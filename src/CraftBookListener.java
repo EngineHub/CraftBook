@@ -35,6 +35,7 @@ public class CraftBookListener extends PluginListener {
     public boolean useLightSwitch = true;
     public boolean useGate = true;
     public boolean useElevators = true;
+    public boolean dropBookshelves = true;
     public float dropAppleChance = 0;
 
     private final static int BOOKSHELF = 47;
@@ -70,6 +71,10 @@ public class CraftBookListener extends PluginListener {
                 if (Math.random() <= dropAppleChance) {
                     player.giveItemDrop(APPLE, 1);
                 }
+            }
+        } else if (dropBookshelves && block.getType() == BOOKSHELF) {
+            if (block.getStatus() == 3) {
+                player.giveItemDrop(BOOKSHELF, 1);
             }
         }
 

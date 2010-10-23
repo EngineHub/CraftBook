@@ -55,6 +55,7 @@ public class CraftBook extends Plugin {
         listener.useLightSwitch = properties.getBoolean("light-switch-enable", true);
         listener.useGate = properties.getBoolean("gate-enable", true);
         listener.useElevators = properties.getBoolean("elevators-enable", true);
+        listener.dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         listener.dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
     }
 
