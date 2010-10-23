@@ -81,7 +81,7 @@ public class CraftBookListener extends PluginListener {
 
                 if (useGate && sign.getText(1).equalsIgnoreCase("[Gate]")) {
                     if (toggleClosestGate(blockClicked)) {
-                        player.sendMessage(Colors.Gold + "Cling clang, gate toggled!");
+                        player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
                     } else {
                         player.sendMessage(Colors.Rose + "No nearby gate to toggle.");
                     }
@@ -200,7 +200,7 @@ public class CraftBookListener extends PluginListener {
         int z = blockClicked.getZ();
 
         for (int x1 = x - 3; x1 <= x + 3; x1++) {
-            for (int y1 = y - 3; y1 <= y + 3; y1++) {
+            for (int y1 = y - 3; y1 <= y + 6; y1++) {
                 for (int z1 = z - 3; z1 <= z + 3; z1++) {
                     if (toggleGate(x1, y1, z1)) {
                         return true;
@@ -218,7 +218,7 @@ public class CraftBookListener extends PluginListener {
         }
 
         // Find the top most fence
-        for (int y1 = y + 1; y1 <= y + 4; y1++) {
+        for (int y1 = y + 1; y1 <= y + 12; y1++) {
             if (getBlockID(x, y1, z) == FENCE) {
                 y = y1;
             } else {
@@ -268,7 +268,7 @@ public class CraftBookListener extends PluginListener {
         performGateToggle(new BlockVector(x + 1, y, z - 1), close, visited);
         performGateToggle(new BlockVector(x + 1, y, z + 1), close, visited);
         
-        int minY = Math.max(0, y - 8);
+        int minY = Math.max(0, y - 12);
         for (int y1 = y - 1; y1 >= minY; y1--) {
             int cur = getBlockID(x, y1, z);
             
