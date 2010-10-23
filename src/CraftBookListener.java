@@ -34,6 +34,8 @@ public class CraftBookListener extends PluginListener {
     public boolean useBookshelf = true;
     public boolean useLightSwitch = true;
     public boolean useGate = true;
+    public boolean useElevators = true;
+    public float dropAppleChance = 0;
 
     private final static int BOOKSHELF = 47;
     private final static int LEVER = 69;
@@ -46,6 +48,8 @@ public class CraftBookListener extends PluginListener {
     private final static int STATIONARY_WATER = 9;
     private final static int BUTTON = 77;
     private final static int WALL_SIGN = 68;
+    private final static int LEAVES = 18;
+    private final static int APPLE = 260;
 
     private Random rand = new Random();
     private HistoryHashMap<BlockVector,Long> recentLightToggles
@@ -57,6 +61,19 @@ public class CraftBookListener extends PluginListener {
 
     private static void setBlockID(int x, int y, int z, int type) {
         etc.getServer().setBlockAt(type, x, y, z);
+    }
+
+    @Override
+    public boolean onBlockDestroy(Player player, Block block) {
+        if (dropAppleChance > 0 && block.getType() == LEAVES) {
+            if (block.getStatus() == 3) {
+                if (Math.random() <= dropAppleChance) {
+                    player.giveItemDrop(APPLE, 1);
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -79,14 +96,86 @@ public class CraftBookListener extends PluginListener {
             if (cBlock instanceof Sign) {
                 Sign sign = (Sign)cBlock;
 
+                // Gate
                 if (useGate && sign.getText(1).equalsIgnoreCase("[Gate]")) {
                     if (toggleClosestGate(blockClicked)) {
                         player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
                     } else {
                         player.sendMessage(Colors.Rose + "No nearby gate to toggle.");
                     }
+                // Light switch
                 } else if (useLightSwitch && sign.getText(1).equalsIgnoreCase("[|]")) {
                     return toggleLights(blockClicked);
+                // Elevator
+                } else if (useElevators
+                        && (sign.getText(1).equalsIgnoreCase("[Lift Up]")
+                        || sign.getText(1).equalsIgnoreCase("[Lift Down]"))) {
+                    performLift(player, blockClicked,
+                            sign.getText(1).equalsIgnoreCase("[Lift Up]"));
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void performLift(Player player, Block blockClicked, boolean up) {
+        int x = blockClicked.getX();
+        int y = blockClicked.getY();
+        int z = blockClicked.getZ();
+
+        if (up) {
+            for (int y1 = y + 1; y1 <= 127; y1++) {
+                if (checkLift(player, x, y1, z, up)) {
+                    return;
+                }
+            }
+        } else {
+            for (int y1 = y - 1; y1 >= 1; y1--) {
+                if (checkLift(player, x, y1, z, up)) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private boolean checkLift(Player player, int x, int y1, int z, boolean up) {
+        if (etc.getServer().getBlockIdAt(x, y1, z) == WALL_SIGN) {
+            ComplexBlock cBlock = etc.getServer().getComplexBlock(x, y1, z);
+
+            if (cBlock instanceof Sign) {
+                Sign sign = (Sign)cBlock;
+
+                // Found our stop?
+                if (sign.getText(1).equalsIgnoreCase("[Lift Up]")
+                        || sign.getText(1).equalsIgnoreCase("[Lift Down]")
+                        || sign.getText(1).equalsIgnoreCase("[Lift]")) {
+                    int plyX = (int)Math.floor(player.getX());
+                    int plyY = (int)Math.floor(player.getY());
+                    int plyZ = (int)Math.floor(player.getZ());
+
+                    int y2;
+                    for (y2 = y1; y2 >= y1 - 5; y2--) {
+                        int id = etc.getServer().getBlockIdAt(plyX, y2, plyZ);
+                        if (id != 0 && id != TORCH && id != REDSTONE_TORCH_OFF
+                                && id != REDSTONE_TORCH_ON && id != WALL_SIGN) {
+                            break;
+                        }
+                    }
+
+                    player.teleportTo(player.getX(), y2 + 1, player.getZ(),
+                            player.getRotation(), player.getPitch());
+                    String title = sign.getText(0);
+
+                    if (title.length() != 0) {
+                        player.sendMessage(Colors.Gold + "Floor: " + title);
+                    } else {
+                        player.sendMessage(Colors.Gold + "You went "
+                                + (up ? "up" : "down") + " a floor.");
+                    }
+
+                    return true;
                 }
             }
         }

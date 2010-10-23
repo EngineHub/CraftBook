@@ -40,6 +40,8 @@ public class CraftBook extends Plugin {
 
         loader.addListener(PluginLoader.Hook.BLOCK_CREATED, listener, this,
                 PluginListener.Priority.MEDIUM);
+        loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, listener, this,
+                PluginListener.Priority.MEDIUM);
     }
 
     /**
@@ -52,6 +54,8 @@ public class CraftBook extends Plugin {
         listener.useBookshelf = properties.getBoolean("bookshelf-enable", true);
         listener.useLightSwitch = properties.getBoolean("light-switch-enable", true);
         listener.useGate = properties.getBoolean("gate-enable", true);
+        listener.useElevators = properties.getBoolean("elevators-enable", true);
+        listener.dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
     }
 
     /**
