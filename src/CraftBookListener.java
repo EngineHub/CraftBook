@@ -334,20 +334,25 @@ public class CraftBookListener extends PluginListener {
     private String getBookLine() throws IOException {
         RandomAccessFile file = new RandomAccessFile(
                 new File("craftbook-books.txt"), "r");
-        
+
+        long len = file.length();
         byte[] data = new byte[500];
 
         for (int tries = 0; tries < 3; tries++) {
-            file.seek(rand.nextInt((int) (file.length())));
+            int j = rand.nextInt((int)len);
+            if (tries == 2) { // File is too small
+                j = 0;
+            }
+            file.seek(j);
             file.read(data);
 
             StringBuilder buffer = new StringBuilder();
-            boolean found = false;
+            boolean found = j == 0;
             byte last = 0;
 
             for (int i = 0; i < data.length; i++) {
                 if (found) {
-                    if (data[i] == 10 || data[i] == 13) {
+                    if (data[i] == 10 || data[i] == 13 || i >= len) {
                         if (last != 10 && last != 13) {
                             return buffer.toString();
                         }
