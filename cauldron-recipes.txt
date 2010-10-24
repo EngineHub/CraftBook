@@ -1,0 +1,17 @@
+;
+; This file is a list of couldron recipes. Each line has 3 fields that
+; are separated by colons (:):
+;
+;     1. Recipe name
+;     2. Ingredients
+;     3. Resulting items
+;
+; The name can be anything. The two lists are block/item IDs.
+;
+; If one recipe's ingredients are a subset of another, it should go below
+; the other recipe.
+;
+; Lines starting with a semi-colon (;) are comments and are ignored. Blank
+; lines are OK.
+;
+grass:3,3,3,6,6:2,2
