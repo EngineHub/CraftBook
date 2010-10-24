@@ -17,12 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import com.sk89q.craftbook.CauldronCookbook;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.io.IOException;
+
 /**
  * Entry point for the plugin for hey0's mod.
  *
  * @author sk89q
  */
 public class CraftBook extends Plugin {
+    /**
+     * Logger.
+     */
+    private static final Logger logger = Logger.getLogger("Minecraft");
+    /**
+     * Properties files for CraftBook.
+     */
     private PropertiesFile properties = new PropertiesFile("craftbook.properties");
     
     /**
@@ -57,6 +69,18 @@ public class CraftBook extends Plugin {
         listener.useElevators = properties.getBoolean("elevators-enable", true);
         listener.dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         listener.dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
+        listener.useCauldrons = properties.getBoolean("cauldron-enable", true);
+        try {
+            listener.cauldronRecipes =
+                    CauldronCookbook.readCauldronRecipes("cauldron-recipes.txt");
+
+            if (listener.cauldronRecipes.size() == 0) {
+                listener.cauldronRecipes = null;
+            }
+        } catch (IOException e) {
+            logger.log(Level.INFO, "cauldron-recipes.txt not loaded: "
+                    + e.getMessage());
+        }
     }
 
     /**

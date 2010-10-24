@@ -21,6 +21,10 @@ import com.sk89q.craftbook.*;
 import java.util.Random;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.*;
 
 /**
@@ -37,7 +41,10 @@ public class CraftBookListener extends PluginListener {
     public boolean useElevators = true;
     public boolean dropBookshelves = true;
     public float dropAppleChance = 0;
+    public boolean useCauldrons = true;
+    public CauldronCookbook cauldronRecipes;
 
+    private final static int STONE = 1;
     private final static int BOOKSHELF = 47;
     private final static int LEVER = 69;
     private final static int TORCH = 50;
@@ -47,6 +54,7 @@ public class CraftBookListener extends PluginListener {
     private final static int FENCE = 85;
     private final static int WATER = 8;
     private final static int STATIONARY_WATER = 9;
+    private final static int STATIONARY_LAVA = 11;
     private final static int BUTTON = 77;
     private final static int WALL_SIGN = 68;
     private final static int LEAVES = 18;
@@ -60,8 +68,18 @@ public class CraftBookListener extends PluginListener {
         return etc.getServer().getBlockIdAt(x, y, z);
     }
 
+    private static int getBlockID(Vector pt) {
+        return etc.getServer().getBlockIdAt(pt.getBlockX(),
+                pt.getBlockY(), pt.getBlockZ());
+    }
+
     private static void setBlockID(int x, int y, int z, int type) {
         etc.getServer().setBlockAt(type, x, y, z);
+    }
+
+    private static void setBlockID(Vector pt, int type) {
+        etc.getServer().setBlockAt(type, pt.getBlockX(),
+                pt.getBlockY(), pt.getBlockZ());
     }
 
     @Override
@@ -120,9 +138,119 @@ public class CraftBookListener extends PluginListener {
                     return true;
                 }
             }
+        } else if (cauldronRecipes != null && useCauldrons
+                && (blockPlaced.getType() == -1 || blockPlaced.getType() >= 256)
+                && blockPlaced.getType() != STONE) {
+            int x = blockClicked.getX();
+            int y = blockClicked.getY();
+            int z = blockClicked.getZ();
+
+            int rootY = y;
+            int below = getBlockID(x, y - 1, z);
+            int below2 = getBlockID(x, y - 2, z);
+            int s1 = getBlockID(x + 1, y, z);
+            int s2 = getBlockID(x, y,  + 1);
+            int s3 = getBlockID(x - 1, y, z);
+            int s4 = getBlockID(x, y, z - 1);
+
+            // Preliminary check so we don't waste CPU cycles
+            if (below == STATIONARY_LAVA || below2 == STATIONARY_LAVA
+                    || s1 == STONE || s2 == STONE || s3 == STONE || s4 == STONE) {
+                // Cauldron is 2 units deep
+                if (below == STATIONARY_LAVA) {
+                    rootY++;
+
+                }
+
+                performCauldron(new BlockVector(x, rootY, z), player);
+            }
         }
 
         return false;
+    }
+
+    private class NotACauldronException extends Exception {}
+
+    private void performCauldron(BlockVector pt, Player player) {
+        int rootY = pt.getBlockY();
+        Map<BlockVector,Integer> visited = new HashMap<BlockVector,Integer>();
+
+        try {
+            // First find the contents of the cauldron
+            findCauldronContents(pt, rootY - 1, rootY, visited);
+
+            // We want cauldrons of a specific shape and size
+            if (visited.size() != 24) {
+                throw new NotACauldronException();
+            }
+
+            Map<Integer,Integer> contents = new HashMap<Integer,Integer>();
+
+            // Collect block types
+            for (Map.Entry<BlockVector,Integer> entry : visited.entrySet()) {
+                if (entry.getValue() != STONE) {
+                    if (!contents.containsKey(entry.getValue())) {
+                        contents.put(entry.getValue(), 1);
+                    } else {
+                        contents.put(entry.getValue(),
+                                contents.get(entry.getValue()) + 1);
+                    }
+                }
+            }
+
+            // Find the recipe
+            CauldronRecipe recipe = cauldronRecipes.find(contents);
+            
+            if (recipe != null) {
+                player.sendMessage(Colors.Gold + "In a poof of smoke, you've made "
+                        + recipe.getName() + ".");
+
+                List<Integer> ingredients =
+                        new ArrayList<Integer>(recipe.getIngredients());
+
+                // Get rid of the blocks in world
+                for (Map.Entry<BlockVector,Integer> entry : visited.entrySet()) {
+                    // This is not a fast operation, but we should not have
+                    // too many ingredients
+                    if (ingredients.contains(entry.getValue())) {
+                        setBlockID(entry.getKey(), 0);
+                        ingredients.remove(entry.getValue());
+                    }
+                }
+
+                // Give results
+                for (Integer id : recipe.getResults()) {
+                    player.giveItem(id, 1);
+                }
+            } else {
+                player.sendMessage(Colors.Red + "Hmm, this doesn't make anything...");
+            }
+        } catch (NotACauldronException e) {
+        }
+    }
+
+    private void findCauldronContents(BlockVector pt, int minY, int maxY,
+            Map<BlockVector,Integer> visited) throws NotACauldronException {
+        if (pt.getBlockY() < minY) { return; }
+        if (pt.getBlockY() > maxY) { return; }
+        if (visited.size() > 24) { throw new NotACauldronException(); }
+        
+        if (visited.containsKey(pt)) { return; }
+        int type = getBlockID(pt);
+        visited.put(pt, type);
+        if (type == STONE) { return; }
+
+        // Must have lava floor
+        if (getBlockID(pt.subtract(0, pt.getBlockY() - minY + 1, 0)) != STATIONARY_LAVA) {
+            throw new NotACauldronException();
+        }
+        
+        findCauldronContents(pt.add(1, 0, 0).toBlockVector(), minY, maxY, visited);
+        findCauldronContents(pt.add(-1, 0, 0).toBlockVector(), minY, maxY, visited);
+        findCauldronContents(pt.add(0, 0, 1).toBlockVector(), minY, maxY, visited);
+        findCauldronContents(pt.add(0, 0, -1).toBlockVector(), minY, maxY, visited);
+        findCauldronContents(pt.add(0, 1, 0).toBlockVector(), minY, maxY, visited);
+        findCauldronContents(pt.add(0, -1, 0).toBlockVector(), minY, maxY, visited);
     }
 
     private void performLift(Player player, Block blockClicked, boolean up) {
