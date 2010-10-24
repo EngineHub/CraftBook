@@ -1,5 +1,5 @@
 ;
-; This file is a list of couldron recipes. Each line has 3 fields that
+; This file is a list of cauldron recipes. Each line has 3 fields that
 ; are separated by colons (:):
 ;
 ;     1. Recipe name
