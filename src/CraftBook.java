@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.CauldronCookbook;
+import com.sk89q.craftbook.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.IOException;
@@ -63,23 +63,37 @@ public class CraftBook extends Plugin {
     public void enable() {
         properties.load();
 
-        listener.useBookshelf = properties.getBoolean("bookshelf-enable", true);
-        listener.useLightSwitch = properties.getBoolean("light-switch-enable", true);
-        listener.useGate = properties.getBoolean("gate-enable", true);
-        listener.useElevators = properties.getBoolean("elevators-enable", true);
+        listener.books = properties.getBoolean("bookshelf-enable", true)
+            ? new BookReader()
+            : null;
+        listener.lightSwitch = properties.getBoolean("light-switch-enable", true)
+            ? new LightSwitch()
+            : null;
+        listener.gateSwitch = properties.getBoolean("gate-enable", true)
+            ? new GateSwitch()
+            : null;
+        listener.elevator = properties.getBoolean("elevators-enable", true)
+            ? new Elevator()
+            : null;
         listener.dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         listener.dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
-        listener.useCauldrons = properties.getBoolean("cauldron-enable", true);
-        try {
-            listener.cauldronRecipes =
-                    CauldronCookbook.readCauldronRecipes("cauldron-recipes.txt");
+        listener.cauldron = null;
 
-            if (listener.cauldronRecipes.size() == 0) {
-                listener.cauldronRecipes = null;
+        if (properties.getBoolean("cauldron-enable", true)) {
+            try {
+                CauldronCookbook recipes =
+                        CauldronCookbook.readCauldronRecipes("cauldron-recipes.txt");
+
+                if (recipes.size() != 0) {
+                    listener.cauldron = new Cauldron(recipes);
+                    logger.log(Level.INFO, recipes.size() + " cauldron recipes loaded");
+                } else {
+                    logger.log(Level.WARNING, "cauldron-recipes.txt had no recipes");
+                }
+            } catch (IOException e) {
+                logger.log(Level.INFO, "cauldron-recipes.txt not loaded: "
+                        + e.getMessage());
             }
-        } catch (IOException e) {
-            logger.log(Level.INFO, "cauldron-recipes.txt not loaded: "
-                    + e.getMessage());
         }
     }
 
@@ -88,5 +102,23 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void disable() {
+    }
+
+    protected static int getBlockID(int x, int y, int z) {
+        return etc.getServer().getBlockIdAt(x, y, z);
+    }
+
+    protected static int getBlockID(Vector pt) {
+        return etc.getServer().getBlockIdAt(pt.getBlockX(),
+                pt.getBlockY(), pt.getBlockZ());
+    }
+
+    protected static void setBlockID(int x, int y, int z, int type) {
+        etc.getServer().setBlockAt(type, x, y, z);
+    }
+
+    protected static void setBlockID(Vector pt, int type) {
+        etc.getServer().setBlockAt(type, pt.getBlockX(),
+                pt.getBlockY(), pt.getBlockZ());
     }
 }
