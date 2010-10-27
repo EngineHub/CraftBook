@@ -110,4 +110,15 @@ public final class BlockType {
                 || id == REDSTONE_TORCH_ON
                 || id == WALL_SIGN;
     }
+
+    /**
+     * Returns true if an ID is lava.
+     * 
+     * @param id
+     * @return
+     */
+    public static boolean isLava(int id) {
+        return id == STATIONARY_LAVA
+                || id == LAVA;
+    }
 }

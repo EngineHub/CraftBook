@@ -72,16 +72,16 @@ public class Cauldron {
         int below = CraftBook.getBlockID(x, y - 1, z);
         int below2 = CraftBook.getBlockID(x, y - 2, z);
         int s1 = CraftBook.getBlockID(x + 1, y, z);
-        int s2 = CraftBook.getBlockID(x, y,  + 1);
+        int s2 = CraftBook.getBlockID(x, y, z + 1);
         int s3 = CraftBook.getBlockID(x - 1, y, z);
         int s4 = CraftBook.getBlockID(x, y, z - 1);
 
         // Preliminary check so we don't waste CPU cycles
-        if (below == BlockType.STATIONARY_LAVA || below2 == BlockType.STATIONARY_LAVA
+        if (BlockType.isLava(below) || BlockType.isLava(below2)
                 || s1 == BlockType.STONE || s2 == BlockType.STONE
                 || s3 == BlockType.STONE || s4 == BlockType.STONE) {
             // Cauldron is 2 units deep
-            if (below == BlockType.STATIONARY_LAVA) {
+            if (BlockType.isLava(below)) {
                 rootY++;
             }
 
@@ -202,8 +202,8 @@ public class Cauldron {
 
         // Must have a stationary lava floor
         Vector lavaPos = pt.subtract(0, pt.getBlockY() - minY + 1, 0);
-        if (CraftBook.getBlockID(lavaPos) != BlockType.STATIONARY_LAVA) {
-            throw new NotACauldronException("Cauldron lacks stationary lava below");
+        if (!BlockType.isLava(CraftBook.getBlockID(lavaPos))) {
+            throw new NotACauldronException("Cauldron lacks lava below");
         }
 
         // Now we recurse!
