@@ -114,11 +114,13 @@ public class CraftBook extends Plugin {
     }
 
     protected static void setBlockID(int x, int y, int z, int type) {
+        if (y < 127 && BlockType.isBottomDependentBlock(getBlockID(x, y + 1, z))) {
+            etc.getServer().setBlockAt(0, x, y + 1, z);
+        }
         etc.getServer().setBlockAt(type, x, y, z);
     }
 
     protected static void setBlockID(Vector pt, int type) {
-        etc.getServer().setBlockAt(type, pt.getBlockX(),
-                pt.getBlockY(), pt.getBlockZ());
+        setBlockID(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), type);
     }
 }

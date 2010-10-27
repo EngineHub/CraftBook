@@ -98,6 +98,31 @@ public final class BlockType {
     public static final int FENCE = 85;
 
     /**
+     * Returns true if the block type requires a block underneath.
+     * 
+     * @param id
+     * @return
+     */
+    public static boolean isBottomDependentBlock(int id) {
+        return id == SAPLING
+                || id == YELLOW_FLOWER
+                || id == RED_FLOWER
+                || id == BROWN_MUSHROOM
+                || id == RED_MUSHROOM
+                || id == TORCH
+                || id == REDSTONE_WIRE
+                || id == CROPS
+                || id == SIGN_POST
+                || id == MINECART_TRACKS
+                || id == LEVER
+                || id == STONE_PRESSURE_PLATE
+                || id == WOODEN_PRESSURE_PLATE
+                || id == REDSTONE_TORCH_OFF
+                || id == REDSTONE_TORCH_ON
+                || id == STONE_BUTTON;
+    }
+
+    /**
      * Checks whether a block can be passed through.
      * 
      * @param id
