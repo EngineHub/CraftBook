@@ -41,7 +41,7 @@ public class LightSwitch {
      * @return
      */
     public boolean toggleLights(Vector origin) {
-        int aboveID = CraftBook.getBlockID(origin);
+        int aboveID = CraftBook.getBlockID(origin.add(0, 1, 0));
 
         if (aboveID == BlockType.TORCH || aboveID == BlockType.REDSTONE_TORCH_OFF
                 || aboveID == BlockType.REDSTONE_TORCH_ON) {
