@@ -78,6 +78,10 @@ public class CraftBookListener extends PluginListener {
         // Discriminate against attempts that would actually place blocks
         boolean isPlacingBlock = blockPlaced.getType() != -1
                 && blockPlaced.getType() <= 256;
+
+        int plyX = (int)Math.floor(player.getLocation().x);
+        int plyY = (int)Math.floor(player.getLocation().y);
+        int plyZ = (int)Math.floor(player.getLocation().z);
         
         // Book reading
         if (books != null
@@ -87,12 +91,27 @@ public class CraftBookListener extends PluginListener {
             return true;
 
         // Sign buttons
-        } else if (blockClicked.getType() == BlockType.WALL_SIGN) {
+        } else if (blockClicked.getType() == BlockType.WALL_SIGN ||
+                CraftBook.getBlockID(plyX, plyY + 1, plyZ) == BlockType.WALL_SIGN ||
+                CraftBook.getBlockID(plyX, plyY, plyZ) == BlockType.WALL_SIGN) {
             int x = blockClicked.getX();
             int y = blockClicked.getY();
             int z = blockClicked.getZ();
 
-            Vector pt = new Vector(x, y, z);
+            Vector pt;
+            if (blockClicked.getType() == BlockType.WALL_SIGN) {
+                pt = new Vector(x, y, z);
+            } else if (CraftBook.getBlockID(plyX, plyY + 1, plyZ) == BlockType.WALL_SIGN) {
+                pt = new Vector(plyX, plyY + 1, plyZ);
+                x = plyX;
+                y = plyY + 1;
+                z = plyZ;
+            } else {
+                pt = new Vector(plyX, plyY, plyZ);
+                x = plyX;
+                y = plyY;
+                z = plyZ;
+            }
 
             ComplexBlock cBlock = etc.getServer().getComplexBlock(x, y, z);
 
