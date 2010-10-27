@@ -103,7 +103,7 @@ public class CraftBookListener extends PluginListener {
                 // Gate
                 if (gateSwitch != null && line2.equalsIgnoreCase("[Gate]")) {
                     // A gate may toggle or not
-                    if (gateSwitch.toggleClosestGate(pt)) {
+                    if (gateSwitch.toggleGates(pt)) {
                         player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
                     } else {
                         player.sendMessage(Colors.Rose + "No nearby gate to toggle.");

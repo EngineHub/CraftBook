@@ -37,37 +37,48 @@ public class GateSwitch {
      * @param pt
      * @return
      */
-    public boolean toggleClosestGate(Vector pt) {
+    public boolean toggleGates(Vector pt) {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
 
-        // First, find a gate to toggle -- this doesn't really find the cloest
-        // gate but rather it finds the first one in its search
+        boolean foundGate = false;
+
+        Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
+
+        // Toggle nearby gates
         for (int x1 = x - 3; x1 <= x + 3; x1++) {
             for (int y1 = y - 3; y1 <= y + 6; y1++) {
                 for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                    if (CraftBook.getBlockID(x, y, z) == BlockType.FENCE
-                            && toggleGate(new Vector(x1, y1, z1))) {
-                        return true;
+                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns, null)) {
+                        foundGate = true;
                     }
                 }
             }
         }
 
-        return false;
+        return foundGate;
     }
 
     /**
-     * Toggles a gate that was found.
+     * Toggles one column of gate.
      * 
      * @param pt
+     * @param visitedColumns
+     * @param close
      * @return
      */
-    private boolean toggleGate(Vector pt) {
+    private boolean recurseColumn(Vector pt, Set<BlockVector> visitedColumns,
+            Boolean close) {
+        if (visitedColumns.size() > 14) { return false; }
+        if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
+        if (CraftBook.getBlockID(pt) != BlockType.FENCE) { return false; }
+        
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
+
+        visitedColumns.add(pt.setY(0).toBlockVector());
 
         // Find the top most fence
         for (int y1 = y + 1; y1 <= y + 12; y1++) {
@@ -84,69 +95,42 @@ public class GateSwitch {
             return false;
         }
 
-        // Close the gate if the block below does not exist as a fence
-        // block, otheriwse open the gate
-        boolean close = CraftBook.getBlockID(x, y - 1, z) != BlockType.FENCE;
+        if (close == null) {
+            // Close the gate if the block below does not exist as a fence
+            // block, otheriwse open the gate
+            close = CraftBook.getBlockID(x, y - 1, z) != BlockType.FENCE;
+        }
 
         // Recursively go to connected fence blocks of the same level
         // and 'close' or 'open' them
-        performGateToggle(new BlockVector(x, y, z), close,
-                new HashSet<BlockVector>());
+        toggleColumn(new BlockVector(x, y, z), close, visitedColumns);
 
         return true;
     }
 
     /**
-     * Recursively find fences to close or open. This method will do the
-     * actual 'closing' or 'opening'.
+     * Actually does the closing/opening. Also recurses to nearby columns.
      * 
-     * @param pt
+     * @param topPoint
      * @param close
-     * @param visited
+     * @param visitedColumns
      */
-    private void performGateToggle(BlockVector pt, boolean close,
-            Set<BlockVector> visited) {
+    private void toggleColumn(Vector topPoint, boolean close,
+            Set<BlockVector> visitedColumns) {
 
-        // Too far away
-        if (visited.size() >= 8) {
-            return;
-        }
+        int x = topPoint.getBlockX();
+        int y = topPoint.getBlockY();
+        int z = topPoint.getBlockZ();
 
-        // Make sure this block is actually a fence
-        if (CraftBook.getBlockID(pt) != BlockType.FENCE) {
-            return;
-        }
-
-        // Don't want infinite recursion
-        if (visited.contains(pt)) {
-            return;
-        }
-
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
-
-        visited.add(pt);
-
-        // Go by to nearby blocks to see if they are fences and should be closed
-        performGateToggle(new BlockVector(x - 1, y, z), close, visited);
-        performGateToggle(new BlockVector(x + 1, y, z), close, visited);
-        performGateToggle(new BlockVector(x, y, z - 1), close, visited);
-        performGateToggle(new BlockVector(x, y, z + 1), close, visited);
-        performGateToggle(new BlockVector(x - 1, y, z - 1), close, visited);
-        performGateToggle(new BlockVector(x - 1, y, z + 1), close, visited);
-        performGateToggle(new BlockVector(x + 1, y, z - 1), close, visited);
-        performGateToggle(new BlockVector(x + 1, y, z + 1), close, visited);
-
-        // As for our current fence, if we want to close the gate then we
-        // replace air/water blocks below with fence blocks; otherwise, we want
-        // to replace fence blocks below with air
+        // If we want to close the gate then we replace air/water blocks
+        // below with fence blocks; otherwise, we want to replace fence
+        // blocks below with air
         int minY = Math.max(0, y - 12);
         for (int y1 = y - 1; y1 >= minY; y1--) {
             int cur = CraftBook.getBlockID(x, y1, z);
 
-                // Allowing water allows the use of gates as flood gates
-                if (cur != BlockType.WATER
+            // Allowing water allows the use of gates as flood gates
+            if (cur != BlockType.WATER
                     && cur != BlockType.STATIONARY_WATER
                     && cur != BlockType.FENCE
                     && cur != 0) {
@@ -154,6 +138,17 @@ public class GateSwitch {
             }
 
             CraftBook.setBlockID(x, y1, z, close ? BlockType.FENCE : 0);
+
+            Vector pt = new Vector(x, y1, z);
+            recurseColumn(pt.add(1, 0, 0), visitedColumns, close);
+            recurseColumn(pt.add(-1, 0, 0), visitedColumns, close);
+            recurseColumn(pt.add(0, 0, 1), visitedColumns, close);
+            recurseColumn(pt.add(0, 0, -1), visitedColumns, close);
         }
+
+        recurseColumn(topPoint.add(1, 0, 0), visitedColumns, close);
+        recurseColumn(topPoint.add(-1, 0, 0), visitedColumns, close);
+        recurseColumn(topPoint.add(0, 0, 1), visitedColumns, close);
+        recurseColumn(topPoint.add(0, 0, -1), visitedColumns, close);
     }
 }
