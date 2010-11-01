@@ -77,6 +77,7 @@ public class CraftBook extends Plugin {
             : null;
         listener.dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         listener.dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
+        listener.checkPermissions = properties.getBoolean("check-permissions", false);
         listener.cauldron = null;
 
         if (properties.getBoolean("cauldron-enable", true)) {

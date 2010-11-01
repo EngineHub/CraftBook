@@ -27,6 +27,7 @@ import com.sk89q.craftbook.*;
 public class CraftBookListener extends PluginListener {
     private PropertiesFile properties;
 
+    public boolean checkPermissions;
     public BookReader books;
     public Cauldron cauldron;
     public Elevator elevator;
@@ -45,7 +46,8 @@ public class CraftBookListener extends PluginListener {
     @Override
     public boolean onBlockDestroy(Player player, Block block) {
         // Random apple drops
-        if (dropAppleChance > 0 && block.getType() == BlockType.LEAVES) {
+        if (dropAppleChance > 0 && block.getType() == BlockType.LEAVES
+                && checkPermission(player, "/appledrops")) {
             if (block.getStatus() == 3) {
                 if (Math.random() <= dropAppleChance) {
                     player.giveItemDrop(ItemType.APPLE, 1);
@@ -53,7 +55,8 @@ public class CraftBookListener extends PluginListener {
             }
 
         // Bookshelf drops
-        } else if (dropBookshelves && block.getType() == BlockType.BOOKCASE) {
+        } else if (dropBookshelves && block.getType() == BlockType.BOOKCASE
+                && checkPermission(player, "/bookshelfdrops")) {
             if (block.getStatus() == 3) {
                 player.giveItemDrop(BlockType.BOOKCASE, 1);
             }
@@ -86,7 +89,8 @@ public class CraftBookListener extends PluginListener {
         // Book reading
         if (books != null
                 && blockClicked.getType() == BlockType.BOOKCASE
-                && !isPlacingBlock) {
+                && !isPlacingBlock
+                && checkPermission(player, "/readbooks")) {
             books.readBook(player);
             return true;
 
@@ -120,7 +124,8 @@ public class CraftBookListener extends PluginListener {
                 String line2 = sign.getText(1);
 
                 // Gate
-                if (gateSwitch != null && line2.equalsIgnoreCase("[Gate]")) {
+                if (gateSwitch != null && line2.equalsIgnoreCase("[Gate]")
+                        && checkPermission(player, "/gate")) {
                     // A gate may toggle or not
                     if (gateSwitch.toggleGates(pt)) {
                         player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
@@ -129,13 +134,15 @@ public class CraftBookListener extends PluginListener {
                     }
                 
                 // Light switch
-                } else if (lightSwitch != null && line2.equalsIgnoreCase("[|]")) {
+                } else if (lightSwitch != null && line2.equalsIgnoreCase("[|]")
+                        && checkPermission(player, "/lightswitch")) {
                     return lightSwitch.toggleLights(pt);
 
                 // Elevator
                 } else if (elevator != null
                         && (line2.equalsIgnoreCase("[Lift Up]")
-                        || line2.equalsIgnoreCase("[Lift Down]"))) {
+                        || line2.equalsIgnoreCase("[Lift Down]"))
+                        && checkPermission(player, "/elevator)")) {
                     
                     // Go up or down?
                     boolean up = line2.equalsIgnoreCase("[Lift Up]");
@@ -146,6 +153,7 @@ public class CraftBookListener extends PluginListener {
 
         // Cauldron
         } else if (cauldron != null
+                && checkPermission(player, "/cauldron")
                 && (blockPlaced.getType() == -1 || blockPlaced.getType() >= 256)
                 && blockPlaced.getType() != BlockType.STONE) {
             
@@ -157,5 +165,16 @@ public class CraftBookListener extends PluginListener {
         }
 
         return false;
+    }
+
+    /**
+     * Check if a player can use a command.
+     * 
+     * @param player
+     * @param command
+     * @return
+     */
+    public boolean checkPermission(Player player, String command) {
+        return !checkPermissions || player.canUseCommand(command);
     }
 }
