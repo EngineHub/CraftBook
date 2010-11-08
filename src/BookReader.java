@@ -35,16 +35,17 @@ public class BookReader {
      * Reads a book.
      * 
      * @param player
+     * @param bookReadLine
      */
-    public void readBook(Player player) {
+    public void readBook(Player player, String bookReadLine) {
         try {
             String text = getBookLine();
 
             if (text != null) {
-                player.sendMessage(Colors.Gold + "You pick out a book...");
+                player.sendMessage(Colors.Gold + bookReadLine);
                 player.sendMessage(text);
             } else {
-                player.sendMessage(Colors.Rose + "Failed to fetch a book line from craftbook-books.txt.");
+                player.sendMessage(Colors.Rose + "Failed to fetch a line from craftbook-books.txt.");
             }
         } catch (IOException e) {
             player.sendMessage(Colors.Rose + "Failed to read craftbook-books.txt.");

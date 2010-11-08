@@ -61,6 +61,7 @@ public class CraftBookListener extends PluginListener {
     private int maxToggleAreaSize;
 
     private BookReader readingModule;
+    private String bookReadLine;
     private Cauldron cauldronModule;
     private Elevator elevatorModule;
     private GateSwitch gateSwitchModule;
@@ -97,6 +98,7 @@ public class CraftBookListener extends PluginListener {
         maxToggleAreaSize = Math.max(0, properties.getInt("toggle-area-max-size", 5000));
 
         readingModule = properties.getBoolean("bookshelf-enable", true) ? new BookReader() : null;
+        bookReadLine = properties.getString("bookshelf-read-text", "You pick out a book...");
         lightSwitchModule = properties.getBoolean("light-switch-enable", true) ? new LightSwitch() : null;
         gateSwitchModule = properties.getBoolean("gate-enable", true) ? new GateSwitch() : null;
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
@@ -185,7 +187,7 @@ public class CraftBookListener extends PluginListener {
                 && blockClicked.getType() == BlockType.BOOKCASE
                 && !isPlacingBlock
                 && checkPermission(player, "/readbooks")) {
-            readingModule.readBook(player);
+            readingModule.readBook(player, bookReadLine);
             return true;
 
         // Sign buttons
