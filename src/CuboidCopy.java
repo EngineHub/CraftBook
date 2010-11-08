@@ -36,6 +36,7 @@ public class CuboidCopy {
     private int length;
     private byte[] blocks;
     private byte[] data;
+    private Vector testOffset;
 
     /**
      * Construct the object. This is to create a new copy at a certain
@@ -139,6 +140,7 @@ public class CuboidCopy {
         copy.length = length;
         copy.blocks = blocks;
         copy.data = data;
+        copy.findTestOffset();
         
         return copy;
     }
@@ -168,6 +170,8 @@ public class CuboidCopy {
                 }
             }
         }
+        
+        findTestOffset();
     }
 
     /**
@@ -242,7 +246,24 @@ public class CuboidCopy {
      * @return
      */
     public boolean shouldClear() {
-        return CraftBook.getBlockID(origin) != 0;
+        Vector v = origin.add(testOffset);
+        return CraftBook.getBlockID(v) != 0;
+    }
+
+    /**
+     * Find a good position to test if an area is active.
+     */
+    private void findTestOffset() {
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
+                for (int z = 0; z < length; z++) {
+                    int index = y * width * length + z * width + x;
+                    if (blocks[index] != 0) {
+                        testOffset = new Vector(x, y, z);
+                    }
+                }
+            }
+        }
     }
 
     /**
