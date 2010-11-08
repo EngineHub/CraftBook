@@ -182,6 +182,7 @@ public class CraftBookListener extends PluginListener {
 
         // Sign buttons
         } else if (blockClicked.getType() == BlockType.WALL_SIGN ||
+                blockClicked.getType() == BlockType.SIGN_POST ||
                 CraftBook.getBlockID(plyX, plyY + 1, plyZ) == BlockType.WALL_SIGN ||
                 CraftBook.getBlockID(plyX, plyY, plyZ) == BlockType.WALL_SIGN) {
             int x = blockClicked.getX();
@@ -189,7 +190,8 @@ public class CraftBookListener extends PluginListener {
             int z = blockClicked.getZ();
 
             Vector pt;
-            if (blockClicked.getType() == BlockType.WALL_SIGN) {
+            if (blockClicked.getType() == BlockType.WALL_SIGN
+                    || blockClicked.getType() == BlockType.SIGN_POST) {
                 pt = new Vector(x, y, z);
             } else if (CraftBook.getBlockID(plyX, plyY + 1, plyZ) == BlockType.WALL_SIGN) {
                 pt = new Vector(plyX, plyY + 1, plyZ);
