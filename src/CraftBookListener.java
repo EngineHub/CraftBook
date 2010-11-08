@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import com.sk89q.craftbook.OperationException;
 import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEditNotInstalled;
@@ -64,6 +65,7 @@ public class CraftBookListener extends PluginListener {
     private Elevator elevatorModule;
     private GateSwitch gateSwitchModule;
     private LightSwitch lightSwitchModule;
+    private Bridge bridgeModule;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
     private float dropAppleChance = 0;
@@ -98,6 +100,7 @@ public class CraftBookListener extends PluginListener {
         lightSwitchModule = properties.getBoolean("light-switch-enable", true) ? new LightSwitch() : null;
         gateSwitchModule = properties.getBoolean("gate-enable", true) ? new GateSwitch() : null;
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
+        bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
@@ -262,6 +265,32 @@ public class CraftBookListener extends PluginListener {
                         player.sendMessage(Colors.Rose + "Could not load area: " + e.getMessage());
                     } catch (IOException e2) {
                         player.sendMessage(Colors.Rose + "Could not load area: " + e2.getMessage());
+                    }
+
+                // Bridges
+                } else if (bridgeModule != null
+                        && blockClicked.getType() == BlockType.SIGN_POST
+                        && line2.equalsIgnoreCase("[Bridge]")) {
+                    int data = CraftBook.getBlockData(x, y, z);
+
+                    try {
+                        if (data == 0x0) {
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.EAST);
+                            player.sendMessage(Colors.Gold + "Bridge toggled.");
+                        } else if (data == 0x4) {
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.SOUTH);
+                            player.sendMessage(Colors.Gold + "Bridge toggled.");
+                        } else if (data == 0x8) {
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.WEST);
+                            player.sendMessage(Colors.Gold + "Bridge toggled.");
+                        } else if (data == 0xC) {
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.NORTH);
+                            player.sendMessage(Colors.Gold + "Bridge toggled.");
+                        } else {
+                            player.sendMessage(Colors.Rose + "That sign is not in a right direction.");
+                        }
+                    } catch (OperationException e) {
+                        player.sendMessage(Colors.Rose + e.getMessage());
                     }
                 }
             }
