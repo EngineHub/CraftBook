@@ -68,7 +68,7 @@ public class CraftBookListener extends PluginListener {
     private Bridge bridgeModule;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
-    private float dropAppleChance = 0;
+    private double dropAppleChance = 0;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -102,7 +102,12 @@ public class CraftBookListener extends PluginListener {
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
-        dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
+        try {
+            dropAppleChance = Double.parseDouble(properties.getString("apple-drop-chance", "0.5")) / 100.0;
+        } catch (NumberFormatException e) {
+            dropAppleChance = -1;
+            logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
+        }
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
         cauldronModule = null;
