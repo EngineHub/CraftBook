@@ -421,9 +421,9 @@ public class CraftBookListener extends PluginListener {
     public boolean runCommand(Player player, String[] split)
             throws InsufficientArgumentsException, LocalWorldEditBridgeException {
         if (split[0].equalsIgnoreCase("/savearea") && canUse(player, "/savearea")) {
-            checkArgs(split, 1, 1, split[0]);
+            checkArgs(split, 1, -1, split[0]);
 
-            String name = split[1];
+            String name = joinString(split, " ", 1);
 
             if (!CopyManager.isValidName(name)) {
                 player.sendMessage(Colors.Rose + "Invalid area name.");
@@ -537,5 +537,24 @@ public class CraftBookListener extends PluginListener {
         } else {
             return blockType.getName();
         }
+    }
+
+    /**
+     * Joins a string from an array of strings.
+     *
+     * @param str
+     * @param delimiter
+     * @return
+     */
+    private static String joinString(String[] str, String delimiter,
+            int initialIndex) {
+        if (str.length == 0) {
+            return "";
+        }
+        StringBuilder buffer = new StringBuilder(str[initialIndex]);
+        for (int i = initialIndex + 1; i < str.length; i++) {
+            buffer.append(delimiter).append(str[i]);
+        }
+        return buffer.toString();
     }
 }
