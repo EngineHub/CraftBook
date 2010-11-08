@@ -18,29 +18,17 @@
 */
 
 import com.sk89q.craftbook.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.io.IOException;
 
 /**
  * Entry point for the plugin for hey0's mod.
  *
  * @author sk89q
  */
-public class CraftBook extends Plugin {
-    /**
-     * Logger.
-     */
-    private static final Logger logger = Logger.getLogger("Minecraft");
-    /**
-     * Properties files for CraftBook.
-     */
-    private PropertiesFile properties = new PropertiesFile("craftbook.properties");
-    
+public class CraftBook extends Plugin {    
     /**
      * Listener for the plugin system.
      */
-    private static final CraftBookListener listener =
+    private static final CraftBookListener controller =
             new CraftBookListener();
 
     /**
@@ -50,9 +38,13 @@ public class CraftBook extends Plugin {
     public void initialize() {
         PluginLoader loader = etc.getLoader();
 
-        loader.addListener(PluginLoader.Hook.BLOCK_CREATED, listener, this,
+        loader.addListener(PluginLoader.Hook.BLOCK_CREATED, controller, this,
                 PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, listener, this,
+        loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, controller, this,
+                PluginListener.Priority.MEDIUM);
+        loader.addListener(PluginLoader.Hook.COMMAND, controller, this,
+                PluginListener.Priority.MEDIUM);
+        loader.addListener(PluginLoader.Hook.DISCONNECT, controller, this,
                 PluginListener.Priority.MEDIUM);
     }
 
@@ -61,41 +53,7 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void enable() {
-        properties.load();
-
-        listener.books = properties.getBoolean("bookshelf-enable", true)
-            ? new BookReader()
-            : null;
-        listener.lightSwitch = properties.getBoolean("light-switch-enable", true)
-            ? new LightSwitch()
-            : null;
-        listener.gateSwitch = properties.getBoolean("gate-enable", true)
-            ? new GateSwitch()
-            : null;
-        listener.elevator = properties.getBoolean("elevators-enable", true)
-            ? new Elevator()
-            : null;
-        listener.dropBookshelves = properties.getBoolean("drop-bookshelves", true);
-        listener.dropAppleChance = (float)(properties.getInt("apple-drop-chance", 5) / 100.0);
-        listener.checkPermissions = properties.getBoolean("check-permissions", false);
-        listener.cauldron = null;
-
-        if (properties.getBoolean("cauldron-enable", true)) {
-            try {
-                CauldronCookbook recipes =
-                        CauldronCookbook.readCauldronRecipes("cauldron-recipes.txt");
-
-                if (recipes.size() != 0) {
-                    listener.cauldron = new Cauldron(recipes);
-                    logger.log(Level.INFO, recipes.size() + " cauldron recipes loaded");
-                } else {
-                    logger.log(Level.WARNING, "cauldron-recipes.txt had no recipes");
-                }
-            } catch (IOException e) {
-                logger.log(Level.INFO, "cauldron-recipes.txt not loaded: "
-                        + e.getMessage());
-            }
-        }
+        controller.loadConfiguration();
     }
 
     /**
@@ -114,6 +72,15 @@ public class CraftBook extends Plugin {
                 pt.getBlockY(), pt.getBlockZ());
     }
 
+    protected static int getBlockData(int x, int y, int z) {
+        return etc.getServer().getBlockData(x, y, z);
+    }
+
+    protected static int getBlockData(Vector pt) {
+        return etc.getServer().getBlockData(pt.getBlockX(),
+                pt.getBlockY(), pt.getBlockZ());
+    }
+
     protected static boolean setBlockID(int x, int y, int z, int type) {
         if (y < 127 && BlockType.isBottomDependentBlock(getBlockID(x, y + 1, z))) {
             etc.getServer().setBlockAt(0, x, y + 1, z);
@@ -123,5 +90,13 @@ public class CraftBook extends Plugin {
 
     protected static boolean setBlockID(Vector pt, int type) {
         return setBlockID(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), type);
+    }
+
+    protected static boolean setBlockData(int x, int y, int z, int data) {
+        return etc.getServer().setBlockData(x, y, z, data);
+    }
+
+    protected static boolean setBlockData(Vector pt, int data) {
+        return setBlockData(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), data);
     }
 }

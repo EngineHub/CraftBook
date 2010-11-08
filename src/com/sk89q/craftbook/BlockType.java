@@ -113,6 +113,7 @@ public final class BlockType {
                 || id == REDSTONE_WIRE
                 || id == CROPS
                 || id == SIGN_POST
+                || id == WALL_SIGN
                 || id == MINECART_TRACKS
                 || id == LEVER
                 || id == STONE_PRESSURE_PLATE

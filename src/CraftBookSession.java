@@ -17,15 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
+import com.sk89q.craftbook.*;
 
 /**
- * List of item IDs.
+ * Used to store per player sessions.
  *
  * @author sk89q
  */
-public final class ItemType {
-    public static final int IRON_AXE = 258;
-    public static final int APPLE = 260;
-    public static final int STONE_AXE = 275;
+public class CraftBookSession {
 }
