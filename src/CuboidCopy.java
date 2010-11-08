@@ -177,7 +177,7 @@ public class CuboidCopy {
     /**
      * Paste to world.
      */
-    public void paste() {
+    public void paste(BlockBag bag) throws BlockBagException {
         Map<Vector,byte[]> queued = new LinkedHashMap<Vector,byte[]>();
 
         for (int x = 0; x < width; x++) {
@@ -188,8 +188,12 @@ public class CuboidCopy {
                     if (BlockType.isBottomDependentBlock(blocks[index])) {
                         queued.put(pt, new byte[] {blocks[index], data[index]});
                     } else {
-                        CraftBook.setBlockID(pt, blocks[index]);
-                        CraftBook.setBlockData(pt, data[index]);
+                        try {
+                            bag.setBlockID(pt, blocks[index]);
+                            CraftBook.setBlockData(pt, data[index]);
+                        } catch (OutOfBlocksException e) {
+                            // Eat error
+                        }
                     }
                 }
             }
@@ -197,15 +201,21 @@ public class CuboidCopy {
 
         for (Map.Entry<Vector,byte[]> entry : queued.entrySet()) {
             byte[] v = entry.getValue();
-            CraftBook.setBlockID(entry.getKey(), v[0]);
-            CraftBook.setBlockData(entry.getKey(), v[1]);
+            try {
+                bag.setBlockID(entry.getKey(), v[0]);
+                CraftBook.setBlockData(entry.getKey(), v[1]);
+            } catch (OutOfBlocksException e) {
+                // Eat error
+            }
         }
+
+        bag.flushChanges();
     }
 
     /**
      * Clear the area.
      */
-    public void clear() {
+    public void clear(BlockBag bag) throws BlockBagException {
         List<Vector> queued = new LinkedList<Vector>();
         
         for (int x = 0; x < width; x++) {
@@ -213,7 +223,7 @@ public class CuboidCopy {
                 for (int z = 0; z < length; z++) {
                     Vector pt = origin.add(x, y, z);
                     if (BlockType.isBottomDependentBlock(CraftBook.getBlockID(pt))) {
-                        CraftBook.setBlockID(pt, 0);
+                        bag.setBlockID(pt, 0);
                     } else {
                         // Can't destroy these blocks yet
                         queued.add(pt);
@@ -223,8 +233,10 @@ public class CuboidCopy {
         }
 
         for (Vector pt : queued) {
-            CraftBook.setBlockID(pt, 0);
+            bag.setBlockID(pt, 0);
         }
+
+        bag.flushChanges();
     }
 
     /**
@@ -232,11 +244,11 @@ public class CuboidCopy {
      *
      * @return
      */
-    public void toggle() {
+    public void toggle(BlockBag bag) throws BlockBagException {
         if (shouldClear()) {
-            clear();
+            clear(bag);
         } else {
-            paste();
+            paste(bag);
         }
     }
 

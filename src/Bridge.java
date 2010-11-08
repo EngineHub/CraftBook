@@ -41,10 +41,11 @@ public class Bridge {
      *
      * @param pt
      * @param direction
+     * @param bag
      * @return
      */
-    public boolean toggleBridge(Vector pt, Direction direction)
-            throws OperationException {
+    public boolean toggleBridge(Vector pt, Direction direction, BlockBag bag)
+            throws OperationException, BlockBagException {
         Vector change = null;
         Vector leftSide = null;
         Vector rightSide = null;
@@ -124,14 +125,16 @@ public class Bridge {
         boolean toOpen = CraftBook.getBlockID(pt.add(change).add(0, -1, 0)) != 0;
 
         if (toOpen) {
-            clearRow(leftSide, change, dist);
-            clearRow(pt.add(0, -1, 0), change, dist);
-            clearRow(rightSide, change, dist);
+            clearRow(leftSide, change, dist, bag);
+            clearRow(pt.add(0, -1, 0), change, dist, bag);
+            clearRow(rightSide, change, dist, bag);
         } else {
-            setRow(leftSide, change, dist);
-            setRow(pt.add(0, -1, 0), change, dist);
-            setRow(rightSide, change, dist);
+            setRow(leftSide, change, dist, bag);
+            setRow(pt.add(0, -1, 0), change, dist, bag);
+            setRow(rightSide, change, dist, bag);
         }
+
+        bag.flushChanges();
         
         return true;
     }
@@ -143,12 +146,13 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void clearRow(Vector origin, Vector change, int dist) {
+    private void clearRow(Vector origin, Vector change, int dist, BlockBag bag)
+            throws BlockBagException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
             if (t == BlockType.WOOD) {
-                CraftBook.setBlockID(p, 0);
+                bag.setBlockID(p, 0);
             } else if (t != 0) {
                 break;
             }
@@ -162,12 +166,13 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void setRow(Vector origin, Vector change, int dist) {
+    private void setRow(Vector origin, Vector change, int dist, BlockBag bag)
+            throws BlockBagException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
             if (t == 0) {
-                CraftBook.setBlockID(p, BlockType.WOOD);
+                bag.setBlockID(p, BlockType.WOOD);
             } else if (t != BlockType.WOOD) {
                 break;
             }

@@ -37,7 +37,8 @@ public class GateSwitch {
      * @param pt
      * @return
      */
-    public boolean toggleGates(Vector pt) {
+    public boolean toggleGates(Vector pt, BlockBag bag)
+            throws BlockBagException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -50,12 +51,14 @@ public class GateSwitch {
         for (int x1 = x - 3; x1 <= x + 3; x1++) {
             for (int y1 = y - 3; y1 <= y + 6; y1++) {
                 for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns, null)) {
+                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns, null, bag)) {
                         foundGate = true;
                     }
                 }
             }
         }
+
+        bag.flushChanges();
 
         return foundGate;
     }
@@ -69,7 +72,8 @@ public class GateSwitch {
      * @return
      */
     private boolean recurseColumn(Vector pt, Set<BlockVector> visitedColumns,
-            Boolean close) {
+            Boolean close, BlockBag bag)
+            throws BlockBagException {
         if (visitedColumns.size() > 14) { return false; }
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
         if (CraftBook.getBlockID(pt) != BlockType.FENCE) { return false; }
@@ -103,7 +107,7 @@ public class GateSwitch {
 
         // Recursively go to connected fence blocks of the same level
         // and 'close' or 'open' them
-        toggleColumn(new BlockVector(x, y, z), close, visitedColumns);
+        toggleColumn(new BlockVector(x, y, z), close, visitedColumns, bag);
 
         return true;
     }
@@ -116,7 +120,8 @@ public class GateSwitch {
      * @param visitedColumns
      */
     private void toggleColumn(Vector topPoint, boolean close,
-            Set<BlockVector> visitedColumns) {
+            Set<BlockVector> visitedColumns, BlockBag bag)
+            throws BlockBagException {
 
         int x = topPoint.getBlockX();
         int y = topPoint.getBlockY();
@@ -137,18 +142,18 @@ public class GateSwitch {
                 break;
             }
 
-            CraftBook.setBlockID(x, y1, z, close ? BlockType.FENCE : 0);
+            bag.setBlockID(x, y1, z, close ? BlockType.FENCE : 0);
 
             Vector pt = new Vector(x, y1, z);
-            recurseColumn(pt.add(1, 0, 0), visitedColumns, close);
-            recurseColumn(pt.add(-1, 0, 0), visitedColumns, close);
-            recurseColumn(pt.add(0, 0, 1), visitedColumns, close);
-            recurseColumn(pt.add(0, 0, -1), visitedColumns, close);
+            recurseColumn(pt.add(1, 0, 0), visitedColumns, close, bag);
+            recurseColumn(pt.add(-1, 0, 0), visitedColumns, close, bag);
+            recurseColumn(pt.add(0, 0, 1), visitedColumns, close, bag);
+            recurseColumn(pt.add(0, 0, -1), visitedColumns, close, bag);
         }
 
-        recurseColumn(topPoint.add(1, 0, 0), visitedColumns, close);
-        recurseColumn(topPoint.add(-1, 0, 0), visitedColumns, close);
-        recurseColumn(topPoint.add(0, 0, 1), visitedColumns, close);
-        recurseColumn(topPoint.add(0, 0, -1), visitedColumns, close);
+        recurseColumn(topPoint.add(1, 0, 0), visitedColumns, close, bag);
+        recurseColumn(topPoint.add(-1, 0, 0), visitedColumns, close, bag);
+        recurseColumn(topPoint.add(0, 0, 1), visitedColumns, close, bag);
+        recurseColumn(topPoint.add(0, 0, -1), visitedColumns, close, bag);
     }
 }

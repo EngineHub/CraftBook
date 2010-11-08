@@ -40,7 +40,8 @@ public class LightSwitch {
      * @param oz
      * @return
      */
-    public boolean toggleLights(Vector origin) {
+    public boolean toggleLights(Vector origin, BlockBag bag)
+            throws BlockBagException {
         int aboveID = CraftBook.getBlockID(origin.add(0, 1, 0));
 
         if (aboveID == BlockType.TORCH || aboveID == BlockType.REDSTONE_TORCH_OFF
@@ -77,9 +78,9 @@ public class LightSwitch {
                             }
 
                             if (on) {
-                                CraftBook.setBlockID(x, y, z, BlockType.TORCH);
+                                bag.setBlockID(x, y, z, BlockType.TORCH);
                             } else {
-                                CraftBook.setBlockID(x, y, z, BlockType.REDSTONE_TORCH_OFF);
+                                bag.setBlockID(x, y, z, BlockType.REDSTONE_TORCH_OFF);
                             }
 
                             changed++;
@@ -87,6 +88,8 @@ public class LightSwitch {
                     }
                 }
             }
+
+            bag.flushChanges();
 
             return true;
         }

@@ -60,6 +60,12 @@ public class CraftBookListener extends PluginListener {
      */
     private int maxToggleAreaSize;
 
+    /**
+     * Fast block bag access.
+     */
+    private static BlockBag dummyBlockBag = new UnlimitedBlackHoleBlockBag();
+
+    private boolean useChestsBlockBag = false;
     private BookReader readingModule;
     private String bookReadLine;
     private Cauldron cauldronModule;
@@ -114,6 +120,16 @@ public class CraftBookListener extends PluginListener {
         checkPermissions = properties.getBoolean("check-permissions", false);
         cauldronModule = null;
 
+        String blockBag = properties.getString("block-bag", "unlimited-black-hole");
+        if (blockBag.equalsIgnoreCase("nearby-chests")) {
+            useChestsBlockBag = true;
+        } else if (blockBag.equalsIgnoreCase("unlimited-black-hole")) {
+            useChestsBlockBag = false;
+        } else {
+            logger.log(Level.WARNING, "Unknown CraftBook block bag: " + blockBag);
+            useChestsBlockBag = false;
+        }
+
         if (properties.getBoolean("cauldron-enable", true)) {
             try {
                 CauldronCookbook recipes =
@@ -163,7 +179,7 @@ public class CraftBookListener extends PluginListener {
 
     /**
      * Called when a block is being attempted to be placed.
-     * 
+     *
      * @param player
      * @param blockPlaced
      * @param blockClicked
@@ -173,6 +189,32 @@ public class CraftBookListener extends PluginListener {
     @Override
     public boolean onBlockCreate(Player player, Block blockPlaced,
             Block blockClicked, int itemInHand) {
+        try {
+            return doBlockCreate(player, blockPlaced, blockClicked, itemInHand);
+        } catch (OutOfBlocksException e) {
+            player.sendMessage(Colors.Rose + "Uh oh! Ran out of: " + toBlockName(e.getID()));
+            player.sendMessage(Colors.Rose + "Make sure nearby chests have the necessary materials.");
+        } catch (OutOfSpaceException e) {
+            player.sendMessage(Colors.Rose + "No room left to put: " + toBlockName(e.getID()));
+            player.sendMessage(Colors.Rose + "Make sure nearby partially occupied chests have free slots.");
+        } catch (BlockBagException e) {
+            player.sendMessage(Colors.Rose + "Unknown error: " + e.getMessage());
+        }
+
+        return true; // On error
+    }
+
+    /**
+     * Called when a block is being attempted to be placed.
+     * 
+     * @param player
+     * @param blockPlaced
+     * @param blockClicked
+     * @param itemInHand
+     * @return
+     */
+    private boolean doBlockCreate(Player player, Block blockPlaced,
+            Block blockClicked, int itemInHand) throws BlockBagException {
 
         // Discriminate against attempts that would actually place blocks
         boolean isPlacingBlock = blockPlaced.getType() != -1
@@ -224,8 +266,11 @@ public class CraftBookListener extends PluginListener {
                 // Gate
                 if (gateSwitchModule != null && line2.equalsIgnoreCase("[Gate]")
                         && checkPermission(player, "/gate")) {
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+
                     // A gate may toggle or not
-                    if (gateSwitchModule.toggleGates(pt)) {
+                    if (gateSwitchModule.toggleGates(pt, bag)) {
                         player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
                     } else {
                         player.sendMessage(Colors.Rose + "No nearby gate to toggle.");
@@ -234,7 +279,9 @@ public class CraftBookListener extends PluginListener {
                 // Light switch
                 } else if (lightSwitchModule != null && line2.equalsIgnoreCase("[|]")
                         && checkPermission(player, "/lightswitch")) {
-                    return lightSwitchModule.toggleLights(pt);
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+                    return lightSwitchModule.toggleLights(pt, bag);
 
                 // Elevator
                 } else if (elevatorModule != null
@@ -261,10 +308,23 @@ public class CraftBookListener extends PluginListener {
                     }
 
                     try {
+                        BlockBag bag = getBlockBag(pt);
+                        bag.addSourcePosition(pt);
                         CuboidCopy copy = copies.load(name);
                         if (copy.distance(pt) <= 4) {
-                            copy.toggle();
-                            player.sendMessage(Colors.Gold + "Toggled!");
+                            copy.toggle(bag);
+                            
+                            // Get missing
+                            Map<Integer,Integer> missing = bag.getMissing();
+                            if (missing.size() > 0) {
+                                for (Map.Entry<Integer,Integer> entry : missing.entrySet()) {
+                                    player.sendMessage(Colors.Rose + "Missing "
+                                            + entry.getValue() + "x "
+                                            + toBlockName(entry.getKey()));
+                                }
+                            } else {
+                                player.sendMessage(Colors.Gold + "Toggled!");
+                            }
                         } else {
                             player.sendMessage(Colors.Rose + "This sign is too far away!");
                         }
@@ -281,17 +341,20 @@ public class CraftBookListener extends PluginListener {
                     int data = CraftBook.getBlockData(x, y, z);
 
                     try {
+                        BlockBag bag = getBlockBag(pt);
+                        bag.addSourcePosition(pt);
+                        
                         if (data == 0x0) {
-                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.EAST);
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.EAST, bag);
                             player.sendMessage(Colors.Gold + "Bridge toggled.");
                         } else if (data == 0x4) {
-                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.SOUTH);
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.SOUTH, bag);
                             player.sendMessage(Colors.Gold + "Bridge toggled.");
                         } else if (data == 0x8) {
-                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.WEST);
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.WEST, bag);
                             player.sendMessage(Colors.Gold + "Bridge toggled.");
                         } else if (data == 0xC) {
-                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.NORTH);
+                            bridgeModule.toggleBridge(new Vector(x, y, z), Bridge.Direction.NORTH, bag);
                             player.sendMessage(Colors.Gold + "Bridge toggled.");
                         } else {
                             player.sendMessage(Colors.Rose + "That sign is not in a right direction.");
@@ -395,6 +458,20 @@ public class CraftBookListener extends PluginListener {
 
         return false;
     }
+
+    /**
+     * Get a block bag.
+     * 
+     * @param origin
+     * @return
+     */
+    public BlockBag getBlockBag(Vector origin) {
+        if (useChestsBlockBag) {
+            return new NearbyChestBlockBag(origin);
+        } else {
+            return dummyBlockBag;
+        }
+    }
     
     /**
      *
@@ -443,5 +520,22 @@ public class CraftBookListener extends PluginListener {
      */
     public boolean checkPermission(Player player, String command) {
         return !checkPermissions || player.canUseCommand(command);
+    }
+
+    /**
+     * Change a block ID to its name.
+     * 
+     * @param id
+     * @return
+     */
+    private String toBlockName(int id) {
+        com.sk89q.worldedit.blocks.BlockType blockType =
+                com.sk89q.worldedit.blocks.BlockType.fromID(id);
+
+        if (blockType == null) {
+            return "#" + id;
+        } else {
+            return blockType.getName();
+        }
     }
 }
