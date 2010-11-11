@@ -53,7 +53,7 @@ public class NearbyChestBlockBag extends BlockBag {
     public void fetchBlock(int id) throws BlockBagException {
         for (BagComplexBlock<Chest> c : chests) {
             Chest chest = c.getChest();
-            hh[] itemArray = chest.getArray();
+            hj[] itemArray = chest.getArray();
             
             // Find the item
             for (int i = 0; itemArray.length > i; i++) {
@@ -89,7 +89,7 @@ public class NearbyChestBlockBag extends BlockBag {
     public void storeBlock(int id) throws BlockBagException {
         for (BagComplexBlock<Chest> c : chests) {
             Chest chest = c.getChest();
-            hh[] itemArray = chest.getArray();
+            hj[] itemArray = chest.getArray();
             int emptySlot = -1;
 
             // Find an existing slot to put it into
@@ -110,7 +110,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
             // Didn't find an existing stack, so let's create a new one
             if (emptySlot != -1) {
-                itemArray[emptySlot] = new hh(id, 1);
+                itemArray[emptySlot] = new hj(id, 1);
                 flushChanges(); // Just in case
                 
                 return;
@@ -142,7 +142,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
                         if (complexBlock instanceof Chest) {
                             Chest chest = (Chest)complexBlock;
-                            hh[] itemArray = chest.getArray();
+                            hj[] itemArray = chest.getArray();
                             boolean occupied = false;
                             
                             // Got to make sure that at least one slot is occupied
