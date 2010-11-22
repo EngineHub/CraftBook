@@ -17,6 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.util.jar.Manifest;
+import java.util.jar.Attributes;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.net.URL;
+import java.io.*;
 import com.sk89q.craftbook.*;
 
 /**
@@ -24,11 +30,15 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class CraftBook extends Plugin {    
+public class CraftBook extends Plugin {
+    /**
+     * Logger.
+     */
+    private static final Logger logger = Logger.getLogger("Minecraft");
     /**
      * Listener for the plugin system.
      */
-    private static final CraftBookListener controller =
+    private static final CraftBookListener listener =
             new CraftBookListener();
 
     /**
@@ -38,15 +48,15 @@ public class CraftBook extends Plugin {
     public void initialize() {
         PluginLoader loader = etc.getLoader();
 
-        loader.addListener(PluginLoader.Hook.BLOCK_CREATED, controller, this,
+        loader.addListener(PluginLoader.Hook.BLOCK_CREATED, listener, this,
                 PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, controller, this,
+        loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, listener, this,
                 PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.REDSTONE_CHANGE, controller, this,
+        loader.addListener(PluginLoader.Hook.REDSTONE_CHANGE, listener, this,
                 PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.COMMAND, controller, this,
+        loader.addListener(PluginLoader.Hook.COMMAND, listener, this,
                 PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.DISCONNECT, controller, this,
+        loader.addListener(PluginLoader.Hook.DISCONNECT, listener, this,
                 PluginListener.Priority.MEDIUM);
     }
 
@@ -55,7 +65,9 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void enable() {
-        controller.loadConfiguration();
+        logger.log(Level.INFO, "CraftBook version " + getVersion() + " loaded");
+
+        listener.loadConfiguration();
     }
 
     /**
@@ -63,6 +75,25 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void disable() {
+    }
+
+    /**
+     * Get the CraftBook version.
+     *
+     * @return
+     */
+    private String getVersion() {
+        try {
+            String classContainer = CraftBook.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toString();
+            URL manifestUrl = new URL("jar:" + classContainer + "!/META-INF/MANIFEST.MF");
+            Manifest manifest = new Manifest(manifestUrl.openStream());
+            Attributes attrib = manifest.getMainAttributes();
+            String ver = (String)attrib.getValue("CraftBook-Version");
+            return ver != null ? ver : "(unavailable)";
+        } catch (IOException e) {
+            return "(unknown)";
+        }
     }
 
     protected static int getBlockID(int x, int y, int z) {

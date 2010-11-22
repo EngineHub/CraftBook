@@ -1,0 +1,40 @@
+1.1:
+- Pumpkins can be toggled off and on (between their lit and unlit states) by
+    putting redstone under the pumpkin.
+- Bridges now support redstone. Wire to the sign.
+- Gates now support redstone. Just wire the sign itself.
+- Bridge signs can now be *below* the bridge and out of view.
+- Bridges can now be made out of other blocks (although the entire bridge
+    has to be of one type). Change the list of allowable blocks in
+    CraftBook's properties file.
+- The maximum length of bridges can now be configured.
+- [I] can be used instead of [|] for light switches.
+- You can now do 'grass1:dirt*3,sapling:grass*3' for cauldron
+    configuration (multipliers and item names). Comments can also now
+    start with the sharp (#) sign.
+
+0.4:
+- Added the bridge.
+- Added toggle-able areas.
+- Added chest support to prevent item farming.
+- Apple drop chance can be a decimal number. Now use -1 to disable entirely.
+- Added support for setting permissions for each function so only some
+    groups can use some functions.
+- Fixed sign posts not working for some functions.
+- Added the ability to change the "you pick out a book..." message for the
+    book reading feature.
+
+0.3:
+- b123 (Halloween update) compatible.
+
+0.2:
+- Added the elevator.
+- Added the cauldron.
+- Added apple drops.
+- Added bookshelf drops.
+- Made book reading code able to handle the first and last lines of a file.
+- Made the gate toggle range slightly larger so you can toggle larger gates
+    and you don't have to have the sign up very high.
+
+0.1:
+- Initial release.
