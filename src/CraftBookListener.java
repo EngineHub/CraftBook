@@ -177,7 +177,7 @@ public class CraftBookListener extends PluginListener {
 
                 if (recipes.size() != 0) {
                     cauldronModule = new Cauldron(recipes);
-                    logger.log(Level.INFO, recipes.size() + " cauldron recipes loaded");
+                    logger.log(Level.INFO, recipes.size() + " cauldron recipe(s) loaded");
                 } else {
                     logger.log(Level.WARNING, "cauldron-recipes.txt had no recipes");
                 }
