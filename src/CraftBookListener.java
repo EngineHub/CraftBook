@@ -380,6 +380,80 @@ public class CraftBookListener extends PluginListener {
         return false;
     }
 
+    /*
+    * Called whenever a redstone source (wire, switch, torch) changes its
+    * current.
+    *
+    * Standard values for wires are 0 for no current, and 14 for a strong current.
+    * Default behaviour for redstone wire is to lower the current by one every
+    * block.
+    *
+    * For other blocks which provide a source of redstone current, the current
+    * value will be 1 or 0 for on and off respectively.
+    *
+    * @param redstone Block of redstone which has just changed in current
+    * @param oldLevel the old current
+    * @param newLevel the new current
+    */
+    public void onRedstoneChange(Block block, int oldLevel, int newLevel) {
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
+
+        boolean wasOn = oldLevel >= 1;
+        boolean isOn = newLevel >= 1;
+
+        if (wasOn != isOn) {
+            // Can power nearby blocks
+            for (int cx = x - 1; cx <= x + 1; cx++) {
+                for (int cy = y - 1; cy <= y + 1; cy++) {
+                    for (int cz = z - 1; cz <= z + 1; cz++) {
+                        if (cx != x || cy != y || cz != z) {
+                            try {
+                                testRedstoneInput(cx, cy, cz, isOn);
+                            } catch (BlockBagException e) { }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Test a block as a redstone input block.
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @param isOn
+     * @throws BlockBagException
+     */
+    public void testRedstoneInput(int x, int y, int z, boolean isOn)
+        throws BlockBagException {
+        int type = CraftBook.getBlockID(x, y, z);
+
+        // Sign triggers
+        if (type == BlockType.WALL_SIGN || type == BlockType.SIGN_POST) {
+            ComplexBlock cblock = etc.getServer().getComplexBlock(x, y, z);
+
+            // Always have to do this check
+            if (!(cblock instanceof Sign)) return;
+
+            Vector pt = new Vector(x, y, z);
+            Sign sign = (Sign)cblock;
+            String line2 = sign.getText(1);
+
+            // Gate
+            if (gateSwitchModule != null && line2.equalsIgnoreCase("[Gate]")) {
+                BlockBag bag = getBlockBag(pt);
+                bag.addSourcePosition(pt);
+
+                // A gate may toggle or not
+                gateSwitchModule.setGateState(pt, bag, isOn);
+            }
+        }
+    }
+
     /**
      *
      * @param player

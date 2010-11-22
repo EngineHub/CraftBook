@@ -35,6 +35,7 @@ public class GateSwitch {
      * Toggles the gate closest to a location.
      * 
      * @param pt
+     * @param bag
      * @return
      */
     public boolean toggleGates(Vector pt, BlockBag bag)
@@ -51,7 +52,43 @@ public class GateSwitch {
         for (int x1 = x - 3; x1 <= x + 3; x1++) {
             for (int y1 = y - 3; y1 <= y + 6; y1++) {
                 for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns, null, bag)) {
+                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
+                            null, bag)) {
+                        foundGate = true;
+                    }
+                }
+            }
+        }
+
+        bag.flushChanges();
+
+        return foundGate;
+    }
+
+    /**
+     * Set gate states of gates closest to a location.
+     *
+     * @param pt
+     * @param bag
+     * @param close
+     * @return
+     */
+    public boolean setGateState(Vector pt, BlockBag bag, boolean close)
+            throws BlockBagException {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+
+        boolean foundGate = false;
+
+        Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
+
+        // Toggle nearby gates
+        for (int x1 = x - 3; x1 <= x + 3; x1++) {
+            for (int y1 = y - 3; y1 <= y + 6; y1++) {
+                for (int z1 = z - 3; z1 <= z + 3; z1++) {
+                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
+                            close, bag)) {
                         foundGate = true;
                     }
                 }
@@ -69,6 +106,8 @@ public class GateSwitch {
      * @param pt
      * @param visitedColumns
      * @param close
+     * @param bag
+     * @param state
      * @return
      */
     private boolean recurseColumn(Vector pt, Set<BlockVector> visitedColumns,

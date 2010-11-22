@@ -42,6 +42,8 @@ public class CraftBook extends Plugin {
                 PluginListener.Priority.MEDIUM);
         loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, controller, this,
                 PluginListener.Priority.MEDIUM);
+        loader.addListener(PluginLoader.Hook.REDSTONE_CHANGE, controller, this,
+                PluginListener.Priority.MEDIUM);
         loader.addListener(PluginLoader.Hook.COMMAND, controller, this,
                 PluginListener.Priority.MEDIUM);
         loader.addListener(PluginLoader.Hook.DISCONNECT, controller, this,
