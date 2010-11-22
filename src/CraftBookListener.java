@@ -70,6 +70,7 @@ public class CraftBookListener extends PluginListener {
     private Cauldron cauldronModule;
     private Elevator elevatorModule;
     private GateSwitch gateSwitchModule;
+    private boolean redstoneGates = true;
     private LightSwitch lightSwitchModule;
     private Bridge bridgeModule;
     private boolean useToggleAreas;
@@ -106,6 +107,7 @@ public class CraftBookListener extends PluginListener {
         bookReadLine = properties.getString("bookshelf-read-text", "You pick out a book...");
         lightSwitchModule = properties.getBoolean("light-switch-enable", true) ? new LightSwitch() : null;
         gateSwitchModule = properties.getBoolean("gate-enable", true) ? new GateSwitch() : null;
+        redstoneGates = properties.getBoolean("gate-redstone", true);
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
@@ -396,6 +398,11 @@ public class CraftBookListener extends PluginListener {
     * @param newLevel the new current
     */
     public void onRedstoneChange(Block block, int oldLevel, int newLevel) {
+        // Pre-check for efficiency
+        if (!redstoneGates) {
+            return;
+        }
+        
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -444,7 +451,8 @@ public class CraftBookListener extends PluginListener {
             String line2 = sign.getText(1);
 
             // Gate
-            if (gateSwitchModule != null && line2.equalsIgnoreCase("[Gate]")) {
+            if (gateSwitchModule != null && redstoneGates
+                    && line2.equalsIgnoreCase("[Gate]")) {
                 BlockBag bag = getBlockBag(pt);
                 bag.addSourcePosition(pt);
 
