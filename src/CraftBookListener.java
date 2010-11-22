@@ -146,6 +146,7 @@ public class CraftBookListener extends PluginListener {
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         redstoneBridges = properties.getBoolean("bridge-redstone", true);
         Bridge.allowableBridgeBlocks = toBlockIDSet(properties.getString("bridge-blocks", "4,5,43"));
+        Bridge.maxBridgeLength = properties.getInt("bridge-max-length", 30);
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         try {
             dropAppleChance = Double.parseDouble(properties.getString("apple-drop-chance", "0.5")) / 100.0;

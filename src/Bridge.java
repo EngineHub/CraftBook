@@ -42,6 +42,10 @@ public class Bridge {
      */
     public static Set<Integer> allowableBridgeBlocks
             = new HashSet<Integer>();
+    /**
+     * Max bridge length.
+     */
+    public static int maxBridgeLength = 30;
 
     /**
      * Returns whether a block can be used for the bridge.
@@ -116,7 +120,7 @@ public class Bridge {
         boolean found = false;
         int dist = 0;
                 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < maxBridgeLength; i++) {
             int id = CraftBook.getBlockID(cur);
 
             if (id == BlockType.SIGN_POST) {
