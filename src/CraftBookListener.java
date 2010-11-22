@@ -278,7 +278,8 @@ public class CraftBookListener extends PluginListener {
                     }
                 
                 // Light switch
-                } else if (lightSwitchModule != null && line2.equalsIgnoreCase("[|]")
+                } else if (lightSwitchModule != null &&
+                        (line2.equalsIgnoreCase("[|]") || line2.equalsIgnoreCase("[I]"))
                         && checkPermission(player, "/lightswitch")) {
                     BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
