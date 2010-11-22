@@ -85,35 +85,63 @@ public class Bridge {
         Vector change = null;
         Vector leftSide = null;
         Vector rightSide = null;
+        int centerShift = 1;
 
         if (direction == Direction.NORTH) {
             change = new Vector(-1, 0, 0);
-            leftSide = pt.add(0, -1, -1);
-            rightSide = pt.add(0, -1, 1);
+            leftSide = pt.add(0, 1, -1);
+            rightSide = pt.add(0, 1, 1);
         } else if(direction == Direction.SOUTH) {
             change = new Vector(1, 0, 0);
-            leftSide = pt.add(0, -1, -1);
-            rightSide = pt.add(0, -1, 1);
+            leftSide = pt.add(0, 1, -1);
+            rightSide = pt.add(0, 1, 1);
         } else if(direction == Direction.WEST) {
             change = new Vector(0, 0, 1);
-            leftSide = pt.add(1, -1, 0);
-            rightSide = pt.add(-1, -1, 0);
+            leftSide = pt.add(1, 1, 0);
+            rightSide = pt.add(-1, 1, 0);
         } else if(direction == Direction.EAST) {
             change = new Vector(0, 0, -1);
-            leftSide = pt.add(1, -1, 0);
-            rightSide = pt.add(-1, -1, 0);
+            leftSide = pt.add(1, 1, 0);
+            rightSide = pt.add(-1, 1, 0);
         }
 
-        int type = CraftBook.getBlockID(pt.add(0, -1, 0));
+        int type;
 
-        if (!canUseBlock(type)) {
-            throw new OperationException("The block underneath the sign has to be an allowed block type.");
-        }
-        if (CraftBook.getBlockID(leftSide) != type) {
-            throw new OperationException("The blocks underneath the sign to the sides have to be the same.");
-        }
-        if (CraftBook.getBlockID(rightSide) != type) {
-            throw new OperationException("The blocks underneath the sign to the sides have to be the same.");
+        // Maybe the sign is below...
+        try {
+            type = CraftBook.getBlockID(pt.add(0, 1, 0));
+
+            if (type == 0) {
+                throw new OperationException("Sign not below"); // Nope
+            }
+
+            if (!canUseBlock(type)) {
+                throw new OperationException("The block above the sign has to be an allowed block type.");
+            }
+            if (CraftBook.getBlockID(leftSide) != type) {
+                throw new OperationException("The blocks above the sign to the sides have to be the same.");
+            }
+            if (CraftBook.getBlockID(rightSide) != type) {
+                throw new OperationException("The blocks above the sign to the sides have to be the same.");
+            }
+
+        // Maybe the sign is above...
+        } catch (OperationException e) {
+            leftSide = leftSide.add(0, -2, 0);
+            rightSide = rightSide.add(0, -2, 0);
+            centerShift = -1;
+
+            type = CraftBook.getBlockID(pt.add(0, -1, 0));
+
+            if (!canUseBlock(type)) {
+                throw new OperationException("The block below the sign has to be an allowed block type.");
+            }
+            if (CraftBook.getBlockID(leftSide) != type) {
+                throw new OperationException("The blocks below the sign to the sides have to be the same.");
+            }
+            if (CraftBook.getBlockID(rightSide) != type) {
+                throw new OperationException("The blocks below the sign to the sides have to be the same.");
+            }
         }
 
         Vector cur = pt.add(change);
@@ -131,7 +159,8 @@ public class Bridge {
                     Sign sign = (Sign)cBlock;
                     String line2 = sign.getText(1);
 
-                    if (line2.equalsIgnoreCase("[Bridge]")) {
+                    if (line2.equalsIgnoreCase("[Bridge]")
+                            || line2.equalsIgnoreCase("[Bridge End]")) {
                         found = true;
                         dist = i;
                         break;
@@ -148,27 +177,30 @@ public class Bridge {
         }
 
         Vector shift = change.multiply(dist + 1);
-        if (CraftBook.getBlockID(pt.add(shift).add(0, -1, 0)) != type) {
-            throw new OperationException("The other side is not setup correctly (needs same block type).");
+        if (CraftBook.getBlockID(pt.add(shift).add(0, centerShift, 0)) != type) {
+            throw new OperationException("Other side is not setup correctly (needs to be "
+                    + etc.getDataSource().getItem(type) + ").");
         }
         if (CraftBook.getBlockID(leftSide.add(shift)) != type) {
-            throw new OperationException("The other side is not setup correctly (needs same block type).");
+            throw new OperationException("Other side is not setup correctly (needs to be "
+                    + etc.getDataSource().getItem(type) + ").");
         }
         if (CraftBook.getBlockID(rightSide.add(shift)) != type) {
-            throw new OperationException("The other side is not setup correctly (needs same block type).");
+            throw new OperationException("Other side is not setup correctly (needs to be "
+                    + etc.getDataSource().getItem(type) + ").");
         }
 
         if (toOpen == null) {
-            toOpen = CraftBook.getBlockID(pt.add(change).add(0, -1, 0)) != 0;
+            toOpen = CraftBook.getBlockID(pt.add(change).add(0, centerShift, 0)) != 0;
         }
 
         if (toOpen) {
             clearRow(leftSide, change, type, dist, bag);
-            clearRow(pt.add(0, -1, 0), change, type, dist, bag);
+            clearRow(pt.add(0, centerShift, 0), change, type, dist, bag);
             clearRow(rightSide, change, type, dist, bag);
         } else {
             setRow(leftSide, change, type, dist, bag);
-            setRow(pt.add(0, -1, 0), change, type, dist, bag);
+            setRow(pt.add(0, centerShift, 0), change, type, dist, bag);
             setRow(rightSide, change, type, dist, bag);
         }
 
