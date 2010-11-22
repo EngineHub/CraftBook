@@ -78,6 +78,7 @@ public class CraftBookListener extends PluginListener {
     private boolean redstoneBridges = true;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
+    private boolean redstonePumpkins = true;
     private double dropAppleChance = 0;
 
     /**
@@ -155,6 +156,7 @@ public class CraftBookListener extends PluginListener {
             logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
         }
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
+        redstonePumpkins = properties.getBoolean("redstone-pumpkins", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
         cauldronModule = null;
 
@@ -436,27 +438,41 @@ public class CraftBookListener extends PluginListener {
     * @param newLevel the new current
     */
     public void onRedstoneChange(Block block, int oldLevel, int newLevel) {
-        // Pre-check for efficiency
-        if (!redstoneGates && !redstoneBridges) {
-            return;
-        }
-        
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
 
         boolean wasOn = oldLevel >= 1;
         boolean isOn = newLevel >= 1;
+        boolean wasChange = wasOn != isOn;
 
-        if (wasOn != isOn) {
-            // Can power nearby blocks
-            for (int cx = x - 1; cx <= x + 1; cx++) {
-                for (int cy = y - 1; cy <= y + 1; cy++) {
-                    for (int cz = z - 1; cz <= z + 1; cz++) {
-                        if (cx != x || cy != y || cz != z) {
-                            try {
-                                testRedstoneInput(cx, cy, cz, isOn);
-                            } catch (BlockBagException e) { }
+        if (!wasChange) {
+            return;
+        }
+
+        // Redstone pumpkins
+        if (redstonePumpkins) {
+            int type = CraftBook.getBlockID(x, y + 1, z);
+            
+            if (redstonePumpkins && type == BlockType.PUMPKIN && isOn) {
+                CraftBook.setBlockID(x, y + 1, z, BlockType.JACKOLANTERN);
+            } else if (redstonePumpkins && type == BlockType.JACKOLANTERN && !isOn) {
+                CraftBook.setBlockID(x, y + 1, z, BlockType.PUMPKIN);
+            }
+        }
+            
+        // Pre-check for efficiency
+        if (redstoneGates || redstoneBridges) {
+            if (wasOn != isOn) {
+                // Can power nearby blocks
+                for (int cx = x - 1; cx <= x + 1; cx++) {
+                    for (int cy = y - 1; cy <= y + 1; cy++) {
+                        for (int cz = z - 1; cz <= z + 1; cz++) {
+                            if (cx != x || cy != y || cz != z) {
+                                try {
+                                    testRedstoneInput(cx, cy, cz, isOn);
+                                } catch (BlockBagException e) { }
+                            }
                         }
                     }
                 }
