@@ -73,6 +73,7 @@ public class CraftBookListener extends PluginListener {
     private boolean redstoneGates = true;
     private LightSwitch lightSwitchModule;
     private Bridge bridgeModule;
+    private boolean redstoneBridges = true;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
     private double dropAppleChance = 0;
@@ -110,6 +111,7 @@ public class CraftBookListener extends PluginListener {
         redstoneGates = properties.getBoolean("gate-redstone", true);
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
+        redstoneBridges = properties.getBoolean("bridge-redstone", true);
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         try {
             dropAppleChance = Double.parseDouble(properties.getString("apple-drop-chance", "0.5")) / 100.0;
@@ -400,7 +402,7 @@ public class CraftBookListener extends PluginListener {
     */
     public void onRedstoneChange(Block block, int oldLevel, int newLevel) {
         // Pre-check for efficiency
-        if (!redstoneGates) {
+        if (!redstoneGates && !redstoneBridges) {
             return;
         }
         
@@ -459,6 +461,29 @@ public class CraftBookListener extends PluginListener {
 
                 // A gate may toggle or not
                 gateSwitchModule.setGateState(pt, bag, isOn);
+
+            // Bridges
+            } else if (bridgeModule != null
+                    && redstoneBridges
+                    && type == BlockType.SIGN_POST
+                    && line2.equalsIgnoreCase("[Bridge]")) {
+                int data = CraftBook.getBlockData(x, y, z);
+
+                try {
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+
+                    if (data == 0x0) {
+                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.EAST, bag, !isOn);
+                    } else if (data == 0x4) {
+                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.SOUTH, bag, !isOn);
+                    } else if (data == 0x8) {
+                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.WEST, bag, !isOn);
+                    } else if (data == 0xC) {
+                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.NORTH, bag, !isOn);
+                    }
+                } catch (OperationException e) {
+                }
             }
         }
     }

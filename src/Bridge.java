@@ -35,7 +35,7 @@ public class Bridge {
         WEST, // +Z
         EAST, // -Z
     }
-    
+
     /**
      * Toggles the gate closest to a location.
      *
@@ -46,6 +46,21 @@ public class Bridge {
      */
     public boolean toggleBridge(Vector pt, Direction direction, BlockBag bag)
             throws OperationException, BlockBagException {
+        return setBridgeState(pt, direction, bag, null);
+    }
+    
+    /**
+     * Toggles the gate closest to a location.
+     *
+     * @param pt
+     * @param direction
+     * @param bag
+     * @return
+     */
+    public boolean setBridgeState(Vector pt, Direction direction,
+            BlockBag bag, Boolean toOpen)
+            throws OperationException, BlockBagException {
+
         Vector change = null;
         Vector leftSide = null;
         Vector rightSide = null;
@@ -122,7 +137,9 @@ public class Bridge {
             throw new OperationException("The other side is not setup correctly.");
         }
 
-        boolean toOpen = CraftBook.getBlockID(pt.add(change).add(0, -1, 0)) != 0;
+        if (toOpen == null) {
+            toOpen = CraftBook.getBlockID(pt.add(change).add(0, -1, 0)) != 0;
+        }
 
         if (toOpen) {
             clearRow(leftSide, change, dist, bag);
