@@ -145,7 +145,7 @@ public class CraftBookListener extends PluginListener {
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         redstoneBridges = properties.getBoolean("bridge-redstone", true);
-        Bridge.allowableBridgeBlocks = toBlockIDSet(properties.getString("bridge-blocks", "4,5,43"));
+        Bridge.allowableBridgeBlocks = toBlockIDSet(properties.getString("bridge-blocks", "4,5,20,43"));
         Bridge.maxBridgeLength = properties.getInt("bridge-max-length", 30);
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         try {
