@@ -17,10 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.OperationException;
 import com.sk89q.craftbook.*;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.WorldEditNotInstalled;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
