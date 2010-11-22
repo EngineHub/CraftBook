@@ -17,7 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.OperationException;
+import java.util.Set;
+import java.util.HashSet;
 import com.sk89q.craftbook.*;
 
 /**
@@ -34,6 +35,22 @@ public class Bridge {
         SOUTH, // +X
         WEST, // +Z
         EAST, // -Z
+    }
+
+    /**
+     * What bridges can be made out of.
+     */
+    public static Set<Integer> allowableBridgeBlocks
+            = new HashSet<Integer>();
+
+    /**
+     * Returns whether a block can be used for the bridge.
+     * 
+     * @param id
+     * @return
+     */
+    private boolean canUseBlock(int id) {
+        return allowableBridgeBlocks.contains(id);
     }
 
     /**
@@ -85,14 +102,14 @@ public class Bridge {
 
         int type = CraftBook.getBlockID(pt.add(0, -1, 0));
 
-        if (type != BlockType.WOOD) {
-            throw new OperationException("The block underneath the sign has to be wood.");
+        if (!canUseBlock(type)) {
+            throw new OperationException("The block underneath the sign has to be an allowed block type.");
         }
-        if (CraftBook.getBlockID(leftSide) != BlockType.WOOD) {
-            throw new OperationException("The blocks underneath the sign to the sides have to be wood.");
+        if (CraftBook.getBlockID(leftSide) != type) {
+            throw new OperationException("The blocks underneath the sign to the sides have to be the same.");
         }
-        if (CraftBook.getBlockID(rightSide) != BlockType.WOOD) {
-            throw new OperationException("The blocks underneath the sign to the sides have to be wood.");
+        if (CraftBook.getBlockID(rightSide) != type) {
+            throw new OperationException("The blocks underneath the sign to the sides have to be the same.");
         }
 
         Vector cur = pt.add(change);
@@ -127,14 +144,14 @@ public class Bridge {
         }
 
         Vector shift = change.multiply(dist + 1);
-        if (CraftBook.getBlockID(pt.add(shift).add(0, -1, 0)) != BlockType.WOOD) {
-            throw new OperationException("The other side is not setup correctly.");
+        if (CraftBook.getBlockID(pt.add(shift).add(0, -1, 0)) != type) {
+            throw new OperationException("The other side is not setup correctly (needs same block type).");
         }
-        if (CraftBook.getBlockID(leftSide.add(shift)) != BlockType.WOOD) {
-            throw new OperationException("The other side is not setup correctly.");
+        if (CraftBook.getBlockID(leftSide.add(shift)) != type) {
+            throw new OperationException("The other side is not setup correctly (needs same block type).");
         }
-        if (CraftBook.getBlockID(rightSide.add(shift)) != BlockType.WOOD) {
-            throw new OperationException("The other side is not setup correctly.");
+        if (CraftBook.getBlockID(rightSide.add(shift)) != type) {
+            throw new OperationException("The other side is not setup correctly (needs same block type).");
         }
 
         if (toOpen == null) {
@@ -142,13 +159,13 @@ public class Bridge {
         }
 
         if (toOpen) {
-            clearRow(leftSide, change, dist, bag);
-            clearRow(pt.add(0, -1, 0), change, dist, bag);
-            clearRow(rightSide, change, dist, bag);
+            clearRow(leftSide, change, type, dist, bag);
+            clearRow(pt.add(0, -1, 0), change, type, dist, bag);
+            clearRow(rightSide, change, type, dist, bag);
         } else {
-            setRow(leftSide, change, dist, bag);
-            setRow(pt.add(0, -1, 0), change, dist, bag);
-            setRow(rightSide, change, dist, bag);
+            setRow(leftSide, change, type, dist, bag);
+            setRow(pt.add(0, -1, 0), change, type, dist, bag);
+            setRow(rightSide, change, type, dist, bag);
         }
 
         bag.flushChanges();
@@ -163,12 +180,12 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void clearRow(Vector origin, Vector change, int dist, BlockBag bag)
+    private void clearRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockBagException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
-            if (t == BlockType.WOOD) {
+            if (t == type) {
                 bag.setBlockID(p, 0);
             } else if (t != 0) {
                 break;
@@ -183,14 +200,14 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void setRow(Vector origin, Vector change, int dist, BlockBag bag)
+    private void setRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockBagException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
             if (t == 0) {
-                bag.setBlockID(p, BlockType.WOOD);
-            } else if (t != BlockType.WOOD) {
+                bag.setBlockID(p, type);
+            } else if (t != type) {
                 break;
             }
         }

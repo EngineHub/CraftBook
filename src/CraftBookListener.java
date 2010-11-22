@@ -21,6 +21,8 @@ import com.sk89q.craftbook.*;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -97,6 +99,37 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
+     * Convert a comma-delimited list to a set of integers.
+     *
+     * @param str
+     * @return
+     */
+    private static Set<Integer> toBlockIDSet(String str) {
+        if (str.trim().length() == 0) {
+            return null;
+        }
+
+        String[] items = str.split(",");
+        Set<Integer> result = new HashSet<Integer>();
+
+        for (String item : items) {
+            try {
+                result.add(Integer.parseInt(item.trim()));
+            } catch (NumberFormatException e) {
+                int id = etc.getDataSource().getItem(item.trim());
+                if (id != 0) {
+                    result.add(id);
+                } else {
+                    logger.log(Level.WARNING, "CraftBook: Unknown block name: "
+                            + item);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Loads CraftBooks's configuration from file.
      */
     public void loadConfiguration() {
@@ -112,6 +145,7 @@ public class CraftBookListener extends PluginListener {
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         redstoneBridges = properties.getBoolean("bridge-redstone", true);
+        Bridge.allowableBridgeBlocks = toBlockIDSet(properties.getString("bridge-blocks", "4,5,43"));
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         try {
             dropAppleChance = Double.parseDouble(properties.getString("apple-drop-chance", "0.5")) / 100.0;
