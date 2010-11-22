@@ -21,7 +21,9 @@ import com.sk89q.craftbook.OperationException;
 import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEditNotInstalled;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -133,7 +135,7 @@ public class CraftBookListener extends PluginListener {
         if (properties.getBoolean("cauldron-enable", true)) {
             try {
                 CauldronCookbook recipes =
-                        CauldronCookbook.readCauldronRecipes("cauldron-recipes.txt");
+                        readCauldronRecipes("cauldron-recipes.txt");
 
                 if (recipes.size() != 0) {
                     cauldronModule = new Cauldron(recipes);
@@ -528,7 +530,7 @@ public class CraftBookListener extends PluginListener {
      * @param id
      * @return
      */
-    private String toBlockName(int id) {
+    private static String toBlockName(int id) {
         com.sk89q.worldedit.blocks.BlockType blockType =
                 com.sk89q.worldedit.blocks.BlockType.fromID(id);
 
@@ -536,6 +538,110 @@ public class CraftBookListener extends PluginListener {
             return "#" + id;
         } else {
             return blockType.getName();
+        }
+    }
+
+    /**
+     * Parse a list of cauldron items.
+     * 
+     * @param list
+     * @return
+     */
+    private static List<Integer> parseCauldronItems(String list) {
+        String[] parts = list.split(",");
+
+        List<Integer> out = new ArrayList<Integer>();
+
+        for (String part : parts) {
+            int multiplier = 1;
+
+            try {
+                // Multiplier
+                if (part.matches("^.*\\*([0-9]+)$")) {
+                    int at = part.lastIndexOf("*");
+                    multiplier = Integer.parseInt(
+                            part.substring(at + 1, part.length()));
+                    part = part.substring(0, at);
+                }
+
+                try {
+                    for (int i = 0; i < multiplier; i++) {
+                        out.add(Integer.valueOf(part));
+                    }
+                } catch (NumberFormatException e) {
+                    int item = etc.getDataSource().getItem(part);
+
+                    if (item > 0) {
+                        for (int i = 0; i < multiplier; i++) {
+                            out.add(item);
+                        }
+                    } else {
+                        logger.log(Level.WARNING, "Cauldron: Unknown item " + part);
+                    }
+                }
+            } catch (NumberFormatException e) { // Bad multiplier
+                logger.log(Level.WARNING, "Cauldron: Bad multiplier in '" + part + "'");
+            }
+        }
+
+        return out;
+    }
+
+    /**
+     * Read a file containing cauldron recipes.
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    private static CauldronCookbook readCauldronRecipes(String path)
+            throws IOException {
+        File file = new File(path);
+        FileReader input = null;
+        CauldronCookbook cookbook = new CauldronCookbook();
+
+        try {
+            input = new FileReader(file);
+            BufferedReader buff = new BufferedReader(input);
+
+            String line;
+            while ((line = buff.readLine()) != null) {
+                line = line.trim();
+
+                // Blank lines
+                if (line.length() == 0) {
+                    continue;
+                }
+
+                // Comment
+                if (line.charAt(0) == ';' || line.charAt(0) == '#' || line.equals("")) {
+                    continue;
+                }
+
+                String[] parts = line.split(":");
+                
+                if (parts.length < 3) {
+                    logger.log(Level.WARNING, "Invalid cauldron recipe line in "
+                            + file.getName() + ": '" + line + "'");
+                } else {
+                    String name = parts[0];
+                    List<Integer> ingredients = parseCauldronItems(parts[1]);
+                    List<Integer> results = parseCauldronItems(parts[2]);
+                    
+                    CauldronRecipe recipe =
+                            new CauldronRecipe(name, ingredients, results);
+                    cookbook.add(recipe);
+                }
+            }
+
+            return cookbook;
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException e) {
+            }
         }
     }
 
