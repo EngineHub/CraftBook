@@ -450,19 +450,9 @@ public class CraftBookListener extends PluginListener {
             return;
         }
 
-        // Redstone pumpkins
-        if (redstonePumpkins) {
-            int type = CraftBook.getBlockID(x, y + 1, z);
-            
-            if (redstonePumpkins && type == BlockType.PUMPKIN && isOn) {
-                CraftBook.setBlockID(x, y + 1, z, BlockType.JACKOLANTERN);
-            } else if (redstonePumpkins && type == BlockType.JACKOLANTERN && !isOn) {
-                CraftBook.setBlockID(x, y + 1, z, BlockType.PUMPKIN);
-            }
-        }
-            
+        int type = CraftBook.getBlockID(x, y + 1, z);            
         // Pre-check for efficiency
-        if (redstoneGates || redstoneBridges) {
+        if (redstoneGates || redstoneBridges || redstonePumpkins) {
             if (wasOn != isOn) {
                 // Can power nearby blocks
                 for (int cx = x - 1; cx <= x + 1; cx++) {
@@ -536,7 +526,201 @@ public class CraftBookListener extends PluginListener {
                 } catch (OperationException e) {
                 }
             }
+        // Redstone pumpkins
+        } else if (redstonePumpkins
+                && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
+            Boolean useOn = testRedstoneTorchInput(x, y, z);
+
+            if (useOn != null && useOn) {
+                CraftBook.setBlockID(x, y, z, BlockType.JACKOLANTERN);
+            } else if (useOn != null) {
+                CraftBook.setBlockID(x, y, z, BlockType.PUMPKIN);
+            }
         }
+    }
+
+    /**
+     * Attempt to treat a block like a redstone torch, meaning that it gets
+     * its state from nearby blocks underneath it. However, this method
+     * will also act like doors as an OR gate rather than an AND gate with
+     * redstone torches.
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    public Boolean testRedstoneTorchInput(int x, int y, int z) {
+        int below = CraftBook.getBlockID(x, y - 1, z);
+        Boolean result = null;
+
+        // Check for blocks below
+        if (below == BlockType.LEVER) {
+            if ((CraftBook.getBlockData(x, y - 1, z) & 0x8) == 0x8) {
+                return true;
+            }
+            result = false;
+        } else if (below == BlockType.STONE_PRESSURE_PLATE) {
+            if ((CraftBook.getBlockData(x, y - 1, z) & 0x1) == 0x1) {
+                return true;
+            }
+            result = false;
+        } else if (below == BlockType.WOODEN_PRESSURE_PLATE) {
+            if ((CraftBook.getBlockData(x, y - 1, z) & 0x1) == 0x1) {
+                return true;
+            }
+            result = false;
+        } else if (below == BlockType.REDSTONE_TORCH_ON) {
+            return true;
+        } else if (below == BlockType.REDSTONE_TORCH_OFF) {
+            result = false;
+        } else if (below == BlockType.STONE_BUTTON) {
+            if ((CraftBook.getBlockData(x, y - 1, z) & 0x8) == 0x8) {
+                return true;
+            }
+            result = false;
+        } else if (below == BlockType.REDSTONE_WIRE) {
+            if (CraftBook.getBlockData(x, y - 1, z) > 0) {
+                return true;
+            }
+            result = false;
+        }
+
+        int northBelow = CraftBook.getBlockID(x - 1, y - 1, z);
+        int southBelow = CraftBook.getBlockID(x + 1, y - 1, z);
+        int westBelow = CraftBook.getBlockID(x, y - 1, z + 1);
+        int eastBelow = CraftBook.getBlockID(x, y - 1, z - 1);
+
+        // For wires that lead up to only this block
+        if (northBelow == BlockType.REDSTONE_WIRE) {
+            int side1 = CraftBook.getBlockID(x - 1, y - 1, z - 1);
+            int side2 = CraftBook.getBlockID(x - 1, y - 1, z + 1);
+
+            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
+                if (CraftBook.getBlockData(x - 1, y - 1, z) > 0) {
+                    return true;
+                }
+                result = false;
+            }
+        }
+
+        if (southBelow == BlockType.REDSTONE_WIRE) {
+            int side1 = CraftBook.getBlockID(x + 1, y - 1, z - 1);
+            int side2 = CraftBook.getBlockID(x + 1, y - 1, z + 1);
+
+            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
+                if (CraftBook.getBlockData(x + 1, y - 1, z) > 0) {
+                    return true;
+                }
+            }
+            result = false;
+        }
+
+        if (westBelow == BlockType.REDSTONE_WIRE) {
+            int side1 = CraftBook.getBlockID(x + 1, y - 1, z + 1);
+            int side2 = CraftBook.getBlockID(x - 1, y - 1, z + 1);
+
+            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
+                if (CraftBook.getBlockData(x, y - 1, z + 1) > 0) {
+                    return true;
+                }
+            }
+            result = false;
+        }
+
+        if (eastBelow == BlockType.REDSTONE_WIRE) {
+            int side1 = CraftBook.getBlockID(x + 1, y - 1, z - 1);
+            int side2 = CraftBook.getBlockID(x - 1, y - 1, z - 1);
+
+            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
+                if (CraftBook.getBlockData(x, y - 1, z - 1) > 0) {
+                    return true;
+                }
+            }
+            result = false;
+        }
+
+        // The sides of the block below
+        Boolean temp = null;
+        temp = testRedstoneTrigger(x - 1, y - 1, z, northBelow);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        temp = testRedstoneTrigger(x + 1, y - 1, z, southBelow);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+        
+        temp = testRedstoneTrigger(x, y - 1, z + 1, westBelow);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        temp = testRedstoneTrigger(x, y - 1, z - 1, eastBelow);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Tests a redstone trigger (everything but wire) to see if it's
+     * indicatign a true. May return a null if there was no data.
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @param type
+     * @return
+     */
+    private Boolean testRedstoneTrigger(int x, int y, int z, int type) {
+        Boolean result = null;
+        
+        if (type == BlockType.LEVER) {
+            if ((CraftBook.getBlockData(x, y, z) & 0x8) == 0x8) {
+                return true;
+            }
+            result = false;
+        } else if (type == BlockType.STONE_PRESSURE_PLATE) {
+            if ((CraftBook.getBlockData(x, y, z) & 0x1) == 0x1) {
+                return true;
+            }
+            result = false;
+        } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
+            if ((CraftBook.getBlockData(x, y, z) & 0x1) == 0x1) {
+                return true;
+            }
+            result = false;
+        } else if (type == BlockType.REDSTONE_TORCH_ON) {
+            return true;
+        } else if (type == BlockType.REDSTONE_TORCH_OFF) {
+            result = false;
+        } else if (type == BlockType.STONE_BUTTON) {
+            if ((CraftBook.getBlockData(x, y, z) & 0x8) == 0x8) {
+                return true;
+            }
+            result = false;
+        }
+
+        return result;
     }
 
     /**

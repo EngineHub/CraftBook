@@ -234,6 +234,24 @@ public final class BlockType {
     }
 
     /**
+     * Returns true if a block uses redstone in some way.
+     *
+     * @param id
+     * @return
+     */
+    public static boolean isRedstoneBlock(int id) {
+        return id == LEVER
+                || id == STONE_PRESSURE_PLATE
+                || id == WOODEN_PRESSURE_PLATE
+                || id == REDSTONE_TORCH_ON
+                || id == REDSTONE_TORCH_OFF
+                || id == STONE_BUTTON
+                || id == REDSTONE_WIRE
+                || id == WOODEN_DOOR
+                || id == IRON_DOOR;
+    }
+
+    /**
      * Get the block or item that would have been dropped. If nothing is
      * dropped, 0 will be returned. If the block should not be destroyed
      * (i.e. bedrock), -1 will be returned.
