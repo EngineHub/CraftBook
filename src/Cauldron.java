@@ -193,6 +193,16 @@ public class Cauldron {
         if (visited.containsKey(pt)) { return; }
 
         int type = CraftBook.getBlockID(pt);
+
+        // Make water work reliably
+        if (type == 9) {
+            type = 8;
+        }
+
+        // Make lava work reliably
+        if (type == 11) {
+            type = 10;
+        }
         
         visited.put(pt, type);
 
