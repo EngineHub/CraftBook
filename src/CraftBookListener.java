@@ -80,6 +80,7 @@ public class CraftBookListener extends PluginListener {
     private boolean dropBookshelves = true;
     private boolean redstonePumpkins = true;
     private double dropAppleChance = 0;
+    private boolean redstoneICs = true;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -159,6 +160,7 @@ public class CraftBookListener extends PluginListener {
         redstonePumpkins = properties.getBoolean("redstone-pumpkins", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
         cauldronModule = null;
+        redstoneICs = properties.getBoolean("redstone-ics", true);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -466,6 +468,71 @@ public class CraftBookListener extends PluginListener {
                         }
                     }
                 }
+            }
+        }
+
+        if (redstoneICs) {
+            int westSide = CraftBook.getBlockID(x, y, z + 1);
+            int eastSide = CraftBook.getBlockID(x, y, z - 1);
+            int northSide = CraftBook.getBlockID(x - 1, y, z);
+            int southSide = CraftBook.getBlockID(x + 1, y, z);
+
+            if (westSide != BlockType.REDSTONE_WIRE
+                    || eastSide != BlockType.REDSTONE_WIRE) {
+                // Possible blocks north / south
+                handleWireInput(x - 1, y, z, isOn);
+                handleWireInput(x + 1, y, z, isOn);
+            } else if (northSide != BlockType.REDSTONE_WIRE
+                    || southSide != BlockType.REDSTONE_WIRE) {
+                // Possible blocks west / east
+                handleWireInput(x, y, z - 1, isOn);
+                handleWireInput(x, y, z + 1, isOn);
+            }
+        }
+    }
+
+    /**
+     * Handles the wire input at a block.
+     * @param x
+     * @param y
+     * @param z
+     * @param isOn
+     */
+    public void handleWireInput(int x, int y, int z, boolean isOn) {
+        int type = CraftBook.getBlockID(x, y, z);
+
+        // ICs
+        if (type == BlockType.WALL_SIGN) {
+            ComplexBlock cblock = etc.getServer().getComplexBlock(x, y, z);
+
+            if (!(cblock instanceof Sign)) {
+                return;
+            }
+
+            Sign sign = (Sign)cblock;
+            String line2 = sign.getText(1);
+
+            // Positive-edge triggered toggle flip flop
+            if (line2.equalsIgnoreCase("[MC1017]") && isOn) {
+                Vector backVec = getWallSignBack(x, y, z);
+                Vector outputVec = backVec.add(0, 1, 0);
+                int backBlock = CraftBook.getBlockID(backVec);
+
+                if (CraftBook.getBlockID(outputVec) == BlockType.REDSTONE_TORCH_ON) {
+                    CraftBook.setBlockID(outputVec, BlockType.AIR);
+                } else if (CraftBook.getBlockID(outputVec) == BlockType.AIR) {
+                    CraftBook.setBlockID(outputVec, BlockType.REDSTONE_TORCH_ON);
+                }
+                
+                // Won't cause a trigger
+                /*if (CraftBook.getBlockID(outputVec) == BlockType.LEVER) {
+                    int data = CraftBook.getBlockData(outputVec);
+                    if ((data & 0x8) == 0x8) {
+                        CraftBook.setBlockData(outputVec, data & 0x7);
+                    } else {
+                        CraftBook.setBlockData(outputVec, data | 0x8);
+                    }
+                }*/
             }
         }
     }
@@ -862,6 +929,27 @@ public class CraftBookListener extends PluginListener {
      */
     public boolean checkPermission(Player player, String command) {
         return !checkPermissions || player.canUseCommand(command);
+    }
+
+    /**
+     * Gets the block behind a sign.
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    public static Vector getWallSignBack(int x, int y, int z) {
+        int data = CraftBook.getBlockData(x, y, z);
+        if (data == 0x2) { // East
+            return new Vector(x, y, z + 1);
+        } else if (data == 0x3) { // West
+            return new Vector(x, y, z - 1);
+        } else if (data == 0x4) { // North
+            return new Vector(x + 1, y, z );
+        } else {
+            return new Vector(x - 1, y, z);
+        }
     }
 
     /**
