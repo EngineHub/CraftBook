@@ -578,14 +578,14 @@ public class CraftBookListener extends PluginListener {
                 int southSide = CraftBook.getBlockID(x + 1, y, z);
 
                 if (westSide != BlockType.REDSTONE_WIRE
-                        || eastSide != BlockType.REDSTONE_WIRE) {
+                        && eastSide != BlockType.REDSTONE_WIRE) {
                     // Possible blocks north / south
                     handleWireInput(x - 1, y, z, isOn);
                     handleWireInput(x + 1, y, z, isOn);
                 }
 
                 if (northSide != BlockType.REDSTONE_WIRE
-                        || southSide != BlockType.REDSTONE_WIRE) {
+                        && southSide != BlockType.REDSTONE_WIRE) {
                     // Possible blocks west / east
                     handleWireInput(x, y, z - 1, isOn);
                     handleWireInput(x, y, z + 1, isOn);
