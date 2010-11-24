@@ -482,7 +482,9 @@ public class CraftBookListener extends PluginListener {
                 // Possible blocks north / south
                 handleWireInput(x - 1, y, z, isOn);
                 handleWireInput(x + 1, y, z, isOn);
-            } else if (northSide != BlockType.REDSTONE_WIRE
+            }
+            
+            if (northSide != BlockType.REDSTONE_WIRE
                     || southSide != BlockType.REDSTONE_WIRE) {
                 // Possible blocks west / east
                 handleWireInput(x, y, z - 1, isOn);
