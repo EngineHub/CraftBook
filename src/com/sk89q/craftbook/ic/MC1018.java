@@ -27,12 +27,11 @@ import com.sk89q.craftbook.*;
  * @author Shaun (sturmeh)
  */
 public class MC1018 extends SISOFamilyIC {
-	
-	public boolean think(Vector pos, boolean input1, boolean oldState) {
-		Signal in = new Signal(input1);
-		Signal out = new Signal(oldState);
-		if (in.not())
-			return out.invert();
-		return out.state();
-	}
+    public boolean think(Vector pos, boolean input1, boolean oldState) {
+        Signal in = new Signal(input1);
+        Signal out = new Signal(oldState);
+        if (in.not())
+                return out.invert();
+        return out.state();
+    }
 }

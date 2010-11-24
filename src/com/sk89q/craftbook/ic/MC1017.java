@@ -27,14 +27,6 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1017 extends SISOFamilyIC {
-    /**
-     * Get a new state to use.
-     *
-     * @param pos
-     * @param input1
-     * @param oldState
-     * @return
-     */
     public boolean think(Vector pos, boolean input1, boolean oldState) {
         if (input1) {
             return !oldState;
