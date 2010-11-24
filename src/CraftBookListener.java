@@ -87,6 +87,7 @@ public class CraftBookListener extends PluginListener {
     private boolean redstonePumpkins = true;
     private double dropAppleChance = 0;
     private boolean redstoneICs = true;
+    private boolean enableAmmeter = true;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -176,6 +177,7 @@ public class CraftBookListener extends PluginListener {
         checkPermissions = properties.getBoolean("check-permissions", false);
         cauldronModule = null;
         redstoneICs = properties.getBoolean("redstone-ics", true);
+        enableAmmeter = properties.getBoolean("ammeter", true);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -272,6 +274,56 @@ public class CraftBookListener extends PluginListener {
      */
     private boolean doBlockCreate(Player player, Block blockPlaced,
             Block blockClicked, int itemInHand) throws BlockBagException {
+
+        int current = -1;
+
+        if (enableAmmeter && itemInHand == 263) { // Coal
+            int type = blockClicked.getType();
+            int data = CraftBook.getBlockData(blockClicked.getX(),
+                    blockClicked.getY(), blockClicked.getZ());
+            
+            if (type == BlockType.LEVER) {
+                if ((data & 0x8) == 0x8) {
+                    current = 15;
+                }
+                current = 0;
+            } else if (type == BlockType.STONE_PRESSURE_PLATE) {
+                if ((data & 0x1) == 0x1) {
+                    current = 15;
+                }
+                current = 0;
+            } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
+                if ((data & 0x1) == 0x1) {
+                    current = 15;
+                }
+                current = 0;
+            } else if (type == BlockType.REDSTONE_TORCH_ON) {
+                current = 15;
+            } else if (type == BlockType.REDSTONE_TORCH_OFF) {
+                current = 0;
+            } else if (type == BlockType.STONE_BUTTON) {
+                if ((data & 0x8) == 0x8) {
+                    current = 15;
+                }
+                current = 0;
+            } else if (type == BlockType.REDSTONE_WIRE) {
+                current = data;
+            }
+
+            if (current > -1) {
+                player.sendMessage(Colors.Yellow + "Ammeter: "
+                        + Colors.Yellow + "["
+                        + Colors.Yellow + repeatString("|", current)
+                        + Colors.Black + repeatString("|", 15 - current)
+                        + Colors.Yellow + "] "
+                        + Colors.White
+                        + current + " A");
+            } else {
+                player.sendMessage(Colors.Yellow + "Ammeter: " + Colors.Red + "Not supported.");
+            }
+
+            return false;
+        }
 
         // Discriminate against attempts that would actually place blocks
         boolean isPlacingBlock = blockPlaced.getType() != -1
@@ -1103,6 +1155,21 @@ public class CraftBookListener extends PluginListener {
         StringBuilder buffer = new StringBuilder(str[initialIndex]);
         for (int i = initialIndex + 1; i < str.length; i++) {
             buffer.append(delimiter).append(str[i]);
+        }
+        return buffer.toString();
+    }
+
+    /**
+     * Repeat a string.
+     * 
+     * @param string
+     * @param num
+     * @return
+     */
+    private static String repeatString(String str, int num) {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < num; i++) {
+            buffer.append(str);
         }
         return buffer.toString();
     }
