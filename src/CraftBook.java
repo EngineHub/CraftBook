@@ -42,6 +42,15 @@ public class CraftBook extends Plugin {
             new CraftBookListener();
 
     /**
+     * Used to fake the data value at a point.
+     */
+    private static BlockVector fakeDataPos;
+    /**
+     * Used to fake the data value at a point.
+     */
+    private static int fakeDataVal;
+
+    /**
      * Initializes the plugin.
      */
     @Override
@@ -124,10 +133,18 @@ public class CraftBook extends Plugin {
     }
 
     protected static int getBlockData(int x, int y, int z) {
+        if (fakeDataPos != null
+                && fakeDataPos.toBlockVector().equals(new BlockVector(x, y, z))) {
+            return fakeDataVal;
+        }
         return etc.getServer().getBlockData(x, y, z);
     }
 
     protected static int getBlockData(Vector pt) {
+        if (fakeDataPos != null
+                && fakeDataPos.equals(pt.toBlockVector())) {
+            return fakeDataVal;
+        }
         return etc.getServer().getBlockData(pt.getBlockX(),
                 pt.getBlockY(), pt.getBlockZ());
     }
@@ -149,5 +166,19 @@ public class CraftBook extends Plugin {
 
     protected static boolean setBlockData(Vector pt, int data) {
         return setBlockData(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), data);
+    }
+
+    protected static void fakeBlockData(int x, int y, int z, int data) {
+        fakeDataPos = new BlockVector(x, y, z);
+        fakeDataVal = data;
+    }
+
+    protected static void fakeBlockData(Vector pt, int data) {
+        fakeDataPos = pt.toBlockVector();
+        fakeDataVal = data;
+    }
+
+    protected static void clearFakeBlockData() {
+        fakeDataPos = null;
     }
 }
