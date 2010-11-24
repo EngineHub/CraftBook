@@ -18,6 +18,7 @@
 */
 
 import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.ic.*;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -51,6 +52,11 @@ public class CraftBookListener extends PluginListener {
      */
     private Map<String,CraftBookSession> sessions =
             new HashMap<String,CraftBookSession>();
+    /**
+     * SISO ICs.
+     */
+    private Map<String,SISOFamilyIC> sisoICs =
+            new HashMap<String,SISOFamilyIC>();
 
     /**
      * Indicates whether each function should check permissions.
@@ -129,6 +135,15 @@ public class CraftBookListener extends PluginListener {
         }
 
         return result;
+    }
+
+    /**
+     * Construct the object.
+     * 
+     */
+    public CraftBookListener() {
+        sisoICs.put("MC1017", new MC1017());
+        sisoICs.put("MC1020", new MC1020());
     }
 
     /**
@@ -513,28 +528,40 @@ public class CraftBookListener extends PluginListener {
 
             Sign sign = (Sign)cblock;
             String line2 = sign.getText(1);
+            int len = line2.length();
 
-            // Positive-edge triggered toggle flip flop
-            if (line2.equalsIgnoreCase("[MC1017]") && isOn) {
-                Vector backVec = getWallSignBack(x, y, z);
-                Vector outputVec = backVec.add(0, 1, 0);
-                int backBlock = CraftBook.getBlockID(backVec);
+            // SISO family
+            if (line2.substring(0, 3).equals("[MC") &&
+                    line2.charAt(len - 1) == ']') {
+                SISOFamilyIC ic = sisoICs.get(line2.substring(1, len - 1));
 
-                if (CraftBook.getBlockID(outputVec) == BlockType.REDSTONE_TORCH_ON) {
-                    CraftBook.setBlockID(outputVec, BlockType.AIR);
-                } else if (CraftBook.getBlockID(outputVec) == BlockType.AIR) {
-                    CraftBook.setBlockID(outputVec, BlockType.REDSTONE_TORCH_ON);
-                }
-                
-                // Won't cause a trigger
-                /*if (CraftBook.getBlockID(outputVec) == BlockType.LEVER) {
-                    int data = CraftBook.getBlockData(outputVec);
-                    if ((data & 0x8) == 0x8) {
-                        CraftBook.setBlockData(outputVec, data & 0x7);
-                    } else {
-                        CraftBook.setBlockData(outputVec, data | 0x8);
+                if (ic != null) {
+                    Vector backVec = getWallSignBack(x, y, z);
+                    Vector outputVec = backVec.add(0, 1, 0);
+                    int backBlock = CraftBook.getBlockID(backVec);
+
+                    boolean lastState =
+                            CraftBook.getBlockID(outputVec) == BlockType.REDSTONE_TORCH_ON;
+                    boolean newState = ic.think(new Vector(x, y, z), isOn, lastState);
+
+                    if (newState != lastState) {
+                        if (!newState && CraftBook.getBlockID(outputVec) == BlockType.REDSTONE_TORCH_ON) {
+                            CraftBook.setBlockID(outputVec, BlockType.AIR);
+                        } else if (newState && CraftBook.getBlockID(outputVec) == BlockType.AIR) {
+                            CraftBook.setBlockID(outputVec, BlockType.REDSTONE_TORCH_ON);
+                        }
+
+                        // Won't cause a trigger
+                        /*if (CraftBook.getBlockID(outputVec) == BlockType.LEVER) {
+                            int data = CraftBook.getBlockData(outputVec);
+                            if (!newState) {
+                                CraftBook.setBlockData(outputVec, data & 0x7);
+                            } else {
+                                CraftBook.setBlockData(outputVec, data | 0x8);
+                            }
+                        }*/
                     }
-                }*/
+                }
             }
         }
     }
