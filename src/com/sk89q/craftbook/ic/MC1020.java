@@ -28,20 +28,10 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1020 extends SISOFamilyIC {
-    /**
-     * Random number generator.
-     */
     private static Random random = new Random();
     
-    /**
-     * Get a new state to use.
-     *
-     * @param pos
-     * @param input1
-     * @param oldState
-     * @return
-     */
-    public boolean think(Vector pos, boolean input1, boolean oldState) {
+    public boolean think(Vector pos, boolean input1, boolean oldState,
+            SignText signText) {
         if (input1) {
             return random.nextBoolean();
         } else {

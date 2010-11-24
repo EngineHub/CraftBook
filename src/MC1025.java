@@ -29,19 +29,19 @@ import com.sk89q.craftbook.ic.Signal;
  * @author Shaun (sturmeh)
  */
 public class MC1025 extends SISOFamilyIC {
+    public boolean think(Vector pos, boolean input1, boolean oldState,
+            SignText signText) {
+        Signal in = new Signal(input1);
+        Signal out = new Signal(oldState);
+        if (in.state())
+            out.set(isServerTimeOdd());
+        return out.state();
+    }
 
-	public boolean think(Vector pos, boolean input1, boolean oldState) {
-		Signal in = new Signal(input1);
-		Signal out = new Signal(oldState);
-		if (in.state())
-			out.set(isServerTimeOdd());
-		return out.state();
-	}
-	
-	private boolean isServerTimeOdd() {
-		long time = etc.getServer().getRelativeTime() % 2;
-		if (time < 0)
-			time += 2;
-		return (time == 1);
-	}
+    private boolean isServerTimeOdd() {
+        long time = etc.getServer().getRelativeTime() % 2;
+        if (time < 0)
+                time += 2;
+        return (time == 1);
+    }
 }

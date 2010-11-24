@@ -15,24 +15,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 package com.sk89q.craftbook.ic;
 
+import java.util.Map;
 import com.sk89q.craftbook.*;
 
 /**
- * Negative/Falling edge-triggered toggle flip flop.
+ * Wireless transmitter.
  *
- * @author Shaun (sturmeh)
+ * @author sk89q
  */
-public class MC1018 extends SISOFamilyIC {
+public class MC1110 extends SISOFamilyIC {
+    public static Map<String,Boolean> airwaves =
+            new HistoryHashMap<String,Boolean>(100);
+
     public boolean think(Vector pos, boolean input1, boolean oldState,
             SignText signText) {
-        Signal in = new Signal(input1);
-        Signal out = new Signal(oldState);
-        if (in.not())
-                return out.invert();
-        return out.state();
+        String id = signText.getLine1();
+        
+        if (id.length() > 0) {
+            airwaves.put(id, input1);
+            return true;
+        }
+
+        return false;
     }
 }

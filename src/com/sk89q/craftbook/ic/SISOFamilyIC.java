@@ -33,7 +33,9 @@ public abstract class SISOFamilyIC {
      * @param pos
      * @param input1
      * @param oldState
+     * @param signText
      * @return
      */
-    public abstract boolean think(Vector pos, boolean input1, boolean oldState);
+    public abstract boolean think(Vector pos, boolean input1, boolean oldState,
+            SignText signText);
 }

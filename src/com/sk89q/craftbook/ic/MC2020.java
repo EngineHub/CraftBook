@@ -31,7 +31,8 @@ public class MC2020 extends SI3OFamilyIC {
     private static Random random = new Random();
 
     public boolean[] think(Vector pos, boolean input1,
-            boolean oldState1, boolean oldState2, boolean oldState3) {
+            boolean oldState1, boolean oldState2, boolean oldState3,
+            SignText signText) {
         if (input1) {
             return new boolean[]{
                 random.nextBoolean(),

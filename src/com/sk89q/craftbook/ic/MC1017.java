@@ -27,7 +27,8 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1017 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState) {
+    public boolean think(Vector pos, boolean input1, boolean oldState,
+            SignText signText) {
         if (input1) {
             return !oldState;
         } else {

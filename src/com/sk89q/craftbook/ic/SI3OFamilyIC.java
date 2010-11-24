@@ -35,8 +35,10 @@ public abstract class SI3OFamilyIC {
      * @param oldState1
      * @param oldState2
      * @param oldState3
+     * @param signText
      * @return 3 booleans or null
      */
     public abstract boolean[] think(Vector pos, boolean input1,
-            boolean oldState1, boolean oldState2, boolean oldState3);
+            boolean oldState1, boolean oldState2, boolean oldState3,
+            SignText signText);
 }

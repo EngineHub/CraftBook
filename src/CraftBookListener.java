@@ -148,8 +148,14 @@ public class CraftBookListener extends PluginListener {
      * 
      */
     public CraftBookListener() {
+        sisoICs.put("MC1000", new MC1000());
+        sisoICs.put("MC1001", new MC1001());
         sisoICs.put("MC1017", new MC1017());
+        sisoICs.put("MC1018", new MC1018());
         sisoICs.put("MC1020", new MC1020());
+        sisoICs.put("MC1025", new MC1025());
+        sisoICs.put("MC1110", new MC1110());
+        sisoICs.put("MC1111", new MC1111());
         si3oICs.put("MC2020", new MC2020());
     }
 
@@ -624,6 +630,10 @@ public class CraftBookListener extends PluginListener {
                     line2.charAt(len - 1) == ']') {
                 String id = line2.substring(1, len - 1);
 
+                SignText signText = new SignText(
+                        sign.getText(0), sign.getText(1), sign.getText(2),
+                        sign.getText(3));
+
                 // SISO family
                 SISOFamilyIC sisoIC = sisoICs.get(id);
 
@@ -632,10 +642,17 @@ public class CraftBookListener extends PluginListener {
                     Vector outputVec = getWallSignBack(x, y, z, 2);
 
                     boolean lastState = getRedstoneOutput(outputVec);
-                    boolean newState = sisoIC.think(new Vector(x, y, z), isOn, lastState);
+                    boolean newState = sisoIC.think(new Vector(x, y, z), isOn, lastState, signText);
 
                     if (newState != lastState) {
                         setRedstoneOutput(outputVec, newState);
+                    }
+
+                    if (signText.isChanged()) {
+                        sign.setText(0, signText.getLine1());
+                        sign.setText(1, signText.getLine2());
+                        sign.setText(2, signText.getLine3());
+                        sign.setText(3, signText.getLine4());
                     }
 
                     return;
@@ -655,13 +672,20 @@ public class CraftBookListener extends PluginListener {
                     boolean lastState2 = getRedstoneOutput(output2Vec);
                     boolean lastState3 = getRedstoneOutput(output3Vec);
                     boolean[] newStates = si30IC.think(new Vector(x, y, z), isOn,
-                            lastState1, lastState2, lastState3);
+                            lastState1, lastState2, lastState3, signText);
 
                     if (newStates != null) {
                         // May raise an exception!
                         setRedstoneOutput(output1Vec, newStates[0]);
                         setRedstoneOutput(output2Vec, newStates[1]);
                         setRedstoneOutput(output3Vec, newStates[2]);
+                    }
+
+                    if (signText.isChanged()) {
+                        sign.setText(0, signText.getLine1());
+                        sign.setText(1, signText.getLine2());
+                        sign.setText(2, signText.getLine3());
+                        sign.setText(3, signText.getLine4());
                     }
 
                     return;
