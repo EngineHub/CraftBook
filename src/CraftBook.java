@@ -48,16 +48,34 @@ public class CraftBook extends Plugin {
     public void initialize() {
         PluginLoader loader = etc.getLoader();
 
-        loader.addListener(PluginLoader.Hook.BLOCK_CREATED, listener, this,
-                PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.BLOCK_DESTROYED, listener, this,
-                PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.REDSTONE_CHANGE, listener, this,
-                PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.COMMAND, listener, this,
-                PluginListener.Priority.MEDIUM);
-        loader.addListener(PluginLoader.Hook.DISCONNECT, listener, this,
-                PluginListener.Priority.MEDIUM);
+        registerHook("BLOCK_CREATED", PluginListener.Priority.MEDIUM);
+        registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
+        registerHook("COMMAND", PluginListener.Priority.MEDIUM);
+        registerHook("DISCONNECT", PluginListener.Priority.MEDIUM);
+
+        if (!registerHook("REDSTONE_CHANGE", PluginListener.Priority.MEDIUM)) {
+            logger.log(Level.WARNING, "CraftBook: Your version of hMod is "
+                    + "does NOT have redstone support! Redstone features will "
+                    + "be disabled in CraftBook.");
+        }
+    }
+
+    /**
+     * Conditionally registers a hook.
+     * 
+     * @param name
+     * @param priority
+     * @return where the hook was registered correctly
+     */
+    public boolean registerHook(String name, PluginListener.Priority priority) {
+        try {
+            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
+            etc.getLoader().addListener(hook, listener, this, priority);
+            return true;
+        } catch (IllegalArgumentException e) {
+            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
+            return false;
+        }
     }
 
     /**
