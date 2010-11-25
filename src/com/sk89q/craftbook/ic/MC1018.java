@@ -29,10 +29,12 @@ import com.sk89q.craftbook.*;
 public class MC1018 extends SISOFamilyIC {
     public boolean think(Vector pos, boolean input1, boolean oldState,
             SignText signText) {
+   	  signText.setLine1("FALLING EDGE");
         Signal in = new Signal(input1);
         Signal out = new Signal(oldState);
         if (in.not())
-                return out.invert();
+            out.invert();
+        signText.setLine3(out.text());
         return out.state();
     }
 }

@@ -31,17 +31,18 @@ import com.sk89q.craftbook.ic.Signal;
 public class MC1025 extends SISOFamilyIC {
     public boolean think(Vector pos, boolean input1, boolean oldState,
             SignText signText) {
+   	  signText.setLine1("CLOCK BIT");
         Signal in = new Signal(input1);
         Signal out = new Signal(oldState);
         if (in.state())
             out.set(isServerTimeOdd());
+        signText.setLine3(out.text());
         return out.state();
     }
 
     private boolean isServerTimeOdd() {
         long time = etc.getServer().getRelativeTime() % 2;
-        if (time < 0)
-                time += 2;
+        if (time < 0) time += 2;
         return (time == 1);
     }
 }

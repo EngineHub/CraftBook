@@ -49,4 +49,15 @@ public class Signal {
 	public boolean not() {
 		return !state;
 	}
+	
+	/**
+    * Returns the string representation.
+    * 
+    * @return 1 or 0.
+    */
+	public String text() {
+		if (state)
+			return "OUTPUT: 1";
+		return "OUTPUT: 0";
+	}
 }

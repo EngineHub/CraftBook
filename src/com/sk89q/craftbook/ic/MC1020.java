@@ -32,10 +32,12 @@ public class MC1020 extends SISOFamilyIC {
     
     public boolean think(Vector pos, boolean input1, boolean oldState,
             SignText signText) {
-        if (input1) {
-            return random.nextBoolean();
-        } else {
-            return oldState;
-        }
+   	  signText.setLine1("RANDOM BIT");
+   	  Signal in = new Signal(input1);
+        Signal out = new Signal(oldState);
+        if (in.state())
+            out.set(random.nextBoolean());
+        signText.setLine3(out.text());
+        return out.state();
     }
 }

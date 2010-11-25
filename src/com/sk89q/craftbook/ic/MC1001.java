@@ -29,7 +29,10 @@ import com.sk89q.craftbook.*;
 public class MC1001 extends SISOFamilyIC {
     public boolean think(Vector pos, boolean input1, boolean oldState,
             SignText signText) {
+   	  signText.setLine1("INVERTER");
         Signal out = new Signal(input1);
-        return out.invert();
+        out.invert();
+        signText.setLine3(out.text());
+        return out.state();
     }
 }

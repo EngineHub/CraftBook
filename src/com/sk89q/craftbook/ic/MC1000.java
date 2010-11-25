@@ -29,7 +29,9 @@ import com.sk89q.craftbook.*;
 public class MC1000 extends SISOFamilyIC {
     public boolean think(Vector pos, boolean input1, boolean oldState,
             SignText signText) {
+   	  signText.setLine1("REPEATER");
         Signal out = new Signal(input1);
+        signText.setLine3(out.text());
         return out.state();
     }
 }
