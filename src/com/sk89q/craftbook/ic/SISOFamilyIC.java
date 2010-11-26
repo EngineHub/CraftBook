@@ -19,8 +19,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
-
 /**
  * Single input, single output family of ICs.
  *
@@ -36,6 +34,5 @@ public abstract class SISOFamilyIC {
      * @param signText
      * @return
      */
-    public abstract boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText);
+    public abstract void think(ChipState chip);
 }

@@ -19,22 +19,15 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
-
 /**
  * Negative/Falling edge-triggered toggle flip flop.
  *
  * @author Shaun (sturmeh)
  */
 public class MC1018 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-   	  signText.setLine1("FALLING EDGE");
-        Signal in = new Signal(input1);
-        Signal out = new Signal(oldState);
-        if (in.not())
-            out.invert();
-        signText.setLine3(out.text());
-        return out.state();
-    }
+	public void think(ChipState chip) {
+		chip.title("FALLING EDGE");
+		if (chip.in(1).not())
+			chip.out(1).invert();
+	}
 }

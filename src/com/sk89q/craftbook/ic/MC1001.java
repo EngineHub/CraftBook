@@ -19,20 +19,14 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
-
 /**
  * Signal Inverter
  *
  * @author Shaun (sturmeh)
  */
 public class MC1001 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-   	  signText.setLine1("INVERTER");
-        Signal out = new Signal(input1);
-        out.invert();
-        signText.setLine3(out.text());
-        return out.state();
-    }
+	public void think(ChipState chip) {
+		chip.title("INVERTER");
+		chip.out(1).set(chip.in(1).not());
+	}
 }

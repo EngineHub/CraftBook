@@ -19,8 +19,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
-
 /**
  * Single input, 3 output family of ICs.
  *
@@ -30,15 +28,7 @@ public abstract class SI3OFamilyIC {
     /**
      * Get a new state to use.
      *
-     * @param pos
-     * @param input1
-     * @param oldState1
-     * @param oldState2
-     * @param oldState3
-     * @param signText
-     * @return 3 booleans or null
+     * @param chip - Chip state.
      */
-    public abstract boolean[] think(Vector pos, boolean input1,
-            boolean oldState1, boolean oldState2, boolean oldState3,
-            SignText signText);
+	public abstract void think(ChipState chip);
 }

@@ -15,11 +15,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
-
-import com.sk89q.craftbook.*;
 
 /**
  * Positive edge-triggered toggle flip flop.
@@ -27,14 +25,9 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1017 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-        signText.setLine1("RISING EDGE");
-        Signal in = new Signal(input1);
-        Signal out = new Signal(oldState);
-        if (in.state())
-           out.invert();
-        signText.setLine3(out.text());
-        return out.state();
-    }
+	public void think(ChipState chip) {
+		chip.title("RISING EDGE");
+		if (chip.in(1).is())
+			chip.out(1).invert();
+	}
 }

@@ -17,11 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.SISOFamilyIC;
-import com.sk89q.craftbook.ic.Signal;
 
 /**
  * 1-bit number based on modulus of server time.
@@ -29,16 +26,12 @@ import com.sk89q.craftbook.ic.Signal;
  * @author Shaun (sturmeh)
  */
 public class MC1025 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-   	  signText.setLine1("CLOCK BIT");
-        Signal in = new Signal(input1);
-        Signal out = new Signal(oldState);
-        if (in.state())
-            out.set(isServerTimeOdd());
-        signText.setLine3(out.text());
-        return out.state();
-    }
+	
+	public void think(ChipState chip) {
+		chip.title("CLOCK BIT");
+		if (chip.in(1).is())
+			chip.out(1).set(isServerTimeOdd());
+	}
 
     private boolean isServerTimeOdd() {
         long time = etc.getServer().getRelativeTime() % 2;

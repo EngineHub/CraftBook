@@ -26,7 +26,7 @@ public class Signal {
     * 
     * @return Current state.
     */
-	public boolean state() {
+	public boolean is() {
 		return state;
 	}
 	

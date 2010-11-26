@@ -638,14 +638,21 @@ public class CraftBookListener extends PluginListener {
                 SISOFamilyIC sisoIC = sisoICs.get(id);
 
                 if (sisoIC != null) {
-                    Vector backVec = getWallSignBack(x, y, z, 1);
+                    //Vector backVec = getWallSignBack(x, y, z, 1);
                     Vector outputVec = getWallSignBack(x, y, z, 2);
 
-                    boolean lastState = getRedstoneOutput(outputVec);
-                    boolean newState = sisoIC.think(new Vector(x, y, z), isOn, lastState, signText);
-
-                    if (newState != lastState) {
-                        setRedstoneOutput(outputVec, newState);
+                    Signal[] in = new Signal[1];
+                    in[0] = new Signal(isOn);
+                    
+                    Signal[] out = new Signal[1];
+                    out[0] = new Signal(getRedstoneOutput(outputVec));
+                    
+                    ChipState chip = new ChipState(new Vector(x, y, z), in, out, signText);
+                    
+                    sisoIC.think(chip);
+                    
+                    if (chip.modified()) {
+                        setRedstoneOutput(outputVec, chip.out(1).is());
                     }
 
                     if (signText.isChanged()) {
@@ -668,17 +675,31 @@ public class CraftBookListener extends PluginListener {
                     Vector output2Vec = getWallSignSide(x, y, z, 1).add(backShift);
                     Vector output3Vec = getWallSignSide(x, y, z, -1).add(backShift);
 
+                    Signal[] in = new Signal[1];
+                    in[0] = new Signal(isOn);
+                    
+                    Signal[] out = new Signal[1];
+                    out[0] = new Signal(getRedstoneOutput(output1Vec));
+                    out[1] = new Signal(getRedstoneOutput(output2Vec));
+                    out[2] = new Signal(getRedstoneOutput(output3Vec));
+                    
+                    ChipState chip = new ChipState(new Vector(x, y, z), in, out, signText);
+                    /*
                     boolean lastState1 = getRedstoneOutput(output1Vec);
                     boolean lastState2 = getRedstoneOutput(output2Vec);
                     boolean lastState3 = getRedstoneOutput(output3Vec);
                     boolean[] newStates = si30IC.think(new Vector(x, y, z), isOn,
                             lastState1, lastState2, lastState3, signText);
-
-                    if (newStates != null) {
+                     */
+                    
+                    // The most important part...
+                    si30IC.think(chip);
+                    
+                    if (chip.modified()) {
                         // May raise an exception!
-                        setRedstoneOutput(output1Vec, newStates[0]);
-                        setRedstoneOutput(output2Vec, newStates[1]);
-                        setRedstoneOutput(output3Vec, newStates[2]);
+                        setRedstoneOutput(output1Vec, chip.out(1).is());
+                        setRedstoneOutput(output2Vec, chip.out(2).is());
+                        setRedstoneOutput(output3Vec, chip.out(3).is());
                     }
 
                     if (signText.isChanged()) {

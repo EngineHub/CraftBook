@@ -15,12 +15,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
-
-import java.util.Map;
-import com.sk89q.craftbook.*;
 
 /**
  * Positive edge-triggered wireless receiver.
@@ -28,21 +25,20 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1111 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-        if (input1) {
-            String id = signText.getLine1();
-            if (id.length() > 0) {
-                Boolean out = MC1110.airwaves.get(id);
-                if (out == null) {
-                    return false;
-                } else {
-                    return out;
-                }
-            }
-            return false;
-        } else {
-            return oldState;
-        }
-    }
+	public void think(ChipState chip) {
+		chip.title("RECIEVER");
+		if (chip.in(1).is()) {
+			String id = chip.text().getLine3();
+			if (!id.isEmpty()) {
+				Boolean out = MC1110.airwaves.get(id);
+				if (out == null) {
+					chip.out(1).set(false);
+				} else {
+					chip.out(1).set(out);
+				}
+			} else {
+				chip.out(1).set(false);
+			}
+		}
+	}
 }

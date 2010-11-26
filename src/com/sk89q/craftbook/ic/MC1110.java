@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
@@ -28,18 +28,19 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1110 extends SISOFamilyIC {
-    public static Map<String,Boolean> airwaves =
-            new HistoryHashMap<String,Boolean>(100);
+	public static Map<String,Boolean> airwaves =
+		new HistoryHashMap<String,Boolean>(100);
 
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-        String id = signText.getLine1();
-        
-        if (id.length() > 0) {
-            airwaves.put(id, input1);
-            return true;
-        }
-
-        return false;
-    }
+	public void think(ChipState chip) {
+		chip.title("TRANSMITTER");
+		
+		String id = chip.text().getLine3();
+		
+		if (!id.isEmpty()) {
+			airwaves.put(id, chip.in(1).is());
+			chip.out(1).set(true);
+		} else {
+			chip.out(1).set(false);
+		}
+	}
 }

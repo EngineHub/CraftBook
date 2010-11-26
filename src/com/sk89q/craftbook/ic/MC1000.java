@@ -19,19 +19,14 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
-
 /**
  * Signal Repeater.
  *
  * @author Shaun (sturmeh)
  */
 public class MC1000 extends SISOFamilyIC {
-    public boolean think(Vector pos, boolean input1, boolean oldState,
-            SignText signText) {
-   	  signText.setLine1("REPEATER");
-        Signal out = new Signal(input1);
-        signText.setLine3(out.text());
-        return out.state();
-    }
+	public void think(ChipState chip) {
+		chip.title("REPEATER");
+		chip.out(1).set(chip.in(1).is());
+	}
 }

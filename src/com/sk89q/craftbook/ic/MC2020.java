@@ -15,12 +15,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
 import java.util.Random;
-import com.sk89q.craftbook.*;
 
 /**
  * 3-bit random number generator.
@@ -28,19 +27,13 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC2020 extends SI3OFamilyIC {
-    private static Random random = new Random();
+	private static Random random = new Random();
 
-    public boolean[] think(Vector pos, boolean input1,
-            boolean oldState1, boolean oldState2, boolean oldState3,
-            SignText signText) {
-        if (input1) {
-            return new boolean[]{
-                random.nextBoolean(),
-                random.nextBoolean(),
-                random.nextBoolean()
-            };
-        } else {
-            return null;
-        }
-    }
+	public void think(ChipState chip) {
+		if (chip.in(1).is()) {
+			chip.out(1).set(random.nextBoolean());
+			chip.out(2).set(random.nextBoolean());
+			chip.out(3).set(random.nextBoolean());
+		}
+	}
 }
