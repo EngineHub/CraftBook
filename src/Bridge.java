@@ -241,7 +241,8 @@ public class Bridge {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
-            if (t == 0) {
+            if (t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
+                     || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA) {
                 bag.setBlockID(p, type);
             } else if (t != type) {
                 break;
