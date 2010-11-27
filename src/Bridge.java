@@ -191,7 +191,12 @@ public class Bridge {
         }
 
         if (toOpen == null) {
-            toOpen = CraftBook.getBlockID(pt.add(change).add(0, centerShift, 0)) != 0;
+            int existing = CraftBook.getBlockID(pt.add(change).add(0, centerShift, 0));
+            toOpen = existing != 0
+                    && existing != BlockType.WATER
+                     && existing != BlockType.STATIONARY_WATER
+                     && existing != BlockType.LAVA
+                     && existing != BlockType.STATIONARY_LAVA;
         }
 
         if (toOpen) {
