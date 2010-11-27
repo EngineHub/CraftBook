@@ -544,6 +544,7 @@ public class CraftBookListener extends PluginListener {
         int z = block.getZ();
 
         int type = CraftBook.getBlockID(x, y, z);
+        int above = CraftBook.getBlockID(x, y + 1, z);
 
         // When this hook has been called, the level in the world has not
         // yet been updated, so we're going to do this very ugly thing of
@@ -615,6 +616,12 @@ public class CraftBookListener extends PluginListener {
                     handleDirectWireInput(new Vector(x, y, z + 1), isOn);
                 }
 
+                // Pumpkins can be triggered from below
+                if (redstonePumpkins
+                    && (above == BlockType.PUMPKIN || above == BlockType.JACKOLANTERN)) {
+                    handleDirectWireInput(new Vector(x, y + 1, z), isOn);
+                }
+
                 return newLevel;
             }
 
@@ -625,6 +632,12 @@ public class CraftBookListener extends PluginListener {
             handleDirectWireInput(new Vector(x + 1, y, z), isOn);
             handleDirectWireInput(new Vector(x, y, z - 1), isOn);
             handleDirectWireInput(new Vector(x, y, z + 1), isOn);
+
+            // Pumpkins can be triggered from below
+            if (redstonePumpkins
+                && (above == BlockType.PUMPKIN || above == BlockType.JACKOLANTERN)) {
+                handleDirectWireInput(new Vector(x, y + 1, z), isOn);
+            }
 
             return newLevel;
         } finally {
@@ -805,7 +818,7 @@ public class CraftBookListener extends PluginListener {
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
 
-        /*// Check block above
+        // Check block above
         int above = CraftBook.getBlockID(x, y + 1, z);
         temp = isRedstoneHigh(new Vector(x, y + 1, z), above, true);
         if (temp != null) {
@@ -825,7 +838,7 @@ public class CraftBookListener extends PluginListener {
             } else {
                 result = false;
             }
-        }*/
+        }
 
         int north = CraftBook.getBlockID(x - 1, y, z);
         int south = CraftBook.getBlockID(x + 1, y, z);
