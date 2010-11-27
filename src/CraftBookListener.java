@@ -163,7 +163,11 @@ public class CraftBookListener extends PluginListener {
      * Loads CraftBooks's configuration from file.
      */
     public void loadConfiguration() {
-        properties.load();
+        try {
+            properties.load();
+        } catch (IOException e) {
+            logger.warning("Failed to load craftbook.properties: " + e.getMessage());
+        }
 
         maxToggleAreaSize = Math.max(0, properties.getInt("toggle-area-max-size", 5000));
 
