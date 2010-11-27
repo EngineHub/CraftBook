@@ -19,6 +19,7 @@
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -523,84 +524,107 @@ public class CraftBookListener extends PluginListener {
     * @param newLevel the new current
     */
     public int onRedstoneChange(Block block, int oldLevel, int newLevel) {
-        int x = block.getX();
-        int y = block.getY();
-        int z = block.getZ();
+        // Pre-check
+        if (!redstoneGates && !redstoneBridges && !redstonePumpkins && !redstoneICs) {
+            return newLevel;
+        }
 
         boolean wasOn = oldLevel >= 1;
         boolean isOn = newLevel >= 1;
         boolean wasChange = wasOn != isOn;
 
+        // For efficiency reasons, we're only going to consider changes between
+        // off and on state, and ignore simple current changes (i.e. 15->13)
         if (!wasChange) {
             return newLevel;
         }
 
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
+
         int type = CraftBook.getBlockID(x, y, z);
 
-        // Fake block data
-        if (type == BlockType.LEVER) {
-            CraftBook.fakeBlockData(x, y, z,
-                    newLevel > 0
-                        ? CraftBook.getBlockData(x, y, z) | 0x8
-                        : CraftBook.getBlockData(x, y, z) & 0x7);
-        } else if (type == BlockType.STONE_PRESSURE_PLATE) {
-            CraftBook.fakeBlockData(x, y, z,
-                    newLevel > 0
-                        ? CraftBook.getBlockData(x, y, z) | 0x1
-                        : CraftBook.getBlockData(x, y, z) & 0x14);
-        } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
-            CraftBook.fakeBlockData(x, y, z,
-                    newLevel > 0
-                        ? CraftBook.getBlockData(x, y, z) | 0x1
-                        : CraftBook.getBlockData(x, y, z) & 0x14);
-        } else if (type == BlockType.STONE_BUTTON) {
-            CraftBook.fakeBlockData(x, y, z,
-                    newLevel > 0
-                        ? CraftBook.getBlockData(x, y, z) | 0x8
-                        : CraftBook.getBlockData(x, y, z) & 0x7);
-        } else if (type == BlockType.REDSTONE_WIRE) {
-            CraftBook.fakeBlockData(x, y, z, newLevel);
-        }
-
+        // When this hook has been called, the level in the world has not
+        // yet been updated, so we're going to do this very ugly thing of
+        // faking the value with the new one whenever the data value of this
+        // block is requested -- it is quite ugly
         try {
-            // Pre-check for efficiency
-            if (redstoneGates || redstoneBridges || redstonePumpkins) {
-                if (wasOn != isOn) {
-                    // Can power nearby blocks
-                    for (int cx = x - 1; cx <= x + 1; cx++) {
-                        for (int cy = y - 1; cy <= y + 1; cy++) {
-                            for (int cz = z - 1; cz <= z + 1; cz++) {
-                                if (cx != x || cy != y || cz != z) {
-                                    try {
-                                        testRedstoneInput(cx, cy, cz, isOn);
-                                    } catch (BlockBagException e) { }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            if (type == BlockType.LEVER) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x8
+                            : CraftBook.getBlockData(x, y, z) & 0x7);
+            } else if (type == BlockType.STONE_PRESSURE_PLATE) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x1
+                            : CraftBook.getBlockData(x, y, z) & 0x14);
+            } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x1
+                            : CraftBook.getBlockData(x, y, z) & 0x14);
+            } else if (type == BlockType.STONE_BUTTON) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x8
+                            : CraftBook.getBlockData(x, y, z) & 0x7);
+            } else if (type == BlockType.REDSTONE_WIRE) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z, newLevel);
 
-            if (redstoneICs) {
                 int westSide = CraftBook.getBlockID(x, y, z + 1);
+                int westSideAbove = CraftBook.getBlockID(x, y + 1, z + 1);
+                int westSideBelow = CraftBook.getBlockID(x, y - 1, z + 1);
                 int eastSide = CraftBook.getBlockID(x, y, z - 1);
+                int eastSideAbove = CraftBook.getBlockID(x, y + 1, z - 1);
+                int eastSideBelow = CraftBook.getBlockID(x, y - 1, z - 1);
+
                 int northSide = CraftBook.getBlockID(x - 1, y, z);
+                int northSideAbove = CraftBook.getBlockID(x - 1, y + 1, z);
+                int northSideBelow = CraftBook.getBlockID(x - 1, y - 1, z);
                 int southSide = CraftBook.getBlockID(x + 1, y, z);
+                int southSideAbove = CraftBook.getBlockID(x + 1, y + 1, z);
+                int southSideBelow = CraftBook.getBlockID(x + 1, y - 1, z);
 
-                if (westSide != BlockType.REDSTONE_WIRE
-                        && eastSide != BlockType.REDSTONE_WIRE) {
+                // Make sure that the wire points to only this block
+                if (!BlockType.isRedstoneBlock(westSide)
+                        && !BlockType.isRedstoneBlock(eastSide)
+                        && !BlockType.isRedstoneBlock(westSideAbove)
+                        && !BlockType.isRedstoneBlock(eastSideAbove)
+                        && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
+                        && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
                     // Possible blocks north / south
-                    handleWireInput(x - 1, y, z, isOn);
-                    handleWireInput(x + 1, y, z, isOn);
+                    handleDirectWireInput(new Vector(x - 1, y, z), isOn);
+                    handleDirectWireInput(new Vector(x + 1, y, z), isOn);
                 }
 
-                if (northSide != BlockType.REDSTONE_WIRE
-                        && southSide != BlockType.REDSTONE_WIRE) {
+                if (!BlockType.isRedstoneBlock(northSide)
+                        && !BlockType.isRedstoneBlock(southSide)
+                        && !BlockType.isRedstoneBlock(northSideAbove)
+                        && !BlockType.isRedstoneBlock(southSideAbove)
+                        && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
+                        && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
                     // Possible blocks west / east
-                    handleWireInput(x, y, z - 1, isOn);
-                    handleWireInput(x, y, z + 1, isOn);
+                    handleDirectWireInput(new Vector(x, y, z - 1), isOn);
+                    handleDirectWireInput(new Vector(x, y, z + 1), isOn);
                 }
+
+                return newLevel;
             }
+
+            // For redstone wires, the code already existed this method
+            // Non-wire blocks proceed
+
+            handleDirectWireInput(new Vector(x - 1, y, z), isOn);
+            handleDirectWireInput(new Vector(x + 1, y, z), isOn);
+            handleDirectWireInput(new Vector(x, y, z - 1), isOn);
+            handleDirectWireInput(new Vector(x, y, z + 1), isOn);
 
             return newLevel;
         } finally {
@@ -609,18 +633,32 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
-     * Handles the wire input at a block.
+     * Handles the wire input at a block in the case when the wire is
+     * directly connected to the block in question only.
+     *
      * @param x
      * @param y
      * @param z
      * @param isOn
      */
-    public void handleWireInput(int x, int y, int z, boolean isOn) {
-        int type = CraftBook.getBlockID(x, y, z);
+    public void handleDirectWireInput(Vector pt, boolean isOn) {
+        int type = CraftBook.getBlockID(pt);
 
-        // ICs
-        if (type == BlockType.WALL_SIGN) {
-            ComplexBlock cblock = etc.getServer().getComplexBlock(x, y, z);
+        // Redstone pumpkins
+        if (redstonePumpkins
+                && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
+            Boolean useOn = testAnyRedstoneInput(pt);
+
+            if (useOn != null && useOn) {
+                CraftBook.setBlockID(pt, BlockType.JACKOLANTERN);
+            } else if (useOn != null) {
+                CraftBook.setBlockID(pt, BlockType.PUMPKIN);
+            }
+        // Sign gates
+        } else if (type == BlockType.WALL_SIGN
+                || type == BlockType.SIGN_POST) {
+            ComplexBlock cblock = etc.getServer().getComplexBlock(
+                    pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
 
             if (!(cblock instanceof Sign)) {
                 return;
@@ -630,7 +668,45 @@ public class CraftBookListener extends PluginListener {
             String line2 = sign.getText(1);
             int len = line2.length();
 
-            if (line2.substring(0, 3).equals("[MC") &&
+            // Gate
+            if (gateSwitchModule != null && redstoneGates
+                    && line2.equalsIgnoreCase("[Gate]")) {
+                BlockBag bag = getBlockBag(pt);
+                bag.addSourcePosition(pt);
+
+                // A gate may toggle or not
+                try {
+                    gateSwitchModule.setGateState(pt, bag, isOn);
+                } catch (BlockBagException e) {
+                }
+
+            // Bridges
+            } else if (bridgeModule != null
+                    && redstoneBridges
+                    && type == BlockType.SIGN_POST
+                    && line2.equalsIgnoreCase("[Bridge]")) {
+                int data = CraftBook.getBlockData(pt);
+
+                try {
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+
+                    if (data == 0x0) {
+                        bridgeModule.setBridgeState(pt, Bridge.Direction.EAST, bag, !isOn);
+                    } else if (data == 0x4) {
+                        bridgeModule.setBridgeState(pt, Bridge.Direction.SOUTH, bag, !isOn);
+                    } else if (data == 0x8) {
+                        bridgeModule.setBridgeState(pt, Bridge.Direction.WEST, bag, !isOn);
+                    } else if (data == 0xC) {
+                        bridgeModule.setBridgeState(pt, Bridge.Direction.NORTH, bag, !isOn);
+                    }
+                } catch (OperationException e) {
+                } catch (BlockBagException e) {
+                }
+            // ICs
+            } else if (redstoneICs
+                    && type == BlockType.WALL_SIGN
+                    && line2.substring(0, 3).equals("[MC") &&
                     line2.charAt(len - 1) == ']') {
                 String id = line2.substring(1, len - 1);
 
@@ -642,8 +718,7 @@ public class CraftBookListener extends PluginListener {
                 SISOFamilyIC sisoIC = sisoICs.get(id);
 
                 if (sisoIC != null) {
-                    //Vector backVec = getWallSignBack(x, y, z, 1);
-                    Vector outputVec = getWallSignBack(x, y, z, 2);
+                    Vector outputVec = getWallSignBack(pt, 2);
 
                     Signal[] in = new Signal[1];
                     in[0] = new Signal(isOn);
@@ -651,7 +726,7 @@ public class CraftBookListener extends PluginListener {
                     Signal[] out = new Signal[1];
                     out[0] = new Signal(getRedstoneOutput(outputVec));
                     
-                    ChipState chip = new ChipState(new Vector(x, y, z), in, out, signText);
+                    ChipState chip = new ChipState(pt, in, out, signText);
                     
                     sisoIC.think(chip);
                     
@@ -673,11 +748,11 @@ public class CraftBookListener extends PluginListener {
                 SI3OFamilyIC si30IC = si3oICs.get(id);
 
                 if (si30IC != null) {
-                    Vector backVec = getWallSignBack(x, y, z, 1);
-                    Vector backShift = backVec.subtract(new Vector(x, y, z));
-                    Vector output1Vec = getWallSignBack(x, y, z, 2);
-                    Vector output2Vec = getWallSignSide(x, y, z, 1).add(backShift);
-                    Vector output3Vec = getWallSignSide(x, y, z, -1).add(backShift);
+                    Vector backVec = getWallSignBack(pt, 1);
+                    Vector backShift = backVec.subtract(pt);
+                    Vector output1Vec = getWallSignBack(pt, 2);
+                    Vector output2Vec = getWallSignSide(pt, 1).add(backShift);
+                    Vector output3Vec = getWallSignSide(pt, -1).add(backShift);
 
                     Signal[] in = new Signal[1];
                     in[0] = new Signal(isOn);
@@ -687,20 +762,12 @@ public class CraftBookListener extends PluginListener {
                     out[1] = new Signal(getRedstoneOutput(output2Vec));
                     out[2] = new Signal(getRedstoneOutput(output3Vec));
                     
-                    ChipState chip = new ChipState(new Vector(x, y, z), in, out, signText);
-                    /*
-                    boolean lastState1 = getRedstoneOutput(output1Vec);
-                    boolean lastState2 = getRedstoneOutput(output2Vec);
-                    boolean lastState3 = getRedstoneOutput(output3Vec);
-                    boolean[] newStates = si30IC.think(new Vector(x, y, z), isOn,
-                            lastState1, lastState2, lastState3, signText);
-                     */
+                    ChipState chip = new ChipState(pt, in, out, signText);
                     
                     // The most important part...
                     si30IC.think(chip);
                     
                     if (chip.modified()) {
-                        // May raise an exception!
                         setRedstoneOutput(output1Vec, chip.out(1).is());
                         setRedstoneOutput(output2Vec, chip.out(2).is());
                         setRedstoneOutput(output3Vec, chip.out(3).is());
@@ -722,6 +789,200 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
+     * Attempts to detect redstone input. If there are many inputs to one
+     * block, only one of the inputs has to be high.
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    private Boolean testAnyRedstoneInput(Vector pt) {
+        Boolean result = null;
+        Boolean temp = null;
+
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+
+        /*// Check block above
+        int above = CraftBook.getBlockID(x, y + 1, z);
+        temp = isRedstoneHigh(new Vector(x, y + 1, z), above, true);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        // Check block below
+        int below = CraftBook.getBlockID(x, y - 1, z);
+        temp = isRedstoneHigh(new Vector(x, y - 1, z), below, true);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }*/
+
+        int north = CraftBook.getBlockID(x - 1, y, z);
+        int south = CraftBook.getBlockID(x + 1, y, z);
+        int west = CraftBook.getBlockID(x, y, z + 1);
+        int east = CraftBook.getBlockID(x, y, z - 1);
+
+        // For wires that lead up to only this block
+        if (north == BlockType.REDSTONE_WIRE) {
+            temp = isRedstoneWireHigh(new Vector(x - 1, y, z),
+                                      new Vector(x - 1, y, z - 1),
+                                      new Vector(x - 1, y, z + 1));
+            if (temp != null) {
+                if (temp == true) {
+                    return true;
+                } else {
+                    result = false;
+                }
+            }
+        }
+
+        if (south == BlockType.REDSTONE_WIRE) {
+            temp = isRedstoneWireHigh(new Vector(x + 1, y, z),
+                                      new Vector(x + 1, y, z - 1),
+                                      new Vector(x + 1, y, z + 1));
+            if (temp != null) {
+                if (temp == true) {
+                    return true;
+                } else {
+                    result = false;
+                }
+            }
+        }
+
+        if (west == BlockType.REDSTONE_WIRE) {
+            temp = isRedstoneWireHigh(new Vector(x, y, z + 1),
+                                      new Vector(x + 1, y, z + 1),
+                                      new Vector(x - 1, y, z + 1));
+            if (temp != null) {
+                if (temp == true) {
+                    return true;
+                } else {
+                    result = false;
+                }
+            }
+        }
+
+        if (east == BlockType.REDSTONE_WIRE) {
+            temp = isRedstoneWireHigh(new Vector(x, y, z - 1),
+                                      new Vector(x + 1, y, z - 1),
+                                      new Vector(x - 1, y, z - 1));
+            if (temp != null) {
+                if (temp == true) {
+                    return true;
+                } else {
+                    result = false;
+                }
+            }
+        }
+
+        // The sides of the block
+        temp = isRedstoneHigh(new Vector(x - 1, y, z), north, false);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        temp = isRedstoneHigh(new Vector(x + 1, y, z), south, false);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+        
+        temp = isRedstoneHigh(new Vector(x, y, z + 1), west, false);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        temp = isRedstoneHigh(new Vector(x, y, z - 1), east, false);
+        if (temp != null) {
+            if (temp == true) {
+                return true;
+            } else {
+                result = false;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks to see whether a wire is high and directed.
+     * 
+     * @param pt
+     * @param sidePt1
+     * @param sidePt2
+     * @return
+     */
+    private Boolean isRedstoneWireHigh(Vector pt, Vector sidePt1, Vector sidePt2) {
+        int side1 = CraftBook.getBlockID(sidePt1);
+        int side1Above = CraftBook.getBlockID(sidePt1.add(0, 1, 0));
+        int side1Below = CraftBook.getBlockID(sidePt1.add(0, -1, 0));
+        int side2 = CraftBook.getBlockID(sidePt2);
+        int side2Above = CraftBook.getBlockID(sidePt2.add(0, 1, 0));
+        int side2Below = CraftBook.getBlockID(sidePt2.add(0, -1, 0));
+
+        if (!BlockType.isRedstoneBlock(side1)
+                && !BlockType.isRedstoneBlock(side1Above)
+                && (!BlockType.isRedstoneBlock(side1Below) || side1 != 0)
+                && !BlockType.isRedstoneBlock(side2)
+                && !BlockType.isRedstoneBlock(side2Above)
+                && (!BlockType.isRedstoneBlock(side2Below) || side2 != 0)) {
+            return CraftBook.getBlockData(pt) > 0;
+        }
+
+        return null;
+    }
+
+    /**
+     * Tests to see if a block is high, possibly including redstone wires. If
+     * there was no redstone at that location, null will be returned.
+     * 
+     * @param pt
+     * @param type
+     * @param considerWires
+     * @return
+     */
+    private Boolean isRedstoneHigh(Vector pt, int type, boolean considerWires) {
+        if (type == BlockType.LEVER) {
+            return (CraftBook.getBlockData(pt) & 0x8) == 0x8;
+        } else if (type == BlockType.STONE_PRESSURE_PLATE) {
+            return (CraftBook.getBlockData(pt) & 0x1) == 0x1;
+        } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
+            return (CraftBook.getBlockData(pt) & 0x1) == 0x1;
+        } else if (type == BlockType.REDSTONE_TORCH_ON) {
+            return true;
+        } else if (type == BlockType.REDSTONE_TORCH_OFF) {
+            return false;
+        } else if (type == BlockType.STONE_BUTTON) {
+            return (CraftBook.getBlockData(pt) & 0x8) == 0x8;
+        } else if (considerWires && type == BlockType.REDSTONE_WIRE) {
+            return CraftBook.getBlockData(pt) > 0;
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the output state of a redstone IC at a location.
      *
      * @param pos
@@ -737,7 +998,7 @@ public class CraftBookListener extends PluginListener {
 
     /**
      * Sets the output state of a redstone IC at a location.
-     * 
+     *
      * @param pos
      * @param state
      */
@@ -745,7 +1006,7 @@ public class CraftBookListener extends PluginListener {
         if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
             int data = CraftBook.getBlockData(pos);
             int newData = data & 0x7;
-            
+
             if (!state) {
                 newData = data & 0x7;
             } else {
@@ -758,246 +1019,6 @@ public class CraftBookListener extends PluginListener {
                         pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), newData);
             }
         }
-    }
-
-    /**
-     * Test a block as a redstone input block.
-     * 
-     * @param x
-     * @param y
-     * @param z
-     * @param isOn
-     * @throws BlockBagException
-     */
-    private void testRedstoneInput(int x, int y, int z, boolean isOn)
-        throws BlockBagException {
-        int type = CraftBook.getBlockID(x, y, z);
-
-        // Sign triggers
-        if (type == BlockType.WALL_SIGN || type == BlockType.SIGN_POST) {
-            ComplexBlock cblock = etc.getServer().getComplexBlock(x, y, z);
-
-            // Always have to do this check
-            if (!(cblock instanceof Sign)) return;
-
-            Vector pt = new Vector(x, y, z);
-            Sign sign = (Sign)cblock;
-            String line2 = sign.getText(1);
-
-            // Gate
-            if (gateSwitchModule != null && redstoneGates
-                    && line2.equalsIgnoreCase("[Gate]")) {
-                BlockBag bag = getBlockBag(pt);
-                bag.addSourcePosition(pt);
-
-                // A gate may toggle or not
-                gateSwitchModule.setGateState(pt, bag, isOn);
-
-            // Bridges
-            } else if (bridgeModule != null
-                    && redstoneBridges
-                    && type == BlockType.SIGN_POST
-                    && line2.equalsIgnoreCase("[Bridge]")) {
-                int data = CraftBook.getBlockData(x, y, z);
-
-                try {
-                    BlockBag bag = getBlockBag(pt);
-                    bag.addSourcePosition(pt);
-
-                    if (data == 0x0) {
-                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.EAST, bag, !isOn);
-                    } else if (data == 0x4) {
-                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.SOUTH, bag, !isOn);
-                    } else if (data == 0x8) {
-                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.WEST, bag, !isOn);
-                    } else if (data == 0xC) {
-                        bridgeModule.setBridgeState(new Vector(x, y, z), Bridge.Direction.NORTH, bag, !isOn);
-                    }
-                } catch (OperationException e) {
-                }
-            }
-        // Redstone pumpkins
-        } else if (redstonePumpkins
-                && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
-            Boolean useOn = testSKDRedstoneInput(x, y, z);
-
-            if (useOn != null && useOn) {
-                CraftBook.setBlockID(x, y, z, BlockType.JACKOLANTERN);
-            } else if (useOn != null) {
-                CraftBook.setBlockID(x, y, z, BlockType.PUMPKIN);
-            }
-        }
-    }
-
-    /**
-     * Attempts to detect redstone input.
-     * 
-     * @param x
-     * @param y
-     * @param z
-     * @return
-     */
-    private Boolean testSKDRedstoneInput(int x, int y, int z) {
-        Boolean result = null;
-        Boolean temp = null;
-
-        // Check block above
-        int above = CraftBook.getBlockID(x, y + 1, z);
-        temp = testNonWireRedstoneTrigger(x, y + 1, z, above);
-        if (temp != null) {
-            if (temp == true) {
-                return true;
-            } else {
-                result = false;
-            }
-        }
-
-        // Check block below
-        int below = CraftBook.getBlockID(x, y - 1, z);
-        temp = testNonWireRedstoneTrigger(x, y - 1, z, below);
-        if (temp != null) {
-            if (temp == true) {
-                return true;
-            } else {
-                result = false;
-            }
-        }
-
-        int north = CraftBook.getBlockID(x - 1, y, z);
-        int south = CraftBook.getBlockID(x + 1, y, z);
-        int west = CraftBook.getBlockID(x, y, z + 1);
-        int east = CraftBook.getBlockID(x, y, z - 1);
-
-        // For wires that lead up to only this block
-        if (north == BlockType.REDSTONE_WIRE) {
-            int side1 = CraftBook.getBlockID(x - 1, y, z - 1);
-            int side2 = CraftBook.getBlockID(x - 1, y, z + 1);
-
-            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
-                if (CraftBook.getBlockData(x - 1, y, z) > 0) {
-                    return true;
-                }
-                result = false;
-            }
-        }
-
-        if (south == BlockType.REDSTONE_WIRE) {
-            int side1 = CraftBook.getBlockID(x + 1, y, z - 1);
-            int side2 = CraftBook.getBlockID(x + 1, y, z + 1);
-
-            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
-                if (CraftBook.getBlockData(x + 1, y, z) > 0) {
-                    return true;
-                }
-            }
-            result = false;
-        }
-
-        if (west == BlockType.REDSTONE_WIRE) {
-            int side1 = CraftBook.getBlockID(x + 1, y, z + 1);
-            int side2 = CraftBook.getBlockID(x - 1, y, z + 1);
-
-            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
-                if (CraftBook.getBlockData(x, y, z + 1) > 0) {
-                    return true;
-                }
-            }
-            result = false;
-        }
-
-        if (east == BlockType.REDSTONE_WIRE) {
-            int side1 = CraftBook.getBlockID(x + 1, y, z - 1);
-            int side2 = CraftBook.getBlockID(x - 1, y, z - 1);
-
-            if (!BlockType.isRedstoneBlock(side1) && !BlockType.isRedstoneBlock(side2)) {
-
-                if (CraftBook.getBlockData(x, y, z - 1) > 0) {
-                    return true;
-                }
-            }
-            result = false;
-        }
-
-        // The sides of the block
-        temp = testNonWireRedstoneTrigger(x - 1, y, z, north);
-        if (temp != null) {
-            if (temp == true) {
-                return true;
-            } else {
-                result = false;
-            }
-        }
-
-        temp = testNonWireRedstoneTrigger(x + 1, y, z, south);
-        if (temp != null) {
-            if (temp == true) {
-                return true;
-            } else {
-                result = false;
-            }
-        }
-        
-        temp = testNonWireRedstoneTrigger(x, y, z + 1, west);
-        if (temp != null) {
-            if (temp == true) {
-                return true;
-            } else {
-                result = false;
-            }
-        }
-
-        temp = testNonWireRedstoneTrigger(x, y, z - 1, east);
-        if (temp != null) {
-            if (temp == true) {
-                return true;
-            } else {
-                result = false;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Tests a redstone trigger (everything but wire) to see if it's
-     * indicatign a true. May return a null if there was no data.
-     * 
-     * @param x
-     * @param y
-     * @param z
-     * @param type
-     * @return
-     */
-    private Boolean testNonWireRedstoneTrigger(int x, int y, int z, int type) {
-        Boolean result = null;
-        
-        if (type == BlockType.LEVER) {
-            if ((CraftBook.getBlockData(x, y, z) & 0x8) == 0x8) {
-                return true;
-            }
-            result = false;
-        } else if (type == BlockType.STONE_PRESSURE_PLATE) {
-            if ((CraftBook.getBlockData(x, y, z) & 0x1) == 0x1) {
-                return true;
-            }
-            result = false;
-        } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
-            if ((CraftBook.getBlockData(x, y, z) & 0x1) == 0x1) {
-                return true;
-            }
-            result = false;
-        } else if (type == BlockType.REDSTONE_TORCH_ON) {
-            return true;
-        } else if (type == BlockType.REDSTONE_TORCH_OFF) {
-            result = false;
-        } else if (type == BlockType.STONE_BUTTON) {
-            if ((CraftBook.getBlockData(x, y, z) & 0x8) == 0x8) {
-                return true;
-            }
-            result = false;
-        }
-
-        return result;
     }
 
     /**
@@ -1150,14 +1171,17 @@ public class CraftBookListener extends PluginListener {
      * @param multiplier
      * @return
      */
-    private static Vector getWallSignBack(int x, int y, int z, int multiplier) {
+    private static Vector getWallSignBack(Vector pt, int multiplier) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
         int data = CraftBook.getBlockData(x, y, z);
         if (data == 0x2) { // East
             return new Vector(x, y, z + multiplier);
         } else if (data == 0x3) { // West
             return new Vector(x, y, z - multiplier);
         } else if (data == 0x4) { // North
-            return new Vector(x + multiplier, y, z );
+            return new Vector(x + multiplier, y, z);
         } else {
             return new Vector(x - multiplier, y, z);
         }
@@ -1172,7 +1196,10 @@ public class CraftBookListener extends PluginListener {
      * @param multiplier
      * @return
      */
-    private static Vector getWallSignSide(int x, int y, int z, int multiplier) {
+    private static Vector getWallSignSide(Vector pt, int multiplier) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
         int data = CraftBook.getBlockData(x, y, z);
         if (data == 0x2) { // East
             return new Vector(x + multiplier, y, z );
