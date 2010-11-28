@@ -25,20 +25,18 @@ package com.sk89q.craftbook.ic;
  * @author sk89q
  */
 public class MC1111 extends SISOFamilyIC {
-	public void think(ChipState chip) {
-		chip.title("RECIEVER");
-		if (chip.in(1).is()) {
-			String id = chip.text().getLine3();
-			if (!id.isEmpty()) {
-				Boolean out = MC1110.airwaves.get(id);
-				if (out == null) {
-					chip.out(1).set(false);
-				} else {
-					chip.out(1).set(out);
-				}
-			} else {
-				chip.out(1).set(false);
-			}
-		}
-	}
+    public void think(ChipState chip) {
+        chip.title("RECIEVER");
+        String id = chip.text().getLine3();
+        if (!id.isEmpty()) {
+            Boolean out = MC1110.airwaves.get(id);
+            if (out == null) {
+                chip.out(1).set(false);
+            } else {
+                chip.out(1).set(out);
+            }
+        } else {
+            chip.out(1).set(false);
+        }
+    }
 }

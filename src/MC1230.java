@@ -17,30 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.ic;
-
-import java.util.Map;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.SISOFamilyIC;
 
 /**
- * Wireless transmitter.
+ * Takes in a clock input, and outputs whether the time is day or night.
  *
- * @author sk89q
+ * @author Shaun (sturmeh)
  */
-public class MC1110 extends SISOFamilyIC {
-    public static Map<String,Boolean> airwaves =
-        new HistoryHashMap<String,Boolean>(100);
+public class MC1230 extends SISOFamilyIC {
 
     public void think(ChipState chip) {
-        chip.title("TRANSMITTER");
+        chip.title("IS IT DAY?");
 
-        String id = chip.text().getLine3();
+        Long specific = etc.getServer().getRelativeTime();
 
-        if (!id.isEmpty()) {
-            airwaves.put(id, chip.in(1).is());
+        if (specific < 13000l)
             chip.out(1).set(true);
-        } else {
+        else 
             chip.out(1).set(false);
-        }
     }
 }

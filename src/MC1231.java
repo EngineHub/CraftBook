@@ -17,30 +17,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.ic;
-
-import java.util.Map;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.SISOFamilyIC;
 
 /**
- * Wireless transmitter.
+ * Sets the server time to day or night, repeats the signal.
  *
- * @author sk89q
+ * @author Shaun (sturmeh)
  */
-public class MC1110 extends SISOFamilyIC {
-    public static Map<String,Boolean> airwaves =
-        new HistoryHashMap<String,Boolean>(100);
+public class MC1231 extends SISOFamilyIC {
 
     public void think(ChipState chip) {
-        chip.title("TRANSMITTER");
+        chip.title("TIME CONTROL");
 
-        String id = chip.text().getLine3();
+        Long specific;
 
-        if (!id.isEmpty()) {
-            airwaves.put(id, chip.in(1).is());
-            chip.out(1).set(true);
-        } else {
-            chip.out(1).set(false);
-        }
+        if (chip.in(1).is())
+            specific = 0l;
+        else 
+            specific = 13000l;
+
+        etc.getServer().setRelativeTime(specific);
+
+        chip.out(1).set(chip.in(1).is());
     }
 }

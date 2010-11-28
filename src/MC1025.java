@@ -26,12 +26,12 @@ import com.sk89q.craftbook.ic.SISOFamilyIC;
  * @author Shaun (sturmeh)
  */
 public class MC1025 extends SISOFamilyIC {
-	
-	public void think(ChipState chip) {
-		chip.title("CLOCK BIT");
-		if (chip.in(1).is())
-			chip.out(1).set(isServerTimeOdd());
-	}
+
+    public void think(ChipState chip) {
+        chip.title("CLOCK BIT");
+        if (chip.in(1).is())
+            chip.out(1).set(isServerTimeOdd());
+    }
 
     private boolean isServerTimeOdd() {
         long time = etc.getServer().getRelativeTime() % 2;
