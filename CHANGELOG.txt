@@ -1,3 +1,35 @@
+1.2:
+- Water and lava can now be used reliably as ingredients. Specify
+    moving water/lava, not the stationary water/lava.
+- Rewrote redstone triggering for bridges and gates. They will now not
+    trigger by redstone as easily -- they now act more like doors and
+    other redstone components in that the wire must run up to the sign
+    and not just merely pass by it. Note that you can also run wires
+    directly underneath the sign and that will work.
+- Added redstone integrated circuits. They compact complicated and
+    otherwise impossible components into very small functional blocks.
+- Pumpkin redstone input triggering has been expanded so that you can lead
+    wires up to it instead of only under it. Note that you should not
+    put redstone components above pumpkins as pumpkins tend to 'eat' the
+    redstone items.
+- CraftBook now has conditional hook registration so that it will not
+    completely fail if a feature of hMod is not available for
+    whatever reason.
+- New ammeter (coal) can be right clicked on redstone components to get
+    their current level.
+- Bridges can now cut through water, allowing you to make flat flood gates
+    in addition to vertical flood gates (with the gate feature). This also
+    applies to lava so that you can make lava flood gates.
+- Fixed the /elevator permission not working, added /togglearea
+    and /bridge as permissions.
+- Added create permissions that allow you to restrict the *creation* of
+    features (such as bridges and gates). check-create-permissions must
+    be enabled (default not).
+- Bookshelf and apple drops should now occur at the place of the block
+    and not at the player's feet.
+- Updated for the new server update.
+- Caught IOException thrown by the new properties class in hMod.
+
 1.1:
 - Pumpkins can be toggled off and on (between their lit and unlit states) by
     putting redstone under the pumpkin.
