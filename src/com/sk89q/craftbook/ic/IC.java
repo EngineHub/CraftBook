@@ -19,6 +19,8 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.*;
+
 /**
  * IC
  *
@@ -37,7 +39,15 @@ public interface IC {
      * @return
      */
     public boolean requiresPermission();
-
+    /**
+     * Validates the IC's environment. The position of the sign is given.
+     * Return a string in order to state an error message and deny
+     * creation, otherwise return null to allow.
+     * 
+     * @param sign
+     * @return
+     */
+    public String validateEnvironment(Vector pos, SignText sign);
     /**
      * Get a new state to use.
      *

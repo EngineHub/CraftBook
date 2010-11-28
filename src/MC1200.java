@@ -43,6 +43,26 @@ public class MC1200 extends SISOFamilyIC {
     public boolean requiresPermission() {
         return true;
     }
+    
+    /**
+     * Validates the IC's environment. The position of the sign is given.
+     * Return a string in order to state an error message and deny
+     * creation, otherwise return null to allow.
+     *
+     * @param sign
+     * @return
+     */
+    public String validateEnvironment(Vector pos, SignText sign) {
+        String id = sign.getLine3();
+
+        if (id.length() == 0) {
+            return "Specify a mob type on the third line.";
+        } else if (!Mob.isValid(id)) {
+            return "Not a valid mob type: " + sign.getLine3() + ".";
+        }
+
+        return null;
+    }
 
     /**
      * Think.

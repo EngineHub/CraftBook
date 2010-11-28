@@ -19,7 +19,6 @@
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -1160,8 +1159,24 @@ public class CraftBookListener extends PluginListener {
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
                         return true;
                     } else {
-                        sign.setText(0, ic.getTitle());
-                        sign.setText(1, "[" + id + "]");
+                        // To check the environment
+                        Vector pos = new Vector(cblock.getX(), cblock.getY(), cblock.getZ());
+                        SignText signText = new SignText(
+                            sign.getText(0), sign.getText(1), sign.getText(2),
+                            sign.getText(3));
+
+                        // Maybe the IC is setup incorrectly
+                        String envError = ic.validateEnvironment(pos, signText);
+
+                        if (envError != null) {
+                            player.sendMessage(Colors.Rose
+                                    + "Error: " + envError);
+                            CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                            return true;
+                        } else {
+                            sign.setText(0, ic.getTitle());
+                            sign.setText(1, "[" + id + "]");
+                        }
                     }
                 } else {
                     sign.setText(1, Colors.Red + line2);
