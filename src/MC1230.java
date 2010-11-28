@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed getIn the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -21,18 +21,18 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.SISOFamilyIC;
 
 /**
- * 1-bit number based on modulus of server time.
+ * Takes in a clock input, and outputs whether the time is day or night.
  *
  * @author Shaun (sturmeh)
  */
-public class MC1025 extends SISOFamilyIC {
+public class MC1230 extends SISOFamilyIC {
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
-        return "REL TIME MOD 2";
+        return "IS IT DAY";
     }
 
     /**
@@ -41,18 +41,11 @@ public class MC1025 extends SISOFamilyIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        if (chip.getIn(1).is())
-                chip.getOut(1).set(isServerTimeOdd());
-    }
+        Long specific = etc.getServer().getRelativeTime();
 
-    /**
-     * Returns true if the relative time is odd.
-     * 
-     * @return
-     */
-    private boolean isServerTimeOdd() {
-        long time = etc.getServer().getRelativeTime() % 2;
-        if (time < 0) time += 2;
-        return (time == 1);
+        if (specific < 13000l)
+            chip.getOut(1).set(true);
+        else 
+            chip.getOut(1).set(false);
     }
 }

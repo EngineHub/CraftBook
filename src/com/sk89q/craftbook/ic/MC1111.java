@@ -40,18 +40,16 @@ public class MC1111 extends SISOFamilyIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        if (chip.getIn(1).is()) {
-            String id = chip.getText().getLine3();
-            if (!id.isEmpty()) {
-                Boolean out = MC1110.airwaves.get(id);
-                if (out == null) {
-                    chip.getOut(1).set(false);
-                } else {
-                    chip.getOut(1).set(out);
-                }
-            } else {
+        String id = chip.getText().getLine3();
+        if (!id.isEmpty()) {
+            Boolean out = MC1110.airwaves.get(id);
+            if (out == null) {
                 chip.getOut(1).set(false);
+            } else {
+                chip.getOut(1).set(out);
             }
+        } else {
+            chip.getOut(1).set(false);
         }
     }
 }
