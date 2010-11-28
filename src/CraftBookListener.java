@@ -778,7 +778,7 @@ public class CraftBookListener extends PluginListener {
                     Signal[] in = new Signal[1];
                     in[0] = new Signal(isOn);
                     
-                    Signal[] out = new Signal[1];
+                    Signal[] out = new Signal[3];
                     out[0] = new Signal(getRedstoneOutput(output1Vec));
                     out[1] = new Signal(getRedstoneOutput(output2Vec));
                     out[2] = new Signal(getRedstoneOutput(output3Vec));
