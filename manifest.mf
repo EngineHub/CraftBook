@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 X-COMMENT: Main-Class will be added automatically by build
 Class-Path: WorldEdit.jar
-CraftBook-Version: 1.1
+CraftBook-Version: 1.2
