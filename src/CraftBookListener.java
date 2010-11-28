@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed getIn the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -522,7 +522,7 @@ public class CraftBookListener extends PluginListener {
     * For other blocks which provide a source of redstone current, the current
     * value will be 1 or 0 for on and off respectively.
     *
-    * @param redstone Block of redstone which has just changed getIn current
+    * @param redstone Block of redstone which has just changed in current
     * @param oldLevel the old current
     * @param newLevel the new current
     */
@@ -549,7 +549,7 @@ public class CraftBookListener extends PluginListener {
         int type = CraftBook.getBlockID(x, y, z);
         int above = CraftBook.getBlockID(x, y + 1, z);
 
-        // When this hook has been called, the level getIn the world has not
+        // When this hook has been called, the level in the world has not
         // yet been updated, so we're going to do this very ugly thing of
         // faking the value with the new one whenever the data value of this
         // block is requested -- it is quite ugly
@@ -643,8 +643,8 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
-     * Handles the wire input at a block getIn the case when the wire is
-     * directly connected to the block getIn question only.
+     * Handles the wire input at a block in the case when the wire is
+     * directly connected to the block in question only.
      *
      * @param x
      * @param y
