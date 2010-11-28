@@ -1381,9 +1381,9 @@ public class CraftBookListener extends PluginListener {
         } else if (data == 0x3) { // West
             return new Vector(x - multiplier, y, z);
         } else if (data == 0x4) { // North
-            return new Vector(x, y, z + multiplier);
-        } else {
             return new Vector(x, y, z - multiplier);
+        } else {
+            return new Vector(x, y, z + multiplier);
         }
     }
 
