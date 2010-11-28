@@ -616,11 +616,8 @@ public class CraftBookListener extends PluginListener {
                     handleDirectWireInput(new Vector(x, y, z + 1), isOn);
                 }
 
-                // Pumpkins can be triggered from below
-                if (redstonePumpkins
-                    && (above == BlockType.PUMPKIN || above == BlockType.JACKOLANTERN)) {
-                    handleDirectWireInput(new Vector(x, y + 1, z), isOn);
-                }
+                // Can be triggered from below
+                handleDirectWireInput(new Vector(x, y + 1, z), isOn);
 
                 return newLevel;
             }
@@ -633,11 +630,8 @@ public class CraftBookListener extends PluginListener {
             handleDirectWireInput(new Vector(x, y, z - 1), isOn);
             handleDirectWireInput(new Vector(x, y, z + 1), isOn);
 
-            // Pumpkins can be triggered from below
-            if (redstonePumpkins
-                && (above == BlockType.PUMPKIN || above == BlockType.JACKOLANTERN)) {
-                handleDirectWireInput(new Vector(x, y + 1, z), isOn);
-            }
+            // Can be triggered from below
+            handleDirectWireInput(new Vector(x, y + 1, z), isOn);
 
             return newLevel;
         } finally {
