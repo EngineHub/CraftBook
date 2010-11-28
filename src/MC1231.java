@@ -36,6 +36,15 @@ public class MC1231 extends SISOFamilyIC {
     }
 
     /**
+     * Returns true if this IC requires permission to use.
+     *
+     * @return
+     */
+    public boolean requiresPermission() {
+        return true;
+    }
+
+    /**
      * Think.
      * 
      * @param chip
