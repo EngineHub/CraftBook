@@ -417,7 +417,7 @@ public class CraftBookListener extends PluginListener {
                 } else if (elevatorModule != null
                         && (line2.equalsIgnoreCase("[Lift Up]")
                         || line2.equalsIgnoreCase("[Lift Down]"))
-                        && checkPermission(player, "/elevator)")) {
+                        && checkPermission(player, "/elevator")) {
 
                     // Go up or down?
                     boolean up = line2.equalsIgnoreCase("[Lift Up]");
@@ -426,7 +426,8 @@ public class CraftBookListener extends PluginListener {
 
                 // Toggle areas
                 } else if (useToggleAreas != false
-                        && line2.equalsIgnoreCase("[Toggle]")) {
+                        && line2.equalsIgnoreCase("[Toggle]")
+                        && checkPermission(player, "/togglearea")) {
                     String name = sign.getText(0);
 
                     if (name.trim().length() == 0) {
