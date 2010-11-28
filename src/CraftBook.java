@@ -169,6 +169,11 @@ public class CraftBook extends Plugin {
         return setBlockData(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), data);
     }
 
+    public static void dropSign(int x, int y, int z) {
+        etc.getServer().setBlockAt(0, x, y, z);
+        etc.getServer().dropItem(x, y, z, 323);
+    }
+
     protected static void fakeBlockData(int x, int y, int z, int data) {
         fakeDataPos = new BlockVector(x, y, z);
         fakeDataVal = data;

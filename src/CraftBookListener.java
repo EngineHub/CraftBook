@@ -157,6 +157,7 @@ public class CraftBookListener extends PluginListener {
         sisoICs.put("MC1025", new MC1025());
         sisoICs.put("MC1110", new MC1110());
         sisoICs.put("MC1111", new MC1111());
+        sisoICs.put("MC1200", new MC1200());
         si3oICs.put("MC2020", new MC2020());
     }
 
@@ -1052,7 +1053,7 @@ public class CraftBookListener extends PluginListener {
 
         return null;
     }
-    
+
     /**
      * Called when either a sign, chest or furnace is changed.
      *
@@ -1083,6 +1084,7 @@ public class CraftBookListener extends PluginListener {
                              && !player.canUseCommand("/" + id.toLowerCase())) {
                         player.sendMessage(Colors.Rose
                                 + "You don't have permission to make " + id + ".");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
                         return true;
                     } else {
                         sign.setText(0, ic.getTitle());
