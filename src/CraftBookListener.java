@@ -65,9 +65,13 @@ public class CraftBookListener extends PluginListener {
             new HashMap<String,SI3OFamilyIC>();
 
     /**
-     * Indicates whether each function should check permissions.
+     * Indicates whether each function should check permissions when using.
      */
     private boolean checkPermissions;
+    /**
+     * Indicates whether each function should check permissions when creating.
+     */
+    private boolean checkCreatePermissions;
     /**
      * Maximum toggle area size.
      */
@@ -195,6 +199,7 @@ public class CraftBookListener extends PluginListener {
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
         redstonePumpkins = properties.getBoolean("redstone-pumpkins", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
+        checkCreatePermissions = properties.getBoolean("check-create-permissions", false);
         cauldronModule = null;
         redstoneICs = properties.getBoolean("redstone-ics", true);
         enableAmmeter = properties.getBoolean("ammeter", true);
@@ -1075,10 +1080,70 @@ public class CraftBookListener extends PluginListener {
             String line2 = sign.getText(1);
             int len = line2.length();
 
+            if (checkCreatePermissions) {
+                // Gate
+                if (line2.equalsIgnoreCase("[Gate]")) {
+                    if (!player.canUseCommand("/makegate")) {
+                        player.sendMessage(Colors.Rose
+                                + "You don't have permission to make gates.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                    }
+                // Light switch
+                } else if (line2.equalsIgnoreCase("[|]")
+                        || line2.equalsIgnoreCase("[I]")) {
+                    if (!player.canUseCommand("/makelightswitch")) {
+                        player.sendMessage(Colors.Rose
+                                + "You don't have permission to make light switches.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                    }
+
+                // Elevator
+                } else if (line2.equalsIgnoreCase("[Lift Up]")
+                        || line2.equalsIgnoreCase("[Lift Down]")
+                        || line2.equalsIgnoreCase("[Lift]")) {
+                    if (!player.canUseCommand("/makeelevator")) {
+                        player.sendMessage(Colors.Rose
+                                + "You don't have permission to make elevators.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                    }
+
+                // Toggle areas
+                } else if (line2.equalsIgnoreCase("[Toggle]")) {
+                    if (!player.canUseCommand("/maketogglearea")) {
+                        player.sendMessage(Colors.Rose
+                                + "You don't have permission to make toggle areas.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                    }
+
+                // Bridges
+                } else if (line2.equalsIgnoreCase("[Bridge]")) {
+                    if (!player.canUseCommand("/makebridge")) {
+                        player.sendMessage(Colors.Rose
+                                + "You don't have permission to make bridges.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                    }
+                }
+            }
+
             // ICs
             if (line2.length() > 4
                     && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
                     line2.charAt(len - 1) == ']') {
+
+                // Check to see if the player can even create ICs
+                if (checkCreatePermissions
+                        && !player.canUseCommand("/makeic")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make ICs.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+
                 String id = line2.substring(1, len - 1).toUpperCase();
 
                 IC ic = getIC(id);
