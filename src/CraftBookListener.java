@@ -246,7 +246,9 @@ public class CraftBookListener extends PluginListener {
                 && checkPermission(player, "/appledrops")) {
             if (block.getStatus() == 3) {
                 if (Math.random() <= dropAppleChance) {
-                    player.giveItemDrop(ItemType.APPLE, 1);
+                    etc.getServer().dropItem(
+                            block.getX(), block.getY(), block.getZ(),
+                            ItemType.APPLE);
                 }
             }
 
@@ -254,7 +256,9 @@ public class CraftBookListener extends PluginListener {
         } else if (dropBookshelves && block.getType() == BlockType.BOOKCASE
                 && checkPermission(player, "/bookshelfdrops")) {
             if (block.getStatus() == 3) {
-                player.giveItemDrop(BlockType.BOOKCASE, 1);
+                    etc.getServer().dropItem(
+                            block.getX(), block.getY(), block.getZ(),
+                            BlockType.BOOKCASE);
             }
         }
 
