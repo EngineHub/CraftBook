@@ -473,7 +473,8 @@ public class CraftBookListener extends PluginListener {
                 // Bridges
                 } else if (bridgeModule != null
                         && blockClicked.getType() == BlockType.SIGN_POST
-                        && line2.equalsIgnoreCase("[Bridge]")) {
+                        && line2.equalsIgnoreCase("[Bridge]")
+                        && checkPermission(player, "/bridge")) {
                     int data = CraftBook.getBlockData(x, y, z);
 
                     try {
