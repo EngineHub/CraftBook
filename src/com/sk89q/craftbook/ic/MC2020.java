@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed getIn the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -27,13 +27,30 @@ import java.util.Random;
  * @author sk89q
  */
 public class MC2020 extends SI3OFamilyIC {
-	private static Random random = new Random();
+    /**
+     * Random number generator.
+     */
+    private static Random random = new Random();
 
-	public void think(ChipState chip) {
-		if (chip.in(1).is()) {
-			chip.out(1).set(random.nextBoolean());
-			chip.out(2).set(random.nextBoolean());
-			chip.out(3).set(random.nextBoolean());
-		}
-	}
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "3-BIT RANDOM";
+    }
+
+    /**
+     * Think.
+     *
+     * @param chip
+     */
+    public void think(ChipState chip) {
+        if (chip.getIn(1).is()) {
+            chip.getOut(1).set(random.nextBoolean());
+            chip.getOut(2).set(random.nextBoolean());
+            chip.getOut(3).set(random.nextBoolean());
+        }
+    }
 }

@@ -26,19 +26,30 @@ import com.sk89q.craftbook.ic.SISOFamilyIC;
  * @author Shaun (sturmeh)
  */
 public class MC1231 extends SISOFamilyIC {
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "TIME CONTROL";
+    }
 
+    /**
+     * Think.
+     * 
+     * @param chip
+     */
     public void think(ChipState chip) {
-        chip.title("TIME CONTROL");
-
         Long specific;
 
-        if (chip.in(1).is())
+        if (chip.getIn(1).is())
             specific = 0l;
         else 
             specific = 13000l;
 
         etc.getServer().setRelativeTime(specific);
 
-        chip.out(1).set(chip.in(1).is());
+        chip.getOut(1).set(chip.getIn(1).is());
     }
 }

@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed getIn the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -25,18 +25,31 @@ package com.sk89q.craftbook.ic;
  * @author sk89q
  */
 public class MC1111 extends SISOFamilyIC {
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "RECEIVER";
+    }
+
+    /**
+     * Think.
+     *
+     * @param chip
+     */
     public void think(ChipState chip) {
-        chip.title("RECIEVER");
-        String id = chip.text().getLine3();
+        String id = chip.getText().getLine3();
         if (!id.isEmpty()) {
             Boolean out = MC1110.airwaves.get(id);
             if (out == null) {
-                chip.out(1).set(false);
+                chip.getOut(1).set(false);
             } else {
-                chip.out(1).set(out);
+                chip.getOut(1).set(out);
             }
         } else {
-            chip.out(1).set(false);
+            chip.getOut(1).set(false);
         }
     }
 }

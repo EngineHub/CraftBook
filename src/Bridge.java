@@ -191,7 +191,12 @@ public class Bridge {
         }
 
         if (toOpen == null) {
-            toOpen = CraftBook.getBlockID(pt.add(change).add(0, centerShift, 0)) != 0;
+            int existing = CraftBook.getBlockID(pt.add(change).add(0, centerShift, 0));
+            toOpen = existing != 0
+                    && existing != BlockType.WATER
+                     && existing != BlockType.STATIONARY_WATER
+                     && existing != BlockType.LAVA
+                     && existing != BlockType.STATIONARY_LAVA;
         }
 
         if (toOpen) {
@@ -241,7 +246,8 @@ public class Bridge {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
-            if (t == 0) {
+            if (t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
+                     || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA) {
                 bag.setBlockID(p, type);
             } else if (t != type) {
                 break;
