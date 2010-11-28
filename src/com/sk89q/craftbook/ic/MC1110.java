@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed getIn the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -28,19 +28,34 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MC1110 extends SISOFamilyIC {
-	public static Map<String,Boolean> airwaves =
-		new HistoryHashMap<String,Boolean>(100);
+    /**
+     * Data store.
+     */
+    public static Map<String,Boolean> airwaves =
+            new HistoryHashMap<String,Boolean>(100);
 
-	public void think(ChipState chip) {
-		chip.title("TRANSMITTER");
-		
-		String id = chip.text().getLine3();
-		
-		if (!id.isEmpty()) {
-			airwaves.put(id, chip.in(1).is());
-			chip.out(1).set(true);
-		} else {
-			chip.out(1).set(false);
-		}
-	}
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "TRANSMITTER";
+    }
+
+    /**
+     * Think.
+     *
+     * @param chip
+     */
+    public void think(ChipState chip) {
+        String id = chip.getText().getLine3();
+
+        if (!id.isEmpty()) {
+            airwaves.put(id, chip.getIn(1).is());
+            chip.getOut(1).set(true);
+        } else {
+            chip.getOut(1).set(false);
+        }
+    }
 }

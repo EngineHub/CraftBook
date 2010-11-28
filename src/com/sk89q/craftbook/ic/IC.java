@@ -8,50 +8,40 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed getIn the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 package com.sk89q.craftbook.ic;
 
 /**
- * Positive edge-triggered wireless receiver.
+ * IC
  *
  * @author sk89q
  */
-public class MC1111 extends SISOFamilyIC {
+public interface IC {
     /**
      * Get the title of the IC.
      *
      * @return
      */
-    public String getTitle() {
-        return "RECEIVER";
-    }
+    public String getTitle();
+    /**
+     * Returns true if this IC requires permission to use.
+     *
+     * @return
+     */
+    public boolean requiresPermission();
 
     /**
-     * Think.
+     * Get a new state to use.
      *
-     * @param chip
+     * @param chip chip state.
      */
-    public void think(ChipState chip) {
-        if (chip.getIn(1).is()) {
-            String id = chip.getText().getLine3();
-            if (!id.isEmpty()) {
-                Boolean out = MC1110.airwaves.get(id);
-                if (out == null) {
-                    chip.getOut(1).set(false);
-                } else {
-                    chip.getOut(1).set(out);
-                }
-            } else {
-                chip.getOut(1).set(false);
-            }
-        }
-    }
+    public void think(ChipState chip);
 }

@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed getIn the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -25,9 +25,22 @@ package com.sk89q.craftbook.ic;
  * @author sk89q
  */
 public class MC1017 extends SISOFamilyIC {
-	public void think(ChipState chip) {
-		chip.title("RISING EDGE");
-		if (chip.in(1).is())
-			chip.out(1).invert();
-	}
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "RISING TOGGLE";
+    }
+
+    /**
+     * Think.
+     * 
+     * @param chip
+     */
+    public void think(ChipState chip) {
+        if (chip.getIn(1).is())
+                chip.getOut(1).invert();
+    }
 }

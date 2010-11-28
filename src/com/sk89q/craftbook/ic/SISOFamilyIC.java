@@ -24,14 +24,27 @@ package com.sk89q.craftbook.ic;
  *
  * @author sk89q
  */
-public abstract class SISOFamilyIC {
+public abstract class SISOFamilyIC implements IC {
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public abstract String getTitle();
+
+    /**
+     * Returns true if this IC requires permission to use.
+     *
+     * @return
+     */
+    public boolean requiresPermission() {
+        return false;
+    }
+    
     /**
      * Get a new state to use.
      * 
-     * @param pos
-     * @param input1
-     * @param oldState
-     * @param signText
+     * @param chip
      * @return
      */
     public abstract void think(ChipState chip);

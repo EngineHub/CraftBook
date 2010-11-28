@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed getIn the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -26,13 +26,30 @@ import com.sk89q.craftbook.ic.SISOFamilyIC;
  * @author Shaun (sturmeh)
  */
 public class MC1025 extends SISOFamilyIC {
-	
-	public void think(ChipState chip) {
-		chip.title("CLOCK BIT");
-		if (chip.in(1).is())
-			chip.out(1).set(isServerTimeOdd());
-	}
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "REL TIME MOD 2";
+    }
 
+    /**
+     * Think.
+     * 
+     * @param chip
+     */
+    public void think(ChipState chip) {
+        if (chip.getIn(1).is())
+                chip.getOut(1).set(isServerTimeOdd());
+    }
+
+    /**
+     * Returns true if the relative tiem is odd.
+     * 
+     * @return
+     */
     private boolean isServerTimeOdd() {
         long time = etc.getServer().getRelativeTime() % 2;
         if (time < 0) time += 2;

@@ -8,7 +8,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This program is distributed getIn the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
@@ -519,7 +519,7 @@ public class CraftBookListener extends PluginListener {
     * For other blocks which provide a source of redstone current, the current
     * value will be 1 or 0 for on and off respectively.
     *
-    * @param redstone Block of redstone which has just changed in current
+    * @param redstone Block of redstone which has just changed getIn current
     * @param oldLevel the old current
     * @param newLevel the new current
     */
@@ -546,7 +546,7 @@ public class CraftBookListener extends PluginListener {
         int type = CraftBook.getBlockID(x, y, z);
         int above = CraftBook.getBlockID(x, y + 1, z);
 
-        // When this hook has been called, the level in the world has not
+        // When this hook has been called, the level getIn the world has not
         // yet been updated, so we're going to do this very ugly thing of
         // faking the value with the new one whenever the data value of this
         // block is requested -- it is quite ugly
@@ -640,8 +640,8 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
-     * Handles the wire input at a block in the case when the wire is
-     * directly connected to the block in question only.
+     * Handles the wire input at a block getIn the case when the wire is
+     * directly connected to the block getIn question only.
      *
      * @param x
      * @param y
@@ -713,9 +713,10 @@ public class CraftBookListener extends PluginListener {
             // ICs
             } else if (redstoneICs
                     && type == BlockType.WALL_SIGN
-                    && line2.substring(0, 3).equals("[MC") &&
+                    && line2.length() > 4
+                    && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
                     line2.charAt(len - 1) == ']') {
-                String id = line2.substring(1, len - 1);
+                String id = line2.substring(1, len - 1).toUpperCase();
 
                 SignText signText = new SignText(
                         sign.getText(0), sign.getText(1), sign.getText(2),
@@ -737,8 +738,8 @@ public class CraftBookListener extends PluginListener {
                     
                     sisoIC.think(chip);
                     
-                    if (chip.modified()) {
-                        setRedstoneOutput(outputVec, chip.out(1).is());
+                    if (chip.isModified()) {
+                        setRedstoneOutput(outputVec, chip.getOut(1).is());
                     }
 
                     if (signText.isChanged()) {
@@ -774,10 +775,10 @@ public class CraftBookListener extends PluginListener {
                     // The most important part...
                     si30IC.think(chip);
                     
-                    if (chip.modified()) {
-                        setRedstoneOutput(output1Vec, chip.out(1).is());
-                        setRedstoneOutput(output2Vec, chip.out(2).is());
-                        setRedstoneOutput(output3Vec, chip.out(3).is());
+                    if (chip.isModified()) {
+                        setRedstoneOutput(output1Vec, chip.getOut(1).is());
+                        setRedstoneOutput(output2Vec, chip.getOut(2).is());
+                        setRedstoneOutput(output3Vec, chip.getOut(3).is());
                     }
 
                     if (signText.isChanged()) {
@@ -992,7 +993,7 @@ public class CraftBookListener extends PluginListener {
     /**
      * Gets the output state of a redstone IC at a location.
      *
-     * @param pos
+     * @param getPosition
      * @param state
      */
     private boolean getRedstoneOutput(Vector pos) {
@@ -1006,7 +1007,7 @@ public class CraftBookListener extends PluginListener {
     /**
      * Sets the output state of a redstone IC at a location.
      *
-     * @param pos
+     * @param getPosition
      * @param state
      */
     private void setRedstoneOutput(Vector pos, boolean state) {
@@ -1026,6 +1027,83 @@ public class CraftBookListener extends PluginListener {
                         pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), newData);
             }
         }
+    }
+
+    /**
+     * Get the registered IC.
+     * 
+     * @param id
+     * @return
+     */
+    public IC getIC(String id) {
+        // SISO family
+        SISOFamilyIC sisoIC = sisoICs.get(id);
+
+        if (sisoIC != null) {
+            return sisoIC;
+        }
+
+        // SI3O family
+        SI3OFamilyIC si30IC = si3oICs.get(id);
+
+        if (si30IC != null) {
+            return si30IC;
+        }
+
+        return null;
+    }
+    
+    /**
+     * Called when either a sign, chest or furnace is changed.
+     *
+     * @param player
+     *            player who changed it
+     * @param cblock
+     *            complex block that changed
+     * @return true if you want any changes to be reverted
+     */
+    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
+        if (cblock instanceof Sign) {
+            Sign sign = (Sign)cblock;
+            int type = CraftBook.getBlockID(
+                    cblock.getX(), cblock.getY(), cblock.getZ());
+            
+            String line2 = sign.getText(1);
+            int len = line2.length();
+
+            // ICs
+            if (line2.length() > 4
+                    && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
+                    line2.charAt(len - 1) == ']') {
+                String id = line2.substring(1, len - 1).toUpperCase();
+
+                IC ic = getIC(id);
+                if (ic != null) {
+                    if (ic.requiresPermission() && !player.canUseCommand("/allic")
+                             && !player.canUseCommand("/" + id.toLowerCase())) {
+                        player.sendMessage(Colors.Rose
+                                + "You don't have permission to make " + id + ".");
+                        return true;
+                    } else {
+                        sign.setText(0, ic.getTitle());
+                        sign.setText(1, "[" + id + "]");
+                    }
+                } else {
+                    sign.setText(1, Colors.Red + line2);
+                    player.sendMessage(Colors.Rose + "Unrecognized IC: " + id);
+                }
+
+                if (!redstoneICs) {
+                    player.sendMessage(Colors.Rose + "Warning: ICs are disabled.");
+                } else if (type == BlockType.SIGN_POST) {
+                    player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
+                }
+
+                return false;
+            }
+        }
+        
+        return false;
     }
 
     /**

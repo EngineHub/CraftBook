@@ -61,6 +61,7 @@ public class CraftBook extends Plugin {
         registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
         registerHook("COMMAND", PluginListener.Priority.MEDIUM);
         registerHook("DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook("COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
 
         if (!registerHook("REDSTONE_CHANGE", PluginListener.Priority.MEDIUM)) {
             logger.log(Level.WARNING, "CraftBook: Your version of hMod is "

@@ -2,64 +2,111 @@ package com.sk89q.craftbook.ic;
 
 import com.sk89q.craftbook.*;
 
+/**
+ * Used to pass around the state of an IC.
+ *
+ * @author Shaun (sturmeh)
+ * @author sk89q
+ */
 public class ChipState {
-	private Signal[] in;
-	private Signal[] out;
-	private boolean[] mem;
-	private Vector pos;
-	private SignText text;
-	
-	public ChipState (Vector pos, Signal[] in, Signal[] out, SignText text) {
-		this.pos = pos;
-		this.in = in;
-		this.out = out;
-		this.text = text;
-		
-		mem = new boolean[out.length];
-		int i = 0;
-		for (Signal bit : out) {
-			mem[i++] = bit.is();
-		}
-	}
-	
-	public void title(String title) {
-		String curTitle = text.getLine1();
-		if (!curTitle.equals(title)) {
-			text.setLine1(title);
-		}
-	}
+    private Signal[] in;
+    private Signal[] out;
+    private boolean[] mem;
+    private Vector pos;
+    private SignText text;
 
-	public Signal in(int n) {
-		if (n > in.length) return null;
-		return in[n-1];
-	}
+    /**
+     * Construct the state.
+     * 
+     * @param getPosition
+     * @param getIn
+     * @param getOut
+     * @param getText
+     */
+    public ChipState(Vector pos, Signal[] in, Signal[] out, SignText text) {
+        this.pos = pos;
+        this.in = in;
+        this.out = out;
+        this.text = text;
 
-	public Signal out(int n) {
-		if (n > out.length) return null;
-		return out[n-1];
-	}
-	
-	public boolean last(int n) {
-		if (n > mem.length) return false;
-		return mem[n-1];
-	}
-	
-	public boolean modified() {
-		int i = 0;
-		
-		for (Signal bit : out) {
-			if (bit.is() != mem[i++])
-				return true;
-		}
-		
-		return false;
-	}
+        mem = new boolean[out.length];
+        int i = 0;
+        for (Signal bit : out) {
+            mem[i++] = bit.is();
+        }
+    }
 
-	public Vector pos() {
-		return pos;
-	}
-	
-	public SignText text() {
-		return text;
-	}
+    /**
+     * Get an input state.
+     * 
+     * @param n
+     * @return
+     */
+    public Signal getIn(int n) {
+        if (n > in.length) {
+            return null;
+        }
+        return in[n - 1];
+    }
+
+    /**
+     * Get an output state.
+     * 
+     * @param n
+     * @return
+     */
+    public Signal getOut(int n) {
+        if (n > out.length) {
+            return null;
+        }
+        return out[n - 1];
+    }
+
+    /**
+     * Returns the last state.
+     * 
+     * @param n
+     * @return
+     */
+    public boolean getLast(int n) {
+        if (n > mem.length) {
+            return false;
+        }
+        return mem[n - 1];
+    }
+
+    /**
+     * Returns whether any outputs have been updated.
+     * 
+     * @return
+     */
+    public boolean isModified() {
+        int i = 0;
+
+        for (Signal bit : out) {
+            if (bit.is() != mem[i++]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the position.
+     * 
+     * @return
+     */
+    public Vector getPosition() {
+        return pos;
+    }
+
+    /**
+     * Get the sign text.
+     * 
+     * @return
+     */
+    public SignText getText() {
+        return text;
+    }
 }
