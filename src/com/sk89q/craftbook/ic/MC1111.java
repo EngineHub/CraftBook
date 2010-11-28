@@ -19,6 +19,8 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.*;
+
 /**
  * Positive edge-triggered wireless receiver.
  *
@@ -32,6 +34,24 @@ public class MC1111 extends SISOFamilyIC {
      */
     public String getTitle() {
         return "RECEIVER";
+    }
+
+    /**
+     * Validates the IC's environment. The position of the sign is given.
+     * Return a string in order to state an error message and deny
+     * creation, otherwise return null to allow.
+     *
+     * @param sign
+     * @return
+     */
+    public String validateEnvironment(Vector pos, SignText sign) {
+        String id = sign.getLine3();
+
+        if (id.length() == 0) {
+            return "Specify a band name on the third line.";
+        }
+
+        return null;
     }
 
     /**
