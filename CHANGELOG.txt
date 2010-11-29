@@ -1,3 +1,7 @@
+1.2.1:
+- Added a recursion limit to the redstone processing.
+- Increased the height that mobs spawned at with MC1200 by one block up.
+
 1.2:
 - Water and lava can now be used reliably as ingredients. Specify
     moving water/lava, not the stationary water/lava.
