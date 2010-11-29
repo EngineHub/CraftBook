@@ -636,8 +636,8 @@ public class CraftBookListener extends PluginListener {
                     // Make sure that the wire points to only this block
                     if (!BlockType.isRedstoneBlock(westSide)
                             && !BlockType.isRedstoneBlock(eastSide)
-                            && !BlockType.isRedstoneBlock(westSideAbove)
-                            && !BlockType.isRedstoneBlock(eastSideAbove)
+                            && (!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0)
+                            && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0)
                             && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
                             && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
                         // Possible blocks north / south
@@ -647,8 +647,8 @@ public class CraftBookListener extends PluginListener {
 
                     if (!BlockType.isRedstoneBlock(northSide)
                             && !BlockType.isRedstoneBlock(southSide)
-                            && !BlockType.isRedstoneBlock(northSideAbove)
-                            && !BlockType.isRedstoneBlock(southSideAbove)
+                            && (!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0)
+                            && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0)
                             && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
                             && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
                         // Possible blocks west / east
