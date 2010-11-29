@@ -101,6 +101,8 @@ public class CraftBookListener extends PluginListener {
     private double dropAppleChance = 0;
     private boolean redstoneICs = true;
     private boolean enableAmmeter = true;
+    private boolean minecartControlBlocks = true;
+    private double minecartSpeedConstant = 1.04;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -206,6 +208,8 @@ public class CraftBookListener extends PluginListener {
         cauldronModule = null;
         redstoneICs = properties.getBoolean("redstone-ics", true);
         enableAmmeter = properties.getBoolean("ammeter", true);
+        minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
+        minecartSpeedConstant = properties.getDouble("minecart-speed-constant", 1.04);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -684,7 +688,7 @@ public class CraftBookListener extends PluginListener {
      */
     public void handleDirectWireInput(Vector pt, boolean isOn) {
         int type = CraftBook.getBlockID(pt);
-
+        
         // Redstone pumpkins
         if (redstonePumpkins
                 && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
@@ -694,6 +698,54 @@ public class CraftBookListener extends PluginListener {
                 CraftBook.setBlockID(pt, BlockType.JACKOLANTERN);
             } else if (useOn != null) {
                 CraftBook.setBlockID(pt, BlockType.PUMPKIN);
+            }
+        // Minecart station
+        } else if (minecartControlBlocks && type == BlockType.OBSIDIAN
+                && CraftBook.getBlockID(pt.add(0, 1, 0)) == BlockType.MINECART_TRACKS
+                && CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST) {
+            ComplexBlock cblock = etc.getServer().getComplexBlock(
+                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
+
+            if (cblock == null || !(cblock instanceof Sign)) {
+                return;
+            }
+
+            Sign sign = (Sign)cblock;
+            String line2 = sign.getText(1);
+
+            if (!line2.equalsIgnoreCase("[Station]")) {
+                return;
+            }
+
+            Vector motion;
+            int data = CraftBook.getBlockData(
+                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
+            
+            if (data == 0x0) {
+                motion = new Vector(0, 0, 10);
+            } else if (data == 0x4) {
+                motion = new Vector(-10, 0, 0);
+            } else if (data == 0x8) {
+                motion = new Vector(0, 0, -10);
+            } else if (data == 0xC) {
+                motion = new Vector(10, 0, 0);
+            } else {
+                return;
+            }
+
+            for (BaseEntity ent : etc.getServer().getEntityList()) {
+                if (ent instanceof Minecart) {
+                    Minecart minecart = (Minecart)ent;
+                    int cartX = (int)Math.floor(minecart.getX());
+                    int cartY = (int)Math.floor(minecart.getY());
+                    int cartZ = (int)Math.floor(minecart.getZ());
+
+                    if (cartX == pt.getBlockX()
+                            || cartY == pt.getBlockY() + 1
+                            || cartZ == pt.getBlockZ()) {
+                        minecart.setMotion(motion.getX(), motion.getY(), motion.getZ());
+                    }
+                }
             }
         // Sign gates
         } else if (type == BlockType.WALL_SIGN
@@ -1025,6 +1077,42 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
+     * Tests to see if a block is high, possibly including redstone wires. If
+     * there was no redstone at that location, null will be returned.
+     *
+     * @param pt
+     * @param type
+     * @param considerWires
+     * @return
+     */
+    private Boolean isRedstoneHigh(Vector pt, boolean considerWires) {
+        return isRedstoneHigh(pt, CraftBook.getBlockID(pt), considerWires);
+    }
+
+    /**
+     * Tests the simple input at a block.
+     * 
+     * @param pt
+     * @return
+     */
+    public Boolean testRedstoneSimpleInput(Vector pt) {
+        Boolean result = null;
+        Boolean temp;
+
+        temp = isRedstoneHigh(pt.add(1, 0, 0), true);
+        if (temp != null) if (temp) return true; else result = false;
+        temp = isRedstoneHigh(pt.add(-1, 0, 0), true);
+        if (temp != null) if (temp) return true; else result = false;
+        temp = isRedstoneHigh(pt.add(0, 0, 1), true);
+        if (temp != null) if (temp) return true; else result = false;
+        temp = isRedstoneHigh(pt.add(0, 0, -1), true);
+        if (temp != null) if (temp) return true; else result = false;
+        temp = isRedstoneHigh(pt.add(0, -1, 0), true);
+        if (temp != null) if (temp) return true; else result = false;
+        return result;
+    }
+
+    /**
      * Gets the output state of a redstone IC at a location.
      *
      * @param getPosition
@@ -1306,6 +1394,82 @@ public class CraftBookListener extends PluginListener {
             return new NearbyChestBlockBag(origin);
         } else {
             return dummyBlockBag;
+        }
+    }
+
+    /**
+     * Called when a vehicle enters or leaves a block
+     *
+     * @param vehicle the vehicle
+     */
+    public void onVehicleUpdate(BaseVehicle vehicle) {
+        if (!minecartControlBlocks && minecartSpeedConstant < 0.5) {
+            return;
+        }
+
+        if (vehicle instanceof Minecart) {
+            Minecart minecart = (Minecart)vehicle;
+
+            int blockX = (int)Math.floor(minecart.getX());
+            int blockY = (int)Math.floor(minecart.getY());
+            int blockZ = (int)Math.floor(minecart.getZ());
+            Vector underPt = new Vector(blockX, blockY - 1, blockZ);
+            int under = CraftBook.getBlockID(blockX, blockY - 1, blockZ);
+
+            if (minecartControlBlocks) {
+                if (under == BlockType.GOLD_ORE) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test == null || test) {
+                        minecart.setMotionX(minecart.getMotionX() * 1.25);
+                        minecart.setMotionY(minecart.getMotionY() * 1.25);
+                        minecart.setMotionZ(minecart.getMotionZ() * 1.25);
+                        return;
+                    }
+                } else if (under == BlockType.GOLD_BLOCK) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test == null || test) {
+                        minecart.setMotionX(minecart.getMotionX() * 2);
+                        minecart.setMotionY(minecart.getMotionY() * 2);
+                        minecart.setMotionZ(minecart.getMotionZ() * 2);
+                        return;
+                    }
+                } else if (under == BlockType.SLOW_SAND) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test == null || test) {
+                        minecart.setMotionX(minecart.getMotionX() * 0.5);
+                        minecart.setMotionY(minecart.getMotionY() * 0.5);
+                        minecart.setMotionZ(minecart.getMotionZ() * 0.5);
+                        return;
+                    }
+                } else if (under == BlockType.GRAVEL) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test == null || test) {
+                        minecart.setMotionX(minecart.getMotionX() * 0.8);
+                        minecart.setMotionY(minecart.getMotionY() * 0.8);
+                        minecart.setMotionZ(minecart.getMotionZ() * 0.8);
+                        return;
+                    }
+                } else if (under == BlockType.OBSIDIAN) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test != null) {
+                        if (!test) {
+                            minecart.setMotion(0, 0, 0);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (minecartSpeedConstant >= 0.5) {
+                minecart.setMotionX(minecart.getMotionX() * minecartSpeedConstant);
+                minecart.setMotionY(minecart.getMotionY() * minecartSpeedConstant);
+                minecart.setMotionZ(minecart.getMotionZ() * minecartSpeedConstant);
+            }
         }
     }
     
