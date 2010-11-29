@@ -76,7 +76,7 @@ public class MC1200 extends SISOFamilyIC {
                 Vector pos = chip.getPosition();
                 Location loc =
                         new Location(pos.getBlockX(),
-                        pos.getBlockY() + 1,
+                        pos.getBlockY() + 2,
                         pos.getBlockZ());
                 Mob mob = new Mob(id, loc);
                 mob.spawn();
