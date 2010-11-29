@@ -63,6 +63,12 @@ public class CraftBookListener extends PluginListener {
     private Map<String,SI3OFamilyIC> si3oICs =
             new HashMap<String,SI3OFamilyIC>();
     /**
+     * VIVO ICs.
+     */
+    private Map<String,VIVOFamilyIC> vivoICs =
+            new HashMap<String,VIVOFamilyIC>();
+    
+    /**
      * Redstone recursion limit.
      */
     private int recursionCount;
@@ -876,6 +882,69 @@ public class CraftBookListener extends PluginListener {
 
                     return;
                 }
+                
+                // VIVO family
+                VIVOFamilyIC vivoIC = vivoICs.get(id);
+
+                if (vivoIC != null) {
+                    Vector backVec = getWallSignBack(pt, 1);
+                    Vector backShift = backVec.subtract(pt);
+                    
+                    Vector out0 = getWallSignBack(pt, 1);
+                    Vector out1 = getWallSignSide(pt, 1).add(backShift);
+                    Vector out2 = getWallSignSide(pt, -1).add(backShift);
+                    
+                    Vector in0 = getWallSignBack(pt, -1);
+                    Vector in1 = getWallSignSide(pt, 1);
+                    Vector in2 = getWallSignSide(pt, -1);
+
+                    boolean hasOut1 = CraftBook.getBlockID(out1) == BlockType.LEVER;
+                    boolean hasOut2 = CraftBook.getBlockID(out2) == BlockType.LEVER;
+                    
+                    Signal[] in = new Signal[3];
+                    Signal[] out = new Signal[3];
+                    
+                    out[0] = new Signal(getRedstoneOutput(out0));
+                    in[0] = new Signal(testAnyRedstoneInput(in0));
+                    
+                    if(hasOut1) {
+                        out[1] = new Signal(getRedstoneOutput(out1));
+                        in[1] = new Signal(false);
+                    }
+                    else {
+                        out[1] = new Signal(false);
+                        in[1] = new Signal(testAnyRedstoneInput(in1));
+                    }
+                    
+                    if(hasOut2) {
+                        out[2] = new Signal(getRedstoneOutput(out2));
+                        in[1] = new Signal(false);
+                    }
+                    else {
+                        out[1] = new Signal(false);
+                        in[2] = new Signal(testAnyRedstoneInput(in2));
+                    }
+                    
+                    ChipState chip = new ChipState(pt, in, out, signText);
+                    
+                    // The most important part...
+                    vivoIC.think(chip);
+                    
+                    if (chip.isModified()) {
+                        setRedstoneOutput(out0, chip.getOut(1).is());
+                        if(hasOut1) setRedstoneOutput(out1,chip.getOut(2).is());
+                        if(hasOut2) setRedstoneOutput(out2,chip.getOut(3).is());
+                    }
+
+                    if (signText.isChanged()) {
+                        sign.setText(0, signText.getLine1());
+                        sign.setText(1, signText.getLine2());
+                        sign.setText(2, signText.getLine3());
+                        sign.setText(3, signText.getLine4());
+                    }
+
+                    return;
+                }
 
                 sign.setText(1, Colors.Red + line2);
             }
@@ -1170,6 +1239,12 @@ public class CraftBookListener extends PluginListener {
 
         if (si30IC != null) {
             return si30IC;
+        }
+       
+        VIVOFamilyIC vivoIC = vivoICs.get(id);
+        
+        if(vivoIC != null) {
+            return vivoIC;
         }
 
         return null;
