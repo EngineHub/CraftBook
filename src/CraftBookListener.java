@@ -741,8 +741,8 @@ public class CraftBookListener extends PluginListener {
                     int cartZ = (int)Math.floor(minecart.getZ());
 
                     if (cartX == pt.getBlockX()
-                            || cartY == pt.getBlockY() + 1
-                            || cartZ == pt.getBlockZ()) {
+                            && cartY == pt.getBlockY() + 1
+                            && cartZ == pt.getBlockZ()) {
                         minecart.setMotion(motion.getX(), motion.getY(), motion.getZ());
                     }
                 }
