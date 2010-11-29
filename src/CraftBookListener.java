@@ -107,7 +107,7 @@ public class CraftBookListener extends PluginListener {
     private boolean redstoneICs = true;
     private boolean enableAmmeter = true;
     private boolean minecartControlBlocks = true;
-    private double minecartSpeedConstant = 1.04;
+    private double minecartCoastFactor = 0;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -214,7 +214,7 @@ public class CraftBookListener extends PluginListener {
         redstoneICs = properties.getBoolean("redstone-ics", true);
         enableAmmeter = properties.getBoolean("ammeter", true);
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
-        minecartSpeedConstant = properties.getDouble("minecart-speed-constant", 1.04);
+        minecartCoastFactor = properties.getDouble("minecart-coast-factor", 0);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -727,13 +727,13 @@ public class CraftBookListener extends PluginListener {
                     pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
             
             if (data == 0x0) {
-                motion = new Vector(0, 0, 10);
+                motion = new Vector(0, 0, 0.1);
             } else if (data == 0x4) {
-                motion = new Vector(-10, 0, 0);
+                motion = new Vector(-0.1, 0, 0);
             } else if (data == 0x8) {
-                motion = new Vector(0, 0, -10);
+                motion = new Vector(0, 0, -0.1);
             } else if (data == 0xC) {
-                motion = new Vector(10, 0, 0);
+                motion = new Vector(0.1, 0, 0);
             } else {
                 return;
             }
@@ -1465,17 +1465,59 @@ public class CraftBookListener extends PluginListener {
     *
     * @param vehicle the vehicle
     */
-    public void onVehicleUpdate(BaseVehicle vehicle) {
-        if (!minecartControlBlocks && minecartSpeedConstant < 0.5) {
+        @Override
+        public void onVehicleUpdate(BaseVehicle vehicle) {
+            if (!minecartControlBlocks && minecartCoastFactor < 0.5) {
+                return;
+            }
+
+            if (vehicle instanceof Minecart) {
+                Minecart minecart = (Minecart)vehicle;
+
+                int blockX = (int)Math.floor(minecart.getX());
+                int blockY = (int)Math.floor(minecart.getY());
+                int blockZ = (int)Math.floor(minecart.getZ());
+                Vector underPt = new Vector(blockX, blockY - 1, blockZ);
+                int under = CraftBook.getBlockID(blockX, blockY - 1, blockZ);
+
+                if (minecartControlBlocks) {
+                    if (under == BlockType.OBSIDIAN) {
+                        Boolean test = testRedstoneSimpleInput(underPt);
+
+                        if (test != null) {
+                            if (!test) {
+                                minecart.setMotion(0, 0, 0);
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                if (minecartCoastFactor >= 0.5) {
+                    minecart.setMotionX(minecart.getMotionX() * minecartCoastFactor);
+                    minecart.setMotionY(minecart.getMotionY() * minecartCoastFactor);
+                    minecart.setMotionZ(minecart.getMotionZ() * minecartCoastFactor);
+                }
+            }
+        }
+        /**
+    * Called when a vehicle changes block
+    *
+    * @param vehicle the vehicle
+    * @param blockX coordinate x
+    * @param blockY coordinate y
+    * @param blockZ coordinate z
+    */
+    @Override
+    public void onVehiclePositionChange(BaseVehicle vehicle,
+            int blockX, int blockY, int blockZ) {
+        if (!minecartControlBlocks) {
             return;
         }
 
         if (vehicle instanceof Minecart) {
             Minecart minecart = (Minecart)vehicle;
 
-            int blockX = (int)Math.floor(minecart.getX());
-            int blockY = (int)Math.floor(minecart.getY());
-            int blockZ = (int)Math.floor(minecart.getZ());
             Vector underPt = new Vector(blockX, blockY - 1, blockZ);
             int under = CraftBook.getBlockID(blockX, blockY - 1, blockZ);
 
@@ -1516,22 +1558,7 @@ public class CraftBookListener extends PluginListener {
                         minecart.setMotionZ(minecart.getMotionZ() * 0.8);
                         return;
                     }
-                } else if (under == BlockType.OBSIDIAN) {
-                    Boolean test = testRedstoneSimpleInput(underPt);
-
-                    if (test != null) {
-                        if (!test) {
-                            minecart.setMotion(0, 0, 0);
-                            return;
-                        }
-                    }
                 }
-            }
-
-            if (minecartSpeedConstant >= 0.5) {
-                minecart.setMotionX(minecart.getMotionX() * minecartSpeedConstant);
-                minecart.setMotionY(minecart.getMotionY() * minecartSpeedConstant);
-                minecart.setMotionZ(minecart.getMotionZ() * minecartSpeedConstant);
             }
         }
     }
