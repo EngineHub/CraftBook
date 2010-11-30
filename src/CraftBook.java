@@ -68,6 +68,14 @@ public class CraftBook extends Plugin {
                     + "does NOT have redstone support! Redstone features will "
                     + "be disabled in CraftBook.");
         }
+
+        if (!registerHook("VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM)) {
+            logger.log(Level.WARNING, "CraftBook: Your version of hMod "
+                    + "does NOT have vehicle hook support! Minecart-related "
+                    + "features will be unavailable.");
+        } else {
+            registerHook("VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
+        }
     }
 
     /**
