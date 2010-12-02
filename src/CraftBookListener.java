@@ -63,10 +63,19 @@ public class CraftBookListener extends PluginListener {
     private Map<String,SI3OFamilyIC> si3oICs =
             new HashMap<String,SI3OFamilyIC>();
     /**
+     * 3ISO ICs.
+     */
+    private Map<String,_3ISOFamilyIC> _3isoICs =
+            new HashMap<String,_3ISOFamilyIC>();
+    /**
      * VIVO ICs.
      */
     private Map<String,VIVOFamilyIC> vivoICs =
             new HashMap<String,VIVOFamilyIC>();
+    /**
+     * The block that was changed.
+     */
+    private BlockVector changedRedstoneInput;
     
     /**
      * Redstone recursion limit.
@@ -587,6 +596,8 @@ public class CraftBookListener extends PluginListener {
             int type = CraftBook.getBlockID(x, y, z);
             int above = CraftBook.getBlockID(x, y + 1, z);
 
+            changedRedstoneInput = new BlockVector(x, y, z);
+
             // When this hook has been called, the level in the world has not
             // yet been updated, so we're going to do this very ugly thing of
             // faking the value with the new one whenever the data value of this
@@ -821,7 +832,7 @@ public class CraftBookListener extends PluginListener {
                     Vector outputVec = getWallSignBack(pt, 2);
 
                     Signal[] in = new Signal[1];
-                    in[0] = new Signal(isOn);
+                    in[0] = new Signal(isOn, true);
                     
                     Signal[] out = new Signal[1];
                     out[0] = new Signal(getRedstoneOutput(outputVec));
@@ -855,22 +866,62 @@ public class CraftBookListener extends PluginListener {
                     Vector output3Vec = getWallSignSide(pt, -1).add(backShift);
 
                     Signal[] in = new Signal[1];
-                    in[0] = new Signal(isOn);
-                    
+                    in[0] = new Signal(isOn, true);
+
                     Signal[] out = new Signal[3];
                     out[0] = new Signal(getRedstoneOutput(output1Vec));
                     out[1] = new Signal(getRedstoneOutput(output2Vec));
                     out[2] = new Signal(getRedstoneOutput(output3Vec));
-                    
+
                     ChipState chip = new ChipState(pt, in, out, signText);
-                    
+
                     // The most important part...
                     si30IC.think(chip);
-                    
+
                     if (chip.isModified()) {
                         setRedstoneOutput(output1Vec, chip.getOut(1).is());
                         setRedstoneOutput(output2Vec, chip.getOut(2).is());
                         setRedstoneOutput(output3Vec, chip.getOut(3).is());
+                    }
+
+                    if (signText.isChanged()) {
+                        sign.setText(0, signText.getLine1());
+                        sign.setText(1, signText.getLine2());
+                        sign.setText(2, signText.getLine3());
+                        sign.setText(3, signText.getLine4());
+                    }
+
+                    return;
+                }
+
+                // 3ISO family
+                _3ISOFamilyIC _3isoIC = _3isoICs.get(id);
+
+                if (_3isoIC != null) {
+                    Vector backVec = getWallSignBack(pt, 1);
+                    Vector outputVec = getWallSignBack(pt, 2);
+                    Vector input1Vec = getWallSignBack(pt, -1);
+                    Vector input2Vec = getWallSignSide(pt, 1);
+                    Vector input3Vec = getWallSignSide(pt, -1);
+
+                    Signal[] in = new Signal[3];
+                    in[0] = new Signal(isRedstoneHighBinary(input1Vec, true),
+                            changedRedstoneInput.equals(input1Vec));
+                    in[1] = new Signal(isRedstoneHighBinary(input2Vec, true),
+                            changedRedstoneInput.equals(input2Vec));
+                    in[2] = new Signal(isRedstoneHighBinary(input3Vec, true),
+                            changedRedstoneInput.equals(input3Vec));
+
+                    Signal[] out = new Signal[1];
+                    out[0] = new Signal(getRedstoneOutput(outputVec));
+
+                    ChipState chip = new ChipState(pt, in, out, signText);
+
+                    // The most important part...
+                    _3isoIC.think(chip);
+
+                    if (chip.isModified()) {
+                        setRedstoneOutput(outputVec, chip.getOut(1).is());
                     }
 
                     if (signText.isChanged()) {
@@ -1159,6 +1210,24 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
+     * Tests to see if a block is high, possibly including redstone wires. If
+     * there was no redstone at that location, null will be returned.
+     *
+     * @param pt
+     * @param type
+     * @param considerWires
+     * @return
+     */
+    private boolean isRedstoneHighBinary(Vector pt, boolean considerWires) {
+        Boolean result = isRedstoneHigh(pt, CraftBook.getBlockID(pt), considerWires);
+        if (result != null && result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Tests the simple input at a block.
      * 
      * @param pt
@@ -1240,7 +1309,15 @@ public class CraftBookListener extends PluginListener {
         if (si30IC != null) {
             return si30IC;
         }
-       
+
+        // 3ISO family
+        _3ISOFamilyIC _3isoIC = _3isoICs.get(id);
+
+        if (_3isoIC != null) {
+            return _3isoIC;
+        }
+
+        // VIVO family
         VIVOFamilyIC vivoIC = vivoICs.get(id);
         
         if(vivoIC != null) {
