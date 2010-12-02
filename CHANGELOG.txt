@@ -1,3 +1,24 @@
+1.3:
+- Added MC3020 (2-input XOR gate), MC3002 (3-input AND),
+    MC3003 (3-input NAND), MC3021 (2-input XNOR), MC3030 (RS NOR latch),
+    MC3031 (RS NAND latch), MC3034 (D rising edge-triggered flip flop),
+    MC3035 (D level-triggered flip flop), MC3231 (time control),
+    MC1201 (dispenser).
+- Minecart booster and station blocks added. They were accidentally added
+    by 1.2.1 got out, so many of you have already been running it. I didn't
+    mean to have them get into the main CraftBook branch yet -- but they
+    have. Gold blocks underneath a track give a 2x boost, gold ore gives
+    25% boost, slow sand gives a 50% slow down, and gravel gives a
+    20% slow down. Station blocks are made of obsidian -- wire them
+    and have a low input to stop all carts that pass over. Put a sign
+    two blocks below facing the direction that you want to go and
+    give a high input to have the cart pushed in the sign's direction
+    (no diagonals!).
+- Improved redstone triggering so that redstone devices to the right/left
+    and above of an input block but have nothing under them will not prevent
+    trigerring.
+- Fixed for the MC update.
+
 1.2.1:
 - Added a recursion limit to the redstone processing.
 - Increased the height that mobs spawned at with MC1200 by one block up.
