@@ -749,13 +749,13 @@ public class CraftBookListener extends PluginListener {
                     pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
             
             if (data == 0x0) {
-                motion = new Vector(0, 0, 0.1);
-            } else if (data == 0x4) {
-                motion = new Vector(-0.1, 0, 0);
-            } else if (data == 0x8) {
                 motion = new Vector(0, 0, -0.1);
-            } else if (data == 0xC) {
+            } else if (data == 0x4) {
                 motion = new Vector(0.1, 0, 0);
+            } else if (data == 0x8) {
+                motion = new Vector(0, 0, 0.1);
+            } else if (data == 0xC) {
+                motion = new Vector(-0.1, 0, 0);
             } else {
                 return;
             }
