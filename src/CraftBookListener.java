@@ -193,6 +193,7 @@ public class CraftBookListener extends PluginListener {
         _3isoICs.put("MC3031", new MC3031());
         _3isoICs.put("MC3034", new MC3034());
         _3isoICs.put("MC3036", new MC3036());
+        _3isoICs.put("MC3231", new MC3231());
     }
 
     /**
