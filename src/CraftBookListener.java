@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import javax.swing.text.html.HTMLDocument.HTMLReader.BlockAction;
 
 /**
  * Event listener for Hey0's server mod.
@@ -126,6 +127,7 @@ public class CraftBookListener extends PluginListener {
     private int minecartStationBlock = BlockType.OBSIDIAN;
     private int minecartReverseBlock = BlockType.CLOTH;
     private int minecartTriggerBlock = BlockType.IRON_ORE;
+    private int minecartEjectBlock = BlockType.IRON_BLOCK;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -251,6 +253,7 @@ public class CraftBookListener extends PluginListener {
         minecartStationBlock = properties.getInt("minecart-station-block", BlockType.OBSIDIAN);
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
+        minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -1721,6 +1724,53 @@ public class CraftBookListener extends PluginListener {
                     setTrackRedstoneTrigger(underPt.add(-1, 0, 0));
                     setTrackRedstoneTrigger(underPt.add(0, 0, 1));
                     setTrackRedstoneTrigger(underPt.add(0, 0, -1));
+                } else if (under == minecartEjectBlock) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test == null || test) {
+                        Player player = minecart.getPassenger();
+                        if (player != null) {
+                            // Let's find a place to put the player
+                            Location loc = player.getLocation();
+                            Vector signPos = new Vector(blockX, blockY - 2, blockZ);
+
+                            if (CraftBook.getBlockID(signPos) == BlockType.SIGN_POST
+                                    && doesSignSay(signPos, 1, "[Eject]")) {
+                                Vector pos = getSignPostOrthogonalBack(signPos, 1);
+
+                                // Acceptable sign direction
+                                if (pos != null) {
+                                    pos = pos.setY(blockY);
+
+                                    // Is the spot free?
+                                    if (BlockType.canPassThrough(CraftBook.getBlockID(pos.add(0, 1, 0)))
+                                            && BlockType.canPassThrough(CraftBook.getBlockID(pos))) {
+                                        loc = new Location(
+                                                pos.getBlockX(),
+                                                pos.getBlockY(),
+                                                pos.getBlockZ());
+
+                                        ComplexBlock cBlock = etc.getServer().getComplexBlock(
+                                                blockX, blockY - 2, blockZ);
+
+                                        if (cBlock instanceof Sign) {
+                                            Sign sign = (Sign)cBlock;
+                                            String text = sign.getText(0);
+                                            if (text.length() > 0) {
+                                                player.sendMessage(Colors.Gold + "You've arrived at: "
+                                                        + text);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            loc.x = loc.x + 0.5;
+                            loc.z = loc.z + 0.5;
+
+                            player.teleportTo(loc);
+                        }
+                    }
                 }
             }
         }
@@ -1801,6 +1851,33 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
+     * Gets the block behind a sign.
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param multiplier
+     * @return
+     */
+    private static Vector getSignPostOrthogonalBack(Vector pt, int multiplier) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+        int data = CraftBook.getBlockData(x, y, z);
+        if (data == 0x8) { // East
+            return new Vector(x, y, z + multiplier);
+        } else if (data == 0x0) { // West
+            return new Vector(x, y, z - multiplier);
+        } else if (data == 0x4) { // North
+            return new Vector(x + multiplier, y, z);
+        } else if (data == 0xC) { // South
+            return new Vector(x - multiplier, y, z);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Gets the block next to a sign.
      *
      * @param x
@@ -1823,6 +1900,27 @@ public class CraftBookListener extends PluginListener {
         } else {
             return new Vector(x, y, z + multiplier);
         }
+    }
+
+    /**
+     * Checks whether a sign at a location has a certain text on a
+     * particular line, case in-sensitive.
+     * 
+     * @param pt
+     * @param lineNo
+     * @param text
+     * @return
+     */
+    public static boolean doesSignSay(Vector pt, int lineNo, String text) {
+        ComplexBlock cBlock = etc.getServer().getComplexBlock(
+                pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+
+        if (cBlock instanceof Sign) {
+            Sign sign = (Sign)cBlock;
+            return text.equalsIgnoreCase(sign.getText(lineNo));
+        }
+
+        return false;
     }
 
     /**

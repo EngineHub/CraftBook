@@ -216,10 +216,28 @@ public final class BlockType {
      */
     public static boolean canPassThrough(int id) {
         return id == AIR
+                || id == SAPLING
+                || id == YELLOW_FLOWER
+                || id == RED_FLOWER
+                || id == BROWN_MUSHROOM
+                || id == RED_MUSHROOM
                 || id == TORCH
+                || id == FIRE
+                || id == REDSTONE_WIRE
+                || id == CROPS
+                || id == SIGN_POST
+                || id == LADDER
+                || id == MINECART_TRACKS
+                || id == WALL_SIGN
+                || id == LEVER
+                || id == STONE_PRESSURE_PLATE
+                || id == WOODEN_PRESSURE_PLATE
                 || id == REDSTONE_TORCH_OFF
                 || id == REDSTONE_TORCH_ON
-                || id == WALL_SIGN;
+                || id == STONE_BUTTON
+                || id == SNOW
+                || id == REED
+                || id == PORTAL;
     }
 
     /**
