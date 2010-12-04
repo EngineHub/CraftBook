@@ -745,9 +745,16 @@ public class CraftBookListener extends PluginListener {
         // Minecart station
         } else if (minecartControlBlocks && type == minecartStationBlock
                 && CraftBook.getBlockID(pt.add(0, 1, 0)) == BlockType.MINECART_TRACKS
-                && CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST) {
+                && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
+                    || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
             ComplexBlock cblock = etc.getServer().getComplexBlock(
                     pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
+
+            // Maybe it's the sign directly below
+            if (cblock == null || !(cblock instanceof Sign)) {
+                cblock = etc.getServer().getComplexBlock(
+                        pt.getBlockX(), pt.getBlockY() - 1, pt.getBlockZ());
+            }
 
             if (cblock == null || !(cblock instanceof Sign)) {
                 return;
