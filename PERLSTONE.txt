@@ -1,4 +1,6 @@
 Perlstone Specification v1.0
+(See http://wiki.sk89q.com/wiki/CraftBook/PerlStone for a up-to-date version,
+ and examples)
 
 Introduction
 ------------
@@ -60,16 +62,18 @@ Logical functions:
                 and if ef is 11 pushes d onto the stack.
 
 Flow control functions:
-cffn (123...->r?) - pops n values off the stack, calls, the function f
-                    (referenced by number), and pushes the previously popped 
-                    values onto the called function's stack, and returns the 
-                    return value, if one exists, of the called function onto 
-                    the calling function's stack.
+cffn (123...->r?) - Pops n values off the stack and calls the function f
+                    (referenced by a two-digit number) and pushes the
+                    previously popped values onto the called function's stack,
+                    and pushes the return value (if one exists) of the called
+                    function onto the calling function's stack 
 tffn (123...->r?) - calls the function defined by f with n arguments are in c,
                     pops the top value of the stack, and returns it.
-[c] (v->) - if v is 'false,' skip to the end of the code block defined by c. 
-            otherwise, execute the code block defined by c. on completion, 
-            repeat this command.
+[ (v->) - pops the top value of the stack, and if it is false, jump to the
+          opcode after the corresponding ] opcode (as defined by a system of
+          nested '[' and ']' instructions) 
+] (v->) - pops the top value of the stack, and if it is true, jump to the
+          opcode after the corresponding [ opcode (as defined in the [ opcode) 
 
 s - returns from the current function
 r (v->) - pops the top value of the stack, and pushes that value onto the stack
