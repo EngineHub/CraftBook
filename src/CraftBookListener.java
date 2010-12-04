@@ -124,6 +124,7 @@ public class CraftBookListener extends PluginListener {
     private int minecart20xSlowBlock = BlockType.GRAVEL;
     private int minecartStationBlock = BlockType.OBSIDIAN;
     private int minecartReverseBlock = BlockType.CLOTH;
+    private int minecartTriggerBlock = BlockType.IRON_ORE;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -247,6 +248,7 @@ public class CraftBookListener extends PluginListener {
         minecart20xSlowBlock = properties.getInt("minecart-20x-slow-block", BlockType.GRAVEL);
         minecartStationBlock = properties.getInt("minecart-station-block", BlockType.OBSIDIAN);
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
+        minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -1312,6 +1314,30 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
+     * Sets the output state of a minecart trigger at a location.
+     *
+     * @param getPosition
+     * @param state
+     */
+    private void setTrackRedstoneTrigger(Vector pos) {
+        if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
+            int data = CraftBook.getBlockData(pos);
+            int newData = 0;
+            boolean state = (data & 0x8) == 0x8;
+
+            if (state) {
+                newData = data & 0x7;
+            } else {
+                newData = data | 0x8;
+            }
+
+            CraftBook.setBlockData(pos, newData);
+            etc.getServer().updateBlockPhysics(
+                    pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), newData);
+        }
+    }
+
+    /**
      * Get the registered IC.
      * 
      * @param id
@@ -1681,6 +1707,11 @@ public class CraftBookListener extends PluginListener {
                         minecart.setMotionZ(minecart.getMotionZ() * -1);
                         return;
                     }
+                } else if (under == minecartTriggerBlock) {
+                    setTrackRedstoneTrigger(underPt.add(1, 0, 0));
+                    setTrackRedstoneTrigger(underPt.add(-1, 0, 0));
+                    setTrackRedstoneTrigger(underPt.add(0, 0, 1));
+                    setTrackRedstoneTrigger(underPt.add(0, 0, -1));
                 }
             }
         }
