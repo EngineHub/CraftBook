@@ -74,12 +74,18 @@ public class MC1200 extends SISOFamilyIC {
             String id = chip.getText().getLine3();
             if (Mob.isValid(id)) {
                 Vector pos = chip.getPosition();
-                Location loc =
-                        new Location(pos.getBlockX(),
-                        pos.getBlockY() + 2,
-                        pos.getBlockZ());
-                Mob mob = new Mob(id, loc);
-                mob.spawn();
+                int maxY = Math.min(128, pos.getBlockY() + 10);
+                int x = pos.getBlockX();
+                int z = pos.getBlockZ();
+
+                for (int y = pos.getBlockY() + 1; y <= maxY; y++) {
+                    if (BlockType.canPassThrough(CraftBook.getBlockID(x, y, z))) {
+                        Location loc = new Location(x, y, z);
+                        Mob mob = new Mob(id, loc);
+                        mob.spawn();
+                        return;
+                    }
+                }
             }
         }
     }
