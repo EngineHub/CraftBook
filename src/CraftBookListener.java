@@ -1024,8 +1024,6 @@ public class CraftBookListener extends PluginListener {
             }
         }
     }
-    
-    private static boolean checkNull(Boolean b) { return b==null?true:b; }
 
     /**
      * Attempts to detect redstone input. If there are many inputs to one
