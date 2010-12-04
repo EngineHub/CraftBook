@@ -139,6 +139,7 @@ public class CraftBookListener extends PluginListener {
     private boolean inCartControl = true;
     private boolean minecartDispensers = true;
     private boolean minecartTrackMessages = true;
+    private boolean redstonePLCsRequirePermission = false;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
     private int minecart50xSlowBlock = BlockType.SLOW_SAND;
@@ -179,9 +180,6 @@ public class CraftBookListener extends PluginListener {
         _3isoICs.put("MC3034", new MC3034());
         _3isoICs.put("MC3036", new MC3036());
         _3isoICs.put("MC3231", new MC3231());
-        vivoICs.put("MC5000", new PlcBase(new Perlstone_1_0(), true));
-        //Uncomment this when switch-based memory is implemented.
-        //vivoICs.put("MC5100", new PlcBase(new Perlstone_1_0(), false));
     }
 
     /**
@@ -270,6 +268,7 @@ public class CraftBookListener extends PluginListener {
         cauldronModule = null;
         redstoneICs = properties.getBoolean("redstone-ics", true);
         redstonePLCs = properties.getBoolean("redstone-plcs", true);
+        redstonePLCsRequirePermission = properties.getBoolean("redstone-plcs-require-permission", false);
         enableAmmeter = properties.getBoolean("ammeter", true);
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
         hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
@@ -286,6 +285,16 @@ public class CraftBookListener extends PluginListener {
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
 
+        if(redstonePLCs) {
+            vivoICs.put("MC5000", new PlcBase(new Perlstone_1_0(), true));
+            //Uncomment this when switch-based memory is implemented.
+            //vivoICs.put("MC5100", new PlcBase(new Perlstone_1_0(), false));
+        } else {
+        	vivoICs.remove("MC5000");
+            //Uncomment this when switch-based memory is implemented.
+        	//vivoICs.remove("MC5100");
+        }
+        
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
             useChestsBlockBag = true;
@@ -665,7 +674,8 @@ public class CraftBookListener extends PluginListener {
             int z = block.getZ();
 
             int type = CraftBook.getBlockID(x, y, z);
-            int above = CraftBook.getBlockID(x, y + 1, z);
+            //Unused
+            //int above = CraftBook.getBlockID(x, y + 1, z);
 
             changedRedstoneInput = new BlockVector(x, y, z);
 
@@ -1022,11 +1032,6 @@ public class CraftBookListener extends PluginListener {
                 _3ISOFamilyIC _3isoIC = _3isoICs.get(id);
 
                 if (_3isoIC != null) {
-                    // Hard-coded
-                    if (!redstonePLCs) {
-                        return;
-                    }
-                    
                     Vector backVec = getWallSignBack(pt, 1);
                     Vector outputVec = getWallSignBack(pt, 2);
                     Vector input1Vec = getWallSignBack(pt, -1);
@@ -1131,7 +1136,13 @@ public class CraftBookListener extends PluginListener {
                     return;
                 }
 
-                sign.setText(1, Colors.Red + line2);
+                if(id.startsWith("MC5")&&!redstonePLCs) {
+                	sign.setText(1, Colors.Red + line2);
+                	sign.setText(2, "!ERROR!");
+                	sign.setText(3, "plcs disabled");
+                }
+                else sign.setText(1, Colors.Red + line2);
+                sign.update();
             }
         }
     }
@@ -1578,7 +1589,7 @@ public class CraftBookListener extends PluginListener {
 
                 String id = line2.substring(1, len - 1).toUpperCase();
 
-                if (id.equalsIgnoreCase("MC5000")) {
+                if (id.startsWith("MC5")) {
                     if (!redstonePLCs) {
                         player.sendMessage(Colors.Rose + "PLCs are not enabled.");
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
@@ -1588,7 +1599,7 @@ public class CraftBookListener extends PluginListener {
 
                 IC ic = getIC(id);
                 if (ic != null) {
-                    if (ic.requiresPermission() && !player.canUseCommand("/allic")
+                    if (( ic.requiresPermission() || ( id.startsWith("MC5") && redstonePLCsRequirePermission ) ) && !player.canUseCommand("/allic")
                              && !player.canUseCommand("/" + id.toLowerCase())) {
                         player.sendMessage(Colors.Rose
                                 + "You don't have permission to make " + id + ".");

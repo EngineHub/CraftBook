@@ -50,14 +50,14 @@ public class PlcBase extends VIVOFamilyIC {
         try {
             code = getCode(chip.getPosition());
         } catch (PlcException e) {
-            t.setLine2(Colors.Rose+t.getLine2());
+            t.setLine2(Colors.Red+t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("code not found");
             return;
         }
         
         if(!t.getLine3().equals("HASH:"+Integer.toHexString(code.hashCode()))) {
-            t.setLine2(Colors.Rose+t.getLine2());
+            t.setLine2(Colors.Red+t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("code modified");
             return;
@@ -67,12 +67,12 @@ public class PlcBase extends VIVOFamilyIC {
         if(signStorage) try {
             presistantStorage = Base64.decode(t.getLine4().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            t.setLine2(Colors.Rose+t.getLine2());
+            t.setLine2(Colors.Red+t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("no utf-8");
             return;
         } catch (IOException e) {
-            t.setLine2(Colors.Rose+t.getLine2());
+            t.setLine2(Colors.Red+t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("unknown error");
             return;
@@ -90,12 +90,12 @@ public class PlcBase extends VIVOFamilyIC {
         try {
             output = language.tick(s, code);
         } catch (PlcException e) {
-            t.setLine2(Colors.Rose+t.getLine2());
+            t.setLine2(Colors.Red+t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4(e.getMessage());
             return;
         } catch (Throwable r) {
-            t.setLine2(Colors.Rose+t.getLine2());
+            t.setLine2(Colors.Red+t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4(r.getClass().getSimpleName());
             return;
