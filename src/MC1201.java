@@ -109,7 +109,7 @@ public class MC1201 extends SISOFamilyIC {
 
         if (item > 0) {
             Vector pos = chip.getPosition();
-            int maxY = pos.getBlockY() + 5;
+            int maxY = Math.min(128, pos.getBlockY() + 10);
             int x = pos.getBlockX();
             int z = pos.getBlockZ();
 

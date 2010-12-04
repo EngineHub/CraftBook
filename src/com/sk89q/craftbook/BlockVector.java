@@ -73,8 +73,9 @@ public class BlockVector extends Vector {
             return false;
         }
         Vector other = (Vector)obj;
-        return (int)other.x == (int)this.x && (int)other.y == (int)this.y
-                && (int)other.z == (int)this.z;
+        return (int)Math.floor(other.x) == (int)Math.floor(this.x)
+                && (int)Math.floor(other.y) == (int)Math.floor(this.y)
+                && (int)Math.floor(other.z) == (int)Math.floor(this.z);
 
     }
 

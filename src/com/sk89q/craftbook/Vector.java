@@ -96,7 +96,7 @@ public class Vector {
      * @return the x
      */
     public int getBlockX() {
-        return (int)Math.round(x);
+        return (int)Math.floor(x);
     }
 
     /**
@@ -130,7 +130,7 @@ public class Vector {
      * @return the y
      */
     public int getBlockY() {
-        return (int)Math.round(y);
+        return (int)Math.floor(y);
     }
 
     /**
@@ -164,7 +164,7 @@ public class Vector {
      * @return the z
      */
     public int getBlockZ() {
-        return (int)Math.round(z);
+        return (int)Math.floor(z);
     }
 
     /**
