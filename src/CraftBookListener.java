@@ -118,7 +118,7 @@ public class CraftBookListener extends PluginListener {
     private boolean enableAmmeter = true;
     private boolean minecartControlBlocks = true;
     private boolean hinderPressurePlateMinecartSlow = false;
-    private double minecartCoastFactor = 0;
+    private boolean hinderUnoccupiedSlowdown = true;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
     private int minecart50xSlowBlock = BlockType.SLOW_SAND;
@@ -243,7 +243,7 @@ public class CraftBookListener extends PluginListener {
         enableAmmeter = properties.getBoolean("ammeter", true);
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
         hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
-        minecartCoastFactor = properties.getDouble("minecart-coast-factor", 0);
+        hinderUnoccupiedSlowdown = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
         minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
         minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
         minecart50xSlowBlock = properties.getInt("minecart-50x-slow-block", BlockType.SLOW_SAND);
@@ -1606,7 +1606,7 @@ public class CraftBookListener extends PluginListener {
      */
     @Override
     public void onVehicleUpdate(BaseVehicle vehicle) {
-        if (!minecartControlBlocks && minecartCoastFactor < 0.5) {
+        if (!minecartControlBlocks && !hinderUnoccupiedSlowdown) {
             return;
         }
 
@@ -1641,10 +1641,9 @@ public class CraftBookListener extends PluginListener {
                                    minecart.getMotionZ() / 0.55000000000000004D);
             }
 
-            if (minecartCoastFactor >= 0.5) {
-                minecart.setMotionX(minecart.getMotionX() * minecartCoastFactor);
-                minecart.setMotionY(minecart.getMotionY() * minecartCoastFactor);
-                minecart.setMotionZ(minecart.getMotionZ() * minecartCoastFactor);
+            if (hinderUnoccupiedSlowdown && minecart.getPassenger() == null) {
+                minecart.setMotionX(minecart.getMotionX() * 1.0188250000000001D);
+                minecart.setMotionZ(minecart.getMotionZ() * 1.0188250000000001D);
             }
         }
     }
