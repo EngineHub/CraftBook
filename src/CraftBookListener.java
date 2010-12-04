@@ -118,6 +118,12 @@ public class CraftBookListener extends PluginListener {
     private boolean enableAmmeter = true;
     private boolean minecartControlBlocks = true;
     private double minecartCoastFactor = 0;
+    private int minecart25xBoostBlock = BlockType.GOLD_ORE;
+    private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
+    private int minecart50xSlowBlock = BlockType.SLOW_SAND;
+    private int minecart20xSlowBlock = BlockType.GRAVEL;
+    private int minecartStationBlock = BlockType.OBSIDIAN;
+    private int minecartReverseBlock = BlockType.CLOTH;
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -235,6 +241,12 @@ public class CraftBookListener extends PluginListener {
         enableAmmeter = properties.getBoolean("ammeter", true);
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
         minecartCoastFactor = properties.getDouble("minecart-coast-factor", 0);
+        minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
+        minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
+        minecart50xSlowBlock = properties.getInt("minecart-50x-slow-block", BlockType.SLOW_SAND);
+        minecart20xSlowBlock = properties.getInt("minecart-20x-slow-block", BlockType.GRAVEL);
+        minecartStationBlock = properties.getInt("minecart-station-block", BlockType.OBSIDIAN);
+        minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
 
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
         if (blockBag.equalsIgnoreCase("nearby-chests")) {
@@ -727,7 +739,7 @@ public class CraftBookListener extends PluginListener {
                 CraftBook.setBlockID(pt, BlockType.PUMPKIN);
             }
         // Minecart station
-        } else if (minecartControlBlocks && type == BlockType.OBSIDIAN
+        } else if (minecartControlBlocks && type == minecartStationBlock
                 && CraftBook.getBlockID(pt.add(0, 1, 0)) == BlockType.MINECART_TRACKS
                 && CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST) {
             ComplexBlock cblock = etc.getServer().getComplexBlock(
@@ -749,13 +761,13 @@ public class CraftBookListener extends PluginListener {
                     pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
             
             if (data == 0x0) {
-                motion = new Vector(0, 0, -0.1);
+                motion = new Vector(0, 0, -0.3);
             } else if (data == 0x4) {
-                motion = new Vector(0.1, 0, 0);
+                motion = new Vector(0.3, 0, 0);
             } else if (data == 0x8) {
-                motion = new Vector(0, 0, 0.1);
+                motion = new Vector(0, 0, 0.3);
             } else if (data == 0xC) {
-                motion = new Vector(-0.1, 0, 0);
+                motion = new Vector(-0.3, 0, 0);
             } else {
                 return;
             }
@@ -1621,40 +1633,44 @@ public class CraftBookListener extends PluginListener {
             int under = CraftBook.getBlockID(blockX, blockY - 1, blockZ);
 
             if (minecartControlBlocks) {
-                if (under == BlockType.GOLD_ORE) {
+                if (under == minecart25xBoostBlock) {
                     Boolean test = testRedstoneSimpleInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 1.25);
-                        minecart.setMotionY(minecart.getMotionY() * 1.25);
                         minecart.setMotionZ(minecart.getMotionZ() * 1.25);
                         return;
                     }
-                } else if (under == BlockType.GOLD_BLOCK) {
+                } else if (under == minecart100xBoostBlock) {
                     Boolean test = testRedstoneSimpleInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 2);
-                        minecart.setMotionY(minecart.getMotionY() * 2);
                         minecart.setMotionZ(minecart.getMotionZ() * 2);
                         return;
                     }
-                } else if (under == BlockType.SLOW_SAND) {
+                } else if (under == minecart50xSlowBlock) {
                     Boolean test = testRedstoneSimpleInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 0.5);
-                        minecart.setMotionY(minecart.getMotionY() * 0.5);
                         minecart.setMotionZ(minecart.getMotionZ() * 0.5);
                         return;
                     }
-                } else if (under == BlockType.GRAVEL) {
+                } else if (under == minecart20xSlowBlock) {
                     Boolean test = testRedstoneSimpleInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 0.8);
-                        minecart.setMotionY(minecart.getMotionY() * 0.8);
                         minecart.setMotionZ(minecart.getMotionZ() * 0.8);
+                        return;
+                    }
+                } else if (under == minecartReverseBlock) {
+                    Boolean test = testRedstoneSimpleInput(underPt);
+
+                    if (test == null || test) {
+                        minecart.setMotionX(minecart.getMotionX() * -1);
+                        minecart.setMotionZ(minecart.getMotionZ() * -1);
                         return;
                     }
                 }
