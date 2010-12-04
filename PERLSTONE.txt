@@ -4,27 +4,31 @@ Introduction
 ------------
 
 Perlstone, named for Perl of which which is often compared to line noise, is a
-small scripting language for use in Minecraft servers which intergrates with
-Minecraft's Redstone system for making what amounts to electrical circuitry.
+small scripting language that can be used in CraftBook to program programmable
+logic chips. The language was designed and the interpreter written by Lymia.
 
-Perlstone has a stack of booleans, a presistant variable table containing 32
-fields, indexed with the values 0-9 or a-u, a temp variable table containing 32
-fields, indexed indentically to the presistant variable table, a function local
-variable table identical to the temp and presistant variable tables, and 3
-input registers. The script is formatted into up to ten function strings,
-seperated by the character ':', and indexed to numbers 0 though 99, all of
-which may return a boolean value.
+Features of Perlstone are:
 
-Each function contains an arbitary number of opcodes, which may take arguments
-(which are pushed onto the function's stack when it is called) and optionally
-returns a single boolean value. When a function is called, a new function local
-variable table is created, starting with all 'false' values, which will be used
-for the duration of the function.
+    * A stack
+    * A 32-cell persistent variable table (indexed with 0-9 and a-v)
+    * A 32-cell temporary variable table (indexed with 0-9 and a-v)
+    * A 32-cell local variable table (for functions, and indexed with 0-9 and
+      a-v)
+    * Three input registers 
+
+A script is grouped into up to ten functions that may return a boolean. Each
+function is written as a string and separated by the character ':'. Each
+function is indexed with numbers 0 though 99. There may be an arbitrary number
+of opcodes used in each function. Some functions may take arguments (which are
+pushed onto the function's stack when it is called) and optionally return a
+single boolean value. When a function is called, a new function local variable
+table is created, pre-filled with all 'false' values and used for the duration
+of the function.
 
 Opcodes
 -------
 
-[opcode][arguments] (stack arguments -> opcode return value) - description
+[opcode][operands] (stack arguments -> opcode return value) - description
 
 Constant functions:
 + (->t) - pushes 'true' onto the stack

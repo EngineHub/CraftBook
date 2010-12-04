@@ -249,7 +249,7 @@ public final class Perlstone_1_0 implements PlcLang {
                     case 'L':
                         char c;
                         if ((c = function[++i]) != 'p' && c != 't' && c != 'l') throw new PerlstoneException("bad arguments");
-                        if (((c = function[++i]) >= '0' && c <= '9') || (c >= 'a' && c <= 'u')) continue loop;
+                        if (((c = function[++i]) >= '0' && c <= '9') || (c >= 'a' && c <= 'v')) continue loop;
                         throw new PerlstoneException("bad arguments");
 
                         // Custom logic gate command
