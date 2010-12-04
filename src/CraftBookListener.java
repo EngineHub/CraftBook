@@ -117,6 +117,7 @@ public class CraftBookListener extends PluginListener {
     private boolean redstoneICs = true;
     private boolean enableAmmeter = true;
     private boolean minecartControlBlocks = true;
+    private boolean hinderPressurePlateMinecartSlow = false;
     private double minecartCoastFactor = 0;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
@@ -241,6 +242,7 @@ public class CraftBookListener extends PluginListener {
         redstoneICs = properties.getBoolean("redstone-ics", true);
         enableAmmeter = properties.getBoolean("ammeter", true);
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
+        hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
         minecartCoastFactor = properties.getDouble("minecart-coast-factor", 0);
         minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
         minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
@@ -1630,7 +1632,8 @@ public class CraftBookListener extends PluginListener {
                 }
             }
 
-            if (under == BlockType.STONE_PRESSURE_PLATE
+            if (hinderPressurePlateMinecartSlow
+                    && under == BlockType.STONE_PRESSURE_PLATE
                     || under == BlockType.WOODEN_PRESSURE_PLATE) {
                 // Numbers from code
                 minecart.setMotion(minecart.getMotionX() / 0.55000000000000004D,
