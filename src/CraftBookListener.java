@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import javax.swing.text.html.HTMLDocument.HTMLReader.BlockAction;
 
 /**
  * Event listener for Hey0's server mod.
@@ -120,6 +119,7 @@ public class CraftBookListener extends PluginListener {
     private boolean minecartControlBlocks = true;
     private boolean hinderPressurePlateMinecartSlow = false;
     private boolean hinderUnoccupiedSlowdown = true;
+    private boolean inCartControl = true;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
     private int minecart50xSlowBlock = BlockType.SLOW_SAND;
@@ -246,6 +246,7 @@ public class CraftBookListener extends PluginListener {
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
         hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
         hinderUnoccupiedSlowdown = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
+        inCartControl = properties.getBoolean("minecart-in-cart-control", true);
         minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
         minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
         minecart50xSlowBlock = properties.getInt("minecart-50x-slow-block", BlockType.SLOW_SAND);
@@ -1802,6 +1803,68 @@ public class CraftBookListener extends PluginListener {
                 }
             }
         }
+    }
+
+    /**
+     * Called when vehicle receives damage
+     *
+     * @param vehicle
+     * @param attacker entity that dealt the damage
+     * @param damage
+     * @return false to set damage
+     */
+    @Override
+    public boolean onVehicleDamage(BaseVehicle vehicle,
+            BaseEntity attacker, int damage) {
+
+        if (!inCartControl) {
+            return false;
+        }
+
+        Player passenger = vehicle.getPassenger();
+
+        // Player.equals() now works correctly as of recent hMod versions
+        if (passenger != null && vehicle instanceof Minecart
+                && attacker.isPlayer()
+                && attacker.getPlayer().equals(passenger)) {
+            double speed = Math.sqrt(Math.pow(vehicle.getMotionX(), 2)
+                    + Math.pow(vehicle.getMotionY(), 2)
+                    + Math.pow(vehicle.getMotionZ(), 2));
+
+            if (speed > 0.01) { // Stop the cart
+                vehicle.setMotion(0, 0, 0);
+            } else {
+                // From hey0's code, and then stolen from WorldEdit
+                double rot = (passenger.getRotation() - 90) % 360;
+                if (rot < 0) {
+                    rot += 360.0;
+                }
+
+                String dir = etc.getCompassPointForDirection(rot);
+                
+                if (dir.equals("N")) {
+                    vehicle.setMotion(-0.1, 0, 0);
+                } else if(dir.equals("NE")) {
+                    vehicle.setMotion(-0.1, 0, -0.1);
+                } else if(dir.equals("E")) {
+                    vehicle.setMotion(0, 0, -0.1);
+                } else if(dir.equals("SE")) {
+                    vehicle.setMotion(0.1, 0, -0.1);
+                } else if(dir.equals("S")) {
+                    vehicle.setMotion(0.1, 0, 0);
+                } else if(dir.equals("SW")) {
+                    vehicle.setMotion(0.1, 0, 0.1);
+                } else if(dir.equals("W")) {
+                    vehicle.setMotion(0, 0, 0.1);
+                } else if(dir.equals("NW")) {
+                    vehicle.setMotion(-0.1, 0, 0.1);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
     
     /**

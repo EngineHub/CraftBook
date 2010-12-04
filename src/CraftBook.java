@@ -75,6 +75,7 @@ public class CraftBook extends Plugin {
                     + "features will be unavailable.");
         } else {
             registerHook("VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
+            registerHook("VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
         }
     }
 
