@@ -16,13 +16,13 @@ Features of Perlstone are:
       a-v)
     * Three input registers 
 
-A script is grouped into up to one hundred functions. Each function is written
-as a string and separated by the character ':', are indexed with numbers 0
-though 99, and contain an arbitrary number of opcodes. Some functions may take
-arguments (which are pushed onto the function's stack when it is called) or
-return a single boolean value. When a function is called, a new function local
-variable table is created, pre-filled with all 'false' values and used for the
-duration of the function. 
+A script is grouped into up to one hundred functions. Functions are strings
+containing an arbitrary number of opcodes, and are separated by the character
+':'. Functions are also indexed with numbers 0 though 99. Some functions may
+take arguments (which are pushed onto the function's stack when it is called)
+or return a single boolean value. When a function is called, a new function
+local variable table is created, pre-filled with all 'false' values and used
+for the duration of the function. 
 
 Opcodes
 -------
