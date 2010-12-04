@@ -176,6 +176,8 @@ public class GateSwitch {
             // Allowing water allows the use of gates as flood gates
             if (cur != BlockType.WATER
                     && cur != BlockType.STATIONARY_WATER
+                    && cur != BlockType.LAVA
+                    && cur != BlockType.STATIONARY_LAVA
                     && cur != BlockType.FENCE
                     && cur != 0) {
                 break;
