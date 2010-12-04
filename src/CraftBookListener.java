@@ -1715,8 +1715,36 @@ public class CraftBookListener extends PluginListener {
                     Boolean test = testRedstoneSimpleInput(underPt);
 
                     if (test == null || test) {
-                        minecart.setMotionX(minecart.getMotionX() * -1);
-                        minecart.setMotionZ(minecart.getMotionZ() * -1);
+                        Vector signPos = new Vector(blockX, blockY - 2, blockZ);
+                        boolean reverseX = true;
+                        boolean reverseZ = true;
+
+                        // Directed reverse block
+                        if (CraftBook.getBlockID(signPos) == BlockType.SIGN_POST
+                                && doesSignSay(signPos, 1, "[Reverse]")) {
+                            Vector dir = getSignPostOrthogonalBack(signPos, 1)
+                                    .subtract(signPos);
+
+                            // Acceptable sign direction
+                            if (dir != null) {
+                                if (CBMath.isSameSign(minecart.getMotionX(),
+                                        dir.getBlockX())) {
+                                    reverseX = false;
+                                }
+                                if (CBMath.isSameSign(minecart.getMotionZ(),
+                                        dir.getBlockZ())) {
+                                    reverseZ = false;
+                                }
+                            }
+                        }
+                        
+                        if (reverseX) {
+                            minecart.setMotionX(minecart.getMotionX() * -1);
+                        }
+                        if (reverseZ) {
+                            minecart.setMotionZ(minecart.getMotionZ() * -1);
+                        }
+                        
                         return;
                     }
                 } else if (under == minecartTriggerBlock) {
