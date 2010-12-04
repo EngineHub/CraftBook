@@ -1604,6 +1604,14 @@ public class CraftBookListener extends PluginListener {
                 }
             }
 
+            if (under == BlockType.STONE_PRESSURE_PLATE
+                    || under == BlockType.WOODEN_PRESSURE_PLATE) {
+                // Numbers from code
+                minecart.setMotion(minecart.getMotionX() / 0.55000000000000004D,
+                                   0,
+                                   minecart.getMotionZ() / 0.55000000000000004D);
+            }
+
             if (minecartCoastFactor >= 0.5) {
                 minecart.setMotionX(minecart.getMotionX() * minecartCoastFactor);
                 minecart.setMotionY(minecart.getMotionY() * minecartCoastFactor);
