@@ -1,6 +1,7 @@
 dev:
 - Added MC5000 (Programmable Logic Controller - Perlstone v1.0, sign based
     memory)
+- Fixed bug in MC1201 where any user can make a spawner for an arbitary item.
 
 1.3:
 - Added MC3020 (2-input XOR gate), MC3002 (3-input AND),
