@@ -328,11 +328,9 @@ public final class Perlstone_1_0 implements PlcLang {
 
     private static void storePresistantStorage(byte[] d, boolean[] pvt) {
         byte[] data = new byte[4];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) 
             for (int b = 0; b < 8; b++)
                 data[i] |= pvt[i * 8 + b] ? 1 << (7-b) : 0;
-            System.out.println(Integer.toBinaryString(data[i]&0xFF));
-        }
         if(DEBUG) System.out.println("Written presistant storage: "+Arrays.toString(pvt)+" -> "+Arrays.toString(d));
         System.arraycopy(data, 0, d, 0, 4);
     }
