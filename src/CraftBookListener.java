@@ -131,6 +131,7 @@ public class CraftBookListener extends PluginListener {
     private boolean redstonePumpkins = true;
     private double dropAppleChance = 0;
     private boolean redstoneICs = true;
+    private boolean redstonePLCs = true;
     private boolean enableAmmeter = true;
     private boolean minecartControlBlocks = true;
     private boolean hinderPressurePlateMinecartSlow = false;
@@ -268,6 +269,7 @@ public class CraftBookListener extends PluginListener {
         checkCreatePermissions = properties.getBoolean("check-create-permissions", false);
         cauldronModule = null;
         redstoneICs = properties.getBoolean("redstone-ics", true);
+        redstonePLCs = properties.getBoolean("redstone-plcs", true);
         enableAmmeter = properties.getBoolean("ammeter", true);
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
         hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
@@ -1020,6 +1022,11 @@ public class CraftBookListener extends PluginListener {
                 _3ISOFamilyIC _3isoIC = _3isoICs.get(id);
 
                 if (_3isoIC != null) {
+                    // Hard-coded
+                    if (!redstonePLCs) {
+                        return;
+                    }
+                    
                     Vector backVec = getWallSignBack(pt, 1);
                     Vector outputVec = getWallSignBack(pt, 2);
                     Vector input1Vec = getWallSignBack(pt, -1);
@@ -1546,6 +1553,13 @@ public class CraftBookListener extends PluginListener {
                 }
             }
 
+            // PLC code blocks
+            if (line2.equalsIgnoreCase("[Code Block]")) {
+                sign.setText(1, "[Code Block]");
+                player.sendMessage("PLC code block detected.");
+                return false;
+            }
+
             // ICs
             if (line2.length() > 4
                     && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
@@ -1563,6 +1577,14 @@ public class CraftBookListener extends PluginListener {
                 }
 
                 String id = line2.substring(1, len - 1).toUpperCase();
+
+                if (id.equalsIgnoreCase("MC5000")) {
+                    if (!redstonePLCs) {
+                        player.sendMessage(Colors.Rose + "PLCs are not enabled.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                    }
+                }
 
                 IC ic = getIC(id);
                 if (ic != null) {
