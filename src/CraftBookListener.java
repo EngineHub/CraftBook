@@ -193,6 +193,8 @@ public class CraftBookListener extends PluginListener {
         sisoICs.put("MC1111", new MC1111());
         sisoICs.put("MC1200", new MC1200());
         sisoICs.put("MC1201", new MC1201());
+        sisoICs.put("MC1205", new MC1205());
+        sisoICs.put("MC1206", new MC1206());
         sisoICs.put("MC1230", new MC1230());
         sisoICs.put("MC1231", new MC1231());
         si3oICs.put("MC2020", new MC2020());
@@ -867,6 +869,7 @@ public class CraftBookListener extends PluginListener {
 
                 if (sisoIC != null) {
                     Vector outputVec = getWallSignBack(pt, 2);
+                    Vector backVec = getWallSignBack(pt, 1);
 
                     Signal[] in = new Signal[1];
                     in[0] = new Signal(isOn, true);
@@ -874,7 +877,7 @@ public class CraftBookListener extends PluginListener {
                     Signal[] out = new Signal[1];
                     out[0] = new Signal(getRedstoneOutput(outputVec));
                     
-                    ChipState chip = new ChipState(pt, in, out, signText);
+                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
                     
                     sisoIC.think(chip);
                     
@@ -910,7 +913,7 @@ public class CraftBookListener extends PluginListener {
                     out[1] = new Signal(getRedstoneOutput(output2Vec));
                     out[2] = new Signal(getRedstoneOutput(output3Vec));
 
-                    ChipState chip = new ChipState(pt, in, out, signText);
+                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
 
                     // The most important part...
                     si30IC.think(chip);
@@ -952,7 +955,7 @@ public class CraftBookListener extends PluginListener {
                     Signal[] out = new Signal[1];
                     out[0] = new Signal(getRedstoneOutput(outputVec));
 
-                    ChipState chip = new ChipState(pt, in, out, signText);
+                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
 
                     // The most important part...
                     _3isoIC.think(chip);
@@ -1013,7 +1016,7 @@ public class CraftBookListener extends PluginListener {
                         in[2] = new Signal(testAnyRedstoneInput(in2));
                     }
                     
-                    ChipState chip = new ChipState(pt, in, out, signText);
+                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
                     
                     // The most important part...
                     vivoIC.think(chip);

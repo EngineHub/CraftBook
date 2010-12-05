@@ -21,18 +21,18 @@ import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 
 /**
- * Mob spawner.
+ * Dispenser.
  *
  * @author sk89q
  */
-public class MC1200 extends SISOFamilyIC {
+public class MC1206 extends SISOFamilyIC {
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
-        return "MOB SPAWNER";
+        return "SET BLOCK BELOW";
     }
 
     /**
@@ -43,7 +43,7 @@ public class MC1200 extends SISOFamilyIC {
     public boolean requiresPermission() {
         return true;
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
@@ -56,12 +56,26 @@ public class MC1200 extends SISOFamilyIC {
         String id = sign.getLine3();
 
         if (id.length() == 0) {
-            return "Specify a mob type on the third line.";
-        } else if (!Mob.isValid(id)) {
-            return "Not a valid mob type: " + sign.getLine3() + ".";
+            return "Specify a block type on the third line.";
+        } else if (getItem(id) < 1) {
+            return "Not a valid block type: " + sign.getLine3() + ".";
         }
 
         return null;
+    }
+
+    /**
+     * Get an item from its name or ID.
+     *
+     * @param id
+     * @return
+     */
+    private int getItem(String id) {
+        try {
+            return Integer.parseInt(id.trim());
+        } catch (NumberFormatException e) {
+            return etc.getDataSource().getItem(id.trim());
+        }
     }
 
     /**
@@ -70,23 +84,30 @@ public class MC1200 extends SISOFamilyIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        if (chip.getIn(1).is()) {
-            String id = chip.getText().getLine3();
-            if (Mob.isValid(id)) {
-                Vector pos = chip.getBlockPosition();
-                int maxY = Math.min(128, pos.getBlockY() + 10);
-                int x = pos.getBlockX();
-                int z = pos.getBlockZ();
-
-                for (int y = pos.getBlockY() + 1; y <= maxY; y++) {
-                    if (BlockType.canPassThrough(CraftBook.getBlockID(x, y, z))) {
-                        Location loc = new Location(x, y, z);
-                        Mob mob = new Mob(id, loc);
-                        mob.spawn();
-                        return;
-                    }
-                }
-            }
+        if (!chip.getIn(1).is()) {
+            return;
         }
+
+        String id = chip.getText().getLine3();
+
+        int item = getItem(id);
+
+        if (item > 0) {
+            Vector pos = chip.getBlockPosition();
+            int y = pos.getBlockY() - 2;
+            int x = pos.getBlockX();
+            int z = pos.getBlockZ();
+
+            if (y >= 0 && CraftBook.getBlockID(x, y, z) == 0) {
+                CraftBook.setBlockID(x, y, z, item);
+                chip.getOut(1).set(true);
+                return;
+            }
+
+            chip.getOut(1).set(y <= 127 && CraftBook.getBlockID(x, y, z) == item);
+            return;
+        }
+
+        chip.getOut(1).set(false);
     }
 }

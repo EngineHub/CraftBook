@@ -13,18 +13,21 @@ public class ChipState {
     private Signal[] out;
     private boolean[] mem;
     private Vector pos;
+    private Vector blockPos;
     private SignText text;
 
     /**
      * Construct the state.
      * 
-     * @param getPosition
-     * @param getIn
-     * @param getOut
-     * @param getText
+     * @param pos
+     * @param blockPos
+     * @param in
+     * @param out
+     * @param text
      */
-    public ChipState(Vector pos, Signal[] in, Signal[] out, SignText text) {
+    public ChipState(Vector pos, Vector blockPos, Signal[] in, Signal[] out, SignText text) {
         this.pos = pos;
+        this.blockPos = blockPos;
         this.in = in;
         this.out = out;
         this.text = text;
@@ -94,11 +97,20 @@ public class ChipState {
 
     /**
      * Get the position.
-     * 
+     *
      * @return
      */
     public Vector getPosition() {
         return pos;
+    }
+
+    /**
+     * Get the position of the IC block.
+     *
+     * @return
+     */
+    public Vector getBlockPosition() {
+        return blockPos;
     }
 
     /**
