@@ -1,3 +1,6 @@
+dev:
+- Added MC4000 (Full Adder)
+
 1.4:
 - Added MC5000, a programmable logic chip utilizing the PerlStone
     language. Contributed by Lymia.

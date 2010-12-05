@@ -84,6 +84,11 @@ public class CraftBookListener extends PluginListener {
     private Map<String,_3ISOFamilyIC> _3isoICs =
             new HashMap<String,_3ISOFamilyIC>();
     /**
+     * 3I3O ICs.
+     */
+    private Map<String,_3I3OFamilyIC> _3i3oICs =
+            new HashMap<String,_3I3OFamilyIC>();
+    /**
      * VIVO ICs.
      */
     private Map<String,VIVOFamilyIC> vivoICs =
@@ -180,6 +185,7 @@ public class CraftBookListener extends PluginListener {
         _3isoICs.put("MC3034", new MC3034());
         _3isoICs.put("MC3036", new MC3036());
         _3isoICs.put("MC3231", new MC3231());
+        _3i3oICs.put("MC4000", new MC4000());
     }
 
     /**
@@ -1068,6 +1074,56 @@ public class CraftBookListener extends PluginListener {
 
                     return;
                 }
+
+                // 3I3O family
+                _3I3OFamilyIC _3i3oIC = _3i3oICs.get(id);
+
+                if (_3i3oIC != null) {
+                    Vector backVec = getWallSignBack(pt, 1);
+                    Vector backShift = getWallSignBack(pt, 2).subtract(pt);
+                    
+                    Vector out0 = getWallSignBack(pt, 3);
+                    Vector out1 = getWallSignSide(pt, 1).add(backShift);
+                    Vector out2 = getWallSignSide(pt, -1).add(backShift);
+                    
+                    Vector in0 = getWallSignBack(pt, -1);
+                    Vector in1 = getWallSignSide(pt, 1);
+                    Vector in2 = getWallSignSide(pt, -1);
+
+                    Signal[] in = new Signal[3];
+                    in[0] = new Signal(isRedstoneHighBinary(in0, true),
+                            changedRedstoneInput.equals(in0));
+                    in[1] = new Signal(isRedstoneHighBinary(in1, true),
+                            changedRedstoneInput.equals(in1));
+                    in[2] = new Signal(isRedstoneHighBinary(in2, true),
+                            changedRedstoneInput.equals(in2));
+
+                    Signal[] out = new Signal[3];
+                    out[0] = new Signal(getRedstoneOutput(out0));
+                    out[1] = new Signal(getRedstoneOutput(out1));
+                    out[2] = new Signal(getRedstoneOutput(out2));
+
+                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
+
+                    // The most important part...
+                    _3i3oIC.think(chip);
+
+                    if (chip.isModified()) {
+                        setRedstoneOutput(out0, chip.getOut(1).is());
+                        setRedstoneOutput(out1, chip.getOut(2).is());
+                        setRedstoneOutput(out2, chip.getOut(3).is());
+                    }
+
+                    if (signText.isChanged()) {
+                        sign.setText(0, signText.getLine1());
+                        sign.setText(1, signText.getLine2());
+                        sign.setText(2, signText.getLine3());
+                        sign.setText(3, signText.getLine4());
+                        sign.update();
+                    }
+
+                    return;
+                }
                 
                 // VIVO family
                 VIVOFamilyIC vivoIC = vivoICs.get(id);
@@ -1484,6 +1540,13 @@ public class CraftBookListener extends PluginListener {
 
         if (_3isoIC != null) {
             return _3isoIC;
+        }
+
+        // 3I3O family
+        _3I3OFamilyIC _3i3oIC = _3i3oICs.get(id);
+
+        if (_3i3oIC != null) {
+            return _3i3oIC;
         }
 
         // VIVO family
