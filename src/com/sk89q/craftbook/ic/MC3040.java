@@ -40,7 +40,7 @@ public class MC3040 extends _3ISOFamilyIC {
      * @param chip
      */
     public void think(ChipState chip) {
-    	boolean swapper = chip.getIn(1).is();
-    	chip.getOut(1).set(swapper?chip.getIn(2).is():chip.getIn(3).is());
+    	boolean swapper = chip.getIn(3).is();
+    	chip.getOut(1).set(swapper?chip.getIn(1).is():chip.getIn(2).is());
     }
 }
