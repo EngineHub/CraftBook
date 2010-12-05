@@ -40,6 +40,10 @@ public class CraftBookListener extends PluginListener {
      */
     private static final Logger logger = Logger.getLogger("Minecraft");
     /**
+     * CraftBook.
+     */
+    private CraftBook craftBook;
+    /**
      * Properties file for CraftBook.
      */
     private PropertiesFile properties = new PropertiesFile("craftbook.properties");
@@ -48,10 +52,10 @@ public class CraftBookListener extends PluginListener {
      */
     private CopyManager copies = new CopyManager();
     /**
-     * Stores sessions.
+     * Stores who has been shown the CraftBook version.
      */
-    private Map<String,CraftBookSession> sessions =
-            new HashMap<String,CraftBookSession>();
+    private Set<String> beenToldVersion =
+            new HashSet<String>();
     /**
      * SISO ICs.
      */
@@ -131,6 +135,39 @@ public class CraftBookListener extends PluginListener {
     private int minecartEjectBlock = BlockType.IRON_BLOCK;
 
     /**
+     * Construct CraftBook.
+     * 
+     * @param craftBook
+     */
+    public CraftBookListener(CraftBook craftBook) {
+        this.craftBook = craftBook;
+        sisoICs.put("MC1000", new MC1000());
+        sisoICs.put("MC1001", new MC1001());
+        sisoICs.put("MC1017", new MC1017());
+        sisoICs.put("MC1018", new MC1018());
+        sisoICs.put("MC1020", new MC1020());
+        sisoICs.put("MC1025", new MC1025());
+        sisoICs.put("MC1110", new MC1110());
+        sisoICs.put("MC1111", new MC1111());
+        sisoICs.put("MC1200", new MC1200());
+        sisoICs.put("MC1201", new MC1201());
+        sisoICs.put("MC1205", new MC1205());
+        sisoICs.put("MC1206", new MC1206());
+        sisoICs.put("MC1230", new MC1230());
+        sisoICs.put("MC1231", new MC1231());
+        si3oICs.put("MC2020", new MC2020());
+        _3isoICs.put("MC3020", new MC3020());
+        _3isoICs.put("MC3002", new MC3002());
+        _3isoICs.put("MC3003", new MC3003());
+        _3isoICs.put("MC3021", new MC3021());
+        _3isoICs.put("MC3030", new MC3030());
+        _3isoICs.put("MC3031", new MC3031());
+        _3isoICs.put("MC3034", new MC3034());
+        _3isoICs.put("MC3036", new MC3036());
+        _3isoICs.put("MC3231", new MC3231());
+    }
+
+    /**
      * Checks to make sure that there are enough but not too many arguments.
      *
      * @param args
@@ -177,37 +214,6 @@ public class CraftBookListener extends PluginListener {
         }
 
         return result;
-    }
-
-    /**
-     * Construct the object.
-     * 
-     */
-    public CraftBookListener() {
-        sisoICs.put("MC1000", new MC1000());
-        sisoICs.put("MC1001", new MC1001());
-        sisoICs.put("MC1017", new MC1017());
-        sisoICs.put("MC1018", new MC1018());
-        sisoICs.put("MC1020", new MC1020());
-        sisoICs.put("MC1025", new MC1025());
-        sisoICs.put("MC1110", new MC1110());
-        sisoICs.put("MC1111", new MC1111());
-        sisoICs.put("MC1200", new MC1200());
-        sisoICs.put("MC1201", new MC1201());
-        sisoICs.put("MC1205", new MC1205());
-        sisoICs.put("MC1206", new MC1206());
-        sisoICs.put("MC1230", new MC1230());
-        sisoICs.put("MC1231", new MC1231());
-        si3oICs.put("MC2020", new MC2020());
-        _3isoICs.put("MC3020", new MC3020());
-        _3isoICs.put("MC3002", new MC3002());
-        _3isoICs.put("MC3003", new MC3003());
-        _3isoICs.put("MC3021", new MC3021());
-        _3isoICs.put("MC3030", new MC3030());
-        _3isoICs.put("MC3031", new MC3031());
-        _3isoICs.put("MC3034", new MC3034());
-        _3isoICs.put("MC3036", new MC3036());
-        _3isoICs.put("MC3231", new MC3231());
     }
 
     /**
@@ -463,6 +469,8 @@ public class CraftBookListener extends PluginListener {
                     BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
 
+                    informUser(player);
+
                     // A gate may toggle or not
                     if (gateSwitchModule.toggleGates(pt, bag)) {
                         player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
@@ -476,6 +484,9 @@ public class CraftBookListener extends PluginListener {
                         && checkPermission(player, "/lightswitch")) {
                     BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
+
+                    informUser(player);
+                    
                     return lightSwitchModule.toggleLights(pt, bag);
 
                 // Elevator
@@ -483,6 +494,8 @@ public class CraftBookListener extends PluginListener {
                         && (line2.equalsIgnoreCase("[Lift Up]")
                         || line2.equalsIgnoreCase("[Lift Down]"))
                         && checkPermission(player, "/elevator")) {
+
+                    informUser(player);
 
                     // Go up or down?
                     boolean up = line2.equalsIgnoreCase("[Lift Up]");
@@ -502,6 +515,8 @@ public class CraftBookListener extends PluginListener {
                         player.sendMessage(Colors.Rose + "Not a valid area name (1st sign line)!");
                         return true;
                     }
+
+                    informUser(player);
 
                     try {
                         BlockBag bag = getBlockBag(pt);
@@ -536,6 +551,8 @@ public class CraftBookListener extends PluginListener {
                         && line2.equalsIgnoreCase("[Bridge]")
                         && checkPermission(player, "/bridge")) {
                     int data = CraftBook.getBlockData(x, y, z);
+
+                    informUser(player);
 
                     try {
                         BlockBag bag = getBlockBag(pt);
@@ -1509,6 +1526,8 @@ public class CraftBookListener extends PluginListener {
                     && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
                     line2.charAt(len - 1) == ']') {
 
+                informUser(player);
+
                 // Check to see if the player can even create ICs
                 if (checkCreatePermissions
                         && !player.canUseCommand("/makeic")) {
@@ -1960,7 +1979,7 @@ public class CraftBookListener extends PluginListener {
      */
     @Override
     public void onDisconnect(Player player) {
-        sessions.remove(player.getName());
+        beenToldVersion.remove(player.getName());
     }
 
     /**
@@ -1970,7 +1989,7 @@ public class CraftBookListener extends PluginListener {
      * @param player
      * @return
      */
-    public CraftBookSession getSession(Player player) {
+    /*public CraftBookSession getSession(Player player) {
         if (sessions.containsKey(player.getName())) {
             return sessions.get(player.getName());
         } else {
@@ -1978,6 +1997,22 @@ public class CraftBookListener extends PluginListener {
             sessions.put(player.getName(), session);
             return session;
         }
+    }*/
+
+    /**
+     * Tells a user once about the CraftBook version.
+     * 
+     * @param player
+     */
+    private void informUser(Player player) {
+        if (beenToldVersion.contains(player.getName())) {
+            return;
+        }
+
+        player.sendMessage(Colors.LightGray + "Powered by CraftBook ver. " +
+                craftBook.getVersion() + " by sk89q <sk89q.com>");
+
+        beenToldVersion.add(player.getName());
     }
 
     /**

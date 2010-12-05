@@ -38,8 +38,8 @@ public class CraftBook extends Plugin {
     /**
      * Listener for the plugin system.
      */
-    private static final CraftBookListener listener =
-            new CraftBookListener();
+    private final CraftBookListener listener =
+            new CraftBookListener(this);
 
     /**
      * Used to fake the data value at a point.
@@ -49,6 +49,10 @@ public class CraftBook extends Plugin {
      * Used to fake the data value at a point.
      */
     private static int fakeDataVal;
+    /**
+     * Cached CraftBook version.
+     */
+    private String version;
 
     /**
      * Initializes the plugin.
@@ -119,7 +123,11 @@ public class CraftBook extends Plugin {
      *
      * @return
      */
-    private String getVersion() {
+    public String getVersion() {
+        if (version != null) {
+            return version;
+        }
+        
         try {
             String classContainer = CraftBook.class.getProtectionDomain()
                     .getCodeSource().getLocation().toString();
@@ -127,10 +135,12 @@ public class CraftBook extends Plugin {
             Manifest manifest = new Manifest(manifestUrl.openStream());
             Attributes attrib = manifest.getMainAttributes();
             String ver = (String)attrib.getValue("CraftBook-Version");
-            return ver != null ? ver : "(unavailable)";
+            version = ver != null ? ver : "(unavailable)";
         } catch (IOException e) {
-            return "(unknown)";
+            version = "(unknown)";
         }
+
+        return version;
     }
 
     protected static int getBlockID(int x, int y, int z) {
