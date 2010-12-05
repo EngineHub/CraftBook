@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+import lymia.perlstone.Perlstone_1_0;
+
 /**
  * Event listener for Hey0's server mod.
  *
@@ -176,6 +178,9 @@ public class CraftBookListener extends PluginListener {
         _3isoICs.put("MC3034", new MC3034());
         _3isoICs.put("MC3036", new MC3036());
         _3isoICs.put("MC3231", new MC3231());
+        vivoICs.put("MC5000", new PlcBase(new Perlstone_1_0(), true));
+        //Uncomment this when switch-based memory is implemented.
+        //vivoICs.put("MC5100", new PlcBase(new Perlstone_1_0(), false));
     }
 
     /**
@@ -227,6 +232,7 @@ public class CraftBookListener extends PluginListener {
         return result;
     }
 
+    /**
     /**
      * Loads CraftBooks's configuration from file.
      */
@@ -964,6 +970,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
+                        sign.update();
                     }
 
                     return;
@@ -1003,6 +1010,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
+                        sign.update();
                     }
 
                     return;
@@ -1043,6 +1051,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
+                        sign.update();
                     }
 
                     return;
@@ -1055,7 +1064,7 @@ public class CraftBookListener extends PluginListener {
                     Vector backVec = getWallSignBack(pt, 1);
                     Vector backShift = backVec.subtract(pt);
                     
-                    Vector out0 = getWallSignBack(pt, 1);
+                    Vector out0 = getWallSignBack(pt, 2);
                     Vector out1 = getWallSignSide(pt, 1).add(backShift);
                     Vector out2 = getWallSignSide(pt, -1).add(backShift);
                     
@@ -1070,7 +1079,8 @@ public class CraftBookListener extends PluginListener {
                     Signal[] out = new Signal[3];
                     
                     out[0] = new Signal(getRedstoneOutput(out0));
-                    in[0] = new Signal(testAnyRedstoneInput(in0));
+                    in[0] = new Signal(isRedstoneHighBinary(in0, true),
+                                       changedRedstoneInput.equals(in0));
                     
                     if(hasOut1) {
                         out[1] = new Signal(getRedstoneOutput(out1));
@@ -1078,16 +1088,18 @@ public class CraftBookListener extends PluginListener {
                     }
                     else {
                         out[1] = new Signal(false);
-                        in[1] = new Signal(testAnyRedstoneInput(in1));
+                        in[1] = new Signal(isRedstoneHighBinary(in1, true),
+                                           changedRedstoneInput.equals(in1));
                     }
                     
                     if(hasOut2) {
                         out[2] = new Signal(getRedstoneOutput(out2));
-                        in[1] = new Signal(false);
+                        in[2] = new Signal(false);
                     }
                     else {
-                        out[1] = new Signal(false);
-                        in[2] = new Signal(testAnyRedstoneInput(in2));
+                        out[2] = new Signal(false);
+                        in[2] = new Signal(isRedstoneHighBinary(in2, true),
+                                           changedRedstoneInput.equals(in2));
                     }
                     
                     ChipState chip = new ChipState(pt, backVec, in, out, signText);
@@ -1106,6 +1118,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
+                        sign.update();
                     }
 
                     return;
