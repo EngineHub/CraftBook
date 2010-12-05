@@ -1,5 +1,33 @@
+1.4:
+- Added MC5000, a programmable logic chip utilizing the PerlStone
+    language. Contributed by Lymia.
+- Gates can now displace lava in addition to water.
+- Minecarts can now be controlled by hitting the cart from within it.
+- Added a minecart message control block that will print a message to a
+    player's chat when s/he passes over the block in a minecart.
+- Added minecart ejection control block to eject the player.
+- Added reverse and directed reverse minecart control blocks.
+- New minecart dispensers that will pick up minecarts that hit it (a chest)
+    and will dispense carts when given a redstone current.
+- Added configuration options to change the minecart control block types.
+- Replaced the minecart coast factor with a function to hinder the
+    gradual slow down of unoccupied minecarts.
+- New experimental minecart trigger block that toggles switches on
+    the side of the block (doesn't work too swell yet).
+- Pressure plates should now no longer bring minecarts to a dead stop.
+- Station signs can now be only one block below the station block.
+- Minecart station blocks now give a slightly stronger boost.
+- MC1200 now spawns mobs in the first free block above the block behind
+    the IC sign.
+- MC1201 now spawn mobs above the block behind the IC sign.
+- Added MC1025 that places a block two blocks above the block
+    behind the IC sign.
+- Added MC1026 that places a block two blocks below the block
+    behind the IC sign.
+
 1.3.1:
 - Fixed bug with MC1201.
+
 1.3:
 - Added MC3020 (2-input XOR gate), MC3002 (3-input AND),
     MC3003 (3-input NAND), MC3021 (2-input XNOR), MC3030 (RS NOR latch),
