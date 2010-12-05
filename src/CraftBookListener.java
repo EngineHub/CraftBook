@@ -57,6 +57,16 @@ public class CraftBookListener extends PluginListener {
     private Set<String> beenToldVersion =
             new HashSet<String>();
     /**
+     * Last minecart message sent from a sign to a player.
+     */
+    private Map<String,String> lastMinecartMsg =
+            new HashMap<String,String>();
+    /**
+     * Last minecart message send time from a sign to a player.
+     */
+    private Map<String,Long> lastMinecartMsgTime =
+            new HashMap<String,Long>();
+    /**
      * SISO ICs.
      */
     private Map<String,SISOFamilyIC> sisoICs =
@@ -125,6 +135,7 @@ public class CraftBookListener extends PluginListener {
     private boolean hinderUnoccupiedSlowdown = true;
     private boolean inCartControl = true;
     private boolean minecartDispensers = true;
+    private boolean minecartTrackMessages = true;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
     private int minecart50xSlowBlock = BlockType.SLOW_SAND;
@@ -257,6 +268,7 @@ public class CraftBookListener extends PluginListener {
         hinderUnoccupiedSlowdown = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
         inCartControl = properties.getBoolean("minecart-in-cart-control", true);
         minecartDispensers = properties.getBoolean("minecart-dispensers", true);
+        minecartTrackMessages = properties.getBoolean("minecart-track-messages", true);
         minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
         minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
         minecart50xSlowBlock = properties.getInt("minecart-50x-slow-block", BlockType.SLOW_SAND);
@@ -1736,7 +1748,7 @@ public class CraftBookListener extends PluginListener {
     @Override
     public void onVehiclePositionChange(BaseVehicle vehicle,
             int blockX, int blockY, int blockZ) {
-        if (!minecartControlBlocks) {
+        if (!minecartControlBlocks && !minecartTrackMessages && !minecartDispensers) {
             return;
         }
 
@@ -1874,6 +1886,46 @@ public class CraftBookListener extends PluginListener {
                 }
             }
 
+            if (minecartTrackMessages
+                    && CraftBook.getBlockID(underPt.add(0, -1, 0)) == BlockType.SIGN_POST) {
+                Vector signPos = underPt.add(0, -1, 0);
+                
+                Boolean test = testRedstoneSimpleInput(signPos);
+
+                if (test == null || test) {
+                    ComplexBlock cblock = etc.getServer().getComplexBlock(
+                            signPos.getBlockX(), signPos.getBlockY(), signPos.getBlockZ());
+
+                    if (!(cblock instanceof Sign)) {
+                        return;
+                    }
+
+                    Sign sign = (Sign)cblock;
+                    String line1 = sign.getText(0);
+
+                    if (line1.equalsIgnoreCase("[Print]")) {
+                        Player player = minecart.getPassenger();
+                        if (player == null) { return; }
+                        
+                        String name = player.getName();
+                        String msg = sign.getText(1) + sign.getText(2) + sign.getText(3);
+                        long now = System.currentTimeMillis();
+
+                        if (lastMinecartMsg.containsKey(name)) {
+                            String lastMessage = lastMinecartMsg.get(name);
+                            if (lastMessage.equals(msg)
+                                    && now < lastMinecartMsgTime.get(name) + 3000) {
+                                return;
+                            }
+                        }
+
+                        lastMinecartMsg.put(name, msg);
+                        lastMinecartMsgTime.put(name, now);
+                        player.sendMessage("> " + msg);
+                    }
+                }
+            }
+
             if (minecartDispensers) {
                 Vector pt = new Vector(blockX, blockY, blockZ);
                 Vector depositPt = null;
@@ -1980,6 +2032,8 @@ public class CraftBookListener extends PluginListener {
     @Override
     public void onDisconnect(Player player) {
         beenToldVersion.remove(player.getName());
+        lastMinecartMsg.remove(player.getName());
+        lastMinecartMsgTime.remove(player.getName());
     }
 
     /**
