@@ -137,7 +137,7 @@ public class PlcBase extends VIVOFamilyIC {
         int y0 = v.getBlockY();
         int z0 = z;
         for(int y=0;y<128;y++) if(CraftBook.getBlockID(x,y,z)==BlockType.WALL_SIGN) { 
-            if(((Sign)s.getComplexBlock(x, y, z)).getText(1).equals("[CODE BLOCK]"))
+            if(((Sign)s.getComplexBlock(x, y, z)).getText(1).equalsIgnoreCase("[CODE BLOCK]"))
                 for(y--;y>=0;y--) if(!(x==x0&&y==y0&&z==z0)&&CraftBook.getBlockID(x,y,z)==BlockType.WALL_SIGN) {
                     Sign n = (Sign) s.getComplexBlock(x, y, z);
                     b.append(n.getText(0)+"\n");
