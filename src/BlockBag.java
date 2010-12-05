@@ -183,6 +183,13 @@ public abstract class BlockBag {
      * @return
      */
     public abstract void addSourcePosition(Vector pos);
+    /**
+     * Adds a position to be used a source.
+     *
+     * @param pos
+     * @return
+     */
+    public abstract void addSingleSourcePosition(Vector pos);
 
     /**
      * Return the list of missing blocks.

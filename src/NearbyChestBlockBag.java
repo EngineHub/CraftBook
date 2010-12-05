@@ -119,7 +119,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
         throw new OutOfSpaceException(id);
     }
-    
+
     /**
      * Adds a position to be used a source.
      *
@@ -144,7 +144,7 @@ public class NearbyChestBlockBag extends BlockBag {
                             Chest chest = (Chest)complexBlock;
                             hn[] itemArray = chest.getArray();
                             boolean occupied = false;
-                            
+
                             // Got to make sure that at least one slot is occupied
                             for (int i = 0; itemArray.length > i; i++) {
                                 if (itemArray[i] != null) {
@@ -161,6 +161,44 @@ public class NearbyChestBlockBag extends BlockBag {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a position to be used a source.
+     *
+     * @param pos
+     * @return
+     */
+    public void addSingleSourcePosition(Vector pos) {
+        int x = pos.getBlockX();
+        int y = pos.getBlockY();
+        int z = pos.getBlockZ();
+        
+        if (CraftBook.getBlockID(pos) == BlockType.CHEST) {
+            ComplexBlock complexBlock =
+                    etc.getServer().getComplexBlock(x, y, z);
+
+            if (complexBlock instanceof Chest) {
+                Chest chest = (Chest)complexBlock;
+                hn[] itemArray = chest.getArray();
+                boolean occupied = false;
+
+                // Got to make sure that at least one slot is occupied
+                for (int i = 0; itemArray.length > i; i++) {
+                    if (itemArray[i] != null) {
+                        // Found an item
+                        if (itemArray[i].a > 0) {
+                            occupied = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (occupied) {
+                    chests.add(new BagComplexBlock<Chest>(pos.toBlockVector(), chest));
                 }
             }
         }

@@ -55,6 +55,15 @@ public class UnlimitedBlackHoleBlockBag extends BlockBag {
      */
     public void addSourcePosition(Vector pos) {
     }
+    
+    /**
+     * Adds a position to be used a source.
+     *
+     * @param pos
+     * @return
+     */
+    public void addSingleSourcePosition(Vector pos) {
+    }
 
     /**
      * Flush changes.

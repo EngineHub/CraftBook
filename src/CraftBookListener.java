@@ -120,6 +120,7 @@ public class CraftBookListener extends PluginListener {
     private boolean hinderPressurePlateMinecartSlow = false;
     private boolean hinderUnoccupiedSlowdown = true;
     private boolean inCartControl = true;
+    private boolean minecartDispensers = true;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
     private int minecart50xSlowBlock = BlockType.SLOW_SAND;
@@ -249,6 +250,7 @@ public class CraftBookListener extends PluginListener {
         hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
         hinderUnoccupiedSlowdown = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
         inCartControl = properties.getBoolean("minecart-in-cart-control", true);
+        minecartDispensers = properties.getBoolean("minecart-dispensers", true);
         minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
         minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
         minecart50xSlowBlock = properties.getInt("minecart-50x-slow-block", BlockType.SLOW_SAND);
@@ -747,6 +749,49 @@ public class CraftBookListener extends PluginListener {
                 CraftBook.setBlockID(pt, BlockType.JACKOLANTERN);
             } else if (useOn != null) {
                 CraftBook.setBlockID(pt, BlockType.PUMPKIN);
+            }
+        // Minecart dispenser
+        } else if (minecartDispensers && type == BlockType.CHEST
+                && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
+                    || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
+            if (!isOn) {
+                return;
+            }
+            
+            Vector signPos = pt.add(0, -2, 0);
+
+            if (!doesSignSay(signPos, 1, "[Dispenser]")) {
+                signPos = pt.add(0, -1, 0);
+            }
+
+            if (!doesSignSay(signPos, 1, "[Dispenser]")) {
+                return;
+            }
+
+            Vector dir = getSignPostOrthogonalBack(signPos, 1)
+                    .subtract(signPos);
+            Vector depositPt = pt.add(dir.multiply(2.5));
+
+            if (CraftBook.getBlockID(depositPt) != BlockType.MINECART_TRACKS) {
+                return;
+            }
+
+            NearbyChestBlockBag blockBag = new NearbyChestBlockBag(pt);
+            blockBag.addSingleSourcePosition(pt);
+            blockBag.addSingleSourcePosition(pt.add(1, 0, 0));
+            blockBag.addSingleSourcePosition(pt.add(-1, 0, 0));
+            blockBag.addSingleSourcePosition(pt.add(0, 0, 1));
+            blockBag.addSingleSourcePosition(pt.add(0, 0, -1));
+
+            try {
+                blockBag.fetchBlock(ItemType.MINECART);
+                blockBag.flushChanges();
+                jo minecart = new jo(etc.getMCServer().e,
+                        depositPt.getX(), depositPt.getY(),
+                        depositPt.getZ(), 0);
+                etc.getMCServer().e.a(minecart);
+            } catch (BlockBagException e) {
+                // No minecarts
             }
         // Minecart station
         } else if (minecartControlBlocks && type == minecartStationBlock
@@ -1756,6 +1801,8 @@ public class CraftBookListener extends PluginListener {
                     setTrackRedstoneTrigger(underPt.add(-1, 0, 0));
                     setTrackRedstoneTrigger(underPt.add(0, 0, 1));
                     setTrackRedstoneTrigger(underPt.add(0, 0, -1));
+
+                    return;
                 } else if (under == minecartEjectBlock) {
                     Boolean test = testRedstoneSimpleInput(underPt);
 
@@ -1802,6 +1849,43 @@ public class CraftBookListener extends PluginListener {
 
                             player.teleportTo(loc);
                         }
+                    }
+
+                    return;
+                }
+            }
+
+            if (minecartDispensers) {
+                Vector pt = new Vector(blockX, blockY, blockZ);
+                Vector depositPt = null;
+
+                if (CraftBook.getBlockID(pt.add(1, 0, 0)) == BlockType.CHEST
+                        && CraftBook.getBlockID(pt.add(-1, 0, 0)) == BlockType.MINECART_TRACKS) {
+                    depositPt = pt.add(1, 0, 0);
+                } else if(CraftBook.getBlockID(pt.add(-1, 0, 0)) == BlockType.CHEST
+                        && CraftBook.getBlockID(pt.add(1, 0, 0)) == BlockType.MINECART_TRACKS) {
+                    depositPt = pt.add(-1, 0, 0);
+                } else if(CraftBook.getBlockID(pt.add(0, 0, 1)) == BlockType.CHEST
+                        && CraftBook.getBlockID(pt.add(0, 0, -1)) == BlockType.MINECART_TRACKS) {
+                    depositPt = pt.add(0, 0, 1);
+                } else if(CraftBook.getBlockID(pt.add(0, 0, -1)) == BlockType.CHEST
+                        && CraftBook.getBlockID(pt.add(0, 0, 1)) == BlockType.MINECART_TRACKS) {
+                    depositPt = pt.add(0, 0, -1);
+                }
+
+                if (depositPt != null) {
+                    NearbyChestBlockBag blockBag = new NearbyChestBlockBag(depositPt);
+                    blockBag.addSingleSourcePosition(depositPt);
+                    blockBag.addSingleSourcePosition(depositPt.add(1, 0, 0));
+                    blockBag.addSingleSourcePosition(depositPt.add(-1, 0, 0));
+                    blockBag.addSingleSourcePosition(depositPt.add(0, 0, 1));
+                    blockBag.addSingleSourcePosition(depositPt.add(0, 0, -1));
+
+                    try {
+                        blockBag.storeBlock(ItemType.MINECART);
+                        blockBag.flushChanges();
+                        minecart.destroy();
+                    } catch (BlockBagException e) {
                     }
                 }
             }
