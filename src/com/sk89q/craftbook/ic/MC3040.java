@@ -20,24 +20,27 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * Full adder
+ * Multiplexer
+ *
  * @author Lymia
  */
-public class MC4000 extends _3I3OFamilyIC {
-	public String getTitle() {
-		return "FULL ADDER";
-	}
+public class MC3040 extends _3ISOFamilyIC {
+    /**
+     * Get the title of the IC.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return "MULTIPLEXER";
+    }
 
-	public void think(ChipState chip) {
-		boolean A = chip.getIn(1).is();
-		boolean B = chip.getIn(2).is();
-		boolean C = chip.getIn(3).is();
-		
-		boolean S = A^B^C;
-		boolean Ca = (A&B)|((A^B)&C);
-		
-		chip.getOut(1).set(S);
-		chip.getOut(2).set(Ca);
-		chip.getOut(3).set(Ca);
-	}
+    /**
+     * Think.
+     *
+     * @param chip
+     */
+    public void think(ChipState chip) {
+    	boolean swapper = chip.getIn(1).is();
+    	chip.getOut(1).set(swapper?chip.getIn(2).is():chip.getIn(3).is());
+    }
 }

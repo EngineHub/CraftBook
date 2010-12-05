@@ -1,5 +1,6 @@
 dev:
-- Added MC4000 (Full Adder)
+- Added MC3040 (Multiplexer), MC4000 (Full Adder), MC4010 (Half Adder), MC4100
+    (Full Subtractor), and MC4110 (Half Subtractor)
 
 1.4:
 - Added MC5000, a programmable logic chip utilizing the PerlStone

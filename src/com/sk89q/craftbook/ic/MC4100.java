@@ -20,12 +20,12 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * Full adder
+ * Full subtractor
  * @author Lymia
  */
-public class MC4000 extends _3I3OFamilyIC {
+public class MC4100 extends _3I3OFamilyIC {
 	public String getTitle() {
-		return "FULL ADDER";
+		return "FULL SUBTRACTOR";
 	}
 
 	public void think(ChipState chip) {
@@ -34,10 +34,10 @@ public class MC4000 extends _3I3OFamilyIC {
 		boolean C = chip.getIn(3).is();
 		
 		boolean S = A^B^C;
-		boolean Ca = (A&B)|((A^B)&C);
+		boolean Bo = C&!(A^B)|(!A&B);
 		
 		chip.getOut(1).set(S);
-		chip.getOut(2).set(Ca);
-		chip.getOut(3).set(Ca);
+		chip.getOut(2).set(Bo);
+		chip.getOut(3).set(Bo);
 	}
 }
