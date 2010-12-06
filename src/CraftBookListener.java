@@ -1835,10 +1835,11 @@ public class CraftBookListener extends PluginListener {
                     }
                 }
             }
-
+            
+            int block = CraftBook.getBlockID(blockX, blockY, blockZ);
             if (hinderPressurePlateMinecartSlow
-                    && under == BlockType.STONE_PRESSURE_PLATE
-                    || under == BlockType.WOODEN_PRESSURE_PLATE) {
+                    && block == BlockType.STONE_PRESSURE_PLATE
+                    || block == BlockType.WOODEN_PRESSURE_PLATE) {
                 // Numbers from code
                 minecart.setMotion(minecart.getMotionX() / 0.55000000000000004D,
                                    0,
