@@ -35,7 +35,7 @@ public class MC3032 extends _3ISOFamilyIC {
      * @return
      */
     public String getTitle() {
-        return "JK Edge Flip Flop";
+        return "JK EDGE FLIP FLOP";
     }
 
     /**
