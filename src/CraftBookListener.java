@@ -68,6 +68,17 @@ public class CraftBookListener extends PluginListener {
             }
         });
         
+        BLOCK_SOURCES.put("admin-black-hole", new BlockSourceFactory() {
+            public BlockSource createBlockSource(Vector v) {
+                return new AdminBlockSource(false,true);
+            }
+        });
+        BLOCK_SOURCES.put("admin-block-source", new BlockSourceFactory() {
+            public BlockSource createBlockSource(Vector v) {
+                return new AdminBlockSource(true,false);
+            }
+        });
+        
         BLOCK_SOURCES.put("nearby-chests", new BlockSourceFactory() {
             public BlockSource createBlockSource(Vector v) {
                 return new NearbyChestBlockSource(v);
@@ -1629,7 +1640,6 @@ public class CraftBookListener extends PluginListener {
             
             String line2 = sign.getText(1);
             int len = line2.length();
-
             if (checkCreatePermissions) {
                 // Gate
                 if (line2.equalsIgnoreCase("[Gate]")) {
@@ -1678,6 +1688,15 @@ public class CraftBookListener extends PluginListener {
                         return true;
                     }
                 }
+            }
+
+            //Black Hole
+            if (line2.equalsIgnoreCase("[Black Hole]")&&!player.canUseCommand("/makeblackhole")) {
+                player.sendMessage(Colors.Rose + "You don't have permission to make black holes.");
+            }
+            //Block Source
+            if (line2.equalsIgnoreCase("[Block Source]")&&!player.canUseCommand("/makeblocksource")) {
+                player.sendMessage(Colors.Rose + "You don't have permission to make block sources.");
             }
 
             // PLC code blocks
