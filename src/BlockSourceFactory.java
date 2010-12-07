@@ -17,32 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
+import com.sk89q.craftbook.Vector;
 
 /**
+ * Factory for Block Bags
  *
- * @author sk89q
+ * @author Lymia
  */
-public class OutOfSpaceException extends BlockSourceException {
-    private static final long serialVersionUID = -7384479745885980016L;
-    
+public interface BlockSourceFactory {
     /**
-     * Stores the block ID.
+     * Creates a BlockSource instance for the passed vector, or null if no
+     * block bag is valid for that position.
      */
-    private int id;
-
-    /**
-     * Construct the object.
-     * @param id
-     */
-    public OutOfSpaceException(int id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the id
-     */
-    public int getID() {
-        return id;
-    }
+    BlockSource createBlockSource(Vector pos);
 }

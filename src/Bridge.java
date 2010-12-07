@@ -65,8 +65,8 @@ public class Bridge {
      * @param bag
      * @return
      */
-    public boolean toggleBridge(Vector pt, Direction direction, BlockBag bag)
-            throws OperationException, BlockBagException {
+    public boolean toggleBridge(Vector pt, Direction direction, BlockSource bag)
+            throws OperationException, BlockSourceException {
         return setBridgeState(pt, direction, bag, null);
     }
     
@@ -79,8 +79,8 @@ public class Bridge {
      * @return
      */
     public boolean setBridgeState(Vector pt, Direction direction,
-            BlockBag bag, Boolean toOpen)
-            throws OperationException, BlockBagException {
+            BlockSource bag, Boolean toOpen)
+            throws OperationException, BlockSourceException {
 
         Vector change = null;
         Vector leftSide = null;
@@ -221,8 +221,8 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void clearRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
-            throws BlockBagException {
+    private void clearRow(Vector origin, Vector change, int type, int dist, BlockSource bag)
+            throws BlockSourceException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
@@ -241,8 +241,8 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void setRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
-            throws BlockBagException {
+    private void setRow(Vector origin, Vector change, int type, int dist, BlockSource bag)
+            throws BlockSourceException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);

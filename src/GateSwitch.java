@@ -38,8 +38,8 @@ public class GateSwitch {
      * @param bag
      * @return
      */
-    public boolean toggleGates(Vector pt, BlockBag bag)
-            throws BlockBagException {
+    public boolean toggleGates(Vector pt, BlockSource bag)
+            throws BlockSourceException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -73,8 +73,8 @@ public class GateSwitch {
      * @param close
      * @return
      */
-    public boolean setGateState(Vector pt, BlockBag bag, boolean close)
-            throws BlockBagException {
+    public boolean setGateState(Vector pt, BlockSource bag, boolean close)
+            throws BlockSourceException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -111,8 +111,8 @@ public class GateSwitch {
      * @return
      */
     private boolean recurseColumn(Vector pt, Set<BlockVector> visitedColumns,
-            Boolean close, BlockBag bag)
-            throws BlockBagException {
+            Boolean close, BlockSource bag)
+            throws BlockSourceException {
         if (visitedColumns.size() > 14) { return false; }
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
         if (CraftBook.getBlockID(pt) != BlockType.FENCE) { return false; }
@@ -159,8 +159,8 @@ public class GateSwitch {
      * @param visitedColumns
      */
     private void toggleColumn(Vector topPoint, boolean close,
-            Set<BlockVector> visitedColumns, BlockBag bag)
-            throws BlockBagException {
+            Set<BlockVector> visitedColumns, BlockSource bag)
+            throws BlockSourceException {
 
         int x = topPoint.getBlockX();
         int y = topPoint.getBlockY();

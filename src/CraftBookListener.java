@@ -20,6 +20,7 @@
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -42,18 +43,34 @@ public class CraftBookListener extends PluginListener {
      */
     private static final Logger logger = Logger.getLogger("Minecraft");
     /**
-     * Block bag types.
+     * Deprecated block source types.
      */
-    private static final Map<String,BlockBagFactory> BLOCK_BAGS = new HashMap<String,BlockBagFactory>();
+    private static final List<String> DEPRECATED_SOURCES = Arrays.asList(new String[]{"unlimited-black-hole"});
+    /**
+     * Block source types.
+     */
+    private static final Map<String,BlockSourceFactory> BLOCK_SOURCES = new HashMap<String,BlockSourceFactory>();
     static {
-        BLOCK_BAGS.put("unlimited-black-hole", new BlockBagFactory() {
-            public BlockBag createBlockBag(Vector v) {
-                return new UnlimitedBlackHoleBlockBag();
+        BLOCK_SOURCES.put("unlimited-black-hole", new BlockSourceFactory() {
+            public BlockSource createBlockSource(Vector v) {
+                return new DummyBlockSource();
             }
         });
-        BLOCK_BAGS.put("nearby-chests", new BlockBagFactory() {
-            public BlockBag createBlockBag(Vector v) {
-                return new NearbyChestBlockBag(v);
+        
+        BLOCK_SOURCES.put("black-hole", new BlockSourceFactory() {
+            public BlockSource createBlockSource(Vector v) {
+                return new DummyBlockSource(false,true);
+            }
+        });
+        BLOCK_SOURCES.put("unlimited-block-source", new BlockSourceFactory() {
+            public BlockSource createBlockSource(Vector v) {
+                return new DummyBlockSource(true,false);
+            }
+        });
+        
+        BLOCK_SOURCES.put("nearby-chests", new BlockSourceFactory() {
+            public BlockSource createBlockSource(Vector v) {
+                return new NearbyChestBlockSource(v);
             }
         });
     }
@@ -136,7 +153,7 @@ public class CraftBookListener extends PluginListener {
     /**
      * Block bag factories.
      */
-    private List<BlockBagFactory> blockBags = new ArrayList<BlockBagFactory>();
+    private List<BlockSourceFactory> blockSources = new ArrayList<BlockSourceFactory>();
     
     private BookReader readingModule;
     private String bookReadLine;
@@ -322,20 +339,29 @@ public class CraftBookListener extends PluginListener {
             //vivoICs.remove("MC5100");
         }
         
-        String blockBags = properties.getString("block-bag", "unlimited-black-hole");
-        for(String blockBag:blockBags.split(",")) {
-            BlockBagFactory f = BLOCK_BAGS.get(blockBag);
+        String blockSources;
+        if(properties.containsKey("block-bag")) {
+            logger.log(Level.WARNING,"CraftBook's block-bag configuration option is "+
+                    "deprecated, and may be removed in a future version. Please use "+
+                    "block-sources instead.");
+            blockSources = properties.getString("block-sources", properties.getString("block-bag"));
+        } else blockSources = properties.getString("block-sources", "black-hole,unlimited-block-source");
+        for(String blockSource:blockSources.split(",")) {
+            if(DEPRECATED_SOURCES.contains(blockSource)) logger.log(Level.WARNING,"The "+blockSource+" CraftBook "+
+                    "block source is deprecated, and may be removed in a future version. Please check "+
+                    "http://wiki.sk89q.com/wiki/CraftBook/Configuration for replacement options.");
+            BlockSourceFactory f = BLOCK_SOURCES.get(blockSource);
             if(f==null) {
-                logger.log(Level.WARNING, "Unknown CraftBook block bag: " + blockBag);
-                this.blockBags.clear();
-                this.blockBags.add(new BlockBagFactory() {
-                    public BlockBag createBlockBag(Vector v) {
-                        return new UnlimitedBlackHoleBlockBag();
+                logger.log(Level.WARNING, "Unknown CraftBook block source: " + blockSource);
+                this.blockSources.clear();
+                this.blockSources.add(new BlockSourceFactory() {
+                    public BlockSource createBlockSource(Vector v) {
+                        return new DummyBlockSource();
                     }
                 });
                 break;
             }
-            this.blockBags.add(f);
+            this.blockSources.add(f);
         }
 
         if (properties.getBoolean("cauldron-enable", true)) {
@@ -409,9 +435,8 @@ public class CraftBookListener extends PluginListener {
             player.sendMessage(Colors.Rose + "materials.");
         } catch (OutOfSpaceException e) {
             player.sendMessage(Colors.Rose + "No room left to put: " + toBlockName(e.getID()));
-            player.sendMessage(Colors.Rose + "Make sure nearby partially occupied block sources have");
-            player.sendMessage(Colors.Rose + "free slots.");
-        } catch (BlockBagException e) {
+            player.sendMessage(Colors.Rose + "Make sure nearby block sources have free slots.");
+        } catch (BlockSourceException e) {
             player.sendMessage(Colors.Rose + "Error: " + e.getMessage());
         }
 
@@ -428,7 +453,7 @@ public class CraftBookListener extends PluginListener {
      * @return
      */
     private boolean doBlockCreate(Player player, Block blockPlaced,
-            Block blockClicked, int itemInHand) throws BlockBagException {
+            Block blockClicked, int itemInHand) throws BlockSourceException {
 
         int current = -1;
 
@@ -530,7 +555,7 @@ public class CraftBookListener extends PluginListener {
                 // Gate
                 if (gateSwitchModule != null && line2.equalsIgnoreCase("[Gate]")
                         && checkPermission(player, "/gate")) {
-                    BlockBag bag = getBlockBag(pt);
+                    BlockSource bag = getBlockSource(pt);
                     bag.addSourcePosition(pt);
 
                     informUser(player);
@@ -546,7 +571,7 @@ public class CraftBookListener extends PluginListener {
                 } else if (lightSwitchModule != null &&
                         (line2.equalsIgnoreCase("[|]") || line2.equalsIgnoreCase("[I]"))
                         && checkPermission(player, "/lightswitch")) {
-                    BlockBag bag = getBlockBag(pt);
+                    BlockSource bag = getBlockSource(pt);
                     bag.addSourcePosition(pt);
 
                     informUser(player);
@@ -583,7 +608,7 @@ public class CraftBookListener extends PluginListener {
                     informUser(player);
 
                     try {
-                        BlockBag bag = getBlockBag(pt);
+                        BlockSource bag = getBlockSource(pt);
                         bag.addSourcePosition(pt);
                         CuboidCopy copy = copies.load(name);
                         if (copy.distance(pt) <= 4) {
@@ -619,7 +644,7 @@ public class CraftBookListener extends PluginListener {
                     informUser(player);
 
                     try {
-                        BlockBag bag = getBlockBag(pt);
+                        BlockSource bag = getBlockSource(pt);
                         bag.addSourcePosition(pt);
                         
                         if (data == 0x0) {
@@ -858,7 +883,7 @@ public class CraftBookListener extends PluginListener {
                 return;
             }
 
-            NearbyChestBlockBag blockBag = new NearbyChestBlockBag(pt);
+            NearbyChestBlockSource blockBag = new NearbyChestBlockSource(pt);
             blockBag.addSingleSourcePosition(pt);
             blockBag.addSingleSourcePosition(pt.add(1, 0, 0));
             blockBag.addSingleSourcePosition(pt.add(-1, 0, 0));
@@ -871,7 +896,7 @@ public class CraftBookListener extends PluginListener {
                         depositPt.getX(), depositPt.getY(),
                         depositPt.getZ(), 0);
                 etc.getMCServer().e.a(minecart);
-            } catch (BlockBagException e) {
+            } catch (BlockSourceException e) {
                 // No minecarts
             }
         // Minecart station
@@ -946,13 +971,13 @@ public class CraftBookListener extends PluginListener {
             // Gate
             if (gateSwitchModule != null && redstoneGates
                     && line2.equalsIgnoreCase("[Gate]")) {
-                BlockBag bag = getBlockBag(pt);
+                BlockSource bag = getBlockSource(pt);
                 bag.addSourcePosition(pt);
 
                 // A gate may toggle or not
                 try {
                     gateSwitchModule.setGateState(pt, bag, isOn);
-                } catch (BlockBagException e) {
+                } catch (BlockSourceException e) {
                 }
 
             // Bridges
@@ -963,7 +988,7 @@ public class CraftBookListener extends PluginListener {
                 int data = CraftBook.getBlockData(pt);
 
                 try {
-                    BlockBag bag = getBlockBag(pt);
+                    BlockSource bag = getBlockSource(pt);
                     bag.addSourcePosition(pt);
 
                     if (data == 0x0) {
@@ -976,7 +1001,7 @@ public class CraftBookListener extends PluginListener {
                         bridgeModule.setBridgeState(pt, Bridge.Direction.NORTH, bag, !isOn);
                     }
                 } catch (OperationException e) {
-                } catch (BlockBagException e) {
+                } catch (BlockSourceException e) {
                 }
             // ICs
             } else if (redstoneICs
@@ -1818,14 +1843,14 @@ public class CraftBookListener extends PluginListener {
      * @param origin
      * @return
      */
-    public BlockBag getBlockBag(Vector origin) {
-        List<BlockBag> bags = new ArrayList<BlockBag>();
-        for(BlockBagFactory f:blockBags) {
-            BlockBag b = f.createBlockBag(origin);
+    public BlockSource getBlockSource(Vector origin) {
+        List<BlockSource> bags = new ArrayList<BlockSource>();
+        for(BlockSourceFactory f:blockSources) {
+            BlockSource b = f.createBlockSource(origin);
             if(b==null) continue;
             bags.add(b);
         }
-        return new CompoundBlockBag(bags);
+        return new CompoundBlockSource(bags);
     }
 
     /**
@@ -2085,7 +2110,7 @@ public class CraftBookListener extends PluginListener {
                 }
 
                 if (depositPt != null) {
-                    NearbyChestBlockBag blockBag = new NearbyChestBlockBag(depositPt);
+                    NearbyChestBlockSource blockBag = new NearbyChestBlockSource(depositPt);
                     blockBag.addSingleSourcePosition(depositPt);
                     blockBag.addSingleSourcePosition(depositPt.add(1, 0, 0));
                     blockBag.addSingleSourcePosition(depositPt.add(-1, 0, 0));
@@ -2095,7 +2120,7 @@ public class CraftBookListener extends PluginListener {
                     try {
                         blockBag.storeBlock(ItemType.MINECART);
                         minecart.destroy();
-                    } catch (BlockBagException e) {
+                    } catch (BlockSourceException e) {
                     } 
                 }
             }

@@ -23,7 +23,7 @@ package com.sk89q.craftbook;
  *
  * @author sk89q
  */
-public class OutOfBlocksException extends BlockBagException {
+public class OutOfBlocksException extends BlockSourceException {
     private static final long serialVersionUID = -7063726368378723452L;
     /**
      * Stores the block ID.

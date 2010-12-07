@@ -40,8 +40,8 @@ public class LightSwitch {
      * @param oz
      * @return
      */
-    public boolean toggleLights(Vector origin, BlockBag bag)
-            throws BlockBagException {
+    public boolean toggleLights(Vector origin, BlockSource bag)
+            throws BlockSourceException {
         int aboveID = CraftBook.getBlockID(origin.add(0, 1, 0));
 
         if (aboveID == BlockType.TORCH || aboveID == BlockType.REDSTONE_TORCH_OFF
