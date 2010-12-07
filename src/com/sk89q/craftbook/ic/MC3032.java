@@ -47,13 +47,13 @@ public class MC3032 extends _3ISOFamilyIC {
         boolean j = chip.getIn(2).is(); //Set
         boolean k = chip.getIn(3).is(); //Reset
         if (chip.getIn(1).isTriggered() && chip.getIn(1).not()) {
-        	if (j && k) {
-        		chip.getOut(1).invert();
-        	} else if (j && !k) {
-        		chip.getOut(1).set(true);
-        	} else if (!j && k) {
-        		chip.getOut(1).set(false);
-        	}
+            if (j && k) {
+                chip.getOut(1).invert();
+            } else if (j && !k) {
+                chip.getOut(1).set(true);
+            } else if (!j && k) {
+                chip.getOut(1).set(false);
+            }
         }
     }
 }

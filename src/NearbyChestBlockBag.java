@@ -37,8 +37,8 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param origin
      */
     public NearbyChestBlockBag(Vector origin) {
-        BagComplexBlockComparator comparator =
-                new BagComplexBlockComparator(origin);
+        BagComplexBlockComparator<Chest> comparator =
+                new BagComplexBlockComparator<Chest>(origin);
         chests = new TreeSet<BagComplexBlock<Chest>>(comparator);
     }
 
@@ -51,31 +51,35 @@ public class NearbyChestBlockBag extends BlockBag {
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockBagException {
-        for (BagComplexBlock<Chest> c : chests) {
-            Chest chest = c.getChest();
-            hn[] itemArray = chest.getArray();
-            
-            // Find the item
-            for (int i = 0; itemArray.length > i; i++) {
-                if (itemArray[i] != null) {
-                    // Found an item
-                    if (itemArray[i].c == id &&
-                        itemArray[i].a >= 1) {
-                        int newAmount = itemArray[i].a - 1;
-
-                        if (newAmount > 0) {
-                            itemArray[i].a = newAmount;
-                        } else {
-                            itemArray[i] = null;
-                        }
-
-                        return;
-                    }
-                }
-            }
-        }
-
-        throw new OutOfBlocksException(id);
+    	try {
+	        for (BagComplexBlock<Chest> c : chests) {
+	            Chest chest = c.getChest();
+	            hn[] itemArray = chest.getArray();
+	            
+	            // Find the item
+	            for (int i = 0; itemArray.length > i; i++) {
+	                if (itemArray[i] != null) {
+	                    // Found an item
+	                    if (itemArray[i].c == id &&
+	                        itemArray[i].a >= 1) {
+	                        int newAmount = itemArray[i].a - 1;
+	
+	                        if (newAmount > 0) {
+	                            itemArray[i].a = newAmount;
+	                        } else {
+	                            itemArray[i] = null;
+	                        }
+	
+	                        return;
+	                    }
+	                }
+	            }
+	        }
+	
+	        throw new OutOfBlocksException(id);
+    	} finally {
+    		flushChanges();
+    	}
     }
 
     /**
@@ -87,37 +91,40 @@ public class NearbyChestBlockBag extends BlockBag {
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id) throws BlockBagException {
-        for (BagComplexBlock<Chest> c : chests) {
-            Chest chest = c.getChest();
-            hn[] itemArray = chest.getArray();
-            int emptySlot = -1;
-
-            // Find an existing slot to put it into
-            for (int i = 0; itemArray.length > i; i++) {
-                if (itemArray[i] != null) {
-                    // Found an item
-                    if (itemArray[i].c == id &&
-                        itemArray[i].a < 64) {
-                        int newAmount = itemArray[i].a + 1;
-                        itemArray[i].a = newAmount;
-
-                        return;
+        try {
+            for (BagComplexBlock<Chest> c : chests) {
+                Chest chest = c.getChest();
+                hn[] itemArray = chest.getArray();
+                int emptySlot = -1;
+    
+                // Find an existing slot to put it into
+                for (int i = 0; itemArray.length > i; i++) {
+                    if (itemArray[i] != null) {
+                        // Found an item
+                        if (itemArray[i].c == id &&
+                            itemArray[i].a < 64) {
+                            int newAmount = itemArray[i].a + 1;
+                            itemArray[i].a = newAmount;
+    
+                            return;
+                        }
+                    } else {
+                        emptySlot = i;
                     }
-                } else {
-                    emptySlot = i;
+                }
+    
+                // Didn't find an existing stack, so let's create a new one
+                if (emptySlot != -1) {
+                    itemArray[emptySlot] = new hn(id, 1);
+                    
+                    return;
                 }
             }
-
-            // Didn't find an existing stack, so let's create a new one
-            if (emptySlot != -1) {
-                itemArray[emptySlot] = new hn(id, 1);
-                flushChanges(); // Just in case
-                
-                return;
-            }
+    
+            throw new OutOfSpaceException(id);
+        } finally {
+            flushChanges(); 
         }
-
-        throw new OutOfSpaceException(id);
     }
 
     /**

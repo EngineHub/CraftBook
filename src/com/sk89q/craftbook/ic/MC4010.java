@@ -24,19 +24,19 @@ package com.sk89q.craftbook.ic;
  * @author Lymia
  */
 public class MC4010 extends _3I3OFamilyIC {
-	public String getTitle() {
-		return "HALF ADDER";
-	}
+    public String getTitle() {
+        return "HALF ADDER";
+    }
 
-	public void think(ChipState chip) {
-		boolean B = chip.getIn(2).is();
-		boolean C = chip.getIn(3).is();
-		
-		boolean S = B^C;
-		boolean Ca = B&C;
-		
-		chip.getOut(1).set(S);
-		chip.getOut(2).set(Ca);
-		chip.getOut(3).set(Ca);
-	}
+    public void think(ChipState chip) {
+        boolean B = chip.getIn(2).is();
+        boolean C = chip.getIn(3).is();
+        
+        boolean S = B^C;
+        boolean Ca = B&C;
+        
+        chip.getOut(1).set(S);
+        chip.getOut(2).set(Ca);
+        chip.getOut(3).set(Ca);
+    }
 }

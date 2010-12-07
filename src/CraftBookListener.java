@@ -301,9 +301,9 @@ public class CraftBookListener extends PluginListener {
             //Uncomment this when switch-based memory is implemented.
             //vivoICs.put("MC5100", new PlcBase(new Perlstone_1_0(), false));
         } else {
-        	vivoICs.remove("MC5000");
+            vivoICs.remove("MC5000");
             //Uncomment this when switch-based memory is implemented.
-        	//vivoICs.remove("MC5100");
+            //vivoICs.remove("MC5100");
         }
         
         String blockBag = properties.getString("block-bag", "unlimited-black-hole");
@@ -383,10 +383,10 @@ public class CraftBookListener extends PluginListener {
             return doBlockCreate(player, blockPlaced, blockClicked, itemInHand);
         } catch (OutOfBlocksException e) {
             player.sendMessage(Colors.Rose + "Uh oh! Ran out of: " + toBlockName(e.getID()));
-            player.sendMessage(Colors.Rose + "Make sure nearby chests have the necessary materials.");
+            player.sendMessage(Colors.Rose + "Make sure nearby block sources have the necessary materials.");
         } catch (OutOfSpaceException e) {
             player.sendMessage(Colors.Rose + "No room left to put: " + toBlockName(e.getID()));
-            player.sendMessage(Colors.Rose + "Make sure nearby partially occupied chests have free slots.");
+            player.sendMessage(Colors.Rose + "Make sure nearby partially occupied block sourcesf have free slots.");
         } catch (BlockBagException e) {
             player.sendMessage(Colors.Rose + "Unknown error: " + e.getMessage());
         }
@@ -843,7 +843,6 @@ public class CraftBookListener extends PluginListener {
 
             try {
                 blockBag.fetchBlock(ItemType.MINECART);
-                blockBag.flushChanges();
                 jo minecart = new jo(etc.getMCServer().e,
                         depositPt.getX(), depositPt.getY(),
                         depositPt.getZ(), 0);
@@ -1198,9 +1197,9 @@ public class CraftBookListener extends PluginListener {
                 }
 
                 if(id.startsWith("MC5")&&!redstonePLCs) {
-                	sign.setText(1, Colors.Red + line2);
-                	sign.setText(2, "!ERROR!");
-                	sign.setText(3, "plcs disabled");
+                    sign.setText(1, Colors.Red + line2);
+                    sign.setText(2, "!ERROR!");
+                    sign.setText(3, "plcs disabled");
                 }
                 else sign.setText(1, Colors.Red + line2);
                 sign.update();
@@ -2069,10 +2068,9 @@ public class CraftBookListener extends PluginListener {
 
                     try {
                         blockBag.storeBlock(ItemType.MINECART);
-                        blockBag.flushChanges();
                         minecart.destroy();
                     } catch (BlockBagException e) {
-                    }
+                    } 
                 }
             }
         }

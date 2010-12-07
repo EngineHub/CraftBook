@@ -24,7 +24,7 @@ import java.util.Comparator;
  *
  * @author sk89q
  */
-public class BagComplexBlockComparator implements Comparator {
+public class BagComplexBlockComparator<T extends ComplexBlock> implements Comparator<BagComplexBlock<T>> {
     /**
      * Origin to compare from.
      */
@@ -46,9 +46,9 @@ public class BagComplexBlockComparator implements Comparator {
      * @param o2
      * @return
      */
-    public int compare(Object o1, Object o2) {
-        BagComplexBlock b1 = (BagComplexBlock)o1;
-        BagComplexBlock b2 = (BagComplexBlock)o2;
+    public int compare(BagComplexBlock<T> o1, BagComplexBlock<T> o2) {
+        BagComplexBlock<T> b1 = (BagComplexBlock<T>)o1;
+        BagComplexBlock<T> b2 = (BagComplexBlock<T>)o2;
 
         double dist1 = b1.getPosition().distance(origin);
         double dist2 = b2.getPosition().distance(origin);
