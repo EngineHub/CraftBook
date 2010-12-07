@@ -25,5 +25,5 @@ package com.sk89q.craftbook;
  * @author sk89q
  */
 public class BlockBagException extends Exception {
-
+    private static final long serialVersionUID = 3259468698292336605L;
 }

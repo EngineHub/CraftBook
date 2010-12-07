@@ -19,12 +19,11 @@
 
 package com.sk89q.craftbook;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
+//import java.util.logging.Logger;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.*;
+//import java.io.*;
 
 /**
  * Store of recipes.
@@ -32,10 +31,11 @@ import java.io.*;
  * @author sk89q
  */
 public class CauldronCookbook {
-    /**
-     * Logger.
-     */
-    private static final Logger logger = Logger.getLogger("Minecraft");
+//    /**
+//     * Logger.
+//     */
+//    private static final Logger logger = Logger.getLogger("Minecraft");
+    
     /**
      * For fast recipe lookup.
      * 

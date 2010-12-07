@@ -383,12 +383,14 @@ public class CraftBookListener extends PluginListener {
             return doBlockCreate(player, blockPlaced, blockClicked, itemInHand);
         } catch (OutOfBlocksException e) {
             player.sendMessage(Colors.Rose + "Uh oh! Ran out of: " + toBlockName(e.getID()));
-            player.sendMessage(Colors.Rose + "Make sure nearby block sources have the necessary materials.");
+            player.sendMessage(Colors.Rose + "Make sure nearby block sources have the necessary");
+            player.sendMessage(Colors.Rose + "materials.");
         } catch (OutOfSpaceException e) {
             player.sendMessage(Colors.Rose + "No room left to put: " + toBlockName(e.getID()));
-            player.sendMessage(Colors.Rose + "Make sure nearby partially occupied block sourcesf have free slots.");
+            player.sendMessage(Colors.Rose + "Make sure nearby partially occupied block sources have");
+            player.sendMessage(Colors.Rose + "free slots.");
         } catch (BlockBagException e) {
-            player.sendMessage(Colors.Rose + "Unknown error: " + e.getMessage());
+            player.sendMessage(Colors.Rose + "Error: " + e.getMessage());
         }
 
         return true; // On error

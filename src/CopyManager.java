@@ -19,7 +19,6 @@
 
 import com.sk89q.craftbook.*;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.io.File;
 
 /**

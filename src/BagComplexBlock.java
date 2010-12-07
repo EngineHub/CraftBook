@@ -66,6 +66,7 @@ public class BagComplexBlock<T extends ComplexBlock> {
      * @return
      */
     @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(Object other) {
         if (other instanceof BagComplexBlock) {
             return ((BagComplexBlock)other).pos.equals(pos);

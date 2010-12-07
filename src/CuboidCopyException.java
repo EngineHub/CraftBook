@@ -22,6 +22,8 @@
  * @author sk89q
  */
 public class CuboidCopyException extends Exception {
+    private static final long serialVersionUID = 1610836109309177856L;
+
     /**
      * Construct an instance.
      * 

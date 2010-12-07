@@ -25,6 +25,8 @@ package com.sk89q.craftbook;
  * @author sk89q
  */
 public class OperationException extends Exception {
+    private static final long serialVersionUID = 2557254416301837827L;
+
     public OperationException(String msg) {
         super(msg);
     }

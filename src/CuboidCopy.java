@@ -111,6 +111,7 @@ public class CuboidCopy {
         byte[] data;
 
         try {
+            @SuppressWarnings("unused")
             byte version = reader.readByte();
             x = reader.readInt();
             y = reader.readInt();

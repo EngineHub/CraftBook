@@ -51,35 +51,35 @@ public class NearbyChestBlockBag extends BlockBag {
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockBagException {
-    	try {
-	        for (BagComplexBlock<Chest> c : chests) {
-	            Chest chest = c.getChest();
-	            hn[] itemArray = chest.getArray();
-	            
-	            // Find the item
-	            for (int i = 0; itemArray.length > i; i++) {
-	                if (itemArray[i] != null) {
-	                    // Found an item
-	                    if (itemArray[i].c == id &&
-	                        itemArray[i].a >= 1) {
-	                        int newAmount = itemArray[i].a - 1;
-	
-	                        if (newAmount > 0) {
-	                            itemArray[i].a = newAmount;
-	                        } else {
-	                            itemArray[i] = null;
-	                        }
-	
-	                        return;
-	                    }
-	                }
-	            }
-	        }
-	
-	        throw new OutOfBlocksException(id);
-    	} finally {
-    		flushChanges();
-    	}
+        try {
+            for (BagComplexBlock<Chest> c : chests) {
+                Chest chest = c.getChest();
+                hn[] itemArray = chest.getArray();
+                
+                // Find the item
+                for (int i = 0; itemArray.length > i; i++) {
+                    if (itemArray[i] != null) {
+                        // Found an item
+                        if (itemArray[i].c == id &&
+                            itemArray[i].a >= 1) {
+                            int newAmount = itemArray[i].a - 1;
+    
+                            if (newAmount > 0) {
+                                itemArray[i].a = newAmount;
+                            } else {
+                                itemArray[i] = null;
+                            }
+    
+                            return;
+                        }
+                    }
+                }
+            }
+    
+            throw new OutOfBlocksException(id);
+        } finally {
+            flushChanges();
+        }
     }
 
     /**

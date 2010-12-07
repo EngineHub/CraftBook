@@ -86,7 +86,7 @@ public class Elevator {
             // We are going to be teleporting to the same place as the player
             // is currently, except with a shifted Y
             int plyX = (int)Math.floor(player.getX());
-            int plyY = (int)Math.floor(player.getY());
+            //int plyY = (int)Math.floor(player.getY());
             int plyZ = (int)Math.floor(player.getZ());
 
             int y2;

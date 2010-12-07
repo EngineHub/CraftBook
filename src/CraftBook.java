@@ -59,7 +59,7 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void initialize() {
-        PluginLoader loader = etc.getLoader();
+        //PluginLoader loader = etc.getLoader();
 
         registerHook("BLOCK_CREATED", PluginListener.Priority.MEDIUM);
         registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
