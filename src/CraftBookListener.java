@@ -42,6 +42,23 @@ public class CraftBookListener extends PluginListener {
      */
     private static final Logger logger = Logger.getLogger("Minecraft");
     /**
+     * Block bag types.
+     */
+    private static final Map<String,BlockBagFactory> BLOCK_BAGS = new HashMap<String,BlockBagFactory>();
+    static {
+        BLOCK_BAGS.put("unlimited-black-hole", new BlockBagFactory() {
+            public BlockBag createBlockBag(Vector v) {
+                return new UnlimitedBlackHoleBlockBag();
+            }
+        });
+        BLOCK_BAGS.put("nearby-chests", new BlockBagFactory() {
+            public BlockBag createBlockBag(Vector v) {
+                return new NearbyChestBlockBag(v);
+            }
+        });
+    }
+    
+    /**
      * CraftBook.
      */
     private CraftBook craftBook;
@@ -117,11 +134,10 @@ public class CraftBookListener extends PluginListener {
     private int maxToggleAreaSize;
 
     /**
-     * Fast block bag access.
+     * Block bag factories.
      */
-    private static BlockBag dummyBlockBag = new UnlimitedBlackHoleBlockBag();
-
-    private boolean useChestsBlockBag = false;
+    private List<BlockBagFactory> blockBags = new ArrayList<BlockBagFactory>();
+    
     private BookReader readingModule;
     private String bookReadLine;
     private Cauldron cauldronModule;
@@ -306,14 +322,20 @@ public class CraftBookListener extends PluginListener {
             //vivoICs.remove("MC5100");
         }
         
-        String blockBag = properties.getString("block-bag", "unlimited-black-hole");
-        if (blockBag.equalsIgnoreCase("nearby-chests")) {
-            useChestsBlockBag = true;
-        } else if (blockBag.equalsIgnoreCase("unlimited-black-hole")) {
-            useChestsBlockBag = false;
-        } else {
-            logger.log(Level.WARNING, "Unknown CraftBook block bag: " + blockBag);
-            useChestsBlockBag = false;
+        String blockBags = properties.getString("block-bag", "unlimited-black-hole");
+        for(String blockBag:blockBags.split(",")) {
+            BlockBagFactory f = BLOCK_BAGS.get(blockBag);
+            if(f==null) {
+                logger.log(Level.WARNING, "Unknown CraftBook block bag: " + blockBag);
+                this.blockBags.clear();
+                this.blockBags.add(new BlockBagFactory() {
+                    public BlockBag createBlockBag(Vector v) {
+                        return new UnlimitedBlackHoleBlockBag();
+                    }
+                });
+                break;
+            }
+            this.blockBags.add(f);
         }
 
         if (properties.getBoolean("cauldron-enable", true)) {
@@ -1797,11 +1819,13 @@ public class CraftBookListener extends PluginListener {
      * @return
      */
     public BlockBag getBlockBag(Vector origin) {
-        if (useChestsBlockBag) {
-            return new NearbyChestBlockBag(origin);
-        } else {
-            return dummyBlockBag;
+        List<BlockBag> bags = new ArrayList<BlockBag>();
+        for(BlockBagFactory f:blockBags) {
+            BlockBag b = f.createBlockBag(origin);
+            if(b==null) continue;
+            bags.add(b);
         }
+        return new CompoundBlockBag(bags);
     }
 
     /**
