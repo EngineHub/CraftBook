@@ -26,7 +26,7 @@ import java.util.Random;
  *
  * @author sk89q
  */
-public class MC2020 extends SI3OFamilyIC {
+public class MC2020 extends BaseIC implements SI3OFamilyIC {
     /**
      * Random number generator.
      */

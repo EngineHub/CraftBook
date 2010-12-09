@@ -27,7 +27,7 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class MC1110 extends SISOFamilyIC {
+public class MC1110 extends BaseIC implements SISOFamilyIC {
     /**
      * Data store.
      */

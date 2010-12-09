@@ -46,7 +46,7 @@ public class CraftBookListener extends PluginListener {
      * Deprecated block source types.
      */
     private static final List<String> DEPRECATED_SOURCES = Arrays.asList(new String[]{"unlimited-black-hole"});
-    /**
+    /** 
      * Block source types.
      */
     private static final Map<String,BlockSourceFactory> BLOCK_SOURCES = new HashMap<String,BlockSourceFactory>();
@@ -342,10 +342,12 @@ public class CraftBookListener extends PluginListener {
 
         if(redstonePLCs) {
             vivoICs.put("MC5000", new PlcBase(new Perlstone_1_0(), true));
+            _3i3oICs.put("MC5001", new PlcBase(new Perlstone_1_0(), true));
             //Uncomment this when switch-based memory is implemented.
             //vivoICs.put("MC5100", new PlcBase(new Perlstone_1_0(), false));
         } else {
             vivoICs.remove("MC5000");
+            _3i3oICs.remove("MC5001");
             //Uncomment this when switch-based memory is implemented.
             //vivoICs.remove("MC5100");
         }

@@ -24,7 +24,7 @@ package com.sk89q.craftbook.ic;
  *
  * @author sk89q
  */
-public class MC1017 extends SISOFamilyIC {
+public class MC1017 extends BaseIC implements SISOFamilyIC {
     /**
      * Get the title of the IC.
      *

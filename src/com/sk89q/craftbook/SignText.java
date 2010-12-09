@@ -56,6 +56,7 @@ public class SignText {
      * @param line1 the line1 to set
      */
     public void setLine1(String line1) {
+        if(this.line1.equals(line1)) return;
         this.line1 = line1;
         changed = true;
     }
@@ -71,6 +72,7 @@ public class SignText {
      * @param line2 the line2 to set
      */
     public void setLine2(String line2) {
+        if(this.line2.equals(line2)) return;
         this.line2 = line2;
         changed = true;
     }
@@ -86,6 +88,7 @@ public class SignText {
      * @param line3 the line3 to set
      */
     public void setLine3(String line3) {
+        if(this.line3.equals(line3)) return;
         this.line3 = line3;
         changed = true;
     }
@@ -101,10 +104,18 @@ public class SignText {
      * @param line4 the line4 to set
      */
     public void setLine4(String line4) {
+        if(this.line4.equals(line4)) return;
         this.line4 = line4;
         changed = true;
     }
 
+    /**
+     * Supress the changed flag.
+     */
+    public void supressChange() {
+        changed = false;
+    }
+    
     /**
      * @return the changed
      */

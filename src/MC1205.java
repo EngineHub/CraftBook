@@ -25,7 +25,7 @@ import com.sk89q.craftbook.ic.*;
  *
  * @author sk89q
  */
-public class MC1205 extends SISOFamilyIC {
+public class MC1205 extends BaseIC implements SISOFamilyIC {
     /**
      * Get the title of the IC.
      *

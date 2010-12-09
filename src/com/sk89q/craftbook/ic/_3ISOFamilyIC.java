@@ -19,45 +19,9 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
-
 /**
  * Single input, single output family of ICs.
  *
  * @author sk89q
  */
-public abstract class _3ISOFamilyIC implements IC {
-    /**
-     * Get the title of the IC.
-     *
-     * @return
-     */
-    public abstract String getTitle();
-
-    /**
-     * Returns true if this IC requires permission to use.
-     *
-     * @return
-     */
-    public boolean requiresPermission() {
-        return false;
-    }
-    /**
-     * Validates the IC's environment. The position of the sign is given.
-     * Return a string in order to state an error message and deny
-     * creation, otherwise return null to allow.
-     *
-     * @param sign
-     * @return
-     */
-    public String validateEnvironment(Vector pos, SignText sign) {
-        return null;
-    }
-    /**
-     * Get a new state to use.
-     *
-     * @param chip
-     * @return
-     */
-    public abstract void think(ChipState chip);
-}
+public interface _3ISOFamilyIC extends IC {}

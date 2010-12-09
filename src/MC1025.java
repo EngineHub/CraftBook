@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.SISOFamilyIC;
 
@@ -25,7 +26,7 @@ import com.sk89q.craftbook.ic.SISOFamilyIC;
  *
  * @author Shaun (sturmeh)
  */
-public class MC1025 extends SISOFamilyIC {
+public class MC1025 extends BaseIC implements SISOFamilyIC {
     /**
      * Get the title of the IC.
      *

@@ -28,10 +28,12 @@ import lymia.util.Base64;
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.SignText;
 import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.VIVOFamilyIC;
+import com.sk89q.craftbook.ic._3I3OFamilyIC;
 
-public class PlcBase extends VIVOFamilyIC {
+public class PlcBase extends BaseIC implements VIVOFamilyIC, _3I3OFamilyIC {
     private PlcLang language;
     private boolean signStorage;
     public PlcBase(PlcLang language, boolean signStorage) {
@@ -107,6 +109,8 @@ public class PlcBase extends VIVOFamilyIC {
         chip.getOut(1).set(output[0]);
         chip.getOut(2).set(output[1]);
         chip.getOut(3).set(output[2]);
+        
+        t.supressChange();
     }
     
     public String validateEnvironment(Vector v, SignText t) {
