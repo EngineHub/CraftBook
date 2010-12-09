@@ -171,8 +171,8 @@ public final class Perlstone_1_0 implements PlcLang {
                             
                             function = staticf[functionId];
                             
-                            fArgs = new boolean[numargs];
-                            for(int j=numargs-1;j>=0;j--) fArgs[j] = stack.pop();
+                            args = new boolean[numargs];
+                            for(int j=numargs-1;j>=0;j--) args[j] = stack.pop();
                             
                             continue outer;
                             
