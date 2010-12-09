@@ -1,0 +1,24 @@
+
+Requirements:
+  * Java JDK - http://www.oracle.com/technetwork/java/javase/downloads/index.html
+  * Apache ANT - http://ant.apache.org/ivy/download.cgi
+  * Official minecraft server JAR - http://minecraft.net/download.jsp
+  * hey0's hMod JAR - http://wiki.hey0.net/index.php/Main_Page
+  * WorldEdit JAR - https://github.com/sk89q/worldedit/downloads
+  * JNBT JAR - (included in worldedit zip)
+
+Directory layout:
+
+minecraft/
+  minecraft_server.jar
+  craftbook/
+    <contents of craftbook repo here>
+  worldedit/
+    WorldEdit.jar
+    jnbt.jar
+  hey0/
+    bin/
+      Minecraft_Mod.jar
+
+Change to the craftbook directory, and execute 'ant' to generate CraftBook.jar, which you can
+then install as normal. (see INSTALL.txt)
