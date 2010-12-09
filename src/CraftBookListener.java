@@ -178,6 +178,7 @@ public class CraftBookListener extends PluginListener {
         _3isoICs.put("MC3031", new MC3031());
         _3isoICs.put("MC3034", new MC3034());
         _3isoICs.put("MC3036", new MC3036());
+		_3isoICs.put("MC3101", new MC3101());
         _3isoICs.put("MC3231", new MC3231());
         vivoICs.put("MC5000", new PlcBase(new Perlstone_1_0(), true));
         //Uncomment this when switch-based memory is implemented.
