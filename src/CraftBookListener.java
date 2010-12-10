@@ -341,15 +341,11 @@ public class CraftBookListener extends PluginListener {
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
 
         if(redstonePLCs) {
-            vivoICs.put("MC5000", new PlcBase(new Perlstone_1_0(), true));
-            _3i3oICs.put("MC5001", new PlcBase(new Perlstone_1_0(), true));
-            //Uncomment this when switch-based memory is implemented.
-            //vivoICs.put("MC5100", new PlcBase(new Perlstone_1_0(), false));
+            vivoICs.put("MC5000", new DefaultPLC(new Perlstone_1_0()));
+            _3i3oICs.put("MC5001", new DefaultPLC(new Perlstone_1_0()));
         } else {
             vivoICs.remove("MC5000");
             _3i3oICs.remove("MC5001");
-            //Uncomment this when switch-based memory is implemented.
-            //vivoICs.remove("MC5100");
         }
         
         String blockSources;
@@ -1752,6 +1748,13 @@ public class CraftBookListener extends PluginListener {
                         // Maybe the IC is setup incorrectly
                         String envError = ic.validateEnvironment(pos, signText);
 
+                        if (signText.isChanged()) {
+                            sign.setText(0, signText.getLine1());
+                            sign.setText(1, signText.getLine2());
+                            sign.setText(2, signText.getLine3());
+                            sign.setText(3, signText.getLine4());
+                        }
+
                         if (envError != null) {
                             player.sendMessage(Colors.Rose
                                     + "Error: " + envError);
@@ -1772,6 +1775,8 @@ public class CraftBookListener extends PluginListener {
                 } else if (type == BlockType.SIGN_POST) {
                     player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
                 }
+                
+                sign.update();
 
                 return false;
             }

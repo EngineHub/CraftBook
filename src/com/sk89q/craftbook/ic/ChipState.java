@@ -51,6 +51,12 @@ public class ChipState {
         }
         return in[n - 1];
     }
+    /**
+     * Gets all input states.
+     */
+    public Signal[] getInputs() {
+        return in.clone();
+    }
 
     /**
      * Get an output state.
@@ -63,6 +69,12 @@ public class ChipState {
             return null;
         }
         return out[n - 1];
+    }
+    /**
+     * Gets all output states.
+     */
+    public Signal[] getOutputs() {
+        return out.clone();
     }
 
     /**

@@ -28,6 +28,8 @@ import lymia.plc.PlcLang;
 import lymia.plc.State;
 
 /**
+ * Language for CraftBook's PLC system. Hardcoded for VIVO or 3I3O layouts.
+ * 
  * @author Lymia
  */
 public final class Perlstone_1_0 implements PlcLang {
