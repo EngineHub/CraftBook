@@ -212,8 +212,8 @@ public enum ICType {
 
             if (chip.isModified()) {
                 CraftBookListener.setRedstoneOutput(out0, chip.getOut(1).is());
-                CraftBookListener.setRedstoneOutput(out1, chip.getOut(2).is());
-                CraftBookListener.setRedstoneOutput(out2, chip.getOut(3).is());
+                if(hasOut1) CraftBookListener.setRedstoneOutput(out1, chip.getOut(2).is());
+                if(hasOut2) CraftBookListener.setRedstoneOutput(out2, chip.getOut(3).is());
             }
         }
     };
