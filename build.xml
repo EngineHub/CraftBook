@@ -1,0 +1,34 @@
+<project name="CraftBook" default="dist" basedir=".">
+  <description>
+      Interactive mechanics and redstone features for Minecraft
+  </description>
+
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="."/>
+
+  <target name="init">
+    <!-- Create the build directory used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source" >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" classpath="minecraft_server.jar:Minecraft_Mod.jar:WorldEdit.jar" destdir="${build}" debug="true"/>
+  </target>
+
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+    <jar jarfile="${dist}/CraftBook.jar" basedir="${build}" manifest="manifest.mf" />
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} directory -->
+    <delete dir="${build}"/>
+    <!-- Delete the compiled jar -->
+    <delete file="CraftBook.jar"/>
+  </target>
+</project>
+
