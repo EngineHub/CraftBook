@@ -1,5 +1,5 @@
 /*    
-Craftbook 
+Craftbook
 Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -16,31 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package lymia.customic;
+package lymia.util;
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
-
-import lymia.plc.PlcBase;
-import lymia.plc.PlcException;
-import lymia.plc.PlcLang;
-
-public class CustomICBase extends PlcBase {
-    private final String name, code;
-    public CustomICBase(PlcLang language, String name, String code) {
-        super(language);
-        this.name = name;
-        this.code = code;
+public class Symbol {
+    public final int symbol;
+    public final Object value;
+    public Symbol(int symbol) {
+        this.symbol = symbol;
+        this.value = null;
     }
-
-    public String getTitle() {
-        return name;
-    }
-    
-    protected String getCode(Vector v) throws PlcException {
-        return code;
-    }
-    protected String validateEnviromentEx(Vector v, SignText t) {
-        return null;
+    public Symbol(int symbol, Object value) {
+        this.symbol = symbol;
+        this.value = value;
     }
 }

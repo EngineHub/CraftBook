@@ -1050,7 +1050,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
-                        sign.update();
+                        if(signText.update()) sign.update();
                     }
 
                     return;
@@ -1090,7 +1090,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
-                        sign.update();
+                        if(signText.update()) sign.update();
                     }
 
                     return;
@@ -1131,7 +1131,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
-                        sign.update();
+                        if(signText.update()) sign.update();
                     }
 
                     return;
@@ -1181,7 +1181,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
-                        sign.update();
+                        if(signText.update()) sign.update();
                     }
 
                     return;
@@ -1248,7 +1248,7 @@ public class CraftBookListener extends PluginListener {
                         sign.setText(1, signText.getLine2());
                         sign.setText(2, signText.getLine3());
                         sign.setText(3, signText.getLine4());
-                        sign.update();
+                        if(signText.update()) sign.update();
                     }
 
                     return;

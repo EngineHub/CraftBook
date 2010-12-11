@@ -29,6 +29,7 @@ public class SignText {
     private String line3;
     private String line4;
     private boolean changed;
+    private boolean noUpdate = false;
 
     /**
      * Construct the object.
@@ -110,10 +111,10 @@ public class SignText {
     }
 
     /**
-     * Supress the changed flag.
+     * Supress sending the client a update.
      */
-    public void supressChange() {
-        changed = false;
+    public void supressUpdate() {
+        noUpdate = true;
     }
     
     /**
@@ -121,5 +122,12 @@ public class SignText {
      */
     public boolean isChanged() {
         return changed;
+    }
+    /**
+     * Check if an update is requested.
+     * @return
+     */
+    public boolean update() {
+        return !noUpdate;
     }
 }
