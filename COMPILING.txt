@@ -6,7 +6,6 @@ Requirements
     * Official minecraft server JAR - http://minecraft.net/download.jsp
     * hey0's hMod JAR - http://wiki.hey0.net/index.php/Main_Page
     * WorldEdit JAR - https://github.com/sk89q/worldedit/downloads
-    * JNBT JAR - (included in worldedit zip)
 
 Directory layout
 ----------------
