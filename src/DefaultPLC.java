@@ -23,10 +23,8 @@ import lymia.plc.PlcLang;
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.SignText;
 import com.sk89q.craftbook.Vector;
-import com.sk89q.craftbook.ic.VIVOFamilyIC;
-import com.sk89q.craftbook.ic._3I3OFamilyIC;
 
-public class DefaultPLC extends PlcBase implements VIVOFamilyIC, _3I3OFamilyIC {
+public class DefaultPLC extends PlcBase {
     public DefaultPLC(PlcLang language) {super(language);}
     
     public String getTitle() {

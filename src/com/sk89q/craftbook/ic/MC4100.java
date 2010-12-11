@@ -23,7 +23,7 @@ package com.sk89q.craftbook.ic;
  * Full subtractor
  * @author Lymia
  */
-public class MC4100 extends BaseIC implements _3I3OFamilyIC {
+public class MC4100 extends BaseIC {
     public String getTitle() {
         return "FULL SUBTRACTOR";
     }

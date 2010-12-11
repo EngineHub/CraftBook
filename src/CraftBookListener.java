@@ -109,35 +109,17 @@ public class CraftBookListener extends PluginListener {
     private Map<String,String> lastMinecartMsg =
             new HashMap<String,String>();
     /**
-     * Last minecart message send time from a sign to a player.
+     * Last time minecart message sent from a sign to a player.
      */
     private Map<String,Long> lastMinecartMsgTime =
             new HashMap<String,Long>();
+
     /**
-     * SISO ICs.
+     * Currently registered ICs
      */
-    private Map<String,SISOFamilyIC> sisoICs =
-            new HashMap<String,SISOFamilyIC>();
-    /**
-     * SI3O ICs.
-     */
-    private Map<String,SI3OFamilyIC> si3oICs =
-            new HashMap<String,SI3OFamilyIC>();
-    /**
-     * 3ISO ICs.
-     */
-    private Map<String,_3ISOFamilyIC> _3isoICs =
-            new HashMap<String,_3ISOFamilyIC>();
-    /**
-     * 3I3O ICs.
-     */
-    private Map<String,_3I3OFamilyIC> _3i3oICs =
-            new HashMap<String,_3I3OFamilyIC>();
-    /**
-     * VIVO ICs.
-     */
-    private Map<String,VIVOFamilyIC> vivoICs =
-            new HashMap<String,VIVOFamilyIC>();
+    private Map<String,RegisteredIC> icList = 
+            new HashMap<String,RegisteredIC>();
+    
     /**
      * The block that was changed.
      */
@@ -205,36 +187,39 @@ public class CraftBookListener extends PluginListener {
      */
     public CraftBookListener(CraftBook craftBook) {
         this.craftBook = craftBook;
-        sisoICs.put("MC1000", new MC1000());
-        sisoICs.put("MC1001", new MC1001());
-        sisoICs.put("MC1017", new MC1017());
-        sisoICs.put("MC1018", new MC1018());
-        sisoICs.put("MC1020", new MC1020());
-        sisoICs.put("MC1025", new MC1025());
-        sisoICs.put("MC1110", new MC1110());
-        sisoICs.put("MC1111", new MC1111());
-        sisoICs.put("MC1200", new MC1200());
-        sisoICs.put("MC1201", new MC1201());
-        sisoICs.put("MC1205", new MC1205());
-        sisoICs.put("MC1206", new MC1206());
-        sisoICs.put("MC1230", new MC1230());
-        sisoICs.put("MC1231", new MC1231());
-        si3oICs.put("MC2020", new MC2020());
-        _3isoICs.put("MC3020", new MC3020());
-        _3isoICs.put("MC3002", new MC3002());
-        _3isoICs.put("MC3003", new MC3003());
-        _3isoICs.put("MC3021", new MC3021());
-        _3isoICs.put("MC3030", new MC3030());
-        _3isoICs.put("MC3031", new MC3031());
-        _3isoICs.put("MC3032", new MC3032());
-        _3isoICs.put("MC3034", new MC3034());
-        _3isoICs.put("MC3036", new MC3036());
-        _3isoICs.put("MC3040", new MC3040());
-        _3isoICs.put("MC3231", new MC3231());
-        _3i3oICs.put("MC4000", new MC4000());
-        _3i3oICs.put("MC4010", new MC4010());
-        _3i3oICs.put("MC4100", new MC4100());
-        _3i3oICs.put("MC4110", new MC4110());
+        registerIC("MC1000", new MC1000(), ICType.SISO);
+        registerIC("MC1001", new MC1001(), ICType.SISO);
+        registerIC("MC1017", new MC1017(), ICType.SISO);
+        registerIC("MC1018", new MC1018(), ICType.SISO);
+        registerIC("MC1020", new MC1020(), ICType.SISO);
+        registerIC("MC1025", new MC1025(), ICType.SISO);
+        registerIC("MC1110", new MC1110(), ICType.SISO);
+        registerIC("MC1111", new MC1111(), ICType.SISO);
+        registerIC("MC1200", new MC1200(), ICType.SISO);
+        registerIC("MC1201", new MC1201(), ICType.SISO);
+        registerIC("MC1205", new MC1205(), ICType.SISO);
+        registerIC("MC1206", new MC1206(), ICType.SISO);
+        registerIC("MC1230", new MC1230(), ICType.SISO);
+        registerIC("MC1231", new MC1231(), ICType.SISO);
+        registerIC("MC2020", new MC2020(), ICType.SI3O);
+        registerIC("MC3020", new MC3020(), ICType._3ISO);
+        registerIC("MC3002", new MC3002(), ICType._3ISO);
+        registerIC("MC3003", new MC3003(), ICType._3ISO);
+        registerIC("MC3021", new MC3021(), ICType._3ISO);
+        registerIC("MC3030", new MC3030(), ICType._3ISO);
+        registerIC("MC3031", new MC3031(), ICType._3ISO);
+        registerIC("MC3032", new MC3032(), ICType._3ISO);
+        registerIC("MC3034", new MC3034(), ICType._3ISO);
+        registerIC("MC3036", new MC3036(), ICType._3ISO);
+        registerIC("MC3040", new MC3040(), ICType._3ISO);
+        registerIC("MC3231", new MC3231(), ICType._3ISO);
+        registerIC("MC4000", new MC4000(), ICType._3I3O);
+        registerIC("MC4010", new MC4010(), ICType._3I3O);
+        registerIC("MC4100", new MC4100(), ICType._3I3O);
+        registerIC("MC4110", new MC4110(), ICType._3I3O);
+        
+        registerIC("MC5000", new DefaultPLC(new Perlstone_1_0()),ICType.VIVO);
+        registerIC("MC5001", new DefaultPLC(new Perlstone_1_0()),ICType._3I3O);
     }
 
     /**
@@ -339,14 +324,6 @@ public class CraftBookListener extends PluginListener {
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
-
-        if(redstonePLCs) {
-            vivoICs.put("MC5000", new DefaultPLC(new Perlstone_1_0()));
-            _3i3oICs.put("MC5001", new DefaultPLC(new Perlstone_1_0()));
-        } else {
-            vivoICs.remove("MC5000");
-            _3i3oICs.remove("MC5001");
-        }
         
         String blockSources;
         if(properties.containsKey("block-bag")) {
@@ -1019,248 +996,33 @@ public class CraftBookListener extends PluginListener {
                     && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
                     line2.charAt(len - 1) == ']') {
                 String id = line2.substring(1, len - 1).toUpperCase();
+                SignText signText = new SignText(sign.getText(0),sign.getText(1),
+                                                 sign.getText(2),sign.getText(3));
 
-                SignText signText = new SignText(
-                        sign.getText(0), sign.getText(1), sign.getText(2),
-                        sign.getText(3));
-
-                // SISO family
-                SISOFamilyIC sisoIC = sisoICs.get(id);
-
-                if (sisoIC != null) {
-                    Vector outputVec = getWallSignBack(pt, 2);
-                    Vector backVec = getWallSignBack(pt, 1);
-
-                    Signal[] in = new Signal[1];
-                    in[0] = new Signal(isOn, true);
-                    
-                    Signal[] out = new Signal[1];
-                    out[0] = new Signal(getRedstoneOutput(outputVec));
-                    
-                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
-                    
-                    sisoIC.think(chip);
-                    
-                    if (chip.isModified()) {
-                        setRedstoneOutput(outputVec, chip.getOut(1).is());
-                    }
-
-                    if (signText.isChanged()) {
-                        sign.setText(0, signText.getLine1());
-                        sign.setText(1, signText.getLine2());
-                        sign.setText(2, signText.getLine3());
-                        sign.setText(3, signText.getLine4());
-                        if(signText.update()) sign.update();
-                    }
-
-                    return;
-                }
-
-                // SI3O family
-                SI3OFamilyIC si30IC = si3oICs.get(id);
-
-                if (si30IC != null) {
-                    Vector backVec = getWallSignBack(pt, 1);
-                    Vector backShift = backVec.subtract(pt);
-                    Vector output1Vec = getWallSignBack(pt, 2);
-                    Vector output2Vec = getWallSignSide(pt, 1).add(backShift);
-                    Vector output3Vec = getWallSignSide(pt, -1).add(backShift);
-
-                    Signal[] in = new Signal[1];
-                    in[0] = new Signal(isOn, true);
-
-                    Signal[] out = new Signal[3];
-                    out[0] = new Signal(getRedstoneOutput(output1Vec));
-                    out[1] = new Signal(getRedstoneOutput(output2Vec));
-                    out[2] = new Signal(getRedstoneOutput(output3Vec));
-
-                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
-
-                    // The most important part...
-                    si30IC.think(chip);
-
-                    if (chip.isModified()) {
-                        setRedstoneOutput(output1Vec, chip.getOut(1).is());
-                        setRedstoneOutput(output2Vec, chip.getOut(2).is());
-                        setRedstoneOutput(output3Vec, chip.getOut(3).is());
-                    }
-
-                    if (signText.isChanged()) {
-                        sign.setText(0, signText.getLine1());
-                        sign.setText(1, signText.getLine2());
-                        sign.setText(2, signText.getLine3());
-                        sign.setText(3, signText.getLine4());
-                        if(signText.update()) sign.update();
-                    }
-
-                    return;
-                }
-
-                // 3ISO family
-                _3ISOFamilyIC _3isoIC = _3isoICs.get(id);
-
-                if (_3isoIC != null) {
-                    Vector backVec = getWallSignBack(pt, 1);
-                    Vector outputVec = getWallSignBack(pt, 2);
-                    Vector input1Vec = getWallSignBack(pt, -1);
-                    Vector input2Vec = getWallSignSide(pt, 1);
-                    Vector input3Vec = getWallSignSide(pt, -1);
-
-                    Signal[] in = new Signal[3];
-                    in[0] = new Signal(isRedstoneHighBinary(input1Vec, true),
-                            changedRedstoneInput.equals(input1Vec));
-                    in[1] = new Signal(isRedstoneHighBinary(input2Vec, true),
-                            changedRedstoneInput.equals(input2Vec));
-                    in[2] = new Signal(isRedstoneHighBinary(input3Vec, true),
-                            changedRedstoneInput.equals(input3Vec));
-
-                    Signal[] out = new Signal[1];
-                    out[0] = new Signal(getRedstoneOutput(outputVec));
-
-                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
-
-                    // The most important part...
-                    _3isoIC.think(chip);
-
-                    if (chip.isModified()) {
-                        setRedstoneOutput(outputVec, chip.getOut(1).is());
-                    }
-
-                    if (signText.isChanged()) {
-                        sign.setText(0, signText.getLine1());
-                        sign.setText(1, signText.getLine2());
-                        sign.setText(2, signText.getLine3());
-                        sign.setText(3, signText.getLine4());
-                        if(signText.update()) sign.update();
-                    }
-
-                    return;
-                }
-
-                // 3I3O family
-                _3I3OFamilyIC _3i3oIC = _3i3oICs.get(id);
-
-                if (_3i3oIC != null) {
-                    Vector backVec = getWallSignBack(pt, 1);
-                    Vector backShift = getWallSignBack(pt, 2).subtract(pt);
-                    
-                    Vector out0 = getWallSignBack(pt, 3);
-                    Vector out1 = getWallSignSide(pt, 1).add(backShift);
-                    Vector out2 = getWallSignSide(pt, -1).add(backShift);
-                    
-                    Vector in0 = getWallSignBack(pt, -1);
-                    Vector in1 = getWallSignSide(pt, 1);
-                    Vector in2 = getWallSignSide(pt, -1);
-
-                    Signal[] in = new Signal[3];
-                    in[0] = new Signal(isRedstoneHighBinary(in0, true),
-                            changedRedstoneInput.equals(in0));
-                    in[1] = new Signal(isRedstoneHighBinary(in1, true),
-                            changedRedstoneInput.equals(in1));
-                    in[2] = new Signal(isRedstoneHighBinary(in2, true),
-                            changedRedstoneInput.equals(in2));
-
-                    Signal[] out = new Signal[3];
-                    out[0] = new Signal(getRedstoneOutput(out0));
-                    out[1] = new Signal(getRedstoneOutput(out1));
-                    out[2] = new Signal(getRedstoneOutput(out2));
-
-                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
-
-                    // The most important part...
-                    _3i3oIC.think(chip);
-
-                    if (chip.isModified()) {
-                        setRedstoneOutput(out0, chip.getOut(1).is());
-                        setRedstoneOutput(out1, chip.getOut(2).is());
-                        setRedstoneOutput(out2, chip.getOut(3).is());
-                    }
-
-                    if (signText.isChanged()) {
-                        sign.setText(0, signText.getLine1());
-                        sign.setText(1, signText.getLine2());
-                        sign.setText(2, signText.getLine3());
-                        sign.setText(3, signText.getLine4());
-                        if(signText.update()) sign.update();
-                    }
-
+                RegisteredIC icType = icList.get(id);
+                if(icType==null) {
+                    sign.setText(1, Colors.Red + line2);
+                    sign.update();
                     return;
                 }
                 
-                // VIVO family
-                VIVOFamilyIC vivoIC = vivoICs.get(id);
-
-                if (vivoIC != null) {
-                    Vector backVec = getWallSignBack(pt, 1);
-                    Vector backShift = backVec.subtract(pt);
-                    
-                    Vector out0 = getWallSignBack(pt, 2);
-                    Vector out1 = getWallSignSide(pt, 1).add(backShift);
-                    Vector out2 = getWallSignSide(pt, -1).add(backShift);
-                    
-                    Vector in0 = getWallSignBack(pt, -1);
-                    Vector in1 = getWallSignSide(pt, 1);
-                    Vector in2 = getWallSignSide(pt, -1);
-
-                    boolean hasOut1 = CraftBook.getBlockID(out1) == BlockType.LEVER;
-                    boolean hasOut2 = CraftBook.getBlockID(out2) == BlockType.LEVER;
-                    
-                    Signal[] in = new Signal[3];
-                    Signal[] out = new Signal[3];
-                    
-                    out[0] = new Signal(getRedstoneOutput(out0));
-                    in[0] = new Signal(isRedstoneHighBinary(in0, true),
-                                       changedRedstoneInput.equals(in0));
-                    
-                    if(hasOut1) {
-                        out[1] = new Signal(getRedstoneOutput(out1));
-                        in[1] = new Signal(false);
-                    }
-                    else {
-                        out[1] = new Signal(false);
-                        in[1] = new Signal(isRedstoneHighBinary(in1, true),
-                                           changedRedstoneInput.equals(in1));
-                    }
-                    
-                    if(hasOut2) {
-                        out[2] = new Signal(getRedstoneOutput(out2));
-                        in[2] = new Signal(false);
-                    }
-                    else {
-                        out[2] = new Signal(false);
-                        in[2] = new Signal(isRedstoneHighBinary(in2, true),
-                                           changedRedstoneInput.equals(in2));
-                    }
-                    
-                    ChipState chip = new ChipState(pt, backVec, in, out, signText);
-                    
-                    // The most important part...
-                    vivoIC.think(chip);
-                    
-                    if (chip.isModified()) {
-                        setRedstoneOutput(out0, chip.getOut(1).is());
-                        if(hasOut1) setRedstoneOutput(out1,chip.getOut(2).is());
-                        if(hasOut2) setRedstoneOutput(out2,chip.getOut(3).is());
-                    }
-
-                    if (signText.isChanged()) {
-                        sign.setText(0, signText.getLine1());
-                        sign.setText(1, signText.getLine2());
-                        sign.setText(2, signText.getLine3());
-                        sign.setText(3, signText.getLine4());
-                        if(signText.update()) sign.update();
-                    }
-
-                    return;
-                }
-
-                if(id.startsWith("MC5")&&!redstonePLCs) {
+                if(icType.isPlc&&!redstonePLCs) {
                     sign.setText(1, Colors.Red + line2);
                     sign.setText(2, "!ERROR!");
                     sign.setText(3, "plcs disabled");
+                    sign.update();
+                    return;
                 }
-                else sign.setText(1, Colors.Red + line2);
-                sign.update();
+                
+                icType.think(pt, changedRedstoneInput, signText, sign);
+
+                if (signText.isChanged()) {
+                    sign.setText(0, signText.getLine1());
+                    sign.setText(1, signText.getLine2());
+                    sign.setText(2, signText.getLine3());
+                    sign.setText(3, signText.getLine4());
+                    if(signText.update()) sign.update();
+                }
             }
         }
     }
@@ -1439,7 +1201,7 @@ public class CraftBookListener extends PluginListener {
      * @param considerWires
      * @return
      */
-    private Boolean isRedstoneHigh(Vector pt, int type, boolean considerWires) {
+    private static Boolean isRedstoneHigh(Vector pt, int type, boolean considerWires) {
         if (type == BlockType.LEVER) {
             return (CraftBook.getBlockData(pt) & 0x8) == 0x8;
         } else if (type == BlockType.STONE_PRESSURE_PLATE) {
@@ -1481,7 +1243,7 @@ public class CraftBookListener extends PluginListener {
      * @param considerWires
      * @return
      */
-    private boolean isRedstoneHighBinary(Vector pt, boolean considerWires) {
+    static boolean isRedstoneHighBinary(Vector pt, boolean considerWires) {
         Boolean result = isRedstoneHigh(pt, CraftBook.getBlockID(pt), considerWires);
         if (result != null && result) {
             return true;
@@ -1519,7 +1281,7 @@ public class CraftBookListener extends PluginListener {
      * @param getPosition
      * @param state
      */
-    private boolean getRedstoneOutput(Vector pos) {
+    static boolean getRedstoneOutput(Vector pos) {
         if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
             return (CraftBook.getBlockData(pos) & 0x8) == 0x8;
         } else {
@@ -1533,7 +1295,7 @@ public class CraftBookListener extends PluginListener {
      * @param getPosition
      * @param state
      */
-    private void setRedstoneOutput(Vector pos, boolean state) {
+    static void setRedstoneOutput(Vector pos, boolean state) {
         if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
             int data = CraftBook.getBlockData(pos);
             int newData = data & 0x7;
@@ -1574,51 +1336,6 @@ public class CraftBookListener extends PluginListener {
             etc.getServer().updateBlockPhysics(
                     pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), newData);
         }
-    }
-
-    /**
-     * Get the registered IC.
-     * 
-     * @param id
-     * @return
-     */
-    public IC getIC(String id) {
-        // SISO family
-        SISOFamilyIC sisoIC = sisoICs.get(id);
-
-        if (sisoIC != null) {
-            return sisoIC;
-        }
-
-        // SI3O family
-        SI3OFamilyIC si30IC = si3oICs.get(id);
-
-        if (si30IC != null) {
-            return si30IC;
-        }
-
-        // 3ISO family
-        _3ISOFamilyIC _3isoIC = _3isoICs.get(id);
-
-        if (_3isoIC != null) {
-            return _3isoIC;
-        }
-
-        // 3I3O family
-        _3I3OFamilyIC _3i3oIC = _3i3oICs.get(id);
-
-        if (_3i3oIC != null) {
-            return _3i3oIC;
-        }
-
-        // VIVO family
-        VIVOFamilyIC vivoIC = vivoICs.get(id);
-        
-        if(vivoIC != null) {
-            return vivoIC;
-        }
-
-        return null;
     }
 
     /**
@@ -1721,18 +1438,18 @@ public class CraftBookListener extends PluginListener {
                 }
 
                 String id = line2.substring(1, len - 1).toUpperCase();
+                RegisteredIC ic = icList.get(id);
 
-                if (id.startsWith("MC5")) {
-                    if (!redstonePLCs) {
-                        player.sendMessage(Colors.Rose + "PLCs are not enabled.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                    }
-                }
-
-                IC ic = getIC(id);
                 if (ic != null) {
-                    if (( ic.requiresPermission() || ( id.startsWith("MC5") && redstonePLCsRequirePermission ) ) && !player.canUseCommand("/allic")
+                    if (ic.isPlc) {
+                        if (!redstonePLCs) {
+                            player.sendMessage(Colors.Rose + "PLCs are not enabled.");
+                            CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                            return true;
+                        }
+                    }
+                    
+                    if (( ic.ic.requiresPermission() || ( ic.isPlc && redstonePLCsRequirePermission ) ) && !player.canUseCommand("/allic")
                              && !player.canUseCommand("/" + id.toLowerCase())) {
                         player.sendMessage(Colors.Rose
                                 + "You don't have permission to make " + id + ".");
@@ -1746,7 +1463,7 @@ public class CraftBookListener extends PluginListener {
                             sign.getText(3));
 
                         // Maybe the IC is setup incorrectly
-                        String envError = ic.validateEnvironment(pos, signText);
+                        String envError = ic.ic.validateEnvironment(pos, signText);
 
                         if (signText.isChanged()) {
                             sign.setText(0, signText.getLine1());
@@ -1761,7 +1478,7 @@ public class CraftBookListener extends PluginListener {
                             CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
                             return true;
                         } else {
-                            sign.setText(0, ic.getTitle());
+                            sign.setText(0, ic.ic.getTitle());
                             sign.setText(1, "[" + id + "]");
                         }
                     }
@@ -2291,7 +2008,7 @@ public class CraftBookListener extends PluginListener {
      * @param multiplier
      * @return
      */
-    private static Vector getWallSignBack(Vector pt, int multiplier) {
+    static Vector getWallSignBack(Vector pt, int multiplier) {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -2343,7 +2060,7 @@ public class CraftBookListener extends PluginListener {
      * @param multiplier
      * @return
      */
-    private static Vector getWallSignSide(Vector pt, int multiplier) {
+    static Vector getWallSignSide(Vector pt, int multiplier) {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -2533,5 +2250,35 @@ public class CraftBookListener extends PluginListener {
             buffer.append(str);
         }
         return buffer.toString();
+    }
+    
+    /**
+     * Registers a new IC.
+     */
+    public void registerIC(String name, IC ic, ICType type) {
+        registerIC(name,ic,type,false);
+    }
+    /**
+     * Registers a new IC.
+     */
+    public void registerIC(String name, IC ic, ICType type, boolean isPlc) {
+        icList.put(name, new RegisteredIC(ic,type,isPlc));
+    }
+    
+    /**
+     * Storage class for registered ICs.
+     */
+    private static class RegisteredIC {
+        final ICType type;
+        final IC ic;
+        final boolean isPlc;
+        RegisteredIC(IC ic, ICType type, boolean isPlc) {
+            this.type = type;
+            this.ic = ic;
+            this.isPlc = isPlc;
+        }
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign) {
+            type.think(pt, changedRedstoneInput, signText, sign, ic);
+        }
     }
 }

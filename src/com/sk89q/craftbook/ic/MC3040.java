@@ -24,7 +24,7 @@ package com.sk89q.craftbook.ic;
  *
  * @author Lymia
  */
-public class MC3040 extends BaseIC implements _3ISOFamilyIC {
+public class MC3040 extends BaseIC {
     /**
      * Get the title of the IC.
      *

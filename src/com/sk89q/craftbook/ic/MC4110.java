@@ -23,7 +23,7 @@ package com.sk89q.craftbook.ic;
  * Half subtractor
  * @author Lymia
  */
-public class MC4110 extends BaseIC implements _3I3OFamilyIC {
+public class MC4110 extends BaseIC {
     public String getTitle() {
         return "HALF SUBTRACTOR";
     }

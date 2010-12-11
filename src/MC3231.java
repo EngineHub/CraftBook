@@ -24,7 +24,7 @@ import com.sk89q.craftbook.ic.*;
  *
  * @author sk89q
  */
-public class MC3231 extends BaseIC implements _3ISOFamilyIC {
+public class MC3231 extends BaseIC {
     /**
      * Get the title of the IC.
      *

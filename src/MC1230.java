@@ -19,14 +19,13 @@
 
 import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.SISOFamilyIC;
 
 /**
  * Takes in a clock input, and outputs whether the time is day or night.
  *
  * @author Shaun (sturmeh)
  */
-public class MC1230 extends BaseIC implements SISOFamilyIC {
+public class MC1230 extends BaseIC {
     /**
      * Get the title of the IC.
      *

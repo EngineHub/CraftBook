@@ -23,7 +23,7 @@ package com.sk89q.craftbook.ic;
  * Full adder
  * @author Lymia
  */
-public class MC4000 extends BaseIC implements _3I3OFamilyIC {
+public class MC4000 extends BaseIC {
     public String getTitle() {
         return "FULL ADDER";
     }

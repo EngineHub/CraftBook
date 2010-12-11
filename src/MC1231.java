@@ -19,14 +19,13 @@
 
 import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.SISOFamilyIC;
 
 /**
  * Sets the server time to day or night, repeats the signal.
  *
  * @author Shaun (sturmeh)
  */
-public class MC1231 extends BaseIC implements SISOFamilyIC {
+public class MC1231 extends BaseIC {
     /**
      * Get the title of the IC.
      *

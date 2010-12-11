@@ -19,14 +19,13 @@
 
 import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.SISOFamilyIC;
 
 /**
  * 1-bit number based on modulus of server time.
  *
  * @author Shaun (sturmeh)
  */
-public class MC1025 extends BaseIC implements SISOFamilyIC {
+public class MC1025 extends BaseIC {
     /**
      * Get the title of the IC.
      *

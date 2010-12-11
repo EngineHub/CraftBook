@@ -26,7 +26,7 @@ import java.util.Random;
  *
  * @author sk89q
  */
-public class MC1020 extends BaseIC implements SISOFamilyIC {
+public class MC1020 extends BaseIC {
     /**
      * Random number generator.
      * 

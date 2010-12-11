@@ -28,7 +28,7 @@ package com.sk89q.craftbook.ic;
  * 
  * @author sindreij
  */
-public class MC3032 extends BaseIC implements _3ISOFamilyIC {
+public class MC3032 extends BaseIC {
     /**
      * Get the title of the IC.
      *
