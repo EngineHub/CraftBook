@@ -1,0 +1,23 @@
+// Syntax
+// ------
+//
+// For inline programs:
+// type/language name:title = begin
+//   program
+// end
+//
+// For programs stored in external files:
+// type/language name:title = file:filename.ext
+//
+// Note that title must contain no spaces, and that the symbol '-' will be
+// replaced with a space.
+//
+// Languages
+// ---------
+//
+// (More may me added at a later date)
+// perlstone_v1.0: Perlstone v1.0
+
+3iso/perlstone_v1.0 MC3041:MY-MULTIPLEXER = begin
+	Cd[Ar]![Br]
+end

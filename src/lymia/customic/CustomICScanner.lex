@@ -63,7 +63,7 @@ SP = [ \t\f]
 IC = [^\r\n]
 WS = {LT} | {SP}
 
-IDENTIFIER = [a-zA-Z0-9_.]+
+IDENTIFIER = [a-zA-Z0-9\-_.]+
 TYPE = {IDENTIFIER} "/" {IDENTIFIER}
 
 FULL_NAME = {IDENTIFIER} ":" {IDENTIFIER}

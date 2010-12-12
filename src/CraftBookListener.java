@@ -190,7 +190,6 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
      */
     public CraftBookListener(CraftBook craftBook) {
         this.craftBook = craftBook;
-        resetICs();
     }
 
     /**
@@ -340,7 +339,9 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         
         if(properties.getBoolean("custom-ics", true)) {
             try {
+                icList.clear();
                 CustomICLoader.load("custom-ics.txt", this);
+                addDefaultICs();
             } catch (CustomICException e) {
                 logger.log(Level.SEVERE, "Failed to load custom IC file: "+e.getMessage());
                 e.printStackTrace();
@@ -348,41 +349,48 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         }
     }
     
-    private void resetICs() {
-        registerIC("MC1000", new MC1000(), ICType.SISO);
-        registerIC("MC1001", new MC1001(), ICType.SISO);
-        registerIC("MC1017", new MC1017(), ICType.SISO);
-        registerIC("MC1018", new MC1018(), ICType.SISO);
-        registerIC("MC1020", new MC1020(), ICType.SISO);
-        registerIC("MC1025", new MC1025(), ICType.SISO);
-        registerIC("MC1110", new MC1110(), ICType.SISO);
-        registerIC("MC1111", new MC1111(), ICType.SISO);
-        registerIC("MC1200", new MC1200(), ICType.SISO);
-        registerIC("MC1201", new MC1201(), ICType.SISO);
-        registerIC("MC1205", new MC1205(), ICType.SISO);
-        registerIC("MC1206", new MC1206(), ICType.SISO);
-        registerIC("MC1230", new MC1230(), ICType.SISO);
-        registerIC("MC1231", new MC1231(), ICType.SISO);
-        registerIC("MC2020", new MC2020(), ICType.SI3O);
-        registerIC("MC3020", new MC3020(), ICType._3ISO);
-        registerIC("MC3002", new MC3002(), ICType._3ISO);
-        registerIC("MC3003", new MC3003(), ICType._3ISO);
-        registerIC("MC3021", new MC3021(), ICType._3ISO);
-        registerIC("MC3030", new MC3030(), ICType._3ISO);
-        registerIC("MC3031", new MC3031(), ICType._3ISO);
-        registerIC("MC3032", new MC3032(), ICType._3ISO);
-        registerIC("MC3034", new MC3034(), ICType._3ISO);
-        registerIC("MC3036", new MC3036(), ICType._3ISO);
-        registerIC("MC3040", new MC3040(), ICType._3ISO);
-        registerIC("MC3101", new MC3101(), ICType._3ISO);
-        registerIC("MC3231", new MC3231(), ICType._3ISO);
-        registerIC("MC4000", new MC4000(), ICType._3I3O);
-        registerIC("MC4010", new MC4010(), ICType._3I3O);
-        registerIC("MC4100", new MC4100(), ICType._3I3O);
-        registerIC("MC4110", new MC4110(), ICType._3I3O);
+    private void addDefaultICs() {
+        internalRegisterIC("MC1000", new MC1000(), ICType.SISO);
+        internalRegisterIC("MC1001", new MC1001(), ICType.SISO);
+        internalRegisterIC("MC1017", new MC1017(), ICType.SISO);
+        internalRegisterIC("MC1018", new MC1018(), ICType.SISO);
+        internalRegisterIC("MC1020", new MC1020(), ICType.SISO);
+        internalRegisterIC("MC1025", new MC1025(), ICType.SISO);
+        internalRegisterIC("MC1110", new MC1110(), ICType.SISO);
+        internalRegisterIC("MC1111", new MC1111(), ICType.SISO);
+        internalRegisterIC("MC1200", new MC1200(), ICType.SISO);
+        internalRegisterIC("MC1201", new MC1201(), ICType.SISO);
+        internalRegisterIC("MC1205", new MC1205(), ICType.SISO);
+        internalRegisterIC("MC1206", new MC1206(), ICType.SISO);
+        internalRegisterIC("MC1230", new MC1230(), ICType.SISO);
+        internalRegisterIC("MC1231", new MC1231(), ICType.SISO);
+        internalRegisterIC("MC2020", new MC2020(), ICType.SI3O);
+        internalRegisterIC("MC3020", new MC3020(), ICType._3ISO);
+        internalRegisterIC("MC3002", new MC3002(), ICType._3ISO);
+        internalRegisterIC("MC3003", new MC3003(), ICType._3ISO);
+        internalRegisterIC("MC3021", new MC3021(), ICType._3ISO);
+        internalRegisterIC("MC3030", new MC3030(), ICType._3ISO);
+        internalRegisterIC("MC3031", new MC3031(), ICType._3ISO);
+        internalRegisterIC("MC3032", new MC3032(), ICType._3ISO);
+        internalRegisterIC("MC3034", new MC3034(), ICType._3ISO);
+        internalRegisterIC("MC3036", new MC3036(), ICType._3ISO);
+        internalRegisterIC("MC3040", new MC3040(), ICType._3ISO);
+        internalRegisterIC("MC3101", new MC3101(), ICType._3ISO);
+        internalRegisterIC("MC3231", new MC3231(), ICType._3ISO);
+        internalRegisterIC("MC4000", new MC4000(), ICType._3I3O);
+        internalRegisterIC("MC4010", new MC4010(), ICType._3I3O);
+        internalRegisterIC("MC4100", new MC4100(), ICType._3I3O);
+        internalRegisterIC("MC4110", new MC4110(), ICType._3I3O);
         
-        registerIC("MC5000", new DefaultPLC(new Perlstone_1_0()),ICType.VIVO);
-        registerIC("MC5001", new DefaultPLC(new Perlstone_1_0()),ICType._3I3O);
+        internalRegisterIC("MC5000", new DefaultPLC(new Perlstone_1_0()), ICType.VIVO, true);
+        internalRegisterIC("MC5001", new DefaultPLC(new Perlstone_1_0()), ICType._3I3O, true);
+    }
+    
+    private void internalRegisterIC(String name, IC ic, ICType type) {
+        if(!icList.containsKey(name)) registerIC(name,ic,type,false);
+    }
+    private void internalRegisterIC(String name, IC ic, ICType type, boolean isPlc) {
+        if(!icList.containsKey(name)) registerIC(name,ic,type,isPlc);
     }
 
     /**
@@ -2274,6 +2282,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
      * Defined by the interface CustomICAccepter
      */
     public void registerIC(String name, IC ic, String type) throws CustomICException {
+        if(icList.containsKey(name)) throw new CustomICException("ic already defined");
         registerIC(name,ic,getIcType(type),false);
     }
     private ICType getIcType(String type) throws CustomICException {
