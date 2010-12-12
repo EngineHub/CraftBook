@@ -19,14 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package lymia.util;
 
 public class Symbol {
-    public final int symbol;
+    public final int symbol, line, col;
     public final Object value;
-    public Symbol(int symbol) {
+    public Symbol(int symbol, int line, int col) {
         this.symbol = symbol;
         this.value = null;
+        this.line = line;
+        this.col = col;
     }
-    public Symbol(int symbol, Object value) {
+    public Symbol(int symbol, Object value, int line, int col) {
         this.symbol = symbol;
         this.value = value;
+        this.line = line;
+        this.col = col;
     }
 }

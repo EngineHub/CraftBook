@@ -70,7 +70,8 @@ public final class Perlstone_1_0 implements PlcLang {
                 
                 for(boolean b:args) stack.push(b);
                 
-                for (int i = 0; i < function.length; i++) {
+                int l = function.length;
+                for (int i = 0; i < l; i++) {
                     numOpcodes[0]++;
                     if(numOpcodes[0]==25000) throw new PerlstoneException("opcode limit");
                     
@@ -280,7 +281,7 @@ public final class Perlstone_1_0 implements PlcLang {
     private static char[][] getStaticFunctions(String program) throws PerlstoneException {
         char[][] staticFunctions; // Java needs a map command...
         /* scope */{
-            String[] staticFunctionStrings = program.replace(" ","").replace("\n", "").split(":");
+            String[] staticFunctionStrings = program.replace(" ","").replace("\t","").replace("\n", "").split(":");
             if (staticFunctionStrings.length > 100) throw new PerlstoneException("excess functions");
             staticFunctions = new char[staticFunctionStrings.length][];
             for (int i = 0; i < staticFunctionStrings.length; i++)

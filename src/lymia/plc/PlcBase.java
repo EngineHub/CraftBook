@@ -95,7 +95,11 @@ public abstract class PlcBase extends BaseIC {
         t.setLine4(Base64.encodeBytes(s.presistantStorage));
         
         try {
-            for(int i=0;i<output.length;i++) chip.getOut(i+1).set(output[i]);
+            for(int i=0;i<output.length;i++) {
+                Signal out = chip.getOut(i+1);
+                if(out==null) break;
+                out.set(output[i]);
+            }
         } catch(ArrayIndexOutOfBoundsException e) {
             t.setLine2("§c"+t.getLine2());
             t.setLine3("!ERROR!");

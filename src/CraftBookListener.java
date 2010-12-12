@@ -30,6 +30,9 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+import lymia.customic.CustomICAccepter;
+import lymia.customic.CustomICException;
+import lymia.customic.CustomICLoader;
 import lymia.perlstone.Perlstone_1_0;
 
 /**
@@ -37,7 +40,7 @@ import lymia.perlstone.Perlstone_1_0;
  *
  * @author sk89q
  */
-public class CraftBookListener extends PluginListener {
+public class CraftBookListener extends PluginListener implements CustomICAccepter {
     /**
      * Logger.
      */
@@ -332,6 +335,15 @@ public class CraftBookListener extends PluginListener {
             } catch (IOException e) {
                 logger.log(Level.INFO, "cauldron-recipes.txt not loaded: "
                         + e.getMessage());
+            }
+        }
+        
+        if(properties.getBoolean("custom-ics", true)) {
+            try {
+                CustomICLoader.load("custom-ics.txt", this);
+            } catch (CustomICException e) {
+                logger.log(Level.SEVERE, "Failed to load custom IC file: "+e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -1231,7 +1243,7 @@ public class CraftBookListener extends PluginListener {
      * there was no redstone at that location, null will be returned.
      *
      * @param pt
-     * @param type
+     * @param icName
      * @param considerWires
      * @return
      */
@@ -1244,7 +1256,7 @@ public class CraftBookListener extends PluginListener {
      * there was no redstone at that location, null will be returned.
      *
      * @param pt
-     * @param type
+     * @param icName
      * @param considerWires
      * @return
      */
@@ -2255,6 +2267,19 @@ public class CraftBookListener extends PluginListener {
             buffer.append(str);
         }
         return buffer.toString();
+    }
+    
+    /**
+     * Register a new IC.
+     * Defined by the interface CustomICAccepter
+     */
+    public void registerIC(String name, IC ic, String type) throws CustomICException {
+        registerIC(name,ic,getIcType(type),false);
+    }
+    private ICType getIcType(String type) throws CustomICException {
+        ICType typeObject = ICType.forName(type);
+        if(typeObject==null) throw new CustomICException("invalid ic type "+type);
+        return typeObject;
     }
     
     /**

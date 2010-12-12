@@ -219,4 +219,13 @@ public enum ICType {
     };
     
     abstract void think(Vector v, Vector c, SignText t, Sign s, IC i);
+    
+    public static ICType forName(String name) {
+             if(name.equals("siso")) return SISO;
+        else if(name.equals("si3o")) return SI3O;
+        else if(name.equals("3iso")) return _3ISO;
+        else if(name.equals("3i3o")) return _3I3O;
+        else if(name.equals("vivo")) return VIVO;
+        else                         return null;
+    }
 }

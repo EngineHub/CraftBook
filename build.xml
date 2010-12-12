@@ -2,6 +2,12 @@
   <description>
     CraftBook adds interactive mechanics, Redstone features, and
     Minecart enhancements to Minecraft SMP.</description>
+  
+  <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
+    <classpath>
+      <pathelement location="./lib/JFlex.jar"/>
+    </classpath>
+  </taskdef>
 
   <property name="src.dir" location="src"/>
   <property name="build.dir" location="build"/>
@@ -13,7 +19,7 @@
   </target>
 
   <target name="compile" depends="init">
-    <javac srcdir="${src.dir}" classpath="minecraft_server.jar:Minecraft_Mod.jar:WorldEdit.jar" deprecation="true" includeantruntime="true" destdir="${build.dir}" debug="true">
+    <javac srcdir="${src.dir}" deprecation="true" includeantruntime="true" destdir="${build.dir}" debug="true">
       <classpath>
         <path path="@{classpath}"/>
         <path path="lib/minecraft_server.jar"/>
@@ -58,9 +64,15 @@
         <exclude name="Minecraft_Mod.jar"/>
         <exclude name="minecraft_server.jar"/>
         <exclude name="WorldEdit.jar"/>
+        <exclude name="JFlex.jar"/>
       </fileset>
     </copy>
     <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip"/>
+  </target>
+
+  <target name="run-jflex">
+    <!-- WARNING: Hardcoded. JFlex's Ant task is horrible. -->
+    <jflex file="src/lymia/customic/CustomICScanner.lex" destdir="${src.dir}"/>
   </target>
 
   <target name="clean">

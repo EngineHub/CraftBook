@@ -18,29 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package lymia.customic;
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
-
-import lymia.plc.PlcBase;
-import lymia.plc.PlcException;
-import lymia.plc.PlcLang;
-
-class CustomICBase extends PlcBase {
-    private final String name, code;
-    CustomICBase(PlcLang language, String name, String code) {
-        super(language);
-        this.name = name;
-        this.code = code;
-    }
-
-    public String getTitle() {
-        return name;
-    }
+class UnknownTokenException extends CustomICException {
+    private static final long serialVersionUID = 8993605202110405821L;
     
-    protected String getCode(Vector v) throws PlcException {
-        return code;
-    }
-    protected String validateEnviromentEx(Vector v, SignText t) {
-        return null;
+    final int line, column;
+    
+    UnknownTokenException(int line, int column) {
+        this.line = line;
+        this.column = column;
     }
 }
