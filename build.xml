@@ -16,9 +16,9 @@
     <javac srcdir="${src.dir}" classpath="minecraft_server.jar:Minecraft_Mod.jar:WorldEdit.jar" deprecation="true" includeantruntime="true" destdir="${build.dir}" debug="true">
       <classpath>
         <path path="@{classpath}"/>
-        <path path="lib/minecraft_server.jar"/>
-        <path path="lib/Minecraft_Mod.jar"/>
-        <path path="lib/WorldEdit.jar"/>
+        <path path="minecraft_server.jar"/>
+        <path path="Minecraft_Mod.jar"/>
+        <path path="WorldEdit.jar"/>
       </classpath>
     </javac>
   </target>
