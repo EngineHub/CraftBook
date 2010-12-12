@@ -14,11 +14,10 @@ Directory layout
 
   craftbook/
     <contents of craftbook repo here>
-    lib/
-      minecraft_server.jar 
-      WorldEdit.jar
-      Minecraft_Mod.jar
-      JFlex.jar
+    minecraft_server.jar 
+    WorldEdit.jar
+    Minecraft_Mod.jar
+    JFlex.jar
 
 Change to the craftbook directory, and execute 'ant' to generate CraftBook.jar,
 which you can then install as normal. (see INSTALL.txt) JFlex is not needed for

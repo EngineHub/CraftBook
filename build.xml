@@ -5,7 +5,7 @@
   
   <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
     <classpath>
-      <pathelement location="./lib/JFlex.jar"/>
+      <pathelement location="./JFlex.jar"/>
     </classpath>
   </taskdef>
 
@@ -59,6 +59,7 @@
       <globmapper from="*.txt" to="*.txt"/>
     </copy>
     <copy tofile="${release.dir}/CraftBook.jar" file="${dist.dir}/CraftBook.jar"/>
+    <!--
     <copy todir="${release.dir}">
       <fileset dir="lib">
         <exclude name="Minecraft_Mod.jar"/>
@@ -67,6 +68,7 @@
         <exclude name="JFlex.jar"/>
       </fileset>
     </copy>
+    -->
     <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip"/>
   </target>
 
