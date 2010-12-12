@@ -1,34 +1,87 @@
 <project name="CraftBook" default="dist" basedir=".">
   <description>
-      Interactive mechanics and redstone features for Minecraft
-  </description>
+    CraftBook adds interactive mechanics, Redstone features, and
+    Minecart enhancements to Minecraft SMP.</description>
 
-  <property name="src" location="src"/>
-  <property name="build" location="build"/>
-  <property name="dist"  location="."/>
+  <property name="src.dir" location="src"/>
+  <property name="build.dir" location="build"/>
+  <property name="dist.dir" location="dist"/>
+  <property name="release.dir" location="release"/>
 
   <target name="init">
-    <!-- Create the build directory used by compile -->
-    <mkdir dir="${build}"/>
+    <mkdir dir="${build.dir}"/>
   </target>
 
-  <target name="compile" depends="init"
-        description="compile the source" >
-    <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${src}" classpath="minecraft_server.jar:Minecraft_Mod.jar:WorldEdit.jar" destdir="${build}" debug="true"/>
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}" classpath="minecraft_server.jar:Minecraft_Mod.jar:WorldEdit.jar" deprecation="true" includeantruntime="true" destdir="${build.dir}" debug="true">
+      <classpath>
+        <path path="@{classpath}"/>
+        <path path="lib/minecraft_server.jar"/>
+        <path path="lib/Minecraft_Mod.jar"/>
+        <path path="lib/WorldEdit.jar"/>
+      </classpath>
+    </javac>
   </target>
 
-  <target name="dist" depends="compile"
-        description="generate the distribution" >
-    <jar jarfile="${dist}/CraftBook.jar" basedir="${build}" manifest="manifest.mf" />
+  <target name="jar" depends="compile">
+    <mkdir dir="${dist.dir}"/>
+    <manifest file="manifest.mf" mode="replace">
+      <attribute name="Implementation-Title" value="CraftBook"/>
+      <attribute name="Implementation-Version" value="${version}"/>
+      <attribute name="CraftBook-Version" value="${version}"/>
+      <attribute name="Class-Path" value="minecraft_server.jar mysql-connector-java-bin.jar plugins/"/>
+    </manifest>
+    <jar jarfile="${dist.dir}/CraftBook.jar" basedir="${build.dir}" manifest="manifest.mf"/>
   </target>
 
-  <target name="clean"
-        description="clean up" >
-    <!-- Delete the ${build} directory -->
-    <delete dir="${build}"/>
-    <!-- Delete the compiled jar -->
-    <delete file="CraftBook.jar"/>
+  <target name="dist">
+    <property name="version" value="nightly"/>
+    <antcall target="jar"/>
   </target>
+
+  <target name="release">
+    <input message="Enter version:" addproperty="version"/>
+    <antcall target="jar"/>
+    <delete dir="${release.dir}"/>
+    <mkdir dir="${release.dir}"/>
+    <mkdir dir="${release.dir}/src"/>
+    <copy todir="${release.dir}/src">
+      <fileset dir="${src.dir}"/>
+    </copy>
+    <copy todir="${release.dir}">
+      <fileset dir="."/>
+      <globmapper from="*.txt" to="*.txt"/>
+    </copy>
+    <copy tofile="${release.dir}/CraftBook.jar" file="${dist.dir}/CraftBook.jar"/>
+    <copy todir="${release.dir}">
+      <fileset dir="lib">
+        <exclude name="Minecraft_Mod.jar"/>
+        <exclude name="minecraft_server.jar"/>
+        <exclude name="WorldEdit.jar"/>
+      </fileset>
+    </copy>
+    <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+    <delete dir="${release.dir}"/>
+  </target>
+  
+  <!--<target name="-get-version-git" if="git-revision">
+    <sequential>
+      <exec executable="git" failifexecutionfails="false" outputproperty="git-revision">
+        <arg value="rev-parse"/>
+        <arg value="HEAD"/>
+      </exec>
+      <exec executable="git" outputproperty="git-revision-dirty">
+        <arg value="diff"/>
+        <arg value="- -shortstat"/>
+      </exec>
+      <condition else="dev-${git-revision}-modified" property="version" value="dev-${git-revision}">
+        <equals arg1="" arg2="${git-revision-dirty}"/>
+      </condition>
+    </sequential>
+  </target>-->
 </project>
-
