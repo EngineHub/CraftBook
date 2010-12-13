@@ -18,29 +18,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package lymia.customic;
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
+public class CustomICException extends Exception {
 
-import lymia.plc.PlcBase;
-import lymia.plc.PlcException;
-import lymia.plc.PlcLang;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4304013653689426785L;
 
-class CustomICBase extends PlcBase {
-    private final String name, code;
-    CustomICBase(PlcLang language, String name, String code) {
-        super(language);
-        this.name = name;
-        this.code = code;
+    public CustomICException() {
+        super();
+        // TODO Auto-generated constructor stub
     }
 
-    public String getTitle() {
-        return name;
+    public CustomICException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
     }
-    
-    protected String getCode(Vector v) throws PlcException {
-        return code;
+
+    public CustomICException(String message) {
+        super(message);
+        // TODO Auto-generated constructor stub
     }
-    protected String validateEnviromentEx(Vector v, SignText t) {
-        return null;
+
+    public CustomICException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
     }
+
 }

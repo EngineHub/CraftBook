@@ -18,29 +18,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package lymia.customic;
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
-
-import lymia.plc.PlcBase;
-import lymia.plc.PlcException;
-import lymia.plc.PlcLang;
-
-class CustomICBase extends PlcBase {
-    private final String name, code;
-    CustomICBase(PlcLang language, String name, String code) {
-        super(language);
-        this.name = name;
-        this.code = code;
-    }
-
-    public String getTitle() {
-        return name;
-    }
+class CustomICSym {
+    static final int SYM_TYPE = 0;
+    static final int SYM_NAME = 1;
+    static final int SYM_PROG = 2;
+    static final int SYM_FILE = 3;
     
-    protected String getCode(Vector v) throws PlcException {
-        return code;
+    static class Type {
+        final String type;
+        final String language;
+        public Type(String type) {
+            String[] s = type.split("/");
+            this.type = s[0];
+            this.language = s[1];
+        }
     }
-    protected String validateEnviromentEx(Vector v, SignText t) {
-        return null;
+    static class Name {
+        final String icName;
+        final String title;
+        public Name(String name) {
+            String[] s = name.split(":");
+            this.icName = s[0];
+            this.title = s.length==2?s[1]:"UNTITLED IC";
+        }
     }
 }
