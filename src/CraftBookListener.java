@@ -127,11 +127,6 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
      * The block that was changed.
      */
     private BlockVector changedRedstoneInput;
-    
-    /**
-     * Redstone recursion limit.
-     */
-    private int recursionCount;
 
     /**
      * Indicates whether each function should check permissions when using.
@@ -158,7 +153,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     private GateSwitch gateSwitchModule;
     private boolean redstoneGates = true;
     private LightSwitch lightSwitchModule;
-    private Bridge bridgeModule;
+    Bridge bridgeModule;
     private boolean redstoneBridges = true;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
@@ -182,6 +177,8 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     private int minecartReverseBlock = BlockType.CLOTH;
     private int minecartTriggerBlock = BlockType.IRON_ORE;
     private int minecartEjectBlock = BlockType.IRON_BLOCK;
+
+    private boolean rsLock = false;
 
     /**
      * Construct CraftBook.
@@ -711,138 +708,129 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     * @param newLevel the new current
     */
     public int onRedstoneChange(Block block, int oldLevel, int newLevel) {
-        recursionCount++;
-
-        if (recursionCount < 0) {
-            recursionCount = 0;
+        return onRedstoneChange(new BlockVector(block.getX(),block.getY(),block.getZ()),oldLevel,newLevel);
+    }
+    public int onRedstoneChange(BlockVector v, int oldLevel, int newLevel) {
+        if(rsLock) {
+            craftBook.getDelay().delayRsChange(v, oldLevel, newLevel);
+            return newLevel;
+        }
+        
+        // Pre-check
+        if (!redstoneGates && !redstoneBridges && !redstonePumpkins && !redstoneICs) {
+            return newLevel;
         }
 
+        boolean wasOn = oldLevel >= 1;
+        boolean isOn = newLevel >= 1;
+        boolean wasChange = wasOn != isOn;
+
+        // For efficiency reasons, we're only going to consider changes between
+        // off and on state, and ignore simple current changes (i.e. 15->13)
+        if (!wasChange) {
+            return newLevel;
+        }
+
+        int x = v.getBlockX();
+        int y = v.getBlockY();
+        int z = v.getBlockZ();
+
+        int type = CraftBook.getBlockID(x, y, z);
+        //Unused
+        //int above = CraftBook.getBlockID(x, y + 1, z);
+
+        changedRedstoneInput = new BlockVector(x, y, z);
+
+        // When this hook has been called, the level in the world has not
+        // yet been updated, so we're going to do this very ugly thing of
+        // faking the value with the new one whenever the data value of this
+        // block is requested -- it is quite ugly
         try {
-            // Pre-check
-            if (!redstoneGates && !redstoneBridges && !redstonePumpkins && !redstoneICs) {
-                return newLevel;
-            }
+            if (type == BlockType.LEVER) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x8
+                            : CraftBook.getBlockData(x, y, z) & 0x7);
+            } else if (type == BlockType.STONE_PRESSURE_PLATE) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x1
+                            : CraftBook.getBlockData(x, y, z) & 0x14);
+            } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x1
+                            : CraftBook.getBlockData(x, y, z) & 0x14);
+            } else if (type == BlockType.STONE_BUTTON) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z,
+                        newLevel > 0
+                            ? CraftBook.getBlockData(x, y, z) | 0x8
+                            : CraftBook.getBlockData(x, y, z) & 0x7);
+            } else if (type == BlockType.REDSTONE_WIRE) {
+                // Fake data
+                CraftBook.fakeBlockData(x, y, z, newLevel);
 
-            if (recursionCount > 4) {
-                recursionCount = 0;
-                block.setType(0);
-                block.update();
-                return 0;
-            }
+                int westSide = CraftBook.getBlockID(x, y, z + 1);
+                int westSideAbove = CraftBook.getBlockID(x, y + 1, z + 1);
+                int westSideBelow = CraftBook.getBlockID(x, y - 1, z + 1);
+                int eastSide = CraftBook.getBlockID(x, y, z - 1);
+                int eastSideAbove = CraftBook.getBlockID(x, y + 1, z - 1);
+                int eastSideBelow = CraftBook.getBlockID(x, y - 1, z - 1);
 
-            boolean wasOn = oldLevel >= 1;
-            boolean isOn = newLevel >= 1;
-            boolean wasChange = wasOn != isOn;
+                int northSide = CraftBook.getBlockID(x - 1, y, z);
+                int northSideAbove = CraftBook.getBlockID(x - 1, y + 1, z);
+                int northSideBelow = CraftBook.getBlockID(x - 1, y - 1, z);
+                int southSide = CraftBook.getBlockID(x + 1, y, z);
+                int southSideAbove = CraftBook.getBlockID(x + 1, y + 1, z);
+                int southSideBelow = CraftBook.getBlockID(x + 1, y - 1, z);
 
-            // For efficiency reasons, we're only going to consider changes between
-            // off and on state, and ignore simple current changes (i.e. 15->13)
-            if (!wasChange) {
-                return newLevel;
-            }
-
-            int x = block.getX();
-            int y = block.getY();
-            int z = block.getZ();
-
-            int type = CraftBook.getBlockID(x, y, z);
-            //Unused
-            //int above = CraftBook.getBlockID(x, y + 1, z);
-
-            changedRedstoneInput = new BlockVector(x, y, z);
-
-            // When this hook has been called, the level in the world has not
-            // yet been updated, so we're going to do this very ugly thing of
-            // faking the value with the new one whenever the data value of this
-            // block is requested -- it is quite ugly
-            try {
-                if (type == BlockType.LEVER) {
-                    // Fake data
-                    CraftBook.fakeBlockData(x, y, z,
-                            newLevel > 0
-                                ? CraftBook.getBlockData(x, y, z) | 0x8
-                                : CraftBook.getBlockData(x, y, z) & 0x7);
-                } else if (type == BlockType.STONE_PRESSURE_PLATE) {
-                    // Fake data
-                    CraftBook.fakeBlockData(x, y, z,
-                            newLevel > 0
-                                ? CraftBook.getBlockData(x, y, z) | 0x1
-                                : CraftBook.getBlockData(x, y, z) & 0x14);
-                } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
-                    // Fake data
-                    CraftBook.fakeBlockData(x, y, z,
-                            newLevel > 0
-                                ? CraftBook.getBlockData(x, y, z) | 0x1
-                                : CraftBook.getBlockData(x, y, z) & 0x14);
-                } else if (type == BlockType.STONE_BUTTON) {
-                    // Fake data
-                    CraftBook.fakeBlockData(x, y, z,
-                            newLevel > 0
-                                ? CraftBook.getBlockData(x, y, z) | 0x8
-                                : CraftBook.getBlockData(x, y, z) & 0x7);
-                } else if (type == BlockType.REDSTONE_WIRE) {
-                    // Fake data
-                    CraftBook.fakeBlockData(x, y, z, newLevel);
-
-                    int westSide = CraftBook.getBlockID(x, y, z + 1);
-                    int westSideAbove = CraftBook.getBlockID(x, y + 1, z + 1);
-                    int westSideBelow = CraftBook.getBlockID(x, y - 1, z + 1);
-                    int eastSide = CraftBook.getBlockID(x, y, z - 1);
-                    int eastSideAbove = CraftBook.getBlockID(x, y + 1, z - 1);
-                    int eastSideBelow = CraftBook.getBlockID(x, y - 1, z - 1);
-
-                    int northSide = CraftBook.getBlockID(x - 1, y, z);
-                    int northSideAbove = CraftBook.getBlockID(x - 1, y + 1, z);
-                    int northSideBelow = CraftBook.getBlockID(x - 1, y - 1, z);
-                    int southSide = CraftBook.getBlockID(x + 1, y, z);
-                    int southSideAbove = CraftBook.getBlockID(x + 1, y + 1, z);
-                    int southSideBelow = CraftBook.getBlockID(x + 1, y - 1, z);
-
-                    // Make sure that the wire points to only this block
-                    if (!BlockType.isRedstoneBlock(westSide)
-                            && !BlockType.isRedstoneBlock(eastSide)
-                            && (!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0)
-                            && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0)
-                            && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
-                            && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
-                        // Possible blocks north / south
-                        handleDirectWireInput(new Vector(x - 1, y, z), isOn);
-                        handleDirectWireInput(new Vector(x + 1, y, z), isOn);
-                    }
-
-                    if (!BlockType.isRedstoneBlock(northSide)
-                            && !BlockType.isRedstoneBlock(southSide)
-                            && (!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0)
-                            && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0)
-                            && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
-                            && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
-                        // Possible blocks west / east
-                        handleDirectWireInput(new Vector(x, y, z - 1), isOn);
-                        handleDirectWireInput(new Vector(x, y, z + 1), isOn);
-                    }
-
-                    // Can be triggered from below
-                    handleDirectWireInput(new Vector(x, y + 1, z), isOn);
-
-                    return newLevel;
+                // Make sure that the wire points to only this block
+                if (!BlockType.isRedstoneBlock(westSide)
+                        && !BlockType.isRedstoneBlock(eastSide)
+                        && (!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0)
+                        && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0)
+                        && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
+                        && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
+                    // Possible blocks north / south
+                    handleDirectWireInput(new Vector(x - 1, y, z), isOn);
+                    handleDirectWireInput(new Vector(x + 1, y, z), isOn);
                 }
 
-                // For redstone wires, the code already exited this method
-                // Non-wire blocks proceed
-
-                handleDirectWireInput(new Vector(x - 1, y, z), isOn);
-                handleDirectWireInput(new Vector(x + 1, y, z), isOn);
-                handleDirectWireInput(new Vector(x, y, z - 1), isOn);
-                handleDirectWireInput(new Vector(x, y, z + 1), isOn);
+                if (!BlockType.isRedstoneBlock(northSide)
+                        && !BlockType.isRedstoneBlock(southSide)
+                        && (!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0)
+                        && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0)
+                        && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
+                        && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
+                    // Possible blocks west / east
+                    handleDirectWireInput(new Vector(x, y, z - 1), isOn);
+                    handleDirectWireInput(new Vector(x, y, z + 1), isOn);
+                }
 
                 // Can be triggered from below
                 handleDirectWireInput(new Vector(x, y + 1, z), isOn);
 
                 return newLevel;
-            } finally {
-                CraftBook.clearFakeBlockData();
             }
+
+            // For redstone wires, the code already exited this method
+            // Non-wire blocks proceed
+
+            handleDirectWireInput(new Vector(x - 1, y, z), isOn);
+            handleDirectWireInput(new Vector(x + 1, y, z), isOn);
+            handleDirectWireInput(new Vector(x, y, z - 1), isOn);
+            handleDirectWireInput(new Vector(x, y, z + 1), isOn);
+
+            // Can be triggered from below
+            handleDirectWireInput(new Vector(x, y + 1, z), isOn);
+
+            return newLevel;
         } finally {
-            recursionCount--;
+            CraftBook.clearFakeBlockData();
         }
     }
 
@@ -996,24 +984,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                     && redstoneBridges
                     && type == BlockType.SIGN_POST
                     && line2.equalsIgnoreCase("[Bridge]")) {
-                int data = CraftBook.getBlockData(pt);
-
-                try {
-                    BlockSource bag = getBlockSource(pt);
-                    bag.addSourcePosition(pt);
-
-                    if (data == 0x0) {
-                        bridgeModule.setBridgeState(pt, Bridge.Direction.EAST, bag, !isOn);
-                    } else if (data == 0x4) {
-                        bridgeModule.setBridgeState(pt, Bridge.Direction.SOUTH, bag, !isOn);
-                    } else if (data == 0x8) {
-                        bridgeModule.setBridgeState(pt, Bridge.Direction.WEST, bag, !isOn);
-                    } else if (data == 0xC) {
-                        bridgeModule.setBridgeState(pt, Bridge.Direction.NORTH, bag, !isOn);
-                    }
-                } catch (OperationException e) {
-                } catch (BlockSourceException e) {
-                }
+                craftBook.getDelay().toggleBridge(pt, isOn);
             // ICs
             } else if (redstoneICs
                     && type == BlockType.WALL_SIGN
@@ -1039,7 +1010,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                     return;
                 }
                 
-                icType.think(pt, changedRedstoneInput, signText, sign);
+                icType.think(pt, changedRedstoneInput, signText, sign, craftBook.getDelay());
 
                 if (signText.isChanged()) {
                     sign.setText(0, signText.getLine1());
@@ -1311,31 +1282,6 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
             return (CraftBook.getBlockData(pos) & 0x8) == 0x8;
         } else {
             return false;
-        }
-    }
-
-    /**
-     * Sets the output state of a redstone IC at a location.
-     *
-     * @param getPosition
-     * @param state
-     */
-    static void setRedstoneOutput(Vector pos, boolean state) {
-        if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
-            int data = CraftBook.getBlockData(pos);
-            int newData = data & 0x7;
-
-            if (!state) {
-                newData = data & 0x7;
-            } else {
-                newData = data | 0x8;
-            }
-
-            if (newData != data) {
-                CraftBook.setBlockData(pos, newData);
-                etc.getServer().updateBlockPhysics(
-                        pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), newData);
-            }
         }
     }
 
@@ -1956,7 +1902,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
 
         return false;
     }
-    
+
     /**
      *
      * @param player
@@ -2243,6 +2189,10 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         }
     }
 
+    public void setRsLock(boolean value) {
+        rsLock = value;
+    }
+    
     /**
      * Joins a string from an array of strings.
      *
@@ -2316,8 +2266,8 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
             this.ic = ic;
             this.isPlc = isPlc;
         }
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign) {
-            type.think(pt, changedRedstoneInput, signText, sign, ic);
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, RedstoneDelayer r) {
+            type.think(pt, changedRedstoneInput, signText, sign, ic, r);
         }
     }
 }

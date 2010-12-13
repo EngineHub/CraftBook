@@ -32,7 +32,7 @@ public enum ICType {
      * Single input, single output
      */
     SISO {
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC sisoIC) {
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC sisoIC, RedstoneDelayer r) {
             Vector outputVec = CraftBookListener.getWallSignBack(pt, 2);
             Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
@@ -49,7 +49,7 @@ public enum ICType {
             sisoIC.think(chip);
             
             if (chip.isModified()) {
-                CraftBookListener.setRedstoneOutput(outputVec, chip.getOut(1).is());
+                r.setOut(outputVec, chip.getOut(1).is());
             }
         }
     },
@@ -57,7 +57,7 @@ public enum ICType {
      * Single input, triple output
      */
     SI3O {
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC si3oIC) {
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC si3oIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector backShift = backVec.subtract(pt);
             Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
@@ -80,9 +80,9 @@ public enum ICType {
             si3oIC.think(chip);
 
             if (chip.isModified()) {
-                CraftBookListener.setRedstoneOutput(output1Vec, chip.getOut(1).is());
-                CraftBookListener.setRedstoneOutput(output2Vec, chip.getOut(2).is());
-                CraftBookListener.setRedstoneOutput(output3Vec, chip.getOut(3).is());
+                r.setOut(output1Vec, chip.getOut(1).is());
+                r.setOut(output2Vec, chip.getOut(2).is());
+                r.setOut(output3Vec, chip.getOut(3).is());
             }
         }
     },
@@ -90,7 +90,7 @@ public enum ICType {
      * Triple input, single output
      */
     _3ISO {
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3isoIC) {
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3isoIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector outputVec = CraftBookListener.getWallSignBack(pt, 2);
             Vector input1Vec = CraftBookListener.getWallSignBack(pt, -1);
@@ -114,7 +114,7 @@ public enum ICType {
             _3isoIC.think(chip);
 
             if (chip.isModified()) {
-                CraftBookListener.setRedstoneOutput(outputVec, chip.getOut(1).is());
+                r.setOut(outputVec, chip.getOut(1).is());
             }
         }
     },
@@ -122,7 +122,7 @@ public enum ICType {
      * Triple input, triple output
      */
     _3I3O {
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3i3oIC) {
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3i3oIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector backShift = CraftBookListener.getWallSignBack(pt, 2).subtract(pt);
             
@@ -153,9 +153,9 @@ public enum ICType {
             _3i3oIC.think(chip);
 
             if (chip.isModified()) {
-                CraftBookListener.setRedstoneOutput(out0, chip.getOut(1).is());
-                CraftBookListener.setRedstoneOutput(out1, chip.getOut(2).is());
-                CraftBookListener.setRedstoneOutput(out2, chip.getOut(3).is());
+                r.setOut(out0, chip.getOut(1).is());
+                r.setOut(out1, chip.getOut(2).is());
+                r.setOut(out2, chip.getOut(3).is());
             }
         }
     },
@@ -163,7 +163,7 @@ public enum ICType {
      * Variable input, variable output
      */
     VIVO {
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC vivoIC) {
+        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC vivoIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector backShift = backVec.subtract(pt);
             
@@ -211,14 +211,14 @@ public enum ICType {
             vivoIC.think(chip);
 
             if (chip.isModified()) {
-                CraftBookListener.setRedstoneOutput(out0, chip.getOut(1).is());
-                if(hasOut1) CraftBookListener.setRedstoneOutput(out1, chip.getOut(2).is());
-                if(hasOut2) CraftBookListener.setRedstoneOutput(out2, chip.getOut(3).is());
+                r.setOut(out0, chip.getOut(1).is());
+                if(hasOut1) r.setOut(out1, chip.getOut(2).is());
+                if(hasOut2) r.setOut(out2, chip.getOut(3).is());
             }
         }
     };
     
-    abstract void think(Vector v, Vector c, SignText t, Sign s, IC i);
+    abstract void think(Vector v, Vector c, SignText t, Sign s, IC i, RedstoneDelayer r);
     
     public static ICType forName(String name) {
              if(name.equals("siso")) return SISO;
