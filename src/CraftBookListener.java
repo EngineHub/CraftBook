@@ -332,7 +332,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                 logger.log(Level.INFO, "cauldron-recipes.txt not loaded: "
                         + e.getMessage());
             }
-        }
+        } else cauldronModule = null;
         
         if(properties.getBoolean("custom-ics", true)) {
             try {
@@ -1416,12 +1416,11 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                         if (!redstonePLCs) {
                             player.sendMessage(Colors.Rose + "PLCs are not enabled.");
                             CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                            return true;
+                            return false;
                         }
                     }
                     
-                    if (( ic.ic.requiresPermission() || ( ic.isPlc && redstonePLCsRequirePermission ) ) && !player.canUseCommand("/allic")
-                             && !player.canUseCommand("/" + id.toLowerCase())) {
+                    if (canCreateIC(player,id,ic)) {
                         player.sendMessage(Colors.Rose
                                 + "You don't have permission to make " + id + ".");
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
@@ -1471,6 +1470,14 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         }
         
         return false;
+    }
+    
+    /**
+     * Checks if the player can create an IC.
+     */
+    private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
+        return ( ic.ic.requiresPermission() || ( ic.isPlc && redstonePLCsRequirePermission ) ) && !player.canUseCommand("/allic")
+               && !player.canUseCommand("/" + id.toLowerCase());
     }
 
     /**
@@ -1546,6 +1553,10 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
             }
 
             return true;
+        }
+        
+        if (split[0].equalsIgnoreCase("/reload") && canUse(player, "/reload")) {
+            loadConfiguration();
         }
 
         return false;
