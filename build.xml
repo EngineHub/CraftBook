@@ -35,7 +35,7 @@
       <attribute name="Implementation-Title" value="CraftBook"/>
       <attribute name="Implementation-Version" value="${version}"/>
       <attribute name="CraftBook-Version" value="${version}"/>
-      <attribute name="Class-Path" value="minecraft_server.jar mysql-connector-java-bin.jar plugins/"/>
+      <attribute name="Class-Path" value="WorldEdit.jar"/>
     </manifest>
     <jar jarfile="${dist.dir}/CraftBook.jar" basedir="${build.dir}" manifest="manifest.mf"/>
   </target>
