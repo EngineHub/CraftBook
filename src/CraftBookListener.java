@@ -1856,16 +1856,20 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                 Vector depositPt = null;
 
                 if (CraftBook.getBlockID(pt.add(1, 0, 0)) == BlockType.CHEST
-                        && CraftBook.getBlockID(pt.add(-1, 0, 0)) == BlockType.MINECART_TRACKS) {
+                        && (CraftBook.getBlockID(pt.add(-1, 0, 0)) == BlockType.MINECART_TRACKS
+                        || CraftBook.getBlockID(pt.add(-1, -1, 0)) == BlockType.MINECART_TRACKS)) {
                     depositPt = pt.add(1, 0, 0);
-                } else if(CraftBook.getBlockID(pt.add(-1, 0, 0)) == BlockType.CHEST
-                        && CraftBook.getBlockID(pt.add(1, 0, 0)) == BlockType.MINECART_TRACKS) {
+                } else if (CraftBook.getBlockID(pt.add(-1, 0, 0)) == BlockType.CHEST
+                        && (CraftBook.getBlockID(pt.add(1, 0, 0)) == BlockType.MINECART_TRACKS
+                        || CraftBook.getBlockID(pt.add(1, -1, 0)) == BlockType.MINECART_TRACKS)) {
                     depositPt = pt.add(-1, 0, 0);
-                } else if(CraftBook.getBlockID(pt.add(0, 0, 1)) == BlockType.CHEST
-                        && CraftBook.getBlockID(pt.add(0, 0, -1)) == BlockType.MINECART_TRACKS) {
+                } else if (CraftBook.getBlockID(pt.add(0, 0, 1)) == BlockType.CHEST
+                        && (CraftBook.getBlockID(pt.add(0, 0, -1)) == BlockType.MINECART_TRACKS
+                        || CraftBook.getBlockID(pt.add(0, -1, -1)) == BlockType.MINECART_TRACKS)) {
                     depositPt = pt.add(0, 0, 1);
-                } else if(CraftBook.getBlockID(pt.add(0, 0, -1)) == BlockType.CHEST
-                        && CraftBook.getBlockID(pt.add(0, 0, 1)) == BlockType.MINECART_TRACKS) {
+                } else if (CraftBook.getBlockID(pt.add(0, 0, -1)) == BlockType.CHEST
+                        && (CraftBook.getBlockID(pt.add(0, 0, 1)) == BlockType.MINECART_TRACKS
+                        || CraftBook.getBlockID(pt.add(0, -1, 1)) == BlockType.MINECART_TRACKS)) {
                     depositPt = pt.add(0, 0, -1);
                 }
 
