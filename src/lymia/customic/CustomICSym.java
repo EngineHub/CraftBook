@@ -39,7 +39,7 @@ class CustomICSym {
         public Name(String name) {
             String[] s = name.split(":");
             this.icName = s[0];
-            this.title = s.length==2?s[1]:"UNTITLED IC";
+            this.title = s.length==2?s[1].replace('-',' '):"UNTITLED IC";
         }
     }
 }

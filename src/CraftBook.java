@@ -40,6 +40,8 @@ public class CraftBook extends Plugin {
      */
     private final CraftBookListener listener =
             new CraftBookListener(this);
+    
+    private final RedstoneDelayer delay = new RedstoneDelayer(listener);
 
     /**
      * Used to fake the data value at a point.
@@ -59,7 +61,7 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void initialize() {
-        //PluginLoader loader = etc.getLoader();
+        TickPatch.applyPatch();
 
         registerHook("BLOCK_CREATED", PluginListener.Priority.MEDIUM);
         registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
@@ -81,6 +83,8 @@ public class CraftBook extends Plugin {
             registerHook("VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
             registerHook("VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
         }
+        
+        TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
     }
 
     /**
@@ -141,6 +145,10 @@ public class CraftBook extends Plugin {
         }
 
         return version;
+    }
+    
+    public RedstoneDelayer getDelay() {
+        return delay;
     }
 
     protected static int getBlockID(int x, int y, int z) {
