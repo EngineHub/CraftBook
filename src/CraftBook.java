@@ -111,6 +111,7 @@ public class CraftBook extends Plugin {
     @Override
     public void enable() {
         logger.log(Level.INFO, "CraftBook version " + getVersion() + " loaded");
+        etc.getInstance().addCommand("/listics", "- List all current CraftBook ICs");
 
         listener.loadConfiguration();
     }
@@ -120,6 +121,7 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void disable() {
+        etc.getInstance().removeCommand("/listics");
     }
 
     /**

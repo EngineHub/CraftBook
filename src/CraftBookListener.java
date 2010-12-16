@@ -21,6 +21,7 @@ import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
@@ -169,6 +170,8 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     private boolean minecartDispensers = true;
     private boolean minecartTrackMessages = true;
     private boolean redstonePLCsRequirePermission = false;
+    private boolean listICs = true;
+    private boolean listUnusuableICs = true;
     private int minecart25xBoostBlock = BlockType.GOLD_ORE;
     private int minecart100xBoostBlock = BlockType.GOLD_BLOCK;
     private int minecart50xSlowBlock = BlockType.SLOW_SAND;
@@ -291,6 +294,9 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
+        
+        listICs = properties.getBoolean("enable-ic-list",true);
+        listUnusuableICs = properties.getBoolean("ic-list-show-unusuable",true);
         
         String blockSources;
         if(properties.containsKey("block-bag")) {
@@ -1420,7 +1426,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                         }
                     }
                     
-                    if (canCreateIC(player,id,ic)) {
+                    if (checkICPremission(player,id,ic)) {
                         player.sendMessage(Colors.Rose
                                 + "You don't have permission to make " + id + ".");
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
@@ -1475,7 +1481,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     /**
      * Checks if the player can create an IC.
      */
-    private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
+    private boolean checkICPremission(Player player, String id, RegisteredIC ic) {
         return ( ic.ic.requiresPermission() || ( ic.isPlc && redstonePLCsRequirePermission ) ) && !player.canUseCommand("/allic")
                && !player.canUseCommand("/" + id.toLowerCase());
     }
@@ -1558,8 +1564,45 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         if (split[0].equalsIgnoreCase("/reload") && canUse(player, "/reload")) {
             loadConfiguration();
         }
+        
+        if(listICs && split[0].equalsIgnoreCase("/listics") && canUse(player, "/listics")) {
+            String[] lines = generateICText(player);
+            int pages = ((lines.length-1)/10)+1;
+            int accessedPage;
+            try {
+                accessedPage = split.length==1?0:Integer.parseInt(split[1])-1;
+                if(accessedPage<0||accessedPage>=pages) {
+                    player.sendMessage(Colors.Rose+"Invalid page \""+split[1]+"\"");
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                player.sendMessage(Colors.Rose+"Invalid page \""+split[1]+"\"");
+                return true;
+            }
+            
+            player.sendMessage(Colors.Blue+"CraftBook ICs (Page "+(accessedPage+1)+" of "+pages+"):");
+            for(int i=accessedPage*10;i<lines.length&&i<(accessedPage+1)*10;i++) player.sendMessage(lines[i]);
+            
+            return true;
+        }
 
         return false;
+    }
+    
+    private String[] generateICText(Player p) {
+        ArrayList<String> icNameList = new ArrayList<String>();
+        icNameList.addAll(icList.keySet());
+        
+        Collections.sort(icNameList);
+        
+        ArrayList<String> strings = new ArrayList<String>();
+        for(String ic:icNameList) {
+            RegisteredIC ric = icList.get(ic);
+            boolean restricted = checkICPremission(p,ic,ric);
+            if(listUnusuableICs) strings.add(Colors.Rose +ic+" ("+ric.type.name+"): "+ric.ic.getTitle()+(restricted?" (RESTRICTED)":""));
+            else if(!restricted) strings.add(Colors.Rose +ic+" ("+ric.type.name+": "+ric.ic.getTitle());
+        }
+        return strings.toArray(new String[0]);
     }
 
     /**

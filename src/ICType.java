@@ -31,7 +31,7 @@ public enum ICType {
     /**
      * Single input, single output
      */
-    SISO {
+    SISO ("SISO") {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC sisoIC, RedstoneDelayer r) {
             Vector outputVec = CraftBookListener.getWallSignBack(pt, 2);
             Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
@@ -56,7 +56,7 @@ public enum ICType {
     /**
      * Single input, triple output
      */
-    SI3O {
+    SI3O ("SI3O") {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC si3oIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector backShift = backVec.subtract(pt);
@@ -89,7 +89,7 @@ public enum ICType {
     /**
      * Triple input, single output
      */
-    _3ISO {
+    _3ISO ("3ISO") {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3isoIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector outputVec = CraftBookListener.getWallSignBack(pt, 2);
@@ -121,7 +121,7 @@ public enum ICType {
     /**
      * Triple input, triple output
      */
-    _3I3O {
+    _3I3O ("3I3O") {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3i3oIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector backShift = CraftBookListener.getWallSignBack(pt, 2).subtract(pt);
@@ -162,7 +162,7 @@ public enum ICType {
     /**
      * Variable input, variable output
      */
-    VIVO {
+    VIVO ("VIVO") {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC vivoIC, RedstoneDelayer r) {
             Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
             Vector backShift = backVec.subtract(pt);
@@ -217,6 +217,11 @@ public enum ICType {
             }
         }
     };
+    
+    public final String name;
+    ICType(String name) {
+        this.name = name;
+    }
     
     abstract void think(Vector v, Vector c, SignText t, Sign s, IC i, RedstoneDelayer r);
     
