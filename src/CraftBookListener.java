@@ -384,6 +384,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         internalRegisterIC("MC4010", new MC4010(), ICType._3I3O);
         internalRegisterIC("MC4100", new MC4100(), ICType._3I3O);
         internalRegisterIC("MC4110", new MC4110(), ICType._3I3O);
+        internalRegisterIC("MC4200", new MC4200(), ICType._3I3O);
         
         internalRegisterIC("MC5000", new DefaultPLC(new Perlstone_1_0()), ICType.VIVO, true);
         internalRegisterIC("MC5001", new DefaultPLC(new Perlstone_1_0()), ICType._3I3O, true);
