@@ -2308,6 +2308,10 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         icList.put(name, new RegisteredIC(ic,type,isPlc));
     }
     
+    public boolean icListEnabled() {
+        return listICs;
+    }
+    
     /**
      * Storage class for registered ICs.
      */
