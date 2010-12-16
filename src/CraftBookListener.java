@@ -363,6 +363,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         internalRegisterIC("MC1111", new MC1111(), ICType.SISO);
         internalRegisterIC("MC1200", new MC1200(), ICType.SISO);
         internalRegisterIC("MC1201", new MC1201(), ICType.SISO);
+        internalRegisterIC("MC1202", new MC1202(), ICType.SISO);
         internalRegisterIC("MC1205", new MC1205(), ICType.SISO);
         internalRegisterIC("MC1206", new MC1206(), ICType.SISO);
         internalRegisterIC("MC1230", new MC1230(), ICType.SISO);
