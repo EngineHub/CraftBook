@@ -156,6 +156,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     private LightSwitch lightSwitchModule;
     Bridge bridgeModule;
     private boolean redstoneBridges = true;
+    private boolean redstoneToggleAreas = true;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
     private boolean redstonePumpkins = true;
@@ -262,6 +263,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         elevatorModule = properties.getBoolean("elevators-enable", true) ? new Elevator() : null;
         bridgeModule = properties.getBoolean("bridge-enable", true) ? new Bridge() : null;
         redstoneBridges = properties.getBoolean("bridge-redstone", true);
+        redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
         Bridge.allowableBridgeBlocks = toBlockIDSet(properties.getString("bridge-blocks", "4,5,20,43"));
         Bridge.maxBridgeLength = properties.getInt("bridge-max-length", 30);
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
@@ -725,7 +727,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
         }
         
         // Pre-check
-        if (!redstoneGates && !redstoneBridges && !redstonePumpkins && !redstoneICs) {
+        if (!redstoneGates && !redstoneBridges && !redstonePumpkins && !redstoneICs && !redstoneToggleAreas) {
             return newLevel;
         }
 
@@ -986,7 +988,29 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                     gateSwitchModule.setGateState(pt, bag, isOn);
                 } catch (BlockSourceException e) {
                 }
+            }	
+			//Toggleable areas
+			else if (useToggleAreas != false && redstoneToggleAreas
+                    && line2.equalsIgnoreCase("[Toggle]")) {
+                BlockSource bag = getBlockSource(pt);
+                bag.addSourcePosition(pt);
 
+				String name = sign.getText(0);
+                // A gate may toggle or not
+               try {
+                    CuboidCopy copy = copies.load(name);
+                    if (copy.distance(pt) <= 4) {
+                        copy.toggle(bag);
+                        
+                    } 
+                    } catch (CuboidCopyException e) {
+                        
+                    } catch (IOException e2) {
+                       
+                    }
+                    catch (BlockSourceException e) {
+
+					}
             // Bridges
             } else if (bridgeModule != null
                     && redstoneBridges
