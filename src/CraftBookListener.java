@@ -1931,15 +1931,19 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                             }
                             */
 
-                            // move the storage cart itself into the chest and destroy it
-                            blockBag.storeBlock(ItemType.STORAGE_CART);
+                            // Split the cart into a Minecart, and an chest, as the dispenser cannot
+                            // release storage minecarts.
+                            blockBag.storeBlock(ItemType.MINECART);
+                            blockBag.storeBlock(BlockType.CHEST);
                             minecart.destroy();
                         } catch (BlockSourceException e) {
                         }
                     } else if(type == Minecart.Type.PoweredMinecart) {
-                        // try putting a powered cart into the chest
+                        // Split the cart into a Minecart, and an furnace, as the dispenser cannot
+                        // release storage minecarts.
                         try {
-                            blockBag.storeBlock(ItemType.POWERED_CART);
+                            blockBag.storeBlock(ItemType.MINECART);
+                            blockBag.storeBlock(BlockType.FURNACE);
                             minecart.destroy();
                         } catch (BlockSourceException e) {
                         }

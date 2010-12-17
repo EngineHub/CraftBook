@@ -29,6 +29,4 @@ public final class ItemType {
     public static final int APPLE = 260;
     public static final int STONE_AXE = 275;
     public static final int MINECART = 328;
-    public static final int STORAGE_CART = 342;
-    public static final int POWERED_CART = 343;
 }
