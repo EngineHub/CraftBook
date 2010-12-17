@@ -53,11 +53,9 @@ public class RedstoneListener extends CraftBookDelegateListener
      * 
      * @param craftBook
      * @param listener
-     * @param properties
      */
-    public RedstoneListener(CraftBook craftBook, CraftBookListener listener,
-			PropertiesFile properties) {
-		super(craftBook, listener, properties);
+    public RedstoneListener(CraftBook craftBook, CraftBookListener listener) {
+		super(craftBook, listener);
 	}
 
     /**

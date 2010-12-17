@@ -32,7 +32,7 @@ public class Elevator {
      * @param pt
      * @param up
      */
-    public void performLift(Player player, Vector pt, boolean up) {
+    public static void performLift(Player player, Vector pt, boolean up) {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -64,7 +64,7 @@ public class Elevator {
      * @param up
      * @return
      */
-    private boolean checkLift(Player player, Vector pt, boolean up) {
+    private static boolean checkLift(Player player, Vector pt, boolean up) {
         int x = pt.getBlockX();
         int y1 = pt.getBlockY();
         int z = pt.getBlockZ();

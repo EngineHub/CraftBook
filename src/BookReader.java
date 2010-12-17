@@ -29,7 +29,7 @@ public class BookReader {
     /**
      * Used for picking random lines.
      */
-    private Random rand = new Random();
+    private static Random rand = new Random();
     
     /**
      * Reads a book.
@@ -37,7 +37,7 @@ public class BookReader {
      * @param player
      * @param bookReadLine
      */
-    public void readBook(Player player, String bookReadLine) {
+    public static void readBook(Player player, String bookReadLine) {
         try {
             String text = getBookLine();
 
@@ -58,7 +58,7 @@ public class BookReader {
      * @return
      * @throws IOException
      */
-    private String getBookLine() throws IOException {
+    private static String getBookLine() throws IOException {
         RandomAccessFile file = new RandomAccessFile(
                 new File("craftbook-books.txt"), "r");
 

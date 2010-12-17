@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sk89q.craftbook.*;
@@ -40,30 +42,36 @@ public class CraftBookListener extends PluginListener {
     static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
     /** 
-     * Block source types.
+     * A list of block bags that can be used. This map is populated on
+     * class loaded via static constructor.
+     * 
+     * Block bags are sources/sinks for getting blocks and storing blocks,
+     * which some features use if some fairness is to be kept. Used block bags
+     * are defined by the user.
      */
-    private static final Map<String,BlockSourceFactory> BLOCK_SOURCES =
+    private static final Map<String,BlockSourceFactory> BLOCK_BAGS =
     	new HashMap<String,BlockSourceFactory>();
     
     /**
-     * Populate the list of block sources.
+     * Static constructor to populate the list of available block bag types.
      */
     static {
-        BLOCK_SOURCES.put("unlimited-black-hole",
+        BLOCK_BAGS.put("unlimited-black-hole",
         		new DummyBlockSource.UnlimitedBlackHoleFactory());
-        BLOCK_SOURCES.put("black-hole",
+        BLOCK_BAGS.put("black-hole",
         		new DummyBlockSource.BlackHoleFactory());
-        BLOCK_SOURCES.put("unlimited-block-source",
+        BLOCK_BAGS.put("unlimited-block-source",
         		new DummyBlockSource.UnlimitedSourceFactory());
-        BLOCK_SOURCES.put("admin-black-hole", 
+        BLOCK_BAGS.put("admin-black-hole", 
         		new AdminBlockSource.BlackHoleFactory());
-        BLOCK_SOURCES.put("admin-block-source", 
+        BLOCK_BAGS.put("admin-block-source", 
         		new AdminBlockSource.UnlimitedSourceFactory());
-        BLOCK_SOURCES.put("nearby-chests", new NearbyChestBlockSource.Factory());
+        BLOCK_BAGS.put("nearby-chests", new NearbyChestBlockSource.Factory());
     }
 
     /**
-     * Stores an instance of the plugin.
+     * Stores an instance of the plugin. This is used to register delegate
+     * listeners and access some global features.
      */
     public CraftBook craftBook; 
     
@@ -77,20 +85,23 @@ public class CraftBookListener extends PluginListener {
      * List of delegate listeners. They will be iterated through for
      * various custom hooks.
      */
-    private List<CraftBookDelegateListener> delegates
-    	= new ArrayList<CraftBookDelegateListener>();
+    private Set<CraftBookDelegateListener> delegates
+    	= new LinkedHashSet<CraftBookDelegateListener>();
     
     /**
-     * A list of block bag factories. Block bags are a source/sink construct
-     * that allows mechanisms only create blocks if they have a source
-     * (such a chest). Having a sink allows blocks to be "put away." Delegates
-     * may use this.
+     * A list of block bag factories. The value of this list is determined by
+     * the 'block-bags' configuration.
      */
     private List<BlockSourceFactory> blockBags =
     	new ArrayList<BlockSourceFactory>();
     
     /**
      * Prevents redstone inputs from triggering.
+     * 
+     * This is to work around a bug with the redstone delayer causing events
+     * to fire twice.
+     * 
+     * @see RedstoneDelayer
      */
     private boolean rsLock = false;
 
@@ -106,6 +117,9 @@ public class CraftBookListener extends PluginListener {
     /**
      * Loads CraftBooks's configuration. This will update the features that use
      * the settings and delegates will be informed of changes.
+     * 
+     * @see CraftBookDelegateListener
+     * @see #loadBlockBags()
      */
     public void loadConfiguration() {
         try {
@@ -125,8 +139,10 @@ public class CraftBookListener extends PluginListener {
     
     /**
      * Load the configured block bags.
+     * 
+     * @see #loadConfiguration()
      */
-    public void loadBlockBags() {
+    private void loadBlockBags() {
 		String blockBagsConfig;
 		
 		// Get the list of block bags to use
@@ -135,7 +151,7 @@ public class CraftBookListener extends PluginListener {
 					Level.WARNING,
 					"CraftBook's block-bag configuration option is "
 							+ "deprecated, and may be removed in a future version. Please use "
-							+ "block-sources instead.");
+							+ "block-bags instead.");
 			blockBagsConfig = properties.getString("block-bags",
 					properties.getString("block-bag",
 							"black-hole,unlimited-block-source"));
@@ -146,7 +162,7 @@ public class CraftBookListener extends PluginListener {
     
 		// Parse out block bags
 		for (String s : blockBagsConfig.split(",")) {
-			BlockSourceFactory f = BLOCK_SOURCES.get(s);
+			BlockSourceFactory f = BLOCK_BAGS.get(s);
 			
 			if (f == null) {
 				logger.log(Level.WARNING, "Unknown CraftBook block source: "
@@ -163,6 +179,47 @@ public class CraftBookListener extends PluginListener {
 				this.blockBags.add(f);
 			}
 		}
+    }
+
+    /**
+     * Conditionally registers a hook for this listener. Hooks for delegates
+     * should be hooked from {@link CraftBookDelegateListener}.
+     * 
+     * @param name
+     * @param priority
+     * @return whether the hook was registered correctly
+     */
+    public boolean registerHook(String name, PluginListener.Priority priority) {
+        try {
+            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
+            etc.getLoader().addListener(hook, this, craftBook, priority);
+            return true;
+        } catch (IllegalArgumentException e) {
+            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
+            return false;
+        }
+    }
+
+    /**
+     * Conditionally registers a hook.
+     * 
+     * @param listener
+     * @param name
+     * @param priority
+     * @return whether the hook was registered correctly
+     */
+    public boolean registerDelegate(CraftBookDelegateListener listener,
+    		String name, PluginListener.Priority priority) {
+        try {
+            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
+            etc.getLoader().addListener(hook, listener, craftBook, priority);
+            delegates.add(listener);
+            listener.loadConfiguration();
+            return true;
+        } catch (IllegalArgumentException e) {
+            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
+            return false;
+        }
     }
     
     /**
@@ -313,6 +370,7 @@ public class CraftBookListener extends PluginListener {
      * @param inputVec
      * @param isOn
      * @param changed
+     * @see CraftBookDelegateListener#onDirectWireInput(Vector, boolean, Vector)
      */
     public void handleDirectWireInput(Vector pt, boolean isOn, Vector changed) {
         // Call the direct wire input hook of delegates
@@ -320,6 +378,43 @@ public class CraftBookListener extends PluginListener {
         	listener.onDirectWireInput(pt, isOn, changed);
         }
     }
+
+    /**
+     * Called when either a sign, chest or furnace is changed. This is used
+     * in this listener to prevent block bag signs from being created unless
+     * appropriate permissions are provided.
+     *
+     * @param player player who changed it
+     * @param cblock complex block that changed
+     * @return true if you want any changes to be reverted
+     */
+    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
+        if (cblock instanceof Sign) {
+            Sign sign = (Sign)cblock;
+            
+            String line2 = sign.getText(1);
+            
+			// Black Hole
+			if (line2.equalsIgnoreCase("[Black Hole]")
+					&& !player.canUseCommand("/makeblackhole")) {
+				player.sendMessage(Colors.Rose
+						+ "You don't have permission to make black holes.");
+                CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                return true;
+			}
+			
+			// Block Source
+			if (line2.equalsIgnoreCase("[Block Source]")
+					&& !player.canUseCommand("/makeblocksource")) {
+				player.sendMessage(Colors.Rose
+						+ "You don't have permission to make block sources.");
+                CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                return true;
+			}
+		}
+
+		return false;
+	}
 
     /**
      * Called on command.
@@ -331,7 +426,17 @@ public class CraftBookListener extends PluginListener {
     @Override
     public boolean onCommand(Player player, String[] split) {
         try {
-            return runCommand(player, split);
+            if (!runCommand(player, split)) {
+                for (CraftBookDelegateListener listener : delegates) {
+                	if (listener.onCheckedCommand(player, split)) {
+                		return true;
+                	}
+                }
+                
+                return false;
+            }
+            
+            return true;
         } catch (InsufficientArgumentsException e) {
             player.sendMessage(Colors.Rose + e.getMessage());
             return true;
@@ -426,5 +531,13 @@ public class CraftBookListener extends PluginListener {
      */
     public void setRsLock(boolean value) {
         rsLock = value;
+    }
+    
+    /**
+     * Get the properties file.
+     * @return
+     */
+    public PropertiesFile getProperties() {
+    	return properties;
     }
 }

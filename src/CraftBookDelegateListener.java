@@ -19,6 +19,7 @@
 
 import java.util.logging.Logger;
 
+import com.sk89q.craftbook.InsufficientArgumentsException;
 import com.sk89q.craftbook.Vector;
 
 /**
@@ -53,20 +54,42 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      * Construct the object.
      * 
      * @param craftBook
-     * @param properties
+     * @param listener
      */
     public CraftBookDelegateListener(
     		CraftBook craftBook,
-    		CraftBookListener listener,
-    		PropertiesFile properties) {
+    		CraftBookListener listener) {
+    	this.craftBook = craftBook;
     	this.listener = listener;
-    	this.properties = properties;
+    	this.properties = listener.getProperties();
     }
     
     /**
      * Reads the configuration from the properties file.
      */
     public abstract void loadConfiguration();
+
+    /**
+     * Get a block bag.
+     * 
+     * @param origin
+     * @return
+     */
+    protected BlockBag getBlockBag(Vector origin) {
+    	return listener.getBlockBag(origin);
+    }
+
+    /**
+     * Conditionally registers a hook.
+     * 
+     * @param listener
+     * @param name
+     * @param priority
+     * @return whether the hook was registered correctly
+     */
+    public boolean registerHook(String name, PluginListener.Priority priority) {
+        return listener.registerDelegate(this, name, priority);
+    }
     
     /**
      * Called when a block has been given directed Redstone input. "Directed"
@@ -79,14 +102,18 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      */
     public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
     }
-
+    
     /**
-     * Get a block bag.
+     * Called on a command that will be checked.
      * 
-     * @param origin
+     * @param player
+     * @param split
      * @return
+     * @throws InsufficientArgumentsException
+     * @throws LocalWorldEditBridgeException
      */
-    protected BlockBag getBlockBag(Vector origin) {
-    	return listener.getBlockBag(origin);
+    public boolean onCheckedCommand(Player player, String[] split)
+    		throws InsufficientArgumentsException, LocalWorldEditBridgeException {
+    	return false;
     }
 }

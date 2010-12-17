@@ -63,9 +63,8 @@ public class VehicleListener extends CraftBookDelegateListener {
      * @param listener
      * @param properties
      */
-    public VehicleListener(CraftBook craftBook, CraftBookListener listener,
-			PropertiesFile properties) {
-		super(craftBook, listener, properties);
+    public VehicleListener(CraftBook craftBook, CraftBookListener listener) {
+		super(craftBook, listener);
 	}
 
     /**
