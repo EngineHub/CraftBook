@@ -33,16 +33,16 @@ public enum ICType {
      */
     SISO {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC sisoIC, RedstoneDelayer r) {
-            Vector outputVec = CraftBookListener.getWallSignBack(pt, 2);
-            Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
-            Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
+            Vector outputVec = Util.getWallSignBack(pt, 2);
+            Vector in0 = Util.getWallSignBack(pt, -1);
+            Vector backVec = Util.getWallSignBack(pt, 1);
 
             Signal[] in = new Signal[1];
-            in[0] = new Signal(CraftBookListener.isRedstoneHighBinary(in0, true),
+            in[0] = new Signal(Redstone.isHighBinary(in0, true),
                     changedRedstoneInput.equals(in0));
             
             Signal[] out = new Signal[1];
-            out[0] = new Signal(CraftBookListener.getRedstoneOutput(outputVec));
+            out[0] = new Signal(Redstone.getOutput(outputVec));
             
             ChipState chip = new ChipState(pt, backVec, in, out, signText);
             
@@ -58,21 +58,21 @@ public enum ICType {
      */
     SI3O {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC si3oIC, RedstoneDelayer r) {
-            Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
+            Vector backVec = Util.getWallSignBack(pt, 1);
             Vector backShift = backVec.subtract(pt);
-            Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
-            Vector output1Vec = CraftBookListener.getWallSignBack(pt, 2);
-            Vector output2Vec = CraftBookListener.getWallSignSide(pt, 1).add(backShift);
-            Vector output3Vec = CraftBookListener.getWallSignSide(pt, -1).add(backShift);
+            Vector in0 = Util.getWallSignBack(pt, -1);
+            Vector output1Vec = Util.getWallSignBack(pt, 2);
+            Vector output2Vec = Util.getWallSignSide(pt, 1).add(backShift);
+            Vector output3Vec = Util.getWallSignSide(pt, -1).add(backShift);
 
             Signal[] in = new Signal[1];
-            in[0] = new Signal(CraftBookListener.isRedstoneHighBinary(in0, true),
+            in[0] = new Signal(Redstone.isHighBinary(in0, true),
                     changedRedstoneInput.equals(in0));
 
             Signal[] out = new Signal[3];
-            out[0] = new Signal(CraftBookListener.getRedstoneOutput(output1Vec));
-            out[1] = new Signal(CraftBookListener.getRedstoneOutput(output2Vec));
-            out[2] = new Signal(CraftBookListener.getRedstoneOutput(output3Vec));
+            out[0] = new Signal(Redstone.getOutput(output1Vec));
+            out[1] = new Signal(Redstone.getOutput(output2Vec));
+            out[2] = new Signal(Redstone.getOutput(output3Vec));
 
             ChipState chip = new ChipState(pt, backVec, in, out, signText);
 
@@ -91,22 +91,22 @@ public enum ICType {
      */
     _3ISO {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3isoIC, RedstoneDelayer r) {
-            Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
-            Vector outputVec = CraftBookListener.getWallSignBack(pt, 2);
-            Vector input1Vec = CraftBookListener.getWallSignBack(pt, -1);
-            Vector input2Vec = CraftBookListener.getWallSignSide(pt, 1);
-            Vector input3Vec = CraftBookListener.getWallSignSide(pt, -1);
+            Vector backVec = Util.getWallSignBack(pt, 1);
+            Vector outputVec = Util.getWallSignBack(pt, 2);
+            Vector input1Vec = Util.getWallSignBack(pt, -1);
+            Vector input2Vec = Util.getWallSignSide(pt, 1);
+            Vector input3Vec = Util.getWallSignSide(pt, -1);
 
             Signal[] in = new Signal[3];
-            in[0] = new Signal(CraftBookListener.isRedstoneHighBinary(input1Vec, true),
+            in[0] = new Signal(Redstone.isHighBinary(input1Vec, true),
                     changedRedstoneInput.equals(input1Vec));
-            in[1] = new Signal(CraftBookListener.isRedstoneHighBinary(input2Vec, true),
+            in[1] = new Signal(Redstone.isHighBinary(input2Vec, true),
                     changedRedstoneInput.equals(input2Vec));
-            in[2] = new Signal(CraftBookListener.isRedstoneHighBinary(input3Vec, true),
+            in[2] = new Signal(Redstone.isHighBinary(input3Vec, true),
                     changedRedstoneInput.equals(input3Vec));
 
             Signal[] out = new Signal[1];
-            out[0] = new Signal(CraftBookListener.getRedstoneOutput(outputVec));
+            out[0] = new Signal(Redstone.getOutput(outputVec));
 
             ChipState chip = new ChipState(pt, backVec, in, out, signText);
 
@@ -123,29 +123,29 @@ public enum ICType {
      */
     _3I3O {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC _3i3oIC, RedstoneDelayer r) {
-            Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
-            Vector backShift = CraftBookListener.getWallSignBack(pt, 2).subtract(pt);
+            Vector backVec = Util.getWallSignBack(pt, 1);
+            Vector backShift = Util.getWallSignBack(pt, 2).subtract(pt);
             
-            Vector out0 = CraftBookListener.getWallSignBack(pt, 3);
-            Vector out1 = CraftBookListener.getWallSignSide(pt, 1).add(backShift);
-            Vector out2 = CraftBookListener.getWallSignSide(pt, -1).add(backShift);
+            Vector out0 = Util.getWallSignBack(pt, 3);
+            Vector out1 = Util.getWallSignSide(pt, 1).add(backShift);
+            Vector out2 = Util.getWallSignSide(pt, -1).add(backShift);
             
-            Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
-            Vector in1 = CraftBookListener.getWallSignSide(pt, 1);
-            Vector in2 = CraftBookListener.getWallSignSide(pt, -1);
+            Vector in0 = Util.getWallSignBack(pt, -1);
+            Vector in1 = Util.getWallSignSide(pt, 1);
+            Vector in2 = Util.getWallSignSide(pt, -1);
 
             Signal[] in = new Signal[3];
-            in[0] = new Signal(CraftBookListener.isRedstoneHighBinary(in0, true),
+            in[0] = new Signal(Redstone.isHighBinary(in0, true),
                     changedRedstoneInput.equals(in0));
-            in[1] = new Signal(CraftBookListener.isRedstoneHighBinary(in1, true),
+            in[1] = new Signal(Redstone.isHighBinary(in1, true),
                     changedRedstoneInput.equals(in1));
-            in[2] = new Signal(CraftBookListener.isRedstoneHighBinary(in2, true),
+            in[2] = new Signal(Redstone.isHighBinary(in2, true),
                     changedRedstoneInput.equals(in2));
 
             Signal[] out = new Signal[3];
-            out[0] = new Signal(CraftBookListener.getRedstoneOutput(out0));
-            out[1] = new Signal(CraftBookListener.getRedstoneOutput(out1));
-            out[2] = new Signal(CraftBookListener.getRedstoneOutput(out2));
+            out[0] = new Signal(Redstone.getOutput(out0));
+            out[1] = new Signal(Redstone.getOutput(out1));
+            out[2] = new Signal(Redstone.getOutput(out2));
 
             ChipState chip = new ChipState(pt, backVec, in, out, signText);
 
@@ -164,16 +164,16 @@ public enum ICType {
      */
     VIVO {
         void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, IC vivoIC, RedstoneDelayer r) {
-            Vector backVec = CraftBookListener.getWallSignBack(pt, 1);
+            Vector backVec = Util.getWallSignBack(pt, 1);
             Vector backShift = backVec.subtract(pt);
             
-            Vector out0 = CraftBookListener.getWallSignBack(pt, 2);
-            Vector out1 = CraftBookListener.getWallSignSide(pt, 1).add(backShift);
-            Vector out2 = CraftBookListener.getWallSignSide(pt, -1).add(backShift);
+            Vector out0 = Util.getWallSignBack(pt, 2);
+            Vector out1 = Util.getWallSignSide(pt, 1).add(backShift);
+            Vector out2 = Util.getWallSignSide(pt, -1).add(backShift);
             
-            Vector in0 = CraftBookListener.getWallSignBack(pt, -1);
-            Vector in1 = CraftBookListener.getWallSignSide(pt, 1);
-            Vector in2 = CraftBookListener.getWallSignSide(pt, -1);
+            Vector in0 = Util.getWallSignBack(pt, -1);
+            Vector in1 = Util.getWallSignSide(pt, 1);
+            Vector in2 = Util.getWallSignSide(pt, -1);
 
             boolean hasOut1 = CraftBook.getBlockID(out1) == BlockType.LEVER;
             boolean hasOut2 = CraftBook.getBlockID(out2) == BlockType.LEVER;
@@ -181,27 +181,27 @@ public enum ICType {
             Signal[] in = new Signal[3];
             Signal[] out = new Signal[3];
             
-            out[0] = new Signal(CraftBookListener.getRedstoneOutput(out0));
-            in[0] = new Signal(CraftBookListener.isRedstoneHighBinary(in0, true),
+            out[0] = new Signal(Redstone.getOutput(out0));
+            in[0] = new Signal(Redstone.isHighBinary(in0, true),
                                changedRedstoneInput.equals(in0));
             
             if(hasOut1) {
-                out[1] = new Signal(CraftBookListener.getRedstoneOutput(out1));
+                out[1] = new Signal(Redstone.getOutput(out1));
                 in[1] = new Signal(false);
             }
             else {
                 out[1] = new Signal(false);
-                in[1] = new Signal(CraftBookListener.isRedstoneHighBinary(in1, true),
+                in[1] = new Signal(Redstone.isHighBinary(in1, true),
                                    changedRedstoneInput.equals(in1));
             }
             
             if(hasOut2) {
-                out[2] = new Signal(CraftBookListener.getRedstoneOutput(out2));
+                out[2] = new Signal(Redstone.getOutput(out2));
                 in[2] = new Signal(false);
             }
             else {
                 out[2] = new Signal(false);
-                in[2] = new Signal(CraftBookListener.isRedstoneHighBinary(in2, true),
+                in[2] = new Signal(Redstone.isHighBinary(in2, true),
                                    changedRedstoneInput.equals(in2));
             }
             

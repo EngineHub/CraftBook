@@ -80,4 +80,38 @@ public class DummyBlockSource extends BlockSource {
      */
     public void flushChanges() {
     }
+    
+    /**
+     * Unlimited black hole bag that will provided unlimited blocks and
+     * discard any accepted blocks.
+     * 
+     * @author sk89q
+     */
+    public static class UnlimitedBlackHoleFactory implements BlockSourceFactory {
+        public BlockSource createBlockSource(Vector v) {
+            return new DummyBlockSource();
+        }
+    }
+    
+    /**
+     * Discards all given blocks.
+     * 
+     * @author sk89q
+     */
+    public static class BlackHoleFactory implements BlockSourceFactory {
+        public BlockSource createBlockSource(Vector v) {
+            return new DummyBlockSource(false, true);
+        }
+    }
+    
+    /**
+     * Provides unlimited blocks.
+     * 
+     * @author sk89q
+     */
+    public static class UnlimitedSourceFactory implements BlockSourceFactory {
+        public BlockSource createBlockSource(Vector v) {
+            return new DummyBlockSource(true, false);
+        }
+    }
 }

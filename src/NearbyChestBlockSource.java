@@ -219,4 +219,15 @@ public class NearbyChestBlockSource extends BlockSource {
             c.getChest().update();
         }
     }
+    
+    /**
+     * Factory.
+     * 
+     * @author sk89q
+     */
+    public static class Factory implements BlockSourceFactory {
+        public BlockSource createBlockSource(Vector v) {
+            return new NearbyChestBlockSource(v);
+        }
+    }
 }
