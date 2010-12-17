@@ -344,12 +344,12 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
             try {
                 icList.clear();
                 CustomICLoader.load("custom-ics.txt", this);
-                addDefaultICs();
             } catch (CustomICException e) {
                 logger.log(Level.SEVERE, "Failed to load custom IC file: "+e.getMessage());
                 e.printStackTrace();
             }
         }
+        addDefaultICs();
     }
     
     private void addDefaultICs() {
