@@ -1894,6 +1894,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                         } catch (BlockSourceException e) {
                         }
                     } else if(minecart.getType() == Minecart.Type.StorageCart) {
+/* Storage cart contents are client side at the moment. 
                         // we need to first try and move the items out of the storage cart
                         // one at a time, until we run out of items or space. If we run out
                         // of items, then try to move the storage cart into the chest.
@@ -1918,6 +1919,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                                 // now that all of that item is gone, null the position
                                 itemArray[i] = null;
                             }
+// end of contents moving code */
                             // move the storage cart itself into the chest and destroy it
                             blockBag.storeBlock(ItemType.STORAGE_CART);
                             minecart.destroy();
