@@ -38,7 +38,7 @@ public class GateSwitch {
      * @param bag
      * @return
      */
-    public boolean toggleGates(Vector pt, BlockSource bag)
+    public boolean toggleGates(Vector pt, BlockBag bag)
             throws BlockSourceException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
@@ -73,7 +73,7 @@ public class GateSwitch {
      * @param close
      * @return
      */
-    public boolean setGateState(Vector pt, BlockSource bag, boolean close)
+    public boolean setGateState(Vector pt, BlockBag bag, boolean close)
             throws BlockSourceException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
@@ -111,7 +111,7 @@ public class GateSwitch {
      * @return
      */
     private boolean recurseColumn(Vector pt, Set<BlockVector> visitedColumns,
-            Boolean close, BlockSource bag)
+            Boolean close, BlockBag bag)
             throws BlockSourceException {
         if (visitedColumns.size() > 14) { return false; }
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
@@ -159,7 +159,7 @@ public class GateSwitch {
      * @param visitedColumns
      */
     private void toggleColumn(Vector topPoint, boolean close,
-            Set<BlockVector> visitedColumns, BlockSource bag)
+            Set<BlockVector> visitedColumns, BlockBag bag)
             throws BlockSourceException {
 
         int x = topPoint.getBlockX();

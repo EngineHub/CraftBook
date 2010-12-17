@@ -17,6 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.util.logging.Logger;
+
 import com.sk89q.craftbook.Vector;
 
 /**
@@ -28,9 +30,20 @@ import com.sk89q.craftbook.Vector;
  */
 public abstract class CraftBookDelegateListener extends PluginListener {
     /**
+     * Logger instance.
+     */
+    protected static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
+    
+    /**
      * CraftBook.
      */
     protected CraftBook craftBook;
+    
+    /**
+     * Reference to the parent listener.
+     */
+    protected CraftBookListener listener;
+    
     /**
      * Properties file for CraftBook.
      */
@@ -44,7 +57,9 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      */
     public CraftBookDelegateListener(
     		CraftBook craftBook,
+    		CraftBookListener listener,
     		PropertiesFile properties) {
+    	this.listener = listener;
     	this.properties = properties;
     }
     
@@ -58,11 +73,20 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      * applies in the context of wires -- if a wire merely passes by a block,
      * it is not considered directed.
      *
-     * @param x
-     * @param y
-     * @param z
+     * @param pt
      * @param isOn
+     * @param changed
      */
-    public void onDirectWireInput(Vector pt, boolean isOn) {
+    public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
+    }
+
+    /**
+     * Get a block bag.
+     * 
+     * @param origin
+     * @return
+     */
+    protected BlockBag getBlockBag(Vector origin) {
+    	return listener.getBlockBag(origin);
     }
 }

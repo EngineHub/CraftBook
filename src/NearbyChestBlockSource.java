@@ -25,7 +25,7 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class NearbyChestBlockSource extends BlockSource {
+public class NearbyChestBlockSource extends BlockBag {
     /**
      * List of chests.
      */
@@ -226,7 +226,7 @@ public class NearbyChestBlockSource extends BlockSource {
      * @author sk89q
      */
     public static class Factory implements BlockSourceFactory {
-        public BlockSource createBlockSource(Vector v) {
+        public BlockBag createBlockSource(Vector v) {
             return new NearbyChestBlockSource(v);
         }
     }

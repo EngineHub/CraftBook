@@ -27,7 +27,7 @@ import java.util.HashMap;
  *
  * @author sk89q
  */
-public abstract class BlockSource {
+public abstract class BlockBag {
     /**
      * Stores a record of missing blocks.
      */

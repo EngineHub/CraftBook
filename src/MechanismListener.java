@@ -26,64 +26,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import lymia.customic.*;
 import lymia.perlstone.Perlstone_1_0;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 
-public class MechanismListener extends CraftBookDelegateListener implements CustomICAccepter {
-    /**
+/**
+ * Listener for mechanisms.
+ * 
+ * @author sk89q
+ */
+public class MechanismListener extends CraftBookDelegateListener {
+	/**
      * Used for toggle-able areas.
      */
     private CopyManager copies = new CopyManager();
-    
-    /** 
-     * Block source types.
-     */
-    private static final Map<String,BlockSourceFactory> BLOCK_SOURCES =
-    	new HashMap<String,BlockSourceFactory>();
-    
-    /**
-     * Pre-fill the list of block sources.
-     */
-    static {
-        BLOCK_SOURCES.put("unlimited-black-hole",
-        		new DummyBlockSource.UnlimitedBlackHoleFactory());
-        BLOCK_SOURCES.put("black-hole",
-        		new DummyBlockSource.BlackHoleFactory());
-        BLOCK_SOURCES.put("unlimited-block-source",
-        		new DummyBlockSource.UnlimitedSourceFactory());
-        BLOCK_SOURCES.put("admin-black-hole", 
-        		new AdminBlockSource.BlackHoleFactory());
-        BLOCK_SOURCES.put("admin-block-source", 
-        		new AdminBlockSource.UnlimitedSourceFactory());
-        BLOCK_SOURCES.put("nearby-chests", new NearbyChestBlockSource.Factory());
-    }
-    
-    /**
-     * Currently registered ICs
-     */
-    private Map<String,RegisteredIC> icList = 
-            new HashMap<String,RegisteredIC>();
 
-    /**
-     * Indicates whether each function should check permissions when using.
-     */
     private boolean checkPermissions;
-    /**
-     * Indicates whether each function should check permissions when creating.
-     */
     private boolean checkCreatePermissions;
-    /**
-     * Maximum toggle area size.
-     */
     private int maxToggleAreaSize;
-
-    /**
-     * Block bag factories.
-     */
-    private List<BlockSourceFactory> blockSources = new ArrayList<BlockSourceFactory>();
-    
     private BookReader readingModule;
     private String bookReadLine;
     private Cauldron cauldronModule;
@@ -95,13 +57,21 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
     private boolean redstoneBridges = true;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
-    private boolean redstonePumpkins = true;
     private double dropAppleChance = 0;
-    private boolean redstoneICs = true;
-    private boolean redstonePLCs = true;
     private boolean enableAmmeter = true;
 
     /**
+     * Construct the object.
+     * 
+     * @param craftBook
+     * @param listener
+     * @param properties
+     */
+    public MechanismListener(CraftBook craftBook, CraftBookListener listener,
+			PropertiesFile properties) {
+		super(craftBook, listener, properties);
+	}
+
     /**
      * Loads CraftBooks's configuration from file.
      */
@@ -126,62 +96,10 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
             logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
         }
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
-        redstonePumpkins = properties.getBoolean("redstone-pumpkins", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
         checkCreatePermissions = properties.getBoolean("check-create-permissions", false);
         cauldronModule = null;
-        redstoneICs = properties.getBoolean("redstone-ics", true);
-        redstonePLCs = properties.getBoolean("redstone-plcs", true);
-        redstonePLCsRequirePermission = properties.getBoolean("redstone-plcs-require-permission", false);
         enableAmmeter = properties.getBoolean("ammeter", true);
-        minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
-        hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
-        hinderUnoccupiedSlowdown = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
-        inCartControl = properties.getBoolean("minecart-in-cart-control", true);
-        minecartDispensers = properties.getBoolean("minecart-dispensers", true);
-        minecartTrackMessages = properties.getBoolean("minecart-track-messages", true);
-        minecart25xBoostBlock = properties.getInt("minecart-25x-boost-block", BlockType.GOLD_ORE);
-        minecart100xBoostBlock = properties.getInt("minecart-100x-boost-block", BlockType.GOLD_BLOCK);
-        minecart50xSlowBlock = properties.getInt("minecart-50x-slow-block", BlockType.SLOW_SAND);
-        minecart20xSlowBlock = properties.getInt("minecart-20x-slow-block", BlockType.GRAVEL);
-        minecartStationBlock = properties.getInt("minecart-station-block", BlockType.OBSIDIAN);
-        minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
-        minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
-        minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
-        
-		String blockSources;
-		
-		// Get the list of block bags to use
-		if (properties.containsKey("block-bag")) {
-			logger.log(
-					Level.WARNING,
-					"CraftBook's block-bag configuration option is "
-							+ "deprecated, and may be removed in a future version. Please use "
-							+ "block-sources instead.");
-			blockSources = properties.getString("block-sources",
-					properties.getString("block-bag"));
-		} else {
-			blockSources = properties.getString("block-sources",
-					"black-hole,unlimited-block-source");
-    	}
-    
-		
-		for (String blockSource : blockSources.split(",")) {
-			BlockSourceFactory f = BLOCK_SOURCES.get(blockSource);
-			
-			if (f == null) {
-				logger.log(Level.WARNING, "Unknown CraftBook block source: "
-						+ blockSource);
-				this.blockSources.clear();
-				this.blockSources.add(new BlockSourceFactory() {
-					public BlockSource createBlockSource(Vector v) {
-						return new DummyBlockSource();
-					}
-				});
-			} else {
-				this.blockSources.add(f);
-			}
-		}
 
 		if (properties.getBoolean("cauldron-enable", true)) {
 			try {
@@ -201,18 +119,6 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
 			}
 		} else
 			cauldronModule = null;
-
-		if (properties.getBoolean("custom-ics", true)) {
-			try {
-				icList.clear();
-				CustomICLoader.load("custom-ics.txt", this);
-				addDefaultICs();
-			} catch (CustomICException e) {
-				logger.log(Level.SEVERE,
-						"Failed to load custom IC file: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
     }
 
     /**
@@ -224,118 +130,11 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
      * @param z
      * @param isOn
      */
-    public void handleDirectWireInput(Vector pt, boolean isOn) {
+    public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
         int type = CraftBook.getBlockID(pt);
         
-        // Redstone pumpkins
-        if (redstonePumpkins
-                && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
-            Boolean useOn = Redstone.testAnyInput(pt);
-
-            if (useOn != null && useOn) {
-                CraftBook.setBlockID(pt, BlockType.JACKOLANTERN);
-            } else if (useOn != null) {
-                CraftBook.setBlockID(pt, BlockType.PUMPKIN);
-            }
-        // Minecart dispenser
-        } else if (minecartDispensers && type == BlockType.CHEST
-                && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
-                    || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
-            if (!isOn) {
-                return;
-            }
-            
-            Vector signPos = pt.add(0, -2, 0);
-
-            if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
-                signPos = pt.add(0, -1, 0);
-            }
-
-            if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
-                return;
-            }
-
-            Vector dir = Util.getSignPostOrthogonalBack(signPos, 1)
-                    .subtract(signPos);
-            Vector depositPt = pt.add(dir.multiply(2.5));
-
-            if (CraftBook.getBlockID(depositPt) != BlockType.MINECART_TRACKS) {
-                return;
-            }
-
-            NearbyChestBlockSource blockBag = new NearbyChestBlockSource(pt);
-            blockBag.addSingleSourcePosition(pt);
-            blockBag.addSingleSourcePosition(pt.add(1, 0, 0));
-            blockBag.addSingleSourcePosition(pt.add(-1, 0, 0));
-            blockBag.addSingleSourcePosition(pt.add(0, 0, 1));
-            blockBag.addSingleSourcePosition(pt.add(0, 0, -1));
-
-            try {
-                blockBag.fetchBlock(ItemType.MINECART);
-                jo minecart = new jo(etc.getMCServer().e,
-                        depositPt.getX(), depositPt.getY(),
-                        depositPt.getZ(), 0);
-                etc.getMCServer().e.a(minecart);
-            } catch (BlockSourceException e) {
-                // No minecarts
-            }
-        // Minecart station
-        } else if (minecartControlBlocks && type == minecartStationBlock
-                && CraftBook.getBlockID(pt.add(0, 1, 0)) == BlockType.MINECART_TRACKS
-                && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
-                    || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
-            ComplexBlock cblock = etc.getServer().getComplexBlock(
-                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
-
-            // Maybe it's the sign directly below
-            if (cblock == null || !(cblock instanceof Sign)) {
-                cblock = etc.getServer().getComplexBlock(
-                        pt.getBlockX(), pt.getBlockY() - 1, pt.getBlockZ());
-            }
-
-            if (cblock == null || !(cblock instanceof Sign)) {
-                return;
-            }
-
-            Sign sign = (Sign)cblock;
-            String line2 = sign.getText(1);
-
-            if (!line2.equalsIgnoreCase("[Station]")) {
-                return;
-            }
-
-            Vector motion;
-            int data = CraftBook.getBlockData(
-                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
-            
-            if (data == 0x0) {
-                motion = new Vector(0, 0, -0.3);
-            } else if (data == 0x4) {
-                motion = new Vector(0.3, 0, 0);
-            } else if (data == 0x8) {
-                motion = new Vector(0, 0, 0.3);
-            } else if (data == 0xC) {
-                motion = new Vector(-0.3, 0, 0);
-            } else {
-                return;
-            }
-
-            for (BaseEntity ent : etc.getServer().getEntityList()) {
-                if (ent instanceof Minecart) {
-                    Minecart minecart = (Minecart)ent;
-                    int cartX = (int)Math.floor(minecart.getX());
-                    int cartY = (int)Math.floor(minecart.getY());
-                    int cartZ = (int)Math.floor(minecart.getZ());
-
-                    if (cartX == pt.getBlockX()
-                            && cartY == pt.getBlockY() + 1
-                            && cartZ == pt.getBlockZ()) {
-                        minecart.setMotion(motion.getX(), motion.getY(), motion.getZ());
-                    }
-                }
-            }
         // Sign gates
-        } else if (type == BlockType.WALL_SIGN
+        if (type == BlockType.WALL_SIGN
                 || type == BlockType.SIGN_POST) {
             ComplexBlock cblock = etc.getServer().getComplexBlock(
                     pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
@@ -351,7 +150,7 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
             // Gate
             if (gateSwitchModule != null && redstoneGates
                     && line2.equalsIgnoreCase("[Gate]")) {
-                BlockSource bag = getBlockSource(pt);
+                BlockBag bag = getBlockBag(pt);
                 bag.addSourcePosition(pt);
 
                 // A gate may toggle or not
@@ -366,93 +165,9 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                     && type == BlockType.SIGN_POST
                     && line2.equalsIgnoreCase("[Bridge]")) {
                 craftBook.getDelay().toggleBridge(pt, isOn);
-            // ICs
-            } else if (redstoneICs
-                    && type == BlockType.WALL_SIGN
-                    && line2.length() > 4
-                    && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
-                    line2.charAt(len - 1) == ']') {
-                String id = line2.substring(1, len - 1).toUpperCase();
-                SignText signText = new SignText(sign.getText(0),sign.getText(1),
-                                                 sign.getText(2),sign.getText(3));
-
-                RegisteredIC icType = icList.get(id);
-                if(icType==null) {
-                    sign.setText(1, Colors.Red + line2);
-                    sign.update();
-                    return;
-                }
-                
-                if(icType.isPlc&&!redstonePLCs) {
-                    sign.setText(1, Colors.Red + line2);
-                    sign.setText(2, "!ERROR!");
-                    sign.setText(3, "plcs disabled");
-                    sign.update();
-                    return;
-                }
-                
-                icType.think(pt, changedRedstoneInput, signText, sign, craftBook.getDelay());
-
-                if (signText.isChanged()) {
-                    sign.setText(0, signText.getLine1());
-                    sign.setText(1, signText.getLine2());
-                    sign.setText(2, signText.getLine3());
-                    sign.setText(3, signText.getLine4());
-                    if(signText.update()) sign.update();
-                }
             }
         }
     }
-
-	private void addDefaultICs() {
-		internalRegisterIC("MC1000", new MC1000(), ICType.SISO);
-		internalRegisterIC("MC1001", new MC1001(), ICType.SISO);
-		internalRegisterIC("MC1017", new MC1017(), ICType.SISO);
-		internalRegisterIC("MC1018", new MC1018(), ICType.SISO);
-		internalRegisterIC("MC1020", new MC1020(), ICType.SISO);
-		internalRegisterIC("MC1025", new MC1025(), ICType.SISO);
-		internalRegisterIC("MC1110", new MC1110(), ICType.SISO);
-		internalRegisterIC("MC1111", new MC1111(), ICType.SISO);
-		internalRegisterIC("MC1200", new MC1200(), ICType.SISO);
-		internalRegisterIC("MC1201", new MC1201(), ICType.SISO);
-		internalRegisterIC("MC1205", new MC1205(), ICType.SISO);
-		internalRegisterIC("MC1206", new MC1206(), ICType.SISO);
-		internalRegisterIC("MC1230", new MC1230(), ICType.SISO);
-		internalRegisterIC("MC1231", new MC1231(), ICType.SISO);
-		internalRegisterIC("MC2020", new MC2020(), ICType.SI3O);
-		internalRegisterIC("MC3020", new MC3020(), ICType._3ISO);
-		internalRegisterIC("MC3002", new MC3002(), ICType._3ISO);
-		internalRegisterIC("MC3003", new MC3003(), ICType._3ISO);
-		internalRegisterIC("MC3021", new MC3021(), ICType._3ISO);
-		internalRegisterIC("MC3030", new MC3030(), ICType._3ISO);
-		internalRegisterIC("MC3031", new MC3031(), ICType._3ISO);
-		internalRegisterIC("MC3032", new MC3032(), ICType._3ISO);
-		internalRegisterIC("MC3034", new MC3034(), ICType._3ISO);
-		internalRegisterIC("MC3036", new MC3036(), ICType._3ISO);
-		internalRegisterIC("MC3040", new MC3040(), ICType._3ISO);
-		internalRegisterIC("MC3101", new MC3101(), ICType._3ISO);
-		internalRegisterIC("MC3231", new MC3231(), ICType._3ISO);
-		internalRegisterIC("MC4000", new MC4000(), ICType._3I3O);
-		internalRegisterIC("MC4010", new MC4010(), ICType._3I3O);
-		internalRegisterIC("MC4100", new MC4100(), ICType._3I3O);
-		internalRegisterIC("MC4110", new MC4110(), ICType._3I3O);
-
-		internalRegisterIC("MC5000", new DefaultPLC(new Perlstone_1_0()),
-				ICType.VIVO, true);
-		internalRegisterIC("MC5001", new DefaultPLC(new Perlstone_1_0()),
-				ICType._3I3O, true);
-	}
-
-	private void internalRegisterIC(String name, IC ic, ICType type) {
-		if (!icList.containsKey(name))
-			registerIC(name, ic, type, false);
-	}
-
-	private void internalRegisterIC(String name, IC ic, ICType type,
-			boolean isPlc) {
-		if (!icList.containsKey(name))
-			registerIC(name, ic, type, isPlc);
-	}
 
     /**
      * Called when a block is hit with the primary attack.
@@ -551,114 +266,35 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
                         return true;
                     }
-                }
-            }
+				}
+			}
 
-            //Black Hole
-            if (line2.equalsIgnoreCase("[Black Hole]")&&!player.canUseCommand("/makeblackhole")) {
-                player.sendMessage(Colors.Rose + "You don't have permission to make black holes.");
-            }
-            //Block Source
-            if (line2.equalsIgnoreCase("[Block Source]")&&!player.canUseCommand("/makeblocksource")) {
-                player.sendMessage(Colors.Rose + "You don't have permission to make block sources.");
-            }
+			// Black Hole
+			if (line2.equalsIgnoreCase("[Black Hole]")
+					&& !player.canUseCommand("/makeblackhole")) {
+				player.sendMessage(Colors.Rose
+						+ "You don't have permission to make black holes.");
+			}
+			// Block Source
+			if (line2.equalsIgnoreCase("[Block Source]")
+					&& !player.canUseCommand("/makeblocksource")) {
+				player.sendMessage(Colors.Rose
+						+ "You don't have permission to make block sources.");
+			}
+		}
 
-            // PLC code blocks
-            if (line2.equalsIgnoreCase("[Code Block]")) {
-                sign.setText(1, "[Code Block]");
-                player.sendMessage("PLC code block detected.");
-                return false;
-            }
+		return false;
+	}
 
-            // ICs
-            if (line2.length() > 4
-                    && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
-                    line2.charAt(len - 1) == ']') {
-
-                informUser(player);
-
-                // Check to see if the player can even create ICs
-                if (checkCreatePermissions
-                        && !player.canUseCommand("/makeic")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make ICs.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
-
-                String id = line2.substring(1, len - 1).toUpperCase();
-                RegisteredIC ic = icList.get(id);
-
-                if (ic != null) {
-                    if (ic.isPlc) {
-                        if (!redstonePLCs) {
-                            player.sendMessage(Colors.Rose + "PLCs are not enabled.");
-                            CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                            return false;
-                        }
-                    }
-                    
-                    if (canCreateIC(player,id,ic)) {
-                        player.sendMessage(Colors.Rose
-                                + "You don't have permission to make " + id + ".");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                    } else {
-                        // To check the environment
-                        Vector pos = new Vector(cblock.getX(), cblock.getY(), cblock.getZ());
-                        SignText signText = new SignText(
-                            sign.getText(0), sign.getText(1), sign.getText(2),
-                            sign.getText(3));
-
-                        // Maybe the IC is setup incorrectly
-                        String envError = ic.ic.validateEnvironment(pos, signText);
-
-                        if (signText.isChanged()) {
-                            sign.setText(0, signText.getLine1());
-                            sign.setText(1, signText.getLine2());
-                            sign.setText(2, signText.getLine3());
-                            sign.setText(3, signText.getLine4());
-                        }
-
-                        if (envError != null) {
-                            player.sendMessage(Colors.Rose
-                                    + "Error: " + envError);
-                            CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                            return true;
-                        } else {
-                            sign.setText(0, ic.ic.getTitle());
-                            sign.setText(1, "[" + id + "]");
-                        }
-                    }
-                } else {
-                    sign.setText(1, Colors.Red + line2);
-                    player.sendMessage(Colors.Rose + "Unrecognized IC: " + id);
-                }
-
-                if (!redstoneICs) {
-                    player.sendMessage(Colors.Rose + "Warning: ICs are disabled.");
-                } else if (type == BlockType.SIGN_POST) {
-                    player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
-                }
-                
-                sign.update();
-
-                return false;
-            }
-        }
-        
-        return false;
-    }
-
-    /**
-     * Called when a block is being attempted to be placed.
-     *
-     * @param player
-     * @param blockPlaced
-     * @param blockClicked
-     * @param itemInHand
-     * @return
-     */
+	/**
+	 * Called when a block is being attempted to be placed.
+	 * 
+	 * @param player
+	 * @param blockPlaced
+	 * @param blockClicked
+	 * @param itemInHand
+	 * @return
+	 */
     @Override
     public boolean onBlockCreate(Player player, Block blockPlaced,
             Block blockClicked, int itemInHand) {
@@ -790,10 +426,8 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                 // Gate
                 if (gateSwitchModule != null && line2.equalsIgnoreCase("[Gate]")
                         && checkPermission(player, "/gate")) {
-                    BlockSource bag = getBlockSource(pt);
+                    BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
-
-                    informUser(player);
 
                     // A gate may toggle or not
                     if (gateSwitchModule.toggleGates(pt, bag)) {
@@ -806,10 +440,8 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                 } else if (lightSwitchModule != null &&
                         (line2.equalsIgnoreCase("[|]") || line2.equalsIgnoreCase("[I]"))
                         && checkPermission(player, "/lightswitch")) {
-                    BlockSource bag = getBlockSource(pt);
+                    BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
-
-                    informUser(player);
                     
                     return lightSwitchModule.toggleLights(pt, bag);
 
@@ -818,8 +450,6 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                         && (line2.equalsIgnoreCase("[Lift Up]")
                         || line2.equalsIgnoreCase("[Lift Down]"))
                         && checkPermission(player, "/elevator")) {
-
-                    informUser(player);
 
                     // Go up or down?
                     boolean up = line2.equalsIgnoreCase("[Lift Up]");
@@ -840,10 +470,8 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                         return true;
                     }
 
-                    informUser(player);
-
                     try {
-                        BlockSource bag = getBlockSource(pt);
+                        BlockBag bag = getBlockBag(pt);
                         bag.addSourcePosition(pt);
                         CuboidCopy copy = copies.load(name);
                         if (copy.distance(pt) <= 4) {
@@ -876,10 +504,8 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
                         && checkPermission(player, "/bridge")) {
                     int data = CraftBook.getBlockData(x, y, z);
 
-                    informUser(player);
-
                     try {
-                        BlockSource bag = getBlockSource(pt);
+                        BlockBag bag = getBlockBag(pt);
                         bag.addSourcePosition(pt);
                         
                         if (data == 0x0) {
@@ -928,7 +554,7 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
     public boolean runCommand(Player player, String[] split)
             throws InsufficientArgumentsException, LocalWorldEditBridgeException {
         if (split[0].equalsIgnoreCase("/savearea") && canUse(player, "/savearea")) {
-            checkArgs(split, 1, -1, split[0]);
+            Util.checkArgs(split, 1, -1, split[0]);
 
             String name = Util.joinString(split, " ", 1);
 
@@ -1023,60 +649,6 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
             }
         }
     }
-    
-    /**
-     * Checks if the player can create an IC.
-     */
-    private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
-        return (ic.ic.requiresPermission()
-        		|| (ic.isPlc && redstonePLCsRequirePermission))
-        		&& !player.canUseCommand("/allic")
-                && !player.canUseCommand("/" + id.toLowerCase());
-    }
-    
-    /**
-     * Register a new IC.
-     * Defined by the interface CustomICAccepter
-     */
-    public void registerIC(String name, IC ic, String type) throws CustomICException {
-        if(icList.containsKey(name)) throw new CustomICException("ic already defined");
-        registerIC(name,ic,getIcType(type),false);
-    }
-    private ICType getIcType(String type) throws CustomICException {
-        ICType typeObject = ICType.forName(type);
-        if(typeObject==null) throw new CustomICException("invalid ic type "+type);
-        return typeObject;
-    }
-    
-    /**
-     * Registers a new IC.
-     */
-    public void registerIC(String name, IC ic, ICType type) {
-        registerIC(name,ic,type,false);
-    }
-    /**
-     * Registers a new IC.
-     */
-    public void registerIC(String name, IC ic, ICType type, boolean isPlc) {
-        icList.put(name, new RegisteredIC(ic,type,isPlc));
-    }
-    
-    /**
-     * Storage class for registered ICs.
-     */
-    private static class RegisteredIC {
-        final ICType type;
-        final IC ic;
-        final boolean isPlc;
-        RegisteredIC(IC ic, ICType type, boolean isPlc) {
-            this.type = type;
-            this.ic = ic;
-            this.isPlc = isPlc;
-        }
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText, Sign sign, RedstoneDelayer r) {
-            type.think(pt, changedRedstoneInput, signText, sign, ic, r);
-        }
-    }
 
     /**
      * Parse a list of cauldron items.
@@ -1122,5 +694,28 @@ public class MechanismListener extends CraftBookDelegateListener implements Cust
         }
 
         return out;
+    }
+
+    /**
+     * Check if a player can use a command.
+     *
+     * @param player
+     * @param command
+     * @return
+     */
+    public boolean canUse(Player player, String command) {
+        return player.canUseCommand(command);
+    }
+
+    /**
+     * Check if a player can use a command. May be overrided if permissions
+     * checking is disabled.
+     * 
+     * @param player
+     * @param command
+     * @return
+     */
+    public boolean checkPermission(Player player, String command) {
+        return !checkPermissions || player.canUseCommand(command);
     }
 }

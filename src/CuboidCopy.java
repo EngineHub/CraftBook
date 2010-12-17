@@ -178,7 +178,7 @@ public class CuboidCopy {
     /**
      * Paste to world.
      */
-    public void paste(BlockSource bag) throws BlockSourceException {
+    public void paste(BlockBag bag) throws BlockSourceException {
         Map<Vector,byte[]> queued = new LinkedHashMap<Vector,byte[]>();
 
         for (int x = 0; x < width; x++) {
@@ -216,7 +216,7 @@ public class CuboidCopy {
     /**
      * Clear the area.
      */
-    public void clear(BlockSource bag) throws BlockSourceException {
+    public void clear(BlockBag bag) throws BlockSourceException {
         List<Vector> queued = new LinkedList<Vector>();
         
         for (int x = 0; x < width; x++) {
@@ -245,7 +245,7 @@ public class CuboidCopy {
      *
      * @return
      */
-    public void toggle(BlockSource bag) throws BlockSourceException {
+    public void toggle(BlockBag bag) throws BlockSourceException {
         if (shouldClear()) {
             clear(bag);
         } else {

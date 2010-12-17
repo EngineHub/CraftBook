@@ -2,6 +2,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.InsufficientArgumentsException;
 import com.sk89q.craftbook.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -40,7 +41,7 @@ public class Util {
 	 * @param multiplier
 	 * @return
 	 */
-	static Vector getWallSignBack(Vector pt, int multiplier) {
+	public static Vector getWallSignBack(Vector pt, int multiplier) {
 	    int x = pt.getBlockX();
 	    int y = pt.getBlockY();
 	    int z = pt.getBlockZ();
@@ -65,7 +66,7 @@ public class Util {
 	 * @param multiplier
 	 * @return
 	 */
-	static Vector getSignPostOrthogonalBack(Vector pt, int multiplier) {
+	public static Vector getSignPostOrthogonalBack(Vector pt, int multiplier) {
 	    int x = pt.getBlockX();
 	    int y = pt.getBlockY();
 	    int z = pt.getBlockZ();
@@ -92,7 +93,7 @@ public class Util {
 	 * @param multiplier
 	 * @return
 	 */
-	static Vector getWallSignSide(Vector pt, int multiplier) {
+	public static Vector getWallSignSide(Vector pt, int multiplier) {
 	    int x = pt.getBlockX();
 	    int y = pt.getBlockY();
 	    int z = pt.getBlockZ();
@@ -135,7 +136,7 @@ public class Util {
 	 * @param id
 	 * @return
 	 */
-	static String toBlockName(int id) {
+	public static String toBlockName(int id) {
 	    com.sk89q.worldedit.blocks.BlockType blockType =
 	            com.sk89q.worldedit.blocks.BlockType.fromID(id);
 	
@@ -153,7 +154,7 @@ public class Util {
 	 * @param delimiter
 	 * @return
 	 */
-	static String joinString(String[] str, String delimiter,
+	public static String joinString(String[] str, String delimiter,
 	        int initialIndex) {
 	    if (str.length == 0) {
 	        return "";
@@ -172,7 +173,7 @@ public class Util {
 	 * @param num
 	 * @return
 	 */
-	static String repeatString(String str, int num) {
+	public static String repeatString(String str, int num) {
 	    StringBuilder buffer = new StringBuilder();
 	    for (int i = 0; i < num; i++) {
 	        buffer.append(str);
@@ -186,7 +187,7 @@ public class Util {
 	 * @param str
 	 * @return
 	 */
-	static Set<Integer> toBlockIDSet(String str) {
+	public static Set<Integer> toBlockIDSet(String str) {
 	    if (str.trim().length() == 0) {
 	        return null;
 	    }
@@ -211,4 +212,21 @@ public class Util {
 	    return result;
 	}
 
+    /**
+     * Checks to make sure that there are enough but not too many arguments.
+     *
+     * @param args
+     * @param min
+     * @param max -1 for no maximum
+     * @param cmd command name
+     * @throws InsufficientArgumentsException
+     */
+    public static void checkArgs(String[] args, int min, int max, String cmd)
+            throws InsufficientArgumentsException {
+        if (args.length <= min) {
+            throw new InsufficientArgumentsException("Minimum " + min + " arguments");
+        } else if (max != -1 && args.length - 1 > max) {
+            throw new InsufficientArgumentsException("Maximum " + max + " arguments");
+        }
+    }
 }

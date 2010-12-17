@@ -53,7 +53,7 @@ public class Bridge {
      * @param id
      * @return
      */
-    private boolean canUseBlock(int id) {
+    private static boolean canUseBlock(int id) {
         return allowableBridgeBlocks.contains(id);
     }
 
@@ -65,7 +65,7 @@ public class Bridge {
      * @param bag
      * @return
      */
-    public boolean toggleBridge(Vector pt, Direction direction, BlockSource bag)
+    public static boolean toggleBridge(Vector pt, Direction direction, BlockBag bag)
             throws OperationException, BlockSourceException {
         return setBridgeState(pt, direction, bag, null);
     }
@@ -78,8 +78,8 @@ public class Bridge {
      * @param bag
      * @return
      */
-    public boolean setBridgeState(Vector pt, Direction direction,
-            BlockSource bag, Boolean toOpen)
+    public static boolean setBridgeState(Vector pt, Direction direction,
+            BlockBag bag, Boolean toOpen)
             throws OperationException, BlockSourceException {
 
         Vector change = null;
@@ -221,7 +221,7 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void clearRow(Vector origin, Vector change, int type, int dist, BlockSource bag)
+    private static void clearRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockSourceException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
@@ -241,7 +241,7 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private void setRow(Vector origin, Vector change, int type, int dist, BlockSource bag)
+    private static void setRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockSourceException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));

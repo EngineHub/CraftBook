@@ -57,13 +57,15 @@ public class VehicleListener extends CraftBookDelegateListener {
     private int minecartEjectBlock = BlockType.IRON_BLOCK;
 
     /**
-     * Construct the listener.
+     * Construct the object.
      * 
      * @param craftBook
+     * @param listener
      * @param properties
      */
-	public VehicleListener(CraftBook craftBook, PropertiesFile properties) {
-		super(craftBook, properties);
+    public VehicleListener(CraftBook craftBook, CraftBookListener listener,
+			PropertiesFile properties) {
+		super(craftBook, listener, properties);
 	}
 
     /**
@@ -85,6 +87,118 @@ public class VehicleListener extends CraftBookDelegateListener {
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
+    }
+
+    /**
+     * Handles the wire input at a block in the case when the wire is
+     * directly connected to the block in question only.
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param isOn
+     */
+    public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
+        int type = CraftBook.getBlockID(pt);
+        
+        // Minecart dispenser
+        if (minecartDispensers && type == BlockType.CHEST
+                && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
+                    || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
+            if (!isOn) {
+                return;
+            }
+            
+            Vector signPos = pt.add(0, -2, 0);
+
+            if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
+                signPos = pt.add(0, -1, 0);
+            }
+
+            if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
+                return;
+            }
+
+            Vector dir = Util.getSignPostOrthogonalBack(signPos, 1)
+                    .subtract(signPos);
+            Vector depositPt = pt.add(dir.multiply(2.5));
+
+            if (CraftBook.getBlockID(depositPt) != BlockType.MINECART_TRACKS) {
+                return;
+            }
+
+            NearbyChestBlockSource blockBag = new NearbyChestBlockSource(pt);
+            blockBag.addSingleSourcePosition(pt);
+            blockBag.addSingleSourcePosition(pt.add(1, 0, 0));
+            blockBag.addSingleSourcePosition(pt.add(-1, 0, 0));
+            blockBag.addSingleSourcePosition(pt.add(0, 0, 1));
+            blockBag.addSingleSourcePosition(pt.add(0, 0, -1));
+
+            try {
+                blockBag.fetchBlock(ItemType.MINECART);
+                jo minecart = new jo(etc.getMCServer().e,
+                        depositPt.getX(), depositPt.getY(),
+                        depositPt.getZ(), 0);
+                etc.getMCServer().e.a(minecart);
+            } catch (BlockSourceException e) {
+                // No minecarts
+            }
+        // Minecart station
+        } else if (minecartControlBlocks && type == minecartStationBlock
+                && CraftBook.getBlockID(pt.add(0, 1, 0)) == BlockType.MINECART_TRACKS
+                && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
+                    || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
+            ComplexBlock cblock = etc.getServer().getComplexBlock(
+                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
+
+            // Maybe it's the sign directly below
+            if (cblock == null || !(cblock instanceof Sign)) {
+                cblock = etc.getServer().getComplexBlock(
+                        pt.getBlockX(), pt.getBlockY() - 1, pt.getBlockZ());
+            }
+
+            if (cblock == null || !(cblock instanceof Sign)) {
+                return;
+            }
+
+            Sign sign = (Sign)cblock;
+            String line2 = sign.getText(1);
+
+            if (!line2.equalsIgnoreCase("[Station]")) {
+                return;
+            }
+
+            Vector motion;
+            int data = CraftBook.getBlockData(
+                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
+            
+            if (data == 0x0) {
+                motion = new Vector(0, 0, -0.3);
+            } else if (data == 0x4) {
+                motion = new Vector(0.3, 0, 0);
+            } else if (data == 0x8) {
+                motion = new Vector(0, 0, 0.3);
+            } else if (data == 0xC) {
+                motion = new Vector(-0.3, 0, 0);
+            } else {
+                return;
+            }
+
+            for (BaseEntity ent : etc.getServer().getEntityList()) {
+                if (ent instanceof Minecart) {
+                    Minecart minecart = (Minecart)ent;
+                    int cartX = (int)Math.floor(minecart.getX());
+                    int cartY = (int)Math.floor(minecart.getY());
+                    int cartZ = (int)Math.floor(minecart.getZ());
+
+                    if (cartX == pt.getBlockX()
+                            && cartY == pt.getBlockY() + 1
+                            && cartZ == pt.getBlockZ()) {
+                        minecart.setMotion(motion.getX(), motion.getY(), motion.getZ());
+                    }
+                }
+            }
+        }
     }
     
     /**

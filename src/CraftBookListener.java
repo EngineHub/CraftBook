@@ -17,76 +17,173 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.ic.*;
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import com.sk89q.craftbook.*;
 
 /**
- * Event listener for Hey0's server mod.
+ * This is CraftBook's main event listener for Hey0's server mod. "Delegate"
+ * listeners are also used for different features and this listener acts
+ * as a proxy for some custom hooks and events.
  *
  * @author sk89q
  */
 public class CraftBookListener extends PluginListener {
     /**
-     * Logger.
+     * Logger instance.
      */
     static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
-    private boolean rsLock = false;
+    /** 
+     * Block source types.
+     */
+    private static final Map<String,BlockSourceFactory> BLOCK_SOURCES =
+    	new HashMap<String,BlockSourceFactory>();
     
     /**
-     * The block that was changed.
+     * Populate the list of block sources.
      */
-    private BlockVector changedRedstoneInput;
+    static {
+        BLOCK_SOURCES.put("unlimited-black-hole",
+        		new DummyBlockSource.UnlimitedBlackHoleFactory());
+        BLOCK_SOURCES.put("black-hole",
+        		new DummyBlockSource.BlackHoleFactory());
+        BLOCK_SOURCES.put("unlimited-block-source",
+        		new DummyBlockSource.UnlimitedSourceFactory());
+        BLOCK_SOURCES.put("admin-black-hole", 
+        		new AdminBlockSource.BlackHoleFactory());
+        BLOCK_SOURCES.put("admin-block-source", 
+        		new AdminBlockSource.UnlimitedSourceFactory());
+        BLOCK_SOURCES.put("nearby-chests", new NearbyChestBlockSource.Factory());
+    }
 
     /**
-     * Checks to make sure that there are enough but not too many arguments.
-     *
-     * @param args
-     * @param min
-     * @param max -1 for no maximum
-     * @param cmd command name
-     * @throws InsufficientArgumentsException
+     * Stores an instance of the plugin.
      */
-    public void checkArgs(String[] args, int min, int max, String cmd)
-            throws InsufficientArgumentsException {
-        if (args.length <= min) {
-            throw new InsufficientArgumentsException("Minimum " + min + " arguments");
-        } else if (max != -1 && args.length - 1 > max) {
-            throw new InsufficientArgumentsException("Maximum " + max + " arguments");
+    public CraftBook craftBook; 
+    
+    /**
+     * Properties file for CraftBook. This instance is shared among this
+     * listener and all delegates.
+     */
+    private PropertiesFile properties = new PropertiesFile("craftbook.properties");
+    
+    /**
+     * List of delegate listeners. They will be iterated through for
+     * various custom hooks.
+     */
+    private List<CraftBookDelegateListener> delegates
+    	= new ArrayList<CraftBookDelegateListener>();
+    
+    /**
+     * A list of block bag factories. Block bags are a source/sink construct
+     * that allows mechanisms only create blocks if they have a source
+     * (such a chest). Having a sink allows blocks to be "put away." Delegates
+     * may use this.
+     */
+    private List<BlockSourceFactory> blockBags =
+    	new ArrayList<BlockSourceFactory>();
+    
+    /**
+     * Prevents redstone inputs from triggering.
+     */
+    private boolean rsLock = false;
+
+    /**
+     * Construct the object.
+     * 
+     * @param craftBook
+     */
+    public CraftBookListener(CraftBook craftBook) {
+    	this.craftBook = craftBook;
+    }
+
+    /**
+     * Loads CraftBooks's configuration. This will update the features that use
+     * the settings and delegates will be informed of changes.
+     */
+    public void loadConfiguration() {
+        try {
+            properties.load();
+        } catch (IOException e) {
+            logger.warning("Failed to load craftbook.properties: " + e.getMessage());
+        }
+        
+        loadBlockBags();
+        
+        // Load the configuration for delegates -- assuming that none will
+        // throw any exceptions
+        for (CraftBookDelegateListener listener : delegates) {
+        	listener.loadConfiguration();
         }
     }
-
-    /*
-    * Called whenever a redstone source (wire, switch, torch) changes its
-    * current.
-    *
-    * Standard values for wires are 0 for no current, and 14 for a strong current.
-    * Default behaviour for redstone wire is to lower the current by one every
-    * block.
-    *
-    * For other blocks which provide a source of redstone current, the current
-    * value will be 1 or 0 for on and off respectively.
-    *
-    * @param redstone Block of redstone which has just changed in current
-    * @param oldLevel the old current
-    * @param newLevel the new current
-    */
-    public int onRedstoneChange(Block block, int oldLevel, int newLevel) {
-        return onRedstoneChange(new BlockVector(block.getX(),block.getY(),block.getZ()),oldLevel,newLevel);
+    
+    /**
+     * Load the configured block bags.
+     */
+    public void loadBlockBags() {
+		String blockBagsConfig;
+		
+		// Get the list of block bags to use
+		if (properties.containsKey("block-bag")) {
+			logger.log(
+					Level.WARNING,
+					"CraftBook's block-bag configuration option is "
+							+ "deprecated, and may be removed in a future version. Please use "
+							+ "block-sources instead.");
+			blockBagsConfig = properties.getString("block-bags",
+					properties.getString("block-bag",
+							"black-hole,unlimited-block-source"));
+		} else {
+			blockBagsConfig = properties.getString("block-bagss",
+					"black-hole,unlimited-block-source");
+    	}
+    
+		// Parse out block bags
+		for (String s : blockBagsConfig.split(",")) {
+			BlockSourceFactory f = BLOCK_SOURCES.get(s);
+			
+			if (f == null) {
+				logger.log(Level.WARNING, "Unknown CraftBook block source: "
+						+ s);
+				
+				// Add a default block bag
+				this.blockBags.clear();
+				this.blockBags.add(new BlockSourceFactory() {
+					public BlockBag createBlockSource(Vector v) {
+						return new DummyBlockSource();
+					}
+				});
+			} else {
+				this.blockBags.add(f);
+			}
+		}
     }
     
     /**
-     * Called on redstone input change. This is passed a BlockVector.
+     * Called on redstone change.
+     *
+     * @param block
+     * @param oldLevel
+     * @param newLevel
+     */
+    public int onRedstoneChange(Block block, int oldLevel, int newLevel) {
+    	BlockVector v = new BlockVector(block.getX(), block.getY(), block.getZ());
+    	
+    	// Give the method a BlockVector instead of a Block
+        return onRedstoneChange(v, oldLevel, newLevel);
+    }
+    
+    /**
+     * Called on redstone input change. This is passed a BlockVector. This
+     * method is fairly complicated -- it has to deal with the block data
+     * value for the changing block not having been set yet, and it also
+     * needs to detect when redstone input is directed.
      * 
      * @param v
      * @param oldLevel
@@ -114,10 +211,6 @@ public class CraftBookListener extends PluginListener {
         int z = v.getBlockZ();
 
         int type = CraftBook.getBlockID(x, y, z);
-        //Unused
-        //int above = CraftBook.getBlockID(x, y + 1, z);
-
-        changedRedstoneInput = new BlockVector(x, y, z);
 
         // When this hook has been called, the level in the world has not
         // yet been updated, so we're going to do this very ugly thing of
@@ -174,8 +267,8 @@ public class CraftBookListener extends PluginListener {
                         && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
                         && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
                     // Possible blocks north / south
-                    handleDirectWireInput(new Vector(x - 1, y, z), isOn);
-                    handleDirectWireInput(new Vector(x + 1, y, z), isOn);
+                    handleDirectWireInput(new Vector(x - 1, y, z), isOn, v);
+                    handleDirectWireInput(new Vector(x + 1, y, z), isOn, v);
                 }
 
                 if (!BlockType.isRedstoneBlock(northSide)
@@ -185,12 +278,12 @@ public class CraftBookListener extends PluginListener {
                         && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
                         && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
                     // Possible blocks west / east
-                    handleDirectWireInput(new Vector(x, y, z - 1), isOn);
-                    handleDirectWireInput(new Vector(x, y, z + 1), isOn);
+                    handleDirectWireInput(new Vector(x, y, z - 1), isOn, v);
+                    handleDirectWireInput(new Vector(x, y, z + 1), isOn, v);
                 }
 
                 // Can be triggered from below
-                handleDirectWireInput(new Vector(x, y + 1, z), isOn);
+                handleDirectWireInput(new Vector(x, y + 1, z), isOn, v);
 
                 return newLevel;
             }
@@ -198,26 +291,39 @@ public class CraftBookListener extends PluginListener {
             // For redstone wires, the code already exited this method
             // Non-wire blocks proceed
 
-            handleDirectWireInput(new Vector(x - 1, y, z), isOn);
-            handleDirectWireInput(new Vector(x + 1, y, z), isOn);
-            handleDirectWireInput(new Vector(x, y, z - 1), isOn);
-            handleDirectWireInput(new Vector(x, y, z + 1), isOn);
+            handleDirectWireInput(new Vector(x - 1, y, z), isOn, v);
+            handleDirectWireInput(new Vector(x + 1, y, z), isOn, v);
+            handleDirectWireInput(new Vector(x, y, z - 1), isOn, v);
+            handleDirectWireInput(new Vector(x, y, z + 1), isOn, v);
 
             // Can be triggered from below
-            handleDirectWireInput(new Vector(x, y + 1, z), isOn);
+            handleDirectWireInput(new Vector(x, y + 1, z), isOn, v);
 
             return newLevel;
         } finally {
             CraftBook.clearFakeBlockData();
         }
     }
-
-    public void setRsLock(boolean value) {
-        rsLock = value;
+    
+    /**
+     * Handles direct redstone input. This method merely passes the call
+     * onto the delegates for further processing. If a delegate throws an
+     * exception, it will not be caught here.
+     * 
+     * @param inputVec
+     * @param isOn
+     * @param changed
+     */
+    public void handleDirectWireInput(Vector pt, boolean isOn, Vector changed) {
+        // Call the direct wire input hook of delegates
+        for (CraftBookDelegateListener listener : delegates) {
+        	listener.onDirectWireInput(pt, isOn, changed);
+        }
     }
 
     /**
-     *
+     * Called on command.
+     * 
      * @param player
      * @param split
      * @return whether the command was processed
@@ -232,15 +338,22 @@ public class CraftBookListener extends PluginListener {
         } catch (LocalWorldEditBridgeException e) {
             if (e.getCause() != null) {
                 Throwable cause = e.getCause();
-                if (cause.getClass().getCanonicalName().equals("com.sk89q.worldedit.IncompleteRegionException")) {
+                String causeName = cause.getClass().getCanonicalName();
+                
+                // If the player has not defined a region
+                if (causeName.equals("com.sk89q.worldedit.IncompleteRegionException")) {
                     player.sendMessage(Colors.Rose + "Region not fully defined (via WorldEdit).");
-                } else if (cause.getClass().getCanonicalName().equals("com.sk89q.worldedit.WorldEditNotInstalled")) {
+                // If WorldEdit is not an installed plugin
+                } else if (causeName.equals("com.sk89q.worldedit.WorldEditNotInstalled")) {
                     player.sendMessage(Colors.Rose + "The WorldEdit plugin is not loaded.");
+                // An unknown error
                 } else {
-                    player.sendMessage(Colors.Rose + "Unknown CraftBook<->WorldEdit error: " + cause.getClass().getCanonicalName());
+                    player.sendMessage(Colors.Rose + "Unknown CraftBook<->WorldEdit error: "
+                    		+ cause.getClass().getCanonicalName());
                 }
             } else {
-                player.sendMessage(Colors.Rose + "Unknown CraftBook<->WorldEdit error: " + e.getMessage());
+                player.sendMessage(Colors.Rose + "Unknown CraftBook<->WorldEdit error: "
+                		+ e.getMessage());
             }
 
             return true;
@@ -248,15 +361,37 @@ public class CraftBookListener extends PluginListener {
     }
     
     /**
+     * Gets called on a command.
      *
      * @param player
      * @param split
      * @return whether the command was processed
      */
     public boolean runCommand(Player player, String[] split)
-            throws InsufficientArgumentsException, LocalWorldEditBridgeException {        
-        if (split[0].equalsIgnoreCase("/reload") && canUse(player, "/reload")) {
-            loadConfiguration();
+            throws InsufficientArgumentsException, LocalWorldEditBridgeException {    
+    	
+    	if (split[0].equalsIgnoreCase("/reload")
+    			&& player.canUseCommand("/reload")
+    			&& split.length > 1
+    			&& split[1].equalsIgnoreCase("CraftBook")) {
+		
+        	// Redirect log messages to the player's chat.
+            LoggerToChatHandler handler = new LoggerToChatHandler(player);
+            handler.setLevel(Level.ALL);
+            Logger minecraftLogger = Logger.getLogger("Minecraft");
+            minecraftLogger.addHandler(handler);
+
+            try {
+                loadConfiguration();
+                player.sendMessage("CraftBook configuration reloaded.");
+            } catch (Throwable t) {
+                player.sendMessage("Error while reloading: "
+                        + t.getMessage());
+            } finally {
+                minecraftLogger.removeHandler(handler);
+            }
+
+            return true;
         }
 
         return false;
@@ -268,38 +403,28 @@ public class CraftBookListener extends PluginListener {
      * @param origin
      * @return
      */
-    public BlockSource getBlockSource(Vector origin) {
-        List<BlockSource> bags = new ArrayList<BlockSource>();
-        for (BlockSourceFactory f : blockSources) {
-            BlockSource b = f.createBlockSource(origin);
+    public BlockBag getBlockBag(Vector origin) {
+        List<BlockBag> bags = new ArrayList<BlockBag>();
+        
+        for (BlockSourceFactory f : blockBags) {
+        	
+            BlockBag b = f.createBlockSource(origin);
             if (b == null) {
             	continue;
             }
+            
             bags.add(b);
         }
+        
         return new CompoundBlockSource(bags);
     }
 
     /**
-     * Check if a player can use a command.
-     *
-     * @param player
-     * @param command
-     * @return
-     */
-    public boolean canUse(Player player, String command) {
-        return player.canUseCommand(command);
-    }
-
-    /**
-     * Check if a player can use a command. May be overrided if permissions
-     * checking is disabled.
+     * Set redstone trigger lock.
      * 
-     * @param player
-     * @param command
-     * @return
+     * @param value
      */
-    public boolean checkPermission(Player player, String command) {
-        return !checkPermissions || player.canUseCommand(command);
+    public void setRsLock(boolean value) {
+        rsLock = value;
     }
 }

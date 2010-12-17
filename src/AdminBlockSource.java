@@ -24,7 +24,7 @@ import com.sk89q.craftbook.*;
  *
  * @author Lymia
  */
-public class AdminBlockSource extends BlockSource {
+public class AdminBlockSource extends BlockBag {
     private boolean fetch = true;
     private boolean store = true;
     private boolean canFetch = false;
@@ -126,7 +126,7 @@ public class AdminBlockSource extends BlockSource {
      * @author sk89q
      */
     public static class BlackHoleFactory implements BlockSourceFactory {
-        public BlockSource createBlockSource(Vector v) {
+        public BlockBag createBlockSource(Vector v) {
             return new AdminBlockSource(false, true);
         }
     }
@@ -137,7 +137,7 @@ public class AdminBlockSource extends BlockSource {
      * @author sk89q
      */
     public static class UnlimitedSourceFactory implements BlockSourceFactory {
-        public BlockSource createBlockSource(Vector v) {
+        public BlockBag createBlockSource(Vector v) {
             return new AdminBlockSource(true, false);
         }
     }

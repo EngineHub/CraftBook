@@ -24,30 +24,30 @@ import com.sk89q.craftbook.OutOfBlocksException;
 import com.sk89q.craftbook.OutOfSpaceException;
 import com.sk89q.craftbook.Vector;
 
-public class CompoundBlockSource extends BlockSource {
-    private List<BlockSource> sources;
-    public CompoundBlockSource(List<BlockSource> bags) {
+public class CompoundBlockSource extends BlockBag {
+    private List<BlockBag> sources;
+    public CompoundBlockSource(List<BlockBag> bags) {
         this.sources = bags;
     }
     
     public void storeBlock(int id) throws BlockSourceException {
-        for(BlockSource b:sources) try {b.storeBlock(id);return;} catch (OutOfSpaceException e) {}
+        for(BlockBag b:sources) try {b.storeBlock(id);return;} catch (OutOfSpaceException e) {}
         throw new OutOfSpaceException(id);
     }
     public void fetchBlock(int id) throws BlockSourceException {
-        for(BlockSource b:sources) try {b.fetchBlock(id);return;} catch (OutOfBlocksException e) {}
+        for(BlockBag b:sources) try {b.fetchBlock(id);return;} catch (OutOfBlocksException e) {}
         throw new OutOfBlocksException(id);
     }
 
     public void addSingleSourcePosition(Vector pos) {
-        for(BlockSource b:sources) b.addSingleSourcePosition(pos);
+        for(BlockBag b:sources) b.addSingleSourcePosition(pos);
     }
 
     public void addSourcePosition(Vector pos) {
-        for(BlockSource b:sources) b.addSourcePosition(pos);
+        for(BlockBag b:sources) b.addSourcePosition(pos);
     }
 
     public void flushChanges() {
-        for(BlockSource b:sources) b.flushChanges();
+        for(BlockBag b:sources) b.flushChanges();
     }
 }
