@@ -339,10 +339,10 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                         + e.getMessage());
             }
         } else cauldronModule = null;
-        
+
+        icList.clear();
         if(properties.getBoolean("custom-ics", true)) {
             try {
-                icList.clear();
                 CustomICLoader.load("custom-ics.txt", this);
             } catch (CustomICException e) {
                 logger.log(Level.SEVERE, "Failed to load custom IC file: "+e.getMessage());
