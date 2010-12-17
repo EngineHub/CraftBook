@@ -1887,11 +1887,50 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
                     blockBag.addSingleSourcePosition(depositPt.add(0, 0, 1));
                     blockBag.addSingleSourcePosition(depositPt.add(0, 0, -1));
 
-                    try {
-                        blockBag.storeBlock(ItemType.MINECART);
-                        minecart.destroy();
-                    } catch (BlockSourceException e) {
-                    } 
+                    if(minecart.getType() == Minecart.Type.Minecart) {
+                        try {
+                            blockBag.storeBlock(ItemType.MINECART);
+                            minecart.destroy();
+                        } catch (BlockSourceException e) {
+                        }
+                    } else if(minecart.getType() == Minecart.Type.StorageCart) {
+                        // we need to first try and move the items out of the storage cart
+                        // one at a time, until we run out of items or space. If we run out
+                        // of items, then try to move the storage cart into the chest.
+                        StorageMinecart sm = minecart.getStorage();
+                        Item[] itemArray = sm.getContents();
+//logger.log(Level.INFO, "storage cart has " + itemArray.length + " items");
+                        try {
+                            // loop through each filled position in the storage cart
+                            for(int i = 0; itemArray.length > i; i++) {
+                                if(itemArray[i] == null) {
+//logger.log(Level.INFO, " item " + i + " is null.");
+                                    continue;
+                                }
+
+//logger.log(Level.INFO, " item " + i + " has " + itemArray[i].getAmount() + " of type " + itemArray[i].getItemId());
+
+                                // move the items into the chest one at a time.
+                                while(itemArray[i].getAmount() > 0) {
+                                    blockBag.storeBlock(itemArray[i].getItemId());
+                                    itemArray[i].setAmount(itemArray[i].getAmount() - 1);
+                                }
+                                // now that all of that item is gone, null the position
+                                itemArray[i] = null;
+                            }
+                            // move the storage cart itself into the chest and destroy it
+                            blockBag.storeBlock(ItemType.STORAGE_CART);
+                            minecart.destroy();
+                        } catch (BlockSourceException e) {
+                        }
+                    } else if(minecart.getType() == Minecart.Type.PoweredMinecart) {
+                        // try putting a powered cart into the chest
+                        try {
+                            blockBag.storeBlock(ItemType.POWERED_CART);
+                            minecart.destroy();
+                        } catch (BlockSourceException e) {
+                        }
+                    }
                 }
             }
         }
