@@ -191,7 +191,9 @@ public class CuboidCopy {
                     } else {
                         try {
                             bag.setBlockID(pt, blocks[index]);
-                            CraftBook.setBlockData(pt, data[index]);
+                            if (BlockType.usesData(blocks[index])) {
+                            	CraftBook.setBlockData(pt, data[index]);
+                            }
                         } catch (OutOfBlocksException e) {
                             // Eat error
                         }
@@ -204,7 +206,9 @@ public class CuboidCopy {
             byte[] v = entry.getValue();
             try {
                 bag.setBlockID(entry.getKey(), v[0]);
-                CraftBook.setBlockData(entry.getKey(), v[1]);
+                if (BlockType.usesData(v[0])) {
+                	CraftBook.setBlockData(entry.getKey(), v[1]);
+                }
             } catch (OutOfBlocksException e) {
                 // Eat error
             }

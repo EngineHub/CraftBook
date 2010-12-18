@@ -241,6 +241,39 @@ public final class BlockType {
     }
 
     /**
+     * Returns true if the block uses its data value.
+     * 
+     * @param id
+     * @return
+     */
+    public static boolean usesData(int id) {
+        return id == SAPLING
+                || id == WATER
+                || id == STATIONARY_WATER
+                || id == LAVA
+                || id == STATIONARY_LAVA
+                || id == TORCH
+                || id == WOODEN_STAIRS
+                || id == REDSTONE_WIRE
+                || id == CROPS
+                || id == SOIL
+                || id == SIGN_POST
+                || id == WOODEN_DOOR
+                || id == LADDER
+                || id == MINECART_TRACKS
+                || id == COBBLESTONE_STAIRS
+                || id == WALL_SIGN
+                || id == LEVER
+                || id == STONE_PRESSURE_PLATE
+                || id == IRON_DOOR
+                || id == WOODEN_PRESSURE_PLATE
+                || id == REDSTONE_TORCH_OFF
+                || id == REDSTONE_TORCH_ON
+                || id == STONE_BUTTON
+                || id == CACTUS;
+    }
+
+    /**
      * Returns true if an ID is lava.
      * 
      * @param id
