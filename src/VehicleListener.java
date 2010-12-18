@@ -341,6 +341,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             }
 
                             loc.x = loc.x + 0.5;
+                            loc.y = loc.y + 0.1;
                             loc.z = loc.z + 0.5;
 
                             player.teleportTo(loc);
