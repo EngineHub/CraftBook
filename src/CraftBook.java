@@ -34,7 +34,7 @@ public class CraftBook extends Plugin {
     /**
      * Logger.
      */
-    private static final Logger logger = Logger.getLogger("Minecraft");
+    private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
     
     /**
      * Listener for the plugin system. This listener handles configuration
@@ -149,7 +149,26 @@ public class CraftBook extends Plugin {
      * Disables the plugin.
      */
     @Override
-    public void disable() {}
+    public void disable() {
+    	StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+    	
+    	for (StackTraceElement element : elements) {
+    		if (element.getClassName().contains("MinecartMania")) {
+    			etc.getServer().addToServerQueue(new Runnable() {
+    				public void run() {
+    					try {
+        					logger.warning("Minecart Mania has been disabled.");
+    						etc.getLoader().disablePlugin("MinecartMania");
+    					} finally {
+    						etc.getLoader().enablePlugin("CraftBook");
+    					}
+    				}
+    			});
+    			
+    			break;
+    		}
+    	}
+    }
 
     /**
      * Get the CraftBook version.
