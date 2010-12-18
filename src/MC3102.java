@@ -26,10 +26,8 @@ import com.sk89q.craftbook.*;
  *
  * 3ISO family chip
  *
- * Counter counts down each time clock input toggles from low to high, it starts 
- * from a predefined value to 0. Output is high when counter reaches 0. If in 
- * 'infinite' mode, it will automatically reset the next time clock is toggled. 
- * Otherwise, it only resets when the 'reset' input toggles from low to high.
+ * Delays signal by the amount of cycles specified in the third line. Sends pulse when delay
+ * is reached. 
  *
  * Configuration:
  * Line 3: time
@@ -66,9 +64,8 @@ public class MC3102 extends BaseIC {
     public String validateEnvironment(Vector pos, SignText sign) {
         String delayVal = sign.getLine3();
 
-		// TODO: More strict validation
         if (delayVal.length() == 0 || Integer.parseInt(delayVal)<0) {
-            return "Specify Delay time in line 3.";
+            return "Specify Delay time in line 3. Delay time must be an integer number.";
         }
 
 		if(! sign.getLine4().equals("") ) {
@@ -111,6 +108,7 @@ public class MC3102 extends BaseIC {
 						chip.getText().setLine4(Integer.toString(delayVal)+'|'+'0');
 						}
 					else
+						//after pulse go back to LOW
 						chip.getOut(1).set(false);
 					}
 				else{
@@ -119,7 +117,7 @@ public class MC3102 extends BaseIC {
     		}
 			
     
-    		// if start input triggered
+    		// if start input triggered (input 2 or 3)
     		if((chip.getIn(2).isTriggered() && chip.getIn(2).is()) 
 				|| (chip.getIn(3).isTriggered() && chip.getIn(3).is())
 				&& !active) {
