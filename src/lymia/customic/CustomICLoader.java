@@ -43,8 +43,8 @@ public class CustomICLoader {
             BufferedReader r;
             try {
                 r = new BufferedReader(new FileReader(source));
-            } catch (FileNotFoundException e) {
-                throw new CustomICException("could not read "+source);
+            } catch (IOException e) {
+                throw new CustomICException("could not read "+source, e);
             }
             
             CustomICScanner s = new CustomICScanner(r);

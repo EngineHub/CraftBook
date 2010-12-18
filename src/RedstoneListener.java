@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,9 +85,14 @@ public class RedstoneListener extends CraftBookDelegateListener
 		if (properties.getBoolean("custom-ics", true)) {
 			try {
 				CustomICLoader.load("custom-ics.txt", this);
+				logger.info("Custom ICs for CraftBook loaded");
 			} catch (CustomICException e) {
-				logger.log(Level.SEVERE,
-						"Failed to load custom IC file: " + e.getMessage());
+				Throwable cause = e.getCause();
+				
+				if (cause != null && !(cause instanceof FileNotFoundException)) {
+					logger.log(Level.WARNING,
+							"Failed to load custom IC file: " + e.getMessage());
+				}
 			}
 		}
 		
