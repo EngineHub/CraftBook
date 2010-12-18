@@ -992,25 +992,7 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
 			//Toggleable areas
 			else if (useToggleAreas != false && redstoneToggleAreas
                     && line2.equalsIgnoreCase("[Toggle]")) {
-                BlockSource bag = getBlockSource(pt);
-                bag.addSourcePosition(pt);
-
-				String name = sign.getText(0);
-                // A gate may toggle or not
-               try {
-                    CuboidCopy copy = copies.load(name);
-                    if (copy.distance(pt) <= 4) {
-                        copy.toggle(bag);
-                        
-                    } 
-                    } catch (CuboidCopyException e) {
-                        
-                    } catch (IOException e2) {
-                       
-                    }
-                    catch (BlockSourceException e) {
-
-					}
+			    craftBook.getDelay().toggleArea(pt.toBlockVector(), sign.getText(0), isOn);
             // Bridges
             } else if (bridgeModule != null
                     && redstoneBridges
@@ -2392,6 +2374,10 @@ public class CraftBookListener extends PluginListener implements CustomICAccepte
     
     public boolean icListEnabled() {
         return listICs;
+    }
+    
+    public CopyManager getCopyManager() {
+        return copies;
     }
     
     /**

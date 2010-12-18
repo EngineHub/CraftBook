@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.sk89q.craftbook.BlockSourceException;
@@ -27,6 +28,9 @@ import com.sk89q.craftbook.Vector;
 public class RedstoneDelayer implements Runnable {
     private HashMap<BlockVector,Boolean> delayedOutputs = new HashMap<BlockVector,Boolean>();
     private HashMap<BlockVector,Boolean> delayedBridges = new HashMap<BlockVector,Boolean>();
+    
+    private HashMap<BlockVector,Boolean> delayedToggles = new HashMap<BlockVector,Boolean>();
+    private HashMap<BlockVector,String> delayedToggleAreas = new HashMap<BlockVector,String>();
 
     private HashMap<BlockVector,Integer> delayedInputsOldValue = new HashMap<BlockVector,Integer>();
     private HashMap<BlockVector,Integer> delayedInputsNewValue = new HashMap<BlockVector,Integer>();
@@ -45,6 +49,11 @@ public class RedstoneDelayer implements Runnable {
         delayedBridges.put(v.toBlockVector(), value);
     }
     
+    public void toggleArea(BlockVector v, String area, boolean value) {
+        delayedToggles.put(v, value);
+        delayedToggleAreas.put(v, area);
+    }
+    
     public void delayRsChange(BlockVector v, int oldValue, int newValue) {
         delayedInputsOldValue.put(v,oldValue);
         delayedInputsNewValue.put(v,newValue);
@@ -54,12 +63,22 @@ public class RedstoneDelayer implements Runnable {
     public void run() {
         HashMap<BlockVector,Boolean> delayedOutputs = (HashMap<BlockVector, Boolean>) this.delayedOutputs.clone();
         HashMap<BlockVector,Boolean> delayedBridges = (HashMap<BlockVector, Boolean>) this.delayedBridges.clone();
+        
         HashMap<BlockVector,Integer> delayedInputsOldValue = (HashMap<BlockVector, Integer>) this.delayedInputsOldValue.clone();
         HashMap<BlockVector,Integer> delayedInputsNewValue = (HashMap<BlockVector, Integer>) this.delayedInputsNewValue.clone();
+        
+        HashMap<BlockVector,Boolean> delayedToggles = (HashMap<BlockVector, Boolean>) this.delayedToggles.clone();
+        HashMap<BlockVector,String> delayedToggleAreas = (HashMap<BlockVector, String>) this.delayedToggleAreas.clone();
+        
         this.delayedOutputs.clear();
         this.delayedBridges.clear();
+        
         this.delayedInputsOldValue.clear();
         this.delayedInputsNewValue.clear();
+        
+        this.delayedToggles.clear();
+        this.delayedToggleAreas.clear();
+        
         l.setRsLock(true);
         for(BlockVector pos:delayedOutputs.keySet()) {
             if(CraftBook.getBlockID(pos)!=BlockType.LEVER) continue;
@@ -98,6 +117,22 @@ public class RedstoneDelayer implements Runnable {
             } catch (OperationException e) {
             } catch (BlockSourceException e) {
             }
+        }
+        for(BlockVector pt:delayedToggles.keySet()) {
+            BlockSource bag = l.getBlockSource(pt);
+            bag.addSourcePosition(pt);
+
+           try {
+                CuboidCopy copy = l.getCopyManager().load(delayedToggleAreas.get(pt));
+                if (copy.distance(pt) <= 4) {
+                    if(delayedToggles.get(pt)) {
+                        if (!copy.shouldClear()) copy.paste(bag);
+                    } else if(copy.shouldClear()) copy.clear(bag);
+                    //copy.toggle(bag);
+                } 
+           } catch (CuboidCopyException e) {} 
+             catch (IOException e2) {}
+             catch (BlockSourceException e) {}
         }
         l.setRsLock(false);
         for(BlockVector pt:delayedInputsOldValue.keySet()) l.onRedstoneChange(pt, delayedInputsOldValue.get(pt), delayedInputsNewValue.get(pt));
