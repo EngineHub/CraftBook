@@ -149,8 +149,7 @@ public class CraftBook extends Plugin {
      * Disables the plugin.
      */
     @Override
-    public void disable() {
-    }
+    public void disable() {}
 
     /**
      * Get the CraftBook version.

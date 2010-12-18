@@ -33,11 +33,6 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MechanismListener extends CraftBookDelegateListener {
-	/**
-     * Used for toggle-able areas.
-     */
-    private CopyManager copies = new CopyManager();
-
     private boolean checkPermissions;
     private boolean checkCreatePermissions;
     private int maxToggleAreaSize;
@@ -54,6 +49,7 @@ public class MechanismListener extends CraftBookDelegateListener {
     private boolean dropBookshelves = true;
     private double dropAppleChance = 0;
     private boolean enableAmmeter = true;
+    private boolean redstoneToggleAreas = true;
 
     /**
      * Construct the object.
@@ -93,6 +89,7 @@ public class MechanismListener extends CraftBookDelegateListener {
         checkCreatePermissions = properties.getBoolean("check-create-permissions", false);
         cauldronModule = null;
         enableAmmeter = properties.getBoolean("ammeter", true);
+        redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
 
 		if (properties.getBoolean("cauldron-enable", true)) {
 			try {
@@ -158,6 +155,11 @@ public class MechanismListener extends CraftBookDelegateListener {
                     && type == BlockType.SIGN_POST
                     && line2.equalsIgnoreCase("[Bridge]")) {
                 craftBook.getDelay().toggleBridge(pt, isOn);
+                
+            //Toggle areas
+            } else if (useToggleAreas && redstoneToggleAreas
+                    && line2.equalsIgnoreCase("[Toggle]")) {
+                craftBook.getDelay().toggleArea(pt.toBlockVector(), sign.getText(0), isOn);
             }
         }
     }
@@ -454,7 +456,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                     try {
                         BlockBag bag = getBlockBag(pt);
                         bag.addSourcePosition(pt);
-                        CuboidCopy copy = copies.load(name);
+                        CuboidCopy copy = listener.getCopyManager().load(name);
                         if (copy.distance(pt) <= 4) {
                             copy.toggle(bag);
                             
@@ -542,7 +544,7 @@ public class MechanismListener extends CraftBookDelegateListener {
     public boolean onCheckedCommand(Player player, String[] split)
             throws InsufficientArgumentsException, LocalWorldEditBridgeException {
     	
-        if (split[0].equalsIgnoreCase("/savearea") && canUse(player, "/savearea")) {
+        if (split[0].equalsIgnoreCase("/savearea") && Util.canUse(player, "/savearea")) {
             Util.checkArgs(split, 1, -1, split[0]);
 
             String name = Util.joinString(split, " ", 1);
@@ -569,7 +571,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 // Save
                 try {
-                    copies.save(name, copy);
+                    listener.getCopyManager().save(name, copy);
                     player.sendMessage(Colors.Gold + "Area saved as '" + name + "'");
                 } catch (IOException e) {
                     player.sendMessage(Colors.Rose + "Could not save area: " + e.getMessage());
@@ -688,18 +690,7 @@ public class MechanismListener extends CraftBookDelegateListener {
 
         return out;
     }
-
-    /**
-     * Check if a player can use a command.
-     *
-     * @param player
-     * @param command
-     * @return
-     */
-    public boolean canUse(Player player, String command) {
-        return player.canUseCommand(command);
-    }
-
+    
     /**
      * Check if a player can use a command. May be overrided if permissions
      * checking is disabled.

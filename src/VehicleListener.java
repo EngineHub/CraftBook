@@ -421,11 +421,67 @@ public class VehicleListener extends CraftBookDelegateListener {
                     blockBag.addSingleSourcePosition(depositPt.add(0, 0, 1));
                     blockBag.addSingleSourcePosition(depositPt.add(0, 0, -1));
 
-                    try {
-                        blockBag.storeBlock(ItemType.MINECART);
-                        minecart.destroy();
-                    } catch (BlockSourceException e) {
-                    } 
+                    Minecart.Type type = null;
+                    if(etc.getInstance().getVersion()<=131) {
+                        switch(minecart.getEntity().d) {
+                            case 0: type = Minecart.Type.Minecart;
+                                    break;
+                            case 1: type = Minecart.Type.StorageCart;
+                                    break;
+                            case 2: type = Minecart.Type.PoweredMinecart;
+                                    break;
+                        }
+                    } else type = minecart.getType();
+
+                    if(type == Minecart.Type.Minecart) {
+                        try {
+                            blockBag.storeBlock(ItemType.MINECART);
+                            minecart.destroy();
+                        } catch (BlockSourceException e) {
+                        }
+                    } else if(type == Minecart.Type.StorageCart) {
+                        //Storage cart contents are client side at the moment. 
+
+                        // we need to first try and move the items out of the storage cart
+                        // one at a time, until we run out of items or space. If we run out
+                        // of items, then try to move the storage cart into the chest.
+                        
+                        //StorageMinecart sm = minecart.getStorage();
+                        //Item[] itemArray = sm.getContents();
+                        try {
+                            // loop through each filled position in the storage cart
+                            /*    
+                            for(int i = 0; itemArray.length > i; i++) {
+                                if(itemArray[i] == null) {
+                                    continue;
+                                }
+                                // move the items into the chest one at a time.
+                                while(itemArray[i].getAmount() > 0) {
+                                    blockBag.storeBlock(itemArray[i].getItemId());
+                                    itemArray[i].setAmount(itemArray[i].getAmount() - 1);
+                                }
+                                // now that all of that item is gone, null the position
+                                itemArray[i] = null;
+                            }
+                            */
+
+                            // Split the cart into a Minecart, and an chest, as the dispenser cannot
+                            // release storage minecarts.
+                            blockBag.storeBlock(ItemType.MINECART);
+                            blockBag.storeBlock(BlockType.CHEST);
+                            minecart.destroy();
+                        } catch (BlockSourceException e) {
+                        }
+                    } else if(type == Minecart.Type.PoweredMinecart) {
+                        // Split the cart into a Minecart, and an furnace, as the dispenser cannot
+                        // release storage minecarts.
+                        try {
+                            blockBag.storeBlock(ItemType.MINECART);
+                            blockBag.storeBlock(BlockType.FURNACE);
+                            minecart.destroy();
+                        } catch (BlockSourceException e) {
+                        }
+                    }
                 }
             }
         }

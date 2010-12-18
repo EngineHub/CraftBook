@@ -1,11 +1,3 @@
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-
-import com.sk89q.craftbook.InsufficientArgumentsException;
-import com.sk89q.craftbook.Vector;
-import com.sk89q.worldedit.blocks.BlockType;
-
 // $Id$
 /*
  * CraftBook
@@ -24,6 +16,13 @@ import com.sk89q.worldedit.blocks.BlockType;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+
+import com.sk89q.craftbook.InsufficientArgumentsException;
+import com.sk89q.craftbook.Vector;
 
 /**
  * Library for Minecraft-related functions.
@@ -228,5 +227,16 @@ public class Util {
         } else if (max != -1 && args.length - 1 > max) {
             throw new InsufficientArgumentsException("Maximum " + max + " arguments");
         }
+    }
+    
+    /**
+     * Check if a player can use a command.
+     *
+     * @param player
+     * @param command
+     * @return
+     */
+    public static boolean canUse(Player player, String command) {
+        return player.canUseCommand(command);
     }
 }

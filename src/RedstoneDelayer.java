@@ -18,6 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.sk89q.craftbook.BlockSourceException;
@@ -40,7 +41,12 @@ public class RedstoneDelayer implements Runnable {
 	private HashMap<BlockVector,Integer> delayedInputsOldValue =
 			new HashMap<BlockVector,Integer>();
 	private HashMap<BlockVector,Integer> delayedInputsNewValue =
-			new HashMap<BlockVector,Integer>();
+			new HashMap<BlockVector,Integer>();    
+    private HashMap<BlockVector,Boolean> delayedToggles = 
+            new HashMap<BlockVector,Boolean>();
+    private HashMap<BlockVector,String> delayedToggleAreas = 
+            new HashMap<BlockVector,String>();
+
 
 	private CraftBookListener listener;
 
@@ -55,6 +61,11 @@ public class RedstoneDelayer implements Runnable {
 	public void toggleBridge(Vector v, boolean value) {
 		delayedBridges.put(v.toBlockVector(), value);
 	}
+	
+    public void toggleArea(BlockVector blockVector, String text, boolean isOn) {
+        delayedToggles.put(blockVector,isOn);
+        delayedToggleAreas.put(blockVector,text);
+    }
 
 	public void delayRsChange(BlockVector v, int oldValue, int newValue) {
 		delayedInputsOldValue.put(v, oldValue);
@@ -122,6 +133,23 @@ public class RedstoneDelayer implements Runnable {
 			} catch (BlockSourceException e) {
 			}
 		}
+		
+        for(BlockVector pt:delayedToggles.keySet()) {
+            BlockBag bag = listener.getBlockBag(pt);
+            bag.addSourcePosition(pt);
+
+           try {
+                CuboidCopy copy = listener.getCopyManager().load(delayedToggleAreas.get(pt));
+                if (copy.distance(pt) <= 4) {
+                    if(delayedToggles.get(pt)) {
+                        if (!copy.shouldClear()) copy.paste(bag);
+                    } else if(copy.shouldClear()) copy.clear(bag);
+                    //copy.toggle(bag);
+                } 
+           } catch (CuboidCopyException e) {} 
+             catch (IOException e2) {}
+             catch (BlockSourceException e) {}
+        }
 		
 		listener.setRsLock(false);
 		
