@@ -522,17 +522,17 @@ public class VehicleListener extends CraftBookDelegateListener {
             
             int block = CraftBook.getBlockID(blockX, blockY, blockZ);
             if (slickPressurePlates
-                    && block == BlockType.STONE_PRESSURE_PLATE
-                    || block == BlockType.WOODEN_PRESSURE_PLATE) {
+                    && (block == BlockType.STONE_PRESSURE_PLATE
+                    || block == BlockType.WOODEN_PRESSURE_PLATE)) {
                 // Numbers from code
-                minecart.setMotion(minecart.getMotionX() / 0.55000000000000004D,
+                minecart.setMotion(minecart.getMotionX() / 0.55,
                                    0,
-                                   minecart.getMotionZ() / 0.55000000000000004D);
+                                   minecart.getMotionZ() / 0.55);
             }
 
             if (unoccupiedCoast && minecart.getPassenger() == null) {
-                minecart.setMotionX(minecart.getMotionX() * 1.0188250000000001D);
-                minecart.setMotionZ(minecart.getMotionZ() * 1.0188250000000001D);
+                minecart.setMotionX(minecart.getMotionX() * 1.018825);
+                minecart.setMotionZ(minecart.getMotionZ() * 1.018825);
             }
         }
     }
