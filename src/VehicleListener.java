@@ -17,10 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import com.sk89q.craftbook.*;
 
 /**
@@ -42,8 +40,8 @@ public class VehicleListener extends CraftBookDelegateListener {
     
     // Settings
     private boolean minecartControlBlocks = true;
-    private boolean hinderPressurePlateMinecartSlow = false;
-    private boolean hinderUnoccupiedSlowdown = true;
+    private boolean slickPressurePlates = false;
+    private boolean unoccupiedCoast = true;
     private boolean inCartControl = true;
     private boolean minecartDispensers = true;
     private boolean minecartTrackMessages = true;
@@ -73,8 +71,8 @@ public class VehicleListener extends CraftBookDelegateListener {
      */
     public void loadConfiguration() {
         minecartControlBlocks = properties.getBoolean("minecart-control-blocks", true);
-        hinderPressurePlateMinecartSlow = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
-        hinderUnoccupiedSlowdown = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
+        slickPressurePlates = properties.getBoolean("hinder-minecart-pressure-plate-slow", true);
+        unoccupiedCoast = properties.getBoolean("minecart-hinder-unoccupied-slowdown", true);
         inCartControl = properties.getBoolean("minecart-in-cart-control", true);
         minecartDispensers = properties.getBoolean("minecart-dispensers", true);
         minecartTrackMessages = properties.getBoolean("minecart-track-messages", true);
@@ -104,16 +102,20 @@ public class VehicleListener extends CraftBookDelegateListener {
         if (minecartDispensers && type == BlockType.CHEST
                 && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
                     || CraftBook.getBlockID(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
+        	
+        	// Rising edge-triggered only
             if (!isOn) {
                 return;
             }
             
             Vector signPos = pt.add(0, -2, 0);
 
+            // Try two blocks underneath first
             if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
                 signPos = pt.add(0, -1, 0);
             }
 
+            // Try three blocks underneath
             if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
                 return;
             }
@@ -436,7 +438,7 @@ public class VehicleListener extends CraftBookDelegateListener {
      */
     @Override
     public void onVehicleUpdate(BaseVehicle vehicle) {
-        if (!minecartControlBlocks && !hinderUnoccupiedSlowdown) {
+        if (!minecartControlBlocks && !unoccupiedCoast) {
             return;
         }
 
@@ -463,7 +465,7 @@ public class VehicleListener extends CraftBookDelegateListener {
             }
             
             int block = CraftBook.getBlockID(blockX, blockY, blockZ);
-            if (hinderPressurePlateMinecartSlow
+            if (slickPressurePlates
                     && block == BlockType.STONE_PRESSURE_PLATE
                     || block == BlockType.WOODEN_PRESSURE_PLATE) {
                 // Numbers from code
@@ -472,7 +474,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                    minecart.getMotionZ() / 0.55000000000000004D);
             }
 
-            if (hinderUnoccupiedSlowdown && minecart.getPassenger() == null) {
+            if (unoccupiedCoast && minecart.getPassenger() == null) {
                 minecart.setMotionX(minecart.getMotionX() * 1.0188250000000001D);
                 minecart.setMotionZ(minecart.getMotionZ() * 1.0188250000000001D);
             }

@@ -43,12 +43,21 @@ public class CraftBook extends Plugin {
      */
     private final CraftBookListener listener =
             new CraftBookListener(this);
-    
     /**
      * Delegate listener for mechanisms.
      */
     private final CraftBookDelegateListener mechanisms =
             new MechanismListener(this, listener);
+    /**
+     * Delegate listener for redstone.
+     */
+    private final CraftBookDelegateListener redstone =
+            new RedstoneListener(this, listener);
+    /**
+     * Delegate listener for vehicle.
+     */
+    private final CraftBookDelegateListener vehicle =
+            new VehicleListener(this, listener);
     
     /**
      * Tick delayer instance used to delay some events until the next tick.
@@ -82,27 +91,47 @@ public class CraftBook extends Plugin {
     public void initialize() {
         TickPatch.applyPatch();
 
-        listener.registerHook("BLOCK_CREATED", PluginListener.Priority.MEDIUM);
-        listener.registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
-        listener.registerHook("COMMAND", PluginListener.Priority.MEDIUM);
-        listener.registerHook("DISCONNECT", PluginListener.Priority.MEDIUM);
-        listener.registerHook("REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
-        listener.registerHook("COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "COMMAND", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
 
-        /*if (!registerHook("VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM)) {
-            logger.log(Level.WARNING, "CraftBook: Your version of hMod "
-                    + "does NOT have vehicle hook support! Minecart-related "
-                    + "features will be unavailable.");
-        } else {
-            registerHook("VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
-            registerHook("VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
-        }*/
+        registerHook(mechanisms, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        listener.registerDelegate(mechanisms);
+        
+        registerHook(redstone, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        listener.registerDelegate(redstone);
 
-        mechanisms.registerHook("BLOCK_CREATED", PluginListener.Priority.MEDIUM);
-        mechanisms.registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
-        mechanisms.registerHook("COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
+        listener.registerDelegate(vehicle);
         
         TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
+    }
+
+    /**
+     * Conditionally registers a hook for a listener.
+     * 
+     * @param name
+     * @param priority
+     * @return whether the hook was registered correctly
+     */
+    public boolean registerHook(PluginListener listener,
+    		String name, PluginListener.Priority priority) {
+        try {
+            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
+            etc.getLoader().addListener(hook, listener, this, priority);
+            return true;
+        } catch (IllegalArgumentException e) {
+            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
+            return false;
+        }
     }
 
     /**

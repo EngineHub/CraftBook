@@ -20,7 +20,6 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 import lymia.customic.*;
@@ -42,7 +41,7 @@ public class RedstoneListener extends CraftBookDelegateListener
     private Map<String,RegisteredIC> icList = 
             new HashMap<String,RegisteredIC>();
 
-    private boolean checkCreatePermissions;
+    private boolean checkCreatePermissions = false;
     private boolean redstonePumpkins = true;
     private boolean redstoneICs = true;
     private boolean redstonePLCs = true;
@@ -72,21 +71,23 @@ public class RedstoneListener extends CraftBookDelegateListener
 		redstonePLCsRequirePermission = properties.getBoolean(
 				"redstone-plcs-require-permission", false);
 
+		icList.clear();
+		addDefaultICs();
+		
+		// Load custom ICs
 		if (properties.getBoolean("custom-ics", true)) {
 			try {
-				icList.clear();
 				CustomICLoader.load("custom-ics.txt", this);
-				addDefaultICs();
 			} catch (CustomICException e) {
 				logger.log(Level.SEVERE,
 						"Failed to load custom IC file: " + e.getMessage());
-				e.printStackTrace();
 			}
 		}
 	}
 	
-
-
+	/**
+	 * Populate the IC list with the default ICs.
+	 */
 	private void addDefaultICs() {
 		internalRegisterIC("MC1000", new MC1000(), ICType.SISO);
 		internalRegisterIC("MC1001", new MC1001(), ICType.SISO);
@@ -129,10 +130,8 @@ public class RedstoneListener extends CraftBookDelegateListener
     /**
      * Called when either a sign, chest or furnace is changed.
      *
-     * @param player
-     *            player who changed it
-     * @param cblock
-     *            complex block that changed
+     * @param player player who changed it
+     * @param cblock complex block that changed
      * @return true if you want any changes to be reverted
      */
     public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
@@ -170,7 +169,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                         }
                     }
                     
-                    if (canCreateIC(player,id,ic)) {
+                    if (!canCreateIC(player, id, ic)) {
                         player.sendMessage(Colors.Rose
                                 + "You don't have permission to make " + id + ".");
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
@@ -201,6 +200,12 @@ public class RedstoneListener extends CraftBookDelegateListener
                             sign.setText(0, ic.ic.getTitle());
                             sign.setText(1, "[" + id + "]");
                         }
+                        
+                        sign.update();
+                    }
+                    
+                    if (ic.isPlc && !redstonePLCs && redstoneICs) {
+                        player.sendMessage(Colors.Rose + "Warning: PLCs are disabled.");
                     }
                 } else {
                     sign.setText(1, Colors.Red + line2);
@@ -212,8 +217,6 @@ public class RedstoneListener extends CraftBookDelegateListener
                 } else if (type == BlockType.SIGN_POST) {
                     player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
                 }
-                
-                sign.update();
 
                 return false;
             }
@@ -258,56 +261,52 @@ public class RedstoneListener extends CraftBookDelegateListener
             String line2 = sign.getText(1);
             int len = line2.length();
             
-            // ICs
-            if (redstoneICs
-                    && type == BlockType.WALL_SIGN
-                    && line2.length() > 4
-                    && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
-                    line2.charAt(len - 1) == ']') {
-                String id = line2.substring(1, len - 1).toUpperCase();
-                SignText signText = new SignText(sign.getText(0),sign.getText(1),
-                                                 sign.getText(2),sign.getText(3));
+			// ICs
+			if (redstoneICs && type == BlockType.WALL_SIGN
+					&& line2.length() > 4
+					&& line2.substring(0, 3).equalsIgnoreCase("[MC")
+					&& line2.charAt(len - 1) == ']') {
 
-                RegisteredIC icType = icList.get(id);
-                if(icType==null) {
-                    sign.setText(1, Colors.Red + line2);
-                    sign.update();
-                    return;
-                }
-                
-                if(icType.isPlc&&!redstonePLCs) {
-                    sign.setText(1, Colors.Red + line2);
-                    sign.setText(2, "!ERROR!");
-                    sign.setText(3, "plcs disabled");
-                    sign.update();
-                    return;
-                }
-                
-                icType.think(pt, changed, signText, sign, craftBook.getDelay());
+				String id = line2.substring(1, len - 1).toUpperCase();
 
-                if (signText.isChanged()) {
-                    sign.setText(0, signText.getLine1());
-                    sign.setText(1, signText.getLine2());
-                    sign.setText(2, signText.getLine3());
-                    sign.setText(3, signText.getLine4());
-                    if(signText.update()) sign.update();
-                }
-            }
-        }
-    }
+				SignText signText = new SignText(sign.getText(0),
+						sign.getText(1), sign.getText(2), sign.getText(3));
+
+				RegisteredIC ic = icList.get(id);
+				if (ic == null) {
+					sign.setText(1, Colors.Red + line2);
+					sign.update();
+					return;
+				}
+
+				ic.think(pt, changed, signText, sign, craftBook.getDelay());
+
+				if (signText.isChanged()) {
+					sign.setText(0, signText.getLine1());
+					sign.setText(1, signText.getLine2());
+					sign.setText(2, signText.getLine3());
+					sign.setText(3, signText.getLine4());
+					
+					if (signText.shouldUpdate()) {
+						sign.update();
+					}
+				}
+			}
+		}
+	}
     
     /**
      * Checks if the player can create an IC.
      */
     private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
-        return (ic.ic.requiresPermission()
-        		|| (ic.isPlc && redstonePLCsRequirePermission))
-        		&& !player.canUseCommand("/allic")
-                && !player.canUseCommand("/" + id.toLowerCase());
+        return (!ic.ic.requiresPermission()
+        		&& !(ic.isPlc && redstonePLCsRequirePermission))
+        		|| player.canUseCommand("/allic")
+                || player.canUseCommand("/" + id.toLowerCase());
     }
 
 	/**
-	 * Register a new IC. Defined by the interface CustomICAccepter
+	 * Register a new IC. Defined by the interface CustomICAccepter.
 	 */
 	public void registerIC(String name, IC ic, String type)
 			throws CustomICException {
@@ -315,10 +314,17 @@ public class RedstoneListener extends CraftBookDelegateListener
 			throw new CustomICException("IC already defined");
 		}
 		
-		registerIC(name, ic, getIcType(type), false);
+		registerIC(name, ic, getICType(type), false);
 	}
 
-	private ICType getIcType(String type) throws CustomICException {
+	/**
+	 * Get an IC type from its type name.
+	 * 
+	 * @param type
+	 * @return
+	 * @throws CustomICException thrown if the type does not exist
+	 */
+	private ICType getICType(String type) throws CustomICException {
 		ICType typeObject = ICType.forName(type);
 		
 		if (typeObject == null) {
@@ -328,19 +334,36 @@ public class RedstoneListener extends CraftBookDelegateListener
 		return typeObject;
 	}
 
+	/**
+	 * Registers an non-PLC IC.
+	 * 
+	 * @param name
+	 * @param ic
+	 * @param type
+	 */
 	private void internalRegisterIC(String name, IC ic, ICType type) {
-		if (!icList.containsKey(name))
+		if (!icList.containsKey(name)) {
 			registerIC(name, ic, type, false);
-	}
-
-	private void internalRegisterIC(String name, IC ic, ICType type,
-			boolean isPlc) {
-		if (!icList.containsKey(name))
-			registerIC(name, ic, type, isPlc);
+		}
 	}
 
 	/**
-	 * Registers a new IC.
+	 * Registers PLC or non-PLC IC.
+	 * 
+	 * @param name
+	 * @param ic
+	 * @param type
+	 * @param isPlc
+	 */
+	private void internalRegisterIC(String name, IC ic, ICType type,
+			boolean isPlc) {
+		if (!icList.containsKey(name)) {
+			registerIC(name, ic, type, isPlc);
+		}
+	}
+
+	/**
+	 * Registers a new non-PLC IC.
 	 */
 	public void registerIC(String name, IC ic, ICType type) {
 		registerIC(name, ic, type, false);
@@ -361,12 +384,28 @@ public class RedstoneListener extends CraftBookDelegateListener
 		final IC ic;
 		final boolean isPlc;
 
-		RegisteredIC(IC ic, ICType type, boolean isPlc) {
+		/**
+		 * Construct the object.
+		 * 
+		 * @param ic
+		 * @param type
+		 * @param isPlc
+		 */
+		public RegisteredIC(IC ic, ICType type, boolean isPlc) {
 			this.type = type;
 			this.ic = ic;
 			this.isPlc = isPlc;
 		}
 
+		/**
+		 * Think.
+		 * 
+		 * @param pt
+		 * @param changedRedstoneInput
+		 * @param signText
+		 * @param sign
+		 * @param r
+		 */
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
 				Sign sign, RedstoneDelayer r) {
 			type.think(pt, changedRedstoneInput, signText, sign, ic, r);

@@ -182,44 +182,16 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
-     * Conditionally registers a hook for this listener. Hooks for delegates
-     * should be hooked from {@link CraftBookDelegateListener}.
-     * 
-     * @param name
-     * @param priority
-     * @return whether the hook was registered correctly
-     */
-    public boolean registerHook(String name, PluginListener.Priority priority) {
-        try {
-            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
-            etc.getLoader().addListener(hook, this, craftBook, priority);
-            return true;
-        } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
-            return false;
-        }
-    }
-
-    /**
-     * Conditionally registers a hook.
+     * Registers a delegate.
      * 
      * @param listener
      * @param name
      * @param priority
      * @return whether the hook was registered correctly
      */
-    public boolean registerDelegate(CraftBookDelegateListener listener,
-    		String name, PluginListener.Priority priority) {
-        try {
-            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
-            etc.getLoader().addListener(hook, listener, craftBook, priority);
-            delegates.add(listener);
-            listener.loadConfiguration();
-            return true;
-        } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
-            return false;
-        }
+    public void registerDelegate(CraftBookDelegateListener listener) {
+        delegates.add(listener);
+        listener.loadConfiguration();
     }
     
     /**

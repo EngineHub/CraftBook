@@ -78,18 +78,6 @@ public abstract class CraftBookDelegateListener extends PluginListener {
     protected BlockBag getBlockBag(Vector origin) {
     	return listener.getBlockBag(origin);
     }
-
-    /**
-     * Conditionally registers a hook.
-     * 
-     * @param listener
-     * @param name
-     * @param priority
-     * @return whether the hook was registered correctly
-     */
-    public boolean registerHook(String name, PluginListener.Priority priority) {
-        return listener.registerDelegate(this, name, priority);
-    }
     
     /**
      * Called when a block has been given directed Redstone input. "Directed"
