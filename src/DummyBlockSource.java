@@ -24,7 +24,7 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class DummyBlockSource extends BlockSource {
+public class DummyBlockSource extends BlockBag {
     private boolean fetch = true, store = true;
     
     public DummyBlockSource() {}
@@ -79,5 +79,39 @@ public class DummyBlockSource extends BlockSource {
      * Flush changes.
      */
     public void flushChanges() {
+    }
+    
+    /**
+     * Unlimited black hole bag that will provided unlimited blocks and
+     * discard any accepted blocks.
+     * 
+     * @author sk89q
+     */
+    public static class UnlimitedBlackHoleFactory implements BlockSourceFactory {
+        public BlockBag createBlockSource(Vector v) {
+            return new DummyBlockSource();
+        }
+    }
+    
+    /**
+     * Discards all given blocks.
+     * 
+     * @author sk89q
+     */
+    public static class BlackHoleFactory implements BlockSourceFactory {
+        public BlockBag createBlockSource(Vector v) {
+            return new DummyBlockSource(false, true);
+        }
+    }
+    
+    /**
+     * Provides unlimited blocks.
+     * 
+     * @author sk89q
+     */
+    public static class UnlimitedSourceFactory implements BlockSourceFactory {
+        public BlockBag createBlockSource(Vector v) {
+            return new DummyBlockSource(true, false);
+        }
     }
 }

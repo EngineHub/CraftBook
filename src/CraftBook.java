@@ -35,24 +35,52 @@ public class CraftBook extends Plugin {
      * Logger.
      */
     private static final Logger logger = Logger.getLogger("Minecraft");
+    
     /**
-     * Listener for the plugin system.
+     * Listener for the plugin system. This listener handles configuration
+     * loading and the bulk of the core functions for CraftBook. Individual
+     * features are implemented in the delegate listeners.
      */
     private final CraftBookListener listener =
             new CraftBookListener(this);
+    /**
+     * Delegate listener for mechanisms.
+     */
+    private final CraftBookDelegateListener mechanisms =
+            new MechanismListener(this, listener);
+    /**
+     * Delegate listener for redstone.
+     */
+    private final CraftBookDelegateListener redstone =
+            new RedstoneListener(this, listener);
+    /**
+     * Delegate listener for vehicle.
+     */
+    private final CraftBookDelegateListener vehicle =
+            new VehicleListener(this, listener);
     
+    /**
+     * Tick delayer instance used to delay some events until the next tick.
+     * It is used mostly for redstone-related events.
+     */
     private final RedstoneDelayer delay = new RedstoneDelayer(listener);
 
     /**
-     * Used to fake the data value at a point.
+     * Used to fake the data value at a point. For the redstone hook, because
+     * the data value has not yet been set when the hook is called, its data
+     * value is faked by CraftBook. As all calls to get a block's data are
+     * routed through CraftBook already, this makes this hack feasible.
      */
     private static BlockVector fakeDataPos;
+    
     /**
-     * Used to fake the data value at a point.
+     * Used to fake the data value at a point. See fakedataPos.
      */
     private static int fakeDataVal;
+    
     /**
-     * Cached CraftBook version.
+     * CraftBook version, fetched from the .jar's manifest. Used to print the
+     * CraftBook version in various places.
      */
     private String version;
 
@@ -63,38 +91,39 @@ public class CraftBook extends Plugin {
     public void initialize() {
         TickPatch.applyPatch();
 
-        registerHook("BLOCK_CREATED", PluginListener.Priority.MEDIUM);
-        registerHook("BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
-        registerHook("COMMAND", PluginListener.Priority.MEDIUM);
-        registerHook("DISCONNECT", PluginListener.Priority.MEDIUM);
-        registerHook("COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "COMMAND", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
 
-        if (!registerHook("REDSTONE_CHANGE", PluginListener.Priority.MEDIUM)) {
-            logger.log(Level.WARNING, "CraftBook: Your version of hMod is "
-                    + "does NOT have redstone support! Redstone features will "
-                    + "be disabled in CraftBook.");
-        }
+        registerHook(mechanisms, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        listener.registerDelegate(mechanisms);
+        
+        registerHook(redstone, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        listener.registerDelegate(redstone);
 
-        if (!registerHook("VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM)) {
-            logger.log(Level.WARNING, "CraftBook: Your version of hMod "
-                    + "does NOT have vehicle hook support! Minecart-related "
-                    + "features will be unavailable.");
-        } else {
-            registerHook("VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
-            registerHook("VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
-        }
+        registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
+        listener.registerDelegate(vehicle);
         
         TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
     }
 
     /**
-     * Conditionally registers a hook.
+     * Conditionally registers a hook for a listener.
      * 
      * @param name
      * @param priority
-     * @return where the hook was registered correctly
+     * @return whether the hook was registered correctly
      */
-    public boolean registerHook(String name, PluginListener.Priority priority) {
+    public boolean registerHook(PluginListener listener,
+    		String name, PluginListener.Priority priority) {
         try {
             PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
             etc.getLoader().addListener(hook, listener, this, priority);
@@ -112,6 +141,7 @@ public class CraftBook extends Plugin {
     public void enable() {
         logger.log(Level.INFO, "CraftBook version " + getVersion() + " loaded");
 
+        // This will also fire the loadConfiguration() methods of delegates
         listener.loadConfiguration();
     }
 
@@ -119,8 +149,7 @@ public class CraftBook extends Plugin {
      * Disables the plugin.
      */
     @Override
-    public void disable() {
-    }
+    public void disable() {}
 
     /**
      * Get the CraftBook version.

@@ -24,11 +24,24 @@ import com.sk89q.craftbook.*;
  *
  * @author Lymia
  */
-public class AdminBlockSource extends BlockSource {
-    private boolean fetch = true, store = true;
-    private boolean canFetch = false, canStore = false;
+public class AdminBlockSource extends BlockBag {
+    private boolean fetch = true;
+    private boolean store = true;
+    private boolean canFetch = false;
+    private boolean canStore = false;
     
-    public AdminBlockSource() {}
+    /**
+     * Construct with the ability to both fetch and store.
+     */
+    public AdminBlockSource() {
+    }
+    
+    /**
+     * Construct the source with fetch/store options.
+     * 
+     * @param fetch
+     * @param store
+     */
     public AdminBlockSource(boolean fetch, boolean store) {
         this.fetch = fetch;
         this.store = store;
@@ -43,7 +56,9 @@ public class AdminBlockSource extends BlockSource {
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockSourceException {
-        if(!canFetch) throw new OutOfBlocksException(id);
+        if (!canFetch) {
+        	throw new OutOfBlocksException(id);
+        }
     }
 
     /**
@@ -55,7 +70,9 @@ public class AdminBlockSource extends BlockSource {
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id) throws BlockSourceException {
-        if(!canStore) throw new OutOfSpaceException(id);
+        if (!canStore) {
+        	throw new OutOfSpaceException(id);
+        }
     }
 
     /**
@@ -65,10 +82,13 @@ public class AdminBlockSource extends BlockSource {
      * @return
      */
     public void addSourcePosition(Vector pos) {
-        for (int x = -3; x <= 3; x++) 
-            for (int y = -3; y <= 3; y++) 
-                for (int z = -3; z <= 3; z++) 
+        for (int x = -3; x <= 3; x++) {
+            for (int y = -3; y <= 3; y++) {
+                for (int z = -3; z <= 3; z++) { 
                     addSingleSourcePosition(pos.add(x, y, z));
+                }
+            }
+        }
     }
     
     /**
@@ -78,10 +98,19 @@ public class AdminBlockSource extends BlockSource {
      * @return
      */
     public void addSingleSourcePosition(Vector pos) {
-        if (CraftBook.getBlockID(pos) == BlockType.WALL_SIGN || CraftBook.getBlockID(pos) == BlockType.SIGN_POST) {
-            Sign s = (Sign)etc.getServer().getComplexBlock(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
-            if(store&&s.getText(1).equalsIgnoreCase("[Black Hole]")) canStore = true;
-            if(fetch&&s.getText(1).equalsIgnoreCase("[Block Source]")) canFetch = true;
+        if (CraftBook.getBlockID(pos) == BlockType.WALL_SIGN
+        		|| CraftBook.getBlockID(pos) == BlockType.SIGN_POST) {
+        	
+            Sign s = (Sign)etc.getServer().getComplexBlock(
+            		pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
+            
+            if (store && s.getText(1).equalsIgnoreCase("[Black Hole]")) {
+            	canStore = true;
+            }
+            
+            if (fetch && s.getText(1).equalsIgnoreCase("[Block Source]")) {
+            	canFetch = true;
+            }
         }
     }
 
@@ -89,5 +118,27 @@ public class AdminBlockSource extends BlockSource {
      * Flush changes.
      */
     public void flushChanges() {
+    }
+    
+    /**
+     * Discards all given blocks.
+     * 
+     * @author sk89q
+     */
+    public static class BlackHoleFactory implements BlockSourceFactory {
+        public BlockBag createBlockSource(Vector v) {
+            return new AdminBlockSource(false, true);
+        }
+    }
+    
+    /**
+     * Provides unlimited blocks.
+     * 
+     * @author sk89q
+     */
+    public static class UnlimitedSourceFactory implements BlockSourceFactory {
+        public BlockBag createBlockSource(Vector v) {
+            return new AdminBlockSource(true, false);
+        }
     }
 }

@@ -25,7 +25,7 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class NearbyChestBlockSource extends BlockSource {
+public class NearbyChestBlockSource extends BlockBag {
     /**
      * List of chests.
      */
@@ -217,6 +217,17 @@ public class NearbyChestBlockSource extends BlockSource {
     public void flushChanges() {
         for (ComparableComplexBlock<Chest> c : chests) {
             c.getChest().update();
+        }
+    }
+    
+    /**
+     * Factory.
+     * 
+     * @author sk89q
+     */
+    public static class Factory implements BlockSourceFactory {
+        public BlockBag createBlockSource(Vector v) {
+            return new NearbyChestBlockSource(v);
         }
     }
 }

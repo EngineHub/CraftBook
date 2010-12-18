@@ -3,32 +3,28 @@
     CraftBook adds interactive mechanics, Redstone features, and
     Minecart enhancements to Minecraft SMP.</description>
   
-  <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
-    <classpath>
-      <pathelement location="./JFlex.jar"/>
-    </classpath>
-  </taskdef>
-
   <property name="src.dir" location="src"/>
   <property name="build.dir" location="build"/>
   <property name="dist.dir" location="dist"/>
   <property name="release.dir" location="release"/>
+  <property name="lib.dir" location="lib"/>
 
   <target name="init">
     <mkdir dir="${build.dir}"/>
   </target>
 
+  <!-- Compile the source files -->
   <target name="compile" depends="init">
     <javac srcdir="${src.dir}" deprecation="true" includeantruntime="true" destdir="${build.dir}" debug="true">
       <classpath>
-        <path path="@{classpath}"/>
-        <path path="minecraft_server.jar"/>
-        <path path="Minecraft_Mod.jar"/>
-        <path path="WorldEdit.jar"/>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
       </classpath>
     </javac>
   </target>
 
+  <!-- Build the .jar -->
   <target name="jar" depends="compile">
     <mkdir dir="${dist.dir}"/>
     <manifest file="manifest.mf" mode="replace">
@@ -40,11 +36,13 @@
     <jar jarfile="${dist.dir}/CraftBook.jar" basedir="${build.dir}" manifest="manifest.mf"/>
   </target>
 
+  <!-- Create the .jar -->
   <target name="dist">
     <property name="version" value="nightly"/>
     <antcall target="jar"/>
   </target>
 
+  <!-- Build a release -->
   <target name="release">
     <input message="Enter version:" addproperty="version"/>
     <antcall target="jar"/>
@@ -59,28 +57,28 @@
       <globmapper from="*.txt" to="*.txt"/>
     </copy>
     <copy tofile="${release.dir}/CraftBook.jar" file="${dist.dir}/CraftBook.jar"/>
-    <!--
-    <copy todir="${release.dir}">
+    <!--<copy todir="${release.dir}">
       <fileset dir="lib">
         <exclude name="Minecraft_Mod.jar"/>
         <exclude name="minecraft_server.jar"/>
         <exclude name="WorldEdit.jar"/>
         <exclude name="JFlex.jar"/>
       </fileset>
-    </copy>
-    -->
+    </copy>-->
     <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip"/>
   </target>
 
-  <target name="run-jflex">
-    <!-- WARNING: Hardcoded. JFlex's Ant task is horrible. -->
-    <jflex file="src/lymia/customic/CustomICScanner.lex" destdir="${src.dir}"/>
-  </target>
-
+  <!-- Clean the output -->
   <target name="clean">
     <delete dir="${build.dir}"/>
     <delete dir="${dist.dir}"/>
     <delete dir="${release.dir}"/>
+  </target>
+
+  <!-- Run JFlex -->
+  <target name="run-jflex">
+    <!-- WARNING: Hardcoded. JFlex's Ant task is horrible. -->
+    <jflex file="src/lymia/customic/CustomICScanner.lex" destdir="${src.dir}"/>
   </target>
   
   <!--<target name="-get-version-git" if="git-revision">
@@ -98,4 +96,10 @@
       </condition>
     </sequential>
   </target>-->
+  
+  <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
+    <classpath>
+      <pathelement location="JFlex.jar"/>
+    </classpath>
+  </taskdef>
 </project>

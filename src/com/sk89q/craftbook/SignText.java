@@ -111,7 +111,7 @@ public class SignText {
     }
 
     /**
-     * Supress sending the client a update.
+     * Suppress sending the client a update.
      */
     public void supressUpdate() {
         noUpdate = true;
@@ -125,9 +125,10 @@ public class SignText {
     }
     /**
      * Check if an update is requested.
+     * 
      * @return
      */
-    public boolean update() {
+    public boolean shouldUpdate() {
         return !noUpdate;
     }
 }

@@ -29,7 +29,7 @@ public class LightSwitch {
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
      */
-    private HistoryHashMap<BlockVector,Long> recentLightToggles
+    private static HistoryHashMap<BlockVector,Long> recentLightToggles
             = new HistoryHashMap<BlockVector,Long>(20);
 
     /**
@@ -40,7 +40,7 @@ public class LightSwitch {
      * @param oz
      * @return
      */
-    public boolean toggleLights(Vector origin, BlockSource bag)
+    public static boolean toggleLights(Vector origin, BlockBag bag)
             throws BlockSourceException {
         int aboveID = CraftBook.getBlockID(origin.add(0, 1, 0));
 
