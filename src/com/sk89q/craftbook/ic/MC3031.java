@@ -40,14 +40,14 @@ public class MC3031 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        boolean set = chip.getIn(1).is();
-        boolean reset = chip.getIn(2).is();
+        boolean set = !chip.getIn(1).is();
+        boolean reset = !chip.getIn(2).is();
         if (!set && !reset) {
             chip.getOut(1).set(true);
         } else if (set && !reset) {
-            chip.getOut(1).set(false);
-        } else if (!set && reset) {
             chip.getOut(1).set(true);
+        } else if (!set && reset) {
+            chip.getOut(1).set(false);
         }
     }
 }
