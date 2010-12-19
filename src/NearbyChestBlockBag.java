@@ -54,21 +54,23 @@ public class NearbyChestBlockBag extends BlockBag {
         try {
             for (ComparableComplexBlock<Chest> c : chests) {
                 Chest chest = c.getChest();
-                hn[] itemArray = chest.getArray();
+                Item[] itemArray = chest.getContents();
                 
                 // Find the item
                 for (int i = 0; itemArray.length > i; i++) {
                     if (itemArray[i] != null) {
                         // Found an item
-                        if (itemArray[i].c == id &&
-                            itemArray[i].a >= 1) {
-                            int newAmount = itemArray[i].a - 1;
+                        if (itemArray[i].getItemId() == id &&
+                            itemArray[i].getAmount() >= 1) {
+                            int newAmount = itemArray[i].getAmount() - 1;
     
                             if (newAmount > 0) {
-                                itemArray[i].a = newAmount;
+                                itemArray[i].setAmount(newAmount);
                             } else {
                                 itemArray[i] = null;
                             }
+                            
+                            chest.setContents(itemArray);
     
                             return;
                         }
@@ -94,17 +96,19 @@ public class NearbyChestBlockBag extends BlockBag {
         try {
             for (ComparableComplexBlock<Chest> c : chests) {
                 Chest chest = c.getChest();
-                hn[] itemArray = chest.getArray();
+                Item[] itemArray = chest.getContents();
                 int emptySlot = -1;
     
                 // Find an existing slot to put it into
                 for (int i = 0; itemArray.length > i; i++) {
                     if (itemArray[i] != null) {
                         // Found an item
-                        if (itemArray[i].c == id &&
-                            itemArray[i].a < 64) {
-                            int newAmount = itemArray[i].a + 1;
-                            itemArray[i].a = newAmount;
+                        if (itemArray[i].getItemId() == id &&
+                            itemArray[i].getAmount() < 64) {
+                            int newAmount = itemArray[i].getAmount() + 1;
+                            itemArray[i].setAmount(newAmount);
+                            
+                            chest.setContents(itemArray);
     
                             return;
                         }
@@ -115,7 +119,9 @@ public class NearbyChestBlockBag extends BlockBag {
     
                 // Didn't find an existing stack, so let's create a new one
                 if (emptySlot != -1) {
-                    itemArray[emptySlot] = new hn(id, 1);
+                    itemArray[emptySlot] = new Item(id, 1);
+                    
+                    chest.setContents(itemArray);
                     
                     return;
                 }
@@ -149,14 +155,14 @@ public class NearbyChestBlockBag extends BlockBag {
 
                         if (complexBlock instanceof Chest) {
                             Chest chest = (Chest)complexBlock;
-                            hn[] itemArray = chest.getArray();
+                            Item[] itemArray = chest.getContents();
                             boolean occupied = false;
 
                             // Got to make sure that at least one slot is occupied
                             for (int i = 0; itemArray.length > i; i++) {
                                 if (itemArray[i] != null) {
                                     // Found an item
-                                    if (itemArray[i].a > 0) {
+                                    if (itemArray[i].getAmount() > 0) {
                                         occupied = true;
                                         break;
                                     }
@@ -190,14 +196,14 @@ public class NearbyChestBlockBag extends BlockBag {
 
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest)complexBlock;
-                hn[] itemArray = chest.getArray();
+                Item[] itemArray = chest.getContents();
                 boolean occupied = false;
 
                 // Got to make sure that at least one slot is occupied
                 for (int i = 0; itemArray.length > i; i++) {
                     if (itemArray[i] != null) {
                         // Found an item
-                        if (itemArray[i].a > 0) {
+                        if (itemArray[i].getAmount() > 0) {
                             occupied = true;
                             break;
                         }
