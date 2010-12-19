@@ -44,9 +44,9 @@ public class MC3033 extends BaseIC {
         boolean reset = !chip.getIn(2).is();
         if (!set && !reset) {
             chip.getOut(1).set(true);
-        } else if (set && !reset) {
-            chip.getOut(1).set(true);
         } else if (!set && reset) {
+            chip.getOut(1).set(true);
+        } else if (set && !reset) {
             chip.getOut(1).set(false);
         }
     }
