@@ -18,16 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import com.sk89q.craftbook.BlockSourceException;
-import com.sk89q.craftbook.BlockType;
+
 import com.sk89q.craftbook.BlockVector;
-import com.sk89q.craftbook.OperationException;
-import com.sk89q.craftbook.Vector;
 
 /**
  * Thread for delaying redstone inputs.
