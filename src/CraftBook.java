@@ -90,7 +90,6 @@ public class CraftBook extends Plugin {
     @Override
     public void initialize() {
         TickPatch.applyPatch();
-        TorchPatch.applyPatch();
 
         registerHook(listener, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
         registerHook(listener, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
@@ -144,6 +143,8 @@ public class CraftBook extends Plugin {
 
         // This will also fire the loadConfiguration() methods of delegates
         listener.loadConfiguration();
+        
+        TorchPatch.applyPatch();
     }
 
     /**
@@ -158,17 +159,19 @@ public class CraftBook extends Plugin {
     			etc.getServer().addToServerQueue(new Runnable() {
     				public void run() {
     					try {
-        					logger.warning("Minecart Mania has been disabled.");
     						etc.getLoader().disablePlugin("MinecartMania");
+                            logger.warning("Minecart Mania has been disabled.");
     					} finally {
     						etc.getLoader().enablePlugin("CraftBook");
     					}
     				}
     			});
     			
-    			break;
+    			return;
     		}
     	}
+
+        TorchPatch.removePatch();
     }
 
     /**

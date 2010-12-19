@@ -1,16 +1,22 @@
 /*    
-Drop-in redstone torch hooks for hMod
+Craftbook 
 Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
 
-This program is free software. It comes without any warranty, to
-the extent permitted by applicable law. You can redistribute it
-and/or modify it under the terms of the Do What The Fuck You Want
-To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,13 +24,11 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TorchPatch extends cl {
-	@SuppressWarnings("unused")
-	private static final Object CL_PATCH_APPLIED = null;
 	/**
 	 * Do not use directly.
 	 */
 	@Deprecated
-	public static final CopyOnWriteArrayList<?> LISTENERS = new CopyOnWriteArrayList<Object>();
+	public static final CopyOnWriteArrayList<ExtensionListener> LISTENERS = new CopyOnWriteArrayList<ExtensionListener>();
 	
 	private static Class<cl> CLASS = cl.class;
 	private static Field[] FIELDS;
@@ -33,6 +37,8 @@ public class TorchPatch extends cl {
 	private static int TYPE_OFF = Block.Type.RedstoneTorchOff.getType();
 	
 	private boolean isOn;
+	
+	private gc old;
 	
 	static {
 		ArrayList<Field> fields = new ArrayList<Field>();
@@ -45,6 +51,8 @@ public class TorchPatch extends cl {
 	
 	public TorchPatch(int texture, boolean isOn, gc old) {
 		super(nullId(isOn), texture, isOn);
+		
+		this.old = old;
 		
 		for(Field f:FIELDS) try {
 			if(Modifier.isStatic(f.getModifiers())||Modifier.isFinal(f.getModifiers())) continue;
@@ -71,14 +79,8 @@ public class TorchPatch extends cl {
      */
     @Deprecated
     public void a(eq world, int x, int y, int z, Random r) {
-        Object[] tasks = LISTENERS.toArray();
-        for(int i=0;i<tasks.length;i++)
-            try {
-                Method m = tasks[i].getClass().getMethod("onRedstoneTorchUpdate", Block.class, Boolean.TYPE);
-                m.setAccessible(true);
-                Boolean b = (Boolean)m.invoke(tasks[i],new Block(bh,x,y,z),isOn);
-                if(b) return;
-            } catch (Exception e) {throw new RuntimeException("invoke failed",e);}
+        ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
+        for(int i=0;i<tasks.length;i++) if(tasks[i].onRedstoneTorchUpdate(new Block(bh,x,y,z),isOn)) return;
         super.a(world,x,y,z,r);
     }
     /**
@@ -87,13 +89,8 @@ public class TorchPatch extends cl {
      */
     @Deprecated
     public void b(eq world, int x, int y, int z, int unk) {
-        Object[] tasks = LISTENERS.toArray();
-        for(int i=0;i<tasks.length;i++)
-            try {
-                Method m = tasks[i].getClass().getMethod("onRedstoneTorchNeighborChange", Block.class);
-                m.setAccessible(true);
-                m.invoke(tasks[i],new Block(bh,x,y,z));
-            } catch (Exception e) {throw new RuntimeException("invoke failed",e);}
+        ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
+        for(int i=0;i<tasks.length;i++) tasks[i].onRedstoneTorchNeighborChange(new Block(bh,x,y,z));
         super.b(world,x,y,z,unk);
     }
 	/**
@@ -102,30 +99,30 @@ public class TorchPatch extends cl {
 	 */
 	@Deprecated
 	public void e(eq world, int x, int y, int z) {
-		Object[] tasks = LISTENERS.toArray();
-		for(int i=0;i<tasks.length;i++)
-			try {
-				Method m = tasks[i].getClass().getMethod("onRedstoneTorchAdded", Block.class);
-				m.setAccessible(true);
-				m.invoke(tasks[i],new Block(bh,x,y,z));
-			} catch (Exception e) {throw new RuntimeException("invoke failed",e);}
+		ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
+		for(int i=0;i<tasks.length;i++) tasks[i].onRedstoneTorchAdded(new Block(bh,x,y,z));
 		super.e(world,x,y,z);
 	}
 	
 	/**
-	 * Applies the patch, if not already applied.
-	 * Call before using addTask or getTaskList().
+	 * Applies the patch, overriding any old instances that may exist.
+	 * Call before using addListener or getListenerList().
 	 */
 	public static void applyPatch() {
-		try {
-			gc.m[TYPE_ON].getClass().getDeclaredField("CL_PATCH_APPLIED");
-		} catch (SecurityException e) {
-			throw new RuntimeException("unexpected error: cannot use reflection");
-		} catch (NoSuchFieldException e) {
-			new TorchPatch(gc.m[TYPE_ON].bg,true,gc.m[TYPE_ON]);
-			new TorchPatch(gc.m[TYPE_OFF].bg,false,gc.m[TYPE_OFF]);
-		}
+		new TorchPatch(gc.m[TYPE_ON].bg,true,gc.m[TYPE_ON]);
+		new TorchPatch(gc.m[TYPE_OFF].bg,false,gc.m[TYPE_OFF]);
 	}
+    /**
+     * Removes the patch if it is applied.
+     */
+    public static void removePatch() {
+        remove(TYPE_ON);
+        remove(TYPE_OFF);
+    }
+    private static void remove(int i) {
+        if(gc.m[i] instanceof TorchPatch) gc.m[i] = ((TorchPatch)gc.m[i]).old;
+    }
+	
 	/**
 	 * Adds a new task.
 	 */
