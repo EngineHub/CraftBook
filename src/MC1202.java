@@ -87,7 +87,7 @@ public class MC1202 extends BaseIC {
             return;
         }
         
-        NearbyChestBlockSource source = new NearbyChestBlockSource(chip.getPosition());
+        NearbyChestBlockBag source = new NearbyChestBlockBag(chip.getPosition());
         source.addSourcePosition(chip.getPosition());
         
         String id = chip.getText().getLine3();

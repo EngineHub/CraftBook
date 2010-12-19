@@ -128,7 +128,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 return;
             }
 
-            NearbyChestBlockSource blockBag = new NearbyChestBlockSource(pt);
+            NearbyChestBlockBag blockBag = new NearbyChestBlockBag(pt);
             blockBag.addSingleSourcePosition(pt);
             blockBag.addSingleSourcePosition(pt.add(1, 0, 0));
             blockBag.addSingleSourcePosition(pt.add(-1, 0, 0));
@@ -415,7 +415,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 }
 
                 if (depositPt != null) {
-                    NearbyChestBlockSource blockBag = new NearbyChestBlockSource(depositPt);
+                    NearbyChestBlockBag blockBag = new NearbyChestBlockBag(depositPt);
                     blockBag.addSingleSourcePosition(depositPt);
                     blockBag.addSingleSourcePosition(depositPt.add(1, 0, 0));
                     blockBag.addSingleSourcePosition(depositPt.add(-1, 0, 0));

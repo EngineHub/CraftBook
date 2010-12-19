@@ -71,7 +71,7 @@ public class CraftBookListener extends PluginListener {
                 new AdminBlockSource.BlackHoleFactory());
         BLOCK_BAGS.put("admin-block-source", 
                 new AdminBlockSource.UnlimitedSourceFactory());
-        BLOCK_BAGS.put("nearby-chests", new NearbyChestBlockSource.Factory());
+        BLOCK_BAGS.put("nearby-chests", new NearbyChestBlockBag.Factory());
     }
 
     /**
