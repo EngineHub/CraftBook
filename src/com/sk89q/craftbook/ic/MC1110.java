@@ -71,7 +71,7 @@ public class MC1110 extends BaseIC {
 
         if (!id.isEmpty()) {
             airwaves.put(id, chip.getIn(1).is());
-            chip.getOut(1).set(true);
+            chip.getOut(1).set(chip.getIn(1).is());
         } else {
             chip.getOut(1).set(false);
         }
