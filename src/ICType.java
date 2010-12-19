@@ -30,6 +30,32 @@ import com.sk89q.craftbook.ic.Signal;
  * @author Lymia
  */
 public enum ICType {
+    /**
+     * Zero input, single output
+     */
+    ZISO ("ZISO",true) {
+        void think(Vector pt, SignText signText, Sign sign, IC zisoIC) {
+            Vector outputVec = Util.getWallSignBack(pt, 2);
+            Vector backVec = Util.getWallSignBack(pt, 1);
+
+            Signal[] in = new Signal[0];
+
+            Signal[] out = new Signal[1];
+            out[0] = new Signal(Redstone.isHighBinary(outputVec, false));
+
+            ChipState chip = new ChipState(pt, backVec, in, out, signText);
+
+            zisoIC.think(chip);
+
+            if (chip.isModified()) {
+                int id = chip.getOut(1).is()?BlockType.REDSTONE_TORCH_ON:BlockType.REDSTONE_TORCH_OFF;
+                if(id==CraftBook.getBlockID(outputVec)) return;
+                CraftBook.setBlockID(outputVec, id);
+                etc.getServer().updateBlockPhysics(outputVec.getBlockX(),
+                        outputVec.getBlockY(), outputVec.getBlockZ(), CraftBook.getBlockData(outputVec));
+            }
+        }
+    },
 	/**
 	 * Single input, single output
 	 */
@@ -226,15 +252,24 @@ public enum ICType {
 	};
 
 	public final String name;
-	private ICType(String name) {
+	public final boolean isInstantIC;
+    private ICType(String name) {
+        this.name = name;
+        this.isInstantIC = false;
+    }
+	private ICType(String name, boolean torchUpdate) {
 	    this.name = name;
+	    this.isInstantIC = torchUpdate;
 	}
 	
-	abstract void think(Vector v, Vector c, SignText t, Sign s, IC i,
-			RedstoneDelayer r);
+	void think(Vector v, Vector c, SignText t, Sign s, IC i,
+			RedstoneDelayer r){}
+    void think(Vector v, SignText t, Sign s, IC i){}
 
 	public static ICType forName(String name) {
-		if (name.equals("siso"))
+	    if (name.equals("ziso"))
+            return SISO;
+	    else if (name.equals("siso"))
 			return SISO;
 		else if (name.equals("si3o"))
 			return SI3O;
