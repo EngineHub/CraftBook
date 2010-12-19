@@ -171,7 +171,7 @@ public class VehicleListener extends CraftBookDelegateListener {
 
             Vector motion;
             int data = CraftBook.getBlockData(
-                    pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
+                    pt.getBlockX(), cblock.getY(), pt.getBlockZ());
             
             if (data == 0x0) {
                 motion = new Vector(0, 0, -0.3);
