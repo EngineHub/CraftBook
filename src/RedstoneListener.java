@@ -279,7 +279,7 @@ public class RedstoneListener extends CraftBookDelegateListener
      * @param z
      * @param isOn
      */
-    public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
+    public void onDirectWireInput(final Vector pt, boolean isOn, final Vector changed) {
         int type = CraftBook.getBlockID(pt);
         
         // Redstone pumpkins
@@ -301,7 +301,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                 return;
             }
 
-            Sign sign = (Sign)cblock;
+            final Sign sign = (Sign)cblock;
             String line2 = sign.getText(1);
             int len = line2.length();
             
@@ -313,29 +313,39 @@ public class RedstoneListener extends CraftBookDelegateListener
 
 				String id = line2.substring(1, len - 1).toUpperCase();
 
-				SignText signText = new SignText(sign.getText(0),
+				final SignText signText = new SignText(sign.getText(0),
 						sign.getText(1), sign.getText(2), sign.getText(3));
 
-				RegisteredIC ic = icList.get(id);
+				final RegisteredIC ic = icList.get(id);
+				
 				if (ic == null) {
 					sign.setText(1, Colors.Red + line2);
 					sign.update();
 					return;
 				}
 
-				if(ic.type.isInstantIC) return;
-				ic.think(pt, changed, signText, sign, craftBook.getDelay());
-
-				if (signText.isChanged()) {
-					sign.setText(0, signText.getLine1());
-					sign.setText(1, signText.getLine2());
-					sign.setText(2, signText.getLine3());
-					sign.setText(3, signText.getLine4());
-					
-					if (signText.shouldUpdate()) {
-						sign.update();
-					}
+				if (ic.type.isInstantIC) {
+					return;
 				}
+
+				craftBook.getDelay().delayAction(
+						new TickDelayer.Action(pt.toBlockVector(), 2) {
+					@Override
+					public void run() {
+						ic.think(pt, changed, signText, sign, craftBook.getDelay());
+
+						if (signText.isChanged()) {
+							sign.setText(0, signText.getLine1());
+							sign.setText(1, signText.getLine2());
+							sign.setText(2, signText.getLine3());
+							sign.setText(3, signText.getLine4());
+							
+							if (signText.shouldUpdate()) {
+								sign.update();
+							}
+						}
+					}
+				});
 			}
 		}
 	}
@@ -638,7 +648,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 		 * @param r
 		 */
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-				Sign sign, RedstoneDelayer r) {
+				Sign sign, TickDelayer r) {
 			type.think(pt, changedRedstoneInput, signText, sign, ic, r);
 		}
 

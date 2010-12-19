@@ -99,16 +99,6 @@ public class CraftBookListener extends PluginListener {
      */
     private List<BlockBagFactory> blockBags =
         new ArrayList<BlockBagFactory>();
-    
-    /**
-     * Prevents redstone inputs from triggering.
-     * 
-     * This is to work around a bug with the redstone delayer causing events
-     * to fire twice.
-     * 
-     * @see RedstoneDelayer
-     */
-    private boolean rsLock = false;
 
     /**
      * Construct the object.
@@ -233,11 +223,6 @@ public class CraftBookListener extends PluginListener {
      * @return
      */
     public int onRedstoneChange(BlockVector v, int oldLevel, int newLevel) {
-        if (rsLock) {
-            craftBook.getDelay().delayRsChange(v, oldLevel, newLevel);
-            return newLevel;
-        }
-
         boolean wasOn = oldLevel >= 1;
         boolean isOn = newLevel >= 1;
         boolean wasChange = wasOn != isOn;
@@ -508,24 +493,21 @@ public class CraftBookListener extends PluginListener {
         
         return new CompoundBlockBag(bags);
     }
-
-    /**
-     * Set redstone trigger lock.
-     * 
-     * @param value
-     */
-    public void setRsLock(boolean value) {
-        rsLock = value;
-    }
     
     /**
      * Get the properties file.
+     * 
      * @return
      */
     public PropertiesFile getProperties() {
         return properties;
     }
     
+    /**
+     * Get copy manager.
+     * 
+     * @return
+     */
     public CopyManager getCopyManager() {
         return copies;
     }

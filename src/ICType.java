@@ -30,38 +30,42 @@ import com.sk89q.craftbook.ic.Signal;
  * @author Lymia
  */
 public enum ICType {
-    /**
-     * Zero input, single output
-     */
-    ZISO ("ZISO",true) {
-        void think(Vector pt, SignText signText, Sign sign, IC zisoIC) {
-            Vector outputVec = Util.getWallSignBack(pt, 2);
-            Vector backVec = Util.getWallSignBack(pt, 1);
+	/**
+	 * Zero input, single output
+	 */
+	ZISO("ZISO", true) {
+		void think(Vector pt, SignText signText, Sign sign, IC zisoIC) {
+			Vector outputVec = Util.getWallSignBack(pt, 2);
+			Vector backVec = Util.getWallSignBack(pt, 1);
 
-            Signal[] in = new Signal[0];
+			Signal[] in = new Signal[0];
 
-            Signal[] out = new Signal[1];
-            out[0] = new Signal(Redstone.isHighBinary(outputVec, false));
+			Signal[] out = new Signal[1];
+			out[0] = new Signal(Redstone.isHighBinary(outputVec, false));
 
-            ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText);
 
-            zisoIC.think(chip);
+			zisoIC.think(chip);
 
-            if (chip.isModified()) {
-                int id = chip.getOut(1).is()?BlockType.REDSTONE_TORCH_ON:BlockType.REDSTONE_TORCH_OFF;
-                if(id==CraftBook.getBlockID(outputVec)) return;
-                CraftBook.setBlockID(outputVec, id);
-                etc.getServer().updateBlockPhysics(outputVec.getBlockX(),
-                        outputVec.getBlockY(), outputVec.getBlockZ(), CraftBook.getBlockData(outputVec));
-            }
-        }
-    },
+			if (chip.isModified()) {
+				int id = chip.getOut(1).is() ? BlockType.REDSTONE_TORCH_ON
+						: BlockType.REDSTONE_TORCH_OFF;
+				if (id == CraftBook.getBlockID(outputVec)) {
+					return;
+				}
+				CraftBook.setBlockID(outputVec, id);
+				etc.getServer().updateBlockPhysics(outputVec.getBlockX(),
+						outputVec.getBlockY(), outputVec.getBlockZ(),
+						CraftBook.getBlockData(outputVec));
+			}
+		}
+	},
 	/**
 	 * Single input, single output
 	 */
-	SISO ("SISO") {
+	SISO("SISO") {
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-				Sign sign, IC sisoIC, RedstoneDelayer r) {
+				Sign sign, IC sisoIC, TickDelayer r) {
 			Vector outputVec = Util.getWallSignBack(pt, 2);
 			Vector in0 = Util.getWallSignBack(pt, -1);
 			Vector backVec = Util.getWallSignBack(pt, 1);
@@ -78,9 +82,9 @@ public enum ICType {
 			sisoIC.think(chip);
 
 			if (chip.isModified()) {
-				r.setOut(outputVec, chip.getOut(1).is());
+				Redstone.setOutput(outputVec, chip.getOut(1).is());
 			}
-			
+
 			if (chip.hasErrored()) {
 				signText.setLine2(Colors.Gold + signText.getLine2());
 				signText.allowUpdate();
@@ -90,9 +94,9 @@ public enum ICType {
 	/**
 	 * Single input, triple output
 	 */
-	SI3O ("SI3O") {
+	SI3O("SI3O") {
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-				Sign sign, IC si3oIC, RedstoneDelayer r) {
+				Sign sign, IC si3oIC, TickDelayer r) {
 			Vector backVec = Util.getWallSignBack(pt, 1);
 			Vector backShift = backVec.subtract(pt);
 			Vector in0 = Util.getWallSignBack(pt, -1);
@@ -115,11 +119,11 @@ public enum ICType {
 			si3oIC.think(chip);
 
 			if (chip.isModified()) {
-				r.setOut(output1Vec, chip.getOut(1).is());
-				r.setOut(output2Vec, chip.getOut(2).is());
-				r.setOut(output3Vec, chip.getOut(3).is());
+				Redstone.setOutput(output1Vec, chip.getOut(1).is());
+				Redstone.setOutput(output2Vec, chip.getOut(2).is());
+				Redstone.setOutput(output3Vec, chip.getOut(3).is());
 			}
-			
+
 			if (chip.hasErrored()) {
 				signText.setLine2(Colors.Gold + signText.getLine2());
 				signText.allowUpdate();
@@ -129,9 +133,9 @@ public enum ICType {
 	/**
 	 * Triple input, single output
 	 */
-	_3ISO ("3ISO") {
+	_3ISO("3ISO") {
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-				Sign sign, IC _3isoIC, RedstoneDelayer r) {
+				Sign sign, IC _3isoIC, TickDelayer r) {
 			Vector backVec = Util.getWallSignBack(pt, 1);
 			Vector outputVec = Util.getWallSignBack(pt, 2);
 			Vector input1Vec = Util.getWallSignBack(pt, -1);
@@ -155,9 +159,9 @@ public enum ICType {
 			_3isoIC.think(chip);
 
 			if (chip.isModified()) {
-				r.setOut(outputVec, chip.getOut(1).is());
+				Redstone.setOutput(outputVec, chip.getOut(1).is());
 			}
-			
+
 			if (chip.hasErrored()) {
 				signText.setLine2(Colors.Gold + signText.getLine2());
 				signText.allowUpdate();
@@ -167,9 +171,9 @@ public enum ICType {
 	/**
 	 * Triple input, triple output
 	 */
-	_3I3O ("3I3O") {
+	_3I3O("3I3O") {
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-				Sign sign, IC _3i3oIC, RedstoneDelayer r) {
+				Sign sign, IC _3i3oIC, TickDelayer r) {
 			Vector backVec = Util.getWallSignBack(pt, 1);
 			Vector backShift = Util.getWallSignBack(pt, 2).subtract(pt);
 
@@ -200,11 +204,11 @@ public enum ICType {
 			_3i3oIC.think(chip);
 
 			if (chip.isModified()) {
-				r.setOut(out0, chip.getOut(1).is());
-				r.setOut(out1, chip.getOut(2).is());
-				r.setOut(out2, chip.getOut(3).is());
+				Redstone.setOutput(out0, chip.getOut(1).is());
+				Redstone.setOutput(out1, chip.getOut(2).is());
+				Redstone.setOutput(out2, chip.getOut(3).is());
 			}
-			
+
 			if (chip.hasErrored()) {
 				signText.setLine2(Colors.Gold + signText.getLine2());
 				signText.allowUpdate();
@@ -214,9 +218,9 @@ public enum ICType {
 	/**
 	 * Variable input, variable output
 	 */
-	VIVO ("VIVO") {
+	VIVO("VIVO") {
 		void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-				Sign sign, IC vivoIC, RedstoneDelayer r) {
+				Sign sign, IC vivoIC, TickDelayer r) {
 			Vector backVec = Util.getWallSignBack(pt, 1);
 			Vector backShift = backVec.subtract(pt);
 
@@ -262,13 +266,13 @@ public enum ICType {
 			vivoIC.think(chip);
 
 			if (chip.isModified()) {
-				r.setOut(out0, chip.getOut(1).is());
+				Redstone.setOutput(out0, chip.getOut(1).is());
 				if (hasOut1)
-					r.setOut(out1, chip.getOut(2).is());
+					Redstone.setOutput(out1, chip.getOut(2).is());
 				if (hasOut2)
-					r.setOut(out2, chip.getOut(3).is());
+					Redstone.setOutput(out2, chip.getOut(3).is());
 			}
-			
+
 			if (chip.hasErrored()) {
 				signText.setLine2(Colors.Gold + signText.getLine2());
 				signText.allowUpdate();
@@ -278,23 +282,27 @@ public enum ICType {
 
 	public final String name;
 	public final boolean isInstantIC;
-    private ICType(String name) {
-        this.name = name;
-        this.isInstantIC = false;
-    }
-	private ICType(String name, boolean torchUpdate) {
-	    this.name = name;
-	    this.isInstantIC = torchUpdate;
+
+	private ICType(String name) {
+		this.name = name;
+		this.isInstantIC = false;
 	}
-	
-	void think(Vector v, Vector c, SignText t, Sign s, IC i,
-			RedstoneDelayer r){}
-    void think(Vector v, SignText t, Sign s, IC i){}
+
+	private ICType(String name, boolean torchUpdate) {
+		this.name = name;
+		this.isInstantIC = torchUpdate;
+	}
+
+	void think(Vector v, Vector c, SignText t, Sign s, IC i, TickDelayer r) {
+	}
+
+	void think(Vector v, SignText t, Sign s, IC i) {
+	}
 
 	public static ICType forName(String name) {
-	    if (name.equals("ziso"))
-            return SISO;
-	    else if (name.equals("siso"))
+		if (name.equals("ziso"))
+			return SISO;
+		else if (name.equals("siso"))
 			return SISO;
 		else if (name.equals("si3o"))
 			return SI3O;

@@ -274,6 +274,31 @@ public class Redstone {
 	    return result;
 	}
 
+    /**
+     * Sets the output state of a redstone IC at a location.
+     *
+     * @param getPosition
+     * @param state
+     */
+    static void setOutput(Vector pos, boolean state) {
+        if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
+            int data = CraftBook.getBlockData(pos);
+            int newData = data & 0x7;
+
+            if (!state) {
+                newData = data & 0x7;
+            } else {
+                newData = data | 0x8;
+            }
+
+            if (newData != data) {
+                CraftBook.setBlockData(pos, newData);
+                etc.getServer().updateBlockPhysics(
+                        pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), newData);
+            }
+        }
+    }
+
 	/**
 	 * Gets the output state of a redstone IC at a location.
 	 *

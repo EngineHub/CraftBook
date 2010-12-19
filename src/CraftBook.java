@@ -63,7 +63,7 @@ public class CraftBook extends Plugin {
      * Tick delayer instance used to delay some events until the next tick.
      * It is used mostly for redstone-related events.
      */
-    private final RedstoneDelayer delay = new RedstoneDelayer(listener);
+    private final TickDelayer delay = new TickDelayer();
 
     /**
      * Used to fake the data value at a point. For the redstone hook, because
@@ -196,7 +196,7 @@ public class CraftBook extends Plugin {
         return version;
     }
     
-    public RedstoneDelayer getDelay() {
+    public TickDelayer getDelay() {
         return delay;
     }
 

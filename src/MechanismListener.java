@@ -121,7 +121,9 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @param z
      * @param isOn
      */
-    public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
+    public void onDirectWireInput(final Vector pt,
+    		final boolean isOn, final Vector changed) {
+    	
         int type = CraftBook.getBlockID(pt);
         
         // Sign gates
@@ -134,8 +136,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                 return;
             }
 
-            Sign sign = (Sign)cblock;
-            String line2 = sign.getText(1);
+            final Sign sign = (Sign)cblock;
+            final String line2 = sign.getText(1);
 
             // Gate
             if (useGates && redstoneGates
@@ -154,12 +156,56 @@ public class MechanismListener extends CraftBookDelegateListener {
                     && redstoneBridges
                     && type == BlockType.SIGN_POST
                     && line2.equalsIgnoreCase("[Bridge]")) {
-                craftBook.getDelay().toggleBridge(pt, isOn);
+                craftBook.getDelay().delayAction(
+                		new TickDelayer.Action(pt.toBlockVector(), 2) {
+					@Override
+					public void run() {
+						int data = CraftBook.getBlockData(pt);
+
+						try {
+							BlockBag bag = listener.getBlockBag(pt);
+							bag.addSourcePosition(pt);
+
+							if (data == 0x0) {
+								Bridge.setBridgeState(pt, Bridge.Direction.EAST, bag, !isOn);
+							} else if (data == 0x4) {
+								Bridge.setBridgeState(pt, Bridge.Direction.SOUTH, bag, !isOn);
+							} else if (data == 0x8) {
+								Bridge.setBridgeState(pt, Bridge.Direction.WEST, bag, !isOn);
+							} else if (data == 0xC) {
+								Bridge.setBridgeState(pt, Bridge.Direction.NORTH, bag, !isOn);
+							}
+						} catch (OperationException e) {
+						} catch (BlockSourceException e) {
+						}
+					}
+				});
                 
-            //Toggle areas
+            // Toggle areas
             } else if (useToggleAreas && redstoneToggleAreas
                     && line2.equalsIgnoreCase("[Toggle]")) {
-                craftBook.getDelay().toggleArea(pt.toBlockVector(), sign.getText(0), isOn);
+                craftBook.getDelay().delayAction(
+            		new TickDelayer.Action(pt.toBlockVector(), 2) {
+    					@Override
+    					public void run() {
+    			            BlockBag bag = listener.getBlockBag(pt);
+    			            bag.addSourcePosition(pt);
+
+    			           try {
+    			                CuboidCopy copy = listener.getCopyManager().load(
+    			                		sign.getText(0));
+    			                if (copy.distance(pt) <= 4) {
+    			                    if (isOn) {
+    			                        copy.paste(bag);
+    			                    } else {
+    			                    	copy.clear(bag);
+    			                    }
+    			                } 
+    			           } catch (CuboidCopyException e) {} 
+    			             catch (IOException e2) {}
+    			             catch (BlockSourceException e) {}
+    					}
+            		});
             }
         }
     }

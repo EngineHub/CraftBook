@@ -17,4 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-public interface TickExtensionListener extends Runnable {}
+public interface TickExtensionListener extends Runnable {
+	
+}
