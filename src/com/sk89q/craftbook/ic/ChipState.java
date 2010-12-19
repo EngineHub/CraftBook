@@ -15,6 +15,7 @@ public class ChipState {
     private Vector pos;
     private Vector blockPos;
     private SignText text;
+    private boolean hasErrored = false;
 
     /**
      * Construct the state.
@@ -132,5 +133,21 @@ public class ChipState {
      */
     public SignText getText() {
         return text;
+    }
+    
+    /**
+     * Triggers an IC error, disabling the IC from further processing.
+     */
+    public void triggerError() {
+    	hasErrored = true;
+    }
+    
+    /**
+     * Returns true if the IC has encountered an error state.
+     * 
+     * @return
+     */
+    public boolean hasErrored() {
+    	return hasErrored;
     }
 }

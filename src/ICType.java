@@ -54,6 +54,11 @@ public enum ICType {
 			if (chip.isModified()) {
 				r.setOut(outputVec, chip.getOut(1).is());
 			}
+			
+			if (chip.hasErrored()) {
+				signText.setLine2(Colors.Gold + signText.getLine2());
+				signText.allowUpdate();
+			}
 		}
 	},
 	/**
@@ -88,6 +93,11 @@ public enum ICType {
 				r.setOut(output2Vec, chip.getOut(2).is());
 				r.setOut(output3Vec, chip.getOut(3).is());
 			}
+			
+			if (chip.hasErrored()) {
+				signText.setLine2(Colors.Gold + signText.getLine2());
+				signText.allowUpdate();
+			}
 		}
 	},
 	/**
@@ -120,6 +130,11 @@ public enum ICType {
 
 			if (chip.isModified()) {
 				r.setOut(outputVec, chip.getOut(1).is());
+			}
+			
+			if (chip.hasErrored()) {
+				signText.setLine2(Colors.Gold + signText.getLine2());
+				signText.allowUpdate();
 			}
 		}
 	},
@@ -162,6 +177,11 @@ public enum ICType {
 				r.setOut(out0, chip.getOut(1).is());
 				r.setOut(out1, chip.getOut(2).is());
 				r.setOut(out2, chip.getOut(3).is());
+			}
+			
+			if (chip.hasErrored()) {
+				signText.setLine2(Colors.Gold + signText.getLine2());
+				signText.allowUpdate();
 			}
 		}
 	},
@@ -221,6 +241,11 @@ public enum ICType {
 					r.setOut(out1, chip.getOut(2).is());
 				if (hasOut2)
 					r.setOut(out2, chip.getOut(3).is());
+			}
+			
+			if (chip.hasErrored()) {
+				signText.setLine2(Colors.Gold + signText.getLine2());
+				signText.allowUpdate();
 			}
 		}
 	};

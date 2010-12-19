@@ -116,6 +116,13 @@ public class SignText {
     public void supressUpdate() {
         noUpdate = true;
     }
+
+    /**
+     * Allow sending the client a update.
+     */
+    public void allowUpdate() {
+        noUpdate = false;
+    }
     
     /**
      * @return the changed

@@ -32,7 +32,7 @@ import com.sk89q.craftbook.*;
  * Otherwise, it only resets when the 'reset' input toggles from low to high.
  *
  * Configuration:
- * Line 3: ##|ONCE or ##|INF -- where ## is the counter reset value, and ONCE or INF
+ * Line 3: ##:ONCE or ##:INF -- where ## is the counter reset value, and ONCE or INF
  *         specifies if the counter should repeat or not.
  * Line 4: 0 -- must be set to 0 (TODO: Make it auto set the counter to 0 on creation)
  *
@@ -43,18 +43,16 @@ import com.sk89q.craftbook.*;
  *
  * Output: HIGH when counter reaches 0, LOW otherwise
  *
- *
  * @author davr
  */
 public class MC3101 extends BaseIC {
-
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
-        return "COUNTER";
+        return "DOWN COUNTER";
     }
 
     /**
@@ -68,14 +66,15 @@ public class MC3101 extends BaseIC {
     public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
 
-		// TODO: More strict validation
-        if (id.length() == 0 || !id.contains("|")) {
+        if (id.length() == 0 || !id.matches("^[0-9]+:(INF|ONCE)$")) {
             return "Specify counter configuration on line 3.";
         }
 
-		if(! sign.getLine4().equals("") ) {
+		if (!sign.getLine4().equals("")) {
 			return "Line 4 must be blank";
 		}
+		
+		sign.setLine4("0");
 
         return null;
     }
@@ -87,55 +86,47 @@ public class MC3101 extends BaseIC {
      */
     public void think(ChipState chip) {
 		try {
-    		// Get IC config data from line 3 of sign
+    		// Get IC configuration data from line 3 of sign
     		String line3 = chip.getText().getLine3();
-    		String[] config = line3.split("\\|");
-    		int resetVal = Integer.parseInt(config[0].trim());
+    		String[] config = line3.split(":");
+    		
+    		int resetVal = Integer.parseInt(config[0]);
     		boolean inf = config[1].equals("INF");
     
     		// Get current counter value from line 4 of sign
     		String line4 = chip.getText().getLine4();
-    		if(line4.equals(""))
-    			line4 = "0";
-    		int curVal = Integer.parseInt(line4.trim());
+    		int curVal = Integer.parseInt(line4);
     		int oldVal = curVal;
     
     		// If clock input triggered
-    		if(chip.getIn(1).isTriggered() && chip.getIn(1).is()) {
-    			if(curVal == 0) { // if we've gotten to 0, reset if infinite mode
-    				if(inf)
+    		if (chip.getIn(1).isTriggered() && chip.getIn(1).is()) {
+    			if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
+    				if (inf) {
     					curVal = resetVal;
-    			}
-    			else // decrement counter
+    				}
+    			} else { // Decrement counter
     				curVal--;
+    			}
     
-    			// set output to high if we're at 0, otherwise low
-    			if(curVal == 0)
+    			// Set output to high if we're at 0, otherwise low
+    			if (curVal == 0) {
     				chip.getOut(1).set(true);
-    			else
+    			} else {
     				chip.getOut(1).set(false);
-    		}
-    
-    		// if reset intput triggered, reset counter value
-    		if(chip.getIn(2).isTriggered() && chip.getIn(2).is()) {
+    			}
+    		// If reset input triggered, reset counter value
+			} else if (chip.getIn(2).isTriggered() && chip.getIn(2).is()) {
     			curVal = resetVal;
     		}
     
-    		// update counter value stored on sign if it's changed
-    		if(curVal != oldVal)
+    		// Update counter value stored on sign if it's changed
+    		if (curVal != oldVal) {
     			chip.getText().setLine4(Integer.toString(curVal));
-    
-    		// Clear error if one is set
-    		if(chip.getText().getLine1().equals("ERROR")) {
-    			chip.getText().setLine1(getTitle());
-    			return;
     		}
+    		
+    		chip.getText().supressUpdate();
 		} catch (Exception e) {
-			// catch errors, and let the user know something went horribly horribly wrong
-			chip.getText().setLine1("ERROR");
-			return;
+			chip.triggerError();
 		}
-		
-		chip.getText().supressUpdate();
     }
 }
