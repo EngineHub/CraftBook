@@ -20,6 +20,7 @@
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
+import com.sk89q.craftbook.BlockVector;
 import com.sk89q.craftbook.InsufficientArgumentsException;
 import com.sk89q.craftbook.Vector;
 
@@ -237,5 +238,31 @@ public class Util {
      */
     public static boolean canUse(Player player, String command) {
         return player.canUseCommand(command);
+    }
+    
+    /**
+     * Gets the tile two blocks behind a torch
+     * 
+     * @param v
+     * @return
+     */
+    public static BlockVector getTorchSignLocation(BlockVector v) {
+        int x = v.getBlockX();
+        int y = v.getBlockY();
+        int z = v.getBlockZ();
+        int data = CraftBook.getBlockData(x, y, z);
+
+        if (data == 5) {
+            return null;
+        } else if (data == 3) {
+            return new BlockVector(x, y, z - 2);
+        } else if (data == 4) {
+            return new BlockVector(x, y, z + 2);
+        } else if (data == 1) {
+            return new BlockVector(x - 2, y, z);
+        } else if (data == 2) {
+            return new BlockVector(x + 2, y, z);
+        }
+        return null;
     }
 }

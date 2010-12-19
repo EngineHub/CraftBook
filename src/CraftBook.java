@@ -90,6 +90,7 @@ public class CraftBook extends Plugin {
     @Override
     public void initialize() {
         TickPatch.applyPatch();
+        TorchPatch.applyPatch();
 
         registerHook(listener, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
         registerHook(listener, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
