@@ -142,15 +142,27 @@ public class Cauldron {
 
                 List<Integer> ingredients =
                         new ArrayList<Integer>(recipe.getIngredients());
+                
+                List<BlockVector> removeQueue = new ArrayList<BlockVector>();
 
                 // Get rid of the blocks in world
                 for (Map.Entry<BlockVector,Integer> entry : visited.entrySet()) {
                     // This is not a fast operation, but we should not have
                     // too many ingredients
                     if (ingredients.contains(entry.getValue())) {
-                        CraftBook.setBlockID(entry.getKey(), 0);
-                        ingredients.remove(entry.getValue());
+                    	// Some blocks need to removed first otherwise they will
+                    	// drop an item, so let's remove those first
+                    	if (!BlockType.isBottomDependentBlock(entry.getValue())) {
+                    		removeQueue.add(entry.getKey());
+                    	} else {
+                    		CraftBook.setBlockID(entry.getKey(), 0);
+                    	}
+                		ingredients.remove(entry.getValue());
                     }
+                }
+                
+                for (BlockVector v : removeQueue) {
+            		CraftBook.setBlockID(v, 0);
                 }
 
                 // Give results
