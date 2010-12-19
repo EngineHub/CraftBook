@@ -272,11 +272,11 @@ public class VehicleListener extends CraftBookDelegateListener {
 
                             // Acceptable sign direction
                             if (dir != null) {
-                                if (CBMath.isSameSign(minecart.getMotionX(),
+                                if (MathUtil.isSameSign(minecart.getMotionX(),
                                         dir.getBlockX())) {
                                     reverseX = false;
                                 }
-                                if (CBMath.isSameSign(minecart.getMotionZ(),
+                                if (MathUtil.isSameSign(minecart.getMotionZ(),
                                         dir.getBlockZ())) {
                                     reverseZ = false;
                                 }

@@ -87,7 +87,7 @@ public class DummyBlockSource extends BlockBag {
      * 
      * @author sk89q
      */
-    public static class UnlimitedBlackHoleFactory implements BlockSourceFactory {
+    public static class UnlimitedBlackHoleFactory implements BlockBagFactory {
         public BlockBag createBlockSource(Vector v) {
             return new DummyBlockSource();
         }
@@ -98,7 +98,7 @@ public class DummyBlockSource extends BlockBag {
      * 
      * @author sk89q
      */
-    public static class BlackHoleFactory implements BlockSourceFactory {
+    public static class BlackHoleFactory implements BlockBagFactory {
         public BlockBag createBlockSource(Vector v) {
             return new DummyBlockSource(false, true);
         }
@@ -109,7 +109,7 @@ public class DummyBlockSource extends BlockBag {
      * 
      * @author sk89q
      */
-    public static class UnlimitedSourceFactory implements BlockSourceFactory {
+    public static class UnlimitedSourceFactory implements BlockBagFactory {
         public BlockBag createBlockSource(Vector v) {
             return new DummyBlockSource(true, false);
         }

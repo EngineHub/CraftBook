@@ -20,11 +20,11 @@
 import com.sk89q.craftbook.Vector;
 
 /**
- * Factory for Block Bags
+ * Factory for block bags.
  *
  * @author Lymia
  */
-public interface BlockSourceFactory {
+public interface BlockBagFactory {
     /**
      * Creates a BlockSource instance for the passed vector, or null if no
      * block bag is valid for that position.

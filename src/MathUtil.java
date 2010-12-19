@@ -21,7 +21,7 @@
  *
  * @author sk89q
  */
-public class CBMath {
+public class MathUtil {
     /**
      * Returns true if two numbers are of the same sign.
      * 

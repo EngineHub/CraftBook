@@ -225,7 +225,7 @@ public class NearbyChestBlockSource extends BlockBag {
      * 
      * @author sk89q
      */
-    public static class Factory implements BlockSourceFactory {
+    public static class Factory implements BlockBagFactory {
         public BlockBag createBlockSource(Vector v) {
             return new NearbyChestBlockSource(v);
         }

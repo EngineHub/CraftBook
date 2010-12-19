@@ -125,7 +125,7 @@ public class AdminBlockSource extends BlockBag {
      * 
      * @author sk89q
      */
-    public static class BlackHoleFactory implements BlockSourceFactory {
+    public static class BlackHoleFactory implements BlockBagFactory {
         public BlockBag createBlockSource(Vector v) {
             return new AdminBlockSource(false, true);
         }
@@ -136,7 +136,7 @@ public class AdminBlockSource extends BlockBag {
      * 
      * @author sk89q
      */
-    public static class UnlimitedSourceFactory implements BlockSourceFactory {
+    public static class UnlimitedSourceFactory implements BlockBagFactory {
         public BlockBag createBlockSource(Vector v) {
             return new AdminBlockSource(true, false);
         }

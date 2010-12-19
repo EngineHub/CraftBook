@@ -34,6 +34,7 @@ import lymia.perlstone.Perlstone_1_0;
  * MechanismListener.
  * 
  * @author sk89q
+ * @author Lymia
  */
 public class RedstoneListener extends CraftBookDelegateListener
 		implements CustomICAccepter {
@@ -319,50 +320,79 @@ public class RedstoneListener extends CraftBookDelegateListener
      */
     @Override
     public boolean onCheckedCommand(Player player, String[] split)
-            throws InsufficientArgumentsException, LocalWorldEditBridgeException {
-        if(listICs && split[0].equalsIgnoreCase("/listics") && Util.canUse(player, "/listics")) {
-            String[] lines = generateICText(player);
-            int pages = ((lines.length-1)/10)+1;
-            int accessedPage;
-            try {
-                accessedPage = split.length==1?0:Integer.parseInt(split[1])-1;
-                if(accessedPage<0||accessedPage>=pages) {
-                    player.sendMessage(Colors.Rose+"Invalid page \""+split[1]+"\"");
-                    return true;
-                }
-            } catch (NumberFormatException e) {
-                player.sendMessage(Colors.Rose+"Invalid page \""+split[1]+"\"");
-                return true;
-            }
-            
-            player.sendMessage(Colors.Blue+"CraftBook ICs (Page "+(accessedPage+1)+" of "+pages+"):");
-            for(int i=accessedPage*10;i<lines.length&&i<(accessedPage+1)*10;i++) player.sendMessage(lines[i]);
-            
-            return true;
-        }
+			throws InsufficientArgumentsException,
+			LocalWorldEditBridgeException {
+    	
+		if (listICs && split[0].equalsIgnoreCase("/listics")
+				&& Util.canUse(player, "/listics")) {
+			String[] lines = generateICText(player);
+			int pages = ((lines.length - 1) / 10) + 1;
+			int accessedPage;
+			
+			try {
+				accessedPage = split.length == 1 ? 0 : Integer
+						.parseInt(split[1]) - 1;
+				if (accessedPage < 0 || accessedPage >= pages) {
+					player.sendMessage(Colors.Rose + "Invalid page \""
+							+ split[1] + "\"");
+					return true;
+				}
+			} catch (NumberFormatException e) {
+				player.sendMessage(Colors.Rose + "Invalid page \"" + split[1]
+						+ "\"");
+				return true;
+			}
+
+			player.sendMessage(Colors.Blue + "CraftBook ICs (Page "
+					+ (accessedPage + 1) + " of " + pages + "):");
+			
+			for (int i = accessedPage * 10; i < lines.length
+					&& i < (accessedPage + 1) * 10; i++) {
+				player.sendMessage(lines[i]);
+			}
+
+			return true;
+		}
 
         return false;
     }
-    
-    private String[] generateICText(Player p) {
-        ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(icList.keySet());
-        
-        Collections.sort(icNameList);
-        
-        ArrayList<String> strings = new ArrayList<String>();
-        for(String ic:icNameList) {
-            RegisteredIC ric = icList.get(ic);
-            boolean canUse = canCreateIC(p,ic,ric);
-            if(listUnusuableICs) strings.add(Colors.Rose +ic+" ("+ric.type.name+"): "+ric.ic.getTitle()+(canUse?"":" (RESTRICTED)"));
-            else if(canUse) strings.add(Colors.Rose +ic+" ("+ric.type.name+": "+ric.ic.getTitle());
-        }
-        return strings.toArray(new String[0]);
-    }
-    
+
     /**
-     * Checks if the player can create an IC.
+     * Used for the /listics command.
+     * 
+     * @param p
+     * @return
      */
+	private String[] generateICText(Player p) {
+		ArrayList<String> icNameList = new ArrayList<String>();
+		icNameList.addAll(icList.keySet());
+
+		Collections.sort(icNameList);
+
+		ArrayList<String> strings = new ArrayList<String>();
+		
+		for (String ic : icNameList) {
+			RegisteredIC ric = icList.get(ic);
+			boolean canUse = canCreateIC(p, ic, ric);
+			
+			if (listUnusuableICs) {
+				strings.add(Colors.Rose + ic + " (" + ric.type.name + "): "
+						+ ric.ic.getTitle() + (canUse ? "" : " (RESTRICTED)"));
+			} else if (canUse) {
+				strings.add(Colors.Rose + ic + " (" + ric.type.name + ": "
+						+ ric.ic.getTitle());
+			}
+		}
+		return strings.toArray(new String[0]);
+	}
+
+	/**
+	 * Checks if the player can create an IC.
+	 * 
+	 * @param player
+	 * @param id
+	 * @param ic
+	 */
     private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
         return (!ic.ic.requiresPermission()
         		&& !(ic.isPlc && redstonePLCsRequirePermission))
@@ -370,9 +400,13 @@ public class RedstoneListener extends CraftBookDelegateListener
                 || player.canUseCommand("/" + id.toLowerCase());
     }
 
-	/**
-	 * Register a new IC. Defined by the interface CustomICAccepter.
-	 */
+    /**
+     * Register a new IC. Defined by the interface CustomICAccepter.
+     * 
+     * @param name
+     * @param ic
+     * @param type
+     */
 	public void registerIC(String name, IC ic, String type)
 			throws CustomICException {
 		if (icList.containsKey(name)) {
@@ -429,6 +463,10 @@ public class RedstoneListener extends CraftBookDelegateListener
 
 	/**
 	 * Registers a new non-PLC IC.
+	 * 
+	 * @param name
+	 * @param ic
+	 * @param type
 	 */
 	public void registerIC(String name, IC ic, ICType type) {
 		registerIC(name, ic, type, false);
@@ -436,6 +474,10 @@ public class RedstoneListener extends CraftBookDelegateListener
 
 	/**
 	 * Registers a new IC.
+	 * 
+	 * @param name
+	 * @param ic
+	 * @param isPlc
 	 */
 	public void registerIC(String name, IC ic, ICType type, boolean isPlc) {
 		icList.put(name, new RegisteredIC(ic, type, isPlc));

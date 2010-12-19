@@ -21,10 +21,12 @@ import com.sk89q.craftbook.Vector;
 import java.util.Comparator;
 
 /**
+ * Used to compare ComplexBlocks based on distance to a point.
  *
  * @author sk89q
  */
-public class ComplexBlockDistanceComparator<T extends ComplexBlock> implements Comparator<ComparableComplexBlock<T>> {
+public class ComplexBlockDistanceComparator<T extends ComplexBlock>
+	implements Comparator<ComparableComplexBlock<T>> {
     /**
      * Origin to compare from.
      */

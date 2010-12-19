@@ -20,11 +20,10 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * JK Flip Flop
- * A JK Flip Flop is like a SR Latch (S = J, R = K), but if
- * both J and K is high, it toggles, and it has a
- * clock.
+ * A JK flip flop.
  * 
+ * A JK Flip Flop is like a SR Latch (S = J, R = K), but if both J and K is
+ * high, it toggles, and it has a clock.
  * 
  * @author sindreij
  */

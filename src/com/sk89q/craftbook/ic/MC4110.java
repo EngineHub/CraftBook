@@ -1,7 +1,7 @@
 // $Id$
 /*
  * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ package com.sk89q.craftbook.ic;
 
 /**
  * Half subtractor
+ * 
  * @author Lymia
  */
 public class MC4110 extends BaseIC {

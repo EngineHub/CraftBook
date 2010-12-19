@@ -49,8 +49,8 @@ public class CraftBookListener extends PluginListener {
      * which some features use if some fairness is to be kept. Used block bags
      * are defined by the user.
      */
-    private static final Map<String,BlockSourceFactory> BLOCK_BAGS =
-        new HashMap<String,BlockSourceFactory>();
+    private static final Map<String,BlockBagFactory> BLOCK_BAGS =
+        new HashMap<String,BlockBagFactory>();
     
     /**
      * Used for toggle-able areas.
@@ -97,8 +97,8 @@ public class CraftBookListener extends PluginListener {
      * A list of block bag factories. The value of this list is determined by
      * the 'block-bags' configuration.
      */
-    private List<BlockSourceFactory> blockBags =
-        new ArrayList<BlockSourceFactory>();
+    private List<BlockBagFactory> blockBags =
+        new ArrayList<BlockBagFactory>();
     
     /**
      * Prevents redstone inputs from triggering.
@@ -167,7 +167,7 @@ public class CraftBookListener extends PluginListener {
     
         // Parse out block bags
         for (String s : blockBagsConfig.split(",")) {
-            BlockSourceFactory f = BLOCK_BAGS.get(s);
+            BlockBagFactory f = BLOCK_BAGS.get(s);
             
             if (f == null) {
                 logger.log(Level.WARNING, "Unknown CraftBook block source: "
@@ -175,7 +175,7 @@ public class CraftBookListener extends PluginListener {
                 
                 // Add a default block bag
                 this.blockBags.clear();
-                this.blockBags.add(new BlockSourceFactory() {
+                this.blockBags.add(new BlockBagFactory() {
                     public BlockBag createBlockSource(Vector v) {
                         return new DummyBlockSource();
                     }
@@ -488,7 +488,7 @@ public class CraftBookListener extends PluginListener {
     public BlockBag getBlockBag(Vector origin) {
         List<BlockBag> bags = new ArrayList<BlockBag>();
         
-        for (BlockSourceFactory f : blockBags) {
+        for (BlockBagFactory f : blockBags) {
             
             BlockBag b = f.createBlockSource(origin);
             if (b == null) {
@@ -498,7 +498,7 @@ public class CraftBookListener extends PluginListener {
             bags.add(b);
         }
         
-        return new CompoundBlockSource(bags);
+        return new CompoundBlockBag(bags);
     }
 
     /**

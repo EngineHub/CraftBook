@@ -20,7 +20,6 @@
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-
 import com.sk89q.craftbook.InsufficientArgumentsException;
 import com.sk89q.craftbook.Vector;
 
