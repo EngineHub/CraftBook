@@ -54,6 +54,20 @@ public class Redstone {
 	 * @return
 	 */
 	static Boolean testAnyInput(Vector pt) {
+		return testAnyInput(pt, true, false);
+	}
+
+	/**
+	 * Attempts to detect redstone input. If there are many inputs to one
+	 * block, only one of the inputs has to be high.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	static Boolean testAnyInput(Vector pt, boolean checkWiresAbove,
+			boolean checkOnlyHorizontal) {
 	    Boolean result = null;
 	    Boolean temp = null;
 	
@@ -61,28 +75,43 @@ public class Redstone {
 	    int y = pt.getBlockY();
 	    int z = pt.getBlockZ();
 	
-	    // Check block above
-	    int above = CraftBook.getBlockID(x, y + 1, z);
-	    temp = Redstone.isHigh(new Vector(x, y + 1, z), above, true);
-	    if (temp != null) {
-	        if (temp == true) {
-	            return true;
-	        } else {
-	            result = false;
-	        }
+	    if (checkWiresAbove) {
+		    temp = testAnyInput(new Vector(x, y + 1, z), false, true);
+		    if (temp != null) {
+		        if (temp == true) {
+		            return true;
+		        } else {
+		            result = false;
+		        }
+		    }
+	    }
+	    
+	    if (!checkOnlyHorizontal) {
+		    // Check block above
+		    int above = CraftBook.getBlockID(x, y + 1, z);
+		    temp = Redstone.isHigh(new Vector(x, y + 1, z), above, true);
+		    if (temp != null) {
+		        if (temp == true) {
+		            return true;
+		        } else {
+		            result = false;
+		        }
+		    }
 	    }
 	
-	    // Check block below
-	    int below = CraftBook.getBlockID(x, y - 1, z);
-	    temp = Redstone.isHigh(new Vector(x, y - 1, z), below, true);
-	    if (temp != null) {
-	        if (temp == true) {
-	            return true;
-	        } else {
-	            result = false;
-	        }
+	    if (!checkOnlyHorizontal) {
+		    // Check block below
+		    int below = CraftBook.getBlockID(x, y - 1, z);
+		    temp = Redstone.isHigh(new Vector(x, y - 1, z), below, true);
+		    if (temp != null) {
+		        if (temp == true) {
+		            return true;
+		        } else {
+		            result = false;
+		        }
+		    }
 	    }
-	
+		
 	    int north = CraftBook.getBlockID(x - 1, y, z);
 	    int south = CraftBook.getBlockID(x + 1, y, z);
 	    int west = CraftBook.getBlockID(x, y, z + 1);

@@ -98,6 +98,11 @@ public class VehicleListener extends CraftBookDelegateListener {
     public void onDirectWireInput(Vector pt, boolean isOn, Vector changed) {
         int type = CraftBook.getBlockID(pt);
         
+        if (CraftBook.getBlockID(pt) == BlockType.MINECART_TRACKS) {
+        	onDirectWireInput(pt.subtract(0, 1, 0), isOn, changed);
+        	return;
+        }
+        
         // Minecart dispenser
         if (minecartDispensers && type == BlockType.CHEST
                 && (CraftBook.getBlockID(pt.add(0, -2, 0)) == BlockType.SIGN_POST
