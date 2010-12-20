@@ -2,7 +2,9 @@ dev:
 - Added MC3040 (Multiplexer), MC4000 (Full Adder), MC4010 (Half Adder), MC4100
     (Full Subtractor), and MC4110 (Half Subtractor), MC3032 (JK negative
     edge-triggered Flip Flop), MC3101 (Counter), MC4200 (Dispatcher), MC1202 
-    (Chest Dispenser)
+    (Chest Dispenser), MC0020 (Self-triggering random bit), MC0111 (Self-
+    triggering reciever), MC0230 (Self-triggering day check)
+- Added support for self-triggering ICs. No more clocks on recievers!
 - Added MC5001, a variant of MC5000 using the 3 input, 3 output layout
 - Improved block source system for bridges, gates, etc.
 - Added support for custom ICs using existing PLC languages.

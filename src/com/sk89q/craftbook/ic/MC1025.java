@@ -1,3 +1,4 @@
+package com.sk89q.craftbook.ic;
 // $Id$
 /*
  * CraftBook
@@ -17,22 +18,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.ic.BaseIC;
-import com.sk89q.craftbook.ic.ChipState;
 
 /**
- * Takes in a clock input, and outputs whether the time is day or night.
+ * 1-bit number based on modulus of server time.
  *
  * @author Shaun (sturmeh)
  */
-public class MC1230 extends BaseIC {
+public class MC1025 extends BaseIC {
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
-        return "IS IT DAY";
+        return "REL TIME MOD 2";
     }
 
     /**
@@ -41,11 +40,18 @@ public class MC1230 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        Long specific = etc.getServer().getRelativeTime();
+        if (chip.getIn(1).is())
+                chip.getOut(1).set(isServerTimeOdd(chip));
+    }
 
-        if (specific < 13000l)
-            chip.getOut(1).set(true);
-        else 
-            chip.getOut(1).set(false);
+    /**
+     * Returns true if the relative time is odd.
+     * 
+     * @return
+     */
+    private boolean isServerTimeOdd(ChipState chip) {
+        long time = chip.getTime() % 2;
+        if (time < 0) time += 2;
+        return (time == 1);
     }
 }
