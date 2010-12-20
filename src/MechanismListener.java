@@ -91,6 +91,13 @@ public class MechanismListener extends CraftBookDelegateListener {
         enableAmmeter = properties.getBoolean("ammeter", true);
         redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
 
+        loadCauldron();
+    }
+    
+    /**
+     * Load the cauldron.
+     */
+    private void loadCauldron() {
 		if (properties.getBoolean("cauldron-enable", true)) {
 			try {
 				CauldronCookbook recipes = readCauldronRecipes("cauldron-recipes.txt");
@@ -110,6 +117,22 @@ public class MechanismListener extends CraftBookDelegateListener {
 		} else {
 			cauldronModule = null;
 		}
+    }
+
+    /**
+     * Called before the console command is parsed. Return true if you don't
+     * want the server command to be parsed by the server.
+     * 
+     * @param split
+     * @return false if you want the command to be parsed.
+     */
+    public boolean onConsoleCommand(String[] split) {
+    	if (split[0].equalsIgnoreCase("reload-cauldron")) {
+    		loadCauldron();
+    		return true;
+    	}
+    	
+        return false;
     }
 
     /**
