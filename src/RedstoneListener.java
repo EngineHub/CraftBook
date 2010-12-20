@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
+
 import lymia.customic.*;
 import lymia.perlstone.Perlstone_1_0;
 
@@ -120,6 +121,7 @@ public class RedstoneListener extends CraftBookDelegateListener
             internalRegisterIC("MC0020", new MC0020(), ICType.ZISO);
             internalRegisterIC("MC0111", new MC1111(), ICType.ZISO);
             internalRegisterIC("MC0230", new MC1230(), ICType.ZISO);
+            internalRegisterIC("MC0420", new MC1420(), ICType.ZISO);
 	    }
         
 		internalRegisterIC("MC1000", new MC1000(), ICType.SISO);
@@ -137,6 +139,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 		internalRegisterIC("MC1206", new MC1206(), ICType.SISO);
 		internalRegisterIC("MC1230", new MC1230(), ICType.SISO);
 		internalRegisterIC("MC1231", new MC1231(), ICType.SISO);
+        internalRegisterIC("MC1420", new MC1420(), ICType.SISO);
 		
 		internalRegisterIC("MC2020", new MC2020(), ICType.SI3O);
 		

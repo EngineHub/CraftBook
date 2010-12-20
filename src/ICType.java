@@ -43,7 +43,7 @@ public enum ICType {
 			Signal[] out = new Signal[1];
 			out[0] = new Signal(Redstone.isHighBinary(outputVec, false));
 
-			ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			zisoIC.think(chip);
 
@@ -78,7 +78,7 @@ public enum ICType {
 			Signal[] out = new Signal[1];
 			out[0] = new Signal(Redstone.getOutput(outputVec));
 
-			ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			sisoIC.think(chip);
 
@@ -114,7 +114,7 @@ public enum ICType {
 			out[1] = new Signal(Redstone.getOutput(output2Vec));
 			out[2] = new Signal(Redstone.getOutput(output3Vec));
 
-			ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			// The most important part...
 			si3oIC.think(chip);
@@ -154,7 +154,7 @@ public enum ICType {
 			Signal[] out = new Signal[1];
 			out[0] = new Signal(Redstone.getOutput(outputVec));
 
-			ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			// The most important part...
 			_3isoIC.think(chip);
@@ -199,7 +199,7 @@ public enum ICType {
 			out[1] = new Signal(Redstone.getOutput(out1));
 			out[2] = new Signal(Redstone.getOutput(out2));
 
-			ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			// The most important part...
 			_3i3oIC.think(chip);
@@ -261,7 +261,7 @@ public enum ICType {
 						changedRedstoneInput.equals(in2));
 			}
 
-			ChipState chip = new ChipState(pt, backVec, in, out, signText);
+			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			// The most important part...
 			vivoIC.think(chip);
