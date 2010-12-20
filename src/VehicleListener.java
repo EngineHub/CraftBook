@@ -513,13 +513,62 @@ public class VehicleListener extends CraftBookDelegateListener {
             int under = CraftBook.getBlockID(blockX, blockY - 1, blockZ);
 
             if (minecartControlBlocks) {
-                if (under == BlockType.OBSIDIAN) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                if (under == minecartStationBlock) {
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test != null) {
                         if (!test) {
                             minecart.setMotion(0, 0, 0);
                             return;
+                        } else {
+                            ComplexBlock cblock = etc.getServer().getComplexBlock(
+                            		blockX, blockY - 2, blockZ);
+
+                            // Maybe it's the sign directly below
+                            if (cblock == null || !(cblock instanceof Sign)) {
+                                cblock = etc.getServer().getComplexBlock(
+                                		blockX, blockY - 3, blockZ);
+                            }
+
+                            if (cblock != null && cblock instanceof Sign) {
+                                Sign sign = (Sign)cblock;
+                                String line2 = sign.getText(1);
+
+                                if (!line2.equalsIgnoreCase("[Station]")) {
+                                    return;
+                                }
+
+                                Vector motion  = null;
+                                int data = CraftBook.getBlockData(
+                                        blockX, cblock.getY(), blockZ);
+                                
+                                if (data == 0x0) {
+                                    motion = new Vector(0, 0, -0.3);
+                                } else if (data == 0x4) {
+                                    motion = new Vector(0.3, 0, 0);
+                                } else if (data == 0x8) {
+                                    motion = new Vector(0, 0, 0.3);
+                                } else if (data == 0xC) {
+                                    motion = new Vector(-0.3, 0, 0);
+                                }
+
+                                if (motion != null) {
+	                                if (!MathUtil.isSameSign(minecart.getMotionX(), motion.getX())
+	                                		|| minecart.getMotionX() < motion.getX()) {
+	                                	minecart.setMotionX(motion.getX());
+	                                }
+	                                if (!MathUtil.isSameSign(minecart.getMotionY(), motion.getY())
+	                                		|| minecart.getMotionY() < motion.getY()) {
+	                                	minecart.setMotionY(motion.getY());
+	                                }
+	                                if (!MathUtil.isSameSign(minecart.getMotionZ(), motion.getZ())
+	                                		|| minecart.getMotionZ() < motion.getZ()) {
+	                                	minecart.setMotionZ(motion.getZ());
+	                                }
+	                                
+	                                return;
+                                }
+                            }
                         }
                     }
                 }
