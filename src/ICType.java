@@ -53,10 +53,11 @@ public enum ICType {
 				if (id == CraftBook.getBlockID(outputVec)) {
 					return;
 				}
+				int metaData = CraftBook.getBlockData(outputVec);
 				CraftBook.setBlockID(outputVec, id);
 				etc.getServer().updateBlockPhysics(outputVec.getBlockX(),
 						outputVec.getBlockY(), outputVec.getBlockZ(),
-						CraftBook.getBlockData(outputVec));
+						metaData);
 			}
 		}
 	},

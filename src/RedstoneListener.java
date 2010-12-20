@@ -427,7 +427,7 @@ public class RedstoneListener extends CraftBookDelegateListener
             if(!ic.type.isSelfTriggered) return;
 
             bv.add(v);
-        } else bv.remove(v);
+        } 
     }
     public void onRedstoneTorchNeighborChange(Block b) {
         onRedstoneTorchAdded(b);
