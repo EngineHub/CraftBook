@@ -77,6 +77,11 @@
 
   <!-- Run JFlex -->
   <target name="run-jflex">
+    <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
+      <classpath>
+        <pathelement location="JFlex.jar"/>
+      </classpath>
+    </taskdef>
     <!-- WARNING: Hardcoded. JFlex's Ant task is horrible. -->
     <jflex file="src/lymia/customic/CustomICScanner.lex" destdir="${src.dir}"/>
   </target>
@@ -96,10 +101,4 @@
       </condition>
     </sequential>
   </target>-->
-  
-  <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
-    <classpath>
-      <pathelement location="JFlex.jar"/>
-    </classpath>
-  </taskdef>
 </project>
