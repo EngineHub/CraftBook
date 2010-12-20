@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
-
 import lymia.customic.*;
 import lymia.perlstone.Perlstone_1_0;
 
@@ -54,6 +53,7 @@ public class RedstoneListener extends CraftBookDelegateListener
     
     private boolean checkCreatePermissions = false;
     private boolean redstonePumpkins = true;
+    private boolean redstoneNetherstone = false;
     private boolean redstoneICs = true;
     private boolean redstonePLCs = true;
     private boolean redstonePLCsRequirePermission = true;
@@ -82,6 +82,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 				"check-create-permissions", false);
 
 		redstonePumpkins = properties.getBoolean("redstone-pumpkins", true);
+		redstoneNetherstone = properties.getBoolean("redstone-netherstone", false);
 		redstoneICs = properties.getBoolean("redstone-ics", true);
 		redstonePLCs = properties.getBoolean("redstone-plcs", true);
 		redstonePLCsRequirePermission = properties.getBoolean(
@@ -294,6 +295,17 @@ public class RedstoneListener extends CraftBookDelegateListener
                 CraftBook.setBlockID(pt, BlockType.JACKOLANTERN);
             } else if (useOn != null) {
                 CraftBook.setBlockID(pt, BlockType.PUMPKIN);
+            }
+        // Redstone netherstone
+        } else if (redstoneNetherstone
+                && (type == BlockType.NETHERSTONE)) {
+            Boolean useOn = Redstone.testAnyInput(pt);
+            Vector above = pt.add(0, 1, 0);
+
+            if (useOn != null && useOn && CraftBook.getBlockID(above) == 0) {
+                CraftBook.setBlockID(above, BlockType.FIRE);
+            } else if (useOn != null && CraftBook.getBlockID(above) == BlockType.FIRE) {
+                CraftBook.setBlockID(above, 0);
             }
         } else if (type == BlockType.WALL_SIGN
                 || type == BlockType.SIGN_POST) {
