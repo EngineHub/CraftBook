@@ -673,9 +673,14 @@ public class MechanismListener extends CraftBookDelegateListener {
                     String name = parts[0];
                     List<Integer> ingredients = parseCauldronItems(parts[1]);
                     List<Integer> results = parseCauldronItems(parts[2]);
+                    String[] groups = null;
+                    
+                    if (parts.length >= 4 && parts[3].trim().length() > 0) {
+                    	groups = parts[3].split(",");
+                    }
                     
                     CauldronRecipe recipe =
-                            new CauldronRecipe(name, ingredients, results);
+                            new CauldronRecipe(name, ingredients, results, groups);
                     cookbook.add(recipe);
                 }
             }
