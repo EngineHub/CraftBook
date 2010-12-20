@@ -46,6 +46,10 @@ public final class CauldronRecipe {
      * List of resulting items or blocks.
      */
     private final List<Integer> results;
+    /**
+     * List of groups that can use this recipe. This may be null.
+     */
+    private final String[] groups;
 
     /**
      * Construct the instance. The list will be sorted.
@@ -53,10 +57,12 @@ public final class CauldronRecipe {
      * @param ingredients
      * @param results
      */
-    public CauldronRecipe(String name, List<Integer> ingredients, List<Integer> results) {
+    public CauldronRecipe(String name, List<Integer> ingredients,
+    		List<Integer> results, String[] groups) {
         this.name = name;
         this.ingredients = Collections.unmodifiableList(ingredients);
         this.results = Collections.unmodifiableList(results);
+        this.groups = groups;
 
         // Make a list of required ingredients by item ID
         for (Integer id : ingredients) {
@@ -83,6 +89,13 @@ public final class CauldronRecipe {
     }
 
     /**
+	 * @return the groups
+	 */
+	public String[] getGroups() {
+		return groups;
+	}
+
+	/**
      * Checks to see if all the ingredients are met.
      *
      * @param check

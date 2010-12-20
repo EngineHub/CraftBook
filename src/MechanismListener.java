@@ -91,6 +91,13 @@ public class MechanismListener extends CraftBookDelegateListener {
         enableAmmeter = properties.getBoolean("ammeter", true);
         redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
 
+        loadCauldron();
+    }
+    
+    /**
+     * Load the cauldron.
+     */
+    private void loadCauldron() {
 		if (properties.getBoolean("cauldron-enable", true)) {
 			try {
 				CauldronCookbook recipes = readCauldronRecipes("cauldron-recipes.txt");
@@ -110,6 +117,22 @@ public class MechanismListener extends CraftBookDelegateListener {
 		} else {
 			cauldronModule = null;
 		}
+    }
+
+    /**
+     * Called before the console command is parsed. Return true if you don't
+     * want the server command to be parsed by the server.
+     * 
+     * @param split
+     * @return false if you want the command to be parsed.
+     */
+    public boolean onConsoleCommand(String[] split) {
+    	if (split[0].equalsIgnoreCase("reload-cauldron")) {
+    		loadCauldron();
+    		return true;
+    	}
+    	
+        return false;
     }
 
     /**
@@ -673,9 +696,14 @@ public class MechanismListener extends CraftBookDelegateListener {
                     String name = parts[0];
                     List<Integer> ingredients = parseCauldronItems(parts[1]);
                     List<Integer> results = parseCauldronItems(parts[2]);
+                    String[] groups = null;
+                    
+                    if (parts.length >= 4 && parts[3].trim().length() > 0) {
+                    	groups = parts[3].split(",");
+                    }
                     
                     CauldronRecipe recipe =
-                            new CauldronRecipe(name, ingredients, results);
+                            new CauldronRecipe(name, ingredients, results, groups);
                     cookbook.add(recipe);
                 }
             }

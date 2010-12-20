@@ -101,6 +101,7 @@ public class CraftBook extends Plugin {
         registerHook(mechanisms, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "SERVERCOMMAND", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(mechanisms);
         
         registerHook(redstone, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);

@@ -137,6 +137,24 @@ public class Cauldron {
             CauldronRecipe recipe = recipes.find(contents);
 
             if (recipe != null) {
+            	String[] groups = recipe.getGroups();
+            	
+            	if (groups != null) {
+            		boolean found = false;
+            		
+            		for (String group : groups) {
+            			if (player.isInGroup(group)) {
+            				found = true;
+            				break;
+            			}
+            		}
+            		
+            		if (!found) {
+                        player.sendMessage(Colors.Red + "Doesn't seem as if you have the ability...");
+                        return;
+            		}
+            	}
+            	
                 player.sendMessage(Colors.Gold + "In a poof of smoke, you've made "
                         + recipe.getName() + ".");
 

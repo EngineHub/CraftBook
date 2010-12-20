@@ -54,11 +54,14 @@ public class MC1200 extends BaseIC {
      */
     public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
+        String rider = sign.getLine4();
 
         if (id.length() == 0) {
             return "Specify a mob type on the third line.";
         } else if (!Mob.isValid(id)) {
-            return "Not a valid mob type: " + sign.getLine3() + ".";
+            return "Not a valid mob type: " + id + ".";
+        } else if (rider.length() == 0 || !Mob.isValid(rider)) {
+            return "Not a valid rider type: " + rider + ".";
         }
 
         return null;
@@ -72,6 +75,8 @@ public class MC1200 extends BaseIC {
     public void think(ChipState chip) {
         if (chip.getIn(1).is()) {
             String id = chip.getText().getLine3();
+            String rider = chip.getText().getLine4();
+            
             if (Mob.isValid(id)) {
                 Vector pos = chip.getBlockPosition();
                 int maxY = Math.min(128, pos.getBlockY() + 10);
@@ -82,7 +87,11 @@ public class MC1200 extends BaseIC {
                     if (BlockType.canPassThrough(CraftBook.getBlockID(x, y, z))) {
                         Location loc = new Location(x, y, z);
                         Mob mob = new Mob(id, loc);
-                        mob.spawn();
+                        if (rider.length() != 0 && Mob.isValid(rider)) {
+                        	mob.spawn(new Mob(rider));
+                        } else {
+                        	mob.spawn();
+                        }
                         return;
                     }
                 }
