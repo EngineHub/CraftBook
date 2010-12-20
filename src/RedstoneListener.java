@@ -59,8 +59,8 @@ public class RedstoneListener extends CraftBookDelegateListener
     private boolean listICs = true;
     private boolean listUnusuableICs = true;
     
-    private boolean enableInstantICs = true;
-    private boolean restrictInstantICs = false;
+    private boolean enableSelfTriggeredICs = true;
+    private boolean restrictSelfTriggeredICs = false;
     
     /**
      * Construct the object.
@@ -89,8 +89,8 @@ public class RedstoneListener extends CraftBookDelegateListener
         listICs = properties.getBoolean("enable-ic-list",true);
         listUnusuableICs = properties.getBoolean("ic-list-show-unusuable",true);
         
-        enableInstantICs = properties.getBoolean("enable-instant-ics",true);
-        restrictInstantICs = properties.getBoolean("instant-ics-require-premission",false);
+        enableSelfTriggeredICs = properties.getBoolean("enable-self-triggered-ics",true);
+        restrictSelfTriggeredICs = properties.getBoolean("self-triggered-ics-require-premission",false);
 
 		icList.clear();
 		
@@ -116,7 +116,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 	 * Populate the IC list with the default ICs.
 	 */
 	private void addDefaultICs() {
-	    if(enableInstantICs) {
+	    if(enableSelfTriggeredICs) {
             internalRegisterIC("MC0020", new MC0020(), ICType.ZISO);
             internalRegisterIC("MC0111", new MC1111(), ICType.ZISO);
             internalRegisterIC("MC0230", new MC1230(), ICType.ZISO);
@@ -239,7 +239,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                             sign.setText(1, "[" + id + "]");
                         }
                         
-                        if(enableInstantICs && ic.type.isInstantIC) {
+                        if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
                             Vector v2 = Util.getWallSignBack(pos, 2);
                             int bid=CraftBook.getBlockID(v2);
                             if(bid==BlockType.REDSTONE_TORCH_OFF||
@@ -324,7 +324,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 					return;
 				}
 
-				if (ic.type.isInstantIC) {
+				if (ic.type.isSelfTriggered) {
 					return;
 				}
 
@@ -351,7 +351,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 	}
 
     public void onTick() {
-        if(!enableInstantICs) return;
+        if(!enableSelfTriggeredICs) return;
         
         //XXX HACK: Do this in a more proper way later.
         if(etc.getServer().getTime()%2!=0) return;
@@ -383,7 +383,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                 continue;
             }
 
-            if(!ic.type.isInstantIC) {
+            if(!ic.type.isSelfTriggered) {
                 this.bv.remove(pt);
                 continue;
             }
@@ -406,7 +406,7 @@ public class RedstoneListener extends CraftBookDelegateListener
         }
     }
     public void onRedstoneTorchAdded(Block b) {
-        if(!enableInstantICs) return;
+        if(!enableSelfTriggeredICs) return;
         
         BlockVector v = new BlockVector(b.getX(),b.getY(),b.getZ());
         BlockVector v2 = Util.getTorchSignLocation(v);
@@ -424,7 +424,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                 return;
             }
 
-            if(!ic.type.isInstantIC) return;
+            if(!ic.type.isSelfTriggered) return;
 
             bv.add(v);
         } else bv.remove(v);
@@ -433,7 +433,7 @@ public class RedstoneListener extends CraftBookDelegateListener
         onRedstoneTorchAdded(b);
     }
     public boolean onRedstoneTorchUpdate(Block b, boolean isOn) {
-        if(!enableInstantICs) return false;
+        if(!enableSelfTriggeredICs) return false;
         
         return bv.contains(new BlockVector(b.getX(),b.getY(),b.getZ()));
     }
@@ -500,14 +500,14 @@ public class RedstoneListener extends CraftBookDelegateListener
 		for (String ic : icNameList) {
 			RegisteredIC ric = icList.get(ic);
 			boolean canUse = canCreateIC(p, ic, ric);
-			boolean instant = ric.type.isInstantIC;
+			boolean auto = ric.type.isSelfTriggered;
 			if (listUnusuableICs) {
 				strings.add(Colors.Rose + ic + " (" + ric.type.name + ")"
-						+ (instant ? " (INSTANT)" : "") + ": "
+						+ (auto ? " (SELF-TRIGGERED)" : "") + ": "
 						+ ric.ic.getTitle() + (canUse ? "" : " (RESTRICTED)"));
 			} else if (canUse) {
 				strings.add(Colors.Rose + ic + " (" + ric.type.name + ")"
-						+ (instant ? " (INSTANT)" : "") + ": "
+						+ (auto ? " (SELF-TRIGGERED)" : "") + ": "
 						+ ric.ic.getTitle());
 			}
 		}
@@ -525,7 +525,7 @@ public class RedstoneListener extends CraftBookDelegateListener
     private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
         return (!ic.ic.requiresPermission()
         		&& !(ic.isPlc && redstonePLCsRequirePermission)
-                && !(ic.type.isInstantIC && restrictInstantICs))
+                && !(ic.type.isSelfTriggered && restrictSelfTriggeredICs))
         		|| player.canUseCommand("/allic")
                 || player.canUseCommand("/" + id.toLowerCase());
     }
@@ -543,7 +543,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 			throw new CustomICException("IC already defined");
 		}
 		ICType icType = getICType(type);
-		if(!enableInstantICs && icType.isInstantIC) return;
+		if(!enableSelfTriggeredICs && icType.isSelfTriggered) return;
 		
 		registerIC(name, ic, icType, false);
 	}

@@ -281,16 +281,16 @@ public enum ICType {
 	};
 
 	public final String name;
-	public final boolean isInstantIC;
+	public final boolean isSelfTriggered;
 
 	private ICType(String name) {
 		this.name = name;
-		this.isInstantIC = false;
+		this.isSelfTriggered = false;
 	}
 
 	private ICType(String name, boolean torchUpdate) {
 		this.name = name;
-		this.isInstantIC = torchUpdate;
+		this.isSelfTriggered = torchUpdate;
 	}
 
 	void think(Vector v, Vector c, SignText t, Sign s, IC i, TickDelayer r) {
