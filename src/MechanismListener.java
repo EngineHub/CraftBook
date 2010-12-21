@@ -603,8 +603,7 @@ public class MechanismListener extends CraftBookDelegateListener {
         }
 
         // Discriminate against attempts that would actually place blocks
-        boolean isPlacingBlock = blockPlaced.getType() != -1
-                && blockPlaced.getType() <= 256;
+        boolean isPlacingBlock = blockPlaced==null;
 
         int plyX = (int)Math.floor(player.getLocation().x);
         int plyY = (int)Math.floor(player.getLocation().y);

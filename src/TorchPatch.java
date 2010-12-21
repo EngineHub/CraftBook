@@ -23,14 +23,14 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TorchPatch extends cl {
+public class TorchPatch extends cu {
 	/**
 	 * Do not use directly.
 	 */
 	@Deprecated
 	public static final CopyOnWriteArrayList<ExtensionListener> LISTENERS = new CopyOnWriteArrayList<ExtensionListener>();
 	
-	private static Class<cl> CLASS = cl.class;
+	private static Class<cu> CLASS = cu.class;
 	private static Field[] FIELDS;
 	
 	private static int TYPE_ON = Block.Type.RedstoneTorchOn.getType();
@@ -38,7 +38,7 @@ public class TorchPatch extends cl {
 	
 	private boolean isOn;
 	
-	private gc old;
+	private gu old;
 	
 	static {
 		ArrayList<Field> fields = new ArrayList<Field>();
@@ -49,7 +49,7 @@ public class TorchPatch extends cl {
 		FIELDS = fields.toArray(new Field[0]);
 	}
 	
-	public TorchPatch(int texture, boolean isOn, gc old) {
+	public TorchPatch(int texture, boolean isOn, gu old) {
 		super(nullId(isOn), texture, isOn);
 		
 		this.old = old;
@@ -69,7 +69,7 @@ public class TorchPatch extends cl {
 	}
 	private static int nullId(boolean isOn) {
 		int id = isOn?TYPE_ON:TYPE_OFF;
-		gc.m[id] = null;
+		gu.m[id] = null;
 		return id;
 	}
 
@@ -78,7 +78,7 @@ public class TorchPatch extends cl {
      * Should not be called.
      */
     @Deprecated
-    public void a(eq world, int x, int y, int z, Random r) {
+    public void a(ff world, int x, int y, int z, Random r) {
         ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
         for(int i=0;i<tasks.length;i++) if(tasks[i].onRedstoneTorchUpdate(new Block(bh,x,y,z),isOn)) return;
         super.a(world,x,y,z,r);
@@ -88,7 +88,7 @@ public class TorchPatch extends cl {
      * Should not be called.
      */
     @Deprecated
-    public void b(eq world, int x, int y, int z, int unk) {
+    public void b(ff world, int x, int y, int z, int unk) {
         ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
         for(int i=0;i<tasks.length;i++) tasks[i].onRedstoneTorchNeighborChange(new Block(bh,x,y,z));
         super.b(world,x,y,z,unk);
@@ -98,7 +98,7 @@ public class TorchPatch extends cl {
 	 * Should not be called.
 	 */
 	@Deprecated
-	public void e(eq world, int x, int y, int z) {
+	public void e(ff world, int x, int y, int z) {
 		ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
 		for(int i=0;i<tasks.length;i++) tasks[i].onRedstoneTorchAdded(new Block(bh,x,y,z));
 		super.e(world,x,y,z);
@@ -109,8 +109,8 @@ public class TorchPatch extends cl {
 	 * Call before using addListener or getListenerList().
 	 */
 	public static void applyPatch() {
-		new TorchPatch(gc.m[TYPE_ON].bg,true,gc.m[TYPE_ON]);
-		new TorchPatch(gc.m[TYPE_OFF].bg,false,gc.m[TYPE_OFF]);
+		new TorchPatch(gu.m[TYPE_ON].bg,true,gu.m[TYPE_ON]);
+		new TorchPatch(gu.m[TYPE_OFF].bg,false,gu.m[TYPE_OFF]);
 	}
     /**
      * Removes the patch if it is applied.
@@ -120,7 +120,7 @@ public class TorchPatch extends cl {
         remove(TYPE_OFF);
     }
     private static void remove(int i) {
-        if(gc.m[i] instanceof TorchPatch) gc.m[i] = ((TorchPatch)gc.m[i]).old;
+        if(gu.m[i] instanceof TorchPatch) gu.m[i] = ((TorchPatch)gu.m[i]).old;
     }
 	
 	/**
@@ -135,7 +135,7 @@ public class TorchPatch extends cl {
 	@SuppressWarnings("unchecked")
 	public static CopyOnWriteArrayList<ExtensionListener> getListenerList() {
 		try {
-			return (CopyOnWriteArrayList<ExtensionListener>) gc.m[TYPE_ON].getClass().getField("LISTENERS").get(null);
+			return (CopyOnWriteArrayList<ExtensionListener>) gu.m[TYPE_ON].getClass().getField("LISTENERS").get(null);
 		} catch (SecurityException e) {
 			throw new RuntimeException("unexpected error: cannot use reflection");
 		} catch (NoSuchFieldException e) {

@@ -26,21 +26,21 @@ import net.minecraft.server.MinecraftServer;
  * 
  * @author Lymia
  */
-public class TickPatch extends gv {
+public class TickPatch extends ho {
 	@SuppressWarnings("unused")
-	private static final Object GV_PATCH_APPLIED = null;
+	private static final Object HO_PATCH_APPLIED = null;
 	/**
 	 * Do not use directly.
 	 */
 	@Deprecated
 	public static final CopyOnWriteArrayList<Runnable> TASK_LIST = new CopyOnWriteArrayList<Runnable>();
 	
-	private static Class<gv> CLASS = gv.class;
+	private static Class<ho> CLASS = ho.class;
 	private static Field[] FIELDS = CLASS.getDeclaredFields();
 	
-	private TickPatch(MinecraftServer arg0, gv g) {
+	private TickPatch(MinecraftServer arg0, ho g) {
 		super(arg0);
-		if(g.getClass()!=CLASS) throw new RuntimeException("unexpected type for gv instance");
+		if(g.getClass()!=CLASS) throw new RuntimeException("unexpected type for ho instance");
 		for(Field f:FIELDS) try {
 			if(Modifier.isStatic(f.getModifiers())) continue;
 			f.setAccessible(true);
@@ -71,7 +71,7 @@ public class TickPatch extends gv {
 	public static void applyPatch() {
 		MinecraftServer s = etc.getServer().getMCServer();
 		try {
-			s.k.getClass().getDeclaredField("GV_PATCH_APPLIED");
+			s.k.getClass().getDeclaredField("HO_PATCH_APPLIED");
 		} catch (SecurityException e) {
 			throw new RuntimeException("unexpected error: cannot use reflection");
 		} catch (NoSuchFieldException e) {
