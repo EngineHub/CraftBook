@@ -758,6 +758,154 @@ public class VehicleListener extends CraftBookDelegateListener {
 
         return false;
     }
+
+    /**
+     * Called when someone places a block. Return true to prevent the placement.
+     * 
+     * @param player
+     * @param blockPlaced
+     * @param blockClicked
+     * @param itemInHand
+     * @return true if you want to undo the block placement
+     */
+    public boolean onBlockPlace(Player player, Block blockPlaced,
+    		Block blockClicked, Item itemInHand) {
+        
+    	if (blockPlaced.getType() == BlockType.MINECART_TRACKS) {
+    		int under = CraftBook.getBlockID(blockPlaced.getX(),
+    				blockPlaced.getY() - 1, blockPlaced.getZ());
+    		
+    		if (minecartControlBlocks && under == minecartStationBlock) {
+    			Sign sign = getControllerSign(blockPlaced.getX(),
+    				blockPlaced.getY() - 1, blockPlaced.getZ(), "[Station]");
+    			Vector pt = new Vector(blockPlaced.getX(),
+    				blockPlaced.getY() - 1, blockPlaced.getZ());
+    			
+    			boolean needsRedstone = Redstone.testAnyInput(pt) == null;
+
+    			if (sign == null && needsRedstone) {
+    				player.sendMessage(Colors.Gold
+    						+ "Two things to do: Wire the block and place a [Station] sign.");
+    			} else if (sign == null) {
+    				player.sendMessage(Colors.Rose
+    						+ "Place a [Station] sign 1-2 blocks underneath.");
+    			} else if (needsRedstone) {
+    				player.sendMessage(Colors.Rose
+    						+ "To make the station work, wire it up with redstone.");
+    			} else {
+    				player.sendMessage(Colors.Gold
+    						+ "Minecart station created.");
+    			}
+    		} else if (minecartControlBlocks && under == minecart25xBoostBlock) {
+    			player.sendMessage(Colors.Gold + "Minecart boost block created.");
+            } else if (minecartControlBlocks && under == minecart100xBoostBlock) {
+    			player.sendMessage(Colors.Gold + "Minecart boost block created.");
+            } else if (minecartControlBlocks && under == minecart50xSlowBlock) {
+    			player.sendMessage(Colors.Gold + "Minecart brake block created.");
+            } else if (minecartControlBlocks && under == minecart20xSlowBlock) {
+    			player.sendMessage(Colors.Gold + "Minecart brake block created.");
+            } else if (minecartControlBlocks && under == minecartReverseBlock) {
+    			player.sendMessage(Colors.Gold + "Minecart reverse block created.");
+            } else if (minecartControlBlocks && under == minecartSortBlock) {
+    			Sign sign = getControllerSign(blockPlaced.getX(),
+        				blockPlaced.getY() - 1, blockPlaced.getZ(), "[Sort]");
+    			Vector pt = new Vector(blockPlaced.getX(),
+    				blockPlaced.getY() - 1, blockPlaced.getZ());
+
+    			if (sign == null) {
+    				player.sendMessage(Colors.Rose
+    						+ "A [Sort] sign is still needed.");
+    			} else {
+    				player.sendMessage(Colors.Gold
+    						+ "Minecart sort block created.");
+    			}
+            }
+    	}
+    	
+    	return false;
+    }
+
+    /**
+     * Called when either a sign, chest or furnace is changed.
+     *
+     * @param player player who changed it
+     * @param cblock complex block that changed
+     * @return true if you want any changes to be reverted
+     */
+    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
+        if (cblock instanceof Sign) {
+            Sign sign = (Sign)cblock;
+            int type = CraftBook.getBlockID(
+            		cblock.getX(), cblock.getY(), cblock.getZ());
+
+            String line1 = sign.getText(0);
+            String line2 = sign.getText(1);
+
+            // Station
+            if (line2.equalsIgnoreCase("[Station]")) {
+            	listener.informUser(player);
+                
+                sign.setText(1, "[Station]");
+            	sign.update();
+            	
+            	if (minecartControlBlocks) {
+                    int data = CraftBook.getBlockData(
+                    		cblock.getX(), cblock.getY(), cblock.getZ());
+
+                    if (type == BlockType.WALL_SIGN) {
+                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
+	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+	                    return true;
+					}
+					
+                	player.sendMessage(Colors.Gold + "Station sign detected.");
+                } else {
+                	player.sendMessage(Colors.Rose
+                			+ "Minecart control blocks are disabled on this server.");
+                }
+            // Sort
+            } else if (line2.equalsIgnoreCase("[Sort]")) {
+            	listener.informUser(player);
+                
+                sign.setText(1, "[Sort]");
+            	sign.update();
+            	
+            	if (minecartControlBlocks) {
+                    int data = CraftBook.getBlockData(
+                    		cblock.getX(), cblock.getY(), cblock.getZ());
+
+                    if (type == BlockType.WALL_SIGN) {
+                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
+	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+	                    return true;
+					}
+					
+                	player.sendMessage(Colors.Gold + "Sort sign detected.");
+                } else {
+                	player.sendMessage(Colors.Rose
+                			+ "Minecart control blocks are disabled on this server.");
+                }
+            // Print
+            } else if (line1.equalsIgnoreCase("[Print]")) {
+            	listener.informUser(player);
+                
+                sign.setText(0, "[Print]");
+            	sign.update();
+        	
+            	player.sendMessage(Colors.Gold + "Message print block detected.");
+            }
+        }
+        
+        return false;
+    }
     
     /**
      * Get the controller sign for a block type. The coordinates provided

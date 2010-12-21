@@ -91,8 +91,6 @@ public class CraftBook extends Plugin {
     public void initialize() {
         TickPatch.applyPatch();
 
-        registerHook(listener, "BLOCK_CREATED", PluginListener.Priority.MEDIUM);
-        registerHook(listener, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
         registerHook(listener, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(listener, "DISCONNECT", PluginListener.Priority.MEDIUM);
         registerHook(listener, "REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
@@ -109,6 +107,8 @@ public class CraftBook extends Plugin {
         listener.registerDelegate(redstone);
 
         registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "BLOCK_PLACE", PluginListener.Priority.LOW);
         registerHook(vehicle, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);

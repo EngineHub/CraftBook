@@ -485,18 +485,17 @@ public class MechanismListener extends CraftBookDelegateListener {
                 sign.setText(1, "[Bridge]");
             	sign.update();
 
-            	
             	listener.informUser(player);
 
-            	if (type == BlockType.WALL_SIGN) {
-                	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-            	} else if (useBridges) {
+            	if (useBridges) {
                     int data = CraftBook.getBlockData(
                     		cblock.getX(), cblock.getY(), cblock.getZ());
-
-					if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+                    
+                    if (type == BlockType.WALL_SIGN) {
+                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                        return true;
+                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
 	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
 	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
 	                    return true;
