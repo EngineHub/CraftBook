@@ -26,6 +26,38 @@ import com.sk89q.craftbook.*;
  */
 public class Elevator {
     /**
+     * Returns whether this lift has a destination.
+     * 
+     * @param pt
+     * @param up
+     */
+    public static boolean hasLinkedLift(Vector pt, boolean up) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+
+        if (up) {
+            // Need to traverse up to find the next sign to teleport to
+            for (int y1 = y + 1; y1 <= 127; y1++) {
+                if (CraftBook.getBlockID(x, y1, z) == BlockType.WALL_SIGN
+                        && getSign(new Vector(x, y1, z), up) != null) {
+                    return true;
+                }
+            }
+        } else {
+            // Need to traverse downwards to find a sign below
+            for (int y1 = y - 1; y1 >= 1; y1--) {
+                if (CraftBook.getBlockID(x, y1, z) == BlockType.WALL_SIGN
+                        && getSign(new Vector(x, y1, z), up) != null) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Attempt to lift a player up.
      * 
      * @param player
@@ -57,6 +89,38 @@ public class Elevator {
     }
 
     /**
+     * Get a corresponding lift sign or null.
+     * 
+     * @param player
+     * @param pt
+     * @param up
+     * @return
+     */
+    private static Sign getSign(Vector pt, boolean up) {
+        int x = pt.getBlockX();
+        int y1 = pt.getBlockY();
+        int z = pt.getBlockZ();
+
+        ComplexBlock cBlock = etc.getServer().getComplexBlock(x, y1, z);
+
+        // This should not happen, but we need to check regardless
+        if (!(cBlock instanceof Sign)) {
+            return null;
+        }
+        
+        Sign sign = (Sign)cBlock;
+
+        // Found our stop?
+        if (sign.getText(1).equalsIgnoreCase("[Lift Up]")
+                || sign.getText(1).equalsIgnoreCase("[Lift Down]")
+                || sign.getText(1).equalsIgnoreCase("[Lift]")) {
+        	return sign;
+        }
+        
+        return null;
+    }
+
+    /**
      * Jump to a sign above.
      * 
      * @param player
@@ -69,20 +133,10 @@ public class Elevator {
         int y1 = pt.getBlockY();
         int z = pt.getBlockZ();
 
-        ComplexBlock cBlock = etc.getServer().getComplexBlock(x, y1, z);
-
-        // This should not happen, but we need to check regardless
-        if (!(cBlock instanceof Sign)) {
-            return false;
-        }
-        
-        Sign sign = (Sign)cBlock;
+        Sign sign = getSign(pt, up);
 
         // Found our stop?
-        if (sign.getText(1).equalsIgnoreCase("[Lift Up]")
-                || sign.getText(1).equalsIgnoreCase("[Lift Down]")
-                || sign.getText(1).equalsIgnoreCase("[Lift]")) {
-
+        if (sign != null) {
             // We are going to be teleporting to the same place as the player
             // is currently, except with a shifted Y
             int plyX = (int)Math.floor(player.getX());
