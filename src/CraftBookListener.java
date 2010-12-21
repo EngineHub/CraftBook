@@ -532,8 +532,7 @@ public class CraftBookListener extends PluginListener {
             return;
         }
 
-        player.sendMessage(Colors.LightGray + "Powered by CraftBook ver. " +
-                craftBook.getVersion() + " by sk89q <sk89q.com>");
+        player.sendMessage(Colors.Gray + "Use /craftbookversion for version information");
 
         beenToldVersion.add(player.getName());
     }
