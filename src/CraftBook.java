@@ -108,6 +108,7 @@ public class CraftBook extends Plugin {
         listener.registerDelegate(redstone);
 
         registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);

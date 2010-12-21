@@ -28,6 +28,11 @@ import com.sk89q.craftbook.*;
  */
 public class VehicleListener extends CraftBookDelegateListener {
 	/**
+     * Station to stop at.
+     */
+    private Map<String,String> stopStation =
+            new HashMap<String,String>();
+	/**
      * Last minecart message sent from a sign to a player.
      */
     private Map<String,String> lastMinecartMsg =
@@ -37,6 +42,13 @@ public class VehicleListener extends CraftBookDelegateListener {
      */
     private Map<String,Long> lastMinecartMsgTime =
             new HashMap<String,Long>();
+    
+    /**
+     * Track direction for sorting.
+     */
+    private enum SortDir {
+    	FORWARD, LEFT, RIGHT
+    }
     
     // Settings
     private boolean minecartControlBlocks = true;
@@ -53,6 +65,7 @@ public class VehicleListener extends CraftBookDelegateListener {
     private int minecartReverseBlock = BlockType.CLOTH;
     private int minecartTriggerBlock = BlockType.IRON_ORE;
     private int minecartEjectBlock = BlockType.IRON_BLOCK;
+    private int minecartSortBlock = BlockType.NETHERSTONE;
 
     /**
      * Construct the object.
@@ -84,6 +97,31 @@ public class VehicleListener extends CraftBookDelegateListener {
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
+        minecartSortBlock = properties.getInt("minecart-sort-block", BlockType.NETHERSTONE);
+    }
+
+    /**
+     * Called before the command is parsed. Return true if you don't want the
+     * command to be parsed.
+     * 
+     * @param player
+     * @param split
+     * @return false if you want the command to be parsed.
+     */
+    public boolean onCommand(Player player, String[] split) {
+    	// /st station stop command
+    	if (split[0].equalsIgnoreCase("/st")) {
+    		if (split.length >= 2) {
+    			stopStation.put(player.getName(), "#" + split[1].trim());
+    			player.sendMessage(Colors.Gold + "You will stop at station \""
+    					+ split[1].trim() + "\".");
+    		} else {
+    			player.sendMessage(Colors.Rose
+    					+ "You need to specify a station name.");
+    		}
+			return true;
+    	}
+        return false;
     }
 
     /**
@@ -345,6 +383,74 @@ public class VehicleListener extends CraftBookDelegateListener {
                             loc.z = loc.z + 0.5;
 
                             player.teleportTo(loc);
+                        }
+                    }
+
+                    return;
+                } else if (under == minecartSortBlock) {
+                    Boolean test = Redstone.testAnyInput(underPt);
+
+                    if (test == null || test) {
+                    	Sign sign = getControllerSign(blockX, blockY - 1, blockZ, "[Sort]");
+                    	
+                    	if (sign != null) {
+                        	SortDir dir = SortDir.FORWARD;
+
+                        	if (satisfiesCartSort(sign.getText(2), minecart,
+                        			new Vector(blockX, blockY, blockZ))) {
+                        		dir = SortDir.LEFT;
+                        	} else if (satisfiesCartSort(sign.getText(3), minecart,
+                        			new Vector(blockX, blockY, blockZ))) {
+                        		dir = SortDir.RIGHT;
+                        	}
+
+                            int signData = CraftBook.getBlockData(
+                            		sign.getX(), sign.getY(), sign.getZ());
+                            int newData = 0;
+                            Vector targetTrack = null;
+                            
+                            if (signData == 0x8) { // West
+                            	if (dir == SortDir.LEFT) {
+                            		newData = 9;
+                            	} else if (dir == SortDir.RIGHT) {
+                            		newData = 8;
+                            	} else {
+                            		newData = 0;
+                            	}
+                            	targetTrack = new Vector(blockX, blockY, blockZ + 1);
+                            } else if (signData == 0x0) { // East
+                            	if (dir == SortDir.LEFT) {
+                            		newData = 7;
+                            	} else if (dir == SortDir.RIGHT) {
+                            		newData = 6;
+                            	} else {
+                            		newData = 0;
+                            	}
+                            	targetTrack = new Vector(blockX, blockY, blockZ - 1);
+                            } else if (signData == 0xC) { // North
+                            	if (dir == SortDir.LEFT) {
+                            		newData = 6;
+                            	} else if (dir == SortDir.RIGHT) {
+                            		newData = 9;
+                            	} else {
+                            		newData = 1;
+                            	}
+                            	targetTrack = new Vector(blockX - 1, blockY, blockZ);
+                            } else if (signData == 0x4) { // South
+                            	if (dir == SortDir.LEFT) {
+                            		newData = 8;
+                            	} else if (dir == SortDir.RIGHT) {
+                            		newData = 7;
+                            	} else {
+                            		newData = 1;
+                            	}
+                            	targetTrack = new Vector(blockX + 1, blockY, blockZ);
+                            }
+                            
+                            if (targetTrack != null
+                            		&& CraftBook.getBlockID(targetTrack) == BlockType.MINECART_TRACKS) {
+                            	CraftBook.setBlockData(targetTrack, newData);
+                            }
                         }
                     }
 
@@ -652,6 +758,89 @@ public class VehicleListener extends CraftBookDelegateListener {
 
         return false;
     }
+    
+    /**
+     * Get the controller sign for a block type. The coordinates provided
+     * are those of the block (signs are to be underneath). The provided
+     * text must be on the second line of the sign.
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @param text
+     * @return
+     */
+    private Sign getControllerSign(int x, int y, int z, String text) {
+        ComplexBlock cblock = etc.getServer().getComplexBlock(x, y - 1, z);
+
+        if (cblock instanceof Sign
+        		&& ((Sign)cblock).getText(1).equalsIgnoreCase(text)) {
+            return (Sign)cblock;
+        }
+        
+        cblock = etc.getServer().getComplexBlock(x, y - 2, z);
+
+        if (cblock instanceof Sign
+        		&& ((Sign)cblock).getText(1).equalsIgnoreCase(text)) {
+            return (Sign)cblock;
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Returns true if a filter line satisfies the conditions.
+     * 
+     * @param line
+     * @param minecart
+     * @param trackPos
+     * @return
+     */
+    public boolean satisfiesCartSort(String line, Minecart minecart, Vector trackPos) {
+    	Player player = minecart.getPassenger();
+    	
+    	if ((line.equalsIgnoreCase("Unoccupied")
+    			|| line.equalsIgnoreCase("Empty"))
+    			&& minecart.isEmpty()) {
+    		return true;
+    	}
+    	
+    	if ((line.equalsIgnoreCase("Occupied")
+    			|| line.equalsIgnoreCase("Full"))
+    			&& !minecart.isEmpty()) {
+    		return true;
+    	}
+    	
+    	if (player != null) {
+    		if (stopStation.get(player.getName()).equals(line)) {
+    			return true;
+    		}
+    	}
+    	
+    	String[] parts = line.split(":");
+    	
+    	if (parts.length >= 2) {
+	    	if (player != null && parts[0].equalsIgnoreCase("Held")) {
+	    		try {
+	    			int item = Integer.parseInt(parts[1]);
+	    			if (player.getItemInHand() == item) {
+	    				return true;
+	    			}
+	    		} catch (NumberFormatException e) {
+	    		}
+	    	} else if (player != null && parts[0].equalsIgnoreCase("Group")) {
+	    		if (player.isInGroup(parts[1])) {
+	    			return true;
+	    		}
+	    	} else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
+	    		if (parts[1].equalsIgnoreCase(player.getName())) {
+	    			return true;
+	    		}
+	    	}
+    	}
+    	
+    	return false;
+    }
 
     /**
      *
@@ -661,5 +850,6 @@ public class VehicleListener extends CraftBookDelegateListener {
     public void onDisconnect(Player player) {
         lastMinecartMsg.remove(player.getName());
         lastMinecartMsgTime.remove(player.getName());
+        stopStation.remove(player.getName());
     }
 }
