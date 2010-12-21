@@ -318,6 +318,9 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 sign.setText(1, "[Gate]");
             	sign.update();
+            	
+            	listener.informUser(player);
+            	
             // Light switch
             } else if (line2.equalsIgnoreCase("[|]")
                     || line2.equalsIgnoreCase("[I]")) {
@@ -330,6 +333,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 sign.setText(1, "[I]");
             	sign.update();
+            	
+            	listener.informUser(player);
 
             // Elevator
             } else if (line2.equalsIgnoreCase("[Lift Up]")
@@ -344,6 +349,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 sign.setText(1, "[Elevator]");
             	sign.update();
+            	
+            	listener.informUser(player);
 
             // Toggle areas
             } else if (line2.equalsIgnoreCase("[Toggle]")) {
@@ -356,6 +363,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 sign.setText(1, "[Toggle]");
             	sign.update();
+            	
+            	listener.informUser(player);
 
             // Toggle areas
             } else if (line2.equalsIgnoreCase("[Area]")) {
@@ -396,6 +405,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 sign.setText(1, "[Area]");
             	sign.update();
+            	
+            	listener.informUser(player);
 
             // Bridges
             } else if (line2.equalsIgnoreCase("[Bridge]")) {
@@ -408,6 +419,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 sign.setText(1, "[Bridge]");
             	sign.update();
+            	
+            	listener.informUser(player);
 			}
 		}
 

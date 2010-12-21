@@ -187,16 +187,20 @@ public class CraftBook extends Plugin {
             return version;
         }
         
-        try {
-            String classContainer = CraftBook.class.getProtectionDomain()
-                    .getCodeSource().getLocation().toString();
-            URL manifestUrl = new URL("jar:" + classContainer + "!/META-INF/MANIFEST.MF");
-            Manifest manifest = new Manifest(manifestUrl.openStream());
-            Attributes attrib = manifest.getMainAttributes();
-            String ver = (String)attrib.getValue("CraftBook-Version");
-            version = ver != null ? ver : "(unavailable)";
-        } catch (IOException e) {
-            version = "(unknown)";
+        Package p = CraftBook.class.getPackage();
+        
+        if (p == null) {
+        	p = Package.getPackage("com.sk89q.craftbook");
+        }
+        
+        if (p == null) {
+        	version = "(unknown)";
+        } else {
+	        version = p.getImplementationVersion();
+	        
+	        if (version == null) {
+	        	version = "(unknown)";
+	        }
         }
 
         return version;

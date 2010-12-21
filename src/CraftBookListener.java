@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -79,6 +80,12 @@ public class CraftBookListener extends PluginListener {
      * listeners and access some global features.
      */
     public CraftBook craftBook; 
+
+    /**
+     * Stores who has been shown the CraftBook version.
+     */
+    private Set<String> beenToldVersion =
+            new HashSet<String>();
     
     /**
      * Properties file for CraftBook. This instance is shared among this
@@ -448,11 +455,12 @@ public class CraftBookListener extends PluginListener {
      */
     public boolean runCommand(Player player, String[] split)
             throws InsufficientArgumentsException, LocalWorldEditBridgeException {    
-        
+
         if (split[0].equalsIgnoreCase("/reload")
                 && player.canUseCommand("/reload")
                 && split.length > 1
-                && split[1].equalsIgnoreCase("CraftBook")) {
+                && (split[1].equalsIgnoreCase("CraftBook")
+                	|| split[1].equals("*"))) {
         
             // Redirect log messages to the player's chat.
             LoggerToChatHandler handler = new LoggerToChatHandler(player);
@@ -471,9 +479,25 @@ public class CraftBookListener extends PluginListener {
             }
 
             return true;
+        } else if (split[0].equalsIgnoreCase("/craftbookversion")) {
+            player.sendMessage(Colors.LightGray + "CraftBook version: " +
+                    craftBook.getVersion());
+            player.sendMessage(Colors.LightGray
+            		+ "Website: http://wiki.sk89q.com/wiki/CraftBook");
+
+            return true;
         }
 
         return false;
+    }
+    
+    /**
+     *
+     * @param player
+     */
+    @Override
+    public void onDisconnect(Player player) {
+        beenToldVersion.remove(player.getName());
     }
 
     /**
@@ -496,6 +520,22 @@ public class CraftBookListener extends PluginListener {
         }
         
         return new CompoundBlockBag(bags);
+    }
+
+    /**
+     * Tells a user once about the CraftBook version.
+     * 
+     * @param player
+     */
+    protected void informUser(Player player) {
+        if (beenToldVersion.contains(player.getName())) {
+            return;
+        }
+
+        player.sendMessage(Colors.LightGray + "Powered by CraftBook ver. " +
+                craftBook.getVersion() + " by sk89q <sk89q.com>");
+
+        beenToldVersion.add(player.getName());
     }
     
     /**
