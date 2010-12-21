@@ -296,6 +296,8 @@ public class CraftBookListener extends PluginListener {
                     // Possible blocks north / south
                     handleDirectWireInput(new Vector(x - 1, y, z), isOn, v);
                     handleDirectWireInput(new Vector(x + 1, y, z), isOn, v);
+                    handleDirectWireInput(new Vector(x - 1, y - 1, z), isOn, v);
+                    handleDirectWireInput(new Vector(x + 1, y - 1, z), isOn, v);
                 }
 
                 if (!BlockType.isRedstoneBlock(northSide)
@@ -307,6 +309,8 @@ public class CraftBookListener extends PluginListener {
                     // Possible blocks west / east
                     handleDirectWireInput(new Vector(x, y, z - 1), isOn, v);
                     handleDirectWireInput(new Vector(x, y, z + 1), isOn, v);
+                    handleDirectWireInput(new Vector(x, y - 1, z - 1), isOn, v);
+                    handleDirectWireInput(new Vector(x, y - 1, z + 1), isOn, v);
                 }
 
                 // Can be triggered from below
