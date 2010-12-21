@@ -478,7 +478,7 @@ public class CraftBookListener extends PluginListener {
                 minecraftLogger.removeHandler(handler);
             }
 
-            return true;
+            return !split[1].equals("*");
         } else if (split[0].equalsIgnoreCase("/craftbookversion")) {
             player.sendMessage(Colors.LightGray + "CraftBook version: " +
                     craftBook.getVersion());
