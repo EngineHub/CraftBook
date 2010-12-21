@@ -263,7 +263,7 @@ public class VehicleListener extends CraftBookDelegateListener {
 
             if (minecartControlBlocks) {
                 if (under == minecart25xBoostBlock) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 1.25);
@@ -271,7 +271,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         return;
                     }
                 } else if (under == minecart100xBoostBlock) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 2);
@@ -279,7 +279,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         return;
                     }
                 } else if (under == minecart50xSlowBlock) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 0.5);
@@ -287,7 +287,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         return;
                     }
                 } else if (under == minecart20xSlowBlock) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
                         minecart.setMotionX(minecart.getMotionX() * 0.8);
@@ -295,7 +295,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         return;
                     }
                 } else if (under == minecartReverseBlock) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
                         Vector signPos = new Vector(blockX, blockY - 2, blockZ);
@@ -338,7 +338,7 @@ public class VehicleListener extends CraftBookDelegateListener {
 
                     return;
                 } else if (under == minecartEjectBlock) {
-                    Boolean test = Redstone.testSimpleInput(underPt);
+                    Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
                         Player player = minecart.getPassenger();
@@ -462,7 +462,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                     && CraftBook.getBlockID(underPt.add(0, -1, 0)) == BlockType.SIGN_POST) {
                 Vector signPos = underPt.add(0, -1, 0);
                 
-                Boolean test = Redstone.testSimpleInput(signPos);
+                Boolean test = Redstone.testAnyInput(signPos);
 
                 if (test == null || test) {
                     ComplexBlock cblock = etc.getServer().getComplexBlock(
