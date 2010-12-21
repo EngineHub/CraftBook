@@ -812,7 +812,8 @@ public class VehicleListener extends CraftBookDelegateListener {
     	}
     	
     	if (player != null) {
-    		if (stopStation.get(player.getName()).equals(line)) {
+    		String stop = stopStation.get(player.getName());
+    		if (stop != null && stop.equals(line)) {
     			return true;
     		}
     	}
