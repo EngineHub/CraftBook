@@ -893,6 +893,14 @@ public class VehicleListener extends CraftBookDelegateListener {
                 	player.sendMessage(Colors.Rose
                 			+ "Minecart control blocks are disabled on this server.");
                 }
+            // Dispenser
+            } else if (line2.equalsIgnoreCase("[Dispenser]")) {
+            	listener.informUser(player);
+                
+                sign.setText(1, "[Dispenser]");
+            	sign.update();
+        	
+            	player.sendMessage(Colors.Gold + "Dispenser sign detected.");
             // Print
             } else if (line1.equalsIgnoreCase("[Print]")) {
             	listener.informUser(player);
