@@ -610,8 +610,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                         }
                         
                         if (copy == null) {
-                            player.sendMessage(Colors.Rose + "The specified area (" + id + ") " +
-                            		"doesn't exist in the specified namespace.");
+                            player.sendMessage(Colors.Rose + "Specified area (" + id + ") " +
+                            		"doesn't exist.");
                             return true;
                         }
                         
