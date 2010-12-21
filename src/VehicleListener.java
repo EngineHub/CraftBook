@@ -809,8 +809,8 @@ public class VehicleListener extends CraftBookDelegateListener {
             } else if (minecartControlBlocks && under == minecartSortBlock) {
     			Sign sign = getControllerSign(blockPlaced.getX(),
         				blockPlaced.getY() - 1, blockPlaced.getZ(), "[Sort]");
-    			Vector pt = new Vector(blockPlaced.getX(),
-    				blockPlaced.getY() - 1, blockPlaced.getZ());
+    			//Vector pt = new Vector(blockPlaced.getX(),
+    			//	blockPlaced.getY() - 1, blockPlaced.getZ());
 
     			if (sign == null) {
     				player.sendMessage(Colors.Rose

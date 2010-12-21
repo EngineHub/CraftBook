@@ -129,9 +129,9 @@ public class Elevator {
      * @return
      */
     private static boolean checkLift(Player player, Vector pt, boolean up) {
-        int x = pt.getBlockX();
+        //int x = pt.getBlockX();
         int y1 = pt.getBlockY();
-        int z = pt.getBlockZ();
+        //int z = pt.getBlockZ();
 
         Sign sign = getSign(pt, up);
 

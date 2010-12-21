@@ -41,10 +41,7 @@ public class MC1230 extends BaseIC {
      */
     public void think(ChipState chip) {
         long time = (chip.getTime() % 24000);
-        // Java modulus is stupid.
-        if (time < 0) {
-            time += 24000;
-        }
+        if (time < 0) time += 24000;
         
         if (time < 13000l)
             chip.getOut(1).set(true);
