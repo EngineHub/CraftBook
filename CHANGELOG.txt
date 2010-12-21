@@ -1,14 +1,85 @@
 dev:
-- Added MC3040 (Multiplexer), MC4000 (Full Adder), MC4010 (Half Adder), MC4100
-    (Full Subtractor), and MC4110 (Half Subtractor), MC3032 (JK negative
-    edge-triggered Flip Flop), MC3101 (Counter), MC4200 (Dispatcher), MC1202 
-    (Chest Dispenser), MC0020 (Self-triggering random bit), MC0111 (Self-
-    triggering reciever), MC0230 (Self-triggering day check)
+[Toggleable areas]
+- Toggleable areas have been overhauled. Now they are saved per-user and
+    no other user can toggle another user's areas (without permission).
+    Existing area files will have to be moved to
+    world/craftbook/copyareas/global
+    and have ".cbcopy" be appended to their filenames. These areas will
+    be in the global namespace.
+- New [Area] sign replaces [Toggle] sign. This new sign has namespace
+    support (3rd line). Leave blank to set it as the namespace for your
+    own player or use "@" for the global namespace (if you have permission).
+- Toggle area signs can now be triggered with redstone.
+- Fixed packet spam caused by toggling areas.
+[Redstone]
+- Added 2-tick propagation delay to ICs and redstone-powered mechanisms.
+    Removes old recursion limit method of infinite loop prevention.
+- Added redstone netherstone (disabled by default). This allows you to
+    toggle fire with redstone.
+- All redstone devices can now take redstone current input on a level
+    above the actual device, allowing you to wire pumpkins from
+    above, for example (note: you still should not put wires on top of
+    pumpkins as they will be removed by Minecraft).
+[ICs]
+- New 3I3O family with 3 inputs and 3 outputs.
+- Added MC3040 (multiplexer), MC4000 (full adder), MC4010 (half adder),
+    MC4100 (full subtractor), MC4110 (half subtractor),
+    MC3032 (JK negative edge-triggered flip flop), MC3101 (down counter),
+    MC4200 (dispatcher), MC1202 (chest dispenser),
+    MC0020 (self-triggering random bit),
+    MC0111 (self-triggering reciever), MC0230 (self-triggering day check).
+- New MC3033 (RS NAND latch) replaces defunct MC3031.
+- MC1200 (mob spawner) now supports riders. Specify the rider on the
+    fourth line.
+- Changed MC1110 to output the input.
 - Added support for self-triggering ICs. No more clocks on recievers!
-- Added MC5001, a variant of MC5000 using the 3 input, 3 output layout
-- Improved block source system for bridges, gates, etc.
+- Added MC5001, a variant of MC5000 using the 3 input, 3 output layout.
 - Added support for custom ICs using existing PLC languages.
+- Added new redstone-plcs-require-permission configuration.
+- Fixed issue with the 32nd slot of Perlstone's tables.
 - Added /listics command.
+[Block bags]
+- Overhauled block bag system for bridges, gates, etc. Now multiple
+    block bags can be used simultaneously.
+- New administrator-only sign-based infinite block bags.
+- Fixed issue with item duplication with the nearby-chests block bag
+    (this may be obsolete with Minecraft beta).
+- The nearby-chests block bag should no longer break between Minecraft
+    updates, pending update of hMod.
+[Minecarts]
+- Added minecart sort control block. This allows you to switch track 
+    direction based on criteria (such as whether the cart is empty, if
+    the passenger is of a certain hMod group, if the passenger is holding
+    a certain item, etc.). It is currently not possible to filter by
+    mob type inside the minecart.
+- Minecart station blocks now continually push when activated.
+- The minecart dispenser can now dispense onto anything.
+- Redstone currents can now be put on the same level as the tracks
+    for minecart control blocks.
+- Fixed the minecart dispenser not collecting carts that were on a slope.
+- Fixed issue where minecarts significantly slowed down on pressure plates.
+- Fixed minecart ejector blocks so they should now more accurately
+    eject players now so that they won't fall through.
+- Fixed issue with station blocks not working well if the sign was only
+    one block underneath the station block.
+- Fixed an issue where changing the station block type to something other
+    than obsidian did not work correctly.
+[Cauldrons]
+- Fixed potential issue with the cauldron dropping items.
+- Added per-group permissions for cauldrons.
+- Added reload-cauldron console command. 
+[Misc]
+- New /reload CraftBook command reloads CraftBook's configuration. /reload *
+    can be used to reload other plugins (utilizing the same system)
+    in addition to hMod as well.
+- Version detection should now be more accurate, working even if you reload
+    the plugin.
+- Various messages were added during feature setup (such as bridge setup)
+    in order to guide players. This may be too noisy so it may be removed
+    or at least toned down in the future.
+- Fixed issue where the elevator could drop players into a deadly fall
+    or put players inside blocks. Now the player is simply not teleported
+    and is informed instead.
 
 1.4:
 - Added MC5000, a programmable logic chip utilizing the PerlStone
