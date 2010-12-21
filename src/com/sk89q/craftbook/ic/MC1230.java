@@ -40,9 +40,10 @@ public class MC1230 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        long specific = chip.getTime();
-
-        if (specific < 13000l)
+        long time = (chip.getTime() % 24000);
+        if (time < 0) time += 24000;
+        
+        if (time < 13000l)
             chip.getOut(1).set(true);
         else 
             chip.getOut(1).set(false);

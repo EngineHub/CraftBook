@@ -17,12 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.net.URL;
-import java.io.*;
 import com.sk89q.craftbook.*;
 
 /**

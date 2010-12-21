@@ -68,6 +68,8 @@ dev:
 - Fixed potential issue with the cauldron dropping items.
 - Added per-group permissions for cauldrons.
 - Added reload-cauldron console command. 
+[Bridges]
+- Bridges can now cut through snow.
 [Misc]
 - New /reload CraftBook command reloads CraftBook's configuration. /reload *
     can be used to reload other plugins (utilizing the same system)
