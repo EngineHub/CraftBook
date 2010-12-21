@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -34,9 +35,17 @@ import com.sk89q.craftbook.*;
  * @author sk89q
  */
 public class MechanismListener extends CraftBookDelegateListener {
+	/**
+     * Tracks copy saves to prevent flooding.
+     */
+    private Map<String,Long> lastCopySave =
+            new HashMap<String,Long>();
+    
     private boolean checkPermissions;
     private boolean checkCreatePermissions;
+    private boolean redstoneToggleAreas = true;
     private int maxToggleAreaSize;
+    private int maxUserToggleAreas;
     private boolean useBookshelves = true;
     private String bookReadLine;
     private Cauldron cauldronModule;
@@ -50,7 +59,6 @@ public class MechanismListener extends CraftBookDelegateListener {
     private boolean dropBookshelves = true;
     private double dropAppleChance = 0;
     private boolean enableAmmeter = true;
-    private boolean redstoneToggleAreas = true;
 
     /**
      * Construct the object.
@@ -67,6 +75,7 @@ public class MechanismListener extends CraftBookDelegateListener {
      */
     public void loadConfiguration() {
         maxToggleAreaSize = Math.max(0, properties.getInt("toggle-area-max-size", 5000));
+    	maxUserToggleAreas = Math.max(0, properties.getInt("toggle-area-max-per-user", 30));
 
         useBookshelves = properties.getBoolean("bookshelf-enable", true);
         bookReadLine = properties.getString("bookshelf-read-text", "You pick out a book...");
@@ -760,9 +769,40 @@ public class MechanismListener extends CraftBookDelegateListener {
                             + maxToggleAreaSize + " blocks.");
                     return true;
                 }
+                
+                // Check to make sure that a user doesn't have too many toggle
+                // areas (to prevent flooding the server with files)
+                if (maxUserToggleAreas >= 0 && !namespace.equals("global")) {
+                	int count = listener.getCopyManager().meetsQuota(
+                			namespace, id, maxUserToggleAreas);
 
+                	if (count > -1) {
+	                    player.sendMessage(Colors.Rose + "You are limited to "
+	                    		+ maxUserToggleAreas + " toggle area(s). You have "
+	                    		+ count + " areas.");
+	                    return true;
+                	}
+                }
+
+                // Prevent save flooding
+                Long lastSave = lastCopySave.get(player.getName());
+                long now = System.currentTimeMillis();
+                
+                if (lastSave != null) {
+                	if (now - lastSave < 1000 * 3) {
+	                    player.sendMessage(Colors.Rose + "Please wait before saving again.");
+	                    return true;
+                	}
+                }
+                
+                lastCopySave.put(player.getName(), now);
+                
+                // Copy
                 CuboidCopy copy = new CuboidCopy(min, size);
                 copy.copy();
+                
+                logger.info(player.getName() + " saving toggle area with folder '"
+                		+ namespace + "' and ID '" + id + "'.");
                 
                 // Save
                 try {
@@ -907,5 +947,14 @@ public class MechanismListener extends CraftBookDelegateListener {
      */
     public boolean checkPermission(Player player, String command) {
         return !checkPermissions || player.canUseCommand(command);
+    }
+
+    /**
+     *
+     * @param player
+     */
+    @Override
+    public void onDisconnect(Player player) {
+    	lastCopySave.remove(player.getName());
     }
 }

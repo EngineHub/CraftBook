@@ -137,4 +137,36 @@ public class CopyManager {
         missing.remove(cacheKey);
         cache.put(id, copy);
     }
+
+    /**
+     * Gets whether a copy can be made.
+     * 
+     * @param namespace
+     * @param ignore
+     * @return -1 if the copy can be made, some other number for the count
+     */
+    public int meetsQuota(String namespace, String ignore, int quota) {
+    	String ignoreFilename = ignore + ".cbcopy";
+    	
+    	String[] files = new File("world" + File.separator
+    			+ "craftbook" + File.separator
+    			+ "areas" + File.separator
+    			+ namespace).list();
+    	
+    	if (ignore == null) {
+	    	return files.length < quota ? -1 : files.length;
+    	} else {
+    		int count = 0;
+    		
+    		for (String f : files) {
+    			if (f.equals(ignoreFilename)) {
+    				return -1;
+    			}
+    			
+    			count++;
+    		}
+    		
+    		return count;
+    	}
+    }
 }
