@@ -18,6 +18,8 @@
 */
 
 import com.sk89q.craftbook.*;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
 
@@ -50,21 +52,36 @@ public class CopyManager {
     }
 
     /**
+     * Checks to see whether a name is a valid namespace.
+     * 
+     * @param name
+     * @return
+     */
+    public static boolean isValidNamespace(String name) {
+        return name.length() > 0 && name.length() <= 15
+                && name.matches("^[A-Za-z0-9_]+$");
+    }
+
+    /**
      * Load a copy from disk. This may return a cached copy. If the copy is not
      * cached, the file will be loaded from disk if possible. If the copy does
      * not exist, null will be returned. An exception may be raised if the file
      * exists but cannot be read for whatever reason.
      * 
+     * @param namespace
      * @param id
      * @return
      * @throws IOException
      * @throws CuboidCopyException
      */
-    public CuboidCopy load(String id) throws IOException, CuboidCopyException {
+    public CuboidCopy load(String namespace, String id)
+    		throws IOException, CuboidCopyException {
+    	
         id = id.toLowerCase();
+        String cacheKey = namespace + "/" + id;
         
-        if (missing.containsKey(id)) {
-            long lastCheck = missing.get(id);
+        if (missing.containsKey(cacheKey)) {
+            long lastCheck = missing.get(cacheKey);
             if (lastCheck > System.currentTimeMillis()) {
                 return null;
             }
@@ -74,14 +91,19 @@ public class CopyManager {
 
         if (copy == null) {
             try {
-                copy = CuboidCopy.load("copyareas" + File.separator + id);
-                missing.remove(id);
-                cache.put(id, copy);
+                copy = CuboidCopy.load("world" + File.separator
+                		+ "craftbook" + File.separator
+                		+ "areas" + File.separator
+                		+ namespace + File.separator
+                		+ id + ".cbcopy");
+                missing.remove(cacheKey);
+                cache.put(cacheKey, copy);
                 return copy;
-            } catch (IOException e2) { // Still raise the exception
-                e2.printStackTrace();
-                missing.put(id, System.currentTimeMillis() + 10000);
-                throw e2;
+            } catch (FileNotFoundException e) {
+                missing.put(cacheKey, System.currentTimeMillis() + 10000);
+            } catch (IOException e) {
+                missing.put(cacheKey, System.currentTimeMillis() + 10000);
+                throw e;
             }
         }
 
@@ -95,16 +117,24 @@ public class CopyManager {
      * @param copy
      * @throws IOException
      */
-    public void save(String id, CuboidCopy copy) throws IOException {
-        File folder = new File("copyareas");
+    public void save(String namespace, String id, CuboidCopy copy)
+    		throws IOException {
+    	
+        File folder = new File("world" + File.separator
+    			+ "craftbook" + File.separator
+    			+ "areas" + File.separator
+    			+ namespace);
+        
         if (!folder.exists()) {
-            folder.mkdir();
+            folder.mkdirs();
         }
 
         id = id.toLowerCase();
+
+        String cacheKey = namespace + "/" + id;
         
-        copy.save("copyareas" + File.separator + id);
-        missing.remove(id);
+        copy.save(new File(folder, id + ".cbcopy"));
+        missing.remove(cacheKey);
         cache.put(id, copy);
     }
 }

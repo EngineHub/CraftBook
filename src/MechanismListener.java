@@ -19,6 +19,7 @@
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,11 +86,11 @@ public class MechanismListener extends CraftBookDelegateListener {
             logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
         }
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
+        redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
         checkCreatePermissions = properties.getBoolean("check-create-permissions", false);
         cauldronModule = null;
         enableAmmeter = properties.getBoolean("ammeter", true);
-        redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
 
         loadCauldron();
     }
@@ -203,32 +204,50 @@ public class MechanismListener extends CraftBookDelegateListener {
 						}
 					}
 				});
-                
-            // Toggle areas
-            } else if (useToggleAreas && redstoneToggleAreas
-                    && line2.equalsIgnoreCase("[Toggle]")) {
-                craftBook.getDelay().delayAction(
-            		new TickDelayer.Action(pt.toBlockVector(), 2) {
-    					@Override
-    					public void run() {
-    			            BlockBag bag = listener.getBlockBag(pt);
-    			            bag.addSourcePosition(pt);
 
-    			           try {
-    			                CuboidCopy copy = listener.getCopyManager().load(
-    			                		sign.getText(0));
-    			                if (copy.distance(pt) <= 4) {
-    			                    if (isOn) {
-    			                        copy.paste(bag);
-    			                    } else {
-    			                    	copy.clear(bag);
-    			                    }
-    			                } 
-    			           } catch (CuboidCopyException e) {} 
-    			             catch (IOException e2) {}
-    			             catch (BlockSourceException e) {}
-    					}
-            		});
+                // Toggle areas
+                } else if (useToggleAreas && redstoneToggleAreas
+                        && (line2.equalsIgnoreCase("[Toggle]")
+                        || line2.equalsIgnoreCase("[Area]"))) {
+                	final boolean isNewSign = line2.equalsIgnoreCase("[Area]");
+                    final String id = sign.getText(0);
+                    final String namespace = sign.getText(2);
+                	
+                    craftBook.getDelay().delayAction(
+                		new TickDelayer.Action(pt.toBlockVector(), 2) {
+        					@Override
+        					public void run() {
+								BlockBag bag = listener.getBlockBag(pt);
+								bag.addSourcePosition(pt);
+
+								try {
+        			                CuboidCopy copy = null;
+        			                
+        			                if (isNewSign) {
+        			                	if (CopyManager.isValidNamespace(namespace)) {
+        			                		copy = listener.getCopyManager().load(
+                			                		"~" + namespace, id);
+        			                	} else if (namespace.equals("")) {
+        			                		copy = listener.getCopyManager().load(
+                			                		"global", id);
+        			                	}
+        			                } else {
+        			                	copy = listener.getCopyManager().load(
+        			                		"global", id);
+        			           		}
+        			           
+        			                if (copy != null && copy.distance(pt) <= 4) {
+        			                    if (isOn) {
+        			                        copy.paste(bag);
+        			                    } else {
+        			                    	copy.clear(bag);
+        			                    }
+        			                } 
+        			           } catch (CuboidCopyException e) {} 
+        			             catch (IOException e2) {}
+        			             catch (BlockSourceException e) {}
+        					}
+                		});
             }
         }
     }
@@ -279,54 +298,107 @@ public class MechanismListener extends CraftBookDelegateListener {
             
             String line2 = sign.getText(1);
             
-            if (checkCreatePermissions) {
-                // Gate
-                if (line2.equalsIgnoreCase("[Gate]")) {
-                    if (!player.canUseCommand("/makegate")) {
+            // Gate
+            if (line2.equalsIgnoreCase("[Gate]")) {
+                if (checkCreatePermissions && !player.canUseCommand("/makegate")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make gates.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+                
+                sign.setText(1, "[Gate]");
+            	sign.update();
+            // Light switch
+            } else if (line2.equalsIgnoreCase("[|]")
+                    || line2.equalsIgnoreCase("[I]")) {
+                if (checkCreatePermissions && !player.canUseCommand("/makelightswitch")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make light switches.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+                
+                sign.setText(1, "[I]");
+            	sign.update();
+
+            // Elevator
+            } else if (line2.equalsIgnoreCase("[Lift Up]")
+                    || line2.equalsIgnoreCase("[Lift Down]")
+                    || line2.equalsIgnoreCase("[Lift]")) {
+                if (checkCreatePermissions && !player.canUseCommand("/makeelevator")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make elevators.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+                
+                sign.setText(1, "[Elevator]");
+            	sign.update();
+
+            // Toggle areas
+            } else if (line2.equalsIgnoreCase("[Toggle]")) {
+                if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make toggle areas.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+                
+                sign.setText(1, "[Toggle]");
+            	sign.update();
+
+            // Toggle areas
+            } else if (line2.equalsIgnoreCase("[Area]")) {
+                if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make toggle areas.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+                
+                String namespace = sign.getText(2);
+                
+                String expected = player.getName();
+                if (expected.length() > 15) {
+                	expected = expected.substring(0, 15);
+                }
+                
+                if (namespace.equals("")
+                		|| namespace.equalsIgnoreCase(expected)) {
+                	sign.setText(2, player.getName());
+                } else if (namespace.equals("@")) {
+                    if (!player.canUseCommand("/savensarea")) {
                         player.sendMessage(Colors.Rose
-                                + "You don't have permission to make gates.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                    }
-                // Light switch
-                } else if (line2.equalsIgnoreCase("[|]")
-                        || line2.equalsIgnoreCase("[I]")) {
-                    if (!player.canUseCommand("/makelightswitch")) {
-                        player.sendMessage(Colors.Rose
-                                + "You don't have permission to make light switches.");
+                                + "You don't have permission to make global area toggles.");
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
                         return true;
                     }
 
-                // Elevator
-                } else if (line2.equalsIgnoreCase("[Lift Up]")
-                        || line2.equalsIgnoreCase("[Lift Down]")
-                        || line2.equalsIgnoreCase("[Lift]")) {
-                    if (!player.canUseCommand("/makeelevator")) {
+                	sign.setText(2, "");
+                } else {
+                    if (!player.canUseCommand("/savensarea")) {
                         player.sendMessage(Colors.Rose
-                                + "You don't have permission to make elevators.");
+                                + "You don't have permission to make area toggles for other namespaces.");
                         CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
                         return true;
                     }
+                }
+                
+                sign.setText(1, "[Area]");
+            	sign.update();
 
-                // Toggle areas
-                } else if (line2.equalsIgnoreCase("[Toggle]")) {
-                    if (!player.canUseCommand("/maketogglearea")) {
-                        player.sendMessage(Colors.Rose
-                                + "You don't have permission to make toggle areas.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                    }
-
-                // Bridges
-                } else if (line2.equalsIgnoreCase("[Bridge]")) {
-                    if (!player.canUseCommand("/makebridge")) {
-                        player.sendMessage(Colors.Rose
-                                + "You don't have permission to make bridges.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                    }
-				}
+            // Bridges
+            } else if (line2.equalsIgnoreCase("[Bridge]")) {
+                if (checkCreatePermissions && !player.canUseCommand("/makebridge")) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make bridges.");
+                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                    return true;
+                }
+                
+                sign.setText(1, "[Bridge]");
+            	sign.update();
 			}
 		}
 
@@ -510,23 +582,40 @@ public class MechanismListener extends CraftBookDelegateListener {
 
                 // Toggle areas
                 } else if (useToggleAreas != false
-                        && line2.equalsIgnoreCase("[Toggle]")
+                        && (line2.equalsIgnoreCase("[Toggle]")
+                        		|| line2.equalsIgnoreCase("[Area]"))
                         && checkPermission(player, "/togglearea")) {
-                    String name = sign.getText(0);
+                    String id = sign.getText(0);
+                    String namespace = sign.getText(2);
 
-                    if (name.trim().length() == 0) {
+                    if (id.trim().length() == 0) {
                         player.sendMessage(Colors.Rose + "Area name must be the first line.");
                         return true;
-                    } else if (!CopyManager.isValidName(name)) {
+                    } else if (!CopyManager.isValidName(id)) {
                         player.sendMessage(Colors.Rose + "Not a valid area name (1st sign line)!");
                         return true;
                     }
 
                     try {
+                    	boolean isNewArea = line2.equalsIgnoreCase("[Area]");
+                    	
                         BlockBag bag = getBlockBag(pt);
                         bag.addSourcePosition(pt);
-                        CuboidCopy copy = listener.getCopyManager().load(name);
-                        if (copy.distance(pt) <= 4) {
+                        CuboidCopy copy = null;
+                        
+                        if (isNewArea && CopyManager.isValidNamespace(namespace)) {
+                        	copy = listener.getCopyManager().load("~" + namespace, id);
+                        } else if (namespace.equals("")) {
+                        	copy = listener.getCopyManager().load("global", id);
+                        }
+                        
+                        if (copy == null) {
+                            player.sendMessage(Colors.Rose + "The specified area (" + id + ") " +
+                            		"doesn't exist in the specified namespace.");
+                            return true;
+                        }
+                        
+                        if (isNewArea || copy.distance(pt) <= 4) {
                             copy.toggle(bag);
                             
                             // Get missing
@@ -613,12 +702,49 @@ public class MechanismListener extends CraftBookDelegateListener {
     public boolean onCheckedCommand(Player player, String[] split)
             throws InsufficientArgumentsException, LocalWorldEditBridgeException {
     	
-        if (split[0].equalsIgnoreCase("/savearea") && Util.canUse(player, "/savearea")) {
-            Util.checkArgs(split, 1, -1, split[0]);
+        if ((split[0].equalsIgnoreCase("/savearea")
+        		&& Util.canUse(player, "/savearea"))
+        		|| (split[0].equalsIgnoreCase("/savensarea")
+        		&& Util.canUse(player, "/savensarea"))) {
+            boolean namespaced = split[0].equalsIgnoreCase("/savensarea");
+            
+            Util.checkArgs(split, namespaced ? 2 : 1, -1, split[0]);
 
-            String name = Util.joinString(split, " ", 1);
+            String id;
+            String namespace;
+            
+            if (namespaced) {
+            	id = Util.joinString(split, " ", 2);
+            	namespace = split[1];
 
-            if (!CopyManager.isValidName(name)) {
+            	if (namespace.equalsIgnoreCase("@")) {
+            		namespace = "global";
+            	} else {
+	                if (!CopyManager.isValidNamespace(namespace)) {
+	                    player.sendMessage(Colors.Rose + "Invalid namespace name. For the global namespace, use @");
+	                    return true;
+	                }
+	                namespace = "~" + namespace;
+            	}
+            } else {
+            	id = Util.joinString(split, " ", 1);
+            	String nameNamespace = player.getName();
+            	
+            	// Sign lines can only be 15 characters long while names
+            	// can be up to 16 characters long
+            	if (nameNamespace.length() > 15) {
+            		nameNamespace = nameNamespace.substring(0, 15);
+            	}
+
+                if (!CopyManager.isValidNamespace(nameNamespace)) {
+                    player.sendMessage(Colors.Rose + "You have an invalid player name.");
+                    return true;
+                }
+                
+                namespace = "~" + nameNamespace;
+            }
+
+            if (!CopyManager.isValidName(id)) {
                 player.sendMessage(Colors.Rose + "Invalid area name.");
                 return true;
             }
@@ -640,8 +766,14 @@ public class MechanismListener extends CraftBookDelegateListener {
                 
                 // Save
                 try {
-                    listener.getCopyManager().save(name, copy);
-                    player.sendMessage(Colors.Gold + "Area saved as '" + name + "'");
+                    listener.getCopyManager().save(namespace, id, copy);
+                    if (namespaced) {
+                        player.sendMessage(Colors.Gold + "Area saved as '"
+                        		+ id + "' under the specified namespace.");
+                    } else {
+                        player.sendMessage(Colors.Gold + "Area saved as '"
+                        		+ id + "' under your player.");
+                    }
                 } catch (IOException e) {
                     player.sendMessage(Colors.Rose + "Could not save area: " + e.getMessage());
                 }
