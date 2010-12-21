@@ -144,17 +144,34 @@ public class Elevator {
             int plyZ = (int)Math.floor(player.getZ());
 
             int y2;
+            
+            int foundFree = 0;
+            boolean foundGround = false;
+            
+            int startingY = BlockType.canPassThrough(CraftBook.getBlockID(plyX, y1 + 1, plyZ))
+            	? y1 + 1 : y1;
 
-            // Step downwards until we find a spot to stand -- only go down
-            // five blocks before aborting and just dropping the player in the
-            // air to fend for him/herself
-            for (y2 = y1; y2 >= y1 - 5; y2--) {
-                int id = etc.getServer().getBlockIdAt(plyX, y2, plyZ);
+            // Step downwards until we find a spot to stand
+            for (y2 = startingY; y2 >= y1 - 5; y2--) {
+                int id = CraftBook.getBlockID(plyX, y2, plyZ);
 
                 // We have to find a block that the player won't fall through
                 if (!BlockType.canPassThrough(id)) {
+                	foundGround = true;
                     break;
                 }
+                
+                foundFree++;
+            }
+            
+            if (foundFree < 2) {
+                player.sendMessage(Colors.Gold + "Uh oh! You would be obstructed!");
+                return false;
+            }
+            
+            if (!foundGround) {
+                player.sendMessage(Colors.Gold + "Uh oh! You would have nothing to stand on!");
+                return false;
             }
 
             // Teleport!
