@@ -27,7 +27,8 @@ dev:
     MC3032 (JK negative edge-triggered flip flop), MC3101 (down counter),
     MC4200 (dispatcher), MC1202 (chest dispenser),
     MC0020 (self-triggering random bit),
-    MC0111 (self-triggering reciever), MC0230 (self-triggering day check).
+    MC0111 (self-triggering reciever), MC0230 (self-triggering day check),
+    MC1240 (arrow shooter), and MC1241 (arrow barrage).
 - New MC3033 (RS NAND latch) replaces defunct MC3031.
 - MC1200 (mob spawner) now supports riders. Specify the rider on the
     fourth line.
