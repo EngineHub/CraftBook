@@ -60,7 +60,7 @@ public class MC1200 extends BaseIC {
             return "Specify a mob type on the third line.";
         } else if (!Mob.isValid(id)) {
             return "Not a valid mob type: " + id + ".";
-        } else if (rider.length() == 0 || !Mob.isValid(rider)) {
+        } else if (rider.length() != 0 && !Mob.isValid(rider)) {
             return "Not a valid rider type: " + rider + ".";
         }
 
