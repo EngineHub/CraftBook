@@ -38,7 +38,7 @@ public class TorchPatch extends cu {
 	
 	private boolean isOn;
 	
-	private gu old;
+	private gv old;
 	
 	static {
 		ArrayList<Field> fields = new ArrayList<Field>();
@@ -49,7 +49,7 @@ public class TorchPatch extends cu {
 		FIELDS = fields.toArray(new Field[0]);
 	}
 	
-	public TorchPatch(int texture, boolean isOn, gu old) {
+	public TorchPatch(int texture, boolean isOn, gv old) {
 		super(nullId(isOn), texture, isOn);
 		
 		this.old = old;
@@ -69,7 +69,7 @@ public class TorchPatch extends cu {
 	}
 	private static int nullId(boolean isOn) {
 		int id = isOn?TYPE_ON:TYPE_OFF;
-		gu.m[id] = null;
+		gv.m[id] = null;
 		return id;
 	}
 
@@ -109,8 +109,8 @@ public class TorchPatch extends cu {
 	 * Call before using addListener or getListenerList().
 	 */
 	public static void applyPatch() {
-		new TorchPatch(gu.m[TYPE_ON].bg,true,gu.m[TYPE_ON]);
-		new TorchPatch(gu.m[TYPE_OFF].bg,false,gu.m[TYPE_OFF]);
+		new TorchPatch(gv.m[TYPE_ON].bg,true,gv.m[TYPE_ON]);
+		new TorchPatch(gv.m[TYPE_OFF].bg,false,gv.m[TYPE_OFF]);
 	}
     /**
      * Removes the patch if it is applied.
@@ -120,7 +120,7 @@ public class TorchPatch extends cu {
         remove(TYPE_OFF);
     }
     private static void remove(int i) {
-        if(gu.m[i] instanceof TorchPatch) gu.m[i] = ((TorchPatch)gu.m[i]).old;
+        if(gv.m[i] instanceof TorchPatch) gv.m[i] = ((TorchPatch)gv.m[i]).old;
     }
 	
 	/**
@@ -135,7 +135,7 @@ public class TorchPatch extends cu {
 	@SuppressWarnings("unchecked")
 	public static CopyOnWriteArrayList<ExtensionListener> getListenerList() {
 		try {
-			return (CopyOnWriteArrayList<ExtensionListener>) gu.m[TYPE_ON].getClass().getField("LISTENERS").get(null);
+			return (CopyOnWriteArrayList<ExtensionListener>) gv.m[TYPE_ON].getClass().getField("LISTENERS").get(null);
 		} catch (SecurityException e) {
 			throw new RuntimeException("unexpected error: cannot use reflection");
 		} catch (NoSuchFieldException e) {

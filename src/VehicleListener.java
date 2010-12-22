@@ -175,7 +175,7 @@ public class VehicleListener extends CraftBookDelegateListener {
 
             try {
                 blockBag.fetchBlock(ItemType.MINECART);
-                kp minecart = new kp(etc.getMCServer().e,
+                kq minecart = new kq(etc.getMCServer().e,
                         depositPt.getX(), depositPt.getY(),
                         depositPt.getZ(), 0);
                 etc.getMCServer().e.a(minecart);
