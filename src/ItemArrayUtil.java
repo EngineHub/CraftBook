@@ -167,11 +167,13 @@ public class ItemArrayUtil {
      * Thrown when an item has been fully transferred.
      */
     private static class TransferredItemException extends Exception {
+        private static final long serialVersionUID = -4125958007487924445L;
     }
 
     /**
      * Thrown when the target is full.
      */
     private static class TargetFullException extends Exception {
+        private static final long serialVersionUID = 5408687817221722647L;
     }
 }

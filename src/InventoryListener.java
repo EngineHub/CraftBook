@@ -47,8 +47,8 @@ public class InventoryListener extends CraftBookDelegateListener {
      * @return true if you want any changes to be reverted
      */
     public boolean onInventoryChange(Player player) {
-    	Inventory inventory = player.getInventory();
-    	Item[] items = inventory.getContents();
+    	//Inventory inventory = player.getInventory();
+    	//Item[] items = inventory.getContents();
 
     	/*player.sendMessage("got item 0: " + (items[0] != null ? items[0].getItemId() : "EMPTY"));
     	player.sendMessage("got item 1: " + (items[1] != null ? items[1].getItemId() : "EMPTY"));
