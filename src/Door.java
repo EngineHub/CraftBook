@@ -142,7 +142,7 @@ public class Door {
 
                     if (line2.equalsIgnoreCase("[Door Up]")
                             || line2.equalsIgnoreCase("[Door Down]")
-                            || line2.equalsIgnoreCase("[Door]")) {
+                            || line2.equalsIgnoreCase("[Door End]")) {
                         found = true;
                         dist = i - 1;
                         break;
@@ -155,7 +155,7 @@ public class Door {
         }
 
         if (!found) {
-            throw new OperationException("[Door] sign required on other side (or it was too far away).");
+            throw new OperationException("Door sign required on other side (or it was too far away).");
         }
 
         Vector otherSideBlockPt = pt.add(vertDir.multiply(dist + 2));
