@@ -96,16 +96,16 @@ public class MinecartUtil {
                                 throw new TransferredItemException();
                             } else if (cartItem.getItemId() == chestItem.getItemId()
                                     && cartItem.getAmount() < 64) {
-                                int leftOver = cartItem.getAmount();
+                                int leftOver = 64 - cartItem.getAmount();
                                 
                                 if (leftOver >= chestItem.getAmount()) {
-                                    cartItem.setAmount(cartItem.getAmount() + leftOver);
+                                    cartItem.setAmount(cartItem.getAmount() + chestItem.getAmount());
                                     chestItems[chestSlot] = null;
                                     changed = true;
                                     throw new TransferredItemException();
                                 } else {
                                     chestItem.setAmount(chestItem.getAmount()
-                                            - (64 - cartItem.getAmount()));
+                                            - leftOver);
                                     cartItem.setAmount(64);
                                     changed = true;
                                 }
