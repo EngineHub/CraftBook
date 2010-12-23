@@ -184,6 +184,33 @@ public class NearbyChestBlockBag extends BlockBag {
             }
         }
     }
+    
+    /**
+     * Get the number of chest blocks. A double-width chest will count has
+     * two chest blocks.
+     * 
+     * @return
+     */
+    public int getChestBlockCount() {
+    	return chests.size();
+    }
+    
+    /**
+     * Fetch related chest inventories.
+     * 
+     * @return
+     */
+    public Inventory[] getInventories() {
+    	Inventory[] inventories = new Inventory[chests.size()];
+    	
+    	int i = 0;
+    	for (ComparableComplexBlock<Chest> c : chests) {
+    		inventories[i] = c.getChest();
+    		i++;
+    	}
+    	
+    	return inventories;
+    }
 
     /**
      * Flush changes.

@@ -370,10 +370,33 @@ public class VehicleListener extends CraftBookDelegateListener {
                         return;
                     }
                 } else if (under == minecartTriggerBlock) {
-                    Redstone.setTrackTrigger(underPt.add(1, 0, 0));
-                    Redstone.setTrackTrigger(underPt.add(-1, 0, 0));
-                    Redstone.setTrackTrigger(underPt.add(0, 0, 1));
-                    Redstone.setTrackTrigger(underPt.add(0, 0, -1));
+                    Boolean test = Redstone.testAnyInput(underPt);
+
+                    if (test == null || test) {
+                    	if (minecart.getType() == Minecart.Type.StorageCart) {
+                    		Vector pt = new Vector(blockX, blockY, blockZ);
+                    		NearbyChestBlockBag bag = new NearbyChestBlockBag(pt);
+
+                    		for (int y = -1; y <= 0; y++) {
+	                    		bag.addSingleSourcePosition(pt.add(1, y, 0));
+	                    		bag.addSingleSourcePosition(pt.add(2, y, 0));
+	                    		bag.addSingleSourcePosition(pt.add(-1, y, 0));
+	                    		bag.addSingleSourcePosition(pt.add(-2, y, 0));
+	                    		bag.addSingleSourcePosition(pt.add(0, y, 1));
+	                    		bag.addSingleSourcePosition(pt.add(0, y, 2));
+	                    		bag.addSingleSourcePosition(pt.add(0, y, -1));
+	                    		bag.addSingleSourcePosition(pt.add(0, y, -2));
+                    		}
+                    		
+                    		if (bag.getChestBlockCount() > 0) {
+                    			if (getControllerSign(pt.add(0, -1, 0), "[Distribute]") != null) {
+                    				MinecartUtil.chestBagToStorage(minecart, bag);
+                    			} else {
+                    				MinecartUtil.storageToChestBag(minecart, bag);
+                    			}
+                    		}
+                    	}
+                    }
 
                     return;
                 } else if (under == minecartEjectBlock) {
