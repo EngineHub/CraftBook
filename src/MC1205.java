@@ -54,11 +54,18 @@ public class MC1205 extends BaseIC {
      */
     public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
+        String force = sign.getLine4();
 
         if (id.length() == 0) {
             return "Specify a block type on the third line.";
+        } else if (getItem(id) == 0) {
+        	sign.setLine4("Force");
         } else if (getItem(id) < 1) {
             return "Not a valid block type: " + sign.getLine3() + ".";
+        }
+
+        if (force.length() != 0 && !force.equalsIgnoreCase("Force")) {
+            return "Fourth line needs to be blank or 'Force'.";
         }
 
         return null;
@@ -89,21 +96,24 @@ public class MC1205 extends BaseIC {
         }
 
         String id = chip.getText().getLine3();
+        String force = chip.getText().getLine4();
+        boolean isForced = force.equalsIgnoreCase("Force");
 
         int item = getItem(id);
 
-        if (item > 0) {
+        if (item > 0 || isForced) {
             Vector pos = chip.getBlockPosition();
             int y = pos.getBlockY() + 2;
             int x = pos.getBlockX();
             int z = pos.getBlockZ();
 
-            if (y <= 127 && CraftBook.getBlockID(x, y, z) == 0) {
+            if (y <= 127 && (isForced || CraftBook.getBlockID(x, y, z) == 0)) {
                 CraftBook.setBlockID(x, y, z, item);
                 chip.getOut(1).set(true);
+            } else {
+            	chip.getOut(1).set(false);
             }
-
-            chip.getOut(1).set(y <= 127 && CraftBook.getBlockID(x, y, z) == item);
+            
             return;
         }
 
