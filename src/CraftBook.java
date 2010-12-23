@@ -90,20 +90,20 @@ public class CraftBook extends Plugin {
         registerHook(listener, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(listener, "DISCONNECT", PluginListener.Priority.MEDIUM);
         registerHook(listener, "REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
-        registerHook(listener, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
 
         registerHook(mechanisms, "DISCONNECT", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "BLOCK_RIGHTCLICKED", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
-        registerHook(mechanisms, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "SERVERCOMMAND", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(mechanisms);
         
-        registerHook(redstone, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(redstone, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(redstone);
 
         registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "BLOCK_PLACE", PluginListener.Priority.LOW);
         registerHook(vehicle, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);

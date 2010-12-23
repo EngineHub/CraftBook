@@ -879,90 +879,86 @@ public class VehicleListener extends CraftBookDelegateListener {
     }
 
     /**
-     * Called when either a sign, chest or furnace is changed.
-     *
-     * @param player player who changed it
-     * @param cblock complex block that changed
-     * @return true if you want any changes to be reverted
+     * Called when a sign is updated.
+     * @param player
+     * @param cblock
+     * @return
      */
-    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
-        if (cblock instanceof Sign) {
-            Sign sign = (Sign)cblock;
-            int type = CraftBook.getBlockID(
-            		cblock.getX(), cblock.getY(), cblock.getZ());
+    public boolean onSignChange(Player player, Sign sign) {
+        int type = CraftBook.getBlockID(
+        		sign.getX(), sign.getY(), sign.getZ());
 
-            String line1 = sign.getText(0);
-            String line2 = sign.getText(1);
+        String line1 = sign.getText(0);
+        String line2 = sign.getText(1);
 
-            // Station
-            if (line2.equalsIgnoreCase("[Station]")) {
-            	listener.informUser(player);
-                
-                sign.setText(1, "[Station]");
-            	sign.update();
-            	
-            	if (minecartControlBlocks) {
-                    int data = CraftBook.getBlockData(
-                    		cblock.getX(), cblock.getY(), cblock.getZ());
-
-                    if (type == BlockType.WALL_SIGN) {
-                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
-	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
-	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-	                    return true;
-					}
-					
-                	player.sendMessage(Colors.Gold + "Station sign detected.");
-                } else {
-                	player.sendMessage(Colors.Rose
-                			+ "Minecart control blocks are disabled on this server.");
-                }
-            // Sort
-            } else if (line2.equalsIgnoreCase("[Sort]")) {
-            	listener.informUser(player);
-                
-                sign.setText(1, "[Sort]");
-            	sign.update();
-            	
-            	if (minecartControlBlocks) {
-                    int data = CraftBook.getBlockData(
-                    		cblock.getX(), cblock.getY(), cblock.getZ());
-
-                    if (type == BlockType.WALL_SIGN) {
-                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
-	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
-	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-	                    return true;
-					}
-					
-                	player.sendMessage(Colors.Gold + "Sort sign detected.");
-                } else {
-                	player.sendMessage(Colors.Rose
-                			+ "Minecart control blocks are disabled on this server.");
-                }
-            // Dispenser
-            } else if (line2.equalsIgnoreCase("[Dispenser]")) {
-            	listener.informUser(player);
-                
-                sign.setText(1, "[Dispenser]");
-            	sign.update();
+        // Station
+        if (line2.equalsIgnoreCase("[Station]")) {
+        	listener.informUser(player);
+            
+            sign.setText(1, "[Station]");
+        	sign.update();
         	
-            	player.sendMessage(Colors.Gold + "Dispenser sign detected.");
-            // Print
-            } else if (line1.equalsIgnoreCase("[Print]")) {
-            	listener.informUser(player);
-                
-                sign.setText(0, "[Print]");
-            	sign.update();
-        	
-            	player.sendMessage(Colors.Gold + "Message print block detected.");
+        	if (minecartControlBlocks) {
+                int data = CraftBook.getBlockData(
+                		sign.getX(), sign.getY(), sign.getZ());
+
+                if (type == BlockType.WALL_SIGN) {
+                	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+            	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+				}
+				
+            	player.sendMessage(Colors.Gold + "Station sign detected.");
+            } else {
+            	player.sendMessage(Colors.Rose
+            			+ "Minecart control blocks are disabled on this server.");
             }
+        // Sort
+        } else if (line2.equalsIgnoreCase("[Sort]")) {
+        	listener.informUser(player);
+            
+            sign.setText(1, "[Sort]");
+        	sign.update();
+        	
+        	if (minecartControlBlocks) {
+                int data = CraftBook.getBlockData(
+                		sign.getX(), sign.getY(), sign.getZ());
+
+                if (type == BlockType.WALL_SIGN) {
+                	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+            	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+				}
+				
+            	player.sendMessage(Colors.Gold + "Sort sign detected.");
+            } else {
+            	player.sendMessage(Colors.Rose
+            			+ "Minecart control blocks are disabled on this server.");
+            }
+        // Dispenser
+        } else if (line2.equalsIgnoreCase("[Dispenser]")) {
+        	listener.informUser(player);
+            
+            sign.setText(1, "[Dispenser]");
+        	sign.update();
+    	
+        	player.sendMessage(Colors.Gold + "Dispenser sign detected.");
+        // Print
+        } else if (line1.equalsIgnoreCase("[Print]")) {
+        	listener.informUser(player);
+            
+            sign.setText(0, "[Print]");
+        	sign.update();
+    	
+        	player.sendMessage(Colors.Gold + "Message print block detected.");
         }
         
         return false;

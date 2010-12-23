@@ -332,252 +332,248 @@ public class MechanismListener extends CraftBookDelegateListener {
     }
 
     /**
-     * Called when either a sign, chest or furnace is changed.
-     *
-     * @param player player who changed it
-     * @param cblock complex block that changed
-     * @return true if you want any changes to be reverted
+     * Called when a sign is updated.
+     * @param player
+     * @param cblock
+     * @return
      */
-    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
-        if (cblock instanceof Sign) {
-            Sign sign = (Sign)cblock;
-            int type = CraftBook.getBlockID(
-            		cblock.getX(), cblock.getY(), cblock.getZ());
+    public boolean onSignChange(Player player, Sign sign) {
+        int type = CraftBook.getBlockID(
+        		sign.getX(), sign.getY(), sign.getZ());
+        
+        String line2 = sign.getText(1);
+        
+        // Gate
+        if (line2.equalsIgnoreCase("[Gate]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/makegate")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make gates.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
             
-            String line2 = sign.getText(1);
+            sign.setText(1, "[Gate]");
+        	sign.update();
+        	
+        	listener.informUser(player);
+        	
+        	if (useGates) {
+            	player.sendMessage(Colors.Gold + "Gate created!");
+            } else {
+            	player.sendMessage(Colors.Rose + "Gates are disabled on this server.");
+            }
+        	
+        // Light switch
+        } else if (line2.equalsIgnoreCase("[|]")
+                || line2.equalsIgnoreCase("[I]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/makelightswitch")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make light switches.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
             
-            // Gate
-            if (line2.equalsIgnoreCase("[Gate]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/makegate")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make gates.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
-                
-                sign.setText(1, "[Gate]");
-            	sign.update();
-            	
-            	listener.informUser(player);
-            	
-            	if (useGates) {
-                	player.sendMessage(Colors.Gold + "Gate created!");
-                } else {
-                	player.sendMessage(Colors.Rose + "Gates are disabled on this server.");
-                }
-            	
-            // Light switch
-            } else if (line2.equalsIgnoreCase("[|]")
-                    || line2.equalsIgnoreCase("[I]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/makelightswitch")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make light switches.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
-                
-                sign.setText(1, "[I]");
-            	sign.update();
-            	
-            	listener.informUser(player);
-            	
-            	if (useLightSwitches) {
-                	player.sendMessage(Colors.Gold + "Light switch created!");
-                } else {
-                	player.sendMessage(Colors.Rose + "Light switches are disabled on this server.");
-                }
+            sign.setText(1, "[I]");
+        	sign.update();
+        	
+        	listener.informUser(player);
+        	
+        	if (useLightSwitches) {
+            	player.sendMessage(Colors.Gold + "Light switch created!");
+            } else {
+            	player.sendMessage(Colors.Rose + "Light switches are disabled on this server.");
+            }
 
-            // Elevator
-            } else if (line2.equalsIgnoreCase("[Lift Up]")
-                    || line2.equalsIgnoreCase("[Lift Down]")
-                    || line2.equalsIgnoreCase("[Lift]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/makeelevator")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make elevators.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
+        // Elevator
+        } else if (line2.equalsIgnoreCase("[Lift Up]")
+                || line2.equalsIgnoreCase("[Lift Down]")
+                || line2.equalsIgnoreCase("[Lift]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/makeelevator")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make elevators.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
 
+            if (line2.equalsIgnoreCase("[Lift Up]")) {
+                sign.setText(1, "[Lift Up]");
+            } else if (line2.equalsIgnoreCase("[Lift Down]")) {
+            	sign.setText(1, "[Lift Down]");
+            } else if (line2.equalsIgnoreCase("[Lift]")) {
+            	sign.setText(1, "[Lift]");
+            }
+            sign.update();
+            
+        	listener.informUser(player);
+        	
+        	if (useElevators) {
+                Vector pt = new Vector(sign.getX(), sign.getY(), sign.getZ());
+                
                 if (line2.equalsIgnoreCase("[Lift Up]")) {
-                    sign.setText(1, "[Lift Up]");
+                    if (Elevator.hasLinkedLift(pt, true)) {
+                    	player.sendMessage(Colors.Gold
+                    			+ "Elevator created and linked!");
+                    } else {
+                    	player.sendMessage(Colors.Gold
+                    			+ "Elevator created but not yet linked to an existing lift sign.");
+                    }
                 } else if (line2.equalsIgnoreCase("[Lift Down]")) {
-                	sign.setText(1, "[Lift Down]");
+                    if (Elevator.hasLinkedLift(pt, false)) {
+                    	player.sendMessage(Colors.Gold
+                    			+ "Elevator created and linked!");
+                    } else {
+                    	player.sendMessage(Colors.Gold
+                    			+ "Elevator created but not yet linked to an existing lift sign.");
+                    }
                 } else if (line2.equalsIgnoreCase("[Lift]")) {
-                	sign.setText(1, "[Lift]");
-                }
-                sign.update();
-                
-            	listener.informUser(player);
-            	
-            	if (useElevators) {
-                    Vector pt = new Vector(cblock.getX(), cblock.getY(), cblock.getZ());
-                    
-                    if (line2.equalsIgnoreCase("[Lift Up]")) {
-                        if (Elevator.hasLinkedLift(pt, true)) {
-                        	player.sendMessage(Colors.Gold
-                        			+ "Elevator created and linked!");
-                        } else {
-                        	player.sendMessage(Colors.Gold
-                        			+ "Elevator created but not yet linked to an existing lift sign.");
-                        }
-                    } else if (line2.equalsIgnoreCase("[Lift Down]")) {
-                        if (Elevator.hasLinkedLift(pt, false)) {
-                        	player.sendMessage(Colors.Gold
-                        			+ "Elevator created and linked!");
-                        } else {
-                        	player.sendMessage(Colors.Gold
-                        			+ "Elevator created but not yet linked to an existing lift sign.");
-                        }
-                    } else if (line2.equalsIgnoreCase("[Lift]")) {
-                        if (Elevator.hasLinkedLift(pt, true)
-                        		|| Elevator.hasLinkedLift(pt, false)) {
-                        	player.sendMessage(Colors.Gold
-                        			+ "Elevator created and linked!");
-                        } else {
-                        	player.sendMessage(Colors.Gold
-                        			+ "Elevator created but not yet linked to an existing lift sign.");
-                        }
-                    }
-                } else {
-                	player.sendMessage(Colors.Rose + "Elevators are disabled on this server.");
-                }
-
-            // Toggle areas
-            } else if (line2.equalsIgnoreCase("[Toggle]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make toggle areas.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
-                
-                sign.setText(1, "[Toggle]");
-            	sign.update();
-            	
-            	listener.informUser(player);
-            	
-            	if (useToggleAreas) {
-                	player.sendMessage(Colors.Gold + "Area toggle created!");
-                } else {
-                	player.sendMessage(Colors.Rose + "Area toggles are disabled on this server.");
-                }
-
-            // Toggle areas
-            } else if (line2.equalsIgnoreCase("[Area]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make toggle areas.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
-                
-                String namespace = sign.getText(2);
-                
-                String expected = player.getName();
-                if (expected.length() > 15) {
-                	expected = expected.substring(0, 15);
-                }
-                
-                if (namespace.equals("")
-                		|| namespace.equalsIgnoreCase(expected)) {
-                	sign.setText(2, player.getName());
-                } else if (namespace.equals("@")) {
-                    if (!player.canUseCommand("/savensarea")) {
-                        player.sendMessage(Colors.Rose
-                                + "You don't have permission to make global area toggles.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                    }
-
-                	sign.setText(2, "");
-                } else {
-                    if (!player.canUseCommand("/savensarea")) {
-                        player.sendMessage(Colors.Rose
-                                + "You don't have permission to make area toggles for other namespaces.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
+                    if (Elevator.hasLinkedLift(pt, true)
+                    		|| Elevator.hasLinkedLift(pt, false)) {
+                    	player.sendMessage(Colors.Gold
+                    			+ "Elevator created and linked!");
+                    } else {
+                    	player.sendMessage(Colors.Gold
+                    			+ "Elevator created but not yet linked to an existing lift sign.");
                     }
                 }
-                
-                sign.setText(1, "[Area]");
-            	sign.update();
-            	
-            	listener.informUser(player);
-            	
-            	if (useToggleAreas) {
-                	player.sendMessage(Colors.Gold + "Area toggle created!");
-                } else {
-                	player.sendMessage(Colors.Rose + "Area toggles are disabled on this server.");
-                }
+            } else {
+            	player.sendMessage(Colors.Rose + "Elevators are disabled on this server.");
+            }
 
-            // Bridges
-            } else if (line2.equalsIgnoreCase("[Bridge]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/makebridge")) {
+        // Toggle areas
+        } else if (line2.equalsIgnoreCase("[Toggle]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make toggle areas.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
+            
+            sign.setText(1, "[Toggle]");
+        	sign.update();
+        	
+        	listener.informUser(player);
+        	
+        	if (useToggleAreas) {
+            	player.sendMessage(Colors.Gold + "Area toggle created!");
+            } else {
+            	player.sendMessage(Colors.Rose + "Area toggles are disabled on this server.");
+            }
+
+        // Toggle areas
+        } else if (line2.equalsIgnoreCase("[Area]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make toggle areas.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
+            
+            String namespace = sign.getText(2);
+            
+            String expected = player.getName();
+            if (expected.length() > 15) {
+            	expected = expected.substring(0, 15);
+            }
+            
+            if (namespace.equals("")
+            		|| namespace.equalsIgnoreCase(expected)) {
+            	sign.setText(2, player.getName());
+            } else if (namespace.equals("@")) {
+                if (!player.canUseCommand("/savensarea")) {
                     player.sendMessage(Colors.Rose
-                            + "You don't have permission to make bridges.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                            + "You don't have permission to make global area toggles.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
                     return true;
                 }
-                
-                sign.setText(1, "[Bridge]");
-            	sign.update();
 
-            	listener.informUser(player);
-
-            	if (useBridges) {
-                    int data = CraftBook.getBlockData(
-                    		cblock.getX(), cblock.getY(), cblock.getZ());
-                    
-                    if (type == BlockType.WALL_SIGN) {
-                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
-	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
-	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-	                    return true;
-					}
-					
-                	player.sendMessage(Colors.Gold + "Bridge created!");
-                } else {
-                	player.sendMessage(Colors.Rose + "Bridges are disabled on this server.");
-                }
-
-            // Doors
-            } else if (line2.equalsIgnoreCase("[Door Up]")
-            		|| line2.equalsIgnoreCase("[Door Down]")) {
-                if (checkCreatePermissions && !player.canUseCommand("/makedoor")) {
+            	sign.setText(2, "");
+            } else {
+                if (!player.canUseCommand("/savensarea")) {
                     player.sendMessage(Colors.Rose
-                            + "You don't have permission to make doors.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                            + "You don't have permission to make area toggles for other namespaces.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
                     return true;
                 }
+            }
+            
+            sign.setText(1, "[Area]");
+        	sign.update();
+        	
+        	listener.informUser(player);
+        	
+        	if (useToggleAreas) {
+            	player.sendMessage(Colors.Gold + "Area toggle created!");
+            } else {
+            	player.sendMessage(Colors.Rose + "Area toggles are disabled on this server.");
+            }
+
+        // Bridges
+        } else if (line2.equalsIgnoreCase("[Bridge]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/makebridge")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make bridges.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
+            
+            sign.setText(1, "[Bridge]");
+        	sign.update();
+
+        	listener.informUser(player);
+
+        	if (useBridges) {
+                int data = CraftBook.getBlockData(
+                		sign.getX(), sign.getY(), sign.getZ());
                 
-                sign.setText(1, line2.equalsIgnoreCase("[Door Up]") ?
-                		"[Door Up]" : "[Door Down]");
-            	sign.update();
+                if (type == BlockType.WALL_SIGN) {
+                	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+            	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+				}
+				
+            	player.sendMessage(Colors.Gold + "Bridge created!");
+            } else {
+            	player.sendMessage(Colors.Rose + "Bridges are disabled on this server.");
+            }
 
-            	listener.informUser(player);
+        // Doors
+        } else if (line2.equalsIgnoreCase("[Door Up]")
+        		|| line2.equalsIgnoreCase("[Door Down]")) {
+            if (checkCreatePermissions && !player.canUseCommand("/makedoor")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make doors.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
+            
+            sign.setText(1, line2.equalsIgnoreCase("[Door Up]") ?
+            		"[Door Up]" : "[Door Down]");
+        	sign.update();
 
-            	if (useDoors) {
-                    int data = CraftBook.getBlockData(
-                    		cblock.getX(), cblock.getY(), cblock.getZ());
-                    
-                    if (type == BlockType.WALL_SIGN) {
-                    	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                        return true;
-                	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
-	                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
-	                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-	                    return true;
-					}
-					
-                	player.sendMessage(Colors.Gold + "Door created!");
-                } else {
-                	player.sendMessage(Colors.Rose + "Doors are disabled on this server.");
-                }
-			}
+        	listener.informUser(player);
+
+        	if (useDoors) {
+                int data = CraftBook.getBlockData(
+                		sign.getX(), sign.getY(), sign.getZ());
+                
+                if (type == BlockType.WALL_SIGN) {
+                	player.sendMessage(Colors.Rose + "The sign must be a sign post.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+            	} else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
+                	player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+				}
+				
+            	player.sendMessage(Colors.Gold + "Door created!");
+            } else {
+            	player.sendMessage(Colors.Rose + "Doors are disabled on this server.");
+            }
 		}
 
 		return false;

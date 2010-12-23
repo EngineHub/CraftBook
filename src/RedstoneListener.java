@@ -172,105 +172,101 @@ public class RedstoneListener extends CraftBookDelegateListener
 	}
 
     /**
-     * Called when either a sign, chest or furnace is changed.
-     *
-     * @param player player who changed it
-     * @param cblock complex block that changed
-     * @return true if you want any changes to be reverted
+     * Called when a sign is updated.
+     * @param player
+     * @param cblock
+     * @return
      */
-    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
-        if (cblock instanceof Sign) {
-            Sign sign = (Sign)cblock;
-            int type = CraftBook.getBlockID(
-                    cblock.getX(), cblock.getY(), cblock.getZ());
-            
-            String line2 = sign.getText(1);
-            int len = line2.length();
+    public boolean onSignChange(Player player, Sign sign) {
+        int type = CraftBook.getBlockID(
+                sign.getX(), sign.getY(), sign.getZ());
+        
+        String line2 = sign.getText(1);
+        int len = line2.length();
 
-            // ICs
-            if (line2.length() > 4
-                    && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
-                    line2.charAt(len - 1) == ']') {
+        // ICs
+        if (line2.length() > 4
+                && line2.substring(0, 3).equalsIgnoreCase("[MC") &&
+                line2.charAt(len - 1) == ']') {
 
-                // Check to see if the player can even create ICs
-                if (checkCreatePermissions
-                        && !player.canUseCommand("/makeic")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make ICs.");
-                    CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                    return true;
-                }
+            // Check to see if the player can even create ICs
+            if (checkCreatePermissions
+                    && !player.canUseCommand("/makeic")) {
+                player.sendMessage(Colors.Rose
+                        + "You don't have permission to make ICs.");
+                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                return true;
+            }
 
-                String id = line2.substring(1, len - 1).toUpperCase();
-                RegisteredIC ic = icList.get(id);
+            String id = line2.substring(1, len - 1).toUpperCase();
+            RegisteredIC ic = icList.get(id);
 
-                if (ic != null) {
-                    if (ic.isPlc) {
-                        if (!redstonePLCs) {
-                            player.sendMessage(Colors.Rose + "PLCs are not enabled.");
-                            CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                            return false;
-                        }
+            if (ic != null) {
+                if (ic.isPlc) {
+                    if (!redstonePLCs) {
+                        player.sendMessage(Colors.Rose + "PLCs are not enabled.");
+                        CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                        return false;
                     }
-                    
-                    if (!canCreateIC(player, id, ic)) {
+                }
+                
+                if (!canCreateIC(player, id, ic)) {
+                    player.sendMessage(Colors.Rose
+                            + "You don't have permission to make " + id + ".");
+                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+                    return true;
+                } else {
+                    // To check the environment
+                    Vector pos = new Vector(sign.getX(), sign.getY(), sign.getZ());
+                    SignText signText = new SignText(
+                        sign.getText(0), sign.getText(1), sign.getText(2),
+                        sign.getText(3));
+
+                    // Maybe the IC is setup incorrectly
+                    String envError = ic.ic.validateEnvironment(pos, signText);
+
+                    if (signText.isChanged()) {
+                        sign.setText(0, signText.getLine1());
+                        sign.setText(1, signText.getLine2());
+                        sign.setText(2, signText.getLine3());
+                        sign.setText(3, signText.getLine4());
+                    }
+
+                    if (envError != null) {
                         player.sendMessage(Colors.Rose
-                                + "You don't have permission to make " + id + ".");
-                        CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
+                                + "Error: " + envError);
+                        CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
                         return true;
                     } else {
-                        // To check the environment
-                        Vector pos = new Vector(cblock.getX(), cblock.getY(), cblock.getZ());
-                        SignText signText = new SignText(
-                            sign.getText(0), sign.getText(1), sign.getText(2),
-                            sign.getText(3));
-
-                        // Maybe the IC is setup incorrectly
-                        String envError = ic.ic.validateEnvironment(pos, signText);
-
-                        if (signText.isChanged()) {
-                            sign.setText(0, signText.getLine1());
-                            sign.setText(1, signText.getLine2());
-                            sign.setText(2, signText.getLine3());
-                            sign.setText(3, signText.getLine4());
-                        }
-
-                        if (envError != null) {
-                            player.sendMessage(Colors.Rose
-                                    + "Error: " + envError);
-                            CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                            return true;
-                        } else {
-                            sign.setText(0, ic.ic.getTitle());
-                            sign.setText(1, "[" + id + "]");
-                        }
-                        
-                        if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
-                            Vector v2 = Util.getWallSignBack(pos, 2);
-                            int bid=CraftBook.getBlockID(v2);
-                            if(bid==BlockType.REDSTONE_TORCH_OFF||
-                               bid==BlockType.REDSTONE_TORCH_ON) bv.add(v2.toBlockVector());
-                        }
-                        
-                        sign.update();
+                        sign.setText(0, ic.ic.getTitle());
+                        sign.setText(1, "[" + id + "]");
                     }
                     
-                    if (ic.isPlc && !redstonePLCs && redstoneICs) {
-                        player.sendMessage(Colors.Rose + "Warning: PLCs are disabled.");
+                    if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
+                        Vector v2 = Util.getWallSignBack(pos, 2);
+                        int bid=CraftBook.getBlockID(v2);
+                        if(bid==BlockType.REDSTONE_TORCH_OFF||
+                           bid==BlockType.REDSTONE_TORCH_ON) bv.add(v2.toBlockVector());
                     }
-                } else {
-                    sign.setText(1, Colors.Red + line2);
-                    player.sendMessage(Colors.Rose + "Unrecognized IC: " + id);
+                    
+                    sign.update();
                 }
-
-                if (!redstoneICs) {
-                    player.sendMessage(Colors.Rose + "Warning: ICs are disabled.");
-                } else if (type == BlockType.SIGN_POST) {
-                    player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
+                
+                if (ic.isPlc && !redstonePLCs && redstoneICs) {
+                    player.sendMessage(Colors.Rose + "Warning: PLCs are disabled.");
                 }
-
-                return false;
+            } else {
+                sign.setText(1, Colors.Red + line2);
+                player.sendMessage(Colors.Rose + "Unrecognized IC: " + id);
             }
+
+            if (!redstoneICs) {
+                player.sendMessage(Colors.Rose + "Warning: ICs are disabled.");
+            } else if (type == BlockType.SIGN_POST) {
+                player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
+            }
+
+            return false;
         }
         
         return false;
