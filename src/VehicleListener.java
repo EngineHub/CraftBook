@@ -644,6 +644,14 @@ public class VehicleListener extends CraftBookDelegateListener {
                                     return;
                                 }
 
+                                String line3 = sign.getText(2);
+                                String line4 = sign.getText(3);
+                                
+                                if (line3.equalsIgnoreCase("Pulse")
+                                		|| line4.equalsIgnoreCase("Pulse")) {
+                                	return;
+                                }
+
                                 Vector motion  = null;
                                 int data = CraftBook.getBlockData(
                                         blockX, cblock.getY(), blockZ);
