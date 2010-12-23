@@ -56,6 +56,7 @@ public class MechanismListener extends CraftBookDelegateListener {
     private boolean redstoneBridges = true;
     private boolean useDoors = true;
     private boolean redstoneDoors = true;
+    private boolean useHiddenSwitches = true;
     private boolean useToggleAreas;
     private boolean dropBookshelves = true;
     private double dropAppleChance = 0;
@@ -86,7 +87,7 @@ public class MechanismListener extends CraftBookDelegateListener {
         useElevators = properties.getBoolean("elevators-enable", true);
         useBridges = properties.getBoolean("bridge-enable", true);
         redstoneBridges = properties.getBoolean("bridge-redstone", true);
-        useDoors = properties.getBoolean("door-enable", true);
+        useHiddenSwitches = properties.getBoolean("door-enable", true);
         Bridge.allowableBridgeBlocks = Util.toBlockIDSet(properties.getString("bridge-blocks", "4,5,20,43"));
         Bridge.maxBridgeLength = properties.getInt("bridge-max-length", 30);
         redstoneDoors = properties.getBoolean("door-redstone", true);
@@ -99,6 +100,7 @@ public class MechanismListener extends CraftBookDelegateListener {
             dropAppleChance = -1;
             logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
         }
+        useHiddenSwitches = properties.getBoolean("hidden-switches-eable", true);
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
         redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
@@ -868,7 +870,6 @@ public class MechanismListener extends CraftBookDelegateListener {
                     
                     return true;
                 }
-                
             }
 
         // Cauldron
@@ -880,9 +881,53 @@ public class MechanismListener extends CraftBookDelegateListener {
             int z = blockClicked.getZ();
 
             cauldronModule.preCauldron(new Vector(x, y, z), player);
+
+        }
+
+        // Hidden switches
+        if (useHiddenSwitches
+        		&& itemInHand <= 0
+                && blockClicked.getType() != BlockType.SIGN_POST
+                && blockClicked.getType() != BlockType.WALL_SIGN
+                && !BlockType.isRedstoneBlock(blockClicked.getType())) {
+            
+            int x = blockClicked.getX();
+            int y = blockClicked.getY();
+            int z = blockClicked.getZ();
+
+        	toggleHiddenSwitch(x, y - 1, z);
+        	toggleHiddenSwitch(x, y + 1, z);
+        	toggleHiddenSwitch(x - 1, y, z);
+        	toggleHiddenSwitch(x + 1, y, z);
+        	toggleHiddenSwitch(x, y, z - 1);
+        	toggleHiddenSwitch(x, y, z + 1);
+            
+            return true;
         }
 
         return false;
+    }
+    
+    /**
+     * Toggle a hidden switch.
+     * 
+     * @param pt
+     */
+    private void toggleHiddenSwitch(int x, int y, int z) {
+    	ComplexBlock cblock = etc.getServer().getComplexBlock(x, y, z);
+    	
+    	if (cblock instanceof Sign) {
+    		Sign sign = (Sign)cblock;
+    		
+    		if (sign.getText(1).equalsIgnoreCase("[X]")) {
+    			Redstone.toggleOutput(new Vector(x, y - 1, z));
+    			Redstone.toggleOutput(new Vector(x, y + 1, z));
+    			Redstone.toggleOutput(new Vector(x - 1, y, z));
+    			Redstone.toggleOutput(new Vector(x + 1, y, z));
+    			Redstone.toggleOutput(new Vector(x, y, z - 1));
+    			Redstone.toggleOutput(new Vector(x, y, z + 1));
+    		}
+    	}
     }
     
     /**
