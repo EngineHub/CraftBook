@@ -514,16 +514,14 @@ public class MechanismListener extends CraftBookDelegateListener {
 	 * Called when a block is being attempted to be placed.
 	 * 
 	 * @param player
-	 * @param blockPlaced
 	 * @param blockClicked
 	 * @param itemInHand
 	 * @return
 	 */
     @Override
-    public boolean onBlockCreate(Player player, Block blockPlaced,
-            Block blockClicked, int itemInHand) {
+    public void onBlockRightClicked(Player player, Block blockClicked, Item item) {
         try {
-            return doBlockCreate(player, blockPlaced, blockClicked, itemInHand);
+            handleBlockUse(player, blockClicked, item.getItemId());
         } catch (OutOfBlocksException e) {
             player.sendMessage(Colors.Rose + "Uh oh! Ran out of: " + Util.toBlockName(e.getID()));
             player.sendMessage(Colors.Rose + "Make sure nearby block sources have the necessary");
@@ -534,21 +532,19 @@ public class MechanismListener extends CraftBookDelegateListener {
         } catch (BlockSourceException e) {
             player.sendMessage(Colors.Rose + "Error: " + e.getMessage());
         }
-
-        return true; // On error
     }
 
     /**
      * Called when a block is being attempted to be placed.
      * 
      * @param player
-     * @param blockPlaced
      * @param blockClicked
      * @param itemInHand
      * @return
      */
-    private boolean doBlockCreate(Player player, Block blockPlaced,
-            Block blockClicked, int itemInHand) throws BlockSourceException {
+    private boolean handleBlockUse(Player player, Block blockClicked,
+    		int itemInHand)
+    		throws BlockSourceException {
 
         int current = -1;
 
@@ -601,10 +597,6 @@ public class MechanismListener extends CraftBookDelegateListener {
             return false;
         }
 
-        // Discriminate against attempts that would actually place blocks
-        boolean isPlacingBlock = blockPlaced.getType() != -1
-                && blockPlaced.getType() <= 256;
-
         int plyX = (int)Math.floor(player.getLocation().x);
         int plyY = (int)Math.floor(player.getLocation().y);
         int plyZ = (int)Math.floor(player.getLocation().z);
@@ -612,7 +604,6 @@ public class MechanismListener extends CraftBookDelegateListener {
         // Book reading
         if (useBookshelves
                 && blockClicked.getType() == BlockType.BOOKCASE
-                && !isPlacingBlock
                 && checkPermission(player, "/readbooks")) {
             BookReader.readBook(player, bookReadLine);
             return true;
@@ -782,9 +773,7 @@ public class MechanismListener extends CraftBookDelegateListener {
 
         // Cauldron
         } else if (cauldronModule != null
-                && checkPermission(player, "/cauldron")
-                && (blockPlaced.getType() == -1 || blockPlaced.getType() >= 256)
-                && blockPlaced.getType() != BlockType.STONE) {
+                && checkPermission(player, "/cauldron")) {
             
             int x = blockClicked.getX();
             int y = blockClicked.getY();
