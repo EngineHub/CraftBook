@@ -54,7 +54,7 @@ public class MC1202 extends BaseIC {
 
         if (sign.getLine4().length() > 0) {
             try {
-                Math.min(64, Math.max(-1, Integer.parseInt(sign.getLine4())));
+                Math.min(64, Math.max(1, Integer.parseInt(sign.getLine4())));
             } catch (NumberFormatException e) {
                 return "Not a valid quantity: " + sign.getLine4() + ".";
             }
@@ -95,7 +95,7 @@ public class MC1202 extends BaseIC {
 
         try {
             quantity = Math.min(64,
-                    Math.max(-1, Integer.parseInt(chip.getText().getLine4())));
+                    Math.max(1, Integer.parseInt(chip.getText().getLine4())));
         } catch (NumberFormatException e) {
         }
 
