@@ -148,15 +148,13 @@ public class VehicleListener extends CraftBookDelegateListener {
             
             Vector signPos = pt.add(0, -2, 0);
 
-            // Try two blocks underneath first
-            if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
-                signPos = pt.add(0, -1, 0);
-            }
-
-            // Try three blocks underneath
-            if (!Util.doesSignSay(signPos, 1, "[Dispenser]")) {
+        	Sign sign = getControllerSign(pt.add(0, -1, 0), "[Dispenser]");
+        	
+            if (sign == null) {
                 return;
             }
+
+        	String collectType = sign != null ? sign.getText(2) : "";
 
             Vector dir = Util.getSignPostOrthogonalBack(signPos, 1)
                     .subtract(signPos);
@@ -174,11 +172,52 @@ public class VehicleListener extends CraftBookDelegateListener {
             blockBag.addSingleSourcePosition(pt.add(0, 0, -1));
 
             try {
-                blockBag.fetchBlock(ItemType.MINECART);
-                kq minecart = new kq(etc.getMCServer().e,
-                        depositPt.getX(), depositPt.getY(),
-                        depositPt.getZ(), 0);
-                etc.getMCServer().e.a(minecart);
+            	if (collectType.equalsIgnoreCase("Storage")) {
+            		try {
+	            		blockBag.fetchBlock(ItemType.STORAGE_MINECART);
+            		} catch (BlockSourceException e) {
+            			// Okay, no storage minecarts... but perhaps we can
+            			// craft a minecart + chest!
+                		if (blockBag.peekBlock(BlockType.CHEST)) {
+                    		blockBag.fetchBlock(ItemType.MINECART);
+                    		blockBag.fetchBlock(BlockType.CHEST);
+                		} else {
+                			throw new BlockSourceException();
+                		}
+            		}
+            		
+            		new Minecart(
+            				depositPt.getX(),
+            				depositPt.getY(),
+            				depositPt.getZ(),
+            				Minecart.Type.StorageCart);
+            	} else if (collectType.equalsIgnoreCase("Powered")) {
+            		try {
+	            		blockBag.fetchBlock(ItemType.POWERED_MINECART);
+            		} catch (BlockSourceException e) {
+            			// Okay, no storage minecarts... but perhaps we can
+            			// craft a minecart + chest!
+                		if (blockBag.peekBlock(BlockType.FURNACE)) {
+                    		blockBag.fetchBlock(ItemType.MINECART);
+                    		blockBag.fetchBlock(BlockType.FURNACE);
+                		} else {
+                			throw new BlockSourceException();
+                		}
+            		}
+            		
+            		new Minecart(
+            				depositPt.getX(),
+            				depositPt.getY(),
+            				depositPt.getZ(),
+            				Minecart.Type.PoweredMinecart);
+            	} else {
+            		blockBag.fetchBlock(ItemType.MINECART);
+            		new Minecart(
+            				depositPt.getX(),
+            				depositPt.getY(),
+            				depositPt.getZ(),
+            				Minecart.Type.Minecart);
+            	}
             } catch (BlockSourceException e) {
                 // No minecarts
             }
@@ -525,6 +564,9 @@ public class VehicleListener extends CraftBookDelegateListener {
                 }
 
                 if (depositPt != null) {
+                	Sign sign = getControllerSign(depositPt.add(0, -1, 0), "[Dispenser]");
+                	String collectType = sign != null ? sign.getText(2) : "";
+                	
                     NearbyChestBlockBag blockBag = new NearbyChestBlockBag(depositPt);
                     blockBag.addSingleSourcePosition(depositPt);
                     blockBag.addSingleSourcePosition(depositPt.add(1, 0, 0));
@@ -564,10 +606,12 @@ public class VehicleListener extends CraftBookDelegateListener {
                                 items[i] = null;
                             }
 
-                            // Split the cart into a Minecart, and an chest, as the dispenser cannot
-                            // release storage minecarts
-                            blockBag.storeBlock(ItemType.MINECART);
-                            blockBag.storeBlock(BlockType.CHEST);
+                            if (collectType.equalsIgnoreCase("Storage")) {
+	                            blockBag.storeBlock(ItemType.STORAGE_MINECART);
+                            } else {
+	                            blockBag.storeBlock(ItemType.MINECART);
+	                            blockBag.storeBlock(BlockType.CHEST);
+                            }
 
                             sm.setContents(items);
                             minecart.destroy();
@@ -576,11 +620,13 @@ public class VehicleListener extends CraftBookDelegateListener {
                             sm.setContents(items);
                         }
                     } else if (type == Minecart.Type.PoweredMinecart) {
-                        // Split the cart into a Minecart, and an furnace, as the dispenser cannot
-                        // release storage minecarts.
                         try {
-                            blockBag.storeBlock(ItemType.MINECART);
-                            blockBag.storeBlock(BlockType.FURNACE);
+                            if (collectType.equalsIgnoreCase("Powered")) {
+	                            blockBag.storeBlock(ItemType.POWERED_MINECART);
+                            } else {
+                                blockBag.storeBlock(ItemType.MINECART);
+                                blockBag.storeBlock(BlockType.FURNACE);
+                            }
                             minecart.destroy();
                         } catch (BlockSourceException e) {
                         	// Ran out of space
@@ -916,6 +962,20 @@ public class VehicleListener extends CraftBookDelegateListener {
         }
         
         return false;
+    }
+    
+    /**
+     * Get the controller sign for a block type. The coordinates provided
+     * are those of the block (signs are to be underneath). The provided
+     * text must be on the second line of the sign.
+     * 
+     * @param pt
+     * @param text
+     * @return
+     */
+    private Sign getControllerSign(Vector pt, String text) {
+    	return getControllerSign(pt.getBlockX(), pt.getBlockY(),
+    			pt.getBlockZ(), text);
     }
     
     /**
