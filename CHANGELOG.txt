@@ -42,6 +42,7 @@ dev:
 - Added new redstone-plcs-require-permission configuration.
 - Fixed issue with the 32nd slot of Perlstone's tables.
 - Added /listics command.
+- Added Perlstone32 PLC language.
 [Block bags]
 - Overhauled block bag system for bridges, gates, etc. Now multiple
     block bags can be used simultaneously.

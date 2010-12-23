@@ -25,6 +25,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+
+import olegbl.perlstone32.Perlstone32_1;
 import lymia.perlstone.Perlstone_1_0;
 import lymia.plc.PlcLang;
 import lymia.util.Symbol;
@@ -35,6 +37,7 @@ public class CustomICLoader {
     private static HashMap<String,PlcLang> LANGUAGES = new HashMap<String,PlcLang>();
     static {
         registerLang("perlstone_v1.0",new Perlstone_1_0());
+        registerLang("perlstone32_v1",new Perlstone32_1());
     }
     
     public static void load(String source, CustomICAccepter dest) throws CustomICException {
