@@ -155,23 +155,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
                         if (complexBlock instanceof Chest) {
                             Chest chest = (Chest)complexBlock;
-                            Item[] itemArray = chest.getContents();
-                            boolean occupied = false;
-
-                            // Got to make sure that at least one slot is occupied
-                            for (int i = 0; itemArray.length > i; i++) {
-                                if (itemArray[i] != null) {
-                                    // Found an item
-                                    if (itemArray[i].getAmount() > 0) {
-                                        occupied = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (occupied) {
-                                chests.add(new ComparableComplexBlock<Chest>(cur.toBlockVector(), chest));
-                            }
+                            chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
                         }
                     }
                 }
@@ -196,23 +180,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest)complexBlock;
-                Item[] itemArray = chest.getContents();
-                boolean occupied = false;
-
-                // Got to make sure that at least one slot is occupied
-                for (int i = 0; itemArray.length > i; i++) {
-                    if (itemArray[i] != null) {
-                        // Found an item
-                        if (itemArray[i].getAmount() > 0) {
-                            occupied = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (occupied) {
-                    chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
-                }
+                chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
             }
         }
     }
