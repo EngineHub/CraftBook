@@ -101,7 +101,7 @@ public class MC1202 extends BaseIC {
 
         int item = getItem(id);
 
-        if (item > 0) {
+        if (item > 0 && !(item >= 21 && item <= 34) && item != 36) {
             Vector pos = chip.getBlockPosition();
             int maxY = Math.min(128, pos.getBlockY() + 10);
             int x = pos.getBlockX();

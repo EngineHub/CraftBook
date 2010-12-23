@@ -101,7 +101,8 @@ public class MC1205 extends BaseIC {
 
         int item = getItem(id);
 
-        if (item > 0 || isForced) {
+        if ((item > 0 || isForced) && !(item >= 21 && item <= 34)
+        		&& item != 36) {
             Vector pos = chip.getBlockPosition();
             int y = pos.getBlockY() + 2;
             int x = pos.getBlockX();
