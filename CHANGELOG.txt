@@ -33,6 +33,9 @@ dev:
 - MC1200 (mob spawner) now supports riders. Specify the rider on the
     fourth line.
 - Changed MC1110 to output the input.
+- Allowed the set block ICs to displace a block ("force" must be the
+    fourth line). 
+- Blocked the dispensing/creation of pre-Alpha cloth blocks with ICs.
 - Added support for self-triggering ICs. No more clocks on recievers!
 - Added MC5001, a variant of MC5000 using the 3 input, 3 output layout.
 - Added support for custom ICs using existing PLC languages.
@@ -53,7 +56,8 @@ dev:
     the passenger is of a certain hMod group, if the passenger is holding
     a certain item, etc.). It is currently not possible to filter by
     mob type inside the minecart.
-- Minecart station blocks now continually push when activated.
+- Minecart station blocks now continually push when activated. To pulse
+    (old behavior), put "Pulse" on the third or fourth line.
 - The minecart dispenser can now dispense onto anything.
 - Redstone currents can now be put on the same level as the tracks
     for minecart control blocks.
@@ -69,8 +73,15 @@ dev:
 - Fixed potential issue with the cauldron dropping items.
 - Added per-group permissions for cauldrons.
 - Added reload-cauldron console command. 
-[Bridges]
+[Mechanisms]
 - Bridges can now cut through snow.
+- New doors are a vertical form of bridges. Use [Door Up] and [Door Down]
+    and [Door End]. They work like bridge signs, although you have to
+    specify a direction that the door is in (unlike bridges).
+- New hidden redstone switches. Put a sign with [X] as the second line next
+    to a block (either next to it, on top, or below) and then put switches
+    right next to the sign at right angles. While holding no item, right
+    click the block to toggle the switch(es).
 [Misc]
 - New /reload CraftBook command reloads CraftBook's configuration. /reload *
     can be used to reload other plugins (utilizing the same system)

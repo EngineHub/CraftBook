@@ -153,7 +153,9 @@ public class CopyManager {
     			+ "areas" + File.separator
     			+ namespace).list();
     	
-    	if (ignore == null) {
+    	if (files == null) {
+    		return quota > 0 ? -1 : 0;
+    	} else if (ignore == null) {
 	    	return files.length < quota ? -1 : files.length;
     	} else {
     		int count = 0;

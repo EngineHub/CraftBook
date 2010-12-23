@@ -341,6 +341,18 @@ public class Redstone {
 	        return false;
 	    }
 	}
+	
+	/**
+	 * Toggles an output.
+	 * 
+	 * @param pos
+	 * @return
+	 */
+	static void toggleOutput(Vector pos) {
+	    if (CraftBook.getBlockID(pos) == BlockType.LEVER) {
+	    	setOutput(pos, (CraftBook.getBlockData(pos) & 0x8) != 0x8);
+	    }
+	}
 
 	/**
 	 * Sets the output state of a minecart trigger at a location.
