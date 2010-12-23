@@ -90,6 +90,7 @@ public class MechanismListener extends CraftBookDelegateListener {
         useHiddenSwitches = properties.getBoolean("door-enable", true);
         Bridge.allowableBridgeBlocks = Util.toBlockIDSet(properties.getString("bridge-blocks", "4,5,20,43"));
         Bridge.maxBridgeLength = properties.getInt("bridge-max-length", 30);
+        useDoors = properties.getBoolean("door-enable", true);
         redstoneDoors = properties.getBoolean("door-redstone", true);
         Door.allowableDoorBlocks = Util.toBlockIDSet(properties.getString("door-blocks", "1,3,4,5,17,20,35,43,44,45,47,80,82"));
         Door.maxDoorLength = properties.getInt("door-max-length", 30);
@@ -100,7 +101,7 @@ public class MechanismListener extends CraftBookDelegateListener {
             dropAppleChance = -1;
             logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
         }
-        useHiddenSwitches = properties.getBoolean("hidden-switches-eable", true);
+        useHiddenSwitches = properties.getBoolean("hidden-switches-enable", true);
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
         redstoneToggleAreas = properties.getBoolean("toggle-areas-redstone", true);
         checkPermissions = properties.getBoolean("check-permissions", false);
