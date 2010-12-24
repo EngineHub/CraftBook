@@ -301,6 +301,15 @@ public class VehicleListener extends CraftBookDelegateListener {
             int under = CraftBook.getBlockID(blockX, blockY - 1, blockZ);
 
             if (minecartControlBlocks) {
+            	// Overflow prevention
+                if (Math.abs(minecart.getMotionX()) > 100) {
+                	minecart.setMotionX(Math.signum(minecart.getMotionX()) * 100);
+                }
+                
+                if (Math.abs(minecart.getMotionZ()) > 100) {
+                	minecart.setMotionZ(Math.signum(minecart.getMotionZ()) * 100);
+                }
+                
                 if (under == minecart25xBoostBlock) {
                     Boolean test = Redstone.testAnyInput(underPt);
 
