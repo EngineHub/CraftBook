@@ -142,7 +142,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id, int amount) throws BlockSourceException {
-    	
+        
     }
 
     /**
@@ -204,7 +204,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      */
     public int getChestBlockCount() {
-    	return chests.size();
+        return chests.size();
     }
     
     /**
@@ -213,15 +213,15 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      */
     public Inventory[] getInventories() {
-    	Inventory[] inventories = new Inventory[chests.size()];
-    	
-    	int i = 0;
-    	for (ComparableComplexBlock<Chest> c : chests) {
-    		inventories[i] = c.getChest();
-    		i++;
-    	}
-    	
-    	return inventories;
+        Inventory[] inventories = new Inventory[chests.size()];
+        
+        int i = 0;
+        for (ComparableComplexBlock<Chest> c : chests) {
+            inventories[i] = c.getChest();
+            i++;
+        }
+        
+        return inventories;
     }
 
     /**

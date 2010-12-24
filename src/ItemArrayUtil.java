@@ -38,57 +38,57 @@ public class ItemArrayUtil {
         boolean changed = false;
         
         try {
-	        for (int cartSlot = 0; cartSlot < fromItems.length; cartSlot++) {
-	        	Item cartItem = fromItems[cartSlot];
-	        	
-	            if (cartItem == null || cartItem.getAmount() == 0) {
-	                continue;
-	            }
-	            
-	            try {
-		            for (; invenIndex < inventories.length; invenIndex++) {
-		            	Item[] chestItems = inventories[invenIndex].getContents();
-		            	
-		            	for (int chestSlot = 0; chestSlot < chestItems.length; chestSlot++) {
-		                    Item chestItem = chestItems[chestSlot];
-		                    
-		                    if (chestItem == null) {
-		                    	chestItems[chestSlot] = cartItem;
-		                    	fromItems[cartSlot] = null;
-	                    		inventories[invenIndex].setContents(chestItems);
-	                    		changed = true;
-	                    		throw new TransferredItemException();
-		                    } else if (chestItem.getItemId() == cartItem.getItemId()
-		                    		&& chestItem.getAmount() < 64
-		                    		&& chestItem.getAmount() >= 0) {
-		                    	int spaceAvailable = 64 - chestItem.getAmount();
-		                    	
-		                    	if (spaceAvailable >= cartItem.getAmount()) {
-		                    		chestItem.setAmount(chestItem.getAmount()
-		                    				+ cartItem.getAmount());
-		                    		fromItems[cartSlot] = null;
-		                    		inventories[invenIndex].setContents(chestItems);
-		                    		changed = true;
-		                    		throw new TransferredItemException();
-		                    	} else {
-		                    		cartItem.setAmount(cartItem.getAmount()
-		                    				- spaceAvailable);
-		                    		chestItem.setAmount(64);
-		                    		changed = true;
-		                    	}
-		                    }
-		            	}
-		            }
-		            
-		            throw new TargetFullException();
-	            } catch (TransferredItemException e) {
-	            }
-	        }
+            for (int cartSlot = 0; cartSlot < fromItems.length; cartSlot++) {
+                Item cartItem = fromItems[cartSlot];
+                
+                if (cartItem == null || cartItem.getAmount() == 0) {
+                    continue;
+                }
+                
+                try {
+                    for (; invenIndex < inventories.length; invenIndex++) {
+                        Item[] chestItems = inventories[invenIndex].getContents();
+                        
+                        for (int chestSlot = 0; chestSlot < chestItems.length; chestSlot++) {
+                            Item chestItem = chestItems[chestSlot];
+                            
+                            if (chestItem == null) {
+                                chestItems[chestSlot] = cartItem;
+                                fromItems[cartSlot] = null;
+                                inventories[invenIndex].setContents(chestItems);
+                                changed = true;
+                                throw new TransferredItemException();
+                            } else if (chestItem.getItemId() == cartItem.getItemId()
+                                    && chestItem.getAmount() < 64
+                                    && chestItem.getAmount() >= 0) {
+                                int spaceAvailable = 64 - chestItem.getAmount();
+                                
+                                if (spaceAvailable >= cartItem.getAmount()) {
+                                    chestItem.setAmount(chestItem.getAmount()
+                                            + cartItem.getAmount());
+                                    fromItems[cartSlot] = null;
+                                    inventories[invenIndex].setContents(chestItems);
+                                    changed = true;
+                                    throw new TransferredItemException();
+                                } else {
+                                    cartItem.setAmount(cartItem.getAmount()
+                                            - spaceAvailable);
+                                    chestItem.setAmount(64);
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+                    
+                    throw new TargetFullException();
+                } catch (TransferredItemException e) {
+                }
+            }
         } catch (TargetFullException e) {
         }
         
         if (changed) {
-        	from.setContents(fromItems);
+            from.setContents(fromItems);
         }
     }
 
@@ -132,7 +132,7 @@ public class ItemArrayUtil {
                                 
                                 if (spaceAvailable >= chestItem.getAmount()) {
                                     cartItem.setAmount(cartItem.getAmount()
-                                    		+ chestItem.getAmount());
+                                            + chestItem.getAmount());
                                     chestItems[chestSlot] = null;
                                     changed = true;
                                     throw new TransferredItemException();
@@ -159,7 +159,7 @@ public class ItemArrayUtil {
         }
         
         if (changedDest) {
-        	to.setContents(toItems);
+            to.setContents(toItems);
         }
     }
 

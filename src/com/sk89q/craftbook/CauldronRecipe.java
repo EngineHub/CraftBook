@@ -58,7 +58,7 @@ public final class CauldronRecipe {
      * @param results
      */
     public CauldronRecipe(String name, List<Integer> ingredients,
-    		List<Integer> results, String[] groups) {
+            List<Integer> results, String[] groups) {
         this.name = name;
         this.ingredients = Collections.unmodifiableList(ingredients);
         this.results = Collections.unmodifiableList(results);
@@ -89,13 +89,13 @@ public final class CauldronRecipe {
     }
 
     /**
-	 * @return the groups
-	 */
-	public String[] getGroups() {
-		return groups;
-	}
+     * @return the groups
+     */
+    public String[] getGroups() {
+        return groups;
+    }
 
-	/**
+    /**
      * Checks to see if all the ingredients are met.
      *
      * @param check

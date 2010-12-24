@@ -31,106 +31,106 @@ import com.sk89q.craftbook.BlockVector;
  * @author sk89q
  */
 public class TickDelayer implements Runnable {
-	/**
-	 * List of actions to delay.
-	 */
+    /**
+     * List of actions to delay.
+     */
     private LinkedHashSet<Action> delayedActions = new LinkedHashSet<Action>();
 
-	/**
-	 * Delay an action.
-	 * 
-	 * @param action
-	 */
-	public void delayAction(Action action) {
-		delayedActions.add(action);
-	}
+    /**
+     * Delay an action.
+     * 
+     * @param action
+     */
+    public void delayAction(Action action) {
+        delayedActions.add(action);
+    }
 
-	/**
-	 * Run thread.
-	 */
-	public void run() {
-		long currentTick = etc.getServer().getTime();
-		
-		ArrayList<Action> actionQueue = new ArrayList<Action>();
-		
-		for (Iterator<Action> it = delayedActions.iterator(); it.hasNext(); ) {
-		    Action action = it.next();
-		    if (action.getRunAt() <= currentTick) {
-		    	it.remove();
-		    	actionQueue.add(action);
-		    }
-		}
-		
-		for (Action action : actionQueue) {
-	    	try {
-	    		action.run();
-	    	} catch (Throwable t) {
-	    		t.printStackTrace();
-	    	}
-		}
-	}
-	
-	/**
-	 * Action to delay.
-	 * 
-	 * @author sk89q
-	 */
-	public static abstract class Action {
-		/**
-		 * Stores the point associated with this delayed action.
-		 */
-		private BlockVector pt;
-		/**
-		 * Tick to perform the action at.
-		 */
-		private long runAt = 0;
-		
-		/**
-		 * Construct the object.
-		 * 
-		 * @param pt
-		 * @param tickDelay
-		 */
-		public Action(BlockVector pt, long tickDelay) {
-			this.pt = pt;
-			runAt = etc.getServer().getTime() + tickDelay;
-		}
-		
-		/**
-		 * Run the action.
-		 */
-		public abstract void run();
-		
-		/**
-		 * Get the tick to run at.
-		 * 
-		 * @return
-		 */
-		public long getRunAt() {
-			return runAt;
-		}
-		
-		/**
-		 * Return the hash code.
-		 * 
-		 * @return hash code
-		 */
-		public int hashCode() {
-			return pt.hashCode();
-		}
-		
-		/**
-		 * Returns whether the other object is equal.
-		 * 
-		 * @param other
-		 * @return
-		 */
-		public boolean equals(Object obj) {
-	        if (!(obj instanceof Action)) {
-	            return false;
-	        }
-	        Action other = (Action)obj;
-	        return other.pt.equals(pt);
-		}
-	}
+    /**
+     * Run thread.
+     */
+    public void run() {
+        long currentTick = etc.getServer().getTime();
+        
+        ArrayList<Action> actionQueue = new ArrayList<Action>();
+        
+        for (Iterator<Action> it = delayedActions.iterator(); it.hasNext(); ) {
+            Action action = it.next();
+            if (action.getRunAt() <= currentTick) {
+                it.remove();
+                actionQueue.add(action);
+            }
+        }
+        
+        for (Action action : actionQueue) {
+            try {
+                action.run();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Action to delay.
+     * 
+     * @author sk89q
+     */
+    public static abstract class Action {
+        /**
+         * Stores the point associated with this delayed action.
+         */
+        private BlockVector pt;
+        /**
+         * Tick to perform the action at.
+         */
+        private long runAt = 0;
+        
+        /**
+         * Construct the object.
+         * 
+         * @param pt
+         * @param tickDelay
+         */
+        public Action(BlockVector pt, long tickDelay) {
+            this.pt = pt;
+            runAt = etc.getServer().getTime() + tickDelay;
+        }
+        
+        /**
+         * Run the action.
+         */
+        public abstract void run();
+        
+        /**
+         * Get the tick to run at.
+         * 
+         * @return
+         */
+        public long getRunAt() {
+            return runAt;
+        }
+        
+        /**
+         * Return the hash code.
+         * 
+         * @return hash code
+         */
+        public int hashCode() {
+            return pt.hashCode();
+        }
+        
+        /**
+         * Returns whether the other object is equal.
+         * 
+         * @param other
+         * @return
+         */
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Action)) {
+                return false;
+            }
+            Action other = (Action)obj;
+            return other.pt.equals(pt);
+        }
+    }
 }

@@ -180,13 +180,13 @@ public abstract class BlockBag {
      * @return whether the block exists
      */
     public boolean peekBlock(int id) {
-    	try {
-	    	fetchBlock(id);
-	    	storeBlock(id);
-	    	return true;
-    	} catch (BlockSourceException e) {
-    		return false;
-    	}
+        try {
+            fetchBlock(id);
+            storeBlock(id);
+            return true;
+        } catch (BlockSourceException e) {
+            return false;
+        }
     }
     
     /**

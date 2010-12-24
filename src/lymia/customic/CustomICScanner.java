@@ -364,7 +364,7 @@ final class CustomICScanner {
       }     
     }
 
-	// numRead < 0
+    // numRead < 0
     return true;
   }
 

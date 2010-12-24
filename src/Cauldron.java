@@ -137,24 +137,24 @@ public class Cauldron {
             CauldronRecipe recipe = recipes.find(contents);
 
             if (recipe != null) {
-            	String[] groups = recipe.getGroups();
-            	
-            	if (groups != null) {
-            		boolean found = false;
-            		
-            		for (String group : groups) {
-            			if (player.isInGroup(group)) {
-            				found = true;
-            				break;
-            			}
-            		}
-            		
-            		if (!found) {
+                String[] groups = recipe.getGroups();
+                
+                if (groups != null) {
+                    boolean found = false;
+                    
+                    for (String group : groups) {
+                        if (player.isInGroup(group)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!found) {
                         player.sendMessage(Colors.Red + "Doesn't seem as if you have the ability...");
                         return;
-            		}
-            	}
-            	
+                    }
+                }
+                
                 player.sendMessage(Colors.Gold + "In a poof of smoke, you've made "
                         + recipe.getName() + ".");
 
@@ -168,19 +168,19 @@ public class Cauldron {
                     // This is not a fast operation, but we should not have
                     // too many ingredients
                     if (ingredients.contains(entry.getValue())) {
-                    	// Some blocks need to removed first otherwise they will
-                    	// drop an item, so let's remove those first
-                    	if (!BlockType.isBottomDependentBlock(entry.getValue())) {
-                    		removeQueue.add(entry.getKey());
-                    	} else {
-                    		CraftBook.setBlockID(entry.getKey(), 0);
-                    	}
-                		ingredients.remove(entry.getValue());
+                        // Some blocks need to removed first otherwise they will
+                        // drop an item, so let's remove those first
+                        if (!BlockType.isBottomDependentBlock(entry.getValue())) {
+                            removeQueue.add(entry.getKey());
+                        } else {
+                            CraftBook.setBlockID(entry.getKey(), 0);
+                        }
+                        ingredients.remove(entry.getValue());
                     }
                 }
                 
                 for (BlockVector v : removeQueue) {
-            		CraftBook.setBlockID(v, 0);
+                    CraftBook.setBlockID(v, 0);
                 }
 
                 // Give results

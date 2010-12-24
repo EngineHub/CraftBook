@@ -70,11 +70,11 @@ public class MC3101 extends BaseIC {
             return "Specify counter configuration on line 3.";
         }
 
-		if (!sign.getLine4().equals("")) {
-			return "Line 4 must be blank";
-		}
-		
-		sign.setLine4("0");
+        if (!sign.getLine4().equals("")) {
+            return "Line 4 must be blank";
+        }
+        
+        sign.setLine4("0");
 
         return null;
     }
@@ -85,48 +85,48 @@ public class MC3101 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
-		try {
-    		// Get IC configuration data from line 3 of sign
-    		String line3 = chip.getText().getLine3();
-    		String[] config = line3.split(":");
-    		
-    		int resetVal = Integer.parseInt(config[0]);
-    		boolean inf = config[1].equals("INF");
+        try {
+            // Get IC configuration data from line 3 of sign
+            String line3 = chip.getText().getLine3();
+            String[] config = line3.split(":");
+            
+            int resetVal = Integer.parseInt(config[0]);
+            boolean inf = config[1].equals("INF");
     
-    		// Get current counter value from line 4 of sign
-    		String line4 = chip.getText().getLine4();
-    		int curVal = Integer.parseInt(line4);
-    		int oldVal = curVal;
+            // Get current counter value from line 4 of sign
+            String line4 = chip.getText().getLine4();
+            int curVal = Integer.parseInt(line4);
+            int oldVal = curVal;
     
-    		// If clock input triggered
-    		if (chip.getIn(1).isTriggered() && chip.getIn(1).is()) {
-    			if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
-    				if (inf) {
-    					curVal = resetVal;
-    				}
-    			} else { // Decrement counter
-    				curVal--;
-    			}
+            // If clock input triggered
+            if (chip.getIn(1).isTriggered() && chip.getIn(1).is()) {
+                if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
+                    if (inf) {
+                        curVal = resetVal;
+                    }
+                } else { // Decrement counter
+                    curVal--;
+                }
     
-    			// Set output to high if we're at 0, otherwise low
-    			if (curVal == 0) {
-    				chip.getOut(1).set(true);
-    			} else {
-    				chip.getOut(1).set(false);
-    			}
-    		// If reset input triggered, reset counter value
-			} else if (chip.getIn(2).isTriggered() && chip.getIn(2).is()) {
-    			curVal = resetVal;
-    		}
+                // Set output to high if we're at 0, otherwise low
+                if (curVal == 0) {
+                    chip.getOut(1).set(true);
+                } else {
+                    chip.getOut(1).set(false);
+                }
+            // If reset input triggered, reset counter value
+            } else if (chip.getIn(2).isTriggered() && chip.getIn(2).is()) {
+                curVal = resetVal;
+            }
     
-    		// Update counter value stored on sign if it's changed
-    		if (curVal != oldVal) {
-    			chip.getText().setLine4(Integer.toString(curVal));
-    		}
-    		
-    		chip.getText().supressUpdate();
-		} catch (Exception e) {
-			chip.triggerError();
-		}
+            // Update counter value stored on sign if it's changed
+            if (curVal != oldVal) {
+                chip.getText().setLine4(Integer.toString(curVal));
+            }
+            
+            chip.getText().supressUpdate();
+        } catch (Exception e) {
+            chip.triggerError();
+        }
     }
 }

@@ -59,30 +59,30 @@ public class MC1240 extends BaseIC {
         String vertVelLine = sign.getLine4();
 
         try {
-        	if (speedSpreadLine.length() > 0) {
-        		String[] parts = speedSpreadLine.split(":");
-        		
-	        	float speed = Float.parseFloat(parts[0]);
-	        	if (speed < 0.3 || speed > 2) {
-	        		return "Speed must be >= 0.3 and <= 2.";
-	        	}
-        		
-	        	if (parts.length > 1) {
-	        		float spread = Float.parseFloat(parts[1]);
-		        	if (spread < 0 || spread > 20) {
-		        		return "Spread must be >= 0 and <= 20.";
-		        	}
-	        	}
-        	}
+            if (speedSpreadLine.length() > 0) {
+                String[] parts = speedSpreadLine.split(":");
+                
+                float speed = Float.parseFloat(parts[0]);
+                if (speed < 0.3 || speed > 2) {
+                    return "Speed must be >= 0.3 and <= 2.";
+                }
+                
+                if (parts.length > 1) {
+                    float spread = Float.parseFloat(parts[1]);
+                    if (spread < 0 || spread > 20) {
+                        return "Spread must be >= 0 and <= 20.";
+                    }
+                }
+            }
 
-        	if (vertVelLine.length() > 0) {
-	        	float speed = Float.parseFloat(vertVelLine);
-	        	if (speed < -1 || speed > 1) {
-	        		return "Vertical elocity must be between or equal to -1 and 1.";
-	        	}
-        	}
+            if (vertVelLine.length() > 0) {
+                float speed = Float.parseFloat(vertVelLine);
+                if (speed < -1 || speed > 1) {
+                    return "Vertical elocity must be between or equal to -1 and 1.";
+                }
+            }
         } catch (NumberFormatException e) {
-        	return "Speed is the third line and spread is the fourth line.";
+            return "Speed is the third line and spread is the fourth line.";
         }
 
         return null;
@@ -102,23 +102,23 @@ public class MC1240 extends BaseIC {
             float vertVel = 0F;
 
             try {
-            	if (speedSpreadLine.length() > 0) {
-            		String[] parts = speedSpreadLine.split(":");
-            		
-    	        	speed = Float.parseFloat(parts[0]);
-            		
-    	        	if (parts.length > 1) {
-    	        		spread = Float.parseFloat(parts[1]);
-    	        	}
-            	}
+                if (speedSpreadLine.length() > 0) {
+                    String[] parts = speedSpreadLine.split(":");
+                    
+                    speed = Float.parseFloat(parts[0]);
+                    
+                    if (parts.length > 1) {
+                        spread = Float.parseFloat(parts[1]);
+                    }
+                }
 
-            	if (vertVelLine.length() > 0) {
-    	        	vertVel = Float.parseFloat(vertVelLine);
-            	}
+                if (vertVelLine.length() > 0) {
+                    vertVel = Float.parseFloat(vertVelLine);
+                }
             } catch (NumberFormatException e) {
             }
-        	
-        	shoot(chip, speed, spread, vertVel);
+            
+            shoot(chip, speed, spread, vertVel);
         }
     }
     
@@ -131,14 +131,14 @@ public class MC1240 extends BaseIC {
      * @param vertVel
      */
     protected void shoot(ChipState chip, float speed, float spread, float vertVel) {
-    	Vector backDir = chip.getBlockPosition().subtract(
-    			chip.getPosition());
-    	Vector firePos = chip.getBlockPosition().add(backDir);
+        Vector backDir = chip.getBlockPosition().subtract(
+                chip.getPosition());
+        Vector firePos = chip.getBlockPosition().add(backDir);
         en arrow = new en(etc.getMCServer().e);
         arrow.c(firePos.getBlockX() + 0.5, firePos.getBlockY() + 0.5,
-        		firePos.getBlockZ() + 0.5, 0, 0);
+                firePos.getBlockZ() + 0.5, 0, 0);
         etc.getMCServer().e.a(arrow);
         arrow.a(backDir.getBlockX(), vertVel, backDir.getBlockZ(),
-        		speed, spread);
+                speed, spread);
     }
 }

@@ -162,7 +162,7 @@ public class ChipState {
      * Triggers an IC error, disabling the IC from further processing.
      */
     public void triggerError() {
-    	hasErrored = true;
+        hasErrored = true;
     }
     
     /**
@@ -171,7 +171,7 @@ public class ChipState {
      * @return
      */
     public boolean hasErrored() {
-    	return hasErrored;
+        return hasErrored;
     }
     
     public long getTime() {

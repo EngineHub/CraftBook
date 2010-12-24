@@ -57,7 +57,7 @@ public class AdminBlockSource extends BlockBag {
      */
     public void fetchBlock(int id) throws BlockSourceException {
         if (!canFetch) {
-        	throw new OutOfBlocksException(id);
+            throw new OutOfBlocksException(id);
         }
     }
 
@@ -71,7 +71,7 @@ public class AdminBlockSource extends BlockBag {
      */
     public void storeBlock(int id) throws BlockSourceException {
         if (!canStore) {
-        	throw new OutOfSpaceException(id);
+            throw new OutOfSpaceException(id);
         }
     }
 
@@ -99,17 +99,17 @@ public class AdminBlockSource extends BlockBag {
      */
     public void addSingleSourcePosition(Vector pos) {
         if (CraftBook.getBlockID(pos) == BlockType.WALL_SIGN
-        		|| CraftBook.getBlockID(pos) == BlockType.SIGN_POST) {
-        	
+                || CraftBook.getBlockID(pos) == BlockType.SIGN_POST) {
+            
             Sign s = (Sign)etc.getServer().getComplexBlock(
-            		pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
+                    pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
             
             if (store && s.getText(1).equalsIgnoreCase("[Black Hole]")) {
-            	canStore = true;
+                canStore = true;
             }
             
             if (fetch && s.getText(1).equalsIgnoreCase("[Block Source]")) {
-            	canFetch = true;
+                canFetch = true;
             }
         }
     }

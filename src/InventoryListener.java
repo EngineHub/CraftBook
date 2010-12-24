@@ -30,8 +30,8 @@ public class InventoryListener extends CraftBookDelegateListener {
      * @param listener
      */
     public InventoryListener(CraftBook craftBook, CraftBookListener listener) {
-		super(craftBook, listener);
-	}
+        super(craftBook, listener);
+    }
 
     /**
      * Loads CraftBooks's configuration from file.
@@ -47,15 +47,15 @@ public class InventoryListener extends CraftBookDelegateListener {
      * @return true if you want any changes to be reverted
      */
     public boolean onInventoryChange(Player player) {
-    	//Inventory inventory = player.getInventory();
-    	//Item[] items = inventory.getContents();
+        //Inventory inventory = player.getInventory();
+        //Item[] items = inventory.getContents();
 
-    	/*player.sendMessage("got item 0: " + (items[0] != null ? items[0].getItemId() : "EMPTY"));
-    	player.sendMessage("got item 1: " + (items[1] != null ? items[1].getItemId() : "EMPTY"));
-    	player.sendMessage("got item 2: " + (items[2] != null ? items[2].getItemId() : "EMPTY"));
-    	player.sendMessage("got item 3: " + (items[3] != null ? items[3].getItemId() : "EMPTY"));
-    	player.sendMessage("got item 4: " + (items[4] != null ? items[4].getItemId() : "EMPTY"));*/
-    	
+        /*player.sendMessage("got item 0: " + (items[0] != null ? items[0].getItemId() : "EMPTY"));
+        player.sendMessage("got item 1: " + (items[1] != null ? items[1].getItemId() : "EMPTY"));
+        player.sendMessage("got item 2: " + (items[2] != null ? items[2].getItemId() : "EMPTY"));
+        player.sendMessage("got item 3: " + (items[3] != null ? items[3].getItemId() : "EMPTY"));
+        player.sendMessage("got item 4: " + (items[4] != null ? items[4].getItemId() : "EMPTY"));*/
+        
         return false;
     }
 }

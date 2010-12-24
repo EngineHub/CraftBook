@@ -26,7 +26,7 @@ import java.util.Comparator;
  * @author sk89q
  */
 public class ComplexBlockDistanceComparator<T extends ComplexBlock>
-	implements Comparator<ComparableComplexBlock<T>> {
+    implements Comparator<ComparableComplexBlock<T>> {
     /**
      * Origin to compare from.
      */

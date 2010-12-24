@@ -75,8 +75,8 @@ public class CopyManager {
      * @throws CuboidCopyException
      */
     public CuboidCopy load(String namespace, String id)
-    		throws IOException, CuboidCopyException {
-    	
+            throws IOException, CuboidCopyException {
+        
         id = id.toLowerCase();
         String cacheKey = namespace + "/" + id;
         
@@ -92,10 +92,10 @@ public class CopyManager {
         if (copy == null) {
             try {
                 copy = CuboidCopy.load("world" + File.separator
-                		+ "craftbook" + File.separator
-                		+ "areas" + File.separator
-                		+ namespace + File.separator
-                		+ id + ".cbcopy");
+                        + "craftbook" + File.separator
+                        + "areas" + File.separator
+                        + namespace + File.separator
+                        + id + ".cbcopy");
                 missing.remove(cacheKey);
                 cache.put(cacheKey, copy);
                 return copy;
@@ -118,12 +118,12 @@ public class CopyManager {
      * @throws IOException
      */
     public void save(String namespace, String id, CuboidCopy copy)
-    		throws IOException {
-    	
+            throws IOException {
+        
         File folder = new File("world" + File.separator
-    			+ "craftbook" + File.separator
-    			+ "areas" + File.separator
-    			+ namespace);
+                + "craftbook" + File.separator
+                + "areas" + File.separator
+                + namespace);
         
         if (!folder.exists()) {
             folder.mkdirs();
@@ -146,29 +146,29 @@ public class CopyManager {
      * @return -1 if the copy can be made, some other number for the count
      */
     public int meetsQuota(String namespace, String ignore, int quota) {
-    	String ignoreFilename = ignore + ".cbcopy";
-    	
-    	String[] files = new File("world" + File.separator
-    			+ "craftbook" + File.separator
-    			+ "areas" + File.separator
-    			+ namespace).list();
-    	
-    	if (files == null) {
-    		return quota > 0 ? -1 : 0;
-    	} else if (ignore == null) {
-	    	return files.length < quota ? -1 : files.length;
-    	} else {
-    		int count = 0;
-    		
-    		for (String f : files) {
-    			if (f.equals(ignoreFilename)) {
-    				return -1;
-    			}
-    			
-    			count++;
-    		}
-    		
-    		return count < quota ? -1 : count;
-    	}
+        String ignoreFilename = ignore + ".cbcopy";
+        
+        String[] files = new File("world" + File.separator
+                + "craftbook" + File.separator
+                + "areas" + File.separator
+                + namespace).list();
+        
+        if (files == null) {
+            return quota > 0 ? -1 : 0;
+        } else if (ignore == null) {
+            return files.length < quota ? -1 : files.length;
+        } else {
+            int count = 0;
+            
+            for (String f : files) {
+                if (f.equals(ignoreFilename)) {
+                    return -1;
+                }
+                
+                count++;
+            }
+            
+            return count < quota ? -1 : count;
+        }
     }
 }

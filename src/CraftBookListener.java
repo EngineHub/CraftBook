@@ -453,7 +453,7 @@ public class CraftBookListener extends PluginListener {
                 && player.canUseCommand("/reload")
                 && split.length > 1
                 && (split[1].equalsIgnoreCase("CraftBook")
-                	|| split[1].equals("*"))) {
+                    || split[1].equals("*"))) {
         
             // Redirect log messages to the player's chat.
             LoggerToChatHandler handler = new LoggerToChatHandler(player);
@@ -476,7 +476,7 @@ public class CraftBookListener extends PluginListener {
             player.sendMessage(Colors.LightGray + "CraftBook version: " +
                     craftBook.getVersion());
             player.sendMessage(Colors.LightGray
-            		+ "Website: http://wiki.sk89q.com/wiki/CraftBook");
+                    + "Website: http://wiki.sk89q.com/wiki/CraftBook");
 
             return true;
         }

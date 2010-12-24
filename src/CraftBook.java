@@ -124,7 +124,7 @@ public class CraftBook extends Plugin {
      * @return whether the hook was registered correctly
      */
     public boolean registerHook(PluginListener listener,
-    		String name, PluginListener.Priority priority) {
+            String name, PluginListener.Priority priority) {
         try {
             PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
             etc.getLoader().addListener(hook, listener, this, priority);
@@ -153,24 +153,24 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void disable() {
-    	StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-    	
-    	for (StackTraceElement element : elements) {
-    		if (element.getClassName().contains("MinecartMania")) {
-    			etc.getServer().addToServerQueue(new Runnable() {
-    				public void run() {
-    					try {
-    						etc.getLoader().disablePlugin("MinecartMania");
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        
+        for (StackTraceElement element : elements) {
+            if (element.getClassName().contains("MinecartMania")) {
+                etc.getServer().addToServerQueue(new Runnable() {
+                    public void run() {
+                        try {
+                            etc.getLoader().disablePlugin("MinecartMania");
                             logger.warning("Minecart Mania has been disabled.");
-    					} finally {
-    						etc.getLoader().enablePlugin("CraftBook");
-    					}
-    				}
-    			});
-    			
-    			return;
-    		}
-    	}
+                        } finally {
+                            etc.getLoader().enablePlugin("CraftBook");
+                        }
+                    }
+                });
+                
+                return;
+            }
+        }
 
         SignPatch.removePatch();
         
@@ -190,17 +190,17 @@ public class CraftBook extends Plugin {
         Package p = CraftBook.class.getPackage();
         
         if (p == null) {
-        	p = Package.getPackage("com.sk89q.craftbook");
+            p = Package.getPackage("com.sk89q.craftbook");
         }
         
         if (p == null) {
-        	version = "(unknown)";
+            version = "(unknown)";
         } else {
-	        version = p.getImplementationVersion();
-	        
-	        if (version == null) {
-	        	version = "(unknown)";
-	        }
+            version = p.getImplementationVersion();
+            
+            if (version == null) {
+                version = "(unknown)";
+            }
         }
 
         return version;

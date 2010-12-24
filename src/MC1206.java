@@ -59,7 +59,7 @@ public class MC1206 extends BaseIC {
         if (id.length() == 0) {
             return "Specify a block type on the third line.";
         } else if (getItem(id) == 0) {
-        	sign.setLine4("Force");
+            sign.setLine4("Force");
         } else if (getItem(id) < 1 && !force.equalsIgnoreCase("Force")) {
             return "Not a valid block type: " + sign.getLine3() + ".";
         }
@@ -102,7 +102,7 @@ public class MC1206 extends BaseIC {
         int item = getItem(id);
 
         if ((item > 0 || isForced) && !(item >= 21 && item <= 34)
-        		&& item != 36) {
+                && item != 36) {
             Vector pos = chip.getBlockPosition();
             int y = pos.getBlockY() - 2;
             int x = pos.getBlockX();
@@ -112,7 +112,7 @@ public class MC1206 extends BaseIC {
                 CraftBook.setBlockID(x, y, z, item);
                 chip.getOut(1).set(true);
             } else {
-            	chip.getOut(1).set(false);
+                chip.getOut(1).set(false);
             }
 
             return;

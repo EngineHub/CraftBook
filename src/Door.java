@@ -63,9 +63,9 @@ public class Door {
      * @return
      */
     private static boolean canPassThrough(int t) {
-    	return t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
-		        || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
-		        || t == BlockType.SNOW;
+        return t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
+                || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
+                || t == BlockType.SNOW;
     }
 
     /**
@@ -77,7 +77,7 @@ public class Door {
      * @return
      */
     public static boolean toggleDoor(Vector pt, Direction direction, 
-    		boolean upwards, BlockBag bag)
+            boolean upwards, BlockBag bag)
             throws OperationException, BlockSourceException {
         return setDoorState(pt, direction, bag, upwards, null);
     }
@@ -98,9 +98,9 @@ public class Door {
         Vector vertDir = upwards ? new Vector(0, 1, 0) : new Vector(0, -1, 0);
 
         if (direction == Direction.NORTH_SOUTH) {
-        	sideDir = new Vector(1, 0, 0);
+            sideDir = new Vector(1, 0, 0);
         } else if(direction == Direction.WEST_EAST) {
-        	sideDir = new Vector(0, 0, 1);
+            sideDir = new Vector(0, 0, 1);
         }
         
         int type;
@@ -122,7 +122,7 @@ public class Door {
         
         // Detect whether the door needs to be opened
         if (toOpen == null) {
-        	toOpen = !canPassThrough(CraftBook.getBlockID(pt.add(vertDir.multiply(2))));
+            toOpen = !canPassThrough(CraftBook.getBlockID(pt.add(vertDir.multiply(2))));
         }
         
         Vector cur = pt.add(vertDir.multiply(2));
