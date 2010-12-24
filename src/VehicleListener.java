@@ -1132,7 +1132,8 @@ public class VehicleListener extends CraftBookDelegateListener {
             return true;
         }
         
-        if (line.equalsIgnoreCase("Player")
+        if ((line.equalsIgnoreCase("Player")
+                || line.equalsIgnoreCase("Ply"))
                 && minecart.getPassenger() != null) {
             return true;
         }
