@@ -168,7 +168,7 @@ public class CopyManager {
     			count++;
     		}
     		
-    		return count;
+    		return count < quota ? -1 : count;
     	}
     }
 }
