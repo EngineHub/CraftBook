@@ -39,7 +39,7 @@ import lymia.perlstone.Perlstone_1_0;
  * @author Lymia
  */
 public class RedstoneListener extends CraftBookDelegateListener
-		implements CustomICAccepter, TorchPatch.ExtensionListener, 
+		implements CustomICAccepter, SignPatch.ExtensionListener, 
 		           TickExtensionListener {
     
     /**
@@ -243,10 +243,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                     }
                     
                     if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
-                        Vector v2 = Util.getWallSignBack(pos, 2);
-                        int bid=CraftBook.getBlockID(v2);
-                        if(bid==BlockType.REDSTONE_TORCH_OFF||
-                           bid==BlockType.REDSTONE_TORCH_ON) bv.add(v2.toBlockVector());
+                        bv.add(pos.toBlockVector());
                     }
                     
                     sign.update();
@@ -371,16 +368,7 @@ public class RedstoneListener extends CraftBookDelegateListener
         
         BlockVector[] bv = this.bv.toArray(new BlockVector[0]);
         for(BlockVector pt:bv) {
-            BlockVector v2 = Util.getTorchSignLocation(pt);
-            if(v2==null) return;
-            if((CraftBook.getBlockID(pt)!=BlockType.REDSTONE_TORCH_ON&&
-                CraftBook.getBlockID(pt)!=BlockType.REDSTONE_TORCH_OFF)||
-                CraftBook.getBlockID(v2)!=BlockType.WALL_SIGN) {
-                this.bv.remove(pt);
-                continue;
-            }
-            
-            Sign sign = (Sign)etc.getServer().getComplexBlock(v2.getBlockX(), v2.getBlockY(), v2.getBlockZ());
+            Sign sign = (Sign)etc.getServer().getComplexBlock(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
             String line2 = sign.getText(1);
             if(!line2.startsWith("[MC")) {
                 this.bv.remove(pt);
@@ -404,7 +392,7 @@ public class RedstoneListener extends CraftBookDelegateListener
             SignText signText = new SignText(sign.getText(0),
                     sign.getText(1), sign.getText(2), sign.getText(3));
             
-            ic.think(v2, signText, sign);
+            ic.think(pt, signText, sign);
             
             if (signText.isChanged()) {
                 sign.setText(0, signText.getLine1());
@@ -418,37 +406,27 @@ public class RedstoneListener extends CraftBookDelegateListener
             }
         }
     }
-    public void onRedstoneTorchAdded(Block b) {
+    public void onSignAdded(Block b) {
         if(!enableSelfTriggeredICs) return;
-        
-        BlockVector v = new BlockVector(b.getX(),b.getY(),b.getZ());
-        BlockVector v2 = Util.getTorchSignLocation(v);
-        if(v2==null) return;
-        if(CraftBook.getBlockID(v2)==BlockType.WALL_SIGN) {
-            Sign sign = (Sign)etc.getServer().getComplexBlock(v2.getBlockX(), v2.getBlockY(), v2.getBlockZ());
-            String line2 = sign.getText(1);
-            if(!line2.startsWith("[MC")) return;
             
-            String id = line2.substring(1, line2.length() - 1).toUpperCase();
-            RegisteredIC ic = icList.get(id);
-            if (ic == null) {
-                sign.setText(1, Colors.Red + line2);
-                sign.update();
-                return;
-            }
-
-            if(!ic.type.isSelfTriggered) return;
-
-            bv.add(v);
-        } 
-    }
-    public void onRedstoneTorchNeighborChange(Block b) {
-        onRedstoneTorchAdded(b);
-    }
-    public boolean onRedstoneTorchUpdate(Block b, boolean isOn) {
-        if(!enableSelfTriggeredICs) return false;
+        Sign sign = (Sign)etc.getServer().getComplexBlock(b.getX(),b.getY(),b.getZ());
+        String line2 = sign.getText(1);
+        if(!line2.startsWith("[MC")) return;
         
-        return bv.contains(new BlockVector(b.getX(),b.getY(),b.getZ()));
+        String id = line2.substring(1, line2.length() - 1).toUpperCase();
+        RegisteredIC ic = icList.get(id);
+        if (ic == null) {
+            sign.setText(1, Colors.Red + line2);
+            sign.update();
+            return;
+        }
+
+        if(!ic.type.isSelfTriggered) return;
+
+        bv.add(new BlockVector(b.getX(),b.getY(),b.getZ()));
+    }
+    public void onLeverNeighborChange(Block b) {
+        onSignAdded(b);
     }
     
     /**

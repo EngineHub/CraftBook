@@ -41,23 +41,14 @@ public enum ICType {
 			Signal[] in = new Signal[0];
 
 			Signal[] out = new Signal[1];
-			out[0] = new Signal(Redstone.isHighBinary(outputVec, false));
+			out[0] = new Signal(Redstone.getOutput(outputVec));
 
 			ChipState chip = new ChipState(pt, backVec, in, out, signText, etc.getServer().getTime());
 
 			zisoIC.think(chip);
 
 			if (chip.isModified()) {
-				int id = chip.getOut(1).is() ? BlockType.REDSTONE_TORCH_ON
-						: BlockType.REDSTONE_TORCH_OFF;
-				if (id == CraftBook.getBlockID(outputVec)) {
-					return;
-				}
-				int metaData = CraftBook.getBlockData(outputVec);
-				CraftBook.setBlockID(outputVec, id);
-				etc.getServer().updateBlockPhysics(outputVec.getBlockX(),
-						outputVec.getBlockY(), outputVec.getBlockZ(),
-						metaData);
+			    Redstone.setOutput(outputVec, out[0].is());
 			}
 		}
 	},

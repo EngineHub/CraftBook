@@ -193,9 +193,9 @@ public class CraftBookListener extends PluginListener {
      */
     public void registerDelegate(CraftBookDelegateListener listener) {
         delegates.add(listener);
-        if(listener instanceof TorchPatch.ExtensionListener) {
-            TorchPatch.addListener(TorchPatch.wrapListener(craftBook, 
-                                   (TorchPatch.ExtensionListener)listener));
+        if(listener instanceof SignPatch.ExtensionListener) {
+            SignPatch.addListener(SignPatch.wrapListener(craftBook, 
+                                   (SignPatch.ExtensionListener)listener));
         }
         if(listener instanceof TickExtensionListener) {
             TickPatch.addTask(TickPatch.wrapRunnable(craftBook, 

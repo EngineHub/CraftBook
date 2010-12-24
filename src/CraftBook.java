@@ -143,7 +143,7 @@ public class CraftBook extends Plugin {
         // This will also fire the loadConfiguration() methods of delegates
         listener.loadConfiguration();
         
-        TorchPatch.applyPatch();
+        SignPatch.applyPatch();
     }
 
     /**
@@ -170,7 +170,7 @@ public class CraftBook extends Plugin {
     		}
     	}
 
-        TorchPatch.removePatch();
+        SignPatch.removePatch();
     }
 
     /**
