@@ -155,6 +155,7 @@ public class VehicleListener extends CraftBookDelegateListener {
             }
 
         	String collectType = sign != null ? sign.getText(2) : "";
+        	boolean push = sign != null ? sign.getText(3).contains("Push") : false;
 
             Vector dir = Util.getSignPostOrthogonalBack(signPos, 1)
                     .subtract(signPos);
@@ -172,6 +173,8 @@ public class VehicleListener extends CraftBookDelegateListener {
             blockBag.addSingleSourcePosition(pt.add(0, 0, -1));
 
             try {
+            	Minecart minecart;
+            	
             	if (collectType.equalsIgnoreCase("Storage")) {
             		try {
 	            		blockBag.fetchBlock(ItemType.STORAGE_MINECART);
@@ -186,7 +189,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 		}
             		}
             		
-            		new Minecart(
+            		minecart = new Minecart(
             				depositPt.getX(),
             				depositPt.getY(),
             				depositPt.getZ(),
@@ -205,18 +208,32 @@ public class VehicleListener extends CraftBookDelegateListener {
                 		}
             		}
             		
-            		new Minecart(
+            		minecart = new Minecart(
             				depositPt.getX(),
             				depositPt.getY(),
             				depositPt.getZ(),
             				Minecart.Type.PoweredMinecart);
             	} else {
             		blockBag.fetchBlock(ItemType.MINECART);
-            		new Minecart(
+            		minecart = new Minecart(
             				depositPt.getX(),
             				depositPt.getY(),
             				depositPt.getZ(),
             				Minecart.Type.Minecart);
+            	}
+            	
+            	if (push) {
+                    int data = CraftBook.getBlockData(signPos);
+                    
+                    if (data == 0x0) {
+                        minecart.setMotion(0, 0, -0.3);
+                    } else if (data == 0x4) {
+                    	minecart.setMotion(0.3, 0, 0);
+                    } else if (data == 0x8) {
+                    	minecart.setMotion(0, 0, 0.3);
+                    } else if (data == 0xC) {
+                    	minecart.setMotion(-0.3, 0, 0);
+                    }
             	}
             } catch (BlockSourceException e) {
                 // No minecarts
