@@ -390,9 +390,11 @@ public class VehicleListener extends CraftBookDelegateListener {
                     		
                     		if (bag.getChestBlockCount() > 0) {
                     			if (getControllerSign(pt.add(0, -1, 0), "[Distribute]") != null) {
-                    				MinecartUtil.chestBagToStorage(minecart, bag);
+                    				ItemArrayUtil.moveChestBagToItemArray(
+                    						minecart.getStorage(), bag);
                     			} else {
-                    				MinecartUtil.storageToChestBag(minecart, bag);
+                    				ItemArrayUtil.moveItemArrayToChestBag(
+                    						minecart.getStorage(), bag);
                     			}
                     		}
                     	}
@@ -606,28 +608,9 @@ public class VehicleListener extends CraftBookDelegateListener {
                         } catch (BlockSourceException e) {
                         }
                     } else if (type == Minecart.Type.StorageCart) {
-                        // We need to first try and move the items out of the storage cart
-                        // one at a time, until we run out of items or space. If we run out
-                        // of items, then try to move the storage cart into the chest.
-                        StorageMinecart sm = minecart.getStorage();
-                        Item[] items = sm.getContents();
-                        
                         try {
-                            // Loop through each filled position in the storage cart
-                            for (int i = 0; items.length > i; i++) {
-                                if (items[i] == null) {
-                                    continue;
-                                }
-                                
-                                // Move the items into the chest one at a time.
-                                while (items[i].getAmount() > 0) {
-                                    blockBag.storeBlock(items[i].getItemId());
-                                    items[i].setAmount(items[i].getAmount() - 1);
-                                }
-                                
-                                // Now that all of that item is gone, null the position
-                                items[i] = null;
-                            }
+                        	ItemArrayUtil.moveItemArrayToChestBag(
+                        			minecart.getStorage(), blockBag);
 
                             if (collectType.equalsIgnoreCase("Storage")) {
 	                            blockBag.storeBlock(ItemType.STORAGE_MINECART);
@@ -635,12 +618,10 @@ public class VehicleListener extends CraftBookDelegateListener {
 	                            blockBag.storeBlock(ItemType.MINECART);
 	                            blockBag.storeBlock(BlockType.CHEST);
                             }
-
-                            sm.setContents(items);
+                            
                             minecart.destroy();
                         } catch (BlockSourceException e) {
                         	// Ran out of space
-                            sm.setContents(items);
                         }
                     } else if (type == Minecart.Type.PoweredMinecart) {
                         try {

@@ -134,6 +134,18 @@ public class NearbyChestBlockBag extends BlockBag {
     }
 
     /**
+     * Stores a block.
+     *
+     * @param pos
+     * @param id
+     * @return
+     * @throws OutOfSpaceException
+     */
+    public void storeBlock(int id, int amount) throws BlockSourceException {
+    	
+    }
+
+    /**
      * Adds a position to be used a source.
      *
      * @param pos
