@@ -369,6 +369,10 @@ public class RedstoneListener extends CraftBookDelegateListener
         BlockVector[] bv = this.bv.toArray(new BlockVector[0]);
         for(BlockVector pt:bv) {
             Sign sign = (Sign)etc.getServer().getComplexBlock(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+            if(sign==null) {
+                this.bv.remove(pt);
+                continue;
+            }
             String line2 = sign.getText(1);
             if(!line2.startsWith("[MC")) {
                 this.bv.remove(pt);
