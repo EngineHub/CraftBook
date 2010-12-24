@@ -70,6 +70,8 @@ public class VehicleListener extends CraftBookDelegateListener {
     private int minecartTriggerBlock = BlockType.IRON_ORE;
     private int minecartEjectBlock = BlockType.IRON_BLOCK;
     private int minecartSortBlock = BlockType.NETHERSTONE;
+    private boolean minecartDestroyOnExit = false;
+    private boolean minecartDropOnExit = false;
 
     /**
      * Construct the object.
@@ -112,6 +114,9 @@ public class VehicleListener extends CraftBookDelegateListener {
         if (decay > 0) {
         	decayWatcher = new MinecartDecayWatcher(decay);
         }
+        
+        minecartDestroyOnExit = properties.getBoolean("minecart-destroy-on-exit");
+        minecartDropOnExit = properties.getBoolean("minecart-drop-on-exit");;
     }
 
     /**
@@ -1011,8 +1016,18 @@ public class VehicleListener extends CraftBookDelegateListener {
      * @param player the player
      */
     public void onVehicleEnter(BaseVehicle vehicle, HumanEntity player) {
-    	if (decayWatcher != null && vehicle instanceof Minecart) {
-    		decayWatcher.trackEnter((Minecart)vehicle);
+    	if (vehicle instanceof Minecart) {
+	    	if (decayWatcher != null) {
+	    		decayWatcher.trackEnter((Minecart)vehicle);
+	    	}
+	    	
+	    	if (minecartDestroyOnExit && vehicle.getPassenger() != null) {
+	    		vehicle.destroy();
+	    		
+	    		if (minecartDropOnExit) {
+	    			player.getPlayer().giveItem(new Item(ItemType.MINECART, 1));
+	    		}
+	    	}
     	}
     }
 
