@@ -104,4 +104,11 @@ public abstract class CraftBookDelegateListener extends PluginListener {
     		throws InsufficientArgumentsException, LocalWorldEditBridgeException {
     	return false;
     }
+    
+    /**
+     * Called on plugin unload.
+     */
+    public void disable() {
+    	
+    }
 }

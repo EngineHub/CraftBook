@@ -109,6 +109,8 @@ public class CraftBook extends Plugin {
         registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_ENTERED", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_DESTROYED", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(vehicle);
         
         TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
@@ -171,6 +173,8 @@ public class CraftBook extends Plugin {
     	}
 
         SignPatch.removePatch();
+        
+        listener.disable();
     }
 
     /**

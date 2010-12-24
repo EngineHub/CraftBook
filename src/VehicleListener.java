@@ -42,6 +42,10 @@ public class VehicleListener extends CraftBookDelegateListener {
      */
     private Map<String,Long> lastMinecartMsgTime =
             new HashMap<String,Long>();
+    /**
+     * Decay watcher. Used to remove empty minecarts.
+     */
+    private MinecartDecayWatcher decayWatcher;
     
     /**
      * Track direction for sorting.
@@ -98,6 +102,16 @@ public class VehicleListener extends CraftBookDelegateListener {
         minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
         minecartSortBlock = properties.getInt("minecart-sort-block", BlockType.NETHERSTONE);
+        
+        // If the configuration is merely reloaded, then this must be destroyed
+        if (decayWatcher != null) {
+        	decayWatcher.disable();
+        }
+        
+        int decay = properties.getInt("minecart-decay-time", 0);
+        if (decay > 0) {
+        	decayWatcher = new MinecartDecayWatcher(decay);
+        }
     }
 
     /**
@@ -988,6 +1002,38 @@ public class VehicleListener extends CraftBookDelegateListener {
         }
         
         return false;
+    }
+
+    /**
+     * Called when a player enter or leaves a vehicle
+     * 
+     * @param vehicle the vehicle
+     * @param player the player
+     */
+    public void onVehicleEnter(BaseVehicle vehicle, HumanEntity player) {
+    	if (decayWatcher != null && vehicle instanceof Minecart) {
+    		decayWatcher.trackEnter((Minecart)vehicle);
+    	}
+    }
+
+    /**
+     * Called when a vehicle is destroyed
+     * 
+     * @param vehicle the vehicle
+     */
+    public void onVehicleDestroyed(BaseVehicle vehicle) {
+    	if (decayWatcher != null && vehicle instanceof Minecart) {
+    		decayWatcher.forgetMinecart((Minecart)vehicle);
+    	}
+    }
+    
+    /**
+     * Called on plugin unload.
+     */
+    public void disable() {
+    	if (decayWatcher != null) {
+    		decayWatcher.disable();
+    	}
     }
     
     /**

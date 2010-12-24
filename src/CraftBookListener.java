@@ -492,6 +492,16 @@ public class CraftBookListener extends PluginListener {
     public void onDisconnect(Player player) {
         beenToldVersion.remove(player.getName());
     }
+    
+    /**
+     * Disables everything.
+     */
+    public void disable() {
+        // Call the disable method of delegates
+        for (CraftBookDelegateListener listener : delegates) {
+            listener.disable();
+        }
+    }
 
     /**
      * Get a block bag.
