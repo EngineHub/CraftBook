@@ -20,7 +20,6 @@
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import com.sk89q.craftbook.BlockVector;
 import com.sk89q.craftbook.InsufficientArgumentsException;
 import com.sk89q.craftbook.Vector;
 
@@ -31,185 +30,185 @@ import com.sk89q.craftbook.Vector;
  */
 public class Util {
 
-	/**
-	 * Gets the block behind a sign.
-	 *
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param multiplier
-	 * @return
-	 */
-	public static Vector getWallSignBack(Vector pt, int multiplier) {
-	    int x = pt.getBlockX();
-	    int y = pt.getBlockY();
-	    int z = pt.getBlockZ();
-	    int data = CraftBook.getBlockData(x, y, z);
-	    if (data == 0x2) { // East
-	        return new Vector(x, y, z + multiplier);
-	    } else if (data == 0x3) { // West
-	        return new Vector(x, y, z - multiplier);
-	    } else if (data == 0x4) { // North
-	        return new Vector(x + multiplier, y, z);
-	    } else {
-	        return new Vector(x - multiplier, y, z);
-	    }
-	}
+    /**
+     * Gets the block behind a sign.
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param multiplier
+     * @return
+     */
+    public static Vector getWallSignBack(Vector pt, int multiplier) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+        int data = CraftBook.getBlockData(x, y, z);
+        if (data == 0x2) { // East
+            return new Vector(x, y, z + multiplier);
+        } else if (data == 0x3) { // West
+            return new Vector(x, y, z - multiplier);
+        } else if (data == 0x4) { // North
+            return new Vector(x + multiplier, y, z);
+        } else {
+            return new Vector(x - multiplier, y, z);
+        }
+    }
 
-	/**
-	 * Gets the block behind a sign.
-	 *
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param multiplier
-	 * @return
-	 */
-	public static Vector getSignPostOrthogonalBack(Vector pt, int multiplier) {
-	    int x = pt.getBlockX();
-	    int y = pt.getBlockY();
-	    int z = pt.getBlockZ();
-	    int data = CraftBook.getBlockData(x, y, z);
-	    if (data == 0x8) { // East
-	        return new Vector(x, y, z + multiplier);
-	    } else if (data == 0x0) { // West
-	        return new Vector(x, y, z - multiplier);
-	    } else if (data == 0x4) { // North
-	        return new Vector(x + multiplier, y, z);
-	    } else if (data == 0xC) { // South
-	        return new Vector(x - multiplier, y, z);
-	    } else {
-	        return null;
-	    }
-	}
+    /**
+     * Gets the block behind a sign.
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param multiplier
+     * @return
+     */
+    public static Vector getSignPostOrthogonalBack(Vector pt, int multiplier) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+        int data = CraftBook.getBlockData(x, y, z);
+        if (data == 0x8) { // East
+            return new Vector(x, y, z + multiplier);
+        } else if (data == 0x0) { // West
+            return new Vector(x, y, z - multiplier);
+        } else if (data == 0x4) { // North
+            return new Vector(x + multiplier, y, z);
+        } else if (data == 0xC) { // South
+            return new Vector(x - multiplier, y, z);
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * Gets the block next to a sign.
-	 *
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param multiplier
-	 * @return
-	 */
-	public static Vector getWallSignSide(Vector pt, int multiplier) {
-	    int x = pt.getBlockX();
-	    int y = pt.getBlockY();
-	    int z = pt.getBlockZ();
-	    int data = CraftBook.getBlockData(x, y, z);
-	    if (data == 0x2) { // East
-	        return new Vector(x + multiplier, y, z );
-	    } else if (data == 0x3) { // West
-	        return new Vector(x - multiplier, y, z);
-	    } else if (data == 0x4) { // North
-	        return new Vector(x, y, z - multiplier);
-	    } else {
-	        return new Vector(x, y, z + multiplier);
-	    }
-	}
+    /**
+     * Gets the block next to a sign.
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param multiplier
+     * @return
+     */
+    public static Vector getWallSignSide(Vector pt, int multiplier) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+        int data = CraftBook.getBlockData(x, y, z);
+        if (data == 0x2) { // East
+            return new Vector(x + multiplier, y, z );
+        } else if (data == 0x3) { // West
+            return new Vector(x - multiplier, y, z);
+        } else if (data == 0x4) { // North
+            return new Vector(x, y, z - multiplier);
+        } else {
+            return new Vector(x, y, z + multiplier);
+        }
+    }
 
-	/**
-	 * Checks whether a sign at a location has a certain text on a
-	 * particular line, case in-sensitive.
-	 * 
-	 * @param pt
-	 * @param lineNo
-	 * @param text
-	 * @return
-	 */
-	public static boolean doesSignSay(Vector pt, int lineNo, String text) {
-	    ComplexBlock cBlock = etc.getServer().getComplexBlock(
-	            pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-	
-	    if (cBlock instanceof Sign) {
-	        Sign sign = (Sign)cBlock;
-	        return text.equalsIgnoreCase(sign.getText(lineNo));
-	    }
-	
-	    return false;
-	}
+    /**
+     * Checks whether a sign at a location has a certain text on a
+     * particular line, case in-sensitive.
+     * 
+     * @param pt
+     * @param lineNo
+     * @param text
+     * @return
+     */
+    public static boolean doesSignSay(Vector pt, int lineNo, String text) {
+        ComplexBlock cBlock = etc.getServer().getComplexBlock(
+                pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+    
+        if (cBlock instanceof Sign) {
+            Sign sign = (Sign)cBlock;
+            return text.equalsIgnoreCase(sign.getText(lineNo));
+        }
+    
+        return false;
+    }
 
-	/**
-	 * Change a block ID to its name.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public static String toBlockName(int id) {
-	    com.sk89q.worldedit.blocks.BlockType blockType =
-	            com.sk89q.worldedit.blocks.BlockType.fromID(id);
-	
-	    if (blockType == null) {
-	        return "#" + id;
-	    } else {
-	        return blockType.getName();
-	    }
-	}
+    /**
+     * Change a block ID to its name.
+     * 
+     * @param id
+     * @return
+     */
+    public static String toBlockName(int id) {
+        com.sk89q.worldedit.blocks.BlockType blockType =
+                com.sk89q.worldedit.blocks.BlockType.fromID(id);
+    
+        if (blockType == null) {
+            return "#" + id;
+        } else {
+            return blockType.getName();
+        }
+    }
 
-	/**
-	 * Joins a string from an array of strings.
-	 *
-	 * @param str
-	 * @param delimiter
-	 * @return
-	 */
-	public static String joinString(String[] str, String delimiter,
-	        int initialIndex) {
-	    if (str.length == 0) {
-	        return "";
-	    }
-	    StringBuilder buffer = new StringBuilder(str[initialIndex]);
-	    for (int i = initialIndex + 1; i < str.length; i++) {
-	        buffer.append(delimiter).append(str[i]);
-	    }
-	    return buffer.toString();
-	}
+    /**
+     * Joins a string from an array of strings.
+     *
+     * @param str
+     * @param delimiter
+     * @return
+     */
+    public static String joinString(String[] str, String delimiter,
+            int initialIndex) {
+        if (str.length == 0) {
+            return "";
+        }
+        StringBuilder buffer = new StringBuilder(str[initialIndex]);
+        for (int i = initialIndex + 1; i < str.length; i++) {
+            buffer.append(delimiter).append(str[i]);
+        }
+        return buffer.toString();
+    }
 
-	/**
-	 * Repeat a string.
-	 * 
-	 * @param string
-	 * @param num
-	 * @return
-	 */
-	public static String repeatString(String str, int num) {
-	    StringBuilder buffer = new StringBuilder();
-	    for (int i = 0; i < num; i++) {
-	        buffer.append(str);
-	    }
-	    return buffer.toString();
-	}
+    /**
+     * Repeat a string.
+     * 
+     * @param string
+     * @param num
+     * @return
+     */
+    public static String repeatString(String str, int num) {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < num; i++) {
+            buffer.append(str);
+        }
+        return buffer.toString();
+    }
 
-	/**
-	 * Convert a comma-delimited list to a set of integers.
-	 *
-	 * @param str
-	 * @return
-	 */
-	public static Set<Integer> toBlockIDSet(String str) {
-	    if (str.trim().length() == 0) {
-	        return null;
-	    }
-	
-	    String[] items = str.split(",");
-	    Set<Integer> result = new HashSet<Integer>();
-	
-	    for (String item : items) {
-	        try {
-	            result.add(Integer.parseInt(item.trim()));
-	        } catch (NumberFormatException e) {
-	            int id = etc.getDataSource().getItem(item.trim());
-	            if (id != 0) {
-	                result.add(id);
-	            } else {
-	                CraftBookListener.logger.log(Level.WARNING, "CraftBook: Unknown block name: "
-	                        + item);
-	            }
-	        }
-	    }
-	
-	    return result;
-	}
+    /**
+     * Convert a comma-delimited list to a set of integers.
+     *
+     * @param str
+     * @return
+     */
+    public static Set<Integer> toBlockIDSet(String str) {
+        if (str.trim().length() == 0) {
+            return null;
+        }
+    
+        String[] items = str.split(",");
+        Set<Integer> result = new HashSet<Integer>();
+    
+        for (String item : items) {
+            try {
+                result.add(Integer.parseInt(item.trim()));
+            } catch (NumberFormatException e) {
+                int id = etc.getDataSource().getItem(item.trim());
+                if (id != 0) {
+                    result.add(id);
+                } else {
+                    CraftBookListener.logger.log(Level.WARNING, "CraftBook: Unknown block name: "
+                            + item);
+                }
+            }
+        }
+    
+        return result;
+    }
 
     /**
      * Checks to make sure that there are enough but not too many arguments.
@@ -238,31 +237,5 @@ public class Util {
      */
     public static boolean canUse(Player player, String command) {
         return player.canUseCommand(command);
-    }
-    
-    /**
-     * Gets the tile two blocks behind a torch
-     * 
-     * @param v
-     * @return
-     */
-    public static BlockVector getTorchSignLocation(BlockVector v) {
-        int x = v.getBlockX();
-        int y = v.getBlockY();
-        int z = v.getBlockZ();
-        int data = CraftBook.getBlockData(x, y, z);
-
-        if (data == 5) {
-            return null;
-        } else if (data == 3) {
-            return new BlockVector(x, y, z - 2);
-        } else if (data == 4) {
-            return new BlockVector(x, y, z + 2);
-        } else if (data == 1) {
-            return new BlockVector(x - 2, y, z);
-        } else if (data == 2) {
-            return new BlockVector(x + 2, y, z);
-        }
-        return null;
     }
 }

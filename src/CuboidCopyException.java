@@ -29,6 +29,15 @@ public class CuboidCopyException extends Exception {
      * 
      * @param msg
      */
+    public CuboidCopyException() {
+        super();
+    }
+
+    /**
+     * Construct an instance.
+     * 
+     * @param msg
+     */
     public CuboidCopyException(String msg) {
         super(msg);
     }

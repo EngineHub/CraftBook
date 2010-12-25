@@ -134,6 +134,18 @@ public class NearbyChestBlockBag extends BlockBag {
     }
 
     /**
+     * Stores a block.
+     *
+     * @param pos
+     * @param id
+     * @return
+     * @throws OutOfSpaceException
+     */
+    public void storeBlock(int id, int amount) throws BlockSourceException {
+        
+    }
+
+    /**
      * Adds a position to be used a source.
      *
      * @param pos
@@ -155,23 +167,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
                         if (complexBlock instanceof Chest) {
                             Chest chest = (Chest)complexBlock;
-                            Item[] itemArray = chest.getContents();
-                            boolean occupied = false;
-
-                            // Got to make sure that at least one slot is occupied
-                            for (int i = 0; itemArray.length > i; i++) {
-                                if (itemArray[i] != null) {
-                                    // Found an item
-                                    if (itemArray[i].getAmount() > 0) {
-                                        occupied = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (occupied) {
-                                chests.add(new ComparableComplexBlock<Chest>(cur.toBlockVector(), chest));
-                            }
+                            chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
                         }
                     }
                 }
@@ -196,25 +192,36 @@ public class NearbyChestBlockBag extends BlockBag {
 
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest)complexBlock;
-                Item[] itemArray = chest.getContents();
-                boolean occupied = false;
-
-                // Got to make sure that at least one slot is occupied
-                for (int i = 0; itemArray.length > i; i++) {
-                    if (itemArray[i] != null) {
-                        // Found an item
-                        if (itemArray[i].getAmount() > 0) {
-                            occupied = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (occupied) {
-                    chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
-                }
+                chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
             }
         }
+    }
+    
+    /**
+     * Get the number of chest blocks. A double-width chest will count has
+     * two chest blocks.
+     * 
+     * @return
+     */
+    public int getChestBlockCount() {
+        return chests.size();
+    }
+    
+    /**
+     * Fetch related chest inventories.
+     * 
+     * @return
+     */
+    public Inventory[] getInventories() {
+        Inventory[] inventories = new Inventory[chests.size()];
+        
+        int i = 0;
+        for (ComparableComplexBlock<Chest> c : chests) {
+            inventories[i] = c.getChest();
+            i++;
+        }
+        
+        return inventories;
     }
 
     /**

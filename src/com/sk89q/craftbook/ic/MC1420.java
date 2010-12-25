@@ -55,12 +55,12 @@ public class MC1420 extends BaseIC {
         int clockTime;
         try {
             clockTime = Integer.parseInt(sign.getLine3());
-		} catch (NumberFormatException e) {
-		    return "Clock rate is not a number.";
-		}
+        } catch (NumberFormatException e) {
+            return "Clock rate is not a number.";
+        }
         
         if (clockTime < 5){
-        	return "Clock rate must be a minimum of 5.";
+            return "Clock rate must be a minimum of 5.";
         }
         if (clockTime > 15){
             return "Clock rate may not be greater than 15.";
@@ -79,11 +79,11 @@ public class MC1420 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
-    	int clockTime = Integer.parseInt(chip.getText().getLine3());
-    	int count = chip.getText().getLine4().length();
+        int clockTime = Integer.parseInt(chip.getText().getLine3());
+        int count = chip.getText().getLine4().length();
         if(count % clockTime == clockTime-1){
-        	chip.getOut(1).set(!chip.getLast(1));
-        	chip.getText().setLine4("");
+            chip.getOut(1).set(!chip.getLast(1));
+            chip.getText().setLine4("");
         } else chip.getText().setLine4(chip.getText().getLine4()+" ");
         
         chip.getText().supressUpdate();

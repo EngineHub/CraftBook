@@ -18,7 +18,6 @@
 */
 
 import com.sk89q.craftbook.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
@@ -65,25 +64,26 @@ public class CopyManager {
     /**
      * Load a copy from disk. This may return a cached copy. If the copy is not
      * cached, the file will be loaded from disk if possible. If the copy does
-     * not exist, null will be returned. An exception may be raised if the file
+     * not exist, an exception will be raised. An exception may be raised if the file
      * exists but cannot be read for whatever reason.
      * 
      * @param namespace
      * @param id
      * @return
      * @throws IOException
+     * @throws MissingCuboidCopyException
      * @throws CuboidCopyException
      */
     public CuboidCopy load(String namespace, String id)
-    		throws IOException, CuboidCopyException {
-    	
+            throws IOException, CuboidCopyException {
+        
         id = id.toLowerCase();
         String cacheKey = namespace + "/" + id;
         
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
             if (lastCheck > System.currentTimeMillis()) {
-                return null;
+                throw new MissingCuboidCopyException(id);
             }
         }
 
@@ -92,15 +92,16 @@ public class CopyManager {
         if (copy == null) {
             try {
                 copy = CuboidCopy.load("world" + File.separator
-                		+ "craftbook" + File.separator
-                		+ "areas" + File.separator
-                		+ namespace + File.separator
-                		+ id + ".cbcopy");
+                        + "craftbook" + File.separator
+                        + "areas" + File.separator
+                        + namespace + File.separator
+                        + id + ".cbcopy");
                 missing.remove(cacheKey);
                 cache.put(cacheKey, copy);
                 return copy;
             } catch (FileNotFoundException e) {
                 missing.put(cacheKey, System.currentTimeMillis() + 10000);
+                throw new MissingCuboidCopyException(id);
             } catch (IOException e) {
                 missing.put(cacheKey, System.currentTimeMillis() + 10000);
                 throw e;
@@ -118,12 +119,12 @@ public class CopyManager {
      * @throws IOException
      */
     public void save(String namespace, String id, CuboidCopy copy)
-    		throws IOException {
-    	
+            throws IOException {
+        
         File folder = new File("world" + File.separator
-    			+ "craftbook" + File.separator
-    			+ "areas" + File.separator
-    			+ namespace);
+                + "craftbook" + File.separator
+                + "areas" + File.separator
+                + namespace);
         
         if (!folder.exists()) {
             folder.mkdirs();
@@ -146,29 +147,29 @@ public class CopyManager {
      * @return -1 if the copy can be made, some other number for the count
      */
     public int meetsQuota(String namespace, String ignore, int quota) {
-    	String ignoreFilename = ignore + ".cbcopy";
-    	
-    	String[] files = new File("world" + File.separator
-    			+ "craftbook" + File.separator
-    			+ "areas" + File.separator
-    			+ namespace).list();
-    	
-    	if (files == null) {
-    		return quota > 0 ? -1 : 0;
-    	} else if (ignore == null) {
-	    	return files.length < quota ? -1 : files.length;
-    	} else {
-    		int count = 0;
-    		
-    		for (String f : files) {
-    			if (f.equals(ignoreFilename)) {
-    				return -1;
-    			}
-    			
-    			count++;
-    		}
-    		
-    		return count;
-    	}
+        String ignoreFilename = ignore + ".cbcopy";
+        
+        String[] files = new File("world" + File.separator
+                + "craftbook" + File.separator
+                + "areas" + File.separator
+                + namespace).list();
+        
+        if (files == null) {
+            return quota > 0 ? -1 : 0;
+        } else if (ignore == null) {
+            return files.length < quota ? -1 : files.length;
+        } else {
+            int count = 0;
+            
+            for (String f : files) {
+                if (f.equals(ignoreFilename)) {
+                    return -1;
+                }
+                
+                count++;
+            }
+            
+            return count < quota ? -1 : count;
+        }
     }
 }

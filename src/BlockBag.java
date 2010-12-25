@@ -165,12 +165,30 @@ public abstract class BlockBag {
      * @param id
      */
     public abstract void fetchBlock(int id) throws BlockSourceException;
+    
     /**
      * Store a block.
      * 
      * @param id
      */
     public abstract void storeBlock(int id) throws BlockSourceException;
+    
+    /**
+     * Checks to see if a block exists without removing it.
+     * 
+     * @param id
+     * @return whether the block exists
+     */
+    public boolean peekBlock(int id) {
+        try {
+            fetchBlock(id);
+            storeBlock(id);
+            return true;
+        } catch (BlockSourceException e) {
+            return false;
+        }
+    }
+    
     /**
      * Flush any changes. This is called at the end.
      */

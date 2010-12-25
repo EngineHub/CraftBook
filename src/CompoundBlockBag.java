@@ -30,46 +30,46 @@ import com.sk89q.craftbook.Vector;
  * @author Lymia
  */
 public class CompoundBlockBag extends BlockBag {
-	private List<BlockBag> sources;
+    private List<BlockBag> sources;
 
-	/**
-	 * Construct the instance.
-	 * 
-	 * @param bags
-	 */
-	public CompoundBlockBag(List<BlockBag> bags) {
-		this.sources = bags;
-	}
+    /**
+     * Construct the instance.
+     * 
+     * @param bags
+     */
+    public CompoundBlockBag(List<BlockBag> bags) {
+        this.sources = bags;
+    }
 
     /**
      * Store a block.
      * 
      * @param id
      */
-	public void storeBlock(int id) throws BlockSourceException {
-		for (BlockBag b : sources)
-			try {
-				b.storeBlock(id);
-				return;
-			} catch (OutOfSpaceException e) {
-			}
-		throw new OutOfSpaceException(id);
-	}
+    public void storeBlock(int id) throws BlockSourceException {
+        for (BlockBag b : sources)
+            try {
+                b.storeBlock(id);
+                return;
+            } catch (OutOfSpaceException e) {
+            }
+        throw new OutOfSpaceException(id);
+    }
 
     /**
      * Get a block.
      * 
      * @param id
      */
-	public void fetchBlock(int id) throws BlockSourceException {
-		for (BlockBag b : sources)
-			try {
-				b.fetchBlock(id);
-				return;
-			} catch (OutOfBlocksException e) {
-			}
-		throw new OutOfBlocksException(id);
-	}
+    public void fetchBlock(int id) throws BlockSourceException {
+        for (BlockBag b : sources)
+            try {
+                b.fetchBlock(id);
+                return;
+            } catch (OutOfBlocksException e) {
+            }
+        throw new OutOfBlocksException(id);
+    }
 
     /**
      * Adds a position to be used a source.
@@ -77,10 +77,10 @@ public class CompoundBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-	public void addSingleSourcePosition(Vector pos) {
-		for (BlockBag b : sources)
-			b.addSingleSourcePosition(pos);
-	}
+    public void addSingleSourcePosition(Vector pos) {
+        for (BlockBag b : sources)
+            b.addSingleSourcePosition(pos);
+    }
 
     /**
      * Adds a position to be used a source.
@@ -88,18 +88,18 @@ public class CompoundBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-	public void addSourcePosition(Vector pos) {
-		for (BlockBag b : sources)
-			b.addSourcePosition(pos);
-	}
+    public void addSourcePosition(Vector pos) {
+        for (BlockBag b : sources)
+            b.addSourcePosition(pos);
+    }
 
     /**
      * Return the list of missing blocks.
      * 
      * @return
      */
-	public void flushChanges() {
-		for (BlockBag b : sources)
-			b.flushChanges();
-	}
+    public void flushChanges() {
+        for (BlockBag b : sources)
+            b.flushChanges();
+    }
 }

@@ -90,25 +90,27 @@ public class CraftBook extends Plugin {
         registerHook(listener, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(listener, "DISCONNECT", PluginListener.Priority.MEDIUM);
         registerHook(listener, "REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
-        registerHook(listener, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(listener, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
 
         registerHook(mechanisms, "DISCONNECT", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "BLOCK_RIGHTCLICKED", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
-        registerHook(mechanisms, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(mechanisms, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
         registerHook(mechanisms, "SERVERCOMMAND", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(mechanisms);
         
-        registerHook(redstone, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(redstone, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(redstone);
 
         registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "COMPLEX_BLOCK_CHANGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "BLOCK_PLACE", PluginListener.Priority.LOW);
         registerHook(vehicle, "COMMAND", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
         registerHook(vehicle, "VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_ENTERED", PluginListener.Priority.MEDIUM);
+        registerHook(vehicle, "VEHICLE_DESTROYED", PluginListener.Priority.MEDIUM);
         listener.registerDelegate(vehicle);
         
         TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
@@ -122,7 +124,7 @@ public class CraftBook extends Plugin {
      * @return whether the hook was registered correctly
      */
     public boolean registerHook(PluginListener listener,
-    		String name, PluginListener.Priority priority) {
+            String name, PluginListener.Priority priority) {
         try {
             PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
             etc.getLoader().addListener(hook, listener, this, priority);
@@ -143,7 +145,7 @@ public class CraftBook extends Plugin {
         // This will also fire the loadConfiguration() methods of delegates
         listener.loadConfiguration();
         
-        TorchPatch.applyPatch();
+        SignPatch.applyPatch();
     }
 
     /**
@@ -151,26 +153,28 @@ public class CraftBook extends Plugin {
      */
     @Override
     public void disable() {
-    	StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-    	
-    	for (StackTraceElement element : elements) {
-    		if (element.getClassName().contains("MinecartMania")) {
-    			etc.getServer().addToServerQueue(new Runnable() {
-    				public void run() {
-    					try {
-    						etc.getLoader().disablePlugin("MinecartMania");
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        
+        for (StackTraceElement element : elements) {
+            if (element.getClassName().contains("MinecartMania")) {
+                etc.getServer().addToServerQueue(new Runnable() {
+                    public void run() {
+                        try {
+                            etc.getLoader().disablePlugin("MinecartMania");
                             logger.warning("Minecart Mania has been disabled.");
-    					} finally {
-    						etc.getLoader().enablePlugin("CraftBook");
-    					}
-    				}
-    			});
-    			
-    			return;
-    		}
-    	}
+                        } finally {
+                            etc.getLoader().enablePlugin("CraftBook");
+                        }
+                    }
+                });
+                
+                return;
+            }
+        }
 
-        TorchPatch.removePatch();
+        SignPatch.removePatch();
+        
+        listener.disable();
     }
 
     /**
@@ -186,17 +190,17 @@ public class CraftBook extends Plugin {
         Package p = CraftBook.class.getPackage();
         
         if (p == null) {
-        	p = Package.getPackage("com.sk89q.craftbook");
+            p = Package.getPackage("com.sk89q.craftbook");
         }
         
         if (p == null) {
-        	version = "(unknown)";
+            version = "(unknown)";
         } else {
-	        version = p.getImplementationVersion();
-	        
-	        if (version == null) {
-	        	version = "(unknown)";
-	        }
+            version = p.getImplementationVersion();
+            
+            if (version == null) {
+                version = "(unknown)";
+            }
         }
 
         return version;
@@ -252,6 +256,14 @@ public class CraftBook extends Plugin {
     }
 
     public static void dropSign(int x, int y, int z) {
+        etc.getServer().setBlockAt(0, x, y, z);
+        etc.getServer().dropItem(x, y, z, 323);
+    }
+
+    public static void dropSign(Vector pt) {
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
         etc.getServer().setBlockAt(0, x, y, z);
         etc.getServer().dropItem(x, y, z, 323);
     }

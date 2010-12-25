@@ -114,7 +114,7 @@ public class Elevator {
         if (sign.getText(1).equalsIgnoreCase("[Lift Up]")
                 || sign.getText(1).equalsIgnoreCase("[Lift Down]")
                 || sign.getText(1).equalsIgnoreCase("[Lift]")) {
-        	return sign;
+            return sign;
         }
         
         return null;
@@ -149,7 +149,7 @@ public class Elevator {
             boolean foundGround = false;
             
             int startingY = BlockType.canPassThrough(CraftBook.getBlockID(plyX, y1 + 1, plyZ))
-            	? y1 + 1 : y1;
+                ? y1 + 1 : y1;
 
             // Step downwards until we find a spot to stand
             for (y2 = startingY; y2 >= y1 - 5; y2--) {
@@ -157,7 +157,7 @@ public class Elevator {
 
                 // We have to find a block that the player won't fall through
                 if (!BlockType.canPassThrough(id)) {
-                	foundGround = true;
+                    foundGround = true;
                     break;
                 }
                 

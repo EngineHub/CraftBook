@@ -57,11 +57,11 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      * @param listener
      */
     public CraftBookDelegateListener(
-    		CraftBook craftBook,
-    		CraftBookListener listener) {
-    	this.craftBook = craftBook;
-    	this.listener = listener;
-    	this.properties = listener.getProperties();
+            CraftBook craftBook,
+            CraftBookListener listener) {
+        this.craftBook = craftBook;
+        this.listener = listener;
+        this.properties = listener.getProperties();
     }
     
     /**
@@ -76,7 +76,7 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      * @return
      */
     protected BlockBag getBlockBag(Vector origin) {
-    	return listener.getBlockBag(origin);
+        return listener.getBlockBag(origin);
     }
     
     /**
@@ -101,7 +101,14 @@ public abstract class CraftBookDelegateListener extends PluginListener {
      * @throws LocalWorldEditBridgeException
      */
     public boolean onCheckedCommand(Player player, String[] split)
-    		throws InsufficientArgumentsException, LocalWorldEditBridgeException {
-    	return false;
+            throws InsufficientArgumentsException, LocalWorldEditBridgeException {
+        return false;
+    }
+    
+    /**
+     * Called on plugin unload.
+     */
+    public void disable() {
+        
     }
 }

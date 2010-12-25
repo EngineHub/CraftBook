@@ -193,9 +193,9 @@ public class CraftBookListener extends PluginListener {
      */
     public void registerDelegate(CraftBookDelegateListener listener) {
         delegates.add(listener);
-        if(listener instanceof TorchPatch.ExtensionListener) {
-            TorchPatch.addListener(TorchPatch.wrapListener(craftBook, 
-                                   (TorchPatch.ExtensionListener)listener));
+        if(listener instanceof SignPatch.ExtensionListener) {
+            SignPatch.addListener(SignPatch.wrapListener(craftBook, 
+                                   (SignPatch.ExtensionListener)listener));
         }
         if(listener instanceof TickExtensionListener) {
             TickPatch.addTask(TickPatch.wrapRunnable(craftBook, 
@@ -361,39 +361,32 @@ public class CraftBookListener extends PluginListener {
     }
 
     /**
-     * Called when either a sign, chest or furnace is changed. This is used
-     * in this listener to prevent block bag signs from being created unless
-     * appropriate permissions are provided.
-     *
-     * @param player player who changed it
-     * @param cblock complex block that changed
-     * @return true if you want any changes to be reverted
+     * Called when a sign is updated.
+     * @param player
+     * @param cblock
+     * @return
      */
-    public boolean onComplexBlockChange(Player player, ComplexBlock cblock) {
-        if (cblock instanceof Sign) {
-            Sign sign = (Sign)cblock;
-            
-            String line2 = sign.getText(1);
-            
-            // Black Hole
-            if (line2.equalsIgnoreCase("[Black Hole]")
-                    && !player.canUseCommand("/makeblackhole")) {
-                player.sendMessage(Colors.Rose
-                        + "You don't have permission to make black holes.");
-                CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                return true;
-            }
-            
-            // Block Source
-            if (line2.equalsIgnoreCase("[Block Source]")
-                    && !player.canUseCommand("/makeblocksource")) {
-                player.sendMessage(Colors.Rose
-                        + "You don't have permission to make block sources.");
-                CraftBook.dropSign(cblock.getX(), cblock.getY(), cblock.getZ());
-                return true;
-            }
+    public boolean onSignChange(Player player, Sign sign) {
+        String line2 = sign.getText(1);
+        
+        // Black Hole
+        if (line2.equalsIgnoreCase("[Black Hole]")
+                && !player.canUseCommand("/makeblackhole")) {
+            player.sendMessage(Colors.Rose
+                    + "You don't have permission to make black holes.");
+            CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+            return true;
         }
-
+        
+        // Block Source
+        if (line2.equalsIgnoreCase("[Block Source]")
+                && !player.canUseCommand("/makeblocksource")) {
+            player.sendMessage(Colors.Rose
+                    + "You don't have permission to make block sources.");
+            CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
+            return true;
+        }
+        
         return false;
     }
 
@@ -460,7 +453,7 @@ public class CraftBookListener extends PluginListener {
                 && player.canUseCommand("/reload")
                 && split.length > 1
                 && (split[1].equalsIgnoreCase("CraftBook")
-                	|| split[1].equals("*"))) {
+                    || split[1].equals("*"))) {
         
             // Redirect log messages to the player's chat.
             LoggerToChatHandler handler = new LoggerToChatHandler(player);
@@ -483,7 +476,7 @@ public class CraftBookListener extends PluginListener {
             player.sendMessage(Colors.LightGray + "CraftBook version: " +
                     craftBook.getVersion());
             player.sendMessage(Colors.LightGray
-            		+ "Website: http://wiki.sk89q.com/wiki/CraftBook");
+                    + "Website: http://wiki.sk89q.com/wiki/CraftBook");
 
             return true;
         }
@@ -498,6 +491,16 @@ public class CraftBookListener extends PluginListener {
     @Override
     public void onDisconnect(Player player) {
         beenToldVersion.remove(player.getName());
+    }
+    
+    /**
+     * Disables everything.
+     */
+    public void disable() {
+        // Call the disable method of delegates
+        for (CraftBookDelegateListener listener : delegates) {
+            listener.disable();
+        }
     }
 
     /**
