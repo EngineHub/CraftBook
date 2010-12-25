@@ -209,6 +209,40 @@ public final class BlockType {
     }
 
     /**
+     * Checks to see whether a block should be placed last.
+     * 
+     * @param id
+     * @return
+     */
+    public static boolean shouldPlaceLast(int id) {
+        return id == SAPLING
+                || id == YELLOW_FLOWER
+                || id == RED_FLOWER
+                || id == BROWN_MUSHROOM
+                || id == RED_MUSHROOM
+                || id == TORCH
+                || id == FIRE
+                || id == REDSTONE_WIRE
+                || id == CROPS
+                || id == SIGN_POST
+                || id == WOODEN_DOOR
+                || id == LADDER
+                || id == MINECART_TRACKS
+                || id == WALL_SIGN
+                || id == LEVER
+                || id == STONE_PRESSURE_PLATE
+                || id == IRON_DOOR
+                || id == WOODEN_PRESSURE_PLATE
+                || id == REDSTONE_TORCH_OFF
+                || id == REDSTONE_TORCH_ON
+                || id == STONE_BUTTON
+                || id == SNOW
+                || id == CACTUS
+                || id == REED
+                || id == PORTAL;
+    }
+
+    /**
      * Checks whether a block can be passed through.
      * 
      * @param id

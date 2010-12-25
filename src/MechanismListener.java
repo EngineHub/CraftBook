@@ -254,46 +254,24 @@ public class MechanismListener extends CraftBookDelegateListener {
             // Toggle areas
             } else if (useToggleAreas && redstoneToggleAreas
                     && (line2.equalsIgnoreCase("[Toggle]")
-                    || line2.equalsIgnoreCase("[Area]"))) {
-                final boolean isNewSign = line2.equalsIgnoreCase("[Area]");
-                final String id = sign.getText(0);
-                final String namespace = sign.getText(2);
-                
+                    || line2.equalsIgnoreCase("[Area]"))) {                
                 craftBook.getDelay().delayAction(
                     new TickDelayer.Action(pt.toBlockVector(), 2) {
-                            @Override
-                            public void run() {
-                                BlockBag bag = listener.getBlockBag(pt);
-                                bag.addSourcePosition(pt);
-    
-                                try {
-                                    CuboidCopy copy = null;
-                                    
-                                    if (isNewSign) {
-                                        if (CopyManager.isValidNamespace(namespace)) {
-                                            copy = listener.getCopyManager().load(
-                                                    "~" + namespace, id);
-                                        } else if (namespace.equals("")) {
-                                            copy = listener.getCopyManager().load(
-                                                    "global", id);
-                                        }
-                                    } else {
-                                        copy = listener.getCopyManager().load(
-                                            "global", id);
-                                       }
-                               
-                                    if (copy != null && copy.distance(pt) <= 4) {
-                                        if (isOn) {
-                                            copy.paste(bag);
-                                        } else {
-                                            copy.clear(bag);
-                                        }
-                                    } 
-                               } catch (CuboidCopyException e) {} 
-                                 catch (IOException e2) {}
-                                 catch (BlockSourceException e) {}
+                        @Override
+                        public void run() {
+                            BlockBag bag = listener.getBlockBag(pt);
+                            bag.addSourcePosition(pt);
+
+                            ToggleArea area = new ToggleArea(pt,
+                                    new HmodSignText(sign), listener.getCopyManager());
+                            
+                            if (isOn) { 
+                                area.setActive(bag);
+                            } else {
+                                area.setInactive(bag);
                             }
-                        });
+                        }
+                    });
             }
         }
     }
@@ -338,8 +316,10 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @return
      */
     public boolean onSignChange(Player player, Sign sign) {
-        int type = CraftBook.getBlockID(
-                sign.getX(), sign.getY(), sign.getZ());
+        CraftBookPlayer ply = new HmodPlayer(player);
+        HmodSignText signText = new HmodSignText(sign);
+        Vector pt = new Vector(sign.getX(), sign.getY(), sign.getZ());
+        int type = CraftBook.getBlockID(pt);
         
         String line2 = sign.getText(1);
         
@@ -407,8 +387,6 @@ public class MechanismListener extends CraftBookDelegateListener {
             listener.informUser(player);
             
             if (useElevators) {
-                Vector pt = new Vector(sign.getX(), sign.getY(), sign.getZ());
-                
                 if (line2.equalsIgnoreCase("[Lift Up]")) {
                     if (Elevator.hasLinkedLift(pt, true)) {
                         player.sendMessage(Colors.Gold
@@ -438,73 +416,21 @@ public class MechanismListener extends CraftBookDelegateListener {
             } else {
                 player.sendMessage(Colors.Rose + "Elevators are disabled on this server.");
             }
-
+        
         // Toggle areas
-        } else if (line2.equalsIgnoreCase("[Toggle]")) {
-            if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
-                player.sendMessage(Colors.Rose
-                        + "You don't have permission to make toggle areas.");
-                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                return true;
-            }
-            
-            sign.setText(1, "[Toggle]");
-            sign.update();
-            
+        } else if (line2.equalsIgnoreCase("[Area]")
+                || line2.equalsIgnoreCase("[Toggle]")) {
             listener.informUser(player);
             
             if (useToggleAreas) {
-                player.sendMessage(Colors.Gold + "Area toggle created!");
-            } else {
-                player.sendMessage(Colors.Rose + "Area toggles are disabled on this server.");
-            }
-
-        // Toggle areas
-        } else if (line2.equalsIgnoreCase("[Area]")) {
-            if (checkCreatePermissions && !player.canUseCommand("/maketogglearea")) {
-                player.sendMessage(Colors.Rose
-                        + "You don't have permission to make toggle areas.");
-                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                return true;
-            }
-            
-            String namespace = sign.getText(2);
-            
-            String expected = player.getName();
-            if (expected.length() > 15) {
-                expected = expected.substring(0, 15);
-            }
-            
-            if (namespace.equals("")
-                    || namespace.equalsIgnoreCase(expected)) {
-                sign.setText(2, player.getName());
-            } else if (namespace.equals("@")) {
-                if (!player.canUseCommand("/savensarea")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make global area toggles.");
-                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                    return true;
+                if (hasCreatePermission(ply, "maketogglearea")
+                        && ToggleArea.validateEnvironment(ply, pt, signText)) {
+                    signText.flushChanges();
+                } else {
+                    CraftBook.dropSign(pt);
                 }
-
-                sign.setText(2, "");
             } else {
-                if (!player.canUseCommand("/savensarea")) {
-                    player.sendMessage(Colors.Rose
-                            + "You don't have permission to make area toggles for other namespaces.");
-                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                    return true;
-                }
-            }
-            
-            sign.setText(1, "[Area]");
-            sign.update();
-            
-            listener.informUser(player);
-            
-            if (useToggleAreas) {
-                player.sendMessage(Colors.Gold + "Area toggle created!");
-            } else {
-                player.sendMessage(Colors.Rose + "Area toggles are disabled on this server.");
+                ply.printError("Area toggles are disabled on this server.");
             }
 
         // Bridges
@@ -748,59 +674,24 @@ public class MechanismListener extends CraftBookDelegateListener {
                 // Toggle areas
                 } else if (useToggleAreas != false
                         && (line2.equalsIgnoreCase("[Toggle]")
-                                || line2.equalsIgnoreCase("[Area]"))
+                        || line2.equalsIgnoreCase("[Area]"))
                         && checkPermission(player, "/togglearea")) {
-                    String id = sign.getText(0);
-                    String namespace = sign.getText(2);
+                    
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+                    
+                    ToggleArea area = new ToggleArea(pt,
+                            new HmodSignText(sign), listener.getCopyManager());
+                    area.playerToggle(new HmodPlayer(player), bag);
 
-                    if (id.trim().length() == 0) {
-                        player.sendMessage(Colors.Rose + "Area name must be the first line.");
-                        return true;
-                    } else if (!CopyManager.isValidName(id)) {
-                        player.sendMessage(Colors.Rose + "Not a valid area name (1st sign line)!");
-                        return true;
-                    }
-
-                    try {
-                        boolean isNewArea = line2.equalsIgnoreCase("[Area]");
-                        
-                        BlockBag bag = getBlockBag(pt);
-                        bag.addSourcePosition(pt);
-                        CuboidCopy copy = null;
-                        
-                        if (isNewArea && CopyManager.isValidNamespace(namespace)) {
-                            copy = listener.getCopyManager().load("~" + namespace, id);
-                        } else if (namespace.equals("")) {
-                            copy = listener.getCopyManager().load("global", id);
+                    // Tell the player of missing blocks
+                    Map<Integer,Integer> missing = bag.getMissing();
+                    if (missing.size() > 0) {
+                        for (Map.Entry<Integer,Integer> entry : missing.entrySet()) {
+                            player.sendMessage(Colors.Rose + "Missing "
+                                    + entry.getValue() + "x "
+                                    + Util.toBlockName(entry.getKey()));
                         }
-                        
-                        if (copy == null) {
-                            player.sendMessage(Colors.Rose + "Specified area (" + id + ") " +
-                                    "doesn't exist.");
-                            return true;
-                        }
-                        
-                        if (isNewArea || copy.distance(pt) <= 4) {
-                            copy.toggle(bag);
-                            
-                            // Get missing
-                            Map<Integer,Integer> missing = bag.getMissing();
-                            if (missing.size() > 0) {
-                                for (Map.Entry<Integer,Integer> entry : missing.entrySet()) {
-                                    player.sendMessage(Colors.Rose + "Missing "
-                                            + entry.getValue() + "x "
-                                            + Util.toBlockName(entry.getKey()));
-                                }
-                            } else {
-                                player.sendMessage(Colors.Gold + "Toggled!");
-                            }
-                        } else {
-                            player.sendMessage(Colors.Rose + "This sign is too far away!");
-                        }
-                    } catch (CuboidCopyException e) {
-                        player.sendMessage(Colors.Rose + "Could not load area: " + e.getMessage());
-                    } catch (IOException e2) {
-                        player.sendMessage(Colors.Rose + "Could not load area: " + e2.getMessage());
                     }
                     
                     return true;
@@ -1174,6 +1065,23 @@ public class MechanismListener extends CraftBookDelegateListener {
      */
     public boolean checkPermission(Player player, String command) {
         return !checkPermissions || player.canUseCommand(command);
+    }
+    
+    /**
+     * Check if a player can use a command. May be overrided if permissions
+     * checking is disabled.
+     * 
+     * @param player
+     * @param command
+     * @return
+     */
+    public boolean hasCreatePermission(CraftBookPlayer player, String permission) {
+        if (!checkCreatePermissions || player.hasPermission(permission)) {
+            return true;
+        } else {
+            player.printError("You don't have permission to make that.");
+            return false;
+        }
     }
 
     /**

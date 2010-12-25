@@ -18,7 +18,6 @@
 */
 
 import com.sk89q.craftbook.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
@@ -65,13 +64,14 @@ public class CopyManager {
     /**
      * Load a copy from disk. This may return a cached copy. If the copy is not
      * cached, the file will be loaded from disk if possible. If the copy does
-     * not exist, null will be returned. An exception may be raised if the file
+     * not exist, an exception will be raised. An exception may be raised if the file
      * exists but cannot be read for whatever reason.
      * 
      * @param namespace
      * @param id
      * @return
      * @throws IOException
+     * @throws MissingCuboidCopyException
      * @throws CuboidCopyException
      */
     public CuboidCopy load(String namespace, String id)
@@ -83,7 +83,7 @@ public class CopyManager {
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
             if (lastCheck > System.currentTimeMillis()) {
-                return null;
+                throw new MissingCuboidCopyException(id);
             }
         }
 
@@ -101,6 +101,7 @@ public class CopyManager {
                 return copy;
             } catch (FileNotFoundException e) {
                 missing.put(cacheKey, System.currentTimeMillis() + 10000);
+                throw new MissingCuboidCopyException(id);
             } catch (IOException e) {
                 missing.put(cacheKey, System.currentTimeMillis() + 10000);
                 throw e;

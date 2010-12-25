@@ -18,11 +18,11 @@
 */
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.LinkedHashMap;
 import com.sk89q.craftbook.*;
+import com.sk89q.worldedit.DoubleArrayList;
 
 /**
  * Stores a copy of a cuboid.
@@ -129,9 +129,11 @@ public class CuboidCopy {
             if (reader.read(data, 0, size) != size) {
                 throw new CuboidCopyException("File error: Bad size");
             }
-        } catch (FileNotFoundException e) {
-            in.close();
-            return null;
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+            }
         }
         
         CuboidCopy copy = new CuboidCopy();
@@ -179,30 +181,43 @@ public class CuboidCopy {
      * Paste to world.
      */
     public void paste(BlockBag bag) throws BlockSourceException {
-        Map<Vector,byte[]> queued = new LinkedHashMap<Vector,byte[]>();
+        DoubleArrayList<Vector,byte[]> queueAfter =
+            new DoubleArrayList<Vector,byte[]>(false);
+        DoubleArrayList<Vector,byte[]> queueLast =
+            new DoubleArrayList<Vector,byte[]>(false);
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     int index = y * width * length + z * width + x;
                     Vector pt = origin.add(x, y, z);
-                    if (BlockType.isBottomDependentBlock(blocks[index])) {
-                        queued.put(pt, new byte[] {blocks[index], data[index]});
+                    
+                    if (BlockType.shouldPlaceLast(CraftBook.getBlockID(pt))) {
+                        CraftBook.setBlockID(pt, 0);
+                    }
+                    
+                    if (BlockType.shouldPlaceLast(blocks[index])) {
+                        queueLast.put(pt, new byte[] {blocks[index], data[index]});
                     } else {
-                        try {
-                            bag.setBlockID(pt, blocks[index]);
-                            if (BlockType.usesData(blocks[index])) {
-                                CraftBook.setBlockData(pt, data[index]);
-                            }
-                        } catch (OutOfBlocksException e) {
-                            // Eat error
-                        }
+                        queueAfter.put(pt, new byte[] {blocks[index], data[index]});
                     }
                 }
             }
         }
 
-        for (Map.Entry<Vector,byte[]> entry : queued.entrySet()) {
+        for (Map.Entry<Vector,byte[]> entry : queueAfter) {
+            byte[] v = entry.getValue();
+            try {
+                bag.setBlockID(entry.getKey(), v[0]);
+                if (BlockType.usesData(v[0])) {
+                    CraftBook.setBlockData(entry.getKey(), v[1]);
+                }
+            } catch (OutOfBlocksException e) {
+                // Eat error
+            }
+        }
+
+        for (Map.Entry<Vector,byte[]> entry : queueLast) {
             byte[] v = entry.getValue();
             try {
                 bag.setBlockID(entry.getKey(), v[0]);
@@ -221,13 +236,13 @@ public class CuboidCopy {
      * Clear the area.
      */
     public void clear(BlockBag bag) throws BlockSourceException {
-        List<Vector> queued = new LinkedList<Vector>();
+        List<Vector> queued = new ArrayList<Vector>();
         
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     Vector pt = origin.add(x, y, z);
-                    if (BlockType.isBottomDependentBlock(CraftBook.getBlockID(pt))) {
+                    if (BlockType.shouldPlaceLast(CraftBook.getBlockID(pt))) {
                         bag.setBlockID(pt, 0);
                     } else {
                         // Can't destroy these blocks yet
