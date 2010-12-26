@@ -67,7 +67,7 @@ public class VehicleListener extends CraftBookDelegateListener {
     private int minecart20xSlowBlock = BlockType.GRAVEL;
     private int minecartStationBlock = BlockType.OBSIDIAN;
     private int minecartReverseBlock = BlockType.CLOTH;
-    private int minecartTriggerBlock = BlockType.IRON_ORE;
+    private int minecartDepositBlock = BlockType.IRON_ORE;
     private int minecartEjectBlock = BlockType.IRON_BLOCK;
     private int minecartSortBlock = BlockType.NETHERSTONE;
     private boolean minecartDestroyOnExit = false;
@@ -101,7 +101,7 @@ public class VehicleListener extends CraftBookDelegateListener {
         minecart20xSlowBlock = properties.getInt("minecart-20x-slow-block", BlockType.GRAVEL);
         minecartStationBlock = properties.getInt("minecart-station-block", BlockType.OBSIDIAN);
         minecartReverseBlock = properties.getInt("minecart-reverse-block", BlockType.CLOTH);
-        minecartTriggerBlock = properties.getInt("minecart-trigger-block", BlockType.IRON_ORE);
+        minecartDepositBlock = properties.getInt("minecart-deposit-block", BlockType.IRON_ORE);
         minecartEjectBlock = properties.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
         minecartSortBlock = properties.getInt("minecart-sort-block", BlockType.NETHERSTONE);
         
@@ -414,7 +414,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         
                         return;
                     }
-                } else if (under == minecartTriggerBlock) {
+                } else if (under == minecartDepositBlock) {
                     Boolean test = Redstone.testAnyInput(underPt);
 
                     if (test == null || test) {
@@ -434,7 +434,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             }
                             
                             if (bag.getChestBlockCount() > 0) {
-                                if (getControllerSign(pt.add(0, -1, 0), "[Distribute]") != null) {
+                                if (getControllerSign(pt.add(0, -1, 0), "[Deposit]") != null) {
                                     ItemArrayUtil.moveChestBagToItemArray(
                                             minecart.getStorage(), bag);
                                 } else {
