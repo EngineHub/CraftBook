@@ -52,6 +52,7 @@
       <fileset dir="."/>
       <globmapper from="*.txt" to="*.txt"/>
     </copy>
+    <copy file="craftbook.properties" todir="${release.dir}"/>
     <copy tofile="${release.dir}/CraftBook.jar" file="${dist.dir}/CraftBook.jar"/>
     <!--<copy todir="${release.dir}">
       <fileset dir="lib">
