@@ -69,8 +69,8 @@ public class MC1240 extends BaseIC {
                 
                 if (parts.length > 1) {
                     float spread = Float.parseFloat(parts[1]);
-                    if (spread < 0 || spread > 20) {
-                        return "Spread must be >= 0 and <= 20.";
+                    if (spread < 0 || spread > 50) {
+                        return "Spread must be >= 0 and <= 50.";
                     }
                 }
             }
@@ -78,7 +78,7 @@ public class MC1240 extends BaseIC {
             if (vertVelLine.length() > 0) {
                 float speed = Float.parseFloat(vertVelLine);
                 if (speed < -1 || speed > 1) {
-                    return "Vertical elocity must be between or equal to -1 and 1.";
+                    return "Vertical velocity must be between or equal to -1 and 1.";
                 }
             }
         } catch (NumberFormatException e) {

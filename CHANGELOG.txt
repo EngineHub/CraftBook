@@ -9,7 +9,11 @@ dev:
 - New [Area] sign replaces [Toggle] sign. This new sign has namespace
     support (3rd line). Leave blank to set it as the namespace for your
     own player or use "@" for the global namespace (if you have permission).
+    The fourth line indicates the other state to switch to when the
+    area is turned off (best used with redstone) -- use "-" to indicate
+    the action of doing nothing and leave blank to clear (default behavior).
 - Toggle area signs can now be triggered with redstone.
+- Fixed toggle areas dropping items.
 - Fixed packet spam caused by toggling areas.
 [Redstone]
 - Added 2-tick propagation delay to ICs and redstone-powered mechanisms.
@@ -28,7 +32,8 @@ dev:
     MC4200 (dispatcher), MC1202 (chest dispenser),
     MC0020 (self-triggering random bit),
     MC0111 (self-triggering reciever), MC0230 (self-triggering day check),
-    MC1240 (arrow shooter), and MC1241 (arrow barrage).
+    MC1240 (arrow shooter), MC1241 (arrow barrage), and
+    MC0420 (self-triggering clock).
 - New MC3033 (RS NAND latch) replaces defunct MC3031.
 - MC1200 (mob spawner) now supports riders. Specify the rider on the
     fourth line.
@@ -40,8 +45,10 @@ dev:
 - Added MC5001, a variant of MC5000 using the 3 input, 3 output layout.
 - Added support for custom ICs using existing PLC languages.
 - Added new redstone-plcs-require-permission configuration.
-- Fixed issue with the 32nd slot of Perlstone's tables.
 - Added /listics command.
+- Added Perlstone32 PLC language.
+- Fixed issue with the 32nd slot of Perlstone's tables.
+- Fixed chest dispenser IC being able to dispense -1 of an item.
 - Added Perlstone32 PLC language.
 [Block bags]
 - Overhauled block bag system for bridges, gates, etc. Now multiple
@@ -51,6 +58,8 @@ dev:
     (this may be obsolete with Minecraft beta).
 - The nearby-chests block bag should no longer break between Minecraft
     updates, pending update of hMod.
+- Removed the requirement of the nearby chest block bag needing one item in
+    the chest to begin with.
 [Minecarts]
 - Added minecart sort control block. This allows you to switch track 
     direction based on criteria (such as whether the cart is empty, if
@@ -60,8 +69,23 @@ dev:
 - Minecart station blocks now continually push when activated. To pulse
     (old behavior), put "Pulse" on the third or fourth line.
 - The minecart dispenser can now dispense onto anything.
+- Minecart dispensers will now collect the contents of storage minecarts
+    and store them.
+- Minecart dispensers can now dispense other types of minecarts by
+    specifying "Storage" or "Powered" on the 3rd line. If a type is
+    specified, minecarts of that type will also be stored (instead of
+    breaking apart minecarts into their respective craftable pieces).
+- Minecart dispensers will now push dispensed minecarts if Push is on the
+    fourth line of the sign.
+- The minecart trigger block has been dropped.
+- A new deposit minecart block can deposit a storage minecart's contents
+    into adjacent chests or deposit the contents of chests into a storage
+    minecart automatically.
 - Redstone currents can now be put on the same level as the tracks
     for minecart control blocks.
+- Added an empty minecart delay that will remove empty minecarts after
+    left unoccupied by players for a certain amount of time.
+- Added an option to destroy minecarts on exit of them.
 - Fixed the minecart dispenser not collecting carts that were on a slope.
 - Fixed issue where minecarts significantly slowed down on pressure plates.
 - Fixed minecart ejector blocks so they should now more accurately
@@ -71,9 +95,11 @@ dev:
 - Fixed an issue where changing the station block type to something other
     than obsidian did not work correctly.
 [Cauldrons]
-- Fixed potential issue with the cauldron dropping items.
 - Added per-group permissions for cauldrons.
 - Added reload-cauldron console command. 
+- If the cauldron recipes file is missing, the current working directory
+    will now be printed.
+- Fixed potential issue with the cauldron dropping items.
 [Mechanisms]
 - Bridges can now cut through snow.
 - New doors are a vertical form of bridges. Use [Door Up] and [Door Down]

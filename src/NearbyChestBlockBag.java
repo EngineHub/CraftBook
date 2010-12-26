@@ -70,7 +70,7 @@ public class NearbyChestBlockBag extends BlockBag {
                                 itemArray[i] = null;
                             }
                             
-                            chest.setContents(itemArray);
+                            ItemArrayUtil.setContents((ItemArray<?>)chest, itemArray);
     
                             return;
                         }
@@ -108,7 +108,7 @@ public class NearbyChestBlockBag extends BlockBag {
                             int newAmount = itemArray[i].getAmount() + 1;
                             itemArray[i].setAmount(newAmount);
                             
-                            chest.setContents(itemArray);
+                            ItemArrayUtil.setContents((ItemArray<?>)chest, itemArray);
     
                             return;
                         }
@@ -121,7 +121,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 if (emptySlot != -1) {
                     itemArray[emptySlot] = new Item(id, 1);
                     
-                    chest.setContents(itemArray);
+                    ItemArrayUtil.setContents((ItemArray<?>)chest, itemArray);
                     
                     return;
                 }

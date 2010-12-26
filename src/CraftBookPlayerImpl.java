@@ -23,7 +23,7 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class HmodPlayer extends CraftBookPlayer {
+public class CraftBookPlayerImpl extends CraftBookPlayer {
     /**
      * Stores the player.
      */
@@ -34,7 +34,7 @@ public class HmodPlayer extends CraftBookPlayer {
      * 
      * @param player
      */
-    public HmodPlayer(Player player) {
+    public CraftBookPlayerImpl(Player player) {
         this.player = player;
     }
 

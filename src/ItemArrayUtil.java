@@ -55,7 +55,7 @@ public class ItemArrayUtil {
                             if (chestItem == null) {
                                 chestItems[chestSlot] = cartItem;
                                 fromItems[cartSlot] = null;
-                                inventories[invenIndex].setContents(chestItems);
+                                setContents(inventories[invenIndex], chestItems);
                                 changed = true;
                                 throw new TransferredItemException();
                             } else if (chestItem.getItemId() == cartItem.getItemId()
@@ -67,7 +67,7 @@ public class ItemArrayUtil {
                                     chestItem.setAmount(chestItem.getAmount()
                                             + cartItem.getAmount());
                                     fromItems[cartSlot] = null;
-                                    inventories[invenIndex].setContents(chestItems);
+                                    setContents(inventories[invenIndex], chestItems);
                                     changed = true;
                                     throw new TransferredItemException();
                                 } else {
@@ -88,7 +88,7 @@ public class ItemArrayUtil {
         }
         
         if (changed) {
-            from.setContents(fromItems);
+            setContents(from, fromItems);
         }
     }
 
@@ -152,14 +152,50 @@ public class ItemArrayUtil {
                 
                 if (changed) {
                     changedDest = true;
-                    inventory.setContents(chestItems);
+                    setContents(inventory, chestItems);
                 }
             }
         } catch (TargetFullException e) {
         }
         
         if (changedDest) {
-            to.setContents(toItems);
+            setContents(to, toItems);
+        }
+    }
+    
+    /**
+     * Set the contents of an ItemArray.
+     * 
+     * @param itemArray
+     * @param contents
+     */
+    public static void setContents(Inventory itemArray, Item[] contents) {
+        int size = itemArray.getContentsSize();
+
+        for (int i = 0; i < size; i++) {
+            if (contents[i] == null) {
+                itemArray.removeItem(i);
+            } else {
+                itemArray.setSlot(contents[i], i);
+            }
+        }
+    }
+    
+    /**
+     * Set the contents of an ItemArray.
+     * 
+     * @param itemArray
+     * @param contents
+     */
+    public static void setContents(ItemArray<?> itemArray, Item[] contents) {
+        int size = itemArray.getContentsSize();
+
+        for (int i = 0; i < size; i++) {
+            if (contents[i] == null) {
+                itemArray.removeItem(i);
+            } else {
+                itemArray.setSlot(contents[i], i);
+            }
         }
     }
 

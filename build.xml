@@ -48,10 +48,6 @@
     <antcall target="jar"/>
     <delete dir="${release.dir}"/>
     <mkdir dir="${release.dir}"/>
-    <mkdir dir="${release.dir}/src"/>
-    <copy todir="${release.dir}/src">
-      <fileset dir="${src.dir}"/>
-    </copy>
     <copy todir="${release.dir}">
       <fileset dir="."/>
       <globmapper from="*.txt" to="*.txt"/>
@@ -65,7 +61,12 @@
         <exclude name="JFlex.jar"/>
       </fileset>
     </copy>-->
-    <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip"/>
+    <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip,COMPILING.txt"/>
+    <mkdir dir="${release.dir}/src"/>
+    <copy todir="${release.dir}/src">
+      <fileset dir="${src.dir}"/>
+    </copy>
+    <zip destfile="${release.dir}/craftbook-${version}-source.zip" basedir="${release.dir}" excludes="*.zip"/>
   </target>
 
   <!-- Clean the output -->

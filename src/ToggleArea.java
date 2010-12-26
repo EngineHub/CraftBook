@@ -28,10 +28,6 @@ import com.sk89q.craftbook.*;
  */
 public class ToggleArea extends SignOrientedMechanism {
     /**
-     * Sign position.
-     */
-    private Vector pt;
-    /**
      * Copy manager.
      */
     private CopyManager copyManager;
@@ -49,10 +45,23 @@ public class ToggleArea extends SignOrientedMechanism {
      * @param signText
      * @param copyManager
      */
-    public ToggleArea(Vector pt, SignText signText, CopyManager copyManager) {
-        super(signText);
+    public ToggleArea(Vector pt, CopyManager copyManager) {
+        super(pt);
         
         this.copyManager = copyManager;
+        
+        isNewArea = getSignIdentifier().equalsIgnoreCase("[Area]");
+    }
+    
+    /**
+     * Used for validation.
+     * 
+     * @param pt
+     * @param signText
+     * @param copyManager
+     */
+    private ToggleArea(Vector pt, SignText signText) {
+        super(pt, signText);
         
         isNewArea = getSignIdentifier().equalsIgnoreCase("[Area]");
     }
@@ -268,7 +277,7 @@ public class ToggleArea extends SignOrientedMechanism {
     public static boolean validateEnvironment(CraftBookPlayer player,
             Vector pt, SignText signText) {
         
-        ToggleArea area = new ToggleArea(pt, signText, null);
+        ToggleArea area = new ToggleArea(pt, signText);
 
         String activeID = area.getSignActiveStateID();
         String inactiveID = area.getSignInactiveStateID();

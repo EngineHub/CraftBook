@@ -19,6 +19,7 @@
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,18 +89,18 @@ public class MechanismListener extends CraftBookDelegateListener {
         useBridges = properties.getBoolean("bridge-enable", true);
         redstoneBridges = properties.getBoolean("bridge-redstone", true);
         useHiddenSwitches = properties.getBoolean("door-enable", true);
-        Bridge.allowableBridgeBlocks = Util.toBlockIDSet(properties.getString("bridge-blocks", "4,5,20,43"));
-        Bridge.maxBridgeLength = properties.getInt("bridge-max-length", 30);
+        Bridge.allowedBlocks = Util.toBlockIDSet(properties.getString("bridge-blocks", "4,5,20,43"));
+        Bridge.maxLength = properties.getInt("bridge-max-length", 30);
         useDoors = properties.getBoolean("door-enable", true);
         redstoneDoors = properties.getBoolean("door-redstone", true);
-        Door.allowableDoorBlocks = Util.toBlockIDSet(properties.getString("door-blocks", "1,3,4,5,17,20,35,43,44,45,47,80,82"));
-        Door.maxDoorLength = properties.getInt("door-max-length", 30);
+        Door.allowedBlocks = Util.toBlockIDSet(properties.getString("door-blocks", "1,3,4,5,17,20,35,43,44,45,47,80,82"));
+        Door.maxLength = properties.getInt("door-max-length", 30);
         dropBookshelves = properties.getBoolean("drop-bookshelves", true);
         try {
             dropAppleChance = Double.parseDouble(properties.getString("apple-drop-chance", "0.5")) / 100.0;
         } catch (NumberFormatException e) {
             dropAppleChance = -1;
-            logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
+            logger.warning("Invalid apple drop chance setting in craftbook.properties");
         }
         useHiddenSwitches = properties.getBoolean("hidden-switches-enable", true);
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
@@ -122,15 +123,20 @@ public class MechanismListener extends CraftBookDelegateListener {
 
                 if (recipes.size() != 0) {
                     cauldronModule = new Cauldron(recipes);
-                    logger.log(Level.INFO, recipes.size()
+                    logger.info(recipes.size()
                             + " cauldron recipe(s) loaded");
                 } else {
-                    logger.log(Level.WARNING,
-                            "cauldron-recipes.txt had no recipes");
+                    logger.warning("cauldron-recipes.txt had no recipes");
+                }
+            } catch (FileNotFoundException e) {
+                logger.info("cauldron-recipes.txt not found: " + e.getMessage());
+                try {
+                    logger.info("Looked in: " + (new File(".")).getCanonicalPath());
+                } catch (IOException ioe) {
+                    // Eat error
                 }
             } catch (IOException e) {
-                logger.log(Level.INFO,
-                        "cauldron-recipes.txt not loaded: " + e.getMessage());
+                logger.warning("cauldron-recipes.txt not loaded: " + e.getMessage());
             }
         } else {
             cauldronModule = null;
@@ -198,29 +204,20 @@ public class MechanismListener extends CraftBookDelegateListener {
                     && type == BlockType.SIGN_POST
                     && line2.equalsIgnoreCase("[Bridge]")) {
                 craftBook.getDelay().delayAction(
-                        new TickDelayer.Action(pt.toBlockVector(), 2) {
-                            @Override
-                            public void run() {
-                                int data = CraftBook.getBlockData(pt);
-        
-                                try {
-                                    BlockBag bag = listener.getBlockBag(pt);
-                                    bag.addSourcePosition(pt);
-        
-                                    if (data == 0x0) {
-                                        Bridge.setBridgeState(pt, Bridge.Direction.EAST, bag, !isOn);
-                                    } else if (data == 0x4) {
-                                        Bridge.setBridgeState(pt, Bridge.Direction.SOUTH, bag, !isOn);
-                                    } else if (data == 0x8) {
-                                        Bridge.setBridgeState(pt, Bridge.Direction.WEST, bag, !isOn);
-                                    } else if (data == 0xC) {
-                                        Bridge.setBridgeState(pt, Bridge.Direction.NORTH, bag, !isOn);
-                                    }
-                                } catch (OperationException e) {
-                                } catch (BlockSourceException e) {
-                                }
+                    new TickDelayer.Action(pt.toBlockVector(), 2) {
+                        @Override
+                        public void run() {
+                            BlockBag bag = listener.getBlockBag(pt);
+                            bag.addSourcePosition(pt);
+                            
+                            Bridge bridge = new Bridge(pt);
+                            if (isOn) {
+                                bridge.setActive(bag);
+                            } else {
+                                bridge.setInactive(bag);
                             }
-                        });
+                        }
+                    });
 
             // Doors
             } else if (useDoors != false
@@ -229,27 +226,20 @@ public class MechanismListener extends CraftBookDelegateListener {
                     && (line2.equalsIgnoreCase("[Door Up]")
                         || line2.equalsIgnoreCase("[Door Down]"))) {
                 craftBook.getDelay().delayAction(
-                        new TickDelayer.Action(pt.toBlockVector(), 2) {
-                            @Override
-                            public void run() {
-                                int data = CraftBook.getBlockData(pt);
-                                boolean upwards = line2.equalsIgnoreCase("[Door Up]");
-                                try {
-                                    BlockBag bag = getBlockBag(pt);
-                                    bag.addSourcePosition(pt);
-                                    
-                                    if (data == 0x0 || data == 0x8) { // East-west
-                                        Door.toggleDoor(pt,
-                                                Door.Direction.NORTH_SOUTH, upwards, bag);
-                                    } else if (data == 0x4 || data == 0xC) { // North-south
-                                        Door.toggleDoor(pt,
-                                                Door.Direction.WEST_EAST, upwards, bag);
-                                    }
-                                } catch (OperationException e) {
-                                } catch (BlockSourceException e) {
-                                }
+                    new TickDelayer.Action(pt.toBlockVector(), 2) {
+                        @Override
+                        public void run() {
+                            BlockBag bag = getBlockBag(pt);
+                            bag.addSourcePosition(pt);
+                            
+                            Door door = new Door(pt);
+                            if (isOn) {
+                                door.setActive(bag);
+                            } else {
+                                door.setInactive(bag);
                             }
-                        });
+                        }
+                    });
 
             // Toggle areas
             } else if (useToggleAreas && redstoneToggleAreas
@@ -262,8 +252,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                             BlockBag bag = listener.getBlockBag(pt);
                             bag.addSourcePosition(pt);
 
-                            ToggleArea area = new ToggleArea(pt,
-                                    new HmodSignText(sign), listener.getCopyManager());
+                            ToggleArea area = new ToggleArea(pt, listener.getCopyManager());
                             
                             if (isOn) { 
                                 area.setActive(bag);
@@ -316,10 +305,9 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @return
      */
     public boolean onSignChange(Player player, Sign sign) {
-        CraftBookPlayer ply = new HmodPlayer(player);
-        HmodSignText signText = new HmodSignText(sign);
+        CraftBookPlayer ply = new CraftBookPlayerImpl(player);
+        SignTextImpl signText = new SignTextImpl(sign);
         Vector pt = new Vector(sign.getX(), sign.getY(), sign.getZ());
-        int type = CraftBook.getBlockID(pt);
         
         String line2 = sign.getText(1);
         
@@ -435,33 +423,15 @@ public class MechanismListener extends CraftBookDelegateListener {
 
         // Bridges
         } else if (line2.equalsIgnoreCase("[Bridge]")) {
-            if (checkCreatePermissions && !player.canUseCommand("/makebridge")) {
-                player.sendMessage(Colors.Rose
-                        + "You don't have permission to make bridges.");
-                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                return true;
-            }
-            
-            sign.setText(1, "[Bridge]");
-            sign.update();
-
             listener.informUser(player);
 
             if (useBridges) {
-                int data = CraftBook.getBlockData(
-                        sign.getX(), sign.getY(), sign.getZ());
-                
-                if (type == BlockType.WALL_SIGN) {
-                    player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                    return true;
-                } else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
-                    player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
-                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                    return true;
+                if (hasCreatePermission(ply, "makebridge")
+                        && Bridge.validateEnvironment(ply, pt, signText)) {
+                    signText.flushChanges();
+                } else {
+                    CraftBook.dropSign(pt);
                 }
-                
-                player.sendMessage(Colors.Gold + "Bridge created!");
             } else {
                 player.sendMessage(Colors.Rose + "Bridges are disabled on this server.");
             }
@@ -469,34 +439,15 @@ public class MechanismListener extends CraftBookDelegateListener {
         // Doors
         } else if (line2.equalsIgnoreCase("[Door Up]")
                 || line2.equalsIgnoreCase("[Door Down]")) {
-            if (checkCreatePermissions && !player.canUseCommand("/makedoor")) {
-                player.sendMessage(Colors.Rose
-                        + "You don't have permission to make doors.");
-                CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                return true;
-            }
-            
-            sign.setText(1, line2.equalsIgnoreCase("[Door Up]") ?
-                    "[Door Up]" : "[Door Down]");
-            sign.update();
-
             listener.informUser(player);
 
             if (useDoors) {
-                int data = CraftBook.getBlockData(
-                        sign.getX(), sign.getY(), sign.getZ());
-                
-                if (type == BlockType.WALL_SIGN) {
-                    player.sendMessage(Colors.Rose + "The sign must be a sign post.");
-                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                    return true;
-                } else if (data != 0x0 && data != 0x4 && data != 0x8 && data != 0xC) {
-                    player.sendMessage(Colors.Rose + "The sign cannot be at an odd angle.");
-                    CraftBook.dropSign(sign.getX(), sign.getY(), sign.getZ());
-                    return true;
+                if (hasCreatePermission(ply, "makedoor")
+                        && Door.validateEnvironment(ply, pt, signText)) {
+                    signText.flushChanges();
+                } else {
+                    CraftBook.dropSign(pt);
                 }
-                
-                player.sendMessage(Colors.Gold + "Door created!");
             } else {
                 player.sendMessage(Colors.Rose + "Doors are disabled on this server.");
             }
@@ -516,7 +467,14 @@ public class MechanismListener extends CraftBookDelegateListener {
     @Override
     public void onBlockRightClicked(Player player, Block blockClicked, Item item) {
         try {
-            handleBlockUse(player, blockClicked, item.getItemId());
+            // Discriminate against attempts that would actually place blocks
+            boolean isPlacingBlock = item.getItemId() >= 1
+                    && item.getItemId() <= 256;
+            // 1 to work around empty hands bug in hMod
+            
+            if (!isPlacingBlock) {
+                handleBlockUse(player, blockClicked, item.getItemId());
+            }
         } catch (OutOfBlocksException e) {
             player.sendMessage(Colors.Rose + "Uh oh! Ran out of: " + Util.toBlockName(e.getID()));
             player.sendMessage(Colors.Rose + "Make sure nearby block sources have the necessary");
@@ -680,9 +638,8 @@ public class MechanismListener extends CraftBookDelegateListener {
                     BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
                     
-                    ToggleArea area = new ToggleArea(pt,
-                            new HmodSignText(sign), listener.getCopyManager());
-                    area.playerToggle(new HmodPlayer(player), bag);
+                    ToggleArea area = new ToggleArea(pt, listener.getCopyManager());
+                    area.playerToggle(new CraftBookPlayerImpl(player), bag);
 
                     // Tell the player of missing blocks
                     Map<Integer,Integer> missing = bag.getMissing();
@@ -701,30 +658,12 @@ public class MechanismListener extends CraftBookDelegateListener {
                         && blockClicked.getType() == BlockType.SIGN_POST
                         && line2.equalsIgnoreCase("[Bridge]")
                         && checkPermission(player, "/bridge")) {
-                    int data = CraftBook.getBlockData(x, y, z);
-
-                    try {
-                        BlockBag bag = getBlockBag(pt);
-                        bag.addSourcePosition(pt);
-                        
-                        if (data == 0x0) {
-                            Bridge.toggleBridge(new Vector(x, y, z), Bridge.Direction.EAST, bag);
-                            player.sendMessage(Colors.Gold + "Bridge toggled.");
-                        } else if (data == 0x4) {
-                            Bridge.toggleBridge(new Vector(x, y, z), Bridge.Direction.SOUTH, bag);
-                            player.sendMessage(Colors.Gold + "Bridge toggled.");
-                        } else if (data == 0x8) {
-                            Bridge.toggleBridge(new Vector(x, y, z), Bridge.Direction.WEST, bag);
-                            player.sendMessage(Colors.Gold + "Bridge toggled.");
-                        } else if (data == 0xC) {
-                            Bridge.toggleBridge(new Vector(x, y, z), Bridge.Direction.NORTH, bag);
-                            player.sendMessage(Colors.Gold + "Bridge toggled.");
-                        } else {
-                            player.sendMessage(Colors.Rose + "That sign is not in a right direction.");
-                        }
-                    } catch (OperationException e) {
-                        player.sendMessage(Colors.Rose + e.getMessage());
-                    }
+                    
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+                    
+                    Bridge bridge = new Bridge(pt);
+                    bridge.playerToggleBridge(new CraftBookPlayerImpl(player), bag);
                     
                     return true;
 
@@ -734,27 +673,12 @@ public class MechanismListener extends CraftBookDelegateListener {
                         && (line2.equalsIgnoreCase("[Door Up]")
                                 || line2.equalsIgnoreCase("[Door Down]"))
                         && checkPermission(player, "/door")) {
-                    int data = CraftBook.getBlockData(x, y, z);
-                    boolean upwards = line2.equalsIgnoreCase("[Door Up]");
-
-                    try {
-                        BlockBag bag = getBlockBag(pt);
-                        bag.addSourcePosition(pt);
-                        
-                        if (data == 0x0 || data == 0x8) { // East-west
-                            Door.toggleDoor(new Vector(x, y, z),
-                                    Door.Direction.NORTH_SOUTH, upwards, bag);
-                            player.sendMessage(Colors.Gold + "Door toggled.");
-                        } else if (data == 0x4 || data == 0xC) { // North-south
-                            Door.toggleDoor(new Vector(x, y, z),
-                                    Door.Direction.WEST_EAST, upwards, bag);
-                            player.sendMessage(Colors.Gold + "Door toggled.");
-                        } else {
-                            player.sendMessage(Colors.Rose + "That sign is not in a right direction.");
-                        }
-                    } catch (OperationException e) {
-                        player.sendMessage(Colors.Rose + e.getMessage());
-                    }
+                    
+                    BlockBag bag = getBlockBag(pt);
+                    bag.addSourcePosition(pt);
+                    
+                    Door door = new Door(pt);
+                    door.playerToggleDoor(new CraftBookPlayerImpl(player), bag);
                     
                     return true;
                 }

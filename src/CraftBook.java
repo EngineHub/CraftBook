@@ -254,6 +254,16 @@ public class CraftBook extends Plugin {
     protected static boolean setBlockData(Vector pt, int data) {
         return setBlockData(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), data);
     }
+    
+    protected static SignText getSignText(Vector pt) {
+        ComplexBlock cblock = etc.getServer().getComplexBlock(pt.getBlockX(),
+                pt.getBlockY(), pt.getBlockZ());
+        if (cblock instanceof Sign) {
+            return new SignTextImpl((Sign)cblock);
+        }
+        
+        return null;
+    }
 
     public static void dropSign(int x, int y, int z) {
         etc.getServer().setBlockAt(0, x, y, z);

@@ -26,33 +26,33 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class Door {
+public class Door extends SignOrientedMechanism {
     /**
      * Direction to extend the bridge.
      */
-    public enum Direction {
+    private enum Direction {
         NORTH_SOUTH, // X
         WEST_EAST, // Z
     }
 
     /**
-     * What bridges can be made out of.
+     * What doors can be made out of.
      */
-    public static Set<Integer> allowableDoorBlocks
+    public static Set<Integer> allowedBlocks
             = new HashSet<Integer>();
     /**
-     * Max bridge length.
+     * Max door length.
      */
-    public static int maxDoorLength = 30;
+    public static int maxLength = 30;
 
     /**
-     * Returns whether a block can be used for the bridge.
+     * Returns whether a block can be used for the door.
      * 
      * @param id
      * @return
      */
     private static boolean canUseBlock(int id) {
-        return allowableDoorBlocks.contains(id);
+        return allowedBlocks.contains(id);
     }
     
     /**
@@ -67,7 +67,94 @@ public class Door {
                 || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
                 || t == BlockType.SNOW;
     }
+    
+    /**
+     * Construct the instance.
+     * 
+     * @param pt
+     */
+    public Door(Vector pt) {
+        super(pt);
+    }
+    
+    /**
+     * Returns the direction of the bridge to open towards.
+     * 
+     * @return
+     * @throws InvalidDirection
+     */
+    private Direction getDirection() throws InvalidDirectionException {
+        int data = CraftBook.getBlockData(pt);
 
+        if (data == 0x0 || data == 0x8) { // East-west
+            return Direction.NORTH_SOUTH;
+        } else if (data == 0x4 || data == 0xC) { // North-south
+            return Direction.WEST_EAST;
+        } else {
+            throw new InvalidDirectionException();
+        }
+    }
+    
+    /**
+     * Returns whether the door needs to be opened upwards. This is indicated
+     * by [Door Up] on the sign as opposed to [Door Down].
+     * 
+     * @return
+     */
+    private boolean isUpwards() {
+        return getSignIdentifier().equalsIgnoreCase("[Door Up]");
+    }
+
+    /**
+     * Toggles the door closest to a location.
+     *
+     * @param player
+     * @param bag
+     * @return
+     */
+    public void playerToggleDoor(CraftBookPlayer player, BlockBag bag)
+            throws BlockSourceException {
+        try {
+            setState(bag, null);
+        } catch (InvalidDirectionException e) {
+            player.printError("The sign is not oriented at a right angle.");
+        } catch (UnacceptableTypeException e) {
+            player.printError("The bridge is not made from an permitted material.");
+        } catch (InvalidConstructionException e) {
+            player.printError(e.getMessage());
+        }
+    }
+    
+    /**
+     * Sets the door to be active.
+     * 
+     * @param bag
+     */
+    public void setActive(BlockBag bag) {
+        try {
+            setState(bag, false);
+        } catch (InvalidDirectionException e) {
+        } catch (UnacceptableTypeException e) {
+        } catch (InvalidConstructionException e) {
+        } catch (BlockSourceException e) {
+        }
+    }
+    
+    /**
+     * Sets the door to be active.
+     * 
+     * @param bag
+     */
+    public void setInactive(BlockBag bag) {
+        try {
+            setState(bag, true);
+        } catch (InvalidDirectionException e) {
+        } catch (UnacceptableTypeException e) {
+        } catch (InvalidConstructionException e) {
+        } catch (BlockSourceException e) {
+        }
+    }
+    
     /**
      * Toggles the door closest to a location.
      *
@@ -76,23 +163,12 @@ public class Door {
      * @param bag
      * @return
      */
-    public static boolean toggleDoor(Vector pt, Direction direction, 
-            boolean upwards, BlockBag bag)
-            throws OperationException, BlockSourceException {
-        return setDoorState(pt, direction, bag, upwards, null);
-    }
-    
-    /**
-     * Toggles the gate closest to a location.
-     *
-     * @param pt
-     * @param direction
-     * @param bag
-     * @return
-     */
-    public static boolean setDoorState(Vector pt, Direction direction,
-            BlockBag bag, boolean upwards, Boolean toOpen)
-            throws OperationException, BlockSourceException {
+    public boolean setState(BlockBag bag, Boolean toOpen)
+            throws BlockSourceException, InvalidDirectionException,
+            UnacceptableTypeException, InvalidConstructionException {
+        
+        Direction direction = getDirection();
+        boolean upwards = isUpwards();
 
         Vector sideDir = null;
         Vector vertDir = upwards ? new Vector(0, 1, 0) : new Vector(0, -1, 0);
@@ -103,21 +179,18 @@ public class Door {
             sideDir = new Vector(0, 0, 1);
         }
         
-        int type;
-        
-        type = CraftBook.getBlockID(pt.add(vertDir));
+        int type = CraftBook.getBlockID(pt.add(vertDir));
 
         // Check construction
         if (!canUseBlock(type)) {
-            throw new OperationException("The block for the door has to be an allowed block type.");
+            throw new UnacceptableTypeException();
         }
         
-        if (CraftBook.getBlockID(pt.add(vertDir).add(sideDir)) != type) {
-            throw new OperationException("The blocks for the door to the sides have to be the same.");
-        }
-        
-        if (CraftBook.getBlockID(pt.add(vertDir).subtract(sideDir)) != type) {
-            throw new OperationException("The blocks for the door to the sides have to be the same.");
+        // Check sides
+        if (CraftBook.getBlockID(pt.add(vertDir).add(sideDir)) != type
+                || CraftBook.getBlockID(pt.add(vertDir).subtract(sideDir)) != type) {
+            throw new InvalidConstructionException(
+                    "The blocks for the door to the sides have to be the same.");
         }
         
         // Detect whether the door needs to be opened
@@ -128,17 +201,16 @@ public class Door {
         Vector cur = pt.add(vertDir.multiply(2));
         boolean found = false;
         int dist = 0;
-                
-        for (int i = 0; i < maxDoorLength + 2; i++) {
+        
+        // Find the other side
+        for (int i = 0; i < maxLength + 2; i++) {
             int id = CraftBook.getBlockID(cur);
 
             if (id == BlockType.SIGN_POST) {
-                ComplexBlock cBlock = etc.getServer().getComplexBlock(
-                        cur.getBlockX(), cur.getBlockY(), cur.getBlockZ());
-
-                if (cBlock instanceof Sign) {
-                    Sign sign = (Sign)cBlock;
-                    String line2 = sign.getText(1);
+                SignText otherSignText = CraftBook.getSignText(cur);
+                
+                if (otherSignText != null) {
+                    String line2 = otherSignText.getLine2();
 
                     if (line2.equalsIgnoreCase("[Door Up]")
                             || line2.equalsIgnoreCase("[Door Down]")
@@ -150,27 +222,23 @@ public class Door {
                 }
             }
 
-            // Imprecision error?
             cur = cur.add(vertDir);
         }
 
+        // Failed to find the other side!
         if (!found) {
-            throw new OperationException("Door sign required on other side (or it was too far away).");
+            throw new InvalidConstructionException(
+                    "[Door] sign required on other side (or it was too far away).");
         }
 
         Vector otherSideBlockPt = pt.add(vertDir.multiply(dist + 2));
-        
-        if (CraftBook.getBlockID(otherSideBlockPt) != type) {
-            throw new OperationException("Other side is not setup correctly (needs to be "
-                    + etc.getDataSource().getItem(type) + ").");
-        }
-        if (CraftBook.getBlockID(otherSideBlockPt.add(sideDir)) != type) {
-            throw new OperationException("Other side is not setup correctly (needs to be "
-                    + etc.getDataSource().getItem(type) + ").");
-        }
-        if (CraftBook.getBlockID(otherSideBlockPt.subtract(sideDir)) != type) {
-            throw new OperationException("Other side is not setup correctly (needs to be "
-                    + etc.getDataSource().getItem(type) + ").");
+
+        // Check the other side to see if it's built correctly
+        if (CraftBook.getBlockID(otherSideBlockPt) != type
+                || CraftBook.getBlockID(otherSideBlockPt.add(sideDir)) != type
+                || CraftBook.getBlockID(otherSideBlockPt.subtract(sideDir)) != type) {
+            throw new InvalidConstructionException(
+            "The other side must be made with the same blocks.");
         }
 
         if (toOpen) {
@@ -225,6 +293,58 @@ public class Door {
             } else if (t != type) {
                 break;
             }
+        }
+    }
+    
+    /**
+     * Validates the sign's environment.
+     * 
+     * @param signText
+     * @return false to deny
+     */
+    public static boolean validateEnvironment(CraftBookPlayer player,
+            Vector pt, SignText signText) {
+        
+        if (signText.getLine2().equalsIgnoreCase("[Door Up]")) {
+            signText.setLine2("[Door Up]");
+        } else if (signText.getLine2().equalsIgnoreCase("[Door Down]")) {
+            signText.setLine2("[Door Down]");
+        } else {
+            signText.setLine2("[Door]");
+        }
+        
+        player.print("Door really created!");
+        
+        return true;
+    }
+    
+    /**
+     * Thrown when the sign is an invalid direction.
+     */
+    private static class InvalidDirectionException extends Exception {
+        private static final long serialVersionUID = -3183606604247616362L;
+    }
+    
+    /**
+     * Thrown when the bridge type is unacceptable.
+     */
+    private static class UnacceptableTypeException extends Exception {
+        private static final long serialVersionUID = 8340723004466483212L;
+    }
+    
+    /**
+     * Thrown when the bridge type is not constructed correctly.
+     */
+    private static class InvalidConstructionException extends Exception {
+        private static final long serialVersionUID = 4943494589521864491L;
+
+        /**
+         * Construct the object.
+         * 
+         * @param msg
+         */
+        public InvalidConstructionException(String msg) {
+            super(msg);
         }
     }
 }
