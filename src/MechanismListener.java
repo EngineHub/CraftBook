@@ -19,6 +19,7 @@
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class MechanismListener extends CraftBookDelegateListener {
             dropAppleChance = Double.parseDouble(properties.getString("apple-drop-chance", "0.5")) / 100.0;
         } catch (NumberFormatException e) {
             dropAppleChance = -1;
-            logger.log(Level.WARNING, "Invalid apple drop chance setting in craftbook.properties");
+            logger.warning("Invalid apple drop chance setting in craftbook.properties");
         }
         useHiddenSwitches = properties.getBoolean("hidden-switches-enable", true);
         useToggleAreas = properties.getBoolean("toggle-areas-enable", true);
@@ -122,15 +123,20 @@ public class MechanismListener extends CraftBookDelegateListener {
 
                 if (recipes.size() != 0) {
                     cauldronModule = new Cauldron(recipes);
-                    logger.log(Level.INFO, recipes.size()
+                    logger.info(recipes.size()
                             + " cauldron recipe(s) loaded");
                 } else {
-                    logger.log(Level.WARNING,
-                            "cauldron-recipes.txt had no recipes");
+                    logger.warning("cauldron-recipes.txt had no recipes");
+                }
+            } catch (FileNotFoundException e) {
+                logger.info("cauldron-recipes.txt not found: " + e.getMessage());
+                try {
+                    logger.info("Looked in: " + (new File(".")).getCanonicalPath());
+                } catch (IOException ioe) {
+                    // Eat error
                 }
             } catch (IOException e) {
-                logger.log(Level.INFO,
-                        "cauldron-recipes.txt not loaded: " + e.getMessage());
+                logger.warning("cauldron-recipes.txt not loaded: " + e.getMessage());
             }
         } else {
             cauldronModule = null;
