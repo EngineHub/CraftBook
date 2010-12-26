@@ -29,6 +29,7 @@ import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 import lymia.customic.*;
 import lymia.perlstone.Perlstone_1_0;
+import lymia.util.Tuple2;
 
 /**
  * Event listener for redstone enhancements such as redstone pumpkins and
@@ -112,6 +113,17 @@ public class RedstoneListener extends CraftBookDelegateListener
         }
         
         addDefaultICs();
+        
+        Server s = etc.getServer();
+        for(Tuple2<Integer,Integer> chunkCoord:ChunkFinder.getLoadedChunks(s.getMCServer().e)) {
+            int xs = (chunkCoord.a+1)<<4;
+            int ys = (chunkCoord.b+1)<<4;
+            for(int x=chunkCoord.a<<4;x<xs;x++) 
+                for(int y=0;y<128;y++) 
+                    for(int z=chunkCoord.b<<4;z<ys;z++) 
+                        if(s.getBlockIdAt(x, y, z)==BlockType.WALL_SIGN)
+                            onSignAdded(x,y,z);
+        }
     }
     
     /**
@@ -410,10 +422,10 @@ public class RedstoneListener extends CraftBookDelegateListener
             }
         }
     }
-    public void onSignAdded(Block b) {
+    public void onSignAdded(int x, int y, int z) {
         if(!enableSelfTriggeredICs) return;
             
-        Sign sign = (Sign)etc.getServer().getComplexBlock(b.getX(),b.getY(),b.getZ());
+        Sign sign = (Sign)etc.getServer().getComplexBlock(x,y,z);
         String line2 = sign.getText(1);
         if(!line2.startsWith("[MC")) return;
         
@@ -427,10 +439,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 
         if(!ic.type.isSelfTriggered) return;
 
-        bv.add(new BlockVector(b.getX(),b.getY(),b.getZ()));
-    }
-    public void onLeverNeighborChange(Block b) {
-        onSignAdded(b);
+        bv.add(new BlockVector(x,y,z));
     }
     
     /**

@@ -73,7 +73,7 @@ public class SignPatch extends go {
     @Deprecated
     public void b(ff world, int x, int y, int z) {
         ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
-        for(int i=0;i<tasks.length;i++) tasks[i].onSignAdded(new Block(bh,x,y,z));
+        for(int i=0;i<tasks.length;i++) tasks[i].onSignAdded(x,y,z);
         super.b(world,x,y,z);
     }
     
@@ -122,7 +122,7 @@ public class SignPatch extends go {
         return new ExtensionListener() {
             private PluginLoader l = etc.getLoader();
             private long lastCheck = 0;
-            public void onSignAdded(Block b) {
+            public void onSignAdded(int x, int y, int z) {
                 if(etc.getServer().getTime()!=lastCheck) {
                     if(l.getPlugin(p.getName())!=p) {
                         CopyOnWriteArrayList<ExtensionListener> taskList = getListenerList();
@@ -131,12 +131,12 @@ public class SignPatch extends go {
                     }
                     lastCheck = etc.getServer().getTime();
                 }
-                if(p.isEnabled()) r.onSignAdded(b);
+                if(p.isEnabled()) r.onSignAdded(x,y,z);
             }
         };
     }
     
     public static interface ExtensionListener {
-        public void onSignAdded(Block b);
+        public void onSignAdded(int x, int y, int z);
     }
 }
