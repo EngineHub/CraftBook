@@ -453,7 +453,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         Player player = minecart.getPassenger();
                         if (player != null) {
                             // Let's find a place to put the player
-                            Location loc = player.getLocation();
+                            Location loc = new Location(blockX, blockY, blockZ);
                             Vector signPos = new Vector(blockX, blockY - 2, blockZ);
 
                             if (CraftBook.getBlockID(signPos) == BlockType.SIGN_POST
