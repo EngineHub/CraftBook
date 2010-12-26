@@ -54,8 +54,8 @@ public class TickPatch extends hp {
     }
     
     /**
-     * The actual patch methpd.
-     * Shpuld not be called.
+     * The actual patch method.
+     * Should not be called.
      */
     @Deprecated
     public void a() {
