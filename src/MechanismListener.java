@@ -467,7 +467,14 @@ public class MechanismListener extends CraftBookDelegateListener {
     @Override
     public void onBlockRightClicked(Player player, Block blockClicked, Item item) {
         try {
-            handleBlockUse(player, blockClicked, item.getItemId());
+            // Discriminate against attempts that would actually place blocks
+            boolean isPlacingBlock = item.getItemId() >= 1
+                    && item.getItemId() <= 256;
+            // 1 to work around empty hands bug in hMod
+            
+            if (!isPlacingBlock) {
+                handleBlockUse(player, blockClicked, item.getItemId());
+            }
         } catch (OutOfBlocksException e) {
             player.sendMessage(Colors.Rose + "Uh oh! Ran out of: " + Util.toBlockName(e.getID()));
             player.sendMessage(Colors.Rose + "Make sure nearby block sources have the necessary");
