@@ -33,7 +33,8 @@ public class ChunkFinder {
     @SuppressWarnings("unchecked")
     public static Tuple2<Integer,Integer>[] getLoadedChunks(ff world) {
         List<Tuple2<Integer,Integer>> chunkList = new ArrayList<Tuple2<Integer,Integer>>();
-        for(kx chunk:(List<kx>)get(get(world,"G"),"f")) if(chunk!=null) chunkList.add(getChunkCoords(chunk));
+        List<kx> list = (List<kx>)get(get(world,"G"),"f");
+        for(kx chunk:list.toArray(new kx[0])) if(chunk!=null) chunkList.add(getChunkCoords(chunk));
         return chunkList.toArray((Tuple2<Integer, Integer>[]) new Tuple2<?,?>[0]);
     }
     
