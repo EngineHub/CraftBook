@@ -18,6 +18,7 @@
 */
 
 import com.sk89q.craftbook.SignText;
+import com.sk89q.craftbook.Vector;
 
 /**
  * A sign oriented mechanism.
@@ -26,16 +27,30 @@ import com.sk89q.craftbook.SignText;
  */
 public abstract class SignOrientedMechanism {
     /**
+     * Sign position.
+     */
+    protected Vector pt;
+    /**
      * Sign text.
      */
-    private SignText signText;
+    protected SignText signText;
     
     /**
      * Construct the object.
      * 
-     * @param signText
+     * @param pt
      */
-    public SignOrientedMechanism(SignText signText) {
+    public SignOrientedMechanism(Vector pt) {
+        signText = CraftBook.getSignText(pt);
+        this.pt = pt;
+    }
+    
+    /**
+     * Construct the object.
+     * 
+     * @param pt
+     */
+    public SignOrientedMechanism(Vector pt, SignText signText) {
         this.signText = signText;
     }
     

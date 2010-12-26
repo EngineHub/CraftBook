@@ -26,26 +26,37 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class Bridge {
+public class Bridge extends SignOrientedMechanism {
     /**
      * Direction to extend the bridge.
      */
-    public enum Direction {
+    private enum Direction {
         NORTH, // -X
         SOUTH, // +X
         WEST, // +Z
         EAST, // -Z
     }
-
+    
     /**
      * What bridges can be made out of.
      */
-    public static Set<Integer> allowableBridgeBlocks
+    public static Set<Integer> allowedBlocks
             = new HashSet<Integer>();
     /**
      * Max bridge length.
      */
-    public static int maxBridgeLength = 30;
+    public static int maxLength = 30;
+    
+    /**
+     * Construct the instance.
+     * 
+     * @param pt
+     * @param signText
+     * @param copyManager
+     */
+    public Bridge(Vector pt) {
+        super(pt);
+    }
 
     /**
      * Returns whether a block can be used for the bridge.
@@ -54,33 +65,106 @@ public class Bridge {
      * @return
      */
     private static boolean canUseBlock(int id) {
-        return allowableBridgeBlocks.contains(id);
+        return allowedBlocks.contains(id);
+    }
+    
+    /**
+     * Returns whether the door should pass through this block (and displace
+     * it if needed).
+     * 
+     * @param t
+     * @return
+     */
+    private static boolean canPassThrough(int t) {
+        return t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
+                || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
+                || t == BlockType.SNOW;
+    }
+    
+    /**
+     * Returns the direction of the bridge to open towards.
+     * 
+     * @return
+     * @throws InvalidDirection
+     */
+    private Direction getDirection() throws InvalidDirectionException {
+        int data = CraftBook.getBlockData(pt);
+        
+        if (data == 0x0) {
+            return Bridge.Direction.EAST;
+        } else if (data == 0x4) {
+            return Bridge.Direction.SOUTH;
+        } else if (data == 0x8) {
+            return Bridge.Direction.WEST;
+        } else if (data == 0xC) {
+            return Bridge.Direction.NORTH; 
+        } else {
+            throw new InvalidDirectionException();
+        }
     }
 
     /**
-     * Toggles the gate closest to a location.
+     * Toggles the bridge closest to a location.
      *
-     * @param pt
-     * @param direction
+     * @param player
      * @param bag
      * @return
      */
-    public static boolean toggleBridge(Vector pt, Direction direction, BlockBag bag)
-            throws OperationException, BlockSourceException {
-        return setBridgeState(pt, direction, bag, null);
+    public void playerToggleBridge(CraftBookPlayer player, BlockBag bag)
+            throws BlockSourceException {
+        try {
+            setState(bag, null);
+        } catch (InvalidDirectionException e) {
+            player.printError("The sign is not oriented at a right angle.");
+        } catch (UnacceptableTypeException e) {
+            player.printError("The bridge is not made from an permitted material.");
+        } catch (InvalidConstructionException e) {
+            player.printError(e.getMessage());
+        }
+    }
+    
+    /**
+     * Sets the bridge to be active.
+     * 
+     * @param bag
+     */
+    public void setActive(BlockBag bag) {
+        try {
+            setState(bag, false);
+        } catch (InvalidDirectionException e) {
+        } catch (UnacceptableTypeException e) {
+        } catch (InvalidConstructionException e) {
+        } catch (BlockSourceException e) {
+        }
+    }
+    
+    /**
+     * Sets the bridge to be active.
+     * 
+     * @param bag
+     */
+    public void setInactive(BlockBag bag) {
+        try {
+            setState(bag, true);
+        } catch (InvalidDirectionException e) {
+        } catch (UnacceptableTypeException e) {
+        } catch (InvalidConstructionException e) {
+        } catch (BlockSourceException e) {
+        }
     }
     
     /**
      * Toggles the gate closest to a location.
      *
-     * @param pt
-     * @param direction
      * @param bag
+     * @param toOpen
      * @return
      */
-    public static boolean setBridgeState(Vector pt, Direction direction,
-            BlockBag bag, Boolean toOpen)
-            throws OperationException, BlockSourceException {
+    private boolean setState(BlockBag bag, Boolean toOpen)
+            throws BlockSourceException, InvalidDirectionException,
+            UnacceptableTypeException, InvalidConstructionException {
+        
+        Direction direction = getDirection();
 
         Vector change = null;
         Vector leftSide = null;
@@ -105,60 +189,50 @@ public class Bridge {
             rightSide = pt.add(-1, 1, 0);
         }
 
-        int type;
+        // Block above the sign
+        int type = CraftBook.getBlockID(pt.add(0, 1, 0));
 
-        // Maybe the sign is below...
-        try {
-            type = CraftBook.getBlockID(pt.add(0, 1, 0));
-
-            if (type == 0) {
-                throw new OperationException("Sign not below"); // Nope
-            }
-
-            if (!canUseBlock(type)) {
-                throw new OperationException("The block above the sign has to be an allowed block type.");
-            }
-            if (CraftBook.getBlockID(leftSide) != type) {
-                throw new OperationException("The blocks above the sign to the sides have to be the same.");
-            }
-            if (CraftBook.getBlockID(rightSide) != type) {
-                throw new OperationException("The blocks above the sign to the sides have to be the same.");
-            }
-
-        // Maybe the sign is above...
-        } catch (OperationException e) {
+        // Attempt to detect whether the bridge is above or below the sign,
+        // first assuming that the bridge is above
+        if (type == 0
+                || !canUseBlock(type)
+                || CraftBook.getBlockID(leftSide) != type
+                || CraftBook.getBlockID(rightSide) != type) {
+            
+            // The bridge is not above, so let's try below
             leftSide = leftSide.add(0, -2, 0);
             rightSide = rightSide.add(0, -2, 0);
             centerShift = -1;
 
+            // Block below the sign
             type = CraftBook.getBlockID(pt.add(0, -1, 0));
-
+            
             if (!canUseBlock(type)) {
-                throw new OperationException("The block below the sign has to be an allowed block type.");
+                throw new UnacceptableTypeException();
             }
-            if (CraftBook.getBlockID(leftSide) != type) {
-                throw new OperationException("The blocks below the sign to the sides have to be the same.");
-            }
-            if (CraftBook.getBlockID(rightSide) != type) {
-                throw new OperationException("The blocks below the sign to the sides have to be the same.");
+
+            // Guess not
+            if (CraftBook.getBlockID(leftSide) != type
+                    || CraftBook.getBlockID(rightSide) != type) {
+                throw new InvalidConstructionException(
+                        "Blocks adjacent to the bridge block must be of the same type.");
             }
         }
 
         Vector cur = pt.add(change);
         boolean found = false;
         int dist = 0;
-                
-        for (int i = 0; i < maxBridgeLength; i++) {
+        
+        // Find the other side
+        for (int i = 0; i < maxLength + 2; i++) {
             int id = CraftBook.getBlockID(cur);
 
             if (id == BlockType.SIGN_POST) {
-                ComplexBlock cBlock = etc.getServer().getComplexBlock(
-                        cur.getBlockX(), cur.getBlockY(), cur.getBlockZ());
-
-                if (cBlock instanceof Sign) {
-                    Sign sign = (Sign)cBlock;
-                    String line2 = sign.getText(1);
-
+                SignText otherSignText = CraftBook.getSignText(cur);
+                
+                if (otherSignText != null) {
+                    String line2 = otherSignText.getLine2();
+                    
                     if (line2.equalsIgnoreCase("[Bridge]")
                             || line2.equalsIgnoreCase("[Bridge End]")) {
                         found = true;
@@ -168,36 +242,29 @@ public class Bridge {
                 }
             }
 
-            // Imprecision error?
             cur = cur.add(change);
         }
 
+        // Failed to find the other side!
         if (!found) {
-            throw new OperationException("[Bridge] sign required on other side (or it was too far away).");
+            throw new InvalidConstructionException(
+                    "[Bridge] sign required on other side (or it was too far away).");
         }
 
         Vector shift = change.multiply(dist + 1);
-        if (CraftBook.getBlockID(pt.add(shift).add(0, centerShift, 0)) != type) {
-            throw new OperationException("Other side is not setup correctly (needs to be "
-                    + etc.getDataSource().getItem(type) + ").");
-        }
-        if (CraftBook.getBlockID(leftSide.add(shift)) != type) {
-            throw new OperationException("Other side is not setup correctly (needs to be "
-                    + etc.getDataSource().getItem(type) + ").");
-        }
-        if (CraftBook.getBlockID(rightSide.add(shift)) != type) {
-            throw new OperationException("Other side is not setup correctly (needs to be "
-                    + etc.getDataSource().getItem(type) + ").");
+        
+        // Check the other side to see if it's built correctly
+        if (CraftBook.getBlockID(pt.add(shift).add(0, centerShift, 0)) != type
+                || CraftBook.getBlockID(leftSide.add(shift)) != type
+                || CraftBook.getBlockID(rightSide.add(shift)) != type) {
+            throw new InvalidConstructionException(
+                    "The other side must be made with the same blocks.");
         }
 
+        // Figure out whether the bridge needs to be opened or closed
         if (toOpen == null) {
             int existing = CraftBook.getBlockID(pt.add(change).add(0, centerShift, 0));
-            toOpen = existing != 0
-                    && existing != BlockType.WATER
-                     && existing != BlockType.STATIONARY_WATER
-                     && existing != BlockType.LAVA
-                     && existing != BlockType.STATIONARY_LAVA
-                     && existing != BlockType.SNOW;
+            toOpen = !canPassThrough(existing);
         }
 
         if (toOpen) {
@@ -209,8 +276,6 @@ public class Bridge {
             setRow(pt.add(0, centerShift, 0), change, type, dist, bag);
             setRow(rightSide, change, type, dist, bag);
         }
-
-        bag.flushChanges();
         
         return true;
     }
@@ -222,7 +287,7 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private static void clearRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
+    private void clearRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockSourceException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
@@ -242,18 +307,62 @@ public class Bridge {
      * @param change
      * @param dist
      */
-    private static void setRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
+    private void setRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockSourceException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
-            if (t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
-                     || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
-                     || t == BlockType.SNOW) {
+            if (canPassThrough(t)) {
                 bag.setBlockID(p, type);
             } else if (t != type) {
                 break;
             }
+        }
+    }
+    
+    /**
+     * Validates the sign's environment.
+     * 
+     * @param signText
+     * @return false to deny
+     */
+    public static boolean validateEnvironment(CraftBookPlayer player,
+            Vector pt, SignText signText) {
+        
+        signText.setLine2("[Bridge]");
+        
+        player.print("Bridge created!");
+        
+        return true;
+    }
+    
+    /**
+     * Thrown when the sign is an invalid direction.
+     */
+    private static class InvalidDirectionException extends Exception {
+        private static final long serialVersionUID = -3183606604247616362L;
+    }
+    
+    /**
+     * Thrown when the bridge type is unacceptable.
+     */
+    private static class UnacceptableTypeException extends Exception {
+        private static final long serialVersionUID = 8340723004466483212L;
+    }
+    
+    /**
+     * Thrown when the bridge type is not constructed correctly.
+     */
+    private static class InvalidConstructionException extends Exception {
+        private static final long serialVersionUID = 4943494589521864491L;
+
+        /**
+         * Construct the object.
+         * 
+         * @param msg
+         */
+        public InvalidConstructionException(String msg) {
+            super(msg);
         }
     }
 }

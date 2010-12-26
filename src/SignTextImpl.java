@@ -24,7 +24,7 @@ import com.sk89q.craftbook.SignText;
  * 
  * @author sk89q
  */
-public class HmodSignText extends SignText {
+public class SignTextImpl extends SignText {
     /**
      * Sign instance.
      */
@@ -36,7 +36,7 @@ public class HmodSignText extends SignText {
      * 
      * @param sign
      */
-    public HmodSignText(Sign sign) {
+    public SignTextImpl(Sign sign) {
         super(sign.getText(0), sign.getText(1),
                 sign.getText(2), sign.getText(3));
         this.sign = sign;
