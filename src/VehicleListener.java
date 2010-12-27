@@ -1115,6 +1115,21 @@ public class VehicleListener extends CraftBookDelegateListener {
             return true;
         }
         
+        if (line.equalsIgnoreCase("Storage")
+                && minecart.getType() == Minecart.Type.StorageCart) {
+            return true;
+        }
+        
+        if (line.equalsIgnoreCase("Powered")
+                && minecart.getType() == Minecart.Type.PoweredMinecart) {
+            return true;
+        }
+        
+        if (line.equalsIgnoreCase("Minecart")
+                && minecart.getType() == Minecart.Type.Minecart) {
+            return true;
+        }
+        
         if ((line.equalsIgnoreCase("Occupied")
                 || line.equalsIgnoreCase("Full"))
                 && !minecart.isEmpty()) {
