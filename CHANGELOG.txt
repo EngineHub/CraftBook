@@ -1,3 +1,10 @@
+2.0preview10:
+- Added the ability to sort minecarts based on their type with the
+    minecart sort block. Use "Storage", "Powered", or "Minecart".
+- Added extra error catching for the chunk finder.
+- Fixed NearbyChestBlockBag not supporting double chests.
+- Fixed ConcurrentModificationException in ChunkFinder.
+
 2.0preview9:
 - Fixed self-triggered ICs not loading reliably on server/chunk load and
     plugin reload.
