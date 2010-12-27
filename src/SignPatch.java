@@ -23,10 +23,6 @@ import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SignPatch extends go {
-    /**
-     * Do not use directly.
-     */
-    @Deprecated
     public static final CopyOnWriteArrayList<ExtensionListener> LISTENERS = new CopyOnWriteArrayList<ExtensionListener>();
     
     private static Class<go> CLASS = go.class;
@@ -95,26 +91,9 @@ public class SignPatch extends go {
      * Adds a new task.
      */
     public static void addListener(ExtensionListener r) {
-        getListenerList().add(r);
+        LISTENERS.add(r);
     }
-    /**
-     * Retrieves the task list.
-     */
-    @SuppressWarnings("unchecked")
-    public static CopyOnWriteArrayList<ExtensionListener> getListenerList() {
-        try {
-            return (CopyOnWriteArrayList<ExtensionListener>) gv.m[TYPE].getClass().getField("LISTENERS").get(null);
-        } catch (SecurityException e) {
-            throw new RuntimeException("unexpected error: cannot use reflection");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException("patch not applied");
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("patch not applied, or incompatable patch applied");
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("patch not applied, or incompatable patch applied");
-        }
-    }
-
+    
     /**
      * Wraps a HookExtension to allow easier use by plugins.
      */
@@ -125,7 +104,7 @@ public class SignPatch extends go {
             public void onSignAdded(int x, int y, int z) {
                 if(etc.getServer().getTime()!=lastCheck) {
                     if(l.getPlugin(p.getName())!=p) {
-                        CopyOnWriteArrayList<ExtensionListener> taskList = getListenerList();
+                        CopyOnWriteArrayList<ExtensionListener> taskList = LISTENERS;
                         while(taskList.contains(this)) taskList.remove(this);
                         return;
                     }
