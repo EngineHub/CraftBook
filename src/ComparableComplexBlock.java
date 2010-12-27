@@ -24,7 +24,8 @@ import com.sk89q.craftbook.*;
  *
  * @author sk89q
  */
-public class ComparableComplexBlock<T extends ComplexBlock> {
+public class ComparableComplexBlock<T extends ComplexBlock>
+    implements PointBasedEntity {
     /**
      * Chest location.
      */

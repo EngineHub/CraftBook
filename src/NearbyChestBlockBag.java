@@ -29,7 +29,7 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * List of chests.
      */
-    private Set<ComparableComplexBlock<Chest>> chests;
+    private Set<ComparableInventory> chests;
 
     /**
      * Construct the object.
@@ -37,9 +37,9 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param origin
      */
     public NearbyChestBlockBag(Vector origin) {
-        ComplexBlockDistanceComparator<Chest> comparator =
-                new ComplexBlockDistanceComparator<Chest>(origin);
-        chests = new TreeSet<ComparableComplexBlock<Chest>>(comparator);
+        DistanceComparator<ComparableInventory> comparator =
+                new DistanceComparator<ComparableInventory>(origin);
+        chests = new TreeSet<ComparableInventory>(comparator);
     }
 
     /**
@@ -52,8 +52,8 @@ public class NearbyChestBlockBag extends BlockBag {
      */
     public void fetchBlock(int id) throws BlockSourceException {
         try {
-            for (ComparableComplexBlock<Chest> c : chests) {
-                Chest chest = c.getChest();
+            for (ComparableInventory c : chests) {
+                Inventory chest = c.getInventory();
                 Item[] itemArray = chest.getContents();
                 
                 // Find the item
@@ -94,8 +94,8 @@ public class NearbyChestBlockBag extends BlockBag {
      */
     public void storeBlock(int id) throws BlockSourceException {
         try {
-            for (ComparableComplexBlock<Chest> c : chests) {
-                Chest chest = c.getChest();
+            for (ComparableInventory c : chests) {
+                Inventory chest = c.getInventory();
                 Item[] itemArray = chest.getContents();
                 int emptySlot = -1;
     
@@ -160,16 +160,7 @@ public class NearbyChestBlockBag extends BlockBag {
             for (int y = -3; y <= 3; y++) {
                 for (int z = -3; z <= 3; z++) {
                     Vector cur = pos.add(x, y, z);
-
-                    if (CraftBook.getBlockID(cur) == BlockType.CHEST) {
-                        ComplexBlock complexBlock =
-                                etc.getServer().getComplexBlock(ox + x, oy + y, oz + z);
-
-                        if (complexBlock instanceof Chest) {
-                            Chest chest = (Chest)complexBlock;
-                            chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
-                        }
-                    }
+                    addSingleSourcePosition(cur);
                 }
             }
         }
@@ -192,7 +183,14 @@ public class NearbyChestBlockBag extends BlockBag {
 
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest)complexBlock;
-                chests.add(new ComparableComplexBlock<Chest>(pos.toBlockVector(), chest));
+                chests.add(new ComparableInventory(pos.toBlockVector(), chest));
+            } else if (complexBlock instanceof DoubleChest) {
+                DoubleChest chest = (DoubleChest)complexBlock;
+                chests.add(new ComparableInventory(
+                        new Vector(chest.getX(), chest.getY(), chest.getZ()), chest));
+                // Double chests have two chest blocks, so creating a new Vector
+                // should theoretically prevent duplication (but it doesn't
+                // (yet...)
             }
         }
     }
@@ -216,8 +214,8 @@ public class NearbyChestBlockBag extends BlockBag {
         Inventory[] inventories = new Inventory[chests.size()];
         
         int i = 0;
-        for (ComparableComplexBlock<Chest> c : chests) {
-            inventories[i] = c.getChest();
+        for (ComparableInventory c : chests) {
+            inventories[i] = c.getInventory();
             i++;
         }
         
@@ -228,8 +226,8 @@ public class NearbyChestBlockBag extends BlockBag {
      * Flush changes.
      */
     public void flushChanges() {
-        for (ComparableComplexBlock<Chest> c : chests) {
-            c.getChest().update();
+        for (ComparableInventory c : chests) {
+            c.getInventory().update();
         }
     }
     

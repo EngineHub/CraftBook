@@ -25,8 +25,8 @@ import java.util.Comparator;
  *
  * @author sk89q
  */
-public class ComplexBlockDistanceComparator<T extends ComplexBlock>
-    implements Comparator<ComparableComplexBlock<T>> {
+public class DistanceComparator<T extends PointBasedEntity>
+    implements Comparator<PointBasedEntity> {
     /**
      * Origin to compare from.
      */
@@ -37,7 +37,7 @@ public class ComplexBlockDistanceComparator<T extends ComplexBlock>
      * 
      * @param origin
      */
-    public ComplexBlockDistanceComparator(Vector origin) {
+    public DistanceComparator(Vector origin) {
         this.origin = origin;
     }
 
@@ -48,9 +48,9 @@ public class ComplexBlockDistanceComparator<T extends ComplexBlock>
      * @param o2
      * @return
      */
-    public int compare(ComparableComplexBlock<T> o1, ComparableComplexBlock<T> o2) {
-        ComparableComplexBlock<T> b1 = (ComparableComplexBlock<T>)o1;
-        ComparableComplexBlock<T> b2 = (ComparableComplexBlock<T>)o2;
+    public int compare(PointBasedEntity o1, PointBasedEntity o2) {
+        PointBasedEntity b1 = (PointBasedEntity)o1;
+        PointBasedEntity b2 = (PointBasedEntity)o2;
 
         double dist1 = b1.getPosition().distance(origin);
         double dist2 = b2.getPosition().distance(origin);
