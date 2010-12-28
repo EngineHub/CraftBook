@@ -66,7 +66,6 @@ public class ComparableInventory implements PointBasedEntity {
      * @return
      */
     @Override
-    @SuppressWarnings("unchecked")
     public boolean equals(Object other) {
         if (other instanceof ComparableInventory) {
             return ((ComparableInventory)other).pos.equals(pos);
