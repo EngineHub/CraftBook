@@ -45,7 +45,7 @@ public class DefaultPLC extends PlcBase {
      * @return
      */
     public String getTitle() {
-        return "PLC (" + getLanguage().getName() + ")";
+        return getLanguage().getName() + " PLC";
     }
 
     /**
