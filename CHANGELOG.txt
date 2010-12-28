@@ -1,3 +1,9 @@
+2.0preview11:
+- Added MC1260/MC0260 (water sensor), MC1261/MC0261 (lava sensor),
+    MC1262/MC0262 (light sensor).
+- Added [DGate], a gate sign with a very small search radius (best
+    used with redstone).
+
 2.0preview10:
 - Added the ability to sort minecarts based on their type with the
     minecart sort block. Use "Storage", "Powered", or "Minecart".
