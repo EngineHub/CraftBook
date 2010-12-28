@@ -63,8 +63,10 @@
 - Added support for custom ICs using existing PLC languages.
 - Added new redstone-plcs-require-permission configuration.
 - Added /listics command.
+- Added Perlstone32 PLC language.
 - Fixed issue with the 32nd slot of Perlstone's tables.
 - Fixed chest dispenser IC being able to dispense -1 of an item.
+- Added Perlstone32 PLC language.
 [Block bags]
 - Overhauled block bag system for bridges, gates, etc. Now multiple
     block bags can be used simultaneously.

@@ -57,7 +57,11 @@ public class DefaultPLC extends PlcBase {
      * @return
      */
     protected String validateEnviromentEx(Vector v, SignText t) {
-        return null;
+        try {
+            return getLanguage().validateEnvironment(v, t, getCode(v));
+        } catch (PlcException e) {
+            return e.toString();
+        }
     }
 
     /**

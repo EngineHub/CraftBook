@@ -18,8 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package lymia.plc;
 
+import java.util.logging.Logger;
+
+import com.sk89q.craftbook.SignText;
+import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.ic.ChipState;
+
 public interface PlcLang {
+	/**
+     * Logger instance.
+     */
+    static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
+    
     String getName();
-    boolean[] tick(State s, String program) throws PlcException;
+    boolean[] tick(ChipState chip, String program) throws PlcException;
     void checkSyntax(String program) throws PlcException;
+    String validateEnvironment(Vector v, SignText t, String code);
 }

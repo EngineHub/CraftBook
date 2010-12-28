@@ -25,6 +25,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+
+import olegbl.perlstone32.Perlstone32_1;
+
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 import lymia.customic.*;
@@ -191,6 +194,11 @@ public class RedstoneListener extends CraftBookDelegateListener
         internalRegisterIC("MC5000", new DefaultPLC(new Perlstone_1_0()),
                 ICType.VIVO, true);
         internalRegisterIC("MC5001", new DefaultPLC(new Perlstone_1_0()),
+                ICType._3I3O, true);
+        
+        internalRegisterIC("MC5032", new DefaultPLC(new Perlstone32_1()),
+                ICType.VIVO, true);
+        internalRegisterIC("MC5033", new DefaultPLC(new Perlstone32_1()),
                 ICType._3I3O, true);
     }
 
