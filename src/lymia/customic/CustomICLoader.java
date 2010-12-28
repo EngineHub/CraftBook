@@ -26,8 +26,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-import olegbl.perlstone32.Perlstone32_1;
-import lymia.perlstone.Perlstone_1_0;
 import lymia.plc.PlcLang;
 import lymia.util.Symbol;
 
