@@ -188,13 +188,15 @@ public class MechanismListener extends CraftBookDelegateListener {
 
             // Gate
             if (useGates && redstoneGates
-                    && line2.equalsIgnoreCase("[Gate]")) {
+                    && (line2.equalsIgnoreCase("[Gate]")
+                    || line2.equalsIgnoreCase("[DGate]"))) {
                 BlockBag bag = getBlockBag(pt);
                 bag.addSourcePosition(pt);
 
                 // A gate may toggle or not
                 try {
-                    GateSwitch.setGateState(pt, bag, isOn);
+                    GateSwitch.setGateState(pt, bag, isOn,
+                            line2.equalsIgnoreCase("[DGate]"));
                 } catch (BlockSourceException e) {
                 }
 
@@ -312,7 +314,7 @@ public class MechanismListener extends CraftBookDelegateListener {
         String line2 = sign.getText(1);
         
         // Gate
-        if (line2.equalsIgnoreCase("[Gate]")) {
+        if (line2.equalsIgnoreCase("[Gate]") || line2.equalsIgnoreCase("[DGate]")) {
             if (checkCreatePermissions && !player.canUseCommand("/makegate")) {
                 player.sendMessage(Colors.Rose
                         + "You don't have permission to make gates.");
@@ -320,7 +322,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                 return true;
             }
             
-            sign.setText(1, "[Gate]");
+            sign.setText(1, line2.equalsIgnoreCase("[Gate]") ? "[Gate]" : "[DGate]");
             sign.update();
             
             listener.informUser(player);
@@ -596,13 +598,16 @@ public class MechanismListener extends CraftBookDelegateListener {
                 String line2 = sign.getText(1);
 
                 // Gate
-                if (useGates && line2.equalsIgnoreCase("[Gate]")
+                if (useGates
+                        && (line2.equalsIgnoreCase("[Gate]")
+                                || line2.equalsIgnoreCase("[DGate]"))
                         && checkPermission(player, "/gate")) {
                     BlockBag bag = getBlockBag(pt);
                     bag.addSourcePosition(pt);
 
                     // A gate may toggle or not
-                    if (GateSwitch.toggleGates(pt, bag)) {
+                    if (GateSwitch.toggleGates(pt, bag,
+                            line2.equalsIgnoreCase("[DGate]"))) {
                         player.sendMessage(Colors.Gold + "*screeetch* Gate moved!");
                     } else {
                         player.sendMessage(Colors.Rose + "No nearby gate to toggle.");

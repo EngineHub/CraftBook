@@ -36,10 +36,11 @@ public class GateSwitch {
      * 
      * @param pt
      * @param bag
+     * @param smallSearchSize
      * @return
      */
-    public static boolean toggleGates(Vector pt, BlockBag bag)
-            throws BlockSourceException {
+    public static boolean toggleGates(Vector pt, BlockBag bag,
+            boolean smallSearchSize) throws BlockSourceException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -48,13 +49,27 @@ public class GateSwitch {
 
         Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
 
-        // Toggle nearby gates
-        for (int x1 = x - 3; x1 <= x + 3; x1++) {
-            for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
-                            null, bag)) {
-                        foundGate = true;
+        if (smallSearchSize) {
+            // Toggle nearby gates
+            for (int x1 = x - 1; x1 <= x + 1; x1++) {
+                for (int y1 = y - 2; y1 <= y + 1; y1++) {
+                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
+                        if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
+                                null, bag)) {
+                            foundGate = true;
+                        }
+                    }
+                }
+            }
+        } else {
+            // Toggle nearby gates
+            for (int x1 = x - 3; x1 <= x + 3; x1++) {
+                for (int y1 = y - 3; y1 <= y + 6; y1++) {
+                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+                        if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
+                                null, bag)) {
+                            foundGate = true;
+                        }
                     }
                 }
             }
@@ -71,10 +86,11 @@ public class GateSwitch {
      * @param pt
      * @param bag
      * @param close
+     * @param searchSize
      * @return
      */
-    public static boolean setGateState(Vector pt, BlockBag bag, boolean close)
-            throws BlockSourceException {
+    public static boolean setGateState(Vector pt, BlockBag bag, boolean close,
+            boolean smallSearchSize) throws BlockSourceException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -83,13 +99,27 @@ public class GateSwitch {
 
         Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
 
-        // Toggle nearby gates
-        for (int x1 = x - 3; x1 <= x + 3; x1++) {
-            for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                    if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
-                            close, bag)) {
-                        foundGate = true;
+        if (smallSearchSize) {
+            // Toggle nearby gates
+            for (int x1 = x - 1; x1 <= x + 1; x1++) {
+                for (int y1 = y - 2; y1 <= y + 1; y1++) {
+                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
+                        if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
+                                close, bag)) {
+                            foundGate = true;
+                        }
+                    }
+                }
+            }
+        } else {
+            // Toggle nearby gates
+            for (int x1 = x - 3; x1 <= x + 3; x1++) {
+                for (int y1 = y - 3; y1 <= y + 6; y1++) {
+                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+                        if (recurseColumn(new Vector(x1, y1, z1), visitedColumns,
+                                close, bag)) {
+                            foundGate = true;
+                        }
                     }
                 }
             }
