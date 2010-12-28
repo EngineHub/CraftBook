@@ -32,6 +32,7 @@ import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
 import lymia.customic.*;
 import lymia.perlstone.Perlstone_1_0;
+import lymia.plc.PlcLang;
 import lymia.util.Tuple2;
 
 /**
@@ -52,8 +53,11 @@ public class RedstoneListener extends CraftBookDelegateListener
     private Map<String,RegisteredIC> icList = 
             new HashMap<String,RegisteredIC>(32);
 
-    private Set<BlockVector> bv = 
+    private Set<BlockVector> instantICs = 
             new HashSet<BlockVector>(32);
+
+    private HashMap<String,PlcLang> plcLanguageList = 
+            new HashMap<String,PlcLang>();
     
     private boolean checkCreatePermissions = false;
     private boolean redstonePumpkins = true;
@@ -75,6 +79,8 @@ public class RedstoneListener extends CraftBookDelegateListener
      */
     public RedstoneListener(CraftBook craftBook, CraftBookListener listener) {
         super(craftBook, listener);
+        registerLang("perlstone_v1.0",new Perlstone_1_0());
+        registerLang("perlstone32_v1",new Perlstone32_1());
     }
 
     /**
@@ -103,7 +109,7 @@ public class RedstoneListener extends CraftBookDelegateListener
         // Load custom ICs
         if (properties.getBoolean("custom-ics", true)) {
             try {
-                CustomICLoader.load("custom-ics.txt", this);
+                CustomICLoader.load("custom-ics.txt", this, plcLanguageList);
                 logger.info("Custom ICs for CraftBook loaded");
             } catch (CustomICException e) {
                 Throwable cause = e.getCause();
@@ -191,15 +197,11 @@ public class RedstoneListener extends CraftBookDelegateListener
         internalRegisterIC("MC4110", new MC4110(), ICType._3I3O);
         internalRegisterIC("MC4200", new MC4200(), ICType._3I3O);
 
-        internalRegisterIC("MC5000", new DefaultPLC(new Perlstone_1_0()),
-                ICType.VIVO, true);
-        internalRegisterIC("MC5001", new DefaultPLC(new Perlstone_1_0()),
-                ICType._3I3O, true);
+        internalRegisterPLC("MC5000", "perlstone_v1.0", ICType.VIVO);
+        internalRegisterPLC("MC5001", "perlstone_v1.0", ICType._3I3O);
         
-        internalRegisterIC("MC5032", new DefaultPLC(new Perlstone32_1()),
-                ICType.VIVO, true);
-        internalRegisterIC("MC5033", new DefaultPLC(new Perlstone32_1()),
-                ICType._3I3O, true);
+        internalRegisterPLC("MC5032", "perlstone32_v1", ICType.VIVO);
+        internalRegisterPLC("MC5033", "perlstone32_v1", ICType._3I3O);
     }
 
     /**
@@ -274,7 +276,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                     }
                     
                     if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
-                        bv.add(pos.toBlockVector());
+                        instantICs.add(pos.toBlockVector());
                     }
                     
                     sign.update();
@@ -397,16 +399,16 @@ public class RedstoneListener extends CraftBookDelegateListener
         //XXX HACK: Do this in a more proper way later.
         if(etc.getServer().getTime()%2!=0) return;
         
-        BlockVector[] bv = this.bv.toArray(new BlockVector[0]);
+        BlockVector[] bv = this.instantICs.toArray(new BlockVector[0]);
         for(BlockVector pt:bv) {
             Sign sign = (Sign)etc.getServer().getComplexBlock(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
             if(sign==null) {
-                this.bv.remove(pt);
+                this.instantICs.remove(pt);
                 continue;
             }
             String line2 = sign.getText(1);
             if(!line2.startsWith("[MC")) {
-                this.bv.remove(pt);
+                this.instantICs.remove(pt);
                 continue;
             }
             
@@ -415,12 +417,12 @@ public class RedstoneListener extends CraftBookDelegateListener
             if (ic == null) {
                 sign.setText(1, Colors.Red + line2);
                 sign.update();
-                this.bv.remove(pt);
+                this.instantICs.remove(pt);
                 continue;
             }
 
             if(!ic.type.isSelfTriggered) {
-                this.bv.remove(pt);
+                this.instantICs.remove(pt);
                 continue;
             }
 
@@ -458,7 +460,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 
         if(!ic.type.isSelfTriggered) return;
 
-        bv.add(new BlockVector(x,y,z));
+        instantICs.add(new BlockVector(x,y,z));
     }
     
     /**
@@ -602,17 +604,16 @@ public class RedstoneListener extends CraftBookDelegateListener
     }
 
     /**
-     * Registers PLC or non-PLC IC.
+     * Registers a PLC
      * 
      * @param name
      * @param ic
      * @param type
      * @param isPlc
      */
-    private void internalRegisterIC(String name, IC ic, ICType type,
-            boolean isPlc) {
+    private void internalRegisterPLC(String name, String plclang, ICType type) {
         if (!icList.containsKey(name)) {
-            registerIC(name, ic, type, isPlc);
+            registerIC(name, new DefaultPLC(plcLanguageList.get(plclang)), type, true);
         }
     }
 
@@ -638,6 +639,10 @@ public class RedstoneListener extends CraftBookDelegateListener
         icList.put(name, new RegisteredIC(ic, type, isPlc));
     }
 
+    public void registerLang(String name, PlcLang language) {
+        plcLanguageList.put(name, language);
+    }
+    
     public void run() {onTick();}
 
     /**

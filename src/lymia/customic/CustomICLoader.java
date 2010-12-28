@@ -34,13 +34,7 @@ import lymia.util.Symbol;
 import static lymia.customic.CustomICSym.*;
 
 public class CustomICLoader {
-    private static HashMap<String,PlcLang> LANGUAGES = new HashMap<String,PlcLang>();
-    static {
-        registerLang("perlstone_v1.0",new Perlstone_1_0());
-        registerLang("perlstone32_v1",new Perlstone32_1());
-    }
-    
-    public static void load(String source, CustomICAccepter dest) throws CustomICException {
+    public static void load(String source, CustomICAccepter dest, HashMap<String,PlcLang> languages) throws CustomICException {
         try {
             BufferedReader r;
             try {
@@ -63,7 +57,7 @@ public class CustomICLoader {
                     case 0:
                         if(y.symbol==SYM_TYPE) {
                             type = (Type)y.value;
-                            PlcLang l = LANGUAGES.get(type.language);
+                            PlcLang l = languages.get(type.language);
                             if(l==null) throw new CustomICException("invalid ic language: "+type.language+" ("+y.line+":"+y.col+")");
                             state = 1;
                         } else throw new CustomICException("unexpected token: "+y.value+" ("+y.line+":"+y.col+")");
@@ -77,7 +71,7 @@ public class CustomICLoader {
                     case 2:
                         switch(y.symbol) {
                             case SYM_PROG:
-                                PlcLang l = LANGUAGES.get(type.language);
+                                PlcLang l = languages.get(type.language);
                                 if(l==null) throw new CustomICException("internal error: invalid ic language");
                                 CustomICBase cic = new CustomICBase(l,name.title,(String)y.value);
                                 dest.registerIC(name.icName,cic,type.type);
@@ -85,7 +79,7 @@ public class CustomICLoader {
                                 break;
                             case SYM_FILE:
                                 try {
-                                    l = LANGUAGES.get(type.language);
+                                    l = languages.get(type.language);
                                     if(l==null) throw new CustomICException("internal error: invalid ic language");
                                     
                                     DataInputStream in = new DataInputStream(new FileInputStream((String)y.value));
@@ -114,9 +108,5 @@ public class CustomICLoader {
         } catch (Throwable t) {
             throw new CustomICException("unknown error: "+t.getClass().getName()+" ("+t.getMessage()+")",t);
         }
-    }
-    
-    public static void registerLang(String name, PlcLang language) {
-        LANGUAGES.put(name, language);
     }
 }

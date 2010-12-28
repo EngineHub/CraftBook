@@ -325,7 +325,7 @@ public final class Perlstone_1_0 implements PlcLang {
         if (stack.size() != 0) throw new PerlstoneException("unmatched brace");
         return jumpTable;
     }
-
+    
     private static char[] sub(char[] t, int s, int e) {
         char[] c = new char[e - s];
         for (int i = 0; i < c.length; i++)
@@ -392,19 +392,16 @@ public final class Perlstone_1_0 implements PlcLang {
             System.out.print("Input: ");
             String input = r.readLine();
             
-            if (input.equals("v")) {
-				DEBUG = !DEBUG;
-				continue;
-			}
-            
-            if (!input.matches("[01][01][01]")) {
+            if (!input.matches("d?[01][01][01]")) {
                 System.out.println("Bad input!");
                 continue;
             }
 
-            chip.getIn(1).set(input.charAt(0) == '1');
-			chip.getIn(2).set(input.charAt(1) == '1');
-			chip.getIn(3).set(input.charAt(2) == '1');
+            DEBUG = input.startsWith("d");
+            
+            chip.getIn(1).set(input.charAt(0+(DEBUG?1:0)) == '1');
+			chip.getIn(2).set(input.charAt(1+(DEBUG?1:0)) == '1');
+			chip.getIn(3).set(input.charAt(2+(DEBUG?1:0)) == '1');
             
             long time = System.nanoTime();
             boolean[] output = p.tick(chip, program);

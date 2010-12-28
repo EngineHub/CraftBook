@@ -45,11 +45,12 @@ public final class Perlstone32_1 implements PlcLang {
 	 * Debugging switch (verbose mode).
 	 */
 	private static boolean DEBUG = false;
+	
 	/**
 	 * Permanent shared storage.
 	 */
-	private static Map<String,int[]> publicPersistentStorage = new HashMap<String,int[]>();
-	private static Map<Vector,int[]> privatePersistentStorage = new HashMap<Vector,int[]>();
+	private Map<String,int[]> publicPersistentStorage = new HashMap<String,int[]>();
+	private Map<Vector,int[]> privatePersistentStorage = new HashMap<Vector,int[]>();
 	
 	public final String getName() {
 		return "PS32 1.1.3";
@@ -102,7 +103,7 @@ public final class Perlstone32_1 implements PlcLang {
 		return output;
 	}
 
-	private static final int callFunction(String function, int[] args, ChipState chip, int[] pvt, int[] tvt, String[] staticf, int[] numOpcodes) throws PerlstoneException {
+	private final int callFunction(String function, int[] args, ChipState chip, int[] pvt, int[] tvt, String[] staticf, int[] numOpcodes) throws PerlstoneException {
 		boolean previousOpcode = false;
 		
 		try {
