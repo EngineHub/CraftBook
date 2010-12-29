@@ -331,8 +331,12 @@ public class CraftBookListener extends PluginListener {
 
             handleDirectWireInput(new Vector(x - 1, y, z), isOn, v);
             handleDirectWireInput(new Vector(x + 1, y, z), isOn, v);
+            handleDirectWireInput(new Vector(x - 1, y - 1, z), isOn, v);
+            handleDirectWireInput(new Vector(x + 1, y - 1, z), isOn, v);
             handleDirectWireInput(new Vector(x, y, z - 1), isOn, v);
             handleDirectWireInput(new Vector(x, y, z + 1), isOn, v);
+            handleDirectWireInput(new Vector(x, y - 1, z - 1), isOn, v);
+            handleDirectWireInput(new Vector(x, y - 1, z + 1), isOn, v);
 
             // Can be triggered from below
             handleDirectWireInput(new Vector(x, y + 1, z), isOn, v);
