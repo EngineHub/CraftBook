@@ -69,14 +69,22 @@ public class Util {
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
         int data = CraftBook.getBlockData(x, y, z);
-        if (data == 0x8) { // East
-            return new Vector(x, y, z + multiplier);
-        } else if (data == 0x0) { // West
+               if (data == 0x0) { // West
             return new Vector(x, y, z - multiplier);
+        } else if (data == 0x2) {
+            return new Vector(x + multiplier, y, z - multiplier);
         } else if (data == 0x4) { // North
             return new Vector(x + multiplier, y, z);
+        } else if (data == 0x5) {
+            return new Vector(x + multiplier, y, z + multiplier);
+        } else if (data == 0x8) { // East
+            return new Vector(x, y, z + multiplier);
+        } else if (data == 0xA) {
+            return new Vector(x - multiplier, y, z + multiplier);
         } else if (data == 0xC) { // South
             return new Vector(x - multiplier, y, z);
+        } else if (data == 0xE) {
+            return new Vector(x - multiplier, y, z - multiplier);
         } else {
             return null;
         }
