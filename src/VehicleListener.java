@@ -935,6 +935,7 @@ public class VehicleListener extends CraftBookDelegateListener {
 
         String line1 = sign.getText(0);
         String line2 = sign.getText(1);
+        String line3 = sign.getText(2);
 
         // Station
         if (line2.equalsIgnoreCase("[Station]")) {
@@ -1004,6 +1005,16 @@ public class VehicleListener extends CraftBookDelegateListener {
             sign.update();
         
             player.sendMessage(Colors.Gold + "Message print block detected.");
+        // Eject
+        } else if (line2.equalsIgnoreCase("[Eject]")) {
+            listener.informUser(player);
+            
+            sign.setText(1, "[Eject]");
+            if (line3.equalsIgnoreCase("[Seek]"))
+                sign.setText(2, "[Seek]");
+            sign.update();
+            
+            player.sendMessage(Colors.Gold + "Ejector sign detected.");
         }
         
         return false;
