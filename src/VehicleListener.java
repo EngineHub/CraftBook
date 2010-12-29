@@ -455,15 +455,25 @@ public class VehicleListener extends CraftBookDelegateListener {
                             // Let's find a place to put the player
                             Location loc = new Location(blockX, blockY, blockZ);
                             Vector signPos = new Vector(blockX, blockY - 2, blockZ);
-
                             if (CraftBook.getBlockID(signPos) == BlockType.SIGN_POST
                                     && Util.doesSignSay(signPos, 1, "[Eject]")) {
                                 Vector pos = Util.getSignPostOrthogonalBack(signPos, 1);
-
+                                ComplexBlock cBlock = etc.getServer().getComplexBlock(
+                                    blockX, blockY - 2, blockZ);
+                                Sign sign = null;
+                                if (cBlock instanceof Sign)
+                                    sign = (Sign) cBlock;
                                 // Acceptable sign direction
                                 if (pos != null) {
                                     pos = pos.setY(blockY);
-
+                                    if (null != sign) {
+                                        if (sign.getText(2) == "[Seek]") {
+                                            while (!BlockType.canPassThrough(CraftBook.getBlockID(pos))
+                                                || !BlockType.canPassThrough(CraftBook.getBlockID(pos.add(0, 1, 0)))) {
+                                                pos = pos.add(0, 1, 0);
+                                            }
+                                        }
+                                    }
                                     // Is the spot free?
                                     if (BlockType.canPassThrough(CraftBook.getBlockID(pos.add(0, 1, 0)))
                                             && BlockType.canPassThrough(CraftBook.getBlockID(pos))) {
@@ -472,11 +482,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                                 pos.getBlockY(),
                                                 pos.getBlockZ());
 
-                                        ComplexBlock cBlock = etc.getServer().getComplexBlock(
-                                                blockX, blockY - 2, blockZ);
-
-                                        if (cBlock instanceof Sign) {
-                                            Sign sign = (Sign)cBlock;
+                                        if (null != sign) {
                                             String text = sign.getText(0);
                                             if (text.length() > 0) {
                                                 player.sendMessage(Colors.Gold + "You've arrived at: "
