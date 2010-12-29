@@ -87,7 +87,7 @@ public class MC1250 extends BaseIC {
                 return;
             }
             
-            en arrow = shoot(x, y + 1, z);
+            en arrow = shoot(x + 0.5, y + 1.5, z + 0.5);
 
             Firework instance = new Firework(arrow);
             (new Thread(instance)).start();
@@ -170,11 +170,11 @@ public class MC1250 extends BaseIC {
      * @param spread
      * @param vertVel
      */
-    protected en shoot(int x, int y, int z) {
+    protected en shoot(double x, double y, double z) {
         en arrow = new en(etc.getMCServer().e);
         arrow.c(x, y, z, 0, 0);
         etc.getMCServer().e.a(arrow);
-        arrow.a(0, 50, 0, 1F, 26);
+        arrow.a(0, 50, 0, 1.05F, 20);
         return arrow;
     }
     
