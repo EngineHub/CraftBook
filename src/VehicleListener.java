@@ -467,7 +467,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                 if (pos != null) {
                                     pos = pos.setY(blockY);
                                     if (null != sign) {
-                                        if (sign.getText(2) == "[Seek]") {
+                                        if (sign.getText(2).equalsIgnoreCase("[Seek]")) {
                                             while (!BlockType.canPassThrough(CraftBook.getBlockID(pos))
                                                 || !BlockType.canPassThrough(CraftBook.getBlockID(pos.add(0, 1, 0)))) {
                                                 pos = pos.add(0, 1, 0);
