@@ -245,18 +245,32 @@ public class ToggleArea extends SignOrientedMechanism {
             String namespace = getNamespace();
             String inactiveID = getInactiveStateID();
             
-            CuboidCopy copy = copyManager.load(namespace, inactiveID);
-
-            if (!isNewArea && copy.distance(pt) > 4) {
-                return;
+            CuboidCopy copy = null;
+            
+            if(inactiveID == null)
+            {
+            	// Do nothing
             }
-                
-            if (inactiveID == null) {
-                // Do nothing
-            } else if (inactiveID.length() == 0) {
-                copy.clear(bag);
-            } else {
-                copy = copyManager.load(namespace, inactiveID);
+            else if(inactiveID.length() == 0)
+            {
+            	String activeID = getActiveStateID();
+            	copy = copyManager.load(namespace, activeID);
+            	
+            	if (!isNewArea && copy.distance(pt) > 4) {
+                    return;
+                }
+            	
+            	copy.clear(bag);
+            }
+            else
+            {
+            	copy = copyManager.load(namespace, inactiveID);
+            	
+            	if (!isNewArea && copy.distance(pt) > 4) {
+                    return;
+                }
+            	
+            	copy = copyManager.load(namespace, inactiveID);
                 copy.paste(bag);
             }
         } catch (BlockSourceException e) {
