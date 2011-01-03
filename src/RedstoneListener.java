@@ -310,13 +310,11 @@ public class RedstoneListener extends CraftBookDelegateListener
                 && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
             Boolean useOn = Redstone.testAnyInput(pt);
 
-            int data = CraftBook.getBlockData(pt);
             if (useOn != null && useOn) {
                 CraftBook.setBlockID(pt, BlockType.JACKOLANTERN);
             } else if (useOn != null) {
                 CraftBook.setBlockID(pt, BlockType.PUMPKIN);
             }
-            CraftBook.setBlockData(pt, data);
         // Redstone netherstone
         } else if (redstoneNetherstone
                 && (type == BlockType.NETHERSTONE)) {
