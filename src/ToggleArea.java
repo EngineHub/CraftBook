@@ -107,7 +107,7 @@ public class ToggleArea extends SignOrientedMechanism {
     public String getNamespace() throws InvalidSignNamespace {
         String namespace = getSignNamespace();
         
-        if (namespace.equals("") || !isNewArea) {
+        if (namespace.equals("@") || !isNewArea) {
             return "global";
         } else {
             if (CopyManager.isValidNamespace(namespace)) {
