@@ -82,10 +82,10 @@
     <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
       <classpath>
         <pathelement location="JFlex.jar"/>
-      </classpath>
+      </classpath> 
     </taskdef>
     <!-- WARNING: Hardcoded. JFlex's Ant task is horrible. -->
-    <jflex file="src/lymia/customic/CustomICScanner.lex" destdir="${src.dir}"/>
+    <jflex file="src/com/sk89q/craftbook/ic/custom/CustomICScanner.lex" destdir="${src.dir}"/>
   </target>
   
   <!--<target name="-get-version-git" if="git-revision">

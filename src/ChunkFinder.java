@@ -20,7 +20,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import lymia.util.Tuple2;
+import com.sk89q.craftbook.util.Tuple2;
+
 
 /**
  * Finds all currently loaded chunks in a world. 
