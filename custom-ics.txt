@@ -3,7 +3,7 @@
 //
 // For inline programs:
 // type/language name:title = begin
-//   program
+// program
 // end
 //
 // For programs stored in external files:
@@ -17,7 +17,8 @@
 //
 // (More may me added at a later date)
 // perlstone_v1.0: Perlstone v1.0
+// perlstone32_v1: Perlstone32 v1
 
 3iso/perlstone_v1.0 MC3041:MY-MULTIPLEXER = begin
-	Cd[Ar]![Br]
+Cd[Ar]![Br]
 end

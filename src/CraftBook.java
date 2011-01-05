@@ -17,9 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import java.io.File;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.state.StateManager;
 
 /**
  * Entry point for the plugin for hey0's mod.
@@ -31,6 +33,7 @@ public class CraftBook extends Plugin {
      * Logger.
      */
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
+    private static final File pathToState = new File("world"+File.separator+"craftbook");
     
     /**
      * Listener for the plugin system. This listener handles configuration
@@ -39,21 +42,6 @@ public class CraftBook extends Plugin {
      */
     private final CraftBookListener listener =
             new CraftBookListener(this);
-    /**
-     * Delegate listener for mechanisms.
-     */
-    private final CraftBookDelegateListener mechanisms =
-            new MechanismListener(this, listener);
-    /**
-     * Delegate listener for redstone.
-     */
-    private final CraftBookDelegateListener redstone =
-            new RedstoneListener(this, listener);
-    /**
-     * Delegate listener for vehicle.
-     */
-    private final CraftBookDelegateListener vehicle =
-            new VehicleListener(this, listener);
     
     /**
      * Tick delayer instance used to delay some events until the next tick.
@@ -79,7 +67,43 @@ public class CraftBook extends Plugin {
      * CraftBook version in various places.
      */
     private String version;
+    
+    /**
+     * State manager object.
+     */
+    private StateManager stateManager = new StateManager();
+    
+    /**
+     * State manager thread. 
+     */
+    private Thread stateThread = new Thread() {
+        public void run() {
+            PluginLoader l = etc.getLoader();
+            while(l.getPlugin("CraftBook")==CraftBook.this) {
+                if(l.getPlugin("CraftBook")==CraftBook.this) 
+                    try {Thread.sleep(10*60*1000);} catch (InterruptedException e) {}
+                if(l.getPlugin("CraftBook")==CraftBook.this) 
+                    stateManager.save(pathToState);
+            }
+        }
+    };
 
+    /**
+     * Delegate listener for mechanisms.
+     */
+    private final CraftBookDelegateListener mechanisms =
+            new MechanismListener(this, listener);
+    /**
+     * Delegate listener for redstone.
+     */
+    private final CraftBookDelegateListener redstone =
+            new RedstoneListener(this, listener);
+    /**
+     * Delegate listener for vehicle.
+     */
+    private final CraftBookDelegateListener vehicle =
+            new VehicleListener(this, listener);
+    
     /**
      * Initializes the plugin.
      */
@@ -114,6 +138,12 @@ public class CraftBook extends Plugin {
         listener.registerDelegate(vehicle);
         
         TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
+        
+        pathToState.mkdirs();
+        stateManager.load(pathToState);
+        
+        stateThread.setName("StateManager");
+        stateThread.start();
     }
 
     /**
@@ -173,6 +203,7 @@ public class CraftBook extends Plugin {
         }
 
         SignPatch.removePatch();
+        stateManager.save(pathToState);
         
         listener.disable();
     }
@@ -208,6 +239,10 @@ public class CraftBook extends Plugin {
     
     public TickDelayer getDelay() {
         return delay;
+    }
+    
+    public StateManager getStateManager() {
+        return stateManager;
     }
 
     protected static int getBlockID(int x, int y, int z) {

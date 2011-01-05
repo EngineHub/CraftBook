@@ -19,13 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package lymia.perlstone;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import com.sk89q.craftbook.BlockVector;
+import com.sk89q.craftbook.SignText;
+import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.Signal;
+
 import lymia.plc.PlcLang;
-import lymia.plc.State;
+import lymia.util.Base64;
 
 /**
  * Language for CraftBook's PLC system. Hardcoded for VIVO or 3I3O layouts.
@@ -39,27 +48,27 @@ public final class Perlstone_1_0 implements PlcLang {
         return "PS v1.0";
     }
 
-    public final boolean[] tick(State s, String program) throws PerlstoneException {
+    public final boolean[] tick(ChipState chip, String program) throws PerlstoneException {
         checkSyntax(program);
 
         char[][] staticFunctions = getStaticFunctions(program);
 
-        boolean[] gvt = readPresistantStorage(s.presistantStorage);
+        boolean[] gvt = readPresistantStorage(chip);
         boolean[] tvt = new boolean[32];
         boolean[] output = new boolean[3];
 
         for (int i = 0; i < output.length && i < staticFunctions.length; i++) {
-            Boolean b = callFunction(staticFunctions[i], new boolean[0], s.input, gvt, tvt, staticFunctions, new int[]{0});
+            Boolean b = callFunction(staticFunctions[i], new boolean[0], chip, gvt, tvt, staticFunctions, new int[]{0});
             if (b == null) continue;
             output[i] = b;
         }
 
-        storePresistantStorage(s.presistantStorage, gvt);
+        storePresistantStorage(chip, gvt);
         
         return output;
     }
 
-    private static final Boolean callFunction(char[] function, boolean[] args, boolean[] it, boolean[] pvt, boolean[] tvt, char[][] staticf, int[] numOpcodes) throws PerlstoneException {
+    private static final Boolean callFunction(char[] function, boolean[] args, ChipState chip, boolean[] pvt, boolean[] tvt, char[][] staticf, int[] numOpcodes) throws PerlstoneException {
         boolean previousOpcode = false;
         
         try {
@@ -95,13 +104,13 @@ public final class Perlstone_1_0 implements PlcLang {
                             continue;
     
                         case 'A':
-                            stack.push(it[0]);
+                        	stack.push(chip.getIn(1).is());
                             continue;
                         case 'B':
-                            stack.push(it[1]);
+                        	stack.push(chip.getIn(2).is());
                             continue;
                         case 'C':
-                            stack.push(it[2]);
+                        	stack.push(chip.getIn(3).is());
                             continue;
     
                         case 'S':
@@ -164,7 +173,7 @@ public final class Perlstone_1_0 implements PlcLang {
                             int numargs = Integer.parseInt(new String(new char[]{function[++i]}));
                             boolean[] fArgs = new boolean[numargs];
                             for(int j=numargs-1;j>=0;j--) fArgs[j] = stack.pop();
-                            Boolean rv = callFunction(staticf[functionId],fArgs,it,pvt,tvt,staticf,numOpcodes);
+                            Boolean rv = callFunction(staticf[functionId],fArgs,chip,pvt,tvt,staticf,numOpcodes);
                             if(rv!=null) stack.push(rv);
                             continue;
                             
@@ -203,6 +212,12 @@ public final class Perlstone_1_0 implements PlcLang {
         } catch (EmptyStackException e) {
             throw new PerlstoneException("read empty stack",e);
         }
+    }
+    
+    public final String validateEnvironment(Vector v, SignText t, String code) {
+    	if(!t.getLine4().isEmpty()) return "line 4 is not empty";
+    	t.setLine4("AAAAAAAAAAAA");
+    	return null;
     }
 
     public final void checkSyntax(String program) throws PerlstoneException {
@@ -312,7 +327,7 @@ public final class Perlstone_1_0 implements PlcLang {
         if (stack.size() != 0) throw new PerlstoneException("unmatched brace");
         return jumpTable;
     }
-
+    
     private static char[] sub(char[] t, int s, int e) {
         char[] c = new char[e - s];
         for (int i = 0; i < c.length; i++)
@@ -320,51 +335,81 @@ public final class Perlstone_1_0 implements PlcLang {
         return c;
     }
 
-    private static boolean[] readPresistantStorage(byte[] d) {
+    private static boolean[] readPresistantStorage(ChipState chip) throws PerlstoneException {
+    	byte[] persistentStorage;
+        try {
+        	persistentStorage = Base64.decode(chip.getText().getLine4().getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new PerlstoneException("no utf-8");
+        } catch (IOException e) {
+        	throw new PerlstoneException("unknown error");
+        }
+    	
         boolean[] pvt = new boolean[32];
         for (int i = 0; i < 4; i++)
             for (int b = 0; b < 8; b++)
-                pvt[i * 8 + b] = ((d[i] >> (7-b)) & 1) == 1 ? true : false;
-        if(DEBUG) System.out.println("Read presistant storage: "+Arrays.toString(d)+" -> "+Arrays.toString(pvt));
+                pvt[i * 8 + b] = ((persistentStorage[i] >> (7-b)) & 1) == 1 ? true : false;
+        if(DEBUG) System.out.println("Read presistant storage: "+Arrays.toString(persistentStorage)+" -> "+Arrays.toString(pvt));
         return pvt;
     }
 
-    private static void storePresistantStorage(byte[] d, boolean[] pvt) {
+    private static void storePresistantStorage(ChipState chip, boolean[] pvt) {
         byte[] data = new byte[4];
         for (int i = 0; i < 4; i++) 
             for (int b = 0; b < 8; b++)
                 data[i] |= pvt[i * 8 + b] ? 1 << (7-b) : 0;
-        if(DEBUG) System.out.println("Written presistant storage: "+Arrays.toString(pvt)+" -> "+Arrays.toString(d));
-        System.arraycopy(data, 0, d, 0, 4);
+        if(DEBUG) System.out.println("Written presistant storage: "+Arrays.toString(pvt)+" -> "+Arrays.toString(data));
+        chip.getText().setLine4(Base64.encodeBytes(data));
     }
+    
+    public void write(File f) {}
+    public void read(File f) {}
     
     public static void main(String[] args) throws Exception {
         System.out.println("Perlstone v1.0 Test Parser");
+        
+        if (args.length > 0)
+        	if (args[0] == "-v")
+        		DEBUG = true;
+        
         System.out.print("Input program: ");
         
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         String program = r.readLine();
 
         Perlstone_1_0 p = new Perlstone_1_0();
+        System.out.println("Running " + p.getName() +".");
         p.checkSyntax(program);
         
-        State s = new State();        
-        s.presistantStorage = new byte[20];
+        Signal[] in = new Signal[3];
+		in[0] = new Signal(false);
+		in[1] = new Signal(false);
+		in[2] = new Signal(false);
+		
+		Signal[] out = new Signal[3];
+		out[0] = new Signal(false);
+		out[1] = new Signal(false);
+		out[2] = new Signal(false);
+        
+        ChipState chip = new ChipState(new Vector(0,0,0), new BlockVector(0,0,0), in, out, new SignText("","[MC5000]","HASH:"+Integer.toHexString(program.hashCode()),"AAAAAAAAAAAA"), 0);
+        
         while(true) {
             System.out.print("Input: ");
             String input = r.readLine();
-            if(!input.matches("[01][01][01]")) {
+            
+            if (!input.matches("d?[01][01][01]")) {
                 System.out.println("Bad input!");
                 continue;
             }
-            s.input = new boolean[]{
-                    input.charAt(0) == '1',
-                    input.charAt(1) == '1',
-                    input.charAt(2) == '1',
-            };
+
+            DEBUG = input.startsWith("d");
+            
+            chip.getIn(1).set(input.charAt(0+(DEBUG?1:0)) == '1');
+			chip.getIn(2).set(input.charAt(1+(DEBUG?1:0)) == '1');
+			chip.getIn(3).set(input.charAt(2+(DEBUG?1:0)) == '1');
             
             long time = System.nanoTime();
-            boolean[] output = p.tick(s, program);
+            boolean[] output = p.tick(chip, program);
             System.out.println("Time taken: "+(System.nanoTime()-time)+" ns");
             
             System.out.println("Output: "+(output[0]?"1":"0")+(output[1]?"1":"0")+(output[2]?"1":"0"));
