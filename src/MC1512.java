@@ -25,7 +25,6 @@
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
-import java.util.List;
 
 public class MC1512 extends BaseIC {
     /**
@@ -78,20 +77,13 @@ public class MC1512 extends BaseIC {
             String distance = chip.getText().getLine4();
             String theMessage = chip.getText().getLine3();
             Vector pos = chip.getBlockPosition();
-            List<Player> players = etc.getServer().getPlayerList();
-            for (int i=0; i< players.size(); i++) {
-                Player aPlayer = (Player) players.get(i);
-                  if (playerVector(aPlayer).distance(pos)<=(double)Float.parseFloat(distance)) {
-                    aPlayer.sendMessage(theMessage);
-                }
-            }
-            
+            for(Player p: etc.getServer().getPlayerList()) 
+                if (playerVector(p).distance(pos)<=(double)Float.parseFloat(distance))
+                    p.sendMessage(theMessage);
         }
     }
 
     public Vector playerVector(Player n){
-        Location loc = n.getLocation();
-        return new Vector(loc.x,loc.y,loc.z);
-        
+        return new Vector(n.getX(),n.getY(),n.getZ());
     }
 }

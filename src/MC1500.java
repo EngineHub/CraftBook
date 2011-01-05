@@ -25,7 +25,6 @@
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
-import java.util.List;
 
 public class MC1500 extends BaseIC {
     /**
@@ -53,9 +52,6 @@ public class MC1500 extends BaseIC {
             return "Put a player's name on line 3, with no spaces.";
         }
 
-        if (!sign.getLine4().equals("")) {
-            return "Line 4 must be blank";
-        }
         return null;
     }
     
@@ -74,13 +70,6 @@ public class MC1500 extends BaseIC {
     }
 
     private boolean isPlayerOnline(String playerName) {
-        List<Player> players = etc.getServer().getPlayerList();
-        for (int i=0; i< players.size(); i++) {
-            Player aPlayer = (Player) players.get(i);
-              if (aPlayer.getName().equals(playerName)) {
-                return true;
-            }
-        }
-        return false;
+        return etc.getServer().matchPlayer(playerName)!=null;
     }
 }
