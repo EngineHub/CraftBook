@@ -17,8 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * A sign oriented mechanism.

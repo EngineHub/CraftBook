@@ -19,11 +19,11 @@
 
 package com.sk89q.craftbook.ic.plc;
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.Signal;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 public abstract class PlcBase extends BaseIC {
     private PlcLang language;

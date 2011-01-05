@@ -17,7 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.server.PointBasedEntity;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Sorts inventories based on position.

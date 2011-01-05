@@ -17,14 +17,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+package com.sk89q.craftbook.blockbag;
+
+
 /**
  *
  * @author sk89q
  */
-public class LocalWorldEditBridgeException extends Exception {
-    private static final long serialVersionUID = 1272046053798611177L;
+public class OutOfBlocksException extends BlockBagException {
+    private static final long serialVersionUID = -7063726368378723452L;
+    /**
+     * Stores the block ID.
+     */
+    private int id;
 
-    public LocalWorldEditBridgeException(Throwable t) {
-        super(t);
+    /**
+     * Construct the object.
+     * @param id
+     */
+    public OutOfBlocksException(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getID() {
+        return id;
     }
 }

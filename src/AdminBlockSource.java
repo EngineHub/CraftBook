@@ -17,7 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.blockbag.OutOfSpaceException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Sign based block source system.
@@ -55,7 +59,7 @@ public class AdminBlockSource extends BlockBag {
      * @return
      * @throws OutOfBlocksException
      */
-    public void fetchBlock(int id) throws BlockSourceException {
+    public void fetchBlock(int id) throws BlockBagException {
         if (!canFetch) {
             throw new OutOfBlocksException(id);
         }
@@ -69,7 +73,7 @@ public class AdminBlockSource extends BlockBag {
      * @return
      * @throws OutOfSpaceException
      */
-    public void storeBlock(int id) throws BlockSourceException {
+    public void storeBlock(int id) throws BlockBagException {
         if (!canStore) {
             throw new OutOfSpaceException(id);
         }

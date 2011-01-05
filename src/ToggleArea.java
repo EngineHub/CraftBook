@@ -18,7 +18,13 @@
 */
 
 import java.io.IOException;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.exception.CuboidCopyException;
+import com.sk89q.craftbook.exception.MissingCuboidCopyException;
+import com.sk89q.craftbook.server.PlayerInterface;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.StringUtil;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Represents an instance of a toggle area. This is temporarily created
@@ -163,10 +169,10 @@ public class ToggleArea extends SignOrientedMechanism {
      * 
      * @param player
      * @param bag
-     * @throws BlockSourceException
+     * @throws BlockBagException
      */
-    public void playerToggle(CraftBookPlayer player, BlockBag bag)
-            throws BlockSourceException {
+    public void playerToggle(PlayerInterface player, BlockBag bag)
+            throws BlockBagException {
         try {
             String namespace = getNamespace();
             String activeID = getActiveStateID();
@@ -225,7 +231,7 @@ public class ToggleArea extends SignOrientedMechanism {
             }
             
             copy.paste(bag);
-        } catch (BlockSourceException e) {;
+        } catch (BlockBagException e) {;
         } catch (InvalidSignNamespace e) {
         } catch (InvalidSignStateID e) {
         } catch (MissingCuboidCopyException e) {
@@ -259,7 +265,7 @@ public class ToggleArea extends SignOrientedMechanism {
                 copy = copyManager.load(namespace, inactiveID);
                 copy.paste(bag);
             }
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
         } catch (InvalidSignNamespace e) {
         } catch (InvalidSignStateID e) {
         } catch (MissingCuboidCopyException e) {
@@ -274,7 +280,7 @@ public class ToggleArea extends SignOrientedMechanism {
      * @param signText
      * @return false to deny
      */
-    public static boolean validateEnvironment(CraftBookPlayer player,
+    public static boolean validateEnvironment(PlayerInterface player,
             Vector pt, SignText signText) {
         
         ToggleArea area = new ToggleArea(pt, signText);

@@ -1,3 +1,4 @@
+package com.sk89q.craftbook.exception;
 // $Id$
 /*
  * CraftBook
@@ -17,13 +18,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
-
 /**
- * Thrown when a block bag is out of space.
  *
  * @author sk89q
  */
-public class BlockSourceException extends Exception {
-    private static final long serialVersionUID = 3259468698292336605L;
+public class CuboidCopyException extends Exception {
+    private static final long serialVersionUID = 1610836109309177856L;
+
+    /**
+     * Construct an instance.
+     * 
+     * @param msg
+     */
+    public CuboidCopyException() {
+        super();
+    }
+
+    /**
+     * Construct an instance.
+     * 
+     * @param msg
+     */
+    public CuboidCopyException(String msg) {
+        super(msg);
+    }
 }

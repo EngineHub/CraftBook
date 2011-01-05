@@ -17,7 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.blockbag.OutOfSpaceException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * For the uninitiated.
@@ -41,7 +44,7 @@ public class DummyBlockSource extends BlockBag {
      * @return
      * @throws OutOfBlocksException
      */
-    public void fetchBlock(int id) throws BlockSourceException {
+    public void fetchBlock(int id) throws BlockBagException {
         if(!fetch) throw new OutOfBlocksException(id);
     }
 
@@ -53,7 +56,7 @@ public class DummyBlockSource extends BlockBag {
      * @return
      * @throws OutOfSpaceException
      */
-    public void storeBlock(int id) throws BlockSourceException {
+    public void storeBlock(int id) throws BlockBagException {
         if(!store) throw new OutOfSpaceException(id);
     }
 

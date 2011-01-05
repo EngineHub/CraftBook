@@ -17,8 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Dispenser.
@@ -122,7 +125,7 @@ public class MC1202 extends BaseIC {
                     for(n=0;n<quantity;n++)
                         try {
                             source.fetchBlock(item);
-                        } catch (BlockSourceException e) {
+                        } catch (BlockBagException e) {
                             break;
                         }
                     if(n!=0) etc.getServer().dropItem(x, y, z, item, quantity);

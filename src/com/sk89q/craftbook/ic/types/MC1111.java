@@ -19,9 +19,10 @@
 
 package com.sk89q.craftbook.ic.types;
 
-import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Positive edge-triggered wireless receiver.

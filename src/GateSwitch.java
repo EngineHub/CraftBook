@@ -17,7 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.Vector;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -40,7 +44,7 @@ public class GateSwitch {
      * @return
      */
     public static boolean toggleGates(Vector pt, BlockBag bag,
-            boolean smallSearchSize) throws BlockSourceException {
+            boolean smallSearchSize) throws BlockBagException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -90,7 +94,7 @@ public class GateSwitch {
      * @return
      */
     public static boolean setGateState(Vector pt, BlockBag bag, boolean close,
-            boolean smallSearchSize) throws BlockSourceException {
+            boolean smallSearchSize) throws BlockBagException {
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -142,7 +146,7 @@ public class GateSwitch {
      */
     private static boolean recurseColumn(Vector pt, Set<BlockVector> visitedColumns,
             Boolean close, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
         if (visitedColumns.size() > 14) { return false; }
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
         if (CraftBook.getBlockID(pt) != BlockType.FENCE) { return false; }
@@ -190,7 +194,7 @@ public class GateSwitch {
      */
     private static void toggleColumn(Vector topPoint, boolean close,
             Set<BlockVector> visitedColumns, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
 
         int x = topPoint.getBlockX();
         int y = topPoint.getBlockY();

@@ -19,7 +19,12 @@
 
 import java.util.Set;
 import java.util.TreeSet;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.blockbag.OutOfSpaceException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  *
@@ -50,7 +55,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      * @throws OutOfBlocksException
      */
-    public void fetchBlock(int id) throws BlockSourceException {
+    public void fetchBlock(int id) throws BlockBagException {
         try {
             for (ComparableInventory c : chests) {
                 Inventory chest = c.getInventory();
@@ -92,7 +97,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      * @throws OutOfSpaceException
      */
-    public void storeBlock(int id) throws BlockSourceException {
+    public void storeBlock(int id) throws BlockBagException {
         try {
             for (ComparableInventory c : chests) {
                 Inventory chest = c.getInventory();
@@ -141,7 +146,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      * @throws OutOfSpaceException
      */
-    public void storeBlock(int id, int amount) throws BlockSourceException {
+    public void storeBlock(int id, int amount) throws BlockBagException {
         
     }
 

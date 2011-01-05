@@ -17,14 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.SignText;
+import com.sk89q.craftbook.util.SignText;
 
 /**
  * A version of SignText that gets its sign text from a hMod Sign object.
  * 
  * @author sk89q
  */
-public class SignTextImpl extends SignText {
+public class HmodSignTextImpl extends SignText {
     /**
      * Sign instance.
      */
@@ -36,7 +36,7 @@ public class SignTextImpl extends SignText {
      * 
      * @param sign
      */
-    public SignTextImpl(Sign sign) {
+    public HmodSignTextImpl(Sign sign) {
         super(sign.getText(0), sign.getText(1),
                 sign.getText(2), sign.getText(3));
         this.sign = sign;

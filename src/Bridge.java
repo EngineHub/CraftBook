@@ -19,7 +19,12 @@
 
 import java.util.Set;
 import java.util.HashSet;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.server.PlayerInterface;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Bridge.
@@ -110,8 +115,8 @@ public class Bridge extends SignOrientedMechanism {
      * @param bag
      * @return
      */
-    public void playerToggleBridge(CraftBookPlayer player, BlockBag bag)
-            throws BlockSourceException {
+    public void playerToggleBridge(PlayerInterface player, BlockBag bag)
+            throws BlockBagException {
         try {
             setState(bag, null);
         } catch (InvalidDirectionException e) {
@@ -134,7 +139,7 @@ public class Bridge extends SignOrientedMechanism {
         } catch (InvalidDirectionException e) {
         } catch (UnacceptableTypeException e) {
         } catch (InvalidConstructionException e) {
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
         }
     }
     
@@ -149,7 +154,7 @@ public class Bridge extends SignOrientedMechanism {
         } catch (InvalidDirectionException e) {
         } catch (UnacceptableTypeException e) {
         } catch (InvalidConstructionException e) {
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
         }
     }
     
@@ -161,7 +166,7 @@ public class Bridge extends SignOrientedMechanism {
      * @return
      */
     private boolean setState(BlockBag bag, Boolean toOpen)
-            throws BlockSourceException, InvalidDirectionException,
+            throws BlockBagException, InvalidDirectionException,
             UnacceptableTypeException, InvalidConstructionException {
         
         Direction direction = getDirection();
@@ -288,7 +293,7 @@ public class Bridge extends SignOrientedMechanism {
      * @param dist
      */
     private void clearRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
@@ -308,7 +313,7 @@ public class Bridge extends SignOrientedMechanism {
      * @param dist
      */
     private void setRow(Vector origin, Vector change, int type, int dist, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
         for (int i = 1; i <= dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
@@ -326,7 +331,7 @@ public class Bridge extends SignOrientedMechanism {
      * @param signText
      * @return false to deny
      */
-    public static boolean validateEnvironment(CraftBookPlayer player,
+    public static boolean validateEnvironment(PlayerInterface player,
             Vector pt, SignText signText) {
         
         signText.setLine2("[Bridge]");

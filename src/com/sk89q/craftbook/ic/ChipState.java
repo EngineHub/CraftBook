@@ -20,7 +20,9 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Used to pass around the state of an IC.

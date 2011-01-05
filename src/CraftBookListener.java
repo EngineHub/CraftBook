@@ -27,7 +27,12 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.exception.InsufficientArgumentsException;
+import com.sk89q.craftbook.exception.LocalWorldEditBridgeException;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * This is CraftBook's main event listener for Hey0's server mod. "Delegate"

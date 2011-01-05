@@ -1,5 +1,5 @@
 /*    
-Craftbook
+Craftbook 
 Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic.plc;
+package com.sk89q.craftbook.server;
 
-import java.util.logging.Logger;
+import java.util.List;
 
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.state.StateHolder;
-import com.sk89q.craftbook.util.SignText;
-import com.sk89q.craftbook.util.Vector;
-
-public interface PlcLang extends StateHolder {
-    /**
-     * Logger instance.
-     */
-    static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    
-    String getName();
-    boolean[] tick(ChipState chip, String program) throws PlcException;
-    void checkSyntax(String program) throws PlcException;
-    String validateEnvironment(Vector v, SignText t, String code);
+public interface ServerInterface {
+    PlayerInterface getPlayer(String player);
+    PlayerInterface matchPlayer(String player);
+    List<PlayerInterface> getPlayerList();
 }

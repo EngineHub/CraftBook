@@ -17,7 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.cauldron.CauldronCookbook;
+import com.sk89q.craftbook.cauldron.CauldronRecipe;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.Vector;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;

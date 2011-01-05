@@ -19,8 +19,9 @@
 
 import java.util.logging.Logger;
 
-import com.sk89q.craftbook.InsufficientArgumentsException;
-import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.exception.InsufficientArgumentsException;
+import com.sk89q.craftbook.exception.LocalWorldEditBridgeException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Proxy plugin listener called by CraftBook. It has additional hooks

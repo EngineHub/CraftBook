@@ -4,7 +4,7 @@
  * Copyright (C) 2010 sk89q <http://www.sk89q.com>
 */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.exception;
 
 /**
  *

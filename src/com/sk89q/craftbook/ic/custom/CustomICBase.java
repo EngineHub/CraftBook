@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sk89q.craftbook.ic.custom;
 
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.plc.PlcBase;
 import com.sk89q.craftbook.ic.plc.PlcException;
 import com.sk89q.craftbook.ic.plc.PlcLang;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 
 class CustomICBase extends PlcBase {

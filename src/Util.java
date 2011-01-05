@@ -20,8 +20,9 @@
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import com.sk89q.craftbook.InsufficientArgumentsException;
-import com.sk89q.craftbook.Vector;
+
+import com.sk89q.craftbook.exception.InsufficientArgumentsException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Library for Minecraft-related functions.

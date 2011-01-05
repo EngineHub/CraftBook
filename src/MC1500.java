@@ -23,8 +23,9 @@
  * @author Tom (tmhrtly)
  */
 
-import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 public class MC1500 extends BaseIC {
     /**

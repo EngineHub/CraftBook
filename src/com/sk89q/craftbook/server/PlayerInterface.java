@@ -17,13 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.server;
+
+import com.sk89q.craftbook.util.Vector;
 
 /**
  *
  * @author sk89q
  */
-public abstract class CraftBookPlayer {
+public abstract class PlayerInterface {
     /**
      * Move the player.
      *
@@ -41,10 +43,10 @@ public abstract class CraftBookPlayer {
      */
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof CraftBookPlayer)) {
+        if (!(other instanceof PlayerInterface)) {
             return false;
         }
-        CraftBookPlayer other2 = (CraftBookPlayer)other;
+        PlayerInterface other2 = (PlayerInterface)other;
         return other2.getName().equals(getName());
     }
 
@@ -145,4 +147,9 @@ public abstract class CraftBookPlayer {
      * @return
      */
     public abstract boolean hasPermission(String permission);
+    
+    /**
+     * Gets the world the player is currently in.
+     */
+    public abstract WorldInterface getWorld();
 }

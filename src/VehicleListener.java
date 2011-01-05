@@ -19,7 +19,11 @@
 
 import java.util.HashMap;
 import java.util.Map;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.ItemType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Delegate listener for vehicle-related hooks and features.
@@ -197,14 +201,14 @@ public class VehicleListener extends CraftBookDelegateListener {
                 if (collectType.equalsIgnoreCase("Storage")) {
                     try {
                         blockBag.fetchBlock(ItemType.STORAGE_MINECART);
-                    } catch (BlockSourceException e) {
+                    } catch (BlockBagException e) {
                         // Okay, no storage minecarts... but perhaps we can
                         // craft a minecart + chest!
                         if (blockBag.peekBlock(BlockType.CHEST)) {
                             blockBag.fetchBlock(ItemType.MINECART);
                             blockBag.fetchBlock(BlockType.CHEST);
                         } else {
-                            throw new BlockSourceException();
+                            throw new BlockBagException();
                         }
                     }
                     
@@ -216,14 +220,14 @@ public class VehicleListener extends CraftBookDelegateListener {
                 } else if (collectType.equalsIgnoreCase("Powered")) {
                     try {
                         blockBag.fetchBlock(ItemType.POWERED_MINECART);
-                    } catch (BlockSourceException e) {
+                    } catch (BlockBagException e) {
                         // Okay, no storage minecarts... but perhaps we can
                         // craft a minecart + chest!
                         if (blockBag.peekBlock(BlockType.FURNACE)) {
                             blockBag.fetchBlock(ItemType.MINECART);
                             blockBag.fetchBlock(BlockType.FURNACE);
                         } else {
-                            throw new BlockSourceException();
+                            throw new BlockBagException();
                         }
                     }
                     
@@ -254,7 +258,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         minecart.setMotion(-0.3, 0, 0);
                     }
                 }
-            } catch (BlockSourceException e) {
+            } catch (BlockBagException e) {
                 // No minecarts
             }
         // Minecart station
@@ -650,7 +654,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         try {
                             blockBag.storeBlock(ItemType.MINECART);
                             minecart.destroy();
-                        } catch (BlockSourceException e) {
+                        } catch (BlockBagException e) {
                         }
                     } else if (type == Minecart.Type.StorageCart) {
                         try {
@@ -665,7 +669,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             }
                             
                             minecart.destroy();
-                        } catch (BlockSourceException e) {
+                        } catch (BlockBagException e) {
                             // Ran out of space
                         }
                     } else if (type == Minecart.Type.PoweredMinecart) {
@@ -677,7 +681,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                 blockBag.storeBlock(BlockType.FURNACE);
                             }
                             minecart.destroy();
-                        } catch (BlockSourceException e) {
+                        } catch (BlockBagException e) {
                             // Ran out of space
                         }
                     }

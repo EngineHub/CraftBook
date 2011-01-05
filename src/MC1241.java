@@ -17,8 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Shoots arrows.

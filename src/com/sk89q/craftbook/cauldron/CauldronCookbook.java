@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.cauldron;
 
 //import java.util.logging.Logger;
 import java.util.Map;

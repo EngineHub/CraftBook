@@ -19,7 +19,8 @@
 
 import java.util.Timer;
 import java.util.TimerTask;
-import com.sk89q.craftbook.HistoryHashMap;
+
+import com.sk89q.craftbook.util.HistoryHashMap;
 
 /**
  * Keeps track of empty minecarts and removes them after they have exceeded

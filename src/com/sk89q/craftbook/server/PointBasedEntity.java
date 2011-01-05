@@ -1,3 +1,4 @@
+package com.sk89q.craftbook.server;
 // $Id$
 /*
  * CraftBook
@@ -17,35 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- *
- * @author sk89q
- */
-public class MissingCuboidCopyException extends CuboidCopyException {
-    /**
-     * Serialization version ID.
-     */
-    private static final long serialVersionUID = -4569606338210856027L;
-    /**
-     * Missing copy name.
-     */
-    private String name;
+import com.sk89q.craftbook.util.Vector;
 
+/**
+ * Represents an entity that has a position.
+ */
+public interface PointBasedEntity {
     /**
-     * Construct an instance.
-     * 
-     * @param name
+     * Get the position.
      */
-    public MissingCuboidCopyException(String name) {
-        super();
-        this.name = name;
-    }
-    
-    /**
-     * Get the missing copy's name.
-     * @return
-     */
-    public String getCopyName() {
-        return name;
-    }
+    public Vector getPosition();
 }

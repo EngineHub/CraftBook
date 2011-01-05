@@ -18,7 +18,7 @@
 */
 
 import com.sk89q.craftbook.BlockType;
-import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Library for Redstone-related logic.

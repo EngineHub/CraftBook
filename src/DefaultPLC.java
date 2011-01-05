@@ -18,11 +18,11 @@
 */
 
 import com.sk89q.craftbook.BlockType;
-import com.sk89q.craftbook.SignText;
-import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.plc.PlcBase;
 import com.sk89q.craftbook.ic.plc.PlcException;
 import com.sk89q.craftbook.ic.plc.PlcLang;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * A PLC that gets code from code block signs.

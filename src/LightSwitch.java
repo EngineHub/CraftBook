@@ -17,7 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Handler for the light switch feature.
@@ -41,7 +45,7 @@ public class LightSwitch {
      * @return
      */
     public static boolean toggleLights(Vector origin, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
         int aboveID = CraftBook.getBlockID(origin.add(0, 1, 0));
 
         if (aboveID == BlockType.TORCH || aboveID == BlockType.REDSTONE_TORCH_OFF

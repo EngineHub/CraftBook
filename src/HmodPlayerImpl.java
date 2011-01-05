@@ -17,13 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.server.PlayerInterface;
+import com.sk89q.craftbook.server.WorldInterface;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  *
  * @author sk89q
  */
-public class CraftBookPlayerImpl extends CraftBookPlayer {
+public class HmodPlayerImpl extends PlayerInterface {
     /**
      * Stores the player.
      */
@@ -34,7 +36,7 @@ public class CraftBookPlayerImpl extends CraftBookPlayer {
      * 
      * @param player
      */
-    public CraftBookPlayerImpl(Player player) {
+    public HmodPlayerImpl(Player player) {
         this.player = player;
     }
 
@@ -182,5 +184,13 @@ public class CraftBookPlayerImpl extends CraftBookPlayer {
      */
     public boolean hasPermission(String permission) {
         return player.canUseCommand("/" + permission);
+    }
+    
+    /**
+     * Gets the world the player is currently in.
+     */
+    public WorldInterface getWorld() {
+        //TODO
+        return null;
     }
 }

@@ -19,10 +19,10 @@
 
 import java.util.List;
 
-import com.sk89q.craftbook.BlockSourceException;
-import com.sk89q.craftbook.OutOfBlocksException;
-import com.sk89q.craftbook.OutOfSpaceException;
-import com.sk89q.craftbook.Vector;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.blockbag.OutOfSpaceException;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * A collection of block bags.
@@ -46,7 +46,7 @@ public class CompoundBlockBag extends BlockBag {
      * 
      * @param id
      */
-    public void storeBlock(int id) throws BlockSourceException {
+    public void storeBlock(int id) throws BlockBagException {
         for (BlockBag b : sources)
             try {
                 b.storeBlock(id);
@@ -61,7 +61,7 @@ public class CompoundBlockBag extends BlockBag {
      * 
      * @param id
      */
-    public void fetchBlock(int id) throws BlockSourceException {
+    public void fetchBlock(int id) throws BlockBagException {
         for (BlockBag b : sources)
             try {
                 b.fetchBlock(id);

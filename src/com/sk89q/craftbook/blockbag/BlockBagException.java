@@ -17,17 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.blockbag;
 
 /**
- * Thrown when something is wrong.
- * 
+ * Thrown when a block bag is out of space.
+ *
  * @author sk89q
  */
-public class OperationException extends Exception {
-    private static final long serialVersionUID = 2557254416301837827L;
-
-    public OperationException(String msg) {
-        super(msg);
-    }
+public class BlockBagException extends Exception {
+    private static final long serialVersionUID = 3259468698292336605L;
 }

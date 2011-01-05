@@ -17,28 +17,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+package com.sk89q.craftbook.blockbag;
+
+
 /**
  *
  * @author sk89q
  */
-public class CuboidCopyException extends Exception {
-    private static final long serialVersionUID = 1610836109309177856L;
+public class OutOfSpaceException extends BlockBagException {
+    private static final long serialVersionUID = -7384479745885980016L;
+    
+    /**
+     * Stores the block ID.
+     */
+    private int id;
 
     /**
-     * Construct an instance.
-     * 
-     * @param msg
+     * Construct the object.
+     * @param id
      */
-    public CuboidCopyException() {
-        super();
+    public OutOfSpaceException(int id) {
+        this.id = id;
     }
 
     /**
-     * Construct an instance.
-     * 
-     * @param msg
+     * @return the id
      */
-    public CuboidCopyException(String msg) {
-        super(msg);
+    public int getID() {
+        return id;
     }
 }

@@ -27,42 +27,19 @@ import java.util.Set;
 import java.util.logging.Level;
 
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.exception.InsufficientArgumentsException;
+import com.sk89q.craftbook.exception.LocalWorldEditBridgeException;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.ic.custom.*;
 import com.sk89q.craftbook.ic.plc.PlcLang;
 import com.sk89q.craftbook.ic.plc.types.Perlstone32_1;
 import com.sk89q.craftbook.ic.plc.types.Perlstone_1_0;
-import com.sk89q.craftbook.ic.types.MC0020;
-import com.sk89q.craftbook.ic.types.MC1000;
-import com.sk89q.craftbook.ic.types.MC1001;
-import com.sk89q.craftbook.ic.types.MC1017;
-import com.sk89q.craftbook.ic.types.MC1018;
-import com.sk89q.craftbook.ic.types.MC1020;
-import com.sk89q.craftbook.ic.types.MC1025;
-import com.sk89q.craftbook.ic.types.MC1110;
-import com.sk89q.craftbook.ic.types.MC1111;
-import com.sk89q.craftbook.ic.types.MC1230;
-import com.sk89q.craftbook.ic.types.MC1420;
-import com.sk89q.craftbook.ic.types.MC2020;
-import com.sk89q.craftbook.ic.types.MC3002;
-import com.sk89q.craftbook.ic.types.MC3003;
-import com.sk89q.craftbook.ic.types.MC3020;
-import com.sk89q.craftbook.ic.types.MC3021;
-import com.sk89q.craftbook.ic.types.MC3030;
-import com.sk89q.craftbook.ic.types.MC3031;
-import com.sk89q.craftbook.ic.types.MC3032;
-import com.sk89q.craftbook.ic.types.MC3033;
-import com.sk89q.craftbook.ic.types.MC3034;
-import com.sk89q.craftbook.ic.types.MC3036;
-import com.sk89q.craftbook.ic.types.MC3040;
-import com.sk89q.craftbook.ic.types.MC3101;
-import com.sk89q.craftbook.ic.types.MC4000;
-import com.sk89q.craftbook.ic.types.MC4010;
-import com.sk89q.craftbook.ic.types.MC4100;
-import com.sk89q.craftbook.ic.types.MC4110;
-import com.sk89q.craftbook.ic.types.MC4200;
+import com.sk89q.craftbook.ic.types.*;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.craftbook.util.Vector;
 
 
 /**

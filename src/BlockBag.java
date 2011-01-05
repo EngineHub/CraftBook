@@ -17,7 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.blockbag.OutOfSpaceException;
+import com.sk89q.craftbook.util.Vector;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -43,7 +47,7 @@ public abstract class BlockBag {
      * @return
      * @throws OutOfSpaceException
      */
-    public boolean setBlockID(int x, int y, int z, int id) throws BlockSourceException {
+    public boolean setBlockID(int x, int y, int z, int id) throws BlockBagException {
         return setBlockID(new Vector(x, y, z), id);
     }
 
@@ -55,7 +59,7 @@ public abstract class BlockBag {
      * @return
      * @throws OutOfSpaceException
      */
-    public boolean setBlockID(Vector pos, int id) throws BlockSourceException {
+    public boolean setBlockID(Vector pos, int id) throws BlockBagException {
         if (id == 0) { // Clearing
             int existingID = CraftBook.getBlockID(pos);
 
@@ -164,14 +168,14 @@ public abstract class BlockBag {
      *
      * @param id
      */
-    public abstract void fetchBlock(int id) throws BlockSourceException;
+    public abstract void fetchBlock(int id) throws BlockBagException;
     
     /**
      * Store a block.
      * 
      * @param id
      */
-    public abstract void storeBlock(int id) throws BlockSourceException;
+    public abstract void storeBlock(int id) throws BlockBagException;
     
     /**
      * Checks to see if a block exists without removing it.
@@ -184,7 +188,7 @@ public abstract class BlockBag {
             fetchBlock(id);
             storeBlock(id);
             return true;
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
             return false;
         }
     }

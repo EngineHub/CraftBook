@@ -1,3 +1,4 @@
+package com.sk89q.craftbook.exception;
 // $Id$
 /*
  * CraftBook
@@ -17,32 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
-
 /**
  *
  * @author sk89q
  */
-public class OutOfSpaceException extends BlockSourceException {
-    private static final long serialVersionUID = -7384479745885980016L;
-    
-    /**
-     * Stores the block ID.
-     */
-    private int id;
+public class LocalWorldEditBridgeException extends Exception {
+    private static final long serialVersionUID = 1272046053798611177L;
 
-    /**
-     * Construct the object.
-     * @param id
-     */
-    public OutOfSpaceException(int id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the id
-     */
-    public int getID() {
-        return id;
+    public LocalWorldEditBridgeException(Throwable t) {
+        super(t);
     }
 }

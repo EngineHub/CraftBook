@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-import com.sk89q.craftbook.BlockVector;
+import com.sk89q.craftbook.util.BlockVector;
 
 /**
  * Thread for delaying redstone inputs.

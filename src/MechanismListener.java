@@ -27,7 +27,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.ItemType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.blockbag.OutOfSpaceException;
+import com.sk89q.craftbook.cauldron.CauldronCookbook;
+import com.sk89q.craftbook.cauldron.CauldronRecipe;
+import com.sk89q.craftbook.exception.InsufficientArgumentsException;
+import com.sk89q.craftbook.exception.LocalWorldEditBridgeException;
+import com.sk89q.craftbook.server.PlayerInterface;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Listener for mechanisms.
@@ -197,7 +208,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                 try {
                     GateSwitch.setGateState(pt, bag, isOn,
                             line2.equalsIgnoreCase("[DGate]"));
-                } catch (BlockSourceException e) {
+                } catch (BlockBagException e) {
                 }
 
             // Bridges
@@ -307,8 +318,8 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @return
      */
     public boolean onSignChange(Player player, Sign sign) {
-        CraftBookPlayer ply = new CraftBookPlayerImpl(player);
-        SignTextImpl signText = new SignTextImpl(sign);
+        PlayerInterface ply = new HmodPlayerImpl(player);
+        HmodSignTextImpl signText = new HmodSignTextImpl(sign);
         Vector pt = new Vector(sign.getX(), sign.getY(), sign.getZ());
         
         String line2 = sign.getText(1);
@@ -484,7 +495,7 @@ public class MechanismListener extends CraftBookDelegateListener {
         } catch (OutOfSpaceException e) {
             player.sendMessage(Colors.Rose + "No room left to put: " + Util.toBlockName(e.getID()));
             player.sendMessage(Colors.Rose + "Make sure nearby block sources have free slots.");
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
             player.sendMessage(Colors.Rose + "Error: " + e.getMessage());
         }
     }
@@ -499,7 +510,7 @@ public class MechanismListener extends CraftBookDelegateListener {
      */
     private boolean handleBlockUse(Player player, Block blockClicked,
             int itemInHand)
-            throws BlockSourceException {
+            throws BlockBagException {
 
         int current = -1;
 
@@ -644,7 +655,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                     bag.addSourcePosition(pt);
                     
                     ToggleArea area = new ToggleArea(pt, listener.getCopyManager());
-                    area.playerToggle(new CraftBookPlayerImpl(player), bag);
+                    area.playerToggle(new HmodPlayerImpl(player), bag);
 
                     // Tell the player of missing blocks
                     Map<Integer,Integer> missing = bag.getMissing();
@@ -668,7 +679,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                     bag.addSourcePosition(pt);
                     
                     Bridge bridge = new Bridge(pt);
-                    bridge.playerToggleBridge(new CraftBookPlayerImpl(player), bag);
+                    bridge.playerToggleBridge(new HmodPlayerImpl(player), bag);
                     
                     return true;
 
@@ -683,7 +694,7 @@ public class MechanismListener extends CraftBookDelegateListener {
                     bag.addSourcePosition(pt);
                     
                     Door door = new Door(pt);
-                    door.playerToggleDoor(new CraftBookPlayerImpl(player), bag);
+                    door.playerToggleDoor(new HmodPlayerImpl(player), bag);
                     
                     return true;
                 }
@@ -1004,7 +1015,7 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @param command
      * @return
      */
-    public boolean hasCreatePermission(CraftBookPlayer player, String permission) {
+    public boolean hasCreatePermission(PlayerInterface player, String permission) {
         if (!checkCreatePermissions || player.hasPermission(permission)) {
             return true;
         } else {

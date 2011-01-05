@@ -20,8 +20,12 @@
 import java.io.File;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.state.StateManager;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Entry point for the plugin for hey0's mod.
@@ -294,7 +298,7 @@ public class CraftBook extends Plugin {
         ComplexBlock cblock = etc.getServer().getComplexBlock(pt.getBlockX(),
                 pt.getBlockY(), pt.getBlockZ());
         if (cblock instanceof Sign) {
-            return new SignTextImpl((Sign)cblock);
+            return new HmodSignTextImpl((Sign)cblock);
         }
         
         return null;

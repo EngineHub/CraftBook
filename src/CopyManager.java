@@ -17,7 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.exception.CuboidCopyException;
+import com.sk89q.craftbook.exception.MissingCuboidCopyException;
+import com.sk89q.craftbook.util.HistoryHashMap;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;

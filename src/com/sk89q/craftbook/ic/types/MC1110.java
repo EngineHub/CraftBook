@@ -20,9 +20,11 @@
 package com.sk89q.craftbook.ic.types;
 
 import java.util.Map;
-import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.BaseIC;
 import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Wireless transmitter.

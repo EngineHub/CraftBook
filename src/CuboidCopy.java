@@ -21,7 +21,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.exception.CuboidCopyException;
+import com.sk89q.craftbook.util.Vector;
 import com.sk89q.worldedit.DoubleArrayList;
 
 /**
@@ -180,7 +185,7 @@ public class CuboidCopy {
     /**
      * Paste to world.
      */
-    public void paste(BlockBag bag) throws BlockSourceException {
+    public void paste(BlockBag bag) throws BlockBagException {
         DoubleArrayList<Vector,byte[]> queueAfter =
             new DoubleArrayList<Vector,byte[]>(false);
         DoubleArrayList<Vector,byte[]> queueLast =
@@ -235,7 +240,7 @@ public class CuboidCopy {
     /**
      * Clear the area.
      */
-    public void clear(BlockBag bag) throws BlockSourceException {
+    public void clear(BlockBag bag) throws BlockBagException {
         List<Vector> queued = new ArrayList<Vector>();
         
         for (int x = 0; x < width; x++) {
@@ -264,7 +269,7 @@ public class CuboidCopy {
      *
      * @return
      */
-    public void toggle(BlockBag bag) throws BlockSourceException {
+    public void toggle(BlockBag bag) throws BlockBagException {
         if (shouldClear()) {
             clear(bag);
         } else {

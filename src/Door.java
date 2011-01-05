@@ -19,7 +19,12 @@
 
 import java.util.Set;
 import java.util.HashSet;
-import com.sk89q.craftbook.*;
+
+import com.sk89q.craftbook.BlockType;
+import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.server.PlayerInterface;
+import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * Door.
@@ -112,8 +117,8 @@ public class Door extends SignOrientedMechanism {
      * @param bag
      * @return
      */
-    public void playerToggleDoor(CraftBookPlayer player, BlockBag bag)
-            throws BlockSourceException {
+    public void playerToggleDoor(PlayerInterface player, BlockBag bag)
+            throws BlockBagException {
         try {
             setState(bag, null);
         } catch (InvalidDirectionException e) {
@@ -136,7 +141,7 @@ public class Door extends SignOrientedMechanism {
         } catch (InvalidDirectionException e) {
         } catch (UnacceptableTypeException e) {
         } catch (InvalidConstructionException e) {
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
         }
     }
     
@@ -151,7 +156,7 @@ public class Door extends SignOrientedMechanism {
         } catch (InvalidDirectionException e) {
         } catch (UnacceptableTypeException e) {
         } catch (InvalidConstructionException e) {
-        } catch (BlockSourceException e) {
+        } catch (BlockBagException e) {
         }
     }
     
@@ -164,7 +169,7 @@ public class Door extends SignOrientedMechanism {
      * @return
      */
     public boolean setState(BlockBag bag, Boolean toOpen)
-            throws BlockSourceException, InvalidDirectionException,
+            throws BlockBagException, InvalidDirectionException,
             UnacceptableTypeException, InvalidConstructionException {
         
         Direction direction = getDirection();
@@ -264,7 +269,7 @@ public class Door extends SignOrientedMechanism {
      * @param dist
      */
     private static void clearColumn(Vector origin, Vector change, int type, int dist, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
         for (int i = 0; i < dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
@@ -284,7 +289,7 @@ public class Door extends SignOrientedMechanism {
      * @param dist
      */
     private static void setColumn(Vector origin, Vector change, int type, int dist, BlockBag bag)
-            throws BlockSourceException {
+            throws BlockBagException {
         for (int i = 0; i < dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = CraftBook.getBlockID(p);
@@ -302,7 +307,7 @@ public class Door extends SignOrientedMechanism {
      * @param signText
      * @return false to deny
      */
-    public static boolean validateEnvironment(CraftBookPlayer player,
+    public static boolean validateEnvironment(PlayerInterface player,
             Vector pt, SignText signText) {
         
         if (signText.getLine2().equalsIgnoreCase("[Door Up]")) {
