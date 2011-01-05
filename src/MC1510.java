@@ -35,8 +35,8 @@ public class MC1510 extends BaseIC {
     public String getTitle() {
         return "MESSAGE PLAYER";
     }
-	
-	/**
+    
+    /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
@@ -44,8 +44,8 @@ public class MC1510 extends BaseIC {
      * @param sign
      * @return
      */
-	
-	public String validateEnvironment(Vector pos, SignText sign) {
+    
+    public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
 
         if (id.length() == 0 || id.contains(" ")) {
@@ -58,23 +58,23 @@ public class MC1510 extends BaseIC {
         return null;
     }
     
-	
+    
     /**
      * Think.
      * 
      * @param chip
      */
     public void think(ChipState chip) {
-		if (chip.getIn(1).is()) {
-			String thePlayerString = chip.getText().getLine3();
-			String theMessage = chip.getText().getLine4();
-			Player thePlayer = etc.getServer().matchPlayer(thePlayerString);
-			if (thePlayer==null) {
-				chip.getOut(1).set(false);
-				return;
-			}
-			chip.getOut(1).set(true);
-			thePlayer.sendMessage(theMessage);
-		}
+        if (chip.getIn(1).is()) {
+            String thePlayerString = chip.getText().getLine3();
+            String theMessage = chip.getText().getLine4();
+            Player thePlayer = etc.getServer().matchPlayer(thePlayerString);
+            if (thePlayer==null) {
+                chip.getOut(1).set(false);
+                return;
+            }
+            chip.getOut(1).set(true);
+            thePlayer.sendMessage(theMessage);
+        }
     }
 }

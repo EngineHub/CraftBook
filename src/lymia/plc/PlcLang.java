@@ -26,7 +26,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.state.StateHolder;
 
 public interface PlcLang extends StateHolder {
-	/**
+    /**
      * Logger instance.
      */
     static final Logger logger = Logger.getLogger("Minecraft.CraftBook");

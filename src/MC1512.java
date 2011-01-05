@@ -36,8 +36,8 @@ public class MC1512 extends BaseIC {
     public String getTitle() {
         return "MESSAGE NEARBY";
     }
-	
-	/**
+    
+    /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
@@ -45,8 +45,8 @@ public class MC1512 extends BaseIC {
      * @param sign
      * @return
      */
-	
-	public String validateEnvironment(Vector pos, SignText sign) {
+    
+    public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
         if (sign.getLine4().equals("")) {
             return "Please put a distance on the third line.";
@@ -67,31 +67,31 @@ public class MC1512 extends BaseIC {
         return true; //Could be used for über-spam (with a large value on the 4th line, its practically like MC1511)
     }
 
-	
+    
     /**
      * Think.
      * 
      * @param chip
      */
     public void think(ChipState chip) {
-		if (chip.getIn(1).is()) { //Only on the rising edge
-			String distance = chip.getText().getLine4();
-			String theMessage = chip.getText().getLine3();
-			Vector pos = chip.getBlockPosition();
-			List<Player> players = etc.getServer().getPlayerList();
-			for (int i=0; i< players.size(); i++) {
-				Player aPlayer = (Player) players.get(i);
-		  		if (playerVector(aPlayer).distance(pos)<=(double)Float.parseFloat(distance)) {
-					aPlayer.sendMessage(theMessage);
-				}
-			}
-			
-		}
+        if (chip.getIn(1).is()) { //Only on the rising edge
+            String distance = chip.getText().getLine4();
+            String theMessage = chip.getText().getLine3();
+            Vector pos = chip.getBlockPosition();
+            List<Player> players = etc.getServer().getPlayerList();
+            for (int i=0; i< players.size(); i++) {
+                Player aPlayer = (Player) players.get(i);
+                  if (playerVector(aPlayer).distance(pos)<=(double)Float.parseFloat(distance)) {
+                    aPlayer.sendMessage(theMessage);
+                }
+            }
+            
+        }
     }
 
-	public Vector playerVector(Player n){
-		Location loc = n.getLocation();
-		return new Vector(loc.x,loc.y,loc.z);
-		
-	}
+    public Vector playerVector(Player n){
+        Location loc = n.getLocation();
+        return new Vector(loc.x,loc.y,loc.z);
+        
+    }
 }

@@ -35,8 +35,8 @@ public class MC1511 extends BaseIC {
     public String getTitle() {
         return "MESSAGE ALL";
     }
-	
-	/**
+    
+    /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
@@ -44,8 +44,8 @@ public class MC1511 extends BaseIC {
      * @param sign
      * @return
      */
-	
-	public String validateEnvironment(Vector pos, SignText sign) {
+    
+    public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
 
         if (id.length()==0) {
@@ -62,16 +62,16 @@ public class MC1511 extends BaseIC {
         return true; //Could be used for über-spam
     }
 
-	
+    
     /**
      * Think.
      * 
      * @param chip
      */
     public void think(ChipState chip) {
-		if (chip.getIn(1).is()) {
-			String theMessage = chip.getText().getLine3();
-			etc.getServer().messageAll(theMessage);
-		}
+        if (chip.getIn(1).is()) {
+            String theMessage = chip.getText().getLine3();
+            etc.getServer().messageAll(theMessage);
+        }
     }
 }

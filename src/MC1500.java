@@ -36,8 +36,8 @@ public class MC1500 extends BaseIC {
     public String getTitle() {
         return "IS PLAYER ONLINE";
     }
-	
-	/**
+    
+    /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
@@ -45,8 +45,8 @@ public class MC1500 extends BaseIC {
      * @param sign
      * @return
      */
-	
-	public String validateEnvironment(Vector pos, SignText sign) {
+    
+    public String validateEnvironment(Vector pos, SignText sign) {
         String id = sign.getLine3();
 
         if (id.length() == 0 || id.contains(" ")) {
@@ -59,28 +59,28 @@ public class MC1500 extends BaseIC {
         return null;
     }
     
-	
+    
     /**
      * Think.
      * 
      * @param chip
      */
     public void think(ChipState chip) {
-		String thePlayer = chip.getText().getLine3();
+        String thePlayer = chip.getText().getLine3();
         if (isPlayerOnline(thePlayer))
             chip.getOut(1).set(true);
         else 
             chip.getOut(1).set(false);
     }
 
-	private boolean isPlayerOnline(String playerName) {
-		List<Player> players = etc.getServer().getPlayerList();
-		for (int i=0; i< players.size(); i++) {
-			Player aPlayer = (Player) players.get(i);
-	  		if (aPlayer.getName().equals(playerName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean isPlayerOnline(String playerName) {
+        List<Player> players = etc.getServer().getPlayerList();
+        for (int i=0; i< players.size(); i++) {
+            Player aPlayer = (Player) players.get(i);
+              if (aPlayer.getName().equals(playerName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

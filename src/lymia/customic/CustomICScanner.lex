@@ -87,7 +87,7 @@ COMMENT = "//" {IC}* {LT}
     
     {INLINE_DECLARATION} {s.setLength(0); yybegin(PROGRAM);}
     {FILE_DECLARATION}   {s.setLength(0); yybegin(FILE);}
-	{WS} {}
+    {WS} {}
 }
 
 <PROGRAM> {

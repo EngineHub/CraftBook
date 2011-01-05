@@ -104,13 +104,13 @@ public final class Perlstone_1_0 implements PlcLang {
                             continue;
     
                         case 'A':
-                        	stack.push(chip.getIn(1).is());
+                            stack.push(chip.getIn(1).is());
                             continue;
                         case 'B':
-                        	stack.push(chip.getIn(2).is());
+                            stack.push(chip.getIn(2).is());
                             continue;
                         case 'C':
-                        	stack.push(chip.getIn(3).is());
+                            stack.push(chip.getIn(3).is());
                             continue;
     
                         case 'S':
@@ -215,9 +215,9 @@ public final class Perlstone_1_0 implements PlcLang {
     }
     
     public final String validateEnvironment(Vector v, SignText t, String code) {
-    	if(!t.getLine4().isEmpty()) return "line 4 is not empty";
-    	t.setLine4("AAAAAAAAAAAA");
-    	return null;
+        if(!t.getLine4().isEmpty()) return "line 4 is not empty";
+        t.setLine4("AAAAAAAAAAAA");
+        return null;
     }
 
     public final void checkSyntax(String program) throws PerlstoneException {
@@ -336,15 +336,15 @@ public final class Perlstone_1_0 implements PlcLang {
     }
 
     private static boolean[] readPresistantStorage(ChipState chip) throws PerlstoneException {
-    	byte[] persistentStorage;
+        byte[] persistentStorage;
         try {
-        	persistentStorage = Base64.decode(chip.getText().getLine4().getBytes("UTF-8"));
+            persistentStorage = Base64.decode(chip.getText().getLine4().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new PerlstoneException("no utf-8");
         } catch (IOException e) {
-        	throw new PerlstoneException("unknown error");
+            throw new PerlstoneException("unknown error");
         }
-    	
+        
         boolean[] pvt = new boolean[32];
         for (int i = 0; i < 4; i++)
             for (int b = 0; b < 8; b++)
@@ -369,8 +369,8 @@ public final class Perlstone_1_0 implements PlcLang {
         System.out.println("Perlstone v1.0 Test Parser");
         
         if (args.length > 0)
-        	if (args[0] == "-v")
-        		DEBUG = true;
+            if (args[0] == "-v")
+                DEBUG = true;
         
         System.out.print("Input program: ");
         
@@ -382,14 +382,14 @@ public final class Perlstone_1_0 implements PlcLang {
         p.checkSyntax(program);
         
         Signal[] in = new Signal[3];
-		in[0] = new Signal(false);
-		in[1] = new Signal(false);
-		in[2] = new Signal(false);
-		
-		Signal[] out = new Signal[3];
-		out[0] = new Signal(false);
-		out[1] = new Signal(false);
-		out[2] = new Signal(false);
+        in[0] = new Signal(false);
+        in[1] = new Signal(false);
+        in[2] = new Signal(false);
+        
+        Signal[] out = new Signal[3];
+        out[0] = new Signal(false);
+        out[1] = new Signal(false);
+        out[2] = new Signal(false);
         
         ChipState chip = new ChipState(new Vector(0,0,0), new BlockVector(0,0,0), in, out, new SignText("","[MC5000]","HASH:"+Integer.toHexString(program.hashCode()),"AAAAAAAAAAAA"), 0);
         
@@ -405,8 +405,8 @@ public final class Perlstone_1_0 implements PlcLang {
             DEBUG = input.startsWith("d");
             
             chip.getIn(1).set(input.charAt(0+(DEBUG?1:0)) == '1');
-			chip.getIn(2).set(input.charAt(1+(DEBUG?1:0)) == '1');
-			chip.getIn(3).set(input.charAt(2+(DEBUG?1:0)) == '1');
+            chip.getIn(2).set(input.charAt(1+(DEBUG?1:0)) == '1');
+            chip.getIn(3).set(input.charAt(2+(DEBUG?1:0)) == '1');
             
             long time = System.nanoTime();
             boolean[] output = p.tick(chip, program);
