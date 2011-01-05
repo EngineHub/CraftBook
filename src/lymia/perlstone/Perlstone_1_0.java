@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package lymia.perlstone;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import com.sk89q.craftbook.BlockVector;
 import com.sk89q.craftbook.SignText;
 import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.ChipState;
@@ -360,6 +362,9 @@ public final class Perlstone_1_0 implements PlcLang {
         chip.getText().setLine4(Base64.encodeBytes(data));
     }
     
+    public void write(File f) {}
+    public void read(File f) {}
+    
     public static void main(String[] args) throws Exception {
         System.out.println("Perlstone v1.0 Test Parser");
         
@@ -386,7 +391,7 @@ public final class Perlstone_1_0 implements PlcLang {
 		out[1] = new Signal(false);
 		out[2] = new Signal(false);
         
-        ChipState chip = new ChipState(new Vector(0,0,0), new Vector(0,0,0), in, out, new SignText("","[MC5032]","HASH:"+Integer.toHexString(program.hashCode()),"AAAAAAAAAAAA"), 0);
+        ChipState chip = new ChipState(new Vector(0,0,0), new BlockVector(0,0,0), in, out, new SignText("","[MC5000]","HASH:"+Integer.toHexString(program.hashCode()),"AAAAAAAAAAAA"), 0);
         
         while(true) {
             System.out.print("Input: ");

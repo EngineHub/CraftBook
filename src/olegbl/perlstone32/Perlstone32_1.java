@@ -18,6 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package olegbl.perlstone32;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.EmptyStackException;
@@ -26,6 +32,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.BlockVector;
 import com.sk89q.craftbook.SignText;
 import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.ChipState;
@@ -50,11 +57,71 @@ public final class Perlstone32_1 implements PlcLang {
 	 * Permanent shared storage.
 	 */
 	private Map<String,int[]> publicPersistentStorage = new HashMap<String,int[]>();
-	private Map<Vector,int[]> privatePersistentStorage = new HashMap<Vector,int[]>();
+	private Map<BlockVector,int[]> privatePersistentStorage = new HashMap<BlockVector,int[]>();
 	
 	public final String getName() {
 		return "PS32 1.1.3";
 	}
+	
+    public void write(File f) throws IOException {
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+        
+        out.write(0);
+        out.writeInt(publicPersistentStorage.size());
+        for(String key: publicPersistentStorage.keySet()) {
+            out.writeUTF(key);
+            int[] data = publicPersistentStorage.get(key);
+            out.writeInt(data.length);
+            for(int i: data) if(i==0) out.writeBoolean(false);
+            else {
+                out.writeBoolean(true);
+                out.writeInt(i);
+            }
+        }
+        out.writeInt(privatePersistentStorage.size());
+        for(BlockVector key: privatePersistentStorage.keySet()) {
+            out.writeInt(key.getBlockX());
+            out.writeInt(key.getBlockY());
+            out.writeInt(key.getBlockZ());
+            int[] data = privatePersistentStorage.get(key);
+            out.writeInt(data.length);
+            for(int i: data) if(i==0) out.writeBoolean(false);
+            else {
+                out.writeBoolean(true);
+                out.writeInt(i);
+            }
+        }
+        
+        out.flush();
+    }
+    public void read(File f) throws IOException {
+        Map<String,int[]> publicPersistentStorage = new HashMap<String,int[]>();
+        Map<BlockVector,int[]> privatePersistentStorage = new HashMap<BlockVector,int[]>();
+        
+        if(f.exists()) {
+            DataInputStream in = new DataInputStream(new FileInputStream(f));
+            
+            if(in.read()!=0) throw new IOException("wrong version");
+            
+            int l = in.readInt();
+            for(int i=0;i<l;i++) {
+                String name = in.readUTF();
+                int[] data = new int[in.readInt()];
+                for(int j=0;j<data.length;j++) if(in.readBoolean()) data[j] = in.readInt();
+                publicPersistentStorage.put(name,data);
+            }
+            l = in.readInt();
+            for(int i=0;i<l;i++) {
+                BlockVector v = new BlockVector(in.readInt(),in.readInt(),in.readInt());
+                int[] data = new int[in.readInt()];
+                for(int j=0;j<data.length;j++) if(in.readBoolean()) data[j] = in.readInt();
+                privatePersistentStorage.put(v,data);
+            }
+        }
+        
+        this.publicPersistentStorage = publicPersistentStorage;
+        this.privatePersistentStorage = privatePersistentStorage;
+    }
 	
 	private static int getPersistentStorageType(ChipState chip) {
 		String type = chip.getText().getLine4().replace(" ","");
@@ -77,8 +144,8 @@ public final class Perlstone32_1 implements PlcLang {
 				publicPersistentStorage.put(chip.getText().getLine4(), new int[32]);
 			}
 		} else if (persistentStorageType == 1) { // Private
-			if (!privatePersistentStorage.containsKey(chip.getPosition())) {
-				privatePersistentStorage.put(chip.getPosition(), new int[32]);
+			if (!privatePersistentStorage.containsKey(chip.getBlockPosition())) {
+				privatePersistentStorage.put(chip.getBlockPosition(), new int[32]);
 			}
 		}
 		
@@ -86,7 +153,7 @@ public final class Perlstone32_1 implements PlcLang {
 		if (persistentStorageType == 0) // Public
 			gvt = publicPersistentStorage.get(chip.getText().getLine4());
 		else if (persistentStorageType == 1) // Private
-			gvt = privatePersistentStorage.get(chip.getPosition()); 
+			gvt = privatePersistentStorage.get(chip.getBlockPosition()); 
 		int[] tvt = new int[32];
 		boolean[] output = new boolean[3];
 		
@@ -97,7 +164,7 @@ public final class Perlstone32_1 implements PlcLang {
 		if (persistentStorageType == 0) { // Public
 			publicPersistentStorage.put(chip.getText().getLine4(), gvt);
 		} else if (persistentStorageType == 1) { // Private
-			privatePersistentStorage.put(chip.getPosition(), gvt);
+			privatePersistentStorage.put(chip.getBlockPosition(), gvt);
 		}
 		
 		return output;
@@ -300,7 +367,7 @@ public final class Perlstone32_1 implements PlcLang {
 	}
 	
 	public final String validateEnvironment(Vector v, SignText t, String code) {
-		privatePersistentStorage.remove(v);
+		privatePersistentStorage.remove(v.toBlockVector());
 		try {
 			checkSyntax(code);
 		} catch (PerlstoneException e) {
@@ -482,7 +549,7 @@ public final class Perlstone32_1 implements PlcLang {
 		out[1] = new Signal(false);
 		out[2] = new Signal(false);
 		
-		ChipState chip = new ChipState(new Vector(0,0,0), new Vector(0,0,0), in, out, new SignText("","[MC5032]","","private"), 0);
+		ChipState chip = new ChipState(new Vector(0,0,0), new BlockVector(0,0,0), in, out, new SignText("","[MC5032]","","private"), 0);
 		
 		while(true) {
 			System.out.print("Input: ");

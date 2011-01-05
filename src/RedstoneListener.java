@@ -642,6 +642,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 
     public void registerLang(String name, PlcLang language) {
         plcLanguageList.put(name, language);
+        craftBook.getStateManager().addStateHolder(name, language);
     }
     
     public void run() {onTick();}
