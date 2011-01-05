@@ -54,9 +54,8 @@ public class MC1512 extends BaseIC {
         if (id.length()==0) {
             return "Please put a message on the 3rd line to be broadcast to nearby players.";
         }
-        double distance;
         try {
-            distance = Double.parseDouble(sign.getLine4());
+            Double.parseDouble(sign.getLine4());
         } catch (NumberFormatException e) {
             return "Distance is not a number.";
         }
@@ -79,7 +78,7 @@ public class MC1512 extends BaseIC {
 			String distance = chip.getText().getLine4();
 			String theMessage = chip.getText().getLine3();
 			Vector pos = chip.getBlockPosition();
-			List players = etc.getServer().getPlayerList();
+			List<Player> players = etc.getServer().getPlayerList();
 			for (int i=0; i< players.size(); i++) {
 				Player aPlayer = (Player) players.get(i);
 		  		if (playerVector(aPlayer).distance(pos)<=(double)Float.parseFloat(distance)) {

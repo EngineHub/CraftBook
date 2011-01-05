@@ -25,7 +25,6 @@
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.ic.*;
-import java.util.List;
 
 public class MC1510 extends BaseIC {
     /**

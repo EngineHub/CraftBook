@@ -74,7 +74,7 @@ public class MC1500 extends BaseIC {
     }
 
 	private boolean isPlayerOnline(String playerName) {
-		List players = etc.getServer().getPlayerList();
+		List<Player> players = etc.getServer().getPlayerList();
 		for (int i=0; i< players.size(); i++) {
 			Player aPlayer = (Player) players.get(i);
 	  		if (aPlayer.getName().equals(playerName)) {
