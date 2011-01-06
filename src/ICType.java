@@ -32,7 +32,35 @@ import com.sk89q.craftbook.util.Vector;
 public enum ICType {
     /**
      * Zero input, single output
-     */
+     */STSS("STSS", true) {
+        void think(Vector pt, SignText signText,Sign sign, IC stssIC) {
+            Vector outputVec = Util.getWallSignBack(pt, 2);
+            Vector in0 = Util.getWallSignBack(pt, -1);
+            Vector backVec = Util.getWallSignBack(pt, 1);
+
+            Signal[] in = new Signal[1];
+            in[0] = new Signal(Redstone.isHighBinary(in0, true),
+                    false);
+
+            Signal[] out = new Signal[1];
+            out[0] = new Signal(Redstone.getOutput(outputVec));
+
+            ChipState chip = new ChipState(pt, backVec.toBlockVector(), in, out, signText, etc.getServer().getTime());
+
+            stssIC.think(chip);
+
+            if (chip.isModified()) {
+                Redstone.setOutput(outputVec, chip.getOut(1).is());
+            }
+
+            if (chip.hasErrored()) {
+                signText.setLine2(Colors.Gold + signText.getLine2());
+                signText.allowUpdate();
+            }
+
+        }
+    },
+
     ZISO("ZISO", true) {
         void think(Vector pt, SignText signText, Sign sign, IC zisoIC) {
             Vector outputVec = Util.getWallSignBack(pt, 2);
