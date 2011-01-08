@@ -513,13 +513,13 @@ public class MechanismListener extends CraftBookDelegateListener {
             throws BlockBagException {
 
         int current = -1;
-		//Lightmeter
-		if (itemInHand == 348) { // Lightstone dust
-	        int x = blockClicked.getX();
-	        int y = blockClicked.getY();
-	        int z = blockClicked.getZ();
-	
-	        int light = etc.getMCServer().e.i(x, y + 1, z);
+        //Lightmeter
+        if (itemInHand == 348) { // Lightstone dust
+            int x = blockClicked.getX();
+            int y = blockClicked.getY();
+            int z = blockClicked.getZ();
+    
+            int light = etc.getMCServer().e.i(x, y + 1, z);
 
             player.sendMessage(Colors.Yellow + ("Light level:" + Integer.toString(light)));
 
