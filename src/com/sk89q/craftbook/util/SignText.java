@@ -138,4 +138,23 @@ public class SignText {
     public boolean shouldUpdate() {
         return !noUpdate;
     }
+    
+    public void setLine(int i, String line) {
+        switch(i) {
+            case 0: line1 = line; return;
+            case 1: line2 = line; return;
+            case 2: line3 = line; return;
+            case 3: line4 = line; return;
+            default: throw new IllegalArgumentException();
+        }
+    }
+    public String getLine(int i) {
+        switch(i) {
+            case 0: return line1;
+            case 1: return line2;
+            case 2: return line3;
+            case 3: return line4;
+            default: throw new IllegalArgumentException();
+        }
+    }
 }

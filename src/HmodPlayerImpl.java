@@ -17,27 +17,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.server.PlayerInterface;
-import com.sk89q.craftbook.server.WorldInterface;
+import com.sk89q.craftbook.access.PlayerInterface;
+import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.Vector;
 
 /**
  *
  * @author sk89q
+ * @author Lymia
  */
 public class HmodPlayerImpl extends PlayerInterface {
     /**
      * Stores the player.
      */
     private Player player;
+    
+    /**
+     * CraftBook core
+     */
+    private CraftBook core;
 
     /**
      * Construct the object.
      * 
      * @param player
      */
-    public HmodPlayerImpl(Player player) {
+    public HmodPlayerImpl(Player player, CraftBook core) {
         this.player = player;
+        this.core = core;
     }
 
     /**
@@ -175,22 +182,31 @@ public class HmodPlayerImpl extends PlayerInterface {
     public Player getPlayerObject() {
         return player;
     }
-
-    /**
-     * Checks if the user has a permission.
-     * 
-     * @name permission
-     * @return
-     */
-    public boolean hasPermission(String permission) {
-        return player.canUseCommand("/" + permission);
-    }
     
     /**
      * Gets the world the player is currently in.
      */
     public WorldInterface getWorld() {
-        //TODO
-        return null;
+        return core.getWorld();
+    }
+
+    public boolean canUseCommand(String permission) {
+        return player.canUseCommand("/"+permission);
+    }
+
+    public boolean canUseObject(String object) {
+        return player.canUseCommand("/"+object);
+    }
+
+    public boolean canCreateObject(String object) {
+        return player.canUseCommand("/make"+object);
+    }
+
+    public boolean canCreateIC(String icId) {
+        return player.canUseCommand("/"+icId)||player.canUseCommand("/allic");
+    }
+    
+    public void sendMessage(String msg) {
+        player.sendMessage(msg);
     }
 }

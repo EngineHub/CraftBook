@@ -17,72 +17,70 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.access.PointBasedEntity;
+package com.sk89q.craftbook.access;
+
 import com.sk89q.craftbook.util.BlockVector;
-import com.sk89q.craftbook.util.Vector;
 
 /**
- * Sorts inventories based on position.
- *
+ * Action to delay.
+ * 
  * @author sk89q
  */
-public class ComparableInventory implements PointBasedEntity {
+public abstract class Action {
     /**
-     * Chest location.
+     * Stores the point associated with this delayed action.
      */
-    private BlockVector pos;
+    private BlockVector pt;
     /**
-     * Chest.
+     * Tick to perform the action at.
      */
-    private Inventory inventory;
-
+    private long runAt = 0;
+    
     /**
      * Construct the object.
      * 
-     * @param pos
-     * @param block
+     * @param pt
+     * @param tickDelay
      */
-    public ComparableInventory(Vector pos, Inventory inventory) {
-        this.pos = pos.toBlockVector();
-        this.inventory = inventory;
+    public Action(WorldInterface w, BlockVector pt, long tickDelay) {
+        this.pt = pt;
+        runAt = w.getTime() + tickDelay;
     }
 
     /**
+     * Run the action.
+     */
+    public abstract void run();
+    
+    /**
+     * Get the tick to run at.
+     * 
      * @return
      */
-    public BlockVector getPosition() {
-        return pos;
+    public long getRunAt() {
+        return runAt;
     }
-
+    
     /**
-     * @return
+     * Return the hash code.
+     * 
+     * @return hash code
      */
-    public Inventory getInventory() {
-        return inventory;
+    public int hashCode() {
+        return pt.hashCode();
     }
-
+    
     /**
-     * Equals check.
+     * Returns whether the other object is equal.
      * 
      * @param other
      * @return
      */
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof ComparableInventory) {
-            return ((ComparableInventory)other).pos.equals(pos);
-        } else {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Action)) {
             return false;
         }
-    }
-
-    /**
-     * Get the hash code.
-     * 
-     * @return
-     */
-    @Override
-    public int hashCode() {
-        return pos.hashCode();
+        Action other = (Action)obj;
+        return other.pt.equals(pt);
     }
 }

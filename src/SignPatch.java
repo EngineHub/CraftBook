@@ -78,13 +78,19 @@ public class SignPatch extends go {
      * Call before using addListener or getListenerList().
      */
     public static void applyPatch() {
-        new SignPatch(gv.m[TYPE]);
+        if(!(gv.m[TYPE] instanceof SignPatch)) new SignPatch(gv.m[TYPE]);
     }
     /**
      * Removes the patch if it is applied.
      */
     public static void removePatch() {
         if(gv.m[TYPE] instanceof SignPatch) gv.m[TYPE] = ((SignPatch)gv.m[TYPE]).old;
+    }
+    /**
+     * Checks if the pathc is applied.
+     */
+    public static boolean isPatched() {
+        return gv.m[TYPE] instanceof SignPatch;
     }
     
     /**

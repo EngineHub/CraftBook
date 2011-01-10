@@ -1,155 +1,114 @@
-// $Id$
-/*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+/*    
+Craftbook 
+Copyright (C) 2010 sk89q <http://www.sk89q.com>
+Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.io.File;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
 
-import com.sk89q.craftbook.BlockType;
-import com.sk89q.craftbook.state.StateManager;
-import com.sk89q.craftbook.util.BlockVector;
-import com.sk89q.craftbook.util.SignText;
-import com.sk89q.craftbook.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.sk89q.craftbook.CraftBookCore;
+import com.sk89q.craftbook.CraftBookDelegateListener;
+import com.sk89q.craftbook.access.Action;
+import com.sk89q.craftbook.access.Configuration;
+import com.sk89q.craftbook.access.Event;
+import com.sk89q.craftbook.access.PlayerInterface;
+import com.sk89q.craftbook.access.ServerInterface;
+import com.sk89q.craftbook.access.WorldInterface;
 
 /**
- * Entry point for the plugin for hey0's mod.
- *
- * @author sk89q
+ * hMod interface for CraftBook
  */
-public class CraftBook extends Plugin {
+public class CraftBook extends Plugin implements ServerInterface {
     /**
      * Logger.
      */
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    private static final File pathToState = new File("world"+File.separator+"craftbook");
+    public static final String DEFAULT_WORLD_NAME = "world";
     
-    /**
-     * Listener for the plugin system. This listener handles configuration
-     * loading and the bulk of the core functions for CraftBook. Individual
-     * features are implemented in the delegate listeners.
-     */
-    private final CraftBookListener listener =
-            new CraftBookListener(this);
+    private CraftBookCore core = new CraftBookCore(this);
+    private PluginLoader loader = etc.getLoader();
+    private Server server = etc.getServer();
     
-    /**
-     * Tick delayer instance used to delay some events until the next tick.
-     * It is used mostly for redstone-related events.
-     */
-    private final TickDelayer delay = new TickDelayer();
-
-    /**
-     * Used to fake the data value at a point. For the redstone hook, because
-     * the data value has not yet been set when the hook is called, its data
-     * value is faked by CraftBook. As all calls to get a block's data are
-     * routed through CraftBook already, this makes this hack feasible.
-     */
-    private static BlockVector fakeDataPos;
+    private HmodWorldImpl world = new HmodWorldImpl(this);
+    private List<WorldInterface> worlds;
     
-    /**
-     * Used to fake the data value at a point. See fakedataPos.
-     */
-    private static int fakeDataVal;
+    private IdentityHashMap<CraftBookDelegateListener,Object> listenerList =
+        new IdentityHashMap<CraftBookDelegateListener,Object>();
+    protected HashMap<Event,List<CraftBookDelegateListener>> events = 
+        new HashMap<Event,List<CraftBookDelegateListener>>();
+    {
+        for(Event e:Event.values()) events.put(e, new ArrayList<CraftBookDelegateListener>());
+    }
     
-    /**
-     * CraftBook version, fetched from the .jar's manifest. Used to print the
-     * CraftBook version in various places.
-     */
-    private String version;
+    private Configuration config;
     
-    /**
-     * State manager object.
-     */
-    private StateManager stateManager = new StateManager();
-    
-    /**
-     * State manager thread. 
-     */
-    private Thread stateThread = new Thread() {
-        public void run() {
-            PluginLoader l = etc.getLoader();
-            while(l.getPlugin("CraftBook")==CraftBook.this) {
-                if(l.getPlugin("CraftBook")==CraftBook.this) 
-                    try {Thread.sleep(10*60*1000);} catch (InterruptedException e) {}
-                if(l.getPlugin("CraftBook")==CraftBook.this) 
-                    stateManager.save(pathToState);
-            }
+    public CraftBook() {
+        List<WorldInterface> worlds = new ArrayList<WorldInterface>();
+        worlds.add(world);
+        this.worlds = Collections.unmodifiableList(worlds);
+        
+        try {
+            config = new HmodConfigurationImpl(new PropertiesFile("craftbook.properties"));
+        } catch (IOException e) {
+            logger.warning("Failed to load craftbook.properties: " + e.getMessage());
         }
-    };
-
-    /**
-     * Delegate listener for mechanisms.
-     */
-    private final CraftBookDelegateListener mechanisms =
-            new MechanismListener(this, listener);
-    /**
-     * Delegate listener for redstone.
-     */
-    private final CraftBookDelegateListener redstone =
-            new RedstoneListener(this, listener);
-    /**
-     * Delegate listener for vehicle.
-     */
-    private final CraftBookDelegateListener vehicle =
-            new VehicleListener(this, listener);
+    }
     
-    /**
-     * Initializes the plugin.
-     */
-    @Override
     public void initialize() {
-        TickPatch.applyPatch();
-
-        registerHook(listener, "COMMAND", PluginListener.Priority.MEDIUM);
-        registerHook(listener, "DISCONNECT", PluginListener.Priority.MEDIUM);
-        registerHook(listener, "REDSTONE_CHANGE", PluginListener.Priority.MEDIUM);
-        registerHook(listener, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
-
-        registerHook(mechanisms, "DISCONNECT", PluginListener.Priority.MEDIUM);
-        registerHook(mechanisms, "BLOCK_RIGHTCLICKED", PluginListener.Priority.MEDIUM);
-        registerHook(mechanisms, "BLOCK_DESTROYED", PluginListener.Priority.MEDIUM);
-        registerHook(mechanisms, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
-        registerHook(mechanisms, "SERVERCOMMAND", PluginListener.Priority.MEDIUM);
-        listener.registerDelegate(mechanisms);
-        
-        registerHook(redstone, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
-        listener.registerDelegate(redstone);
-
-        registerHook(vehicle, "DISCONNECT", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "SIGN_CHANGE", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "BLOCK_PLACE", PluginListener.Priority.LOW);
-        registerHook(vehicle, "COMMAND", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "VEHICLE_POSITIONCHANGE", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "VEHICLE_UPDATE", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "VEHICLE_DAMAGE", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "VEHICLE_ENTERED", PluginListener.Priority.MEDIUM);
-        registerHook(vehicle, "VEHICLE_DESTROYED", PluginListener.Priority.MEDIUM);
-        listener.registerDelegate(vehicle);
-        
-        TickPatch.addTask(TickPatch.wrapRunnable(this, delay));
-        
-        pathToState.mkdirs();
-        stateManager.load(pathToState);
-        
-        stateThread.setName("StateManager");
-        stateThread.start();
+        core.initialize();
     }
 
+    @Override
+    public void enable() {
+        SignPatch.applyPatch();
+        for(CraftBookDelegateListener l:listenerList.keySet()) l.loadConfiguration();
+        core.enable();
+    }
+    
+    @Override
+    public void disable() {
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (element.getClassName().contains("MinecartMania")) {
+                etc.getServer().addToServerQueue(new Runnable() {
+                    public void run() {
+                        try {
+                            etc.getLoader().disablePlugin("MinecartMania");
+                            logger.warning("Minecart Mania has been disabled.");
+                        } finally {
+                            etc.getLoader().enablePlugin("CraftBook");
+                        }
+                    }
+                });
+                
+                return;
+            }
+        }
+
+        SignPatch.removePatch();
+        core.disable();
+    }
+    
     /**
      * Conditionally registers a hook for a listener.
      * 
@@ -169,165 +128,63 @@ public class CraftBook extends Plugin {
         }
     }
 
-    /**
-     * Enables the plugin.
-     */
+    public boolean isCraftBookLoaded() {
+        return loader.getPlugin(getClass().getName()) == this;
+    }
+    public boolean isCraftBookEnabled() {
+        return isEnabled();
+    }
+
+    public boolean isPlayerOnline(String player) {
+        return server.getPlayer(player) != null;
+    }
+
+    // TODO: Optimize
+    public PlayerInterface getPlayer(String player) {
+        return new HmodPlayerImpl(server.getPlayer(player),this);
+    }
+
+    // TODO: Optimize
+    public PlayerInterface matchPlayer(String player) {
+        return new HmodPlayerImpl(server.matchPlayer(player),this);
+    }
+
+    // TODO: Optimize
+    public List<PlayerInterface> getPlayerList() {
+        List<Player> list = server.getPlayerList();
+        List<PlayerInterface> list2 = new ArrayList<PlayerInterface>();
+        
+        for(Player p:list) list2.add(new HmodPlayerImpl(p,this));
+        
+        return list2;
+    }
+ 
+    public void registerListener(Event e, CraftBookDelegateListener l) {
+        listenerList.put(l, null);
+        events.get(e).add(l);
+    }
+    
+    public boolean hasWorld(String world) {
+        return world.equals(DEFAULT_WORLD_NAME);
+    }
+    public WorldInterface getWorld(String world) {
+        return world.equals(DEFAULT_WORLD_NAME)?this.world:null;
+    }
+    public List<WorldInterface> getWorlds() {
+        return worlds;
+    }
+    
+    public WorldInterface getWorld() {
+        return world;
+    }
+
+    public Configuration getConfiguration() {
+        return config;
+    }
+
     @Override
-    public void enable() {
-        logger.log(Level.INFO, "CraftBook version " + getVersion() + " loaded");
-
-        // This will also fire the loadConfiguration() methods of delegates
-        listener.loadConfiguration();
+    public void delayAction(Action a) {
+        // TODO Auto-generated method stub
         
-        SignPatch.applyPatch();
-    }
-
-    /**
-     * Disables the plugin.
-     */
-    @Override
-    public void disable() {
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        
-        for (StackTraceElement element : elements) {
-            if (element.getClassName().contains("MinecartMania")) {
-                etc.getServer().addToServerQueue(new Runnable() {
-                    public void run() {
-                        try {
-                            etc.getLoader().disablePlugin("MinecartMania");
-                            logger.warning("Minecart Mania has been disabled.");
-                        } finally {
-                            etc.getLoader().enablePlugin("CraftBook");
-                        }
-                    }
-                });
-                
-                return;
-            }
-        }
-
-        SignPatch.removePatch();
-        stateManager.save(pathToState);
-        
-        listener.disable();
-    }
-
-    /**
-     * Get the CraftBook version.
-     *
-     * @return
-     */
-    public String getVersion() {
-        if (version != null) {
-            return version;
-        }
-        
-        Package p = CraftBook.class.getPackage();
-        
-        if (p == null) {
-            p = Package.getPackage("com.sk89q.craftbook");
-        }
-        
-        if (p == null) {
-            version = "(unknown)";
-        } else {
-            version = p.getImplementationVersion();
-            
-            if (version == null) {
-                version = "(unknown)";
-            }
-        }
-
-        return version;
-    }
-    
-    public TickDelayer getDelay() {
-        return delay;
-    }
-    
-    public StateManager getStateManager() {
-        return stateManager;
-    }
-
-    protected static int getBlockID(int x, int y, int z) {
-        return etc.getServer().getBlockIdAt(x, y, z);
-    }
-
-    protected static int getBlockID(Vector pt) {
-        return etc.getServer().getBlockIdAt(pt.getBlockX(),
-                pt.getBlockY(), pt.getBlockZ());
-    }
-
-    protected static int getBlockData(int x, int y, int z) {
-        if (fakeDataPos != null
-                && fakeDataPos.toBlockVector().equals(new BlockVector(x, y, z))) {
-            return fakeDataVal;
-        }
-        return etc.getServer().getBlockData(x, y, z);
-    }
-
-    protected static int getBlockData(Vector pt) {
-        if (fakeDataPos != null
-                && fakeDataPos.equals(pt.toBlockVector())) {
-            return fakeDataVal;
-        }
-        return etc.getServer().getBlockData(pt.getBlockX(),
-                pt.getBlockY(), pt.getBlockZ());
-    }
-
-    protected static boolean setBlockID(int x, int y, int z, int type) {
-        if (y < 127 && BlockType.isBottomDependentBlock(getBlockID(x, y + 1, z))) {
-            etc.getServer().setBlockAt(0, x, y + 1, z);
-        }
-        return etc.getServer().setBlockAt(type, x, y, z);
-    }
-
-    protected static boolean setBlockID(Vector pt, int type) {
-        return setBlockID(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), type);
-    }
-
-    protected static boolean setBlockData(int x, int y, int z, int data) {
-        return etc.getServer().setBlockData(x, y, z, data);
-    }
-
-    protected static boolean setBlockData(Vector pt, int data) {
-        return setBlockData(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ(), data);
-    }
-    
-    protected static SignText getSignText(Vector pt) {
-        ComplexBlock cblock = etc.getServer().getComplexBlock(pt.getBlockX(),
-                pt.getBlockY(), pt.getBlockZ());
-        if (cblock instanceof Sign) {
-            return new HmodSignTextImpl((Sign)cblock);
-        }
-        
-        return null;
-    }
-
-    public static void dropSign(int x, int y, int z) {
-        etc.getServer().setBlockAt(0, x, y, z);
-        etc.getServer().dropItem(x, y, z, 323);
-    }
-
-    public static void dropSign(Vector pt) {
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
-        etc.getServer().setBlockAt(0, x, y, z);
-        etc.getServer().dropItem(x, y, z, 323);
-    }
-
-    protected static void fakeBlockData(int x, int y, int z, int data) {
-        fakeDataPos = new BlockVector(x, y, z);
-        fakeDataVal = data;
-    }
-
-    protected static void fakeBlockData(Vector pt, int data) {
-        fakeDataPos = pt.toBlockVector();
-        fakeDataVal = data;
-    }
-
-    protected static void clearFakeBlockData() {
-        fakeDataPos = null;
     }
 }
