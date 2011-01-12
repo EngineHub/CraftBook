@@ -238,4 +238,16 @@ public class Util {
     public static boolean canUse(Player player, String command) {
         return player.canUseCommand(command);
     }
+
+    public static Integer tryParse(String s)
+    {
+        try
+        {
+            return Integer.parseInt(s);
+        }
+        catch (Exception x)
+        {
+            return null;
+        }
+    }
 }
