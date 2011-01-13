@@ -116,16 +116,22 @@ public class MC1202 extends BaseIC {
             int x = pos.getBlockX();
             int z = pos.getBlockZ();
 
-            for (int y = pos.getBlockY() + 1; y <= maxY; y++) {
-                if (BlockType.canPassThrough(CraftBook.getBlockID(x, y, z))) {
+            for (int y = pos.getBlockY() + 1; y <= maxY; y++)
+            {
+                if (BlockType.canPassThrough(CraftBook.getBlockID(x, y, z)))
+                {
                     int n = 0;
                     for(n=0;n<quantity;n++)
-                        try {
+                        try
+                        {
                             source.fetchBlock(item);
                         } catch (BlockSourceException e) {
                             break;
                         }
-                    if(n!=0) etc.getServer().dropItem(x, y, z, item, quantity);
+
+                    if(n!=0)
+                        etc.getServer().dropItem(x, y, z, item, n);
+
                     return;
                 }
             }

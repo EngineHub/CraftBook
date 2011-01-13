@@ -53,6 +53,42 @@ public enum ICType {
         }
     },
     /**
+     * Zero input, triple output
+     */
+    ZI3O("ZI3O", true) {
+        void think(Vector pt, SignText signText, Sign sign, IC zi30) {
+
+            Vector backVec = Util.getWallSignBack(pt, 1);
+            Vector backShift = backVec.subtract(pt);
+
+            Signal[] in = new Signal[0];
+
+            Vector output1Vec = Util.getWallSignBack(pt, 2);
+            Vector output2Vec = Util.getWallSignSide(pt, 1).add(backShift);
+            Vector output3Vec = Util.getWallSignSide(pt, -1).add(backShift);
+
+            Signal[] out = new Signal[3];
+            out[0] = new Signal(Redstone.getOutput(output1Vec));
+            out[1] = new Signal(Redstone.getOutput(output2Vec));
+            out[2] = new Signal(Redstone.getOutput(output3Vec));
+
+            ChipState chip = new ChipState(pt, backVec.toBlockVector(), in, out, signText, etc.getServer().getTime());
+
+            zi30.think(chip);
+
+            if (chip.isModified()) {
+                Redstone.setOutput(output1Vec, chip.getOut(1).is());
+                Redstone.setOutput(output2Vec, chip.getOut(2).is());
+                Redstone.setOutput(output3Vec, chip.getOut(3).is());
+            }
+
+            if (chip.hasErrored()) {
+                signText.setLine2(Colors.Gold + signText.getLine2());
+                signText.allowUpdate();
+            }
+        }
+    },
+    /**
      * Single input, single output
      */
     SISO("SISO") {

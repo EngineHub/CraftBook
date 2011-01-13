@@ -485,6 +485,25 @@ public class CraftBookListener extends PluginListener {
             return true;
         }
 
+        if (split[0].equalsIgnoreCase("/sw"))
+        {
+
+            if (split.length < 2)
+            {
+                player.sendMessage(Colors.Rose + "Switch command usage: " + Colors.White + "/sw ID [code]");
+                return true;
+            }
+
+            String code = "";
+
+            if (split.length > 2)
+                code = split[2];
+
+            CommandIC.addPendingTrigger(split[1], code);
+
+            return true;
+        }
+
         return false;
     }
     
