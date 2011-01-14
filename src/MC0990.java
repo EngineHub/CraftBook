@@ -53,6 +53,9 @@ public class MC0990 extends BaseIC {
         if (id.isEmpty())
             return "Needs an ID.";
 
+        if (id.contains(" ") || sign.getLine4().contains(" "))
+            return "No spaces in ID/code!";
+
         return null;
     }
 
