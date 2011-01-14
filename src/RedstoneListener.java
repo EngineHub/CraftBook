@@ -156,7 +156,8 @@ public class RedstoneListener extends CraftBookDelegateListener
 
             internalRegisterIC("MC0990", new MC0990(), ICType.ZI3O);
         }
-        
+
+        internalRegisterIC("MC0991", new MC0991(), ICType.SI3O);
         internalRegisterIC("MC1000", new MC1000(), ICType.SISO);
         internalRegisterIC("MC1001", new MC1001(), ICType.SISO);
         internalRegisterIC("MC1017", new MC1017(), ICType.SISO);

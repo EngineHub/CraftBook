@@ -27,7 +27,7 @@ import com.sk89q.craftbook.ic.ChipState;
  *
  * @author robhol
  */
-public class MC0990 extends BaseIC {
+public class MC0991 extends BaseIC {
 
     /**
      * Get the title of the IC.
@@ -35,7 +35,7 @@ public class MC0990 extends BaseIC {
      * @return
      */
     public String getTitle() {
-        return "COMMAND SWITCH";
+        return "CMD SWITCH EXT";
     }
 
     /**
@@ -64,21 +64,17 @@ public class MC0990 extends BaseIC {
      *
      * @param chip
      */
-    int i = 0;
-    final int thinkInterval = 8;
     public void think(ChipState chip) {
 
-        //No need to think all the time.
-        i++;
-        if (i < thinkInterval)
-            return;
-        else
-            i = 0;
+        if (!chip.getIn(1).is())
+        {
+            //Falling flank. Clear any existing outputs.
+            chip.getOut(1).set(false);
+            chip.getOut(2).set(false);
+            chip.getOut(3).set(false);
 
-        //Clear any existing outputs
-        chip.getOut(1).set(false);
-        chip.getOut(2).set(false);
-        chip.getOut(3).set(false);
+            return;
+        }
 
         //Check "central" for pending activations
         String code = CommandIC.check(chip.getText().getLine3());
