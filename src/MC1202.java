@@ -34,7 +34,16 @@ public class MC1202 extends BaseIC {
     public String getTitle() {
         return "CHEST DISPENSER";
     }
-    
+
+    /**
+     * Returns true if this IC requires permission to use.
+     *
+     * @return
+     */
+    public boolean requiresPermission() {
+        return true;
+    }
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny

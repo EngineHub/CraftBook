@@ -23,9 +23,10 @@ import java.util.logging.Logger;
 import com.sk89q.craftbook.SignText;
 import com.sk89q.craftbook.Vector;
 import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.state.StateHolder;
 
-public interface PlcLang {
-	/**
+public interface PlcLang extends StateHolder {
+    /**
      * Logger instance.
      */
     static final Logger logger = Logger.getLogger("Minecraft.CraftBook");

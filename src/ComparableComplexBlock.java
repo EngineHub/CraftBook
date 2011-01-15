@@ -66,8 +66,8 @@ public class ComparableComplexBlock<T extends ComplexBlock>
      * @param other
      * @return
      */
+    @SuppressWarnings("rawtypes")
     @Override
-    @SuppressWarnings("unchecked")
     public boolean equals(Object other) {
         if (other instanceof ComparableComplexBlock) {
             return ((ComparableComplexBlock)other).pos.equals(pos);
