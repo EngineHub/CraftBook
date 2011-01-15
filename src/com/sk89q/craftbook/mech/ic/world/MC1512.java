@@ -24,9 +24,7 @@ package com.sk89q.craftbook.mech.ic.world;
  * @author Tom (tmhrtly)
  */
 
-import Player;
-import etc;
-
+import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -82,13 +80,9 @@ public class MC1512 extends BaseIC {
             String distance = chip.getText().getLine4();
             String theMessage = chip.getText().getLine3();
             Vector pos = chip.getBlockPosition();
-            for(Player p: etc.getServer().getPlayerList()) 
-                if (playerVector(p).distance(pos)<=(double)Float.parseFloat(distance))
+            for(PlayerInterface p: chip.getWorld().getPlayerList()) 
+                if (p.getPosition().distance(pos)<=(double)Float.parseFloat(distance))
                     p.sendMessage(theMessage);
         }
-    }
-
-    public Vector playerVector(Player n){
-        return new Vector(n.getX(),n.getY(),n.getZ());
     }
 }

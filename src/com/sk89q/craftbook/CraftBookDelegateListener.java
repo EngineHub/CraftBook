@@ -75,7 +75,7 @@ public abstract class CraftBookDelegateListener {
         
     }
     
-    public void onTick() {}
+    public void onTick(WorldInterface world) {}
     public void onSignCreate(WorldInterface world, int x, int y, int z) {}
     public boolean onSignChange(PlayerInterface i, WorldInterface world, Vector v, SignInterface s) {
         return false;

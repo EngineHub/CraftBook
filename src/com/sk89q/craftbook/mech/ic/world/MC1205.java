@@ -18,10 +18,10 @@ package com.sk89q.craftbook.mech.ic.world;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import etc;
-
-import com.sk89q.craftbook.CraftBookCore;
+import com.sk89q.craftbook.access.ServerInterface;
+import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.mech.ic.*;
+import com.sk89q.craftbook.util.CraftBookUtil;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
@@ -57,15 +57,15 @@ public class MC1205 extends BaseIC {
      * @param sign
      * @return
      */
-    public String validateEnvironment(Vector pos, SignText sign) {
+    public String validateEnvironment(ServerInterface i, WorldInterface w, Vector pos, SignText sign) {
         String id = sign.getLine3();
         String force = sign.getLine4();
 
         if (id.length() == 0) {
             return "Specify a block type on the third line.";
-        } else if (getItem(id) == 0) {
+        } else if (CraftBookUtil.getItem(i.getConfiguration(), id) == 0) {
             sign.setLine4("Force");
-        } else if (getItem(id) < 1) {
+        } else if (CraftBookUtil.getItem(i.getConfiguration(), id) < 1) {
             return "Not a valid block type: " + sign.getLine3() + ".";
         }
 
@@ -74,20 +74,6 @@ public class MC1205 extends BaseIC {
         }
 
         return null;
-    }
-
-    /**
-     * Get an item from its name or ID.
-     *
-     * @param id
-     * @return
-     */
-    private int getItem(String id) {
-        try {
-            return Integer.parseInt(id.trim());
-        } catch (NumberFormatException e) {
-            return etc.getDataSource().getItem(id.trim());
-        }
     }
 
     /**
@@ -104,7 +90,7 @@ public class MC1205 extends BaseIC {
         String force = chip.getText().getLine4();
         boolean isForced = force.equalsIgnoreCase("Force");
 
-        int item = getItem(id);
+        int item = CraftBookUtil.getItem(chip.getServer().getConfiguration(), id);
 
         if ((item > 0 || isForced) && !(item >= 21 && item <= 34)
                 && item != 36) {
@@ -113,8 +99,8 @@ public class MC1205 extends BaseIC {
             int x = pos.getBlockX();
             int z = pos.getBlockZ();
 
-            if (y <= 127 && (isForced || CraftBookCore.getBlockID(x, y, z) == 0)) {
-                CraftBookCore.setBlockID(x, y, z, item);
+            if (y <= 127 && (isForced || chip.getWorld().getId(x, y, z) == 0)) {
+                chip.getWorld().setId(x, y, z, item);
                 chip.getOut(1).set(true);
             } else {
                 chip.getOut(1).set(false);

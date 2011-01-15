@@ -42,4 +42,8 @@ public abstract class WorldInterface$ implements WorldInterface {
     public BlockEntity getBlockEntity(Vector v) {
         return getBlockEntity(v.getBlockX(),v.getBlockY(),v.getBlockZ());
     }
+    
+    public int getLightLevel(Vector v) {
+        return getLightLevel(v.getBlockX(),v.getBlockY(),v.getBlockZ());
+    }
 }

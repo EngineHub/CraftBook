@@ -180,4 +180,8 @@ public class CraftBook extends Plugin implements ServerInterface {
     public Configuration getConfiguration() {
         return config;
     }
+
+    public void sendMessage(String message) {
+        world.sendMessage(message);
+    }
 }

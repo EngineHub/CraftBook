@@ -25,7 +25,7 @@ public class MC1230 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
-        long time = (chip.getTime() % 24000);
+        long time = (chip.getWorld().getTime() % 24000);
         if (time < 0) time += 24000;
         
         if (time < 13000l)

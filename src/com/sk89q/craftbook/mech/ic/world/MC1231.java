@@ -18,8 +18,6 @@ package com.sk89q.craftbook.mech.ic.world;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import etc;
-
 import com.sk89q.craftbook.mech.ic.BaseIC;
 import com.sk89q.craftbook.mech.ic.ChipState;
 
@@ -60,7 +58,7 @@ public class MC1231 extends BaseIC {
         else 
             specific = 13000l;
 
-        etc.getServer().setRelativeTime(specific);
+        chip.getWorld().setTime(specific);
 
         chip.getOut(1).set(chip.getIn(1).is());
     }

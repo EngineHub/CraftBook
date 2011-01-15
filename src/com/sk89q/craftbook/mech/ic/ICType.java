@@ -37,7 +37,7 @@ public enum ICType {
      * Zero input, single output
      */
     ZISO("ZISO", true) {    
-        void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
+        public void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
             Vector outputVec = MinecraftUtil.getWallSignBack(w, v, 2);
             Vector backVec = MinecraftUtil.getWallSignBack(w, v, 1);
 
@@ -59,7 +59,7 @@ public enum ICType {
      * Single input, single output
      */
     SISO("SISO") {
-        void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC sisoIC) {
             Vector outputVec = MinecraftUtil.getWallSignBack(w, pt, 2);
             Vector in0 = MinecraftUtil.getWallSignBack(w, pt, -1);
@@ -90,7 +90,7 @@ public enum ICType {
      * Single input, triple output
      */
     SI3O("SI3O") {
-        void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC si3oIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = backVec.subtract(pt);
@@ -129,7 +129,7 @@ public enum ICType {
      * Triple input, single output
      */
     _3ISO("3ISO") {
-        void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC _3isoIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector outputVec = MinecraftUtil.getWallSignBack(w, pt, 2);
@@ -167,7 +167,7 @@ public enum ICType {
      * Triple input, triple output
      */
     _3I3O("3I3O") {
-        void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC _3i3oIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = MinecraftUtil.getWallSignBack(w, pt, 2).subtract(pt);
@@ -214,7 +214,7 @@ public enum ICType {
      * Variable input, variable output
      */
     VIVO("VIVO") {
-        void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC vivoIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = backVec.subtract(pt);
@@ -288,10 +288,10 @@ public enum ICType {
         this.isSelfTriggered = torchUpdate;
     }
 
-    void think(ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t, IC i) {
+    public void think(ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t, IC i) {
     }
 
-    void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
+    public void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
     }
 
     public static ICType forName(String name) {

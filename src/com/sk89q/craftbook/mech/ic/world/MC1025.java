@@ -35,7 +35,7 @@ public class MC1025 extends BaseIC {
      * @return
      */
     private boolean isServerTimeOdd(ChipState chip) {
-        long time = chip.getServer().getTime() % 2;
+        long time = chip.getWorld().getTime() % 2;
         if (time < 0) time += 2;
         return (time == 1);
     }

@@ -111,6 +111,9 @@ public class HmodWorldImpl extends WorldInterface$ {
     public long getTime() {
         return server.getTime();
     }
+    public void setTime(long time) {
+        server.setTime(time);
+    }
     
     public void delayAction(Action a) {
         delay.delayAction(a);
@@ -136,5 +139,13 @@ public class HmodWorldImpl extends WorldInterface$ {
     
     private boolean isFakedBlock(int x, int y, int z) {
         return fakeExisting&&fakeX==x&&fakeY==y&&fakeZ==z;
+    }
+
+    public void sendMessage(String message) {
+        server.messageAll(message);
+    }
+
+    public int getLightLevel(int x, int y, int z) {
+        return server.getMCServer().e.j(x, y + 1, z);
     }
 }

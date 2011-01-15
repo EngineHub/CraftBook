@@ -152,6 +152,12 @@ public class CraftBookCore {
         pathToState.mkdirs();
         stateManager.load(pathToState);
         
+        server.registerListener(Event.SIGN_CHANGE, redstone);
+        server.registerListener(Event.WIRE_INPUT, redstone);
+        server.registerListener(Event.TICK, redstone);
+        server.registerListener(Event.SIGN_CREATE, redstone);
+        server.registerListener(Event.COMMAND, redstone);
+        
         stateThread.setName("StateManager");
         stateThread.start();
     }

@@ -18,8 +18,6 @@ package com.sk89q.craftbook.mech.ic.world;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import etc;
-
 import com.sk89q.craftbook.mech.ic.BaseIC;
 import com.sk89q.craftbook.mech.ic.ChipState;
 import com.sk89q.craftbook.util.SignText;
@@ -106,7 +104,7 @@ public class MC1260 extends BaseIC {
         
         y = Math.min(Math.max(0, y), 127);
         
-        int type = etc.getServer().getBlockIdAt(x, y, z);
+        int type = chip.getWorld().getId(x, y, z);
         
         chip.getOut(1).set(type == 8 || type == 9);
     }

@@ -24,8 +24,7 @@ package com.sk89q.craftbook.mech.ic.world;
  * @author Tom (tmhrtly)
  */
 
-import etc;
-
+import com.sk89q.craftbook.access.ServerInterface;
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -67,13 +66,13 @@ public class MC1500 extends BaseIC {
      */
     public void think(ChipState chip) {
         String thePlayer = chip.getText().getLine3();
-        if (isPlayerOnline(thePlayer))
+        if (isPlayerOnline(chip.getServer(),thePlayer))
             chip.getOut(1).set(true);
         else 
             chip.getOut(1).set(false);
     }
 
-    private boolean isPlayerOnline(String playerName) {
-        return etc.getServer().matchPlayer(playerName)!=null;
+    private boolean isPlayerOnline(ServerInterface s, String playerName) {
+        return s.matchPlayer(playerName)!=null;
     }
 }

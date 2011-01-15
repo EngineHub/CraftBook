@@ -24,8 +24,6 @@ package com.sk89q.craftbook.mech.ic.world;
  * @author Tom (tmhrtly)
  */
 
-import etc;
-
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -75,7 +73,7 @@ public class MC1511 extends BaseIC {
     public void think(ChipState chip) {
         if (chip.getIn(1).is()) {
             String theMessage = chip.getText().getLine3();
-            etc.getServer().messageAll(theMessage);
+            chip.getServer().sendMessage(theMessage);
         }
     }
 }

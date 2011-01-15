@@ -10,12 +10,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.access.Action;
+import com.sk89q.craftbook.access.BlockEntity;
 import com.sk89q.craftbook.access.Configuration;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.ServerInterface;
+import com.sk89q.craftbook.access.SignInterface;
 import com.sk89q.craftbook.access.WorldInterface;
-import com.sk89q.craftbook.exception.InsufficientArgumentsException;
-import com.sk89q.craftbook.exception.LocalWorldEditBridgeException;
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.mech.ic.custom.*;
 import com.sk89q.craftbook.mech.ic.logic.*;
@@ -23,9 +24,8 @@ import com.sk89q.craftbook.mech.ic.world.*;
 import com.sk89q.craftbook.mech.ic.plc.*;
 import com.sk89q.craftbook.mech.ic.plc.types.*;
 import com.sk89q.craftbook.util.BlockVector;
-import com.sk89q.craftbook.util.CraftBookUtil;
 import com.sk89q.craftbook.util.MinecraftUtil;
-import com.sk89q.craftbook.util.SignText;
+import com.sk89q.craftbook.util.RedstoneUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.Vector;
 
@@ -128,7 +128,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                         for(int y=0;y<128;y++) 
                             for(int z=chunkCoord.b<<4;z<ys;z++) 
                                 if(w.getId(x, y, z)==BlockType.WALL_SIGN)
-                                    onSignAdded(w,x,y,z);
+                                    onSignCreate(w,x,y,z);
                 }
         } catch(Throwable t) {
             System.err.println("Chunk finder failed: "+t.getClass());
@@ -212,7 +212,7 @@ public class RedstoneListener extends CraftBookDelegateListener
      * @param cblock
      * @return
      */
-    public boolean onSignChange(PlayerInterface player, WorldInterface world, Vector v, SignText s) {
+    public boolean onSignChange(PlayerInterface player, WorldInterface world, Vector v, SignInterface s) {
         int type = world.getId(v);
         
         String line2 = s.getLine2();
@@ -245,56 +245,49 @@ public class RedstoneListener extends CraftBookDelegateListener
                 }
                 
                 if (!canCreateIC(player, id, ic)) {
-                    player.sendMessage(Colors.Rose
+                    player.sendMessage(Colors.RED
                             + "You don't have permission to make " + id + ".");
-                    MinecraftUtil.dropSign(v.getBlockX(), v.getBlockY(), v.getBlockZ());
+                    MinecraftUtil.dropSign(world, v.getBlockX(), v.getBlockY(), v.getBlockZ());
                     return true;
                 } else {
                     // To check the environment
                     Vector pos = new Vector(v.getBlockX(), v.getBlockY(), v.getBlockZ());
-                    SignText signText = new SignText(
-                        sign.getText(0), sign.getText(1), sign.getText(2),
-                        sign.getText(3));
 
                     // Maybe the IC is setup incorrectly
-                    String envError = ic.ic.validateEnvironment(pos, signText);
+                    String envError = ic.ic.validateEnvironment(server, world, pos, s);
 
-                    if (signText.isChanged()) {
-                        sign.setText(0, signText.getLine1());
-                        sign.setText(1, signText.getLine2());
-                        sign.setText(2, signText.getLine3());
-                        sign.setText(3, signText.getLine4());
-                    }
+                    s.flushChanges();
 
                     if (envError != null) {
-                        player.sendMessage(Colors.Rose
+                        player.sendMessage(Colors.RED
                                 + "Error: " + envError);
-                        MinecraftUtil.dropSign(v.getBlockX(), v.getBlockY(), v.getBlockZ());
+                        MinecraftUtil.dropSign(world, v.getBlockX(), v.getBlockY(), v.getBlockZ());
                         return true;
                     } else {
-                        sign.setText(0, ic.ic.getTitle());
-                        sign.setText(1, "[" + id + "]");
+                        s.setLine1(ic.ic.getTitle());
+                        s.setLine2("[" + id + "]");
                     }
                     
                     if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
                         instantICs.add(pos.toBlockVector());
                     }
                     
-                    sign.update();
+                    s.flushChanges();
                 }
                 
                 if (ic.isPlc && !redstonePLCs && redstoneICs) {
-                    player.sendMessage(Colors.Rose + "Warning: PLCs are disabled.");
+                    player.sendMessage(Colors.RED + "Warning: PLCs are disabled.");
                 }
             } else {
-                sign.setText(1, Colors.Red + line2);
-                player.sendMessage(Colors.Rose + "Unrecognized IC: " + id);
+                s.setLine2(Colors.DARK_RED + line2);
+                s.flushChanges();
+                player.sendMessage(Colors.RED + "Unrecognized IC: " + id);
             }
 
             if (!redstoneICs) {
-                player.sendMessage(Colors.Rose + "Warning: ICs are disabled.");
+                player.sendMessage(Colors.RED + "Warning: ICs are disabled.");
             } else if (type == BlockType.SIGN_POST) {
-                player.sendMessage(Colors.Rose + "Warning: IC signs must be on a wall.");
+                player.sendMessage(Colors.RED + "Warning: IC signs must be on a wall.");
             }
 
             return false;
@@ -312,41 +305,42 @@ public class RedstoneListener extends CraftBookDelegateListener
      * @param z
      * @param isOn
      */
-    public void onDirectWireInput(final Vector pt, boolean isOn, final Vector changed) {
-        int type = CraftBookCore.getBlockID(pt);
+    public void onWireInput(final WorldInterface world, final Vector pt, 
+            final boolean isOn, final Vector changed) {
+        int type = world.getId(pt);
         
         // Redstone pumpkins
         if (redstonePumpkins
                 && (type == BlockType.PUMPKIN || type == BlockType.JACKOLANTERN)) {
-            Boolean useOn = RedstoneUtil.testAnyInput(pt);
+            Boolean useOn = RedstoneUtil.testAnyInput(world, pt);
 
             if (useOn != null && useOn) {
-                CraftBookCore.setBlockID(pt, BlockType.JACKOLANTERN);
+                world.setId(pt, BlockType.JACKOLANTERN);
             } else if (useOn != null) {
-                CraftBookCore.setBlockID(pt, BlockType.PUMPKIN);
+                world.setId(pt, BlockType.PUMPKIN);
             }
         // Redstone netherstone
         } else if (redstoneNetherstone
                 && (type == BlockType.NETHERSTONE)) {
-            Boolean useOn = RedstoneUtil.testAnyInput(pt);
+            Boolean useOn = RedstoneUtil.testAnyInput(world,pt);
             Vector above = pt.add(0, 1, 0);
 
-            if (useOn != null && useOn && CraftBookCore.getBlockID(above) == 0) {
-                CraftBookCore.setBlockID(above, BlockType.FIRE);
-            } else if (useOn != null && CraftBookCore.getBlockID(above) == BlockType.FIRE) {
-                CraftBookCore.setBlockID(above, 0);
+            if (useOn != null && useOn && world.getId(above) == 0) {
+                world.setId(above, BlockType.FIRE);
+            } else if (useOn != null && world.getId(above) == BlockType.FIRE) {
+                world.setId(above, 0);
             }
         } else if (type == BlockType.WALL_SIGN
                 || type == BlockType.SIGN_POST) {
-            ComplexBlock cblock = etc.getServer().getComplexBlock(
+            BlockEntity cblock = world.getBlockEntity(
                     pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
 
-            if (!(cblock instanceof Sign)) {
+            if (!(cblock instanceof SignInterface)) {
                 return;
             }
 
-            final Sign sign = (Sign)cblock;
-            String line2 = sign.getText(1);
+            final SignInterface sign = (SignInterface)cblock;
+            String line2 = sign.getLine2();
             int len = line2.length();
             
             // ICs
@@ -357,14 +351,11 @@ public class RedstoneListener extends CraftBookDelegateListener
 
                 String id = line2.substring(1, len - 1).toUpperCase();
 
-                final SignText signText = new SignText(sign.getText(0),
-                        sign.getText(1), sign.getText(2), sign.getText(3));
-
                 final RegisteredIC ic = icList.get(id);
                 
                 if (ic == null) {
-                    sign.setText(1, Colors.Red + line2);
-                    sign.update();
+                    sign.setLine2(Colors.DARK_RED + line2);
+                    sign.flushChanges();
                     return;
                 }
 
@@ -372,42 +363,34 @@ public class RedstoneListener extends CraftBookDelegateListener
                     return;
                 }
 
-                craftBook.getDelay().delayAction(
-                        new TickDelayer.Action(pt.toBlockVector(), 2) {
+                world.delayAction(
+                        new Action(world, pt.toBlockVector(), 2) {
                     @Override
                     public void run() {
-                        ic.think(pt, changed, signText, sign, craftBook.getDelay());
+                        ic.think(server, world, pt, changed, sign);
 
-                        if (signText.isChanged()) {
-                            sign.setText(0, signText.getLine1());
-                            sign.setText(1, signText.getLine2());
-                            sign.setText(2, signText.getLine3());
-                            sign.setText(3, signText.getLine4());
-                            
-                            if (signText.shouldUpdate()) {
-                                sign.update();
-                            }
-                        }
+                        sign.flushChanges();
                     }
                 });
             }
         }
     }
 
-    public void onTick() {
+    public void onTick(WorldInterface world) {
         if(!enableSelfTriggeredICs) return;
         
         //XXX HACK: Do this in a more proper way later.
-        if(etc.getServer().getTime()%2!=0) return;
+        if(world.getTime()%2!=0) return;
         
         BlockVector[] bv = this.instantICs.toArray(new BlockVector[0]);
         for(BlockVector pt:bv) {
-            Sign sign = (Sign)etc.getServer().getComplexBlock(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+            SignInterface sign = (SignInterface) 
+            world.getBlockEntity(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
             if(sign==null) {
                 this.instantICs.remove(pt);
                 continue;
             }
-            String line2 = sign.getText(1);
+            String line2 = sign.getLine1();
             if(!line2.startsWith("[MC")) {
                 this.instantICs.remove(pt);
                 continue;
@@ -416,8 +399,8 @@ public class RedstoneListener extends CraftBookDelegateListener
             String id = line2.substring(1, line2.length() - 1).toUpperCase();
             RegisteredIC ic = icList.get(id);
             if (ic == null) {
-                sign.setText(1, Colors.Red + line2);
-                sign.update();
+                sign.setLine2(Colors.RED + line2);
+                sign.flushChanges();
                 this.instantICs.remove(pt);
                 continue;
             }
@@ -426,36 +409,24 @@ public class RedstoneListener extends CraftBookDelegateListener
                 this.instantICs.remove(pt);
                 continue;
             }
-
-            SignText signText = new SignText(sign.getText(0),
-                    sign.getText(1), sign.getText(2), sign.getText(3));
             
-            ic.think(pt, signText, sign);
+            ic.think(server, world, pt, sign);
             
-            if (signText.isChanged()) {
-                sign.setText(0, signText.getLine1());
-                sign.setText(1, signText.getLine2());
-                sign.setText(2, signText.getLine3());
-                sign.setText(3, signText.getLine4());
-                
-                if (signText.shouldUpdate()) {
-                    sign.update();
-                }
-            }
+            sign.flushChanges();
         }
     }
-    public void onSignAdded(int x, int y, int z) {
+    public void onSignCreate(WorldInterface world, int x, int y, int z) {
         if(!enableSelfTriggeredICs) return;
             
-        Sign sign = (Sign)etc.getServer().getComplexBlock(x,y,z);
-        String line2 = sign.getText(1);
+        SignInterface sign = (SignInterface) world.getBlockEntity(x,y,z);
+        String line2 = sign.getLine2();
         if(!line2.startsWith("[MC")) return;
         
         String id = line2.substring(1, line2.length() - 1).toUpperCase();
         RegisteredIC ic = icList.get(id);
         if (ic == null) {
-            sign.setText(1, Colors.Red + line2);
-            sign.update();
+            sign.setLine2(Colors.DARK_RED + line2);
+            sign.flushChanges();
             return;
         }
 
@@ -472,12 +443,9 @@ public class RedstoneListener extends CraftBookDelegateListener
      * @return whether the command was processed
      */
     @Override
-    public boolean onCheckedCommand(Player player, String[] split)
-            throws InsufficientArgumentsException,
-            LocalWorldEditBridgeException {
-        
+    public boolean onCommand(PlayerInterface player, String[] split) {
         if (listICs && split[0].equalsIgnoreCase("/listics")
-                && Util.canUse(player, "/listics")) {
+                && player.canUseCommand("listics")) {
             String[] lines = generateICText(player);
             int pages = ((lines.length - 1) / 10) + 1;
             int accessedPage;
@@ -486,17 +454,17 @@ public class RedstoneListener extends CraftBookDelegateListener
                 accessedPage = split.length == 1 ? 0 : Integer
                         .parseInt(split[1]) - 1;
                 if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(Colors.Rose + "Invalid page \""
+                    player.sendMessage(Colors.RED + "Invalid page \""
                             + split[1] + "\"");
                     return true;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(Colors.Rose + "Invalid page \"" + split[1]
+                player.sendMessage(Colors.RED + "Invalid page \"" + split[1]
                         + "\"");
                 return true;
             }
 
-            player.sendMessage(Colors.Blue + "CraftBook ICs (Page "
+            player.sendMessage(Colors.DARK_BLUE + "CraftBook ICs (Page "
                     + (accessedPage + 1) + " of " + pages + "):");
             
             for (int i = accessedPage * 10; i < lines.length
@@ -516,7 +484,7 @@ public class RedstoneListener extends CraftBookDelegateListener
      * @param p
      * @return
      */
-    private String[] generateICText(Player p) {
+    private String[] generateICText(PlayerInterface p) {
         ArrayList<String> icNameList = new ArrayList<String>();
         icNameList.addAll(icList.keySet());
 
@@ -528,11 +496,11 @@ public class RedstoneListener extends CraftBookDelegateListener
             boolean canUse = canCreateIC(p, ic, ric);
             boolean auto = ric.type.isSelfTriggered;
             if (listUnusuableICs) {
-                strings.add(Colors.Rose + ic + " (" + ric.type.name + ")"
+                strings.add(Colors.RED + ic + " (" + ric.type.name + ")"
                         + (auto ? " (SELF-TRIGGERED)" : "") + ": "
                         + ric.ic.getTitle() + (canUse ? "" : " (RESTRICTED)"));
             } else if (canUse) {
-                strings.add(Colors.Rose + ic + " (" + ric.type.name + ")"
+                strings.add(Colors.RED + ic + " (" + ric.type.name + ")"
                         + (auto ? " (SELF-TRIGGERED)" : "") + ": "
                         + ric.ic.getTitle());
             }
@@ -548,12 +516,11 @@ public class RedstoneListener extends CraftBookDelegateListener
      * @param id
      * @param ic
      */
-    private boolean canCreateIC(Player player, String id, RegisteredIC ic) {
+    private boolean canCreateIC(PlayerInterface player, String id, RegisteredIC ic) {
         return (!ic.ic.requiresPermission()
                 && !(ic.isPlc && redstonePLCsRequirePermission)
                 && !(ic.type.isSelfTriggered && restrictSelfTriggeredICs))
-                || player.canUseCommand("/allic")
-                || player.canUseCommand("/" + id.toLowerCase());
+                || player.canCreateIC(id);
     }
 
     /**
@@ -644,8 +611,6 @@ public class RedstoneListener extends CraftBookDelegateListener
         plcLanguageList.put(name, language);
         craftBook.getStateManager().addStateHolder(name, language);
     }
-    
-    public void run() {onTick();}
 
     /**
      * Storage class for registered ICs.
@@ -668,31 +633,14 @@ public class RedstoneListener extends CraftBookDelegateListener
             this.isPlc = isPlc;
         }
 
-        /**
-         * Think.
-         * 
-         * @param pt
-         * @param changedRedstoneInput
-         * @param signText
-         * @param sign
-         * @param r
-         */
-        void think(Vector pt, Vector changedRedstoneInput, SignText signText,
-                Sign sign, TickDelayer r) {
-            type.think(pt, changedRedstoneInput, signText, sign, ic, r);
+
+        void think(ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t) {
+            type.think(s,w,v,c,t,ic);
         }
 
-        /**
-         * Think.
-         * 
-         * @param pt
-         * @param changedRedstoneInput
-         * @param signText
-         * @param sign
-         */
-        void think(Vector pt, SignText signText, Sign sign) {
-            type.think(pt, signText, sign, ic);
+        void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t) {
+            type.think(s,w,v,t,ic);
         }
     }
-    
+
 }

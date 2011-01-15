@@ -24,9 +24,7 @@ package com.sk89q.craftbook.mech.ic.world;
  * @author Tom (tmhrtly)
  */
 
-import Player;
-import etc;
-
+import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -73,7 +71,7 @@ public class MC1510 extends BaseIC {
         if (chip.getIn(1).is()) {
             String thePlayerString = chip.getText().getLine3();
             String theMessage = chip.getText().getLine4();
-            Player thePlayer = etc.getServer().matchPlayer(thePlayerString);
+            PlayerInterface thePlayer = chip.getServer().matchPlayer(thePlayerString);
             if (thePlayer==null) {
                 chip.getOut(1).set(false);
                 return;

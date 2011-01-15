@@ -1,4 +1,3 @@
-package com.sk89q.craftbook.mech.ic.world;
 // $Id$
 /*
  * CraftBook
@@ -18,10 +17,15 @@ package com.sk89q.craftbook.mech.ic.world;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+package com.sk89q.craftbook.mech.ic.world;
+
 import com.sk89q.craftbook.BlockType;
-import com.sk89q.craftbook.CraftBookCore;
+import com.sk89q.craftbook.access.ServerInterface;
+import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.blockbag.BlockBagException;
+import com.sk89q.craftbook.blockbag.NearbyChestBlockBag;
 import com.sk89q.craftbook.mech.ic.*;
+import com.sk89q.craftbook.util.CraftBookUtil;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
@@ -57,12 +61,12 @@ public class MC1202 extends BaseIC {
      * @param sign
      * @return
      */
-    public String validateEnvironment(Vector pos, SignText sign) {
+    public String validateEnvironment(ServerInterface i, WorldInterface w, Vector pos, SignText sign) {
         String id = sign.getLine3();
 
         if (id.length() == 0) {
             return "Specify a item type on the third line.";
-        } else if (getItem(id) < 1) {
+        } else if (CraftBookUtil.getItem(i.getConfiguration(),id) < 1) {
             return "Not a valid item type: " + sign.getLine3() + ".";
         }
 
@@ -78,20 +82,6 @@ public class MC1202 extends BaseIC {
     }
 
     /**
-     * Get an item from its name or ID.
-     * 
-     * @param id
-     * @return
-     */
-    private int getItem(String id) {
-        try {
-            return Integer.parseInt(id.trim());
-        } catch (NumberFormatException e) {
-            return etc.getDataSource().getItem(id.trim());
-        }
-    }
-
-    /**
      * Think.
      *
      * @param chip
@@ -102,7 +92,7 @@ public class MC1202 extends BaseIC {
         }
         
         NearbyChestBlockBag source = new NearbyChestBlockBag(chip.getPosition());
-        source.addSourcePosition(chip.getPosition());
+        source.addSourcePosition(chip.getWorld(),chip.getPosition());
         
         String id = chip.getText().getLine3();
         int quantity = 1;
@@ -113,7 +103,7 @@ public class MC1202 extends BaseIC {
         } catch (NumberFormatException e) {
         }
 
-        int item = getItem(id);
+        int item = CraftBookUtil.getItem(chip.getServer().getConfiguration(), id);
 
         if (item > 0 && !(item >= 21 && item <= 34) && item != 36) {
             Vector pos = chip.getBlockPosition();
@@ -122,7 +112,7 @@ public class MC1202 extends BaseIC {
             int z = pos.getBlockZ();
 
             for (int y = pos.getBlockY() + 1; y <= maxY; y++) {
-                if (BlockType.canPassThrough(CraftBookCore.getBlockID(x, y, z))) {
+                if (BlockType.canPassThrough(chip.getWorld().getId(x, y, z))) {
                     int n = 0;
                     for(n=0;n<quantity;n++)
                         try {
@@ -130,7 +120,7 @@ public class MC1202 extends BaseIC {
                         } catch (BlockBagException e) {
                             break;
                         }
-                    if(n!=0) etc.getServer().dropItem(x, y, z, item, quantity);
+                    if(n!=0) chip.getWorld().dropItem(x, y, z, item, quantity);
                     return;
                 }
             }

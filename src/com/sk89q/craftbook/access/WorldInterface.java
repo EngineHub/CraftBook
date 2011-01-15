@@ -53,4 +53,10 @@ public interface WorldInterface {
     void delayAction(Action a);
     
     long getTime();
+    void setTime(long time);
+    
+    void sendMessage(String message);
+    
+    int getLightLevel(int x, int y, int z);
+    int getLightLevel(Vector v);
 }

@@ -38,4 +38,6 @@ public interface ServerInterface {
     List<WorldInterface> getWorlds();
     
     Configuration getConfiguration();
+    
+    void sendMessage(String message);
 }

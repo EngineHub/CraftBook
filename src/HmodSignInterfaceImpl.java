@@ -63,7 +63,7 @@ public class HmodSignInterfaceImpl extends SignInterface {
             sign.setText(1, getLine2());
             sign.setText(2, getLine3());
             sign.setText(3, getLine4());
-            sign.update();
+            if(shouldUpdate()) sign.update();
         }
     }
 
