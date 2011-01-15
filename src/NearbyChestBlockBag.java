@@ -152,9 +152,9 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      */
     public void addSourcePosition(Vector pos) {
-        int ox = pos.getBlockX();
-        int oy = pos.getBlockY();
-        int oz = pos.getBlockZ();
+        //int ox = pos.getBlockX();
+        //int oy = pos.getBlockY();
+        //int oz = pos.getBlockZ();
 
         for (int x = -3; x <= 3; x++) {
             for (int y = -3; y <= 3; y++) {
