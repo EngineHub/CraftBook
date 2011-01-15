@@ -22,6 +22,7 @@ import com.sk89q.craftbook.access.Action;
 import com.sk89q.craftbook.access.BlockEntity;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.WorldInterface$;
+import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.TickDelayer;
 import com.sk89q.craftbook.util.Tuple2;
 
@@ -30,21 +31,36 @@ public class HmodWorldImpl extends WorldInterface$ {
     private CraftBook main;
     private TickDelayer delay = new TickDelayer(this);
     
+    private boolean fakeExisting = false;
+    private int fakeX = 0;
+    private int fakeY = 0;
+    private int fakeZ = 0;
+    private int fakeData = 0;
+    
     public HmodWorldImpl(CraftBook main) {
         this.main = main;
     }
     
     public boolean setId(int x, int y, int z, int t) {
-        return server.setBlockAt(t, x, y, z);
+        if(server.setBlockAt(t, x, y, z)) {
+            if(isFakedBlock(x,y,z)) fakeExisting = false;
+            
+            return true;
+        }
+        return false;
     }
     public int getId(int x, int y, int z) {
         return server.getBlockIdAt(x, y, z);
     }
 
     public boolean setData(int x, int y, int z, int t) {
+        if(isFakedBlock(x,y,z)) fakeExisting = false;
         return server.setBlockData(x, y, z, t);
     }
     public int getData(int x, int y, int z) {
+        if(isFakedBlock(x,y,z)) {
+            return fakeData;
+        }
         return server.getBlockData(x, y, z);
     }
 
@@ -58,6 +74,8 @@ public class HmodWorldImpl extends WorldInterface$ {
 
     public boolean setDataAndUpdate(int x, int y, int z, int t) {
         if(server.setBlockData(x, y, z, t)) {
+            if(isFakedBlock(x,y,z)) fakeExisting = false;
+            
             server.updateBlockPhysics(x,y,z,t);
             return true;
         }
@@ -80,7 +98,9 @@ public class HmodWorldImpl extends WorldInterface$ {
     public BlockEntity getBlockEntity(int x, int y, int z) {
         ComplexBlock b = server.getComplexBlock(x,y,z);
         if(b==null) return null;
-        else if(b instanceof Sign) return new HmodSignInterfaceImpl((Sign)b);
+        else if(b instanceof Sign) return new HmodSignInterfaceImpl(this,new BlockVector(x,y,z),(Sign)b);
+        else if(b instanceof Chest) return new HmodChestInterfaceImpl(this,new BlockVector(x,y,z),(Chest)b);
+        else if(b instanceof DoubleChest) return new HmodChestInterfaceImpl(this,new BlockVector(x,y,z),(DoubleChest)b);
         else return null;
     }
 
@@ -101,5 +121,20 @@ public class HmodWorldImpl extends WorldInterface$ {
     }
     public int hashCode() {
         return System.identityHashCode(this);
+    }
+    
+    protected void fakeData(int x, int y, int z, int d) {
+        fakeExisting = true;
+        fakeX = x;
+        fakeY = y;
+        fakeZ = z;
+        fakeData = d;
+    }
+    protected void destroyFake() {
+        fakeExisting = false;
+    }
+    
+    private boolean isFakedBlock(int x, int y, int z) {
+        return fakeExisting&&fakeX==x&&fakeY==y&&fakeZ==z;
     }
 }

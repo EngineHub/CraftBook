@@ -18,6 +18,9 @@
 */
 
 import com.sk89q.craftbook.access.SignInterface;
+import com.sk89q.craftbook.access.WorldInterface;
+import com.sk89q.craftbook.util.BlockVector;
+import com.sk89q.craftbook.util.Vector;
 
 /**
  * A version of SignText that gets its sign text from a hMod Sign object.
@@ -30,16 +33,21 @@ public class HmodSignInterfaceImpl extends SignInterface {
      */
     private Sign sign;
     
+    private final WorldInterface w;
+    private final BlockVector pos;
+    
     /**
      * Construct an instance. SignText will be constructed with the 4 lines
      * of text from the sign.
      * 
      * @param sign
      */
-    public HmodSignInterfaceImpl(Sign sign) {
+    public HmodSignInterfaceImpl(WorldInterface w, BlockVector pos, Sign sign) {
         super(sign.getText(0), sign.getText(1),
                 sign.getText(2), sign.getText(3));
         this.sign = sign;
+        this.pos = pos;
+        this.w = w;
     }
     
     public int getX() { return sign.getX(); }
@@ -57,5 +65,25 @@ public class HmodSignInterfaceImpl extends SignInterface {
             sign.setText(3, getLine4());
             sign.update();
         }
+    }
+
+    public boolean equals(Object other) {
+        if (other instanceof HmodSignInterfaceImpl) {
+            HmodSignInterfaceImpl sign = ((HmodSignInterfaceImpl)other);
+            return sign.pos.equals(pos)&&sign.w.equals(w);
+        } else {
+            return false;
+        }
+    }
+    public int hashCode() {
+        return pos.hashCode()*31+w.hashCode();
+    }
+
+    public Vector getPosition() {
+        return pos;
+    }
+    
+    public WorldInterface getWorld() {
+        return w;
     }
 }

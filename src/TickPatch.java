@@ -1,11 +1,11 @@
 /*    
-Drop-in onTick hpok for hMod
+Drop-in onTick hook for hMod
 Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
 
-This program is free software. It comes withput any warranty, to
+This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
 and/or modify it under the terms of the Do What The Fuck You Want
-To Public License, Version 2, as published by Sam hpcevar. See
+To Public License, Version 2, as published by Sam Hocevar. See
 http://sam.zoy.org/wtfpl/COPYING for more details.
 */
 
@@ -19,28 +19,28 @@ import net.minecraft.server.MinecraftServer;
  * <p>Allows plugins to define code to run every tick.</p>
  * 
  * <p>To use, define a Runnable object that will be run each tick, and call the
- *    following in the initialize methpd:</p>
+ *    following in the initialize method:</p>
  * 
  * <p>TickPatch.applyPatch();
  *    TickPatch.addTask(TickTask.wrapRunnable(this,onTick));</p>
  * 
- * @authpr Lymia
+ * @author Lymia
  */
-public class TickPatch extends hp {
+public class TickPatch extends im {
     @SuppressWarnings("unused")
-    private static final Object HP_PATCH_APPLIED = null;
+    private static final Object IM_PATCH_APPLIED = null;
     /**
      * Do not use directly.
      */
     @Deprecated
     public static final CopyOnWriteArrayList<Runnable> TASK_LIST = new CopyOnWriteArrayList<Runnable>();
     
-    private static Class<hp> CLASS = hp.class;
+    private static Class<im> CLASS = im.class;
     private static Field[] FIELDS = CLASS.getDeclaredFields();
     
-    private TickPatch(MinecraftServer arg0, hp g) {
+    private TickPatch(MinecraftServer arg0, im g) {
         super(arg0);
-        if(g.getClass()!=CLASS) throw new RuntimeException("unexpected type for hp instance");
+        if(g.getClass()!=CLASS) throw new RuntimeException("unexpected type for im instance");
         for(Field f:FIELDS) try {
             if(Modifier.isStatic(f.getModifiers())) continue;
             f.setAccessible(true);
@@ -71,7 +71,7 @@ public class TickPatch extends hp {
     public static void applyPatch() {
         MinecraftServer s = etc.getServer().getMCServer();
         try {
-            s.k.getClass().getDeclaredField("HP_PATCH_APPLIED");
+            s.k.getClass().getDeclaredField("IM_PATCH_APPLIED");
         } catch (SecurityException e) {
             throw new RuntimeException("unexpected error: cannot use reflection");
         } catch (NoSuchFieldException e) {

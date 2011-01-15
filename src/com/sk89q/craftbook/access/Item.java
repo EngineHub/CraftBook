@@ -18,24 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sk89q.craftbook.access;
 
-import java.util.List;
-
-import com.sk89q.craftbook.CraftBookDelegateListener;
-
-public interface ServerInterface {
-    boolean isCraftBookLoaded();
-    boolean isCraftBookEnabled();
+public final class Item {
+    public final int id, count;
+    public Item(int id, int count) {
+        this.id = id;
+        this.count = count;
+    }
     
-    boolean isPlayerOnline(String player);
-    PlayerInterface getPlayer(String player);
-    PlayerInterface matchPlayer(String player);
-    List<PlayerInterface> getPlayerList();
-    
-    void registerListener(Event e, CraftBookDelegateListener l);
-    
-    boolean hasWorld(String world);
-    WorldInterface getWorld(String world);
-    List<WorldInterface> getWorlds();
-    
-    Configuration getConfiguration();
+    public Item addItems(int count) {
+        return new Item(id,this.count+count);
+    }
+    public Item removeItems(int count) {
+        return new Item(id,this.count-count);
+    }
 }

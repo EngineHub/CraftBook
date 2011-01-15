@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 
 import com.sk89q.craftbook.CraftBookCore;
 import com.sk89q.craftbook.CraftBookDelegateListener;
-import com.sk89q.craftbook.access.Action;
 import com.sk89q.craftbook.access.Configuration;
 import com.sk89q.craftbook.access.Event;
 import com.sk89q.craftbook.access.PlayerInterface;
@@ -180,11 +179,5 @@ public class CraftBook extends Plugin implements ServerInterface {
 
     public Configuration getConfiguration() {
         return config;
-    }
-
-    @Override
-    public void delayAction(Action a) {
-        // TODO Auto-generated method stub
-        
     }
 }

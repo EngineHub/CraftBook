@@ -20,7 +20,7 @@
 package com.sk89q.craftbook.mech;
 
 import com.sk89q.craftbook.BlockType;
-import com.sk89q.craftbook.CraftBookCore;
+import com.sk89q.craftbook.Colors;
 import com.sk89q.craftbook.access.BlockEntity;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.SignInterface;
@@ -81,7 +81,7 @@ public class Elevator {
             // Need to traverse up to find the next sign to teleport to
             for (int y1 = y + 1; y1 <= 127; y1++) {
                 if (w.getId(x, y1, z) == BlockType.WALL_SIGN
-                        && checkLift(player, w, player, new Vector(x, y1, z), up)) {
+                        && checkLift(player, w, new Vector(x, y1, z), up)) {
                     return;
                 }
             }
@@ -89,7 +89,7 @@ public class Elevator {
             // Need to traverse downwards to find a sign below
             for (int y1 = y - 1; y1 >= 1; y1--) {
                 if (w.getId(x, y1, z) == BlockType.WALL_SIGN
-                        && checkLift(player, w, player, new Vector(x, y1, z), up)) {
+                        && checkLift(player, w, new Vector(x, y1, z), up)) {
                     return;
                 }
             }
@@ -147,21 +147,21 @@ public class Elevator {
         if (sign != null) {
             // We are going to be teleporting to the same place as the player
             // is currently, except with a shifted Y
-            int plyX = (int)Math.floor(player.getX());
+            int plyX = (int)Math.floor(player.getPosition().getX());
             //int plyY = (int)Math.floor(player.getY());
-            int plyZ = (int)Math.floor(player.getZ());
+            int plyZ = (int)Math.floor(player.getPosition().getZ());
 
             int y2;
             
             int foundFree = 0;
             boolean foundGround = false;
             
-            int startingY = BlockType.canPassThrough(CraftBookCore.getBlockID(plyX, y1 + 1, plyZ))
+            int startingY = BlockType.canPassThrough(w.getId(plyX, y1 + 1, plyZ))
                 ? y1 + 1 : y1;
 
             // Step downwards until we find a spot to stand
             for (y2 = startingY; y2 >= y1 - 5; y2--) {
-                int id = CraftBookCore.getBlockID(plyX, y2, plyZ);
+                int id = w.getId(plyX, y2, plyZ);
 
                 // We have to find a block that the player won't fall through
                 if (!BlockType.canPassThrough(id)) {
@@ -173,29 +173,29 @@ public class Elevator {
             }
             
             if (foundFree < 2) {
-                player.sendMessage(Colors.Gold + "Uh oh! You would be obstructed!");
+                player.sendMessage(Colors.GOLD + "Uh oh! You would be obstructed!");
                 return false;
             }
             
             if (!foundGround) {
-                player.sendMessage(Colors.Gold + "Uh oh! You would have nothing to stand on!");
+                player.sendMessage(Colors.GOLD + "Uh oh! You would have nothing to stand on!");
                 return false;
             }
 
             // Teleport!
-            player.teleportTo(player.getX(), y2 + 1, player.getZ(),
-                    player.getRotation(), player.getPitch());
+            player.setPosition(new Vector(player.getPosition().getX(), y2 + 1, player.getPosition().getZ()),
+                    (float)player.getYaw(), (float)player.getPitch());
 
 
             // Now, we want to read the sign so we can tell the player
             // his or her floor, but as that may not be avilable, we can
             // just print a generic message
-            String title = sign.getText(0);
+            String title = sign.getLine1();
 
             if (title.length() != 0) {
-                player.sendMessage(Colors.Gold + "Floor: " + title);
+                player.sendMessage(Colors.GOLD + "Floor: " + title);
             } else {
-                player.sendMessage(Colors.Gold + "You went "
+                player.sendMessage(Colors.GOLD + "You went "
                         + (up ? "up" : "down") + " a floor.");
             }
 

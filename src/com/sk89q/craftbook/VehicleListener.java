@@ -441,10 +441,10 @@ public class VehicleListener extends CraftBookDelegateListener {
                             
                             if (bag.getChestBlockCount() > 0) {
                                 if (getControllerSign(pt.add(0, -1, 0), "[Deposit]") != null) {
-                                    ItemArrayUtil.moveChestBagToItemArray(
+                                    InventoryUtil.moveChestBagToItemArray(
                                             minecart.getStorage(), bag);
                                 } else {
-                                    ItemArrayUtil.moveItemArrayToChestBag(
+                                    InventoryUtil.moveItemArrayToChestBag(
                                             minecart.getStorage(), bag);
                                 }
                             }
@@ -660,7 +660,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         }
                     } else if (type == Minecart.Type.StorageCart) {
                         try {
-                            ItemArrayUtil.moveItemArrayToChestBag(
+                            InventoryUtil.moveItemArrayToChestBag(
                                     minecart.getStorage(), blockBag);
 
                             if (collectType.equalsIgnoreCase("Storage")) {

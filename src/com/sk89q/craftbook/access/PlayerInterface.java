@@ -25,7 +25,7 @@ import com.sk89q.craftbook.util.Vector;
  *
  * @author sk89q
  */
-public abstract class PlayerInterface {
+public abstract class PlayerInterface implements PointBasedEntity {
     /**
      * Move the player.
      *

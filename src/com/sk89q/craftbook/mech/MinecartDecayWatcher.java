@@ -1,3 +1,4 @@
+package com.sk89q.craftbook.mech;
 // $Id$
 /*
  * CraftBook
@@ -16,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+import BaseEntity;
+import Minecart;
+import etc;
 
 import java.util.Timer;
 import java.util.TimerTask;

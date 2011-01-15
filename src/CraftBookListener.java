@@ -103,12 +103,6 @@ public class CraftBookListener extends PluginListener {
         } catch (IOException e) {
             logger.warning("Failed to load craftbook.properties: " + e.getMessage());
         }
-        
-        // Load the configuration for delegates -- assuming that none will
-        // throw any exceptions
-        for (CraftBookDelegateListener listener : delegates) {
-            listener.loadConfiguration();
-        }
     }
         
     /**

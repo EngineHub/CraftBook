@@ -23,8 +23,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.sk89q.craftbook.BlockType;
-import com.sk89q.craftbook.CraftBookCore;
+import com.sk89q.craftbook.access.BlockEntity;
+import com.sk89q.craftbook.access.ChestInterface;
+import com.sk89q.craftbook.access.Item;
+import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.DistanceComparator;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.Vector;
 
 /**
@@ -35,7 +39,7 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * List of chests.
      */
-    private Set<ComparableInventory> chests;
+    private Set<ChestInterface> chests;
 
     /**
      * Construct the object.
@@ -43,9 +47,9 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param origin
      */
     public NearbyChestBlockBag(Vector origin) {
-        DistanceComparator<ComparableInventory> comparator =
-                new DistanceComparator<ComparableInventory>(origin);
-        chests = new TreeSet<ComparableInventory>(comparator);
+        DistanceComparator<ChestInterface> comparator =
+                new DistanceComparator<ChestInterface>(origin);
+        chests = new TreeSet<ChestInterface>(comparator);
     }
 
     /**
@@ -58,25 +62,24 @@ public class NearbyChestBlockBag extends BlockBag {
      */
     public void fetchBlock(int id) throws BlockBagException {
         try {
-            for (ComparableInventory c : chests) {
-                Inventory chest = c.getInventory();
-                Item[] itemArray = chest.getContents();
+            for (ChestInterface chest : chests) {
+                Item[] itemArray = chest.getItems();
                 
                 // Find the item
                 for (int i = 0; itemArray.length > i; i++) {
                     if (itemArray[i] != null) {
                         // Found an item
-                        if (itemArray[i].getItemId() == id &&
-                            itemArray[i].getAmount() >= 1) {
-                            int newAmount = itemArray[i].getAmount() - 1;
+                        if (itemArray[i].id == id &&
+                            itemArray[i].count >= 1) {
+                            int newAmount = itemArray[i].count - 1;
     
                             if (newAmount > 0) {
-                                itemArray[i].setAmount(newAmount);
+                                itemArray[i] = new Item(itemArray[i].id,newAmount);
                             } else {
                                 itemArray[i] = null;
                             }
                             
-                            ItemArrayUtil.setContents((ItemArray<?>)chest, itemArray);
+                            InventoryUtil.setContents(chest, itemArray);
     
                             return;
                         }
@@ -100,24 +103,21 @@ public class NearbyChestBlockBag extends BlockBag {
      */
     public void storeBlock(int id) throws BlockBagException {
         try {
-            for (ComparableInventory c : chests) {
-                Inventory chest = c.getInventory();
-                Item[] itemArray = chest.getContents();
+            for (ChestInterface chest : chests) {
+                Item[] itemArray = chest.getItems();
                 int emptySlot = -1;
     
                 // Find an existing slot to put it into
                 for (int i = 0; itemArray.length > i; i++) {
-                    if (itemArray[i] != null) {
-                        // Found an item
-                        if (itemArray[i].getItemId() == id &&
-                            itemArray[i].getAmount() < 64) {
-                            int newAmount = itemArray[i].getAmount() + 1;
-                            itemArray[i].setAmount(newAmount);
-                            
-                            ItemArrayUtil.setContents((ItemArray<?>)chest, itemArray);
-    
-                            return;
-                        }
+                    // Found an item
+                    if (itemArray[i].id == id &&
+                        itemArray[i].count < 64) {
+                        int newAmount = itemArray[i].count + 1;
+                        itemArray[i] = new Item(itemArray[i].id,newAmount);
+                        
+                        InventoryUtil.setContents(chest, itemArray);
+
+                        return;
                     } else {
                         emptySlot = i;
                     }
@@ -127,7 +127,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 if (emptySlot != -1) {
                     itemArray[emptySlot] = new Item(id, 1);
                     
-                    ItemArrayUtil.setContents((ItemArray<?>)chest, itemArray);
+                    InventoryUtil.setContents(chest, itemArray);
                     
                     return;
                 }
@@ -157,7 +157,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSourcePosition(Vector pos) {
+    public void addSourcePosition(WorldInterface w, Vector pos) {
         //int ox = pos.getBlockX();
         //int oy = pos.getBlockY();
         //int oz = pos.getBlockZ();
@@ -166,7 +166,7 @@ public class NearbyChestBlockBag extends BlockBag {
             for (int y = -3; y <= 3; y++) {
                 for (int z = -3; z <= 3; z++) {
                     Vector cur = pos.add(x, y, z);
-                    addSingleSourcePosition(cur);
+                    addSingleSourcePosition(w,cur);
                 }
             }
         }
@@ -178,25 +178,19 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSingleSourcePosition(Vector pos) {
+    public void addSingleSourcePosition(WorldInterface w, Vector pos) {
         int x = pos.getBlockX();
         int y = pos.getBlockY();
         int z = pos.getBlockZ();
         
-        if (CraftBookCore.getBlockID(pos) == BlockType.CHEST) {
-            ComplexBlock complexBlock =
-                    etc.getServer().getComplexBlock(x, y, z);
+        if (w.getId(pos) == BlockType.CHEST) {
+            BlockEntity complexBlock =
+                    w.getBlockEntity(x, y, z);
 
-            if (complexBlock instanceof Chest) {
-                Chest chest = (Chest)complexBlock;
-                chests.add(new ComparableInventory(pos.toBlockVector(), chest));
-            } else if (complexBlock instanceof DoubleChest) {
-                DoubleChest chest = (DoubleChest)complexBlock;
-                chests.add(new ComparableInventory(
-                        new Vector(chest.getX(), chest.getY(), chest.getZ()), chest));
-                // Double chests have two chest blocks, so creating a new Vector
-                // should theoretically prevent duplication (but it doesn't
-                // (yet...)
+            if (complexBlock instanceof ChestInterface) {
+                ChestInterface chest = (ChestInterface)complexBlock;
+                
+                if(!chests.contains(chest)) chests.add((ChestInterface)complexBlock);
             }
         }
     }
@@ -216,24 +210,16 @@ public class NearbyChestBlockBag extends BlockBag {
      * 
      * @return
      */
-    public Inventory[] getInventories() {
-        Inventory[] inventories = new Inventory[chests.size()];
-        
-        int i = 0;
-        for (ComparableInventory c : chests) {
-            inventories[i] = c.getInventory();
-            i++;
-        }
-        
-        return inventories;
+    public ChestInterface[] getInventories() {
+        return chests.toArray(new ChestInterface[0]);
     }
 
     /**
      * Flush changes.
      */
     public void flushChanges() {
-        for (ComparableInventory c : chests) {
-            c.getInventory().update();
+        for (ChestInterface c : chests) {
+            c.flushChanges();
         }
     }
     
@@ -243,7 +229,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @author sk89q
      */
     public static class Factory implements BlockBagFactory {
-        public BlockBag createBlockSource(Vector v) {
+        public BlockBag createBlockSource(WorldInterface world, Vector v) {
             return new NearbyChestBlockBag(v);
         }
     }
