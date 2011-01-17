@@ -22,15 +22,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class SignPatch extends go {
+public class SignPatch extends hi {
     public static final CopyOnWriteArrayList<ExtensionListener> LISTENERS = new CopyOnWriteArrayList<ExtensionListener>();
     
-    private static Class<go> CLASS = go.class;
+    private static Class<hi> CLASS = hi.class;
     private static Field[] FIELDS;
     
     private static int TYPE = Block.Type.WallSign.getType();
     
-    private gv old;
+    private hr old;
     
     static {
         ArrayList<Field> fields = new ArrayList<Field>();
@@ -41,8 +41,8 @@ public class SignPatch extends go {
         FIELDS = fields.toArray(new Field[0]);
     }
     
-    public SignPatch(gv old) {
-        super(nullId(), kp.class, false);
+    public SignPatch(hr old) {
+        super(nullId(), lw.class, false);
         
         this.old = old;
         
@@ -58,7 +58,7 @@ public class SignPatch extends go {
         }
     }
     private static int nullId() {
-        gv.m[TYPE] = null;
+    	hr.m[TYPE] = null;
         return TYPE;
     }
 
@@ -67,7 +67,7 @@ public class SignPatch extends go {
      * Should not be called.
      */
     @Deprecated
-    public void b(ff world, int x, int y, int z) {
+    public void b(fv world, int x, int y, int z) {
         ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
         for(int i=0;i<tasks.length;i++) tasks[i].onSignAdded(x,y,z);
         super.b(world,x,y,z);
@@ -78,13 +78,13 @@ public class SignPatch extends go {
      * Call before using addListener or getListenerList().
      */
     public static void applyPatch() {
-        new SignPatch(gv.m[TYPE]);
+        new SignPatch(hr.m[TYPE]);
     }
     /**
      * Removes the patch if it is applied.
      */
     public static void removePatch() {
-        if(gv.m[TYPE] instanceof SignPatch) gv.m[TYPE] = ((SignPatch)gv.m[TYPE]).old;
+        if(hr.m[TYPE] instanceof SignPatch) hr.m[TYPE] = ((SignPatch)hr.m[TYPE]).old;
     }
     
     /**

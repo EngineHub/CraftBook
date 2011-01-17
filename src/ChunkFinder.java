@@ -31,14 +31,14 @@ public class ChunkFinder {
     private ChunkFinder() {}
     
     @SuppressWarnings("unchecked")
-    public static Tuple2<Integer,Integer>[] getLoadedChunks(ff world) {
+    public static Tuple2<Integer,Integer>[] getLoadedChunks(fv world) {
         List<Tuple2<Integer,Integer>> chunkList = new ArrayList<Tuple2<Integer,Integer>>();
-        List<kx> list = (List<kx>)get(get(world,"G"),"f");
-        for(kx chunk:list.toArray(new kx[0])) if(chunk!=null) chunkList.add(getChunkCoords(chunk));
+        List<me> list = (List<me>)get(get(world,"G"),"f");
+        for(me chunk:list.toArray(new me[0])) if(chunk!=null) chunkList.add(getChunkCoords(chunk));
         return chunkList.toArray((Tuple2<Integer, Integer>[]) new Tuple2<?,?>[0]);
     }
     
-    private static Tuple2<Integer,Integer> getChunkCoords(kx chunk) {
+    private static Tuple2<Integer,Integer> getChunkCoords(me chunk) {
         return new Tuple2<Integer,Integer>(chunk.j,chunk.k);
     }
     

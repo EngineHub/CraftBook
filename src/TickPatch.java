@@ -26,7 +26,7 @@ import net.minecraft.server.MinecraftServer;
  * 
  * @authpr Lymia
  */
-public class TickPatch extends hp {
+public class TickPatch extends im {
     @SuppressWarnings("unused")
     private static final Object HP_PATCH_APPLIED = null;
     /**
@@ -35,12 +35,12 @@ public class TickPatch extends hp {
     @Deprecated
     public static final CopyOnWriteArrayList<Runnable> TASK_LIST = new CopyOnWriteArrayList<Runnable>();
     
-    private static Class<hp> CLASS = hp.class;
+    private static Class<im> CLASS = im.class;
     private static Field[] FIELDS = CLASS.getDeclaredFields();
     
-    private TickPatch(MinecraftServer arg0, hp g) {
+    private TickPatch(MinecraftServer arg0, im g) {
         super(arg0);
-        if(g.getClass()!=CLASS) throw new RuntimeException("unexpected type for hp instance");
+        if(g.getClass()!=CLASS) throw new RuntimeException("unexpected type for im instance");
         for(Field f:FIELDS) try {
             if(Modifier.isStatic(f.getModifiers())) continue;
             f.setAccessible(true);

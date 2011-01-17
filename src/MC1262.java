@@ -99,7 +99,7 @@ public class MC1262 extends BaseIC {
             return;
         }
         
-        int light = etc.getMCServer().e.i(x, y + 1, z);
+        int light = etc.getMCServer().e.j(x, y + 1, z);
         
         chip.getOut(1).set(light >= minLight);
     }
