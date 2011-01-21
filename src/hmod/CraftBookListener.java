@@ -272,8 +272,39 @@ public class CraftBookListener extends PluginListener
      */
     public void handleDirectWireInput(Vector pt, boolean isOn, Vector changed) {
         // Call the direct wire input hook of delegates
-        for (CraftBookDelegateListener listener : main.wireInputListeners) {
+        for (CraftBookDelegateListener listener : main.wireInputListeners) 
             listener.onWireInput(w, pt, isOn, changed);
-        }
+    }
+    
+    public void onDisconnect(Player p) {
+        PlayerInterface player = new HmodPlayerImpl(p, main);
+        for (CraftBookDelegateListener listener : main.disconnectListeners) 
+            listener.onDisconnect(player);
+    }
+    
+    public boolean onBlockPlace(Player p, Block pp, Block cp, Item itemInHand) {
+        PlayerInterface player = new HmodPlayerImpl(p, main);
+        BlockVector pv = new BlockVector(pp.getX(),pp.getY(),pp.getZ());
+        BlockVector cv = new BlockVector(cp.getX(),cp.getY(),cp.getZ());
+        for (CraftBookDelegateListener listener : main.blockPlaceListeners) 
+            if(listener.onBlockPlace(w,player,pv,cv,itemInHand.getItemId()))
+                return true;
+        return false;
+    }
+    
+    public void onBlockRightClicked(Player p, Block cp, Item itemInHand) {
+        PlayerInterface player = new HmodPlayerImpl(p, main);
+        BlockVector cv = new BlockVector(cp.getX(),cp.getY(),cp.getZ());
+        for (CraftBookDelegateListener listener : main.blockRightClickListeners) 
+            listener.onBlockRightClicked(w,player,cv,itemInHand.getItemId());
+    }
+    
+    public boolean onBlockDestroy(Player p, Block dp) {
+        PlayerInterface player = new HmodPlayerImpl(p, main);
+        BlockVector dv = new BlockVector(dp.getX(),dp.getY(),dp.getZ());
+        for (CraftBookDelegateListener listener : main.blockDestroyedListeners) 
+            if(listener.onBlockDestroy(player, dv))
+                return true;
+        return false;
     }
 }
