@@ -16,10 +16,8 @@ Chat with us! Fellow users and developers can be found hanging
 at #craftbook on irc.esper.net.
 
 
-Installation
-------------
-
-This plugin requires Hey0's server modification.
+Installation for hMod
+---------------------
 
   1. Create a "plugins" folder inside your "bin" folder.
 
