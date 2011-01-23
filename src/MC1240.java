@@ -134,7 +134,7 @@ public class MC1240 extends BaseIC {
         Vector backDir = chip.getBlockPosition().subtract(
                 chip.getPosition());
         Vector firePos = chip.getBlockPosition().add(backDir);
-        by arrow = new by(etc.getMCServer().e);
+        fc arrow = new fc(etc.getMCServer().e);
         arrow.c(firePos.getBlockX() + 0.5, firePos.getBlockY() + 0.5,
                 firePos.getBlockZ() + 0.5, 0, 0);
         etc.getMCServer().e.a(arrow);

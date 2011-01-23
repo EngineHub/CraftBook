@@ -87,7 +87,7 @@ public class MC1250 extends BaseIC {
                 return;
             }
             
-            by arrow = shoot(x + 0.5, y + 1.5, z + 0.5);
+            fc arrow = shoot(x + 0.5, y + 1.5, z + 0.5);
 
             Firework instance = new Firework(arrow);
             (new Thread(instance)).start();
@@ -105,7 +105,7 @@ public class MC1250 extends BaseIC {
         /**
          * Arrow.
          */
-        private by arrow;
+        private fc arrow;
         /**
          * Expiration time.
          */
@@ -116,7 +116,7 @@ public class MC1250 extends BaseIC {
          * 
          * @param arrow
          */
-        public Firework(by arrow) {
+        public Firework(fc arrow) {
             expireTime = System.currentTimeMillis() + 5000;
             this.arrow = arrow;
             lastY = arrow.q;
@@ -170,8 +170,8 @@ public class MC1250 extends BaseIC {
      * @param spread
      * @param vertVel
      */
-    protected by shoot(double x, double y, double z) {
-        by arrow = new by(etc.getMCServer().e);
+    protected fc shoot(double x, double y, double z) {
+        fc arrow = new fc(etc.getMCServer().e);
         arrow.c(x, y, z, 0, 0);
         etc.getMCServer().e.a(arrow);
         arrow.a(0, 50, 0, 1.05F, 20);

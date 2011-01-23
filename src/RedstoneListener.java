@@ -208,6 +208,11 @@ public class RedstoneListener extends CraftBookDelegateListener
         
         internalRegisterPLC("MC5032", "perlstone32_v1", ICType.VIVO);
         internalRegisterPLC("MC5033", "perlstone32_v1", ICType._3I3O);
+        
+        internalRegisterIC("MCX242", new MCX242(), ICType.SISO);
+        internalRegisterIC("MCX243", new MCX243(), ICType.SISO);
+        internalRegisterIC("MCX244", new MCX244(), ICType.SISO);
+        internalRegisterIC("MCX245", new MCX245(), ICType.SISO);
     }
 
     /**
