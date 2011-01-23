@@ -1,8 +1,8 @@
-package com.sk89q.craftbook.exception;
 // $Id$
 /*
  * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * Copyright (C) 2010 Shaun (sturmeh)
+ * Copyright (C) 2010 sk89q
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,12 @@ package com.sk89q.craftbook.exception;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- *
- * @author sk89q
- */
-public class LocalWorldEditBridgeException extends Exception {
-    private static final long serialVersionUID = 1272046053798611177L;
+package com.sk89q.craftbook.mech.ic;
 
-    public LocalWorldEditBridgeException(Throwable t) {
-        super(t);
+public abstract class LogicIC extends BaseIC {
+    public final void think(ChipState state) {
+        LogicChipState s = new LogicChipState(state.getInputs(),state.getOutputs(),state.getText(),state.getBlockPosition());
+        think(s);
     }
+    public abstract void think(LogicChipState state);
 }

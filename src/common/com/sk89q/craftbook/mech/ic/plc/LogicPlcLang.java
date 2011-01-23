@@ -20,13 +20,19 @@ package com.sk89q.craftbook.mech.ic.plc;
 
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.mech.ic.ChipState;
-import com.sk89q.craftbook.state.StateHolder;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
-public interface PlcLang extends StateHolder {
-    String getName();
-    boolean[] tick(ChipState chip, String program) throws PlcException;
-    void checkSyntax(String program) throws PlcException;
-    String validateEnvironment(WorldInterface w, Vector v, SignText t, String code);
+public abstract class LogicPlcLang implements PlcLang {
+    public final boolean[] tick(ChipState state, String program) throws PlcException {
+        LogicChipState s = new LogicChipState(state.getInputs(),state.getOutputs(),state.getText(),state.getBlockPosition());
+        return tick(state.getWorld().getUniqueIdString(),s,program);
+    }
+    public abstract boolean[] tick(String id, LogicChipState chip, String program) throws PlcException;
+
+    public final String validateEnvironment(WorldInterface w, Vector v, SignText t, String code) {
+        return validateEnvironment(w.getUniqueIdString(),v,t,code);
+    }
+    public abstract String validateEnvironment(String id, Vector v, SignText t, String code);
 }

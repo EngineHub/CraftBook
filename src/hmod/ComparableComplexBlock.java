@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.sk89q.craftbook.access.PointBasedEntity;
 import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.Vector;
 
@@ -26,8 +25,7 @@ import com.sk89q.craftbook.util.Vector;
  *
  * @author sk89q
  */
-public class ComparableComplexBlock<T extends ComplexBlock>
-    implements PointBasedEntity {
+public class ComparableComplexBlock<T extends ComplexBlock> {
     /**
      * Chest location.
      */

@@ -17,35 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mech.ic.logic;
-
-import java.util.Map;
+package com.sk89q.craftbook.mech.ic.world;
 
 import com.sk89q.craftbook.mech.ic.BaseIC;
 import com.sk89q.craftbook.mech.ic.ChipState;
-import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 /**
- * Wireless transmitter.
+ * Positive edge-triggered wireless receiver.
  *
  * @author sk89q
  */
-public class MC1110 extends BaseIC {
-    /**
-     * Data store.
-     */
-    public static Map<String,Boolean> airwaves =
-            new HistoryHashMap<String,Boolean>(100);
-
+public class MC1111 extends BaseIC {
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
-        return "TRANSMITTER";
+        return "RECEIVER";
     }
 
     /**
@@ -73,10 +64,13 @@ public class MC1110 extends BaseIC {
      */
     public void think(ChipState chip) {
         String id = chip.getText().getLine3();
-
         if (!id.isEmpty()) {
-            airwaves.put(id, chip.getIn(1).is());
-            chip.getOut(1).set(chip.getIn(1).is());
+            Boolean out = chip.getCore().getTransmissions().get(id);
+            if (out == null) {
+                chip.getOut(1).set(false);
+            } else {
+                chip.getOut(1).set(out);
+            }
         } else {
             chip.getOut(1).set(false);
         }

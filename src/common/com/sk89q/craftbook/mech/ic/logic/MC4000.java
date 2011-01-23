@@ -19,20 +19,20 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * Full adder.
  * 
  * @author Lymia
  */
-public class MC4000 extends BaseIC {
+public class MC4000 extends LogicIC {
     public String getTitle() {
         return "FULL ADDER";
     }
 
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         boolean A = chip.getIn(1).is();
         boolean B = chip.getIn(2).is();
         boolean C = chip.getIn(3).is();

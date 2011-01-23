@@ -17,15 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.access.Action;
+import com.sk89q.craftbook.access.ArrowInterface;
 import com.sk89q.craftbook.access.BlockEntity;
+import com.sk89q.craftbook.access.MobInterface;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.WorldInterface$;
 import com.sk89q.craftbook.util.BlockVector;
-import com.sk89q.craftbook.util.TickDelayer;
 import com.sk89q.craftbook.util.Tuple2;
 
 public class HmodWorldImpl extends WorldInterface$ {
@@ -71,7 +73,7 @@ public class HmodWorldImpl extends WorldInterface$ {
         return server.getBlockData(x, y, z);
     }
 
-    public void dropItem(float x, float y, float z, int type, int count) {
+    public void dropItem(double x, double y, double z, int type, int count) {
         server.dropItem(x, y, z, type, count);
     }
     
@@ -105,9 +107,9 @@ public class HmodWorldImpl extends WorldInterface$ {
     public BlockEntity getBlockEntity(int x, int y, int z) {
         ComplexBlock b = server.getComplexBlock(x,y,z);
         if(b==null) return null;
-        else if(b instanceof Sign) return new HmodSignInterfaceImpl(this,new BlockVector(x,y,z),(Sign)b);
-        else if(b instanceof Chest) return new HmodChestInterfaceImpl(this,new BlockVector(x,y,z),(Chest)b);
-        else if(b instanceof DoubleChest) return new HmodChestInterfaceImpl(this,new BlockVector(x,y,z),(DoubleChest)b);
+        else if(b instanceof Sign) return new HmodSignImpl(this,new BlockVector(x,y,z),(Sign)b);
+        else if(b instanceof Chest) return new HmodChestImpl(this,new BlockVector(x,y,z),(Chest)b);
+        else if(b instanceof DoubleChest) return new HmodChestImpl(this,new BlockVector(x,y,z),(DoubleChest)b);
         else return null;
     }
 
@@ -165,5 +167,57 @@ public class HmodWorldImpl extends WorldInterface$ {
     
     public File getToggleAreaPath() {
         return main.pathToToggleAreas;
+    }
+
+    public void explode(double x, double y, double z) {
+        dh tnt = new dh(etc.getMCServer().e);
+        tnt.a(x, y, z);
+        tnt.b_();
+    }
+    
+    public ArrowInterface shootArrow(double x, double y, double z, 
+                                     double xComponent, double yComponent, double zComponent, 
+                                     double speed, double spread) {
+        fc arrow = new fc(etc.getMCServer().e);
+        arrow.c(x, y, z, 0, 0);
+        etc.getMCServer().e.a(arrow);
+        arrow.a(xComponent, yComponent, zComponent, (float)speed, (float)spread);
+        return new HmodArrowImpl(arrow,this);
+    }
+
+    public void enqueAction(Runnable r) {
+        server.addToServerQueue(r);
+    }
+
+    public List<MobInterface> getMobList() {
+        List<Mob> list = server.getMobList();
+        List<MobInterface> list2 = new ArrayList<MobInterface>();
+        
+        for(Mob p:list) list2.add(new HmodMobImpl(p,this));
+        
+        return list2;
+    }
+
+    public MobInterface spawnMob(double x, double y, double z, String type) {
+        Mob m = new Mob(type);
+        m.setX(x);
+        m.setY(y);
+        m.setZ(z);
+        m.spawn();
+        return new HmodMobImpl(m,this);
+    }
+
+    @Override
+    public MobInterface spawnMob(double x, double y, double z, String type, String rider) {
+        Mob m = new Mob(type);
+        m.setX(x);
+        m.setY(y);
+        m.setZ(z);
+        Mob r = new Mob(rider);
+        r.setX(x);
+        r.setY(y);
+        r.setZ(z);
+        m.spawn(r);
+        return new HmodMobImpl(m,this);
     }
 }

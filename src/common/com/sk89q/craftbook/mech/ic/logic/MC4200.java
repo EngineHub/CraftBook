@@ -19,20 +19,20 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * Dispatcher
  * 
  * @author Lymia
  */
-public class MC4200 extends BaseIC {
+public class MC4200 extends LogicIC {
     public String getTitle() {
         return "DISPATCHER";
     }
 
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         boolean value = chip.getIn(1).is();
         boolean targetB = chip.getIn(2).is();
         boolean targetC = chip.getIn(3).is();

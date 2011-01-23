@@ -22,7 +22,6 @@ package com.sk89q.craftbook.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.sk89q.craftbook.InsufficientArgumentsException;
 import com.sk89q.craftbook.access.Configuration;
@@ -33,11 +32,6 @@ import com.sk89q.craftbook.access.Configuration;
  * @author sk89q
  */
 public class CraftBookUtil {
-    /**
-     * Logger.
-     */
-    private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    
     /**
      * Trim a string if it is longer than a certain length.
      *  
@@ -139,7 +133,7 @@ public class CraftBookUtil {
                 if (id != 0) {
                     result.add(id);
                 } else {
-                    logger.log(Level.WARNING, "CraftBook: Unknown block name: "
+                    c.getLogger().log(Level.WARNING, "CraftBook: Unknown block name: "
                             + item);
                 }
             }

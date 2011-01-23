@@ -19,15 +19,15 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * Three input AND gate.
  *
  * @author sk89q
  */
-public class MC3002 extends BaseIC {
+public class MC3002 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -42,7 +42,7 @@ public class MC3002 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         chip.getOut(1).set(chip.getIn(1).is() && chip.getIn(2).is()
                 && chip.getIn(3).is());
     }

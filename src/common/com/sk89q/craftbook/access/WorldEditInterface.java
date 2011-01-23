@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sk89q.craftbook.access;
 
-import com.sk89q.craftbook.exception.LocalWorldEditBridgeException;
 import com.sk89q.craftbook.util.Vector;
 
 public interface WorldEditInterface {

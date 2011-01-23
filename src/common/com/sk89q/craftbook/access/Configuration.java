@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.access;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Stores the configuration for Craftbook.
@@ -44,4 +45,8 @@ public interface Configuration {
     
     String getItemName(int id);
     int getItemId(String name);
+    
+    Logger getLogger();
+    
+    boolean isValidMob(String mobName);
 }

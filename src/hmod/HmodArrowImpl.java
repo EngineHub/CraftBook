@@ -1,5 +1,5 @@
 /*    
-Craftbook
+Craftbook 
 Copyright (C) 2010 Lymia <lymiahugs@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.mech.ic.plc;
-
+import com.sk89q.craftbook.access.ArrowInterface;
 import com.sk89q.craftbook.access.WorldInterface;
-import com.sk89q.craftbook.mech.ic.ChipState;
-import com.sk89q.craftbook.state.StateHolder;
-import com.sk89q.craftbook.util.SignText;
-import com.sk89q.craftbook.util.Vector;
 
-public interface PlcLang extends StateHolder {
-    String getName();
-    boolean[] tick(ChipState chip, String program) throws PlcException;
-    void checkSyntax(String program) throws PlcException;
-    String validateEnvironment(WorldInterface w, Vector v, SignText t, String code);
+public class HmodArrowImpl extends HmodBaseEntityImpl
+                        implements ArrowInterface {
+    private fc arrow;
+    
+    public HmodArrowImpl(fc arrow, WorldInterface w) {
+        super(new BaseEntity(arrow),w);
+    }
+
+    public double getXSpeed() {
+        return arrow.s;
+    }
+    public double getYSpeed() {
+        return arrow.t;
+    }
+    public double getZSpeed() {
+        return arrow.u;
+    }
+
+    public void setXSpeed(double s) {
+        arrow.s = s;
+    }
+    public void setYSpeed(double s) {
+        arrow.t = s;
+    }
+    public void setZSpeed(double s) {
+        arrow.u = s;
+    }
 }

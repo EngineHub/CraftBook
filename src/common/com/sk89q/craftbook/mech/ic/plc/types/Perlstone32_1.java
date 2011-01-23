@@ -25,11 +25,10 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.logging.Level;
 
 import com.sk89q.craftbook.access.WorldInterface;
-import com.sk89q.craftbook.mech.ic.ChipState;
-import com.sk89q.craftbook.mech.ic.plc.PlcLang;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.plc.LogicPlcLang;
 import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -39,7 +38,7 @@ import com.sk89q.craftbook.util.Vector;
  * 
  * @author olegbl
  */
-public final class Perlstone32_1 implements PlcLang {
+public final class Perlstone32_1 extends LogicPlcLang {
     /**
      * Debugging switch (verbose mode).
      */
@@ -62,22 +61,20 @@ public final class Perlstone32_1 implements PlcLang {
         return "PS32 1.1.3";
     }
 
-    private static int getPersistentStorageType(ChipState chip) {
+    private static int getPersistentStorageType(LogicChipState chip) {
         String type = chip.getText().getLine4().replace(" ", "");
         if (type.equalsIgnoreCase("private")) return 1; // Private
         else if (type.equals("")) return 2; // None
         return 0; // Public
     }
 
-    public final boolean[] tick(ChipState chip, String program) throws PerlstoneException {
+    public final boolean[] tick(String worldName, LogicChipState chip, String program) throws PerlstoneException {
         // checkSyntax(program); // Already done when placing sign.
         // (validateEnvironment)
 
         String[] staticFunctions = getStaticFunctions(program);
 
         int persistentStorageType = getPersistentStorageType(chip);
-
-        String worldName = chip.getWorld().getUniqueIdString();
 
         if (!privatePersistentStorage.containsKey(worldName)) 
             privatePersistentStorage.put(worldName, new HashMap<BlockVector, int[]>());
@@ -115,7 +112,7 @@ public final class Perlstone32_1 implements PlcLang {
         return output;
     }
 
-    private final int callFunction(String function, int[] args, ChipState chip, int[] pvt, int[] tvt, String[] staticf, int[] numOpcodes) throws PerlstoneException {
+    private final int callFunction(String function, int[] args, LogicChipState chip, int[] pvt, int[] tvt, String[] staticf, int[] numOpcodes) throws PerlstoneException {
         boolean previousOpcode = false;
 
         try {
@@ -125,7 +122,7 @@ public final class Perlstone32_1 implements PlcLang {
 
             if (debug) {
                 System.out.println(" - Jump Table: " + Arrays.toString(jumpTable));
-                logger.log(Level.INFO, "[CraftBook] Perlstone32 - Jump Table: " + Arrays.toString(jumpTable));
+//                logger.log(Level.INFO, "[CraftBook] Perlstone32 - Jump Table: " + Arrays.toString(jumpTable));
             }
 
             for (int b : args)
@@ -146,10 +143,10 @@ public final class Perlstone32_1 implements PlcLang {
                         System.out.println(" - TVT: " + Arrays.toString(tvt));
                         System.out.println(" - LVT: " + Arrays.toString(lvt));
                         System.out.println(" - Stack: " + stack);
-                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - PVT: " + Arrays.toString(pvt));
-                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - TVT: " + Arrays.toString(tvt));
-                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - LVT: " + Arrays.toString(lvt));
-                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - Stack: " + stack);
+//                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - PVT: " + Arrays.toString(pvt));
+//                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - TVT: " + Arrays.toString(tvt));
+//                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - LVT: " + Arrays.toString(lvt));
+//                        logger.log(Level.INFO, "[CraftBook] Perlstone32 - Stack: " + stack);
                     }
                     System.out.println("Opcode " + numOpcodes[0] + ": token # " + i + ": " + token + " in " + new String(function));
                     previousOpcode = true;
@@ -293,7 +290,7 @@ public final class Perlstone32_1 implements PlcLang {
                 else {
                     if (debug) {
                         System.out.println(i + " " + token + " " + new String(function));
-                        logger.log(Level.INFO, "[CraftBook] Perlstone32 " + i + " " + token + " " + new String(function));
+//                        logger.log(Level.INFO, "[CraftBook] Perlstone32 " + i + " " + token + " " + new String(function));
                     }
                     throw new PerlstoneException(errorLocation + ": Unknown opcode.");
                 }
@@ -306,8 +303,10 @@ public final class Perlstone32_1 implements PlcLang {
         }
     }
 
-    public final String validateEnvironment(WorldInterface w, Vector v, SignText t, String code) {
-        privatePersistentStorage.remove(v.toBlockVector());
+    public final String validateEnvironment(String w, Vector v, SignText t, String code) {
+        if(privatePersistentStorage.containsKey(w))
+            privatePersistentStorage.get(w).remove(v.toBlockVector());
+        
         try {
             checkSyntax(code);
         } catch (PerlstoneException e) {

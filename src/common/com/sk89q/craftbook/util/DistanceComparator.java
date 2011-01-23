@@ -19,7 +19,7 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.access.PointBasedEntity;
+import com.sk89q.craftbook.access.BlockEntity;
 
 import java.util.Comparator;
 
@@ -28,8 +28,8 @@ import java.util.Comparator;
  *
  * @author sk89q
  */
-public class DistanceComparator<T extends PointBasedEntity>
-    implements Comparator<PointBasedEntity> {
+public class DistanceComparator<T extends BlockEntity>
+    implements Comparator<BlockEntity> {
     /**
      * Origin to compare from.
      */
@@ -51,9 +51,9 @@ public class DistanceComparator<T extends PointBasedEntity>
      * @param o2
      * @return
      */
-    public int compare(PointBasedEntity o1, PointBasedEntity o2) {
-        PointBasedEntity b1 = (PointBasedEntity)o1;
-        PointBasedEntity b2 = (PointBasedEntity)o2;
+    public int compare(BlockEntity o1, BlockEntity o2) {
+        BlockEntity b1 = (BlockEntity)o1;
+        BlockEntity b2 = (BlockEntity)o2;
 
         double dist1 = b1.getPosition().distance(origin);
         double dist2 = b2.getPosition().distance(origin);

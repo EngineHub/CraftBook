@@ -70,9 +70,9 @@ public class CraftBookListener extends PluginListener
     }
     
     public boolean onSignChange(Player p, Sign sp) {
-        PlayerInterface player = new HmodPlayerImpl(p, main);
+        PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector signPosition = new BlockVector(sp.getX(),sp.getY(),sp.getZ());
-        SignInterface s = new HmodSignInterfaceImpl(w, signPosition, sp);
+        SignInterface s = new HmodSignImpl(w, signPosition, sp);
         for(CraftBookDelegateListener l:main.signChangeListeners) 
             if(l.onSignChange(player,w,signPosition,s)) return true;
         return false;
@@ -113,7 +113,7 @@ public class CraftBookListener extends PluginListener
                 return !split[1].equals("*");
             }
 
-            PlayerInterface myPlayer = new HmodPlayerImpl(player, main);
+            PlayerInterface myPlayer = new HmodPlayerImpl(player, w);
             
             for (CraftBookDelegateListener listener : main.commandListeners)
                 if (listener.onCommand(myPlayer, split)) return true;
@@ -277,13 +277,13 @@ public class CraftBookListener extends PluginListener
     }
     
     public void onDisconnect(Player p) {
-        PlayerInterface player = new HmodPlayerImpl(p, main);
+        PlayerInterface player = new HmodPlayerImpl(p, w);
         for (CraftBookDelegateListener listener : main.disconnectListeners) 
             listener.onDisconnect(player);
     }
     
     public boolean onBlockPlace(Player p, Block pp, Block cp, Item itemInHand) {
-        PlayerInterface player = new HmodPlayerImpl(p, main);
+        PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector pv = new BlockVector(pp.getX(),pp.getY(),pp.getZ());
         BlockVector cv = new BlockVector(cp.getX(),cp.getY(),cp.getZ());
         for (CraftBookDelegateListener listener : main.blockPlaceListeners) 
@@ -293,17 +293,17 @@ public class CraftBookListener extends PluginListener
     }
     
     public void onBlockRightClicked(Player p, Block cp, Item itemInHand) {
-        PlayerInterface player = new HmodPlayerImpl(p, main);
+        PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector cv = new BlockVector(cp.getX(),cp.getY(),cp.getZ());
         for (CraftBookDelegateListener listener : main.blockRightClickListeners) 
             listener.onBlockRightClicked(w,player,cv,itemInHand.getItemId());
     }
     
     public boolean onBlockDestroy(Player p, Block dp) {
-        PlayerInterface player = new HmodPlayerImpl(p, main);
+        PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector dv = new BlockVector(dp.getX(),dp.getY(),dp.getZ());
         for (CraftBookDelegateListener listener : main.blockDestroyedListeners) 
-            if(listener.onBlockDestroy(player, dv))
+            if(listener.onBlockDestroy(w, player, dv, dp.getStatus()))
                 return true;
         return false;
     }

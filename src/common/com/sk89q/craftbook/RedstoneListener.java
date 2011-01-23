@@ -2,33 +2,18 @@ package com.sk89q.craftbook;
 // $Id$
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
-import com.sk89q.craftbook.access.Action;
-import com.sk89q.craftbook.access.BlockEntity;
-import com.sk89q.craftbook.access.Configuration;
-import com.sk89q.craftbook.access.PlayerInterface;
-import com.sk89q.craftbook.access.ServerInterface;
-import com.sk89q.craftbook.access.SignInterface;
-import com.sk89q.craftbook.access.WorldInterface;
+import com.sk89q.craftbook.access.*;
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.mech.ic.custom.*;
 import com.sk89q.craftbook.mech.ic.logic.*;
 import com.sk89q.craftbook.mech.ic.world.*;
 import com.sk89q.craftbook.mech.ic.plc.*;
 import com.sk89q.craftbook.mech.ic.plc.types.*;
-import com.sk89q.craftbook.util.BlockVector;
-import com.sk89q.craftbook.util.MinecraftUtil;
-import com.sk89q.craftbook.util.RedstoneUtil;
-import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.Vector;
-
 
 /**
  * Event listener for redstone enhancements such as redstone pumpkins and
@@ -106,12 +91,12 @@ public class RedstoneListener extends CraftBookDelegateListener
         if (c.getBoolean("custom-ics", true)) {
             try {
                 CustomICLoader.load("custom-ics.txt", this, plcLanguageList);
-                logger.info("Custom ICs for CraftBook loaded");
+                server.getLogger().info("Custom ICs for CraftBook loaded");
             } catch (CustomICException e) {
                 Throwable cause = e.getCause();
                 
                 if (cause != null && !(cause instanceof FileNotFoundException)) {
-                    logger.log(Level.WARNING,
+                    server.getLogger().log(Level.WARNING,
                             "Failed to load custom IC file: " + e.getMessage(),cause);
                 }
             }
@@ -615,7 +600,7 @@ public class RedstoneListener extends CraftBookDelegateListener
     /**
      * Storage class for registered ICs.
      */
-    private static class RegisteredIC {
+    private class RegisteredIC {
         final ICType type;
         final IC ic;
         final boolean isPlc;
@@ -635,11 +620,11 @@ public class RedstoneListener extends CraftBookDelegateListener
 
 
         void think(ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t) {
-            type.think(s,w,v,c,t,ic);
+            type.think(craftBook,s,w,v,c,t,ic);
         }
 
         void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t) {
-            type.think(s,w,v,t,ic);
+            type.think(craftBook,s,w,v,t,ic);
         }
     }
 

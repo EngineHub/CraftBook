@@ -26,13 +26,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import com.sk89q.craftbook.access.Configuration;
 import com.sk89q.craftbook.access.Event;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.ServerInterface;
+import com.sk89q.craftbook.access.SignInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.blockbag.AdminBlockSource;
 import com.sk89q.craftbook.blockbag.BlockBag;
@@ -41,6 +41,8 @@ import com.sk89q.craftbook.blockbag.CompoundBlockBag;
 import com.sk89q.craftbook.blockbag.DummyBlockBag;
 import com.sk89q.craftbook.blockbag.NearbyChestBlockBag;
 import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.craftbook.util.MinecraftUtil;
 import com.sk89q.craftbook.util.Vector;
 
 /**
@@ -48,12 +50,7 @@ import com.sk89q.craftbook.util.Vector;
  *
  * @author sk89q
  */
-public class CraftBookCore {
-    /**
-     * Logger.
-     */
-    private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    
+public class CraftBookCore extends CraftBookDelegateListener {
     /** 
      * A list of block bags that can be used. This map is populated on
      * class loaded via static constructor.
@@ -103,16 +100,6 @@ public class CraftBookCore {
      * Delegate listener for vehicle.
      */
     private final CraftBookDelegateListener vehicle;
-    
-    /**
-     * Delegate listener for misc.
-     */
-    private final CraftBookDelegateListener misc;
-    
-    /**
-     * Server interface object.
-     */
-    private final ServerInterface server;
 
     /**
      * Stores who has been shown the CraftBook version.
@@ -125,26 +112,41 @@ public class CraftBookCore {
      */
     private CopyManager copies = new CopyManager();
     
+    /**
+     * Data store.
+     */
+    private Map<String,Boolean> airWaves =
+            new HistoryHashMap<String,Boolean>(100);
+    
     public CraftBookCore(ServerInterface server) {
+        this.craftBook = this;
         this.server = server;
         mechanisms = new MechanismListener(this, server);
         redstone = new RedstoneListener(this, server);
         vehicle = new VehicleListener(this, server);
-        misc = new MiscListener(this, server);
     }
     
     /**
      * Initializes the plugin.
      */
     public void initialize() {
-        server.registerListener(Event.SIGN_CHANGE, misc);
-        server.registerListener(Event.COMMAND, misc);
+        server.registerListener(Event.DISCONNECT, this);
+        server.registerListener(Event.SIGN_CHANGE, this);
+        server.registerListener(Event.COMMAND, this);
         
         server.registerListener(Event.SIGN_CHANGE, redstone);
         server.registerListener(Event.WIRE_INPUT, redstone);
         server.registerListener(Event.TICK, redstone);
         server.registerListener(Event.SIGN_CREATE, redstone);
         server.registerListener(Event.COMMAND, redstone);
+        
+        server.registerListener(Event.CONSOLE_COMMAND,mechanisms);
+        server.registerListener(Event.WIRE_INPUT,mechanisms);
+        server.registerListener(Event.BLOCK_DESTROY,mechanisms);
+        server.registerListener(Event.SIGN_CHANGE,mechanisms);
+        server.registerListener(Event.BLOCK_RIGHTCLICKED,mechanisms);
+        server.registerListener(Event.COMMAND,mechanisms);
+        server.registerListener(Event.DISCONNECT,mechanisms);
     }
     
     /**
@@ -173,7 +175,7 @@ public class CraftBookCore {
         
         // Get the list of block bags to use
         if (c.hasKey("block-bag")) {
-            logger.log(
+            server.getLogger().log(
                     Level.WARNING,
                     "CraftBook's block-bag configuration option is "
                             + "deprecated, and may be removed in a future version. Please use "
@@ -191,7 +193,7 @@ public class CraftBookCore {
             BlockBagFactory f = BLOCK_BAGS.get(s);
             
             if (f == null) {
-                logger.log(Level.WARNING, "Unknown CraftBook block source: "
+                server.getLogger().log(Level.WARNING, "Unknown CraftBook block source: "
                         + s);
                 
                 // Add a default block bag
@@ -247,7 +249,57 @@ public class CraftBookCore {
         beenToldVersion.add(player.getName());
     }
     
-    public CopyManager getCopies() {
+    public CopyManager getCopyManager() {
         return copies;
+    }
+    
+    public Map<String,Boolean> getTransmissions() {
+        return airWaves;
+    }
+    
+    public void onDisconnect(PlayerInterface player) {
+        beenToldVersion.remove(player.getName());
+    }
+    
+    /**
+     * Called when a sign is updated.
+     * @param player
+     * @param cblock
+     * @return
+     */
+    public boolean onSignChange(PlayerInterface i, WorldInterface world, Vector v, SignInterface s) {
+        String line2 = s.getLine2();
+        
+        // Black Hole
+        if (line2.equalsIgnoreCase("[Black Hole]")
+                && !i.canCreateObject("blackhole")) {
+            i.sendMessage(Colors.RED
+                    + "You don't have permission to make black holes.");
+            MinecraftUtil.dropSign(world, s.getX(), s.getY(), s.getZ());
+            return true;
+        }
+        
+        // Block Source
+        if (line2.equalsIgnoreCase("[Block Source]")
+                && !i.canCreateObject("blocksource")) {
+            i.sendMessage(Colors.RED
+                    + "You don't have permission to make block sources.");
+            MinecraftUtil.dropSign(world, s.getX(), s.getY(), s.getZ());
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean onCommand(PlayerInterface player, String[] split) {
+        if (split[0].equalsIgnoreCase("/craftbookversion")) {
+            player.sendMessage(Colors.GRAY + "CraftBook version: " +
+                    server.getCraftBookVersion());
+            player.sendMessage(Colors.GRAY
+                    + "Website: http://wiki.sk89q.com/wiki/CraftBook");
+
+            return true;
+        }
+        return false;
     }
 }

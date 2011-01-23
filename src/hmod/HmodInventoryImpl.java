@@ -18,13 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import com.sk89q.craftbook.access.InventoryInterface;
 
-public class HmodInventoryInterfaceImpl implements InventoryInterface {
+public class HmodInventoryImpl implements InventoryInterface {
     private final Inventory inventory;
     private final int length;
     private final com.sk89q.craftbook.access.Item[] items;
     private final boolean[] changed;
     
-    public HmodInventoryInterfaceImpl(Inventory i) {
+    public HmodInventoryImpl(Inventory i) {
         inventory = i;
         length = i.getContentsSize();
         items = new com.sk89q.craftbook.access.Item[length];

@@ -19,8 +19,8 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * A JK flip flop.
@@ -30,7 +30,7 @@ import com.sk89q.craftbook.mech.ic.ChipState;
  * 
  * @author sindreij
  */
-public class MC3032 extends BaseIC {
+public class MC3032 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -45,7 +45,7 @@ public class MC3032 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         boolean j = chip.getIn(2).is(); //Set
         boolean k = chip.getIn(3).is(); //Reset
         if (chip.getIn(1).isTriggered() && chip.getIn(1).not()) {

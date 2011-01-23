@@ -19,15 +19,15 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * RS NOR Latch.
  *
  * @author sk89q
  */
-public class MC3030 extends BaseIC {
+public class MC3030 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -42,7 +42,7 @@ public class MC3030 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         boolean set = chip.getIn(1).is();
         boolean reset = chip.getIn(2).is();
         if (set && reset) {

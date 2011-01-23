@@ -46,4 +46,8 @@ public abstract class WorldInterface$ implements WorldInterface {
     public int getLightLevel(Vector v) {
         return getLightLevel(v.getBlockX(),v.getBlockY(),v.getBlockZ());
     }
+    
+    public void kyuu(double x, double y, double z) {
+        explode(x,y,z);
+    }
 }

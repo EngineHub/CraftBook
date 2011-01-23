@@ -19,8 +19,8 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
@@ -29,7 +29,7 @@ import com.sk89q.craftbook.util.Vector;
  *
  * @author Sir Propane
  */
-public class MC1420 extends BaseIC {
+public class MC1420 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -78,7 +78,7 @@ public class MC1420 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         int clockTime = Integer.parseInt(chip.getText().getLine3());
         int count = chip.getText().getLine4().length();
         if(count % clockTime == clockTime-1){

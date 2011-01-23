@@ -1,4 +1,3 @@
-package com.sk89q.craftbook.util;
 // $Id$
 /*
  * CraftBook
@@ -17,6 +16,8 @@ package com.sk89q.craftbook.util;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.access.InventoryInterface;
 import com.sk89q.craftbook.access.Item;

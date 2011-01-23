@@ -27,7 +27,7 @@ import com.sk89q.craftbook.util.Vector;
  * 
  * @author sk89q
  */
-public class HmodSignInterfaceImpl extends SignInterface {
+public class HmodSignImpl extends SignInterface {
     /**
      * Sign instance.
      */
@@ -42,7 +42,7 @@ public class HmodSignInterfaceImpl extends SignInterface {
      * 
      * @param sign
      */
-    public HmodSignInterfaceImpl(WorldInterface w, BlockVector pos, Sign sign) {
+    public HmodSignImpl(WorldInterface w, BlockVector pos, Sign sign) {
         super(sign.getText(0), sign.getText(1),
                 sign.getText(2), sign.getText(3));
         this.sign = sign;
@@ -68,8 +68,8 @@ public class HmodSignInterfaceImpl extends SignInterface {
     }
 
     public boolean equals(Object other) {
-        if (other instanceof HmodSignInterfaceImpl) {
-            HmodSignInterfaceImpl sign = ((HmodSignInterfaceImpl)other);
+        if (other instanceof HmodSignImpl) {
+            HmodSignImpl sign = ((HmodSignImpl)other);
             return sign.pos.equals(pos)&&sign.w.equals(w);
         } else {
             return false;

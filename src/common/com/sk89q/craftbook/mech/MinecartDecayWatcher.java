@@ -81,7 +81,7 @@ public class MinecartDecayWatcher {
     private void performCheck() {
         long now = System.currentTimeMillis();
         
-        for (BaseEntity ent : etc.getServer().getEntityList()) {
+        for (BaseEntityInterface ent : etc.getServer().getEntityList()) {
             if (ent instanceof Minecart) {
                 Minecart minecart = (Minecart)ent;
                 

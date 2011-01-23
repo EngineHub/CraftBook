@@ -20,6 +20,7 @@ package com.sk89q.craftbook.mech.ic;
 
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.Colors;
+import com.sk89q.craftbook.CraftBookCore;
 import com.sk89q.craftbook.access.ServerInterface;
 import com.sk89q.craftbook.access.SignInterface;
 import com.sk89q.craftbook.access.WorldInterface;
@@ -37,7 +38,7 @@ public enum ICType {
      * Zero input, single output
      */
     ZISO("ZISO", true) {    
-        public void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
             Vector outputVec = MinecraftUtil.getWallSignBack(w, v, 2);
             Vector backVec = MinecraftUtil.getWallSignBack(w, v, 1);
 
@@ -46,7 +47,7 @@ public enum ICType {
             Signal[] out = new Signal[1];
             out[0] = new Signal(RedstoneUtil.getOutput(w, outputVec));
 
-            ChipState chip = new ChipState(s, w, v, backVec.toBlockVector(), in, out, t);
+            ChipState chip = new ChipState(o, s, w, v, backVec.toBlockVector(), in, out, t);
 
             i.think(chip);
 
@@ -59,7 +60,7 @@ public enum ICType {
      * Single input, single output
      */
     SISO("SISO") {
-        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC sisoIC) {
             Vector outputVec = MinecraftUtil.getWallSignBack(w, pt, 2);
             Vector in0 = MinecraftUtil.getWallSignBack(w, pt, -1);
@@ -72,7 +73,7 @@ public enum ICType {
             Signal[] out = new Signal[1];
             out[0] = new Signal(RedstoneUtil.getOutput(w, outputVec));
 
-            ChipState chip = new ChipState(s, w, pt, backVec.toBlockVector(), in, out, sign);
+            ChipState chip = new ChipState(o, s, w, pt, backVec.toBlockVector(), in, out, sign);
 
             sisoIC.think(chip);
 
@@ -90,7 +91,7 @@ public enum ICType {
      * Single input, triple output
      */
     SI3O("SI3O") {
-        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC si3oIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = backVec.subtract(pt);
@@ -108,7 +109,7 @@ public enum ICType {
             out[1] = new Signal(RedstoneUtil.getOutput(w, output2Vec));
             out[2] = new Signal(RedstoneUtil.getOutput(w, output3Vec));
 
-            ChipState chip = new ChipState(s, w, pt, backVec.toBlockVector(), in, out, sign);
+            ChipState chip = new ChipState(o, s, w, pt, backVec.toBlockVector(), in, out, sign);
 
             // The most important part...
             si3oIC.think(chip);
@@ -129,7 +130,7 @@ public enum ICType {
      * Triple input, single output
      */
     _3ISO("3ISO") {
-        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC _3isoIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector outputVec = MinecraftUtil.getWallSignBack(w, pt, 2);
@@ -148,7 +149,7 @@ public enum ICType {
             Signal[] out = new Signal[1];
             out[0] = new Signal(RedstoneUtil.getOutput(w, outputVec));
 
-            ChipState chip = new ChipState(s, w, pt, backVec.toBlockVector(), in, out, sign);
+            ChipState chip = new ChipState(o, s, w, pt, backVec.toBlockVector(), in, out, sign);
 
             // The most important part...
             _3isoIC.think(chip);
@@ -167,7 +168,7 @@ public enum ICType {
      * Triple input, triple output
      */
     _3I3O("3I3O") {
-        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC _3i3oIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = MinecraftUtil.getWallSignBack(w, pt, 2).subtract(pt);
@@ -193,7 +194,7 @@ public enum ICType {
             out[1] = new Signal(RedstoneUtil.getOutput(w, out1));
             out[2] = new Signal(RedstoneUtil.getOutput(w, out2));
 
-            ChipState chip = new ChipState(s, w, pt, backVec.toBlockVector(), in, out, sign);
+            ChipState chip = new ChipState(o, s, w, pt, backVec.toBlockVector(), in, out, sign);
 
             // The most important part...
             _3i3oIC.think(chip);
@@ -214,7 +215,7 @@ public enum ICType {
      * Variable input, variable output
      */
     VIVO("VIVO") {
-        public void think(ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
                 SignInterface sign, IC vivoIC) {
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = backVec.subtract(pt);
@@ -255,7 +256,7 @@ public enum ICType {
                         changedRedstoneInput.equals(in2));
             }
 
-            ChipState chip = new ChipState(s, w, pt, backVec.toBlockVector(), in, out, sign);
+            ChipState chip = new ChipState(o, s, w, pt, backVec.toBlockVector(), in, out, sign);
 
             // The most important part...
             vivoIC.think(chip);
@@ -288,10 +289,10 @@ public enum ICType {
         this.isSelfTriggered = torchUpdate;
     }
 
-    public void think(ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t, IC i) {
+    public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t, IC i) {
     }
 
-    public void think(ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
+    public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
     }
 
     public static ICType forName(String name) {

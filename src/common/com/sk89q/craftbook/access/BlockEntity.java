@@ -18,6 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sk89q.craftbook.access;
 
-public interface BlockEntity extends PointBasedEntity {
+import com.sk89q.craftbook.util.Vector;
+
+public interface BlockEntity {
     public abstract void flushChanges();
+    public Vector getPosition();
 }

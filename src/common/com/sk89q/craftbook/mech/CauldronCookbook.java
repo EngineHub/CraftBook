@@ -33,11 +33,6 @@ import java.util.ArrayList;
  * @author sk89q
  */
 public class CauldronCookbook {
-//    /**
-//     * Logger.
-//     */
-//    private static final Logger logger = Logger.getLogger("Minecraft");
-    
     /**
      * For fast recipe lookup.
      * 

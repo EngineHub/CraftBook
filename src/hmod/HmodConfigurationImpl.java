@@ -17,10 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.sk89q.craftbook.access.Configuration;
 
 public class HmodConfigurationImpl implements Configuration {
+    /**
+     * Logger.
+     */
+    private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
+    
     private PropertiesFile f;
     private DataSource s = etc.getDataSource();
     
@@ -95,5 +101,13 @@ public class HmodConfigurationImpl implements Configuration {
     }
     public int getItemId(String name) {
         return s.getItem(name);
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public boolean isValidMob(String mobName) {
+        return Mob.isValid(mobName);
     }
 }

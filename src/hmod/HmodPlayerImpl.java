@@ -19,62 +19,27 @@
 
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.WorldInterface;
-import com.sk89q.craftbook.util.Vector;
 
 /**
  *
  * @author sk89q
  * @author Lymia
  */
-public class HmodPlayerImpl extends PlayerInterface {
+public class HmodPlayerImpl extends HmodLivingEntityImpl
+                         implements PlayerInterface {
     /**
      * Stores the player.
      */
     protected Player player;
-    
-    /**
-     * CraftBook core
-     */
-    private CraftBook core;
 
     /**
      * Construct the object.
      * 
      * @param player
      */
-    public HmodPlayerImpl(Player player, CraftBook core) {
+    public HmodPlayerImpl(Player player, WorldInterface w) {
+        super(player,w);
         this.player = player;
-        this.core = core;
-    }
-
-    /**
-     * Move the player.
-     *
-     * @param pos
-     */
-    @Override
-    public void setPosition(Vector pos) {
-        setPosition(pos, (float)getPitch(), (float)getYaw());
-    }
-
-    /**
-     * Get the point of the block that is being stood in.
-     *
-     * @return point
-     */
-    @Override
-    public Vector getBlockIn() {
-        return Vector.toBlockPoint(player.getX(), player.getY(), player.getZ());
-    }
-
-    /**
-     * Get the point of the block that is being stood upon.
-     *
-     * @return point
-     */
-    @Override
-    public Vector getBlockOn() {
-        return Vector.toBlockPoint(player.getX(), player.getY() - 1, player.getZ());
     }
 
     /**
@@ -85,36 +50,6 @@ public class HmodPlayerImpl extends PlayerInterface {
     @Override
     public String getName() {
         return player.getName();
-    }
-
-    /**
-     * Get the player's view pitch.
-     *
-     * @return pitch
-     */
-    @Override
-    public double getPitch() {
-        return player.getPitch();
-    }
-
-    /**
-     * Get the player's position.
-     *
-     * @return point
-     */
-    @Override
-    public Vector getPosition() {
-        return new Vector(player.getX(), player.getY(), player.getZ());
-    }
-
-    /**
-     * Get the player's view yaw.
-     *
-     * @return yaw
-     */
-    @Override
-    public double getYaw() {
-        return player.getRotation();
     }
 
     /**
@@ -159,35 +94,10 @@ public class HmodPlayerImpl extends PlayerInterface {
     }
 
     /**
-     * Move the player.
-     *
-     * @param pos
-     * @param pitch
-     * @param yaw
-     */
-    @Override
-    public void setPosition(Vector pos, float pitch, float yaw) {
-        Location loc = new Location();
-        loc.x = pos.getX();
-        loc.y = pos.getY();
-        loc.z = pos.getZ();
-        loc.rotX = (float) yaw;
-        loc.rotY = (float) pitch;
-        player.teleportTo(loc);
-    }
-
-    /**
      * @return the player
      */
     public Player getPlayerObject() {
         return player;
-    }
-    
-    /**
-     * Gets the world the player is currently in.
-     */
-    public WorldInterface getWorld() {
-        return core.getWorld();
     }
 
     public boolean canUseCommand(String permission) {
@@ -212,5 +122,30 @@ public class HmodPlayerImpl extends PlayerInterface {
 
     public boolean isInGroup(String group) {
         return player.isInGroup(group);
+    }
+    
+    /**
+     * Returns true if equal.
+     *
+     * @param other
+     * @return whether the other object is equivalent
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof PlayerInterface)) {
+            return false;
+        }
+        PlayerInterface other2 = (PlayerInterface)other;
+        return other2.getName().equals(getName());
+    }
+
+    /**
+     * Gets the hash code.
+     *
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 }

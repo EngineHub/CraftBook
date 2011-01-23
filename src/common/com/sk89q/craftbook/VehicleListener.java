@@ -304,7 +304,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 return;
             }
 
-            for (BaseEntity ent : etc.getServer().getEntityList()) {
+            for (BaseEntityInterface ent : etc.getServer().getEntityList()) {
                 if (ent instanceof Minecart) {
                     Minecart minecart = (Minecart)ent;
                     int cartX = (int)Math.floor(minecart.getX());
@@ -811,7 +811,7 @@ public class VehicleListener extends CraftBookDelegateListener {
      */
     @Override
     public boolean onVehicleDamage(BaseVehicle vehicle,
-            BaseEntity attacker, int damage) {
+            BaseEntityInterface attacker, int damage) {
 
         if (!inCartControl) {
             return false;

@@ -21,25 +21,25 @@ import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.Vector;
 
-public class HmodChestInterfaceImpl extends HmodInventoryInterfaceImpl
+public class HmodChestImpl extends HmodInventoryImpl
                                     implements ChestInterface{
     private final WorldInterface w;
     private final BlockVector pos;
     
-    public HmodChestInterfaceImpl(WorldInterface w, BlockVector pos, Chest chest) {
+    public HmodChestImpl(WorldInterface w, BlockVector pos, Chest chest) {
         super(chest);
         this.pos = pos;
         this.w = w;
     }
-    public HmodChestInterfaceImpl(WorldInterface w, BlockVector pos, DoubleChest chest) {
+    public HmodChestImpl(WorldInterface w, BlockVector pos, DoubleChest chest) {
         super(chest);
         this.pos = pos;
         this.w = w;
     }
 
     public boolean equals(Object other) {
-        if (other instanceof HmodChestInterfaceImpl) {
-            HmodChestInterfaceImpl chest = ((HmodChestInterfaceImpl)other);
+        if (other instanceof HmodChestImpl) {
+            HmodChestImpl chest = ((HmodChestImpl)other);
             return chest.pos.equals(pos)&&chest.w.equals(w);
         } else {
             return false;

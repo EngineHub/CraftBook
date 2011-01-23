@@ -15,34 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
-package com.sk89q.craftbook.mech.ic.logic;
-
-import com.sk89q.craftbook.mech.ic.LogicIC;
-import com.sk89q.craftbook.mech.ic.LogicChipState;
+package com.sk89q.craftbook.access;
 
 /**
- * Signal Inverter
  *
- * @author Shaun (sturmeh)
+ * @author sk89q
  */
-public class MC1001 extends LogicIC {
-    /**
-     * Get the title of the IC.
-     *
-     * @return
-     */
-    public String getTitle() {
-        return "NOT";
-    }
+public class LocalWorldEditBridgeException extends Exception {
+    private static final long serialVersionUID = 1272046053798611177L;
 
-    /**
-     * Think.
-     * 
-     * @param chip
-     */
-    public void think(LogicChipState chip) {
-        chip.getOut(1).set(chip.getIn(1).not());
+    public LocalWorldEditBridgeException(Throwable t) {
+        super(t);
     }
 }

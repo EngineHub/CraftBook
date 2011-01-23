@@ -19,7 +19,6 @@ package com.sk89q.craftbook.mech;
 */
 
 import java.util.Set;
-import java.util.HashSet;
 
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.access.PlayerInterface;
@@ -50,12 +49,11 @@ public class Bridge extends SignOrientedMechanism {
     /**
      * What bridges can be made out of.
      */
-    public static Set<Integer> allowedBlocks
-            = new HashSet<Integer>();
+    public Set<Integer> allowedBlocks;
     /**
      * Max bridge length.
      */
-    public static int maxLength = 30;
+    public int maxLength;
     
     /**
      * Construct the instance.
@@ -64,8 +62,10 @@ public class Bridge extends SignOrientedMechanism {
      * @param signText
      * @param copyManager
      */
-    public Bridge(ServerInterface s, WorldInterface w, Vector pt) {
+    public Bridge(ServerInterface s, WorldInterface w, Vector pt, BridgeSettings settings) {
         super(s,w,pt);
+        allowedBlocks = settings.allowedBlocks;
+        maxLength = settings.maxLength;
     }
 
     /**
@@ -74,7 +74,7 @@ public class Bridge extends SignOrientedMechanism {
      * @param id
      * @return
      */
-    private static boolean canUseBlock(int id) {
+    private boolean canUseBlock(int id) {
         return allowedBlocks.contains(id);
     }
     
@@ -376,5 +376,16 @@ public class Bridge extends SignOrientedMechanism {
         public InvalidConstructionException(String msg) {
             super(msg);
         }
+    }
+    
+    public static class BridgeSettings {
+        /**
+         * What bridges can be made out of.
+         */
+        public Set<Integer> allowedBlocks;
+        /**
+         * Max bridge length.
+         */
+        public int maxLength;
     }
 }

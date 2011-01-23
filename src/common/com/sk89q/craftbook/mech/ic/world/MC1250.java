@@ -1,4 +1,3 @@
-package com.sk89q.craftbook.mech.ic.world;
 // $Id$
 /*
  * CraftBook
@@ -18,12 +17,12 @@ package com.sk89q.craftbook.mech.ic.world;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import cx;
-import en;
-import etc;
+package com.sk89q.craftbook.mech.ic.world;
 
 import java.util.Random;
 
+import com.sk89q.craftbook.access.ArrowInterface;
+import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.mech.ic.*;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -93,9 +92,9 @@ public class MC1250 extends BaseIC {
                 return;
             }
             
-            en arrow = shoot(x + 0.5, y + 1.5, z + 0.5);
+            ArrowInterface arrow = shoot(chip.getWorld(), x + 0.5, y + 1.5, z + 0.5);
 
-            Firework instance = new Firework(arrow);
+            Firework instance = new Firework(arrow, chip.getWorld());
             (new Thread(instance)).start();
         }
     }
@@ -111,21 +110,24 @@ public class MC1250 extends BaseIC {
         /**
          * Arrow.
          */
-        private en arrow;
+        private ArrowInterface arrow;
         /**
          * Expiration time.
          */
         private long expireTime;
+        
+        private WorldInterface world;
 
         /**
          * Construct the object.
          * 
          * @param arrow
          */
-        public Firework(en arrow) {
+        public Firework(ArrowInterface arrow, WorldInterface world) {
             expireTime = System.currentTimeMillis() + 5000;
             this.arrow = arrow;
-            lastY = arrow.q;
+            lastY = arrow.getY();
+            this.world = world;
         }
 
         /**
@@ -134,18 +136,18 @@ public class MC1250 extends BaseIC {
         public void run() {
             try {
                 while (true) {
-                    final double arrowX = arrow.p;
-                    final double arrowY = arrow.q;
-                    final double arrowZ = arrow.r;
+                    final double arrowX = arrow.getX();
+                    final double arrowY = arrow.getY();
+                    final double arrowZ = arrow.getZ();
                     
                     if (arrowY < lastY) {
-                        etc.getServer().addToServerQueue(new Runnable() {
+                        world.enqueAction(new Runnable() {
                             public void run() {
-                                etc.getMCServer().e.e(arrow);
+                                
                                 
                                 // Make TNT explode
-                                explodeTNT(arrowX, arrowY, arrowZ);
-                                explodeTNT(
+                                world.kyuu(arrowX, arrowY, arrowZ);
+                                world.kyuu(
                                         arrowX + r.nextDouble() * 2 - 1,
                                         arrowY + r.nextDouble() * 1,
                                         arrowZ + r.nextDouble() * 2 - 1);
@@ -176,25 +178,9 @@ public class MC1250 extends BaseIC {
      * @param spread
      * @param vertVel
      */
-    protected en shoot(double x, double y, double z) {
-        en arrow = new en(etc.getMCServer().e);
-        arrow.c(x, y, z, 0, 0);
-        etc.getMCServer().e.a(arrow);
-        arrow.a(0, 50, 0, 1.05F, 20);
-        return arrow;
-    }
-    
-    /**
-     * Makes TNT go boom.
-     * 
-     * @param x
-     * @param y
-     * @param z
-     */
-    protected void explodeTNT(double x, double y, double z) {
-        // Make TNT explode
-        cx tnt = new cx(etc.getMCServer().e);
-        tnt.a(x, y, z);
-        tnt.b_();
+    protected ArrowInterface shoot(WorldInterface w, double x, double y, double z) {
+        return w.shootArrow(x, y, z, 
+                            0, 50, 0, 
+                            1.05F, 20);
     }
 }

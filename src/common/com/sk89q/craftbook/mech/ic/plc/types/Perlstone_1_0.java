@@ -27,8 +27,8 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 import com.sk89q.craftbook.access.WorldInterface;
-import com.sk89q.craftbook.mech.ic.ChipState;
-import com.sk89q.craftbook.mech.ic.plc.PlcLang;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.plc.LogicPlcLang;
 import com.sk89q.craftbook.util.Base64;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
@@ -38,7 +38,7 @@ import com.sk89q.craftbook.util.Vector;
  * 
  * @author Lymia
  */
-public final class Perlstone_1_0 implements PlcLang {
+public final class Perlstone_1_0 extends LogicPlcLang {
     private final boolean debug;
     
     public Perlstone_1_0() { 
@@ -52,7 +52,7 @@ public final class Perlstone_1_0 implements PlcLang {
         return "PS v1.0";
     }
 
-    public final boolean[] tick(ChipState chip, String program) throws PerlstoneException {
+    public final boolean[] tick(String id, LogicChipState chip, String program) throws PerlstoneException {
         //Default case, and check on create makes this redundant
         //checkSyntax(program);
 
@@ -73,7 +73,7 @@ public final class Perlstone_1_0 implements PlcLang {
         return output;
     }
 
-    private final Boolean callFunction(char[] function, boolean[] args, ChipState chip, boolean[] pvt, boolean[] tvt, char[][] staticf, int[] numOpcodes) throws PerlstoneException {
+    private final Boolean callFunction(char[] function, boolean[] args, LogicChipState chip, boolean[] pvt, boolean[] tvt, char[][] staticf, int[] numOpcodes) throws PerlstoneException {
         boolean previousOpcode = false;
         
         try {
@@ -219,7 +219,7 @@ public final class Perlstone_1_0 implements PlcLang {
         }
     }
     
-    public final String validateEnvironment(WorldInterface w, Vector v, SignText t, String code) {
+    public final String validateEnvironment(String w, Vector v, SignText t, String code) {
         if(!t.getLine4().isEmpty()) return "line 4 is not empty";
         t.setLine4("AAAAAAAAAAAA");
         return null;
@@ -340,7 +340,7 @@ public final class Perlstone_1_0 implements PlcLang {
         return c;
     }
 
-    private boolean[] readPresistantStorage(ChipState chip) throws PerlstoneException {
+    private boolean[] readPresistantStorage(LogicChipState chip) throws PerlstoneException {
         byte[] persistentStorage;
         try {
             persistentStorage = Base64.decode(chip.getText().getLine4().getBytes("UTF-8"));
@@ -358,7 +358,7 @@ public final class Perlstone_1_0 implements PlcLang {
         return pvt;
     }
 
-    private void storePresistantStorage(ChipState chip, boolean[] pvt) {
+    private void storePresistantStorage(LogicChipState chip, boolean[] pvt) {
         byte[] data = new byte[4];
         for (int i = 0; i < 4; i++) 
             for (int b = 0; b < 8; b++)

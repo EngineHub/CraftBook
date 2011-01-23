@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mech.ic.logic;
+package com.sk89q.craftbook.mech.ic.world;
 
 import com.sk89q.craftbook.mech.ic.BaseIC;
 import com.sk89q.craftbook.mech.ic.ChipState;
@@ -25,18 +25,18 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 /**
- * Positive edge-triggered wireless receiver.
+ * Wireless transmitter.
  *
  * @author sk89q
  */
-public class MC1111 extends BaseIC {
+public class MC1110 extends BaseIC {
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
-        return "RECEIVER";
+        return "TRANSMITTER";
     }
 
     /**
@@ -64,13 +64,10 @@ public class MC1111 extends BaseIC {
      */
     public void think(ChipState chip) {
         String id = chip.getText().getLine3();
+
         if (!id.isEmpty()) {
-            Boolean out = MC1110.airwaves.get(id);
-            if (out == null) {
-                chip.getOut(1).set(false);
-            } else {
-                chip.getOut(1).set(out);
-            }
+            chip.getCore().getTransmissions().put(id, chip.getIn(1).is());
+            chip.getOut(1).set(chip.getIn(1).is());
         } else {
             chip.getOut(1).set(false);
         }

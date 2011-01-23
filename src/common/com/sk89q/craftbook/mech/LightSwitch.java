@@ -36,7 +36,7 @@ public class LightSwitch {
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
      */
-    private static HistoryHashMap<BlockVector,Long> recentLightToggles
+    private HistoryHashMap<BlockVector,Long> recentLightToggles
             = new HistoryHashMap<BlockVector,Long>(20);
 
     /**
@@ -47,7 +47,7 @@ public class LightSwitch {
      * @param oz
      * @return
      */
-    public static boolean toggleLights(WorldInterface w, Vector origin, BlockBag bag)
+    public boolean toggleLights(WorldInterface w, Vector origin, BlockBag bag)
             throws BlockBagException {
         int aboveID = w.getId(origin.add(0, 1, 0));
 

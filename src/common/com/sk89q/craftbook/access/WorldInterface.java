@@ -39,7 +39,7 @@ public interface WorldInterface {
     int getData(int x, int y, int z);
     int getData(Vector v);
     
-    void dropItem(float x, float y, float z, int type, int count);
+    void dropItem(double x, double y, double z, int type, int count);
     
     BlockEntity getBlockEntity(int x, int y, int z);
     BlockEntity getBlockEntity(Vector v);
@@ -48,10 +48,13 @@ public interface WorldInterface {
     PlayerInterface getPlayer(String player);
     PlayerInterface matchPlayer(String player);
     List<PlayerInterface> getPlayerList();
+
+    List<MobInterface> getMobList();
     
     Tuple2<Integer,Integer>[] getLoadedChunks();
     
     void delayAction(Action a);
+    void enqueAction(Runnable r);
     
     long getTime();
     void setTime(long time);
@@ -64,4 +67,14 @@ public interface WorldInterface {
     String getUniqueIdString();
     File getPath();
     File getToggleAreaPath();
+
+    ArrowInterface shootArrow(double x, double y, double z, 
+                              double xComponent, double yComponent, double zComponent, 
+                              double speed, double spread);
+    
+    void explode(double x, double y, double z);
+    void kyuu(double x, double y, double z);
+    
+    MobInterface spawnMob(double x, double y, double z, String type);
+    MobInterface spawnMob(double x, double y, double z, String type, String rider);
 }

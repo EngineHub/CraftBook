@@ -19,15 +19,15 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * Negative/Falling edge-triggered toggle flip flop.
  *
  * @author Shaun (sturmeh)
  */
-public class MC1018 extends BaseIC {
+public class MC1018 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -42,7 +42,7 @@ public class MC1018 extends BaseIC {
      * 
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         if (chip.getIn(1).not())
             chip.getOut(1).invert();
     }

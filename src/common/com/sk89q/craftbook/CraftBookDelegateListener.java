@@ -19,8 +19,6 @@
 
 package com.sk89q.craftbook;
 
-import java.util.logging.Logger;
-
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.ServerInterface;
 import com.sk89q.craftbook.access.SignInterface;
@@ -36,11 +34,6 @@ import com.sk89q.craftbook.util.Vector;
  */
 public abstract class CraftBookDelegateListener {
     /**
-     * Logger instance.
-     */
-    protected static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    
-    /**
      * CraftBook.
      */
     protected CraftBookCore craftBook;
@@ -49,6 +42,8 @@ public abstract class CraftBookDelegateListener {
      * Server interface
      */
     protected ServerInterface server;
+    
+    public CraftBookDelegateListener(){}
     
     /**
      * Construct the object.
@@ -92,11 +87,9 @@ public abstract class CraftBookDelegateListener {
             Vector blockClicked, int itemInHand) {
         return false;
     }
-    public boolean onBlockRightClicked(WorldInterface world, PlayerInterface p, Vector block,
-            int itemInHand) {
-        return false;
-    }
-    public boolean onBlockDestroy(PlayerInterface p, Vector block) {
+    public void onBlockRightClicked(WorldInterface world, PlayerInterface p, Vector block,
+            int itemInHand) {}
+    public boolean onBlockDestroy(WorldInterface world, PlayerInterface p, Vector block, int status) {
         return false;
     }
 }

@@ -48,20 +48,20 @@ public class Door extends SignOrientedMechanism {
     /**
      * What doors can be made out of.
      */
-    public static Set<Integer> allowedBlocks
+    private Set<Integer> allowedBlocks
             = new HashSet<Integer>();
     /**
      * Max door length.
      */
-    public static int maxLength = 30;
-
+    private int maxLength = 30;
+    
     /**
      * Returns whether a block can be used for the door.
      * 
      * @param id
      * @return
      */
-    private static boolean canUseBlock(int id) {
+    private boolean canUseBlock(int id) {
         return allowedBlocks.contains(id);
     }
     
@@ -83,8 +83,10 @@ public class Door extends SignOrientedMechanism {
      * 
      * @param pt
      */
-    public Door(ServerInterface s, WorldInterface w, Vector pt) {
+    public Door(ServerInterface s, WorldInterface w, Vector pt, DoorSettings settings) {
         super(s,w,pt);
+        allowedBlocks = settings.allowedBlocks;
+        maxLength = settings.maxLength;
     }
     
     /**
@@ -312,7 +314,7 @@ public class Door extends SignOrientedMechanism {
      * @param signText
      * @return false to deny
      */
-    public boolean validateEnvironment(PlayerInterface player,
+    public static boolean validateEnvironment(PlayerInterface player,
             Vector pt, SignText signText) {
         
         if (signText.getLine2().equalsIgnoreCase("[Door Up]")) {
@@ -356,5 +358,16 @@ public class Door extends SignOrientedMechanism {
         public InvalidConstructionException(String msg) {
             super(msg);
         }
+    }
+    
+    public static class DoorSettings {
+        /**
+         * What doors can be made out of.
+         */
+        public Set<Integer> allowedBlocks;
+        /**
+         * Max door length.
+         */
+        public int maxLength;
     }
 }

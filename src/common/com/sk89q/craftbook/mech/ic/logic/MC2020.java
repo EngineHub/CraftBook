@@ -21,15 +21,15 @@ package com.sk89q.craftbook.mech.ic.logic;
 
 import java.util.Random;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * 3-bit random number generator.
  *
  * @author sk89q
  */
-public class MC2020 extends BaseIC {
+public class MC2020 extends LogicIC {
     /**
      * Random number generator.
      */
@@ -49,7 +49,7 @@ public class MC2020 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         if (chip.getIn(1).is()) {
             chip.getOut(1).set(random.nextBoolean());
             chip.getOut(2).set(random.nextBoolean());

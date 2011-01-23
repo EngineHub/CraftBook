@@ -107,7 +107,7 @@ public class CraftBook extends Plugin implements ServerInterface {
         events.put(Event.WIRE_INPUT, wireInputListeners);
         events.put(Event.DISCONNECT, disconnectListeners);
         events.put(Event.BLOCK_PLACE, blockPlaceListeners);
-        events.put(Event.BLOCK_DESTROYED, blockDestroyedListeners);
+        events.put(Event.BLOCK_DESTROY, blockDestroyedListeners);
         events.put(Event.VEHICLE_POSITIONCHANGE, vehiclePositionChangeListeners);
         events.put(Event.VEHICLE_UPDATE, vehicleUpdateListeners);
         events.put(Event.VEHICLE_DAMAGE, vehicleDamageListeners);
@@ -201,7 +201,6 @@ public class CraftBook extends Plugin implements ServerInterface {
 
     public void loadConfiguration() {
         for(CraftBookDelegateListener l:listenerList.keySet()) l.loadConfiguration();
-        core.loadConfiguration();
     }
     
     @Override
@@ -311,12 +310,12 @@ public class CraftBook extends Plugin implements ServerInterface {
 
     // TODO: Optimize
     public PlayerInterface getPlayer(String player) {
-        return new HmodPlayerImpl(server.getPlayer(player),this);
+        return new HmodPlayerImpl(server.getPlayer(player),world);
     }
 
     // TODO: Optimize
     public PlayerInterface matchPlayer(String player) {
-        return new HmodPlayerImpl(server.matchPlayer(player),this);
+        return new HmodPlayerImpl(server.matchPlayer(player),world);
     }
 
     // TODO: Optimize
@@ -324,7 +323,7 @@ public class CraftBook extends Plugin implements ServerInterface {
         List<Player> list = server.getPlayerList();
         List<PlayerInterface> list2 = new ArrayList<PlayerInterface>();
         
-        for(Player p:list) list2.add(new HmodPlayerImpl(p,this));
+        for(Player p:list) list2.add(new HmodPlayerImpl(p,world));
         
         return list2;
     }
@@ -362,5 +361,9 @@ public class CraftBook extends Plugin implements ServerInterface {
 
     public WorldEditInterface getWorldEditBridge() {
         return worldEdit;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }    
 }

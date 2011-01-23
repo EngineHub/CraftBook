@@ -19,15 +19,15 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 
 /**
  * Multiplexer
  *
  * @author Lymia
  */
-public class MC3040 extends BaseIC {
+public class MC3040 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -42,7 +42,7 @@ public class MC3040 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         boolean swapper = chip.getIn(3).is();
         chip.getOut(1).set(swapper?chip.getIn(1).is():chip.getIn(2).is());
     }

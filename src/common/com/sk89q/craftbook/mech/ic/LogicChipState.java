@@ -20,30 +20,22 @@
 
 package com.sk89q.craftbook.mech.ic;
 
-import com.sk89q.craftbook.CraftBookCore;
-import com.sk89q.craftbook.access.ServerInterface;
 import com.sk89q.craftbook.access.SignInterface;
-import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.BlockVector;
-import com.sk89q.craftbook.util.Vector;
 
 /**
- * Used to pass around the state of an IC.
+ * Used to pass around the state of an pure IC.
  *
  * @author Shaun (sturmeh)
  * @author sk89q
  * @author Lymia
  */
-public class ChipState {
+public class LogicChipState {
     private Signal[] in;
     private Signal[] out;
     private boolean[] mem;
-    private CraftBookCore craftBook;
-    private ServerInterface server;
-    private WorldInterface world;
-    private Vector pos;
-    private BlockVector blockPos;
     private SignInterface text;
+    private BlockVector blockPos;
     private boolean hasErrored = false;
 
     /**
@@ -55,16 +47,11 @@ public class ChipState {
      * @param out
      * @param text
      */
-    public ChipState(CraftBookCore core, ServerInterface server, WorldInterface world, Vector pos,
-            BlockVector blockPos, Signal[] in, Signal[] out, SignInterface text) {
-        this.craftBook = core;
-        this.server = server;
-        this.world = world;
-        this.pos = pos;
-        this.blockPos = blockPos;
+    public LogicChipState(Signal[] in, Signal[] out, SignInterface text, BlockVector blockPos) {
         this.in = in;
         this.out = out;
         this.text = text;
+        this.blockPos = blockPos;
 
         mem = new boolean[out.length];
         int i = 0;
@@ -142,24 +129,6 @@ public class ChipState {
     }
 
     /**
-     * Get the position.
-     *
-     * @return
-     */
-    public Vector getPosition() {
-        return pos;
-    }
-
-    /**
-     * Get the position of the IC block.
-     *
-     * @return
-     */
-    public BlockVector getBlockPosition() {
-        return blockPos;
-    }
-
-    /**
      * Get the sign text.
      * 
      * @return
@@ -184,14 +153,12 @@ public class ChipState {
         return hasErrored;
     }
 
-    public ServerInterface getServer() {
-        return server;
-    }
-    public WorldInterface getWorld() {
-        return world;
-    }
-    
-    public CraftBookCore getCore() {
-        return craftBook;
+    /**
+     * Get the position of the IC block.
+     *
+     * @return
+     */
+    public BlockVector getBlockPosition() {
+        return blockPos;
     }
 }

@@ -19,8 +19,10 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.BaseIC;
-import com.sk89q.craftbook.mech.ic.ChipState;
+import com.sk89q.craftbook.access.ServerInterface;
+import com.sk89q.craftbook.access.WorldInterface;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+import com.sk89q.craftbook.mech.ic.LogicChipState;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
@@ -48,7 +50,7 @@ import com.sk89q.craftbook.util.Vector;
  *
  * @author davr
  */
-public class MC3101 extends BaseIC {
+public class MC3101 extends LogicIC {
     /**
      * Get the title of the IC.
      *
@@ -66,7 +68,7 @@ public class MC3101 extends BaseIC {
      * @param sign
      * @return
      */
-    public String validateEnvironment(Vector pos, SignText sign) {
+    public String validateEnvironment(ServerInterface i, WorldInterface world, Vector pos, SignText sign) {
         String id = sign.getLine3();
 
         if (id.length() == 0 || !id.matches("^[0-9]+:(INF|ONCE)$")) {
@@ -87,7 +89,7 @@ public class MC3101 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip) {
+    public void think(LogicChipState chip) {
         try {
             // Get IC configuration data from line 3 of sign
             String line3 = chip.getText().getLine3();
