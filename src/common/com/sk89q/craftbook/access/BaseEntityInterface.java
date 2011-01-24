@@ -45,5 +45,15 @@ public interface BaseEntityInterface {
     public Vector getBlockIn();
     public Vector getBlockOn();
     
-    public void destroy();
+    public void remove();
+    
+    public int getEntityId();
+
+    double getXSpeed();
+    double getYSpeed();
+    double getZSpeed();
+    
+    void setXSpeed(double s);
+    void setYSpeed(double s);
+    void setZSpeed(double s);
 }

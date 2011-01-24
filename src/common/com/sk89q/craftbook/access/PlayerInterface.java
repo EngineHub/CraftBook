@@ -29,7 +29,7 @@ public interface PlayerInterface extends LivingEntityInterface {
      *
      * @return String
      */
-    public abstract String getName();
+    public String getName();
 
     /**
      * Gives the player an item.
@@ -37,37 +37,39 @@ public interface PlayerInterface extends LivingEntityInterface {
      * @param type
      * @param amt
      */
-    public abstract void giveItem(int type, int amt);
+    public void giveItem(int type, int amt);
 
     /**
      * Print a message.
      *
      * @param msg
      */
-    public abstract void printRaw(String msg);
+    public void printRaw(String msg);
 
     /**
      * Print a WorldEdit message.
      *
      * @param msg
      */
-    public abstract void print(String msg);
+    public void print(String msg);
 
     /**
      * Print a WorldEdit error.
      *
      * @param msg
      */
-    public abstract void printError(String msg);
+    public void printError(String msg);
     
-    public abstract boolean canUseCommand(String permission);
+    public boolean canUseCommand(String permission);
     
-    public abstract boolean canUseObject(String object);
-    public abstract boolean canCreateObject(String object);
+    public boolean canUseObject(String object);
+    public boolean canCreateObject(String object);
     
-    public abstract boolean canCreateIC(String icId);
+    public boolean canCreateIC(String icId);
 
-    public abstract void sendMessage(String string);
+    public void sendMessage(String string);
     
-    public abstract boolean isInGroup(String group);
+    public boolean isInGroup(String group);
+    
+    public int getItemInHand();
 }

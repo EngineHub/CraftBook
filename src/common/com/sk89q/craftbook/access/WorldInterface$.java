@@ -50,4 +50,12 @@ public abstract class WorldInterface$ implements WorldInterface {
     public void kyuu(double x, double y, double z) {
         explode(x,y,z);
     }
+
+    public boolean equals(Object o) {
+        if(!(o instanceof WorldInterface)) return false;
+        return getUniqueIdString().equals(((WorldInterface)o).getUniqueIdString());
+    }
+    public int hashCode() {
+        return getUniqueIdString().hashCode();
+    }
 }

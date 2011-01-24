@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SignPatch extends hi {
     public static final CopyOnWriteArrayList<ExtensionListener> LISTENERS = new CopyOnWriteArrayList<ExtensionListener>();
     
-    private static Class<go> CLASS = go.class;
+    private static Class<hi> CLASS = hi.class;
     private static Field[] FIELDS;
     
     private static int TYPE = Block.Type.WallSign.getType();
@@ -42,7 +42,7 @@ public class SignPatch extends hi {
     }
     
     public SignPatch(hr old) {
-        super(nullId(), kp.class, false);
+        super(nullId(), lv.class, false);
         
         this.old = old;
         

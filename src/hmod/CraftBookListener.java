@@ -23,6 +23,8 @@ import java.util.logging.Level;
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.CraftBookDelegateListener;
 import com.sk89q.craftbook.InsufficientArgumentsException;
+import com.sk89q.craftbook.access.BaseEntityInterface;
+import com.sk89q.craftbook.access.MinecartInterface;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.SignInterface;
 import com.sk89q.craftbook.util.BlockVector;
@@ -306,5 +308,49 @@ public class CraftBookListener extends PluginListener
             if(listener.onBlockDestroy(w, player, dv, dp.getStatus()))
                 return true;
         return false;
+    }
+    
+    public boolean onVehicleDamage(BaseVehicle vehicle, BaseEntity entity, int damage) {
+        if(!(vehicle instanceof Minecart)) return false;
+        MinecartInterface m = getMinecart((Minecart)vehicle);
+        BaseEntityInterface e = new HmodBaseEntityImpl(entity, w);
+        for (CraftBookDelegateListener listener : main.minecartDamageListeners) 
+            if(listener.onMinecartDamage(w, m, e, damage))
+                return true;
+        return false;
+    }
+    
+    public void onVehicleUpdate(BaseVehicle vehicle) {
+        if(!(vehicle instanceof Minecart)) return;
+        MinecartInterface m = getMinecart((Minecart)vehicle);
+        for (CraftBookDelegateListener listener : main.minecartVelocityChangeListeners) 
+            listener.onMinecartVelocityChange(w, m);
+    }
+    
+    public void onVehiclePositionChange(BaseVehicle vehicle, int x, int y, int z) {
+        if(!(vehicle instanceof Minecart)) return;
+        MinecartInterface m = getMinecart((Minecart)vehicle);
+        for (CraftBookDelegateListener listener : main.minecartPositionChangeListeners) 
+            listener.onMinecartPositionChange(w, m, x, y, z);
+    }
+    
+    public void onVehicleEnter(BaseVehicle vehicle, HumanEntity entity) {
+        if(!(vehicle instanceof Minecart)) return;
+        MinecartInterface m = getMinecart((Minecart)vehicle);
+        BaseEntityInterface e = new HmodBaseEntityImpl(entity, w);
+        boolean entering = vehicle.getPassenger()==null;
+        for (CraftBookDelegateListener listener : main.minecartEnterListeners) 
+            listener.onMinecartEnter(w, m, e, entering);
+    }
+    
+    public void onVehicleDestroyed(BaseVehicle vehicle) {
+        if(!(vehicle instanceof Minecart)) return;
+        MinecartInterface m = getMinecart((Minecart)vehicle);
+        for (CraftBookDelegateListener listener : main.minecartDestroyListeners) 
+            listener.onMinecartDestroyed(w, m);
+    }
+    
+    private MinecartInterface getMinecart(Minecart m) {
+        return new HmodMinecartImpl(m,w);
     }
 }

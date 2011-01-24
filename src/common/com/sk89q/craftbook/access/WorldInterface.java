@@ -51,6 +51,8 @@ public interface WorldInterface {
 
     List<MobInterface> getMobList();
     
+    List<MinecartInterface> getMinecartList();
+    
     Tuple2<Integer,Integer>[] getLoadedChunks();
     
     void delayAction(Action a);
@@ -77,4 +79,6 @@ public interface WorldInterface {
     
     MobInterface spawnMob(double x, double y, double z, String type);
     MobInterface spawnMob(double x, double y, double z, String type, String rider);
+    
+    MinecartInterface spawnMinecart(double x, double y, double z, MinecartInterface.Type type);
 }

@@ -19,9 +19,11 @@
 
 package com.sk89q.craftbook.mech;
 
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import com.sk89q.craftbook.access.MinecartInterface;
+import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.HistoryHashMap;
 
 /**
@@ -39,8 +41,9 @@ public class MinecartDecayWatcher {
     /**
      * Stores a list of minecarts.
      */
-    private HistoryHashMap<Integer,Long> minecarts
-            = new HistoryHashMap<Integer,Long>(500);
+    private HashMap<WorldInterface,HistoryHashMap<Integer,Long>> minecarts
+            = new HashMap<WorldInterface,HistoryHashMap<Integer,Long>>();
+    
     /**
      * Maximum age of minecarts.
      */
@@ -60,15 +63,17 @@ public class MinecartDecayWatcher {
              */
             @Override
             public void run() {
-                etc.getServer().addToServerQueue(new Runnable() {
-                    /**
-                     * Performs the check.
-                     */
-                    @Override
-                    public void run() {
-                        performCheck();
-                    }
-                });
+                WorldInterface[] worlds = minecarts.keySet().toArray(new WorldInterface[0]);
+                for(final WorldInterface world: worlds)
+                    world.enqueAction(new Runnable() {
+                        /**
+                         * Performs the check.
+                         */
+                        @Override
+                        public void run() {
+                            performCheck(world);
+                        }
+                    });
             }
         }, 0, 3000);
     }
@@ -78,27 +83,25 @@ public class MinecartDecayWatcher {
      * or bad things may happen. It is already run automatically by the
      * TimerTask at a periodic interval.
      */
-    private void performCheck() {
+    private void performCheck(WorldInterface world) {
         long now = System.currentTimeMillis();
         
-        for (BaseEntityInterface ent : etc.getServer().getEntityList()) {
-            if (ent instanceof Minecart) {
-                Minecart minecart = (Minecart)ent;
+        HistoryHashMap<Integer,Long> minecarts = getCarts(world);
+        
+        for (MinecartInterface minecart : world.getMinecartList()) {
+            if (minecart.hasPassenger()) {
+                // We don't need to update the hash map because a player
+                // existing the minecart will update the hash map,
+                // and until the minecart is empty it won't be considered
+                // be deletion
+            } else {
+                Long then = minecarts.get(minecart.getEntityId());
                 
-                if (minecart.getPassenger() != null) {
-                    // We don't need to update the hash map because a player
-                    // existing the minecart will update the hash map,
-                    // and until the minecart is empty it won't be considered
-                    // be deletion
-                } else {
-                    Long then = minecarts.get(minecart.getId());
-                    
-                    if (then == null) {
-                        minecarts.put(minecart.getId(), System.currentTimeMillis());
-                    } else if (now - then > delay) {
-                        minecart.destroy();
-                        forgetMinecart(minecart);
-                    }
+                if (then == null) {
+                    minecarts.put(minecart.getEntityId(), System.currentTimeMillis());
+                } else if (now - then > delay) {
+                    minecart.remove();
+                    forgetMinecart(minecart);
                 }
             }
         }
@@ -109,8 +112,8 @@ public class MinecartDecayWatcher {
      * 
      * @param minecart
      */
-    public void trackEnter(Minecart minecart) {
-        minecarts.put(minecart.getId(), System.currentTimeMillis());
+    public void trackEnter(WorldInterface world, MinecartInterface minecart) {
+        getCarts(world).put(minecart.getEntityId(), System.currentTimeMillis());
     }
     
     /**
@@ -118,8 +121,8 @@ public class MinecartDecayWatcher {
      * 
      * @param minecart
      */
-    public void forgetMinecart(Minecart minecart) {
-        minecarts.remove(minecart.getId());
+    public void forgetMinecart(MinecartInterface minecart) {
+        minecarts.remove(minecart.getEntityId());
     }
     
     /**
@@ -128,5 +131,20 @@ public class MinecartDecayWatcher {
      */
     public void disable() {
         timer.cancel();
+    }
+    
+    public synchronized void addWorld(WorldInterface w) {
+        minecarts.put(w,new HistoryHashMap<Integer,Long>(500));
+    }
+    public synchronized void removeWorld(WorldInterface w) {
+        minecarts.remove(w);
+    }
+    protected synchronized HistoryHashMap<Integer,Long> getCarts(WorldInterface w) {
+        if(!minecarts.containsKey(w)) return minecarts.get(w);
+        else {
+            HistoryHashMap<Integer,Long> ret;
+            minecarts.put(w,ret=new HistoryHashMap<Integer,Long>(500));
+            return ret;
+        }
     }
 }

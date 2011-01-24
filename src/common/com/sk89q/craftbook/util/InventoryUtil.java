@@ -97,6 +97,78 @@ public class InventoryUtil {
     }
     
     /**
+     * Move the contents of a chest block bag to an inventory.
+     * 
+     * @param to
+     * @param bag
+     */
+    public static void moveChestBagToItemArray(InventoryInterface to,
+            NearbyChestBlockBag bag) {
+        
+        Item[] toItems = to.getItems();
+        boolean changedDest = false;
+        
+        try {
+            for (InventoryInterface inventory : bag.getInventories()) {
+                boolean changed = false;
+                Item[] chestItems = inventory.getItems();
+    
+                try {
+                    for (int chestSlot = 0; chestSlot < chestItems.length; chestSlot++) {
+                        Item chestItem = chestItems[chestSlot];
+                        
+                        if (chestItem == null || chestItem.count == 0) {
+                            continue;
+                        }
+                        
+                        for (int cartSlot = 0; cartSlot < toItems.length; cartSlot++) {
+                            Item cartItem = toItems[cartSlot];
+        
+                            if (cartItem == null) {
+                                toItems[cartSlot] = chestItem;
+                                chestItems[chestSlot] = null;
+                                changed = true;
+                                throw new TransferredItemException();
+                            } else if (cartItem.id == chestItem.id
+                                    && cartItem.count < 64
+                                    && cartItem.count >= 0) {
+                                int spaceAvailable = 64 - cartItem.count;
+                                
+                                if (spaceAvailable >= chestItem.count) {
+                                    cartItem = cartItem.addItems(chestItem.count);
+                                    chestItems[chestSlot] = null;
+                                    changed = true;
+                                    throw new TransferredItemException();
+                                } else {
+                                    chestItem = chestItem.removeItems(spaceAvailable);
+                                    cartItem = new Item(cartItem.id,64);
+                                    changed = true;
+                                }
+                            }
+                        }
+                        
+                        throw new TargetFullException();
+                    }
+                } catch (TransferredItemException e) {
+                    
+                } finally {
+                    
+                }
+                
+                if (changed) {
+                    changedDest = true;
+                    setContents(inventory, chestItems);
+                }
+            }
+        } catch (TargetFullException e) {
+        }
+        
+        if (changedDest) {
+            setContents(to, toItems);
+        }
+    }
+    
+    /**
      * Set the contents of an ItemArray.
      * 
      * @param itemArray
@@ -112,6 +184,7 @@ public class InventoryUtil {
                 itemArray.setItem(i, contents[i]);
             }
         }
+        itemArray.flushChanges();
     }
 
     /**

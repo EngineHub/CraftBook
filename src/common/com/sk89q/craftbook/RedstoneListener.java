@@ -210,7 +210,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 
             // Check to see if the player can even create ICs
             if (checkCreatePermissions
-                    && !player.canUseCommand("/makeic")) {
+                    && !player.canCreateObject("ic")) {
                 player.sendMessage(Colors.RED
                         + "You don't have permission to make ICs.");
                 MinecraftUtil.dropSign(world, v.getBlockX(), v.getBlockY(), v.getBlockZ());

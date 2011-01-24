@@ -21,29 +21,7 @@ import com.sk89q.craftbook.access.WorldInterface;
 
 public class HmodArrowImpl extends HmodBaseEntityImpl
                         implements ArrowInterface {
-    private fc arrow;
-    
     public HmodArrowImpl(fc arrow, WorldInterface w) {
         super(new BaseEntity(arrow),w);
-    }
-
-    public double getXSpeed() {
-        return arrow.s;
-    }
-    public double getYSpeed() {
-        return arrow.t;
-    }
-    public double getZSpeed() {
-        return arrow.u;
-    }
-
-    public void setXSpeed(double s) {
-        arrow.s = s;
-    }
-    public void setYSpeed(double s) {
-        arrow.t = s;
-    }
-    public void setZSpeed(double s) {
-        arrow.u = s;
     }
 }

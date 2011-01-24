@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import com.sk89q.craftbook.access.Action;
 import com.sk89q.craftbook.access.ArrowInterface;
 import com.sk89q.craftbook.access.BlockEntity;
+import com.sk89q.craftbook.access.MinecartInterface;
+import com.sk89q.craftbook.access.MinecartInterface.Type;
 import com.sk89q.craftbook.access.MobInterface;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.WorldInterface$;
@@ -128,13 +130,6 @@ public class HmodWorldImpl extends WorldInterface$ {
         delay.delayAction(a);
     }
     
-    public boolean equals(Object o) {
-        return this==o;
-    }
-    public int hashCode() {
-        return System.identityHashCode(this);
-    }
-    
     protected void fakeData(int x, int y, int z, int d) {
         fakeExisting = true;
         fakeX = x;
@@ -219,5 +214,36 @@ public class HmodWorldImpl extends WorldInterface$ {
         r.setZ(z);
         m.spawn(r);
         return new HmodMobImpl(m,this);
+    }
+
+    public List<MinecartInterface> getMinecartList() {
+        List<MinecartInterface> list = new ArrayList<MinecartInterface>();
+        for(BaseVehicle v: server.getVehicleEntityList()) if(v instanceof Minecart) {
+            Minecart m = (Minecart)v;
+            if(m.getStorage()==null) 
+                list.add(new HmodMinecartImpl(m,this));
+            else
+                list.add(new HmodStorageMinecartImpl(m,this));
+        }
+        return list;
+    }
+
+    @Override
+    public MinecartInterface spawnMinecart(double x, double y, double z, Type type) {
+        Minecart minecart = null;
+        switch(type) {
+            case REGULAR:
+                minecart = new Minecart(x,y,z,Minecart.Type.Minecart);
+                break;
+            case POWERED:
+                minecart = new Minecart(x,y,z,Minecart.Type.PoweredMinecart);
+                break;
+            case STORAGE:
+                minecart = new Minecart(x,y,z,Minecart.Type.StorageCart);
+                break;
+            default:
+                assert false;
+        }
+        return new HmodMinecartImpl(minecart,this);
     }
 }

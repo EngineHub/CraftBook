@@ -140,13 +140,24 @@ public class CraftBookCore extends CraftBookDelegateListener {
         server.registerListener(Event.SIGN_CREATE, redstone);
         server.registerListener(Event.COMMAND, redstone);
         
-        server.registerListener(Event.CONSOLE_COMMAND,mechanisms);
-        server.registerListener(Event.WIRE_INPUT,mechanisms);
-        server.registerListener(Event.BLOCK_DESTROY,mechanisms);
-        server.registerListener(Event.SIGN_CHANGE,mechanisms);
-        server.registerListener(Event.BLOCK_RIGHTCLICKED,mechanisms);
-        server.registerListener(Event.COMMAND,mechanisms);
-        server.registerListener(Event.DISCONNECT,mechanisms);
+        server.registerListener(Event.CONSOLE_COMMAND, mechanisms);
+        server.registerListener(Event.WIRE_INPUT, mechanisms);
+        server.registerListener(Event.BLOCK_DESTROY, mechanisms);
+        server.registerListener(Event.SIGN_CHANGE, mechanisms);
+        server.registerListener(Event.BLOCK_RIGHTCLICKED, mechanisms);
+        server.registerListener(Event.COMMAND, mechanisms);
+        server.registerListener(Event.DISCONNECT, mechanisms);
+        
+        server.registerListener(Event.COMMAND, vehicle);
+        server.registerListener(Event.WIRE_INPUT, vehicle);
+        server.registerListener(Event.MINECART_POSITIONCHANGE, vehicle);
+        server.registerListener(Event.MINECART_VELOCITYCHANGE, vehicle);
+        server.registerListener(Event.MINECART_DAMAGE, vehicle);
+        server.registerListener(Event.MINECART_ENTERED, vehicle);
+        server.registerListener(Event.MINECART_DESTROYED, vehicle);
+        server.registerListener(Event.BLOCK_PLACE, vehicle);
+        server.registerListener(Event.WORLD_LOAD, vehicle);
+        server.registerListener(Event.DISCONNECT, vehicle);
     }
     
     /**

@@ -21,15 +21,14 @@ package com.sk89q.craftbook.mech.area;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.blockbag.BlockBag;
 import com.sk89q.craftbook.blockbag.BlockBagException;
 import com.sk89q.craftbook.blockbag.OutOfBlocksException;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.Vector;
-import com.sk89q.worldedit.DoubleArrayList;
 
 /**
  * Stores a copy of a cuboid.
@@ -188,10 +187,10 @@ public class CuboidCopy {
      * Paste to world.
      */
     public void paste(WorldInterface w, BlockBag bag) throws BlockBagException {
-        DoubleArrayList<Vector,byte[]> queueAfter =
-            new DoubleArrayList<Vector,byte[]>(false);
-        DoubleArrayList<Vector,byte[]> queueLast =
-            new DoubleArrayList<Vector,byte[]>(false);
+        ArrayList<Tuple2<Vector,byte[]>> queueAfter =
+            new ArrayList<Tuple2<Vector,byte[]>>();
+        ArrayList<Tuple2<Vector,byte[]>> queueLast =
+            new ArrayList<Tuple2<Vector,byte[]>>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -204,32 +203,32 @@ public class CuboidCopy {
                     }
                     
                     if (BlockType.shouldPlaceLast(blocks[index])) {
-                        queueLast.put(pt, new byte[] {blocks[index], data[index]});
+                        queueLast.add(new Tuple2<Vector,byte[]>(pt, new byte[] {blocks[index], data[index]}));
                     } else {
-                        queueAfter.put(pt, new byte[] {blocks[index], data[index]});
+                        queueAfter.add(new Tuple2<Vector,byte[]>(pt, new byte[] {blocks[index], data[index]}));
                     }
                 }
             }
         }
 
-        for (Map.Entry<Vector,byte[]> entry : queueAfter) {
-            byte[] v = entry.getValue();
+        for (Tuple2<Vector,byte[]> entry : queueAfter) {
+            byte[] v = entry.b;
             try {
-                bag.setBlockID(w, entry.getKey(), v[0]);
+                bag.setBlockID(w, entry.a, v[0]);
                 if (BlockType.usesData(v[0])) {
-                    w.setData(entry.getKey(), v[1]);
+                    w.setData(entry.a, v[1]);
                 }
             } catch (OutOfBlocksException e) {
                 // Eat error
             }
         }
 
-        for (Map.Entry<Vector,byte[]> entry : queueLast) {
-            byte[] v = entry.getValue();
+        for (Tuple2<Vector,byte[]> entry : queueLast) {
+            byte[] v = entry.b;
             try {
-                bag.setBlockID(w, entry.getKey(), v[0]);
+                bag.setBlockID(w, entry.a, v[0]);
                 if (BlockType.usesData(v[0])) {
-                    w.setData(entry.getKey(), v[1]);
+                    w.setData(entry.a, v[1]);
                 }
             } catch (OutOfBlocksException e) {
                 // Eat error

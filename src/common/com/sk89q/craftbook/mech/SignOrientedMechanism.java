@@ -57,7 +57,7 @@ public abstract class SignOrientedMechanism {
         
         BlockEntity blockEntity = 
             w.getBlockEntity(x,y,z);
-        if(!(blockEntity instanceof SignInterface)) 
+        if(blockEntity instanceof SignInterface) 
             signText = (SignInterface) blockEntity;
         else throw new IllegalArgumentException("block not sign");
         this.pt = pt;

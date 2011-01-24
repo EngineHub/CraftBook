@@ -36,6 +36,8 @@ public class HmodStateManager extends StateManager {
     
     synchronized void loadAll() throws IOException {
         WorldInterface world = main.getWorld();
+        if(!main.pathToGlobalState.exists()) main.pathToGlobalState.mkdirs();
+        if(!main.pathToWorldState.exists()) main.pathToGlobalState.mkdirs();
         for(String name:stateHolders.keySet()) {
             StateHolder h = stateHolders.get(name);
             DataInputStream in = null;
@@ -43,7 +45,7 @@ public class HmodStateManager extends StateManager {
                 File f = new File(main.pathToGlobalState,name);
                 if(!f.exists()) h.resetCommonData();
                 else {
-                    in = new DataInputStream(new FileInputStream(f));
+                    in = new DataInputStream(new FileInputStream(f)); 
                     h.readCommonData(in);
                 }
             } finally {
@@ -64,6 +66,8 @@ public class HmodStateManager extends StateManager {
     
     synchronized void saveAll() throws IOException {
         WorldInterface world = main.getWorld();
+        if(!main.pathToGlobalState.exists()) main.pathToGlobalState.mkdirs();
+        if(!main.pathToWorldState.exists()) main.pathToGlobalState.mkdirs();
         for(String name:stateHolders.keySet()) {
             StateHolder h = stateHolders.get(name);
             DataOutputStream out = null;

@@ -19,6 +19,8 @@
 
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.access.BaseEntityInterface;
+import com.sk89q.craftbook.access.MinecartInterface;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.ServerInterface;
 import com.sk89q.craftbook.access.SignInterface;
@@ -92,4 +94,17 @@ public abstract class CraftBookDelegateListener {
     public boolean onBlockDestroy(WorldInterface world, PlayerInterface p, Vector block, int status) {
         return false;
     }
+    
+    public void onMinecartPositionChange(WorldInterface world, MinecartInterface cart, int x, int y, int z) {}
+    public void onMinecartVelocityChange(WorldInterface world, MinecartInterface cart) {}
+    public boolean onMinecartDamage(WorldInterface world, MinecartInterface cart,
+                                    BaseEntityInterface attacker, int damage) {
+        return false;
+    }
+    public void onMinecartEnter(WorldInterface world, MinecartInterface cart,
+                                BaseEntityInterface entity, boolean entering) {}
+    public void onMinecartDestroyed(WorldInterface world, MinecartInterface cart) {}
+    
+    public void onWorldLoad(WorldInterface world) {}
+    public void onWorldUnload(WorldInterface world) {}
 }

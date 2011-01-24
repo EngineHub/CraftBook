@@ -139,7 +139,31 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
         entity.setZ(z);
     }
 
-    public void destroy() {
+    public void remove() {
         etc.getServer().getMCServer().e.e(entity.getEntity());
+    }
+
+    public int getEntityId() {
+        return entity.getId();
+    }
+    
+    public double getXSpeed() {
+        return entity.entity.s;
+    }
+    public double getYSpeed() {
+        return entity.entity.t;
+    }
+    public double getZSpeed() {
+        return entity.entity.u;
+    }
+
+    public void setXSpeed(double s) {
+        entity.entity.s = s;
+    }
+    public void setYSpeed(double s) {
+        entity.entity.t = s;
+    }
+    public void setZSpeed(double s) {
+        entity.entity.u = s;
     }
 }

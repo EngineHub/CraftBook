@@ -47,7 +47,6 @@ public class CraftBook extends Plugin implements ServerInterface {
      */
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
     
-    private CraftBookCore core = new CraftBookCore(this);
     private PluginLoader loader = etc.getLoader();
     private Server server = etc.getServer();
     
@@ -87,15 +86,15 @@ public class CraftBook extends Plugin implements ServerInterface {
         new ArrayList<CraftBookDelegateListener>();
     protected List<CraftBookDelegateListener> blockDestroyedListeners = 
         new ArrayList<CraftBookDelegateListener>();
-    protected List<CraftBookDelegateListener> vehiclePositionChangeListeners = 
+    protected List<CraftBookDelegateListener> minecartPositionChangeListeners = 
         new ArrayList<CraftBookDelegateListener>();
-    protected List<CraftBookDelegateListener> vehicleUpdateListeners = 
+    protected List<CraftBookDelegateListener> minecartVelocityChangeListeners = 
         new ArrayList<CraftBookDelegateListener>();
-    protected List<CraftBookDelegateListener> vehicleDamageListeners = 
+    protected List<CraftBookDelegateListener> minecartDamageListeners = 
         new ArrayList<CraftBookDelegateListener>();
-    protected List<CraftBookDelegateListener> vehicleEnterListeners = 
+    protected List<CraftBookDelegateListener> minecartEnterListeners = 
         new ArrayList<CraftBookDelegateListener>();
-    protected List<CraftBookDelegateListener> vehicleDestroyListeners = 
+    protected List<CraftBookDelegateListener> minecartDestroyListeners = 
         new ArrayList<CraftBookDelegateListener>();
     
     {
@@ -107,18 +106,22 @@ public class CraftBook extends Plugin implements ServerInterface {
         events.put(Event.WIRE_INPUT, wireInputListeners);
         events.put(Event.DISCONNECT, disconnectListeners);
         events.put(Event.BLOCK_PLACE, blockPlaceListeners);
+        events.put(Event.BLOCK_RIGHTCLICKED, blockRightClickListeners);
         events.put(Event.BLOCK_DESTROY, blockDestroyedListeners);
-        events.put(Event.VEHICLE_POSITIONCHANGE, vehiclePositionChangeListeners);
-        events.put(Event.VEHICLE_UPDATE, vehicleUpdateListeners);
-        events.put(Event.VEHICLE_DAMAGE, vehicleDamageListeners);
-        events.put(Event.VEHICLE_ENTERED, vehicleEnterListeners);
-        events.put(Event.VEHICLE_DESTROYED, vehicleDestroyListeners);
+        events.put(Event.MINECART_POSITIONCHANGE, minecartPositionChangeListeners);
+        events.put(Event.MINECART_VELOCITYCHANGE, minecartVelocityChangeListeners);
+        events.put(Event.MINECART_DAMAGE, minecartDamageListeners);
+        events.put(Event.MINECART_ENTERED, minecartEnterListeners);
+        events.put(Event.MINECART_DESTROYED, minecartDestroyListeners);
+        
+        events.put(Event.WORLD_LOAD, new ArrayList<CraftBookDelegateListener>());
+        events.put(Event.WORLD_UNLOAD, new ArrayList<CraftBookDelegateListener>());
     }
 
     /**
      * State manager object.
      */
-    private HmodStateManager stateManager = new HmodStateManager(this);
+    private HmodStateManager stateManager;
         
     /**
      * State manager thread. 
@@ -147,19 +150,9 @@ public class CraftBook extends Plugin implements ServerInterface {
     
     private HmodWorldEditBridge worldEdit = new HmodWorldEditBridge();
     
+    private CraftBookCore core;
+
     public CraftBook() {
-        List<WorldInterface> worlds = new ArrayList<WorldInterface>();
-        worlds.add(world);
-        this.worlds = Collections.unmodifiableList(worlds);
-        
-        try {
-            config = new HmodConfigurationImpl(new PropertiesFile("craftbook.properties"));
-        } catch (IOException e) {
-            logger.warning("Failed to load craftbook.properties: " + e.getMessage());
-        }
-    }
-    
-    public void initialize() {
         PluginLoader l = etc.getLoader();
         
         TickPatch.applyPatch();
@@ -173,8 +166,11 @@ public class CraftBook extends Plugin implements ServerInterface {
         l.addListener(PluginLoader.Hook.BLOCK_PLACE, listener, this, PluginListener.Priority.MEDIUM);
         l.addListener(PluginLoader.Hook.BLOCK_RIGHTCLICKED, listener, this, PluginListener.Priority.MEDIUM);
         l.addListener(PluginLoader.Hook.BLOCK_DESTROYED, listener, this, PluginListener.Priority.MEDIUM);
-        
-        core.initialize();
+        l.addListener(PluginLoader.Hook.VEHICLE_DAMAGE, listener, this, PluginListener.Priority.MEDIUM);
+        l.addListener(PluginLoader.Hook.VEHICLE_UPDATE, listener, this, PluginListener.Priority.MEDIUM);
+        l.addListener(PluginLoader.Hook.VEHICLE_POSITIONCHANGE, listener, this, PluginListener.Priority.MEDIUM);
+        l.addListener(PluginLoader.Hook.VEHICLE_ENTERED, listener, this, PluginListener.Priority.MEDIUM);
+        l.addListener(PluginLoader.Hook.VEHICLE_DESTROYED, listener, this, PluginListener.Priority.MEDIUM);
         
         logger.log(Level.INFO, "CraftBook version " + getCraftBookVersion() + " initialized");
         
@@ -195,8 +191,23 @@ public class CraftBook extends Plugin implements ServerInterface {
             pathToToggleAreas = new File(pathToState,"areas");
         }
         
+        stateManager = new HmodStateManager(this);
+        
         stateThread.setName("StateManager-"+name);
         stateThread.start();
+
+        List<WorldInterface> worlds = new ArrayList<WorldInterface>();
+        worlds.add(world);
+        this.worlds = Collections.unmodifiableList(worlds);
+        
+        try {
+            config = new HmodConfigurationImpl(new PropertiesFile("craftbook.properties"));
+        } catch (IOException e) {
+            logger.warning("Failed to load craftbook.properties: " + e.getMessage());
+        }
+        
+        core = new CraftBookCore(this);
+        core.initialize();
     }
 
     public void loadConfiguration() {
@@ -207,13 +218,14 @@ public class CraftBook extends Plugin implements ServerInterface {
     public void enable() {
         SignPatch.applyPatch();
         loadConfiguration();
-        core.enable();
 
         try {
             stateManager.loadAll();
         } catch (IOException e) {
             logger.log(Level.WARNING,"failed to load state", e);
         }
+        
+        core.enable();
         
         logger.log(Level.INFO, "CraftBook version " + getCraftBookVersion() + " enabled");
     }
@@ -238,13 +250,14 @@ public class CraftBook extends Plugin implements ServerInterface {
         }
 
         SignPatch.removePatch();
-        core.disable();
 
         try {
             stateManager.saveAll();
         } catch (IOException e) {
             logger.log(Level.WARNING,"failed to save state", e);
         }
+        
+        core.disable();
 
         logger.log(Level.INFO, "CraftBook version " + getCraftBookVersion() + " disabled");
     }
@@ -276,25 +289,6 @@ public class CraftBook extends Plugin implements ServerInterface {
         }
 
         return version;
-    }
-    
-    /**
-     * Conditionally registers a hook for a listener.
-     * 
-     * @param name
-     * @param priority
-     * @return whether the hook was registered correctly
-     */
-    public boolean registerHook(PluginListener listener,
-            String name, PluginListener.Priority priority) {
-        try {
-            PluginLoader.Hook hook = PluginLoader.Hook.valueOf(name);
-            etc.getLoader().addListener(hook, listener, this, priority);
-            return true;
-        } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING, "CraftBook: Missing hook " + name + "!");
-            return false;
-        }
     }
 
     public boolean isCraftBookLoaded() {

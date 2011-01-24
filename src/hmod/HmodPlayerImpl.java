@@ -148,4 +148,9 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
     public int hashCode() {
         return getName().hashCode();
     }
+
+    @Override
+    public int getItemInHand() {
+        return player.getItemInHand();
+    }
 }
