@@ -156,7 +156,7 @@ public class CraftBook extends Plugin implements ServerInterface {
         PluginLoader l = etc.getLoader();
         
         TickPatch.applyPatch();
-        TickPatch.addTask(TickPatch.wrapRunnable(this,listener));
+        TickPatch.addTask(TickPatch.wrapRunnable(this, listener));
         SignPatch.addListener(SignPatch.wrapListener(this, listener));
         l.addListener(PluginLoader.Hook.SIGN_CHANGE, listener, this, PluginListener.Priority.MEDIUM);
         l.addListener(PluginLoader.Hook.COMMAND, listener, this, PluginListener.Priority.MEDIUM);
@@ -205,6 +205,8 @@ public class CraftBook extends Plugin implements ServerInterface {
         } catch (IOException e) {
             logger.warning("Failed to load craftbook.properties: " + e.getMessage());
         }
+        
+        world.registerTickListener(this);
         
         core = new CraftBookCore(this);
         core.initialize();

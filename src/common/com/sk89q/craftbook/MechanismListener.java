@@ -1022,7 +1022,7 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @return
      */
     public boolean checkObjectUse(PlayerInterface player, String command) {
-        return !checkPermissions || checkObjectUse(player,command);
+        return !checkPermissions || player.canUseObject(command);
     }
     
     /**
@@ -1034,7 +1034,7 @@ public class MechanismListener extends CraftBookDelegateListener {
      * @return
      */
     public boolean checkObjectCreate(PlayerInterface player, String permission) {
-        if (!checkCreatePermissions || checkObjectCreate(player,permission)) {
+        if (!checkCreatePermissions || player.canCreateObject(permission)) {
             return true;
         } else {
             player.printError("You don't have permission to make that.");

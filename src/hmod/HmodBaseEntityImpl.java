@@ -148,22 +148,22 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
     }
     
     public double getXSpeed() {
-        return entity.entity.s;
+        return entity.getEntity().s;
     }
     public double getYSpeed() {
-        return entity.entity.t;
+        return entity.getEntity().t;
     }
     public double getZSpeed() {
-        return entity.entity.u;
+        return entity.getEntity().u;
     }
 
     public void setXSpeed(double s) {
-        entity.entity.s = s;
+        entity.getEntity().s = s;
     }
     public void setYSpeed(double s) {
-        entity.entity.t = s;
+        entity.getEntity().t = s;
     }
     public void setZSpeed(double s) {
-        entity.entity.u = s;
+        entity.getEntity().u = s;
     }
 }

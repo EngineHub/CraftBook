@@ -42,6 +42,10 @@ public class HmodMinecartImpl extends HmodBaseEntityImpl
                 assert false : "bad enum value";
         }
     }
+    
+    public void remove() {
+        cart.destroy();
+    }
 
     public Type getType() {
         return type;

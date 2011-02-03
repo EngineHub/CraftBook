@@ -351,6 +351,9 @@ public class CraftBookListener extends PluginListener
     }
     
     private MinecartInterface getMinecart(Minecart m) {
-        return new HmodMinecartImpl(m,w);
+        if(m.getStorage()==null)
+            return new HmodMinecartImpl(m,w);
+        else
+            return new HmodStorageMinecartImpl(m,w);
     }
 }

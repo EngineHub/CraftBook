@@ -246,4 +246,8 @@ public class HmodWorldImpl extends WorldInterface$ {
         }
         return new HmodMinecartImpl(minecart,this);
     }
+    
+    protected void registerTickListener(CraftBook core) {
+        TickPatch.addTask(TickPatch.wrapRunnable(core, delay));
+    }
 }

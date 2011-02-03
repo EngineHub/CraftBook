@@ -32,8 +32,8 @@ public class RedstoneListener extends CraftBookDelegateListener
     private Map<String,RegisteredIC> icList = 
             new HashMap<String,RegisteredIC>(32);
 
-    private Set<BlockVector> instantICs = 
-            new HashSet<BlockVector>(32);
+    private HashMap<String,HashSet<BlockVector>> instantICs = 
+            new HashMap<String,HashSet<BlockVector>>(32);
 
     private HashMap<String,PlcLang> plcLanguageList = 
             new HashMap<String,PlcLang>();
@@ -254,7 +254,7 @@ public class RedstoneListener extends CraftBookDelegateListener
                     }
                     
                     if(enableSelfTriggeredICs && ic.type.isSelfTriggered) {
-                        instantICs.add(pos.toBlockVector());
+                        getInstantIcList(world).add(pos.toBlockVector());
                     }
                     
                     s.flushChanges();
@@ -367,17 +367,20 @@ public class RedstoneListener extends CraftBookDelegateListener
         //XXX HACK: Do this in a more proper way later.
         if(world.getTime()%2!=0) return;
         
-        BlockVector[] bv = this.instantICs.toArray(new BlockVector[0]);
+        HashSet<BlockVector> instantICs = getInstantIcList(world);
+        
+        BlockVector[] bv = instantICs.toArray(new BlockVector[0]);
         for(BlockVector pt:bv) {
             SignInterface sign = (SignInterface) 
-            world.getBlockEntity(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+                world.getBlockEntity(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+            
             if(sign==null) {
-                this.instantICs.remove(pt);
+                instantICs.remove(pt);
                 continue;
             }
-            String line2 = sign.getLine1();
+            String line2 = sign.getLine2();
             if(!line2.startsWith("[MC")) {
-                this.instantICs.remove(pt);
+                instantICs.remove(pt);
                 continue;
             }
             
@@ -386,12 +389,12 @@ public class RedstoneListener extends CraftBookDelegateListener
             if (ic == null) {
                 sign.setLine2(Colors.RED + line2);
                 sign.flushChanges();
-                this.instantICs.remove(pt);
+                instantICs.remove(pt);
                 continue;
             }
 
             if(!ic.type.isSelfTriggered) {
-                this.instantICs.remove(pt);
+                instantICs.remove(pt);
                 continue;
             }
             
@@ -417,7 +420,7 @@ public class RedstoneListener extends CraftBookDelegateListener
 
         if(!ic.type.isSelfTriggered) return;
 
-        instantICs.add(new BlockVector(x,y,z));
+        getInstantIcList(world).add(new BlockVector(x,y,z));
     }
     
     /**
@@ -595,6 +598,14 @@ public class RedstoneListener extends CraftBookDelegateListener
     public void registerLang(String name, PlcLang language) {
         plcLanguageList.put(name, language);
         server.getStateManager().addStateHolder(name, language);
+    }
+    
+    private HashSet<BlockVector> getInstantIcList(WorldInterface world) {
+        String name = world.getUniqueIdString();
+        if(instantICs.containsKey(name)) return instantICs.get(name);
+        HashSet<BlockVector> s = new HashSet<BlockVector>();
+        instantICs.put(name,s);
+        return s;
     }
 
     /**

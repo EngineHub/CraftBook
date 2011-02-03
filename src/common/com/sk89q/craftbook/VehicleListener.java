@@ -614,7 +614,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                     PlayerInterface player = minecart.getPlayer();
                     
                     String name = player.getName();
-                    String msg = sign.getLine1() + sign.getLine2() + sign.getLine3();
+                    String msg = sign.getLine2() + sign.getLine3() + sign.getLine4();
                     long now = System.currentTimeMillis();
 
                     if (lastMinecartMsg.containsKey(name)) {
