@@ -20,7 +20,6 @@ package com.sk89q.craftbook.mech;
 
 import java.util.Random;
 import java.io.*;
-import sun.security.krb5.Config;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.worldedit.BlockVector;
