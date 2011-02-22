@@ -48,6 +48,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
                 bookcaseReadLine = config.getString("bookcase.read-line", bookcaseReadLine);
             }
         };
+        
+        config.loadConfiguration();
     }
     
     @Override

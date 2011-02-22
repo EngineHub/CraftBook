@@ -38,6 +38,8 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             public void loadConfiguration() {
             }
         };
+        
+        config.loadConfiguration();
     }
     
     @Override
