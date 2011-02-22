@@ -18,6 +18,10 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -87,6 +91,47 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     protected void registerEvent(Event.Type type, Listener listener) {
         getServer().getPluginManager()
                 .registerEvent(type, listener, Priority.Normal, this);
+    }
+    
+    /**
+     * Create a default configuration file from the .jar.
+     * 
+     * @param name
+     */
+    protected void createDefaultConfiguration(String name) {
+        File actual = new File(getDataFolder(), name);
+        if (!actual.exists()) {
+            
+            InputStream input =
+                    this.getClass().getResourceAsStream("/defaults/" + name);
+            if (input != null) {
+                FileOutputStream output = null;
+
+                try {
+                    output = new FileOutputStream(actual);
+                    byte[] buf = new byte[8192];
+                    int length = 0;
+                    while ((length = input.read(buf)) > 0) {
+                        output.write(buf, 0, length);
+                    }
+                    
+                    logger.info(getDescription().getName()
+                            + ": Default configuration file written: " + name);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (input != null)
+                            input.close();
+                    } catch (IOException e) {}
+
+                    try {
+                        if (output != null)
+                            output.close();
+                    } catch (IOException e) {}
+                }
+            }
+        }
     }
     
     /**

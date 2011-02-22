@@ -35,6 +35,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+
+        createDefaultConfiguration("books.txt");
+        createDefaultConfiguration("cauldron-recipes.txt");
         
         config = new MechanismsConfiguration() {
             @Override

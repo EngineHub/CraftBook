@@ -33,6 +33,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     public void onEnable() {
         super.onEnable();
         
+        createDefaultConfiguration("custom-ics.txt");
+        
         config = new CircuitsConfiguration() {
             @Override
             public void loadConfiguration() {
