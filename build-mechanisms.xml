@@ -1,0 +1,33 @@
+<project name="CraftBookMechanisms" default="dist" basedir=".">
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}/mechanisms" deprecation="true"
+      includeantruntime="true" destdir="${build.dir}/mechanisms" debug="true">
+      <classpath>
+        <pathelement location="${build.dir}/common" />
+        <fileset refid="libs"/>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="jar" depends="compile">
+    <mkdir dir="${dist.dir}/mechanisms"/>
+    
+    <!-- Make the manifest -->
+    <manifest file="${dist.dir}/mechanisms/manifest.mf" mode="replace">
+      <attribute name="Implementation-Title" value="CraftBook (mechanisms)"/>
+      <attribute name="Implementation-Version" value="${version}"/>
+      <attribute name="CraftBook-Version" value="${version}"/>
+      <attribute name="Class-Path" value="CraftBook.jar WorldEdit.jar ../WorldEdit.jar"/>
+    </manifest>
+    
+    <!-- Make the plugin.yml file -->
+    <delete file="${build.dir}/mechanisms/plugin.yml"/>
+    <copy tofile="${build.dir}/mechanisms/plugin.yml" file="${src.dir}/mechanisms/resources/plugin.yml"/>
+    <replace file="${build.dir}/mechanisms/plugin.yml" token="__VERSION_MACRO__" value="${version}"/>
+    <mkdir dir="${build.dir}/mechanisms/defaults"/>
+    <copy tofile="${build.dir}/mechanisms/defaults/config.yml" file="${src.dir}/mechanisms/resources/config.yml"/>
+    <jar jarfile="${dist.dir}/CraftBookMechanisms.jar" basedir="${build.dir}/mechanisms" manifest="${dist.dir}/mechanisms/manifest.mf"/>
+  </target>
+  
+</project>

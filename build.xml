@@ -1,152 +1,83 @@
-<project name="CraftBook" default="build-all" basedir=".">
-	<description>
-    CraftBook adds interactive mechanics, Redstone features, and
-    Minecart enhancements to Minecraft SMP.</description>
+<project name="CraftBook" default="dist" basedir=".">
+  <description>
+  CraftBook adds interactive mechanics, Redstone features, and
+  Minecart enhancements to Minecraft SMP.</description>
 
-	<property name="src.dir" location="src" />
-	<property name="build.dir" location="build" />
-	<property name="dist.dir" location="dist" />
-	<property name="release.dir" location="release" />
-	<property name="lib.dir" location="lib" />
+  <property name="src.dir" location="src" />
+  <property name="build.dir" location="build" />
+  <property name="dist.dir" location="dist" />
+  <property name="release.dir" location="release" />
+  <property name="lib.dir" location="lib" />
 
-	<target name="init">
-		<mkdir dir="${build.dir}" />
-		<mkdir dir="${build.dir}/bukkit" />
-		<mkdir dir="${build.dir}/hmod" />
-		<mkdir dir="${build.dir}/common" />
-	</target>
+  <fileset id="libs" dir="${lib.dir}">
+    <include name="Bukkit.jar" />
+    <include name="Craftbukkit.jar" />
+    <include name="WorldEdit.jar" />
+  </fileset>
 
-	<!-- Compile the common source files -->
-	<target name="compile-common" depends="init">
-		<javac srcdir="${src.dir}/common" deprecation="true" includeantruntime="true" destdir="${build.dir}/common" debug="true"/>
-	</target>
+  <import file="build-common.xml" />
+  <import file="build-mechanisms.xml" />
 
-	<!-- Compile the hMod source files -->
-	<target name="compile-hmod" depends="compile-common">
-		<javac srcdir="${src.dir}/hmod" deprecation="true" includeantruntime="true" destdir="${build.dir}/hmod" debug="true">
-			<classpath>
-				<fileset dir="${lib.dir}" includes="*.jar"/>
-				<pathelement path="${build.dir}/common"/>
-			</classpath>
-		</javac>
-	</target>
+  <target name="init">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${build.dir}/common" />
+    <mkdir dir="${build.dir}/mechanisms" />
+  </target>
 
-	<!-- Compile the Bukkit source files -->
-	<target name="compile-bukkit" depends="compile-common">
-		<javac srcdir="${src.dir}/bukkit" deprecation="true" includeantruntime="true" destdir="${build.dir}/bukkit" debug="true">
-			<classpath>
-				<fileset dir="${lib.dir}" includes="*.jar"/>
-				<pathelement path="${build.dir}/common"/>
-			</classpath>
-		</javac>
-	</target>
+  <!-- Compile the source files -->
+  <target name="compile" depends="init">
+    <sequential>
+      <antcall target="CraftBookCommon.compile"/>
+      <antcall target="CraftBookMechanisms.compile"/>
+    </sequential>
+  </target>
 
-	<!-- Generate the manifest file -->
-	<target name="generate-manifest">
-		<manifest file="manifest.mf" mode="replace">
-			<attribute name="Implementation-Title" value="CraftBook" />
-			<attribute name="Implementation-Version" value="${version}" />
-			<attribute name="CraftBook-Version" value="${version}" />
-			<attribute name="Class-Path" value="WorldEdit.jar" />
-		</manifest>
-	</target>
+  <!-- Build the .jar -->
+  <target name="jar" depends="compile">
+    <sequential>
+      <antcall target="CraftBookCommon.jar"/>
+      <antcall target="CraftBookMechanisms.jar"/>
+    </sequential>
+  </target>
 
-	<!-- Build the .jar for Bukkit and hMod -->
-	<target name="jar-all" depends="compile-hmod,compile-bukkit">
-		<antcall target="generate-manifest"/>
-		<mkdir dir="${dist.dir}" />
-		<jar jarfile="${dist.dir}/CraftBook.jar" manifest="manifest.mf">
-			<fileset dir="${build.dir}/common"/>
-			<fileset dir="${build.dir}/hmod"/>
-			<fileset dir="${build.dir}/bukkit"/>
-		</jar>
-	</target>
+  <!-- Create the .jar -->
+  <target name="dist">
+    <property name="version" value="nightly"/>
+    <antcall target="jar"/>
+  </target>
 
-	<!-- Build the .jar for Bukkit -->
-	<target name="jar-bukkit" depends="compile-bukkit">
-		<antcall target="generate-manifest"/>
-		<mkdir dir="${dist.dir}" />
-		<jar jarfile="${dist.dir}/CraftBook.jar" manifest="manifest.mf">
-			<fileset dir="${build.dir}/common"/>
-			<fileset dir="${build.dir}/bukkit"/>
-		</jar>
-	</target>
+  <!-- Build a release -->
+  <target name="release" depends="clean">
+    <input message="Enter version:" addproperty="version"/>
+    <antcall target="jar"/>
+    <delete dir="${release.dir}"/>
+    <mkdir dir="${release.dir}"/>
+    <!--<copy tofile="${release.dir}/README.txt" file="README.txt"/>
+    <copy tofile="${release.dir}/LICENSE.txt" file="LICENSE.txt"/>
+    <copy tofile="${release.dir}/CHANGELOG.txt" file="CHANGELOG.txt"/>-->
+    <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip plugin.yml common mechanisms"/>
+    <mkdir dir="${release.dir}/src"/>
+    <copy todir="${release.dir}/src">
+      <fileset dir="${src.dir}"/>
+    </copy>
+    <zip destfile="${release.dir}/craftbook-${version}-src.zip" basedir="${release.dir}" excludes="*.zip plugin.yml common mechanisms"/>
+  </target>
+  
+  <!-- Clean the output -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+    <delete dir="${release.dir}"/>
+  </target>
 
-	<!-- Build the .jar for hMod -->
-	<target name="jar-hmod" depends="compile-hmod">
-		<antcall target="generate-manifest"/>
-		<mkdir dir="${dist.dir}" />
-		<jar jarfile="${dist.dir}/CraftBook.jar" manifest="manifest.mf">
-			<fileset dir="${build.dir}/common"/>
-			<fileset dir="${build.dir}/hmod"/>
-		</jar>
-	</target>
-
-	<!-- Create the .jar for Bukkit and hMod -->
-	<target name="build-all">
-		<property name="version" value="nightly" />
-		<antcall target="jar-all" />
-	</target>
-
-	<!-- Create the .jar for Bukkit -->
-	<target name="build-bukkit">
-		<property name="version" value="nightly" />
-		<antcall target="jar-bukkit" />
-	</target>
-
-	<!-- Create the .jar for hMod -->
-	<target name="build-hmod">
-		<property name="version" value="nightly" />
-		<antcall target="jar-hmod" />
-	</target>
-
-	<!-- Build a release -->
-	<target name="release">
-		<input message="Enter version:" addproperty="version" />
-		<antcall target="jar-all" />
-		
-		<delete dir="${release.dir}" />
-		
-		<!-- Build distribution -->
-		<mkdir dir="${release.dir}" />
-		
-		<copy todir="${release.dir}">
-			<fileset dir="." includes="*.txt" excludes="COMPILING.txt"/>
-			<fileset file="craftbook.properties"/>
-			<fileset file="${dist.dir}/CraftBook.jar"/>
-		</copy>
-		
-		<zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip" />
-
-		<!-- Build source including distribution -->
-		<mkdir dir="${release.dir}/src" />
-		<copy todir="${release.dir}/src">
-			<fileset dir="${src.dir}" />
-		</copy>
-		
-		<copy todir="${release.dir">
-			<fileset file="build.xml"/>
-			<fileset file="COMPILING.txt"/>
-		</copy>
-		
-		<zip destfile="${release.dir}/craftbook-${version}-source.zip" basedir="${release.dir}" excludes="*.zip" />
-	</target>
-
-	<!-- Clean the output -->
-	<target name="clean">
-		<delete dir="${build.dir}" />
-		<delete dir="${dist.dir}" />
-		<delete dir="${release.dir}" />
-	</target>
-
-	<!-- Run JFlex -->
-	<target name="run-jflex">
-		<taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
-			<classpath>
-				<pathelement location="${lib.dir}/JFlex.jar" />
-			</classpath>
-		</taskdef>
-		<!-- WARNING: Hardcoded. JFlex's Ant task is horrible. -->
-		<jflex file="src/com/sk89q/craftbook/ic/custom/CustomICScanner.lex" destdir="${src.dir}" />
-	</target>
+  <!-- Run JFlex
+  <target name="run-jflex">
+    <taskdef classname="JFlex.anttask.JFlexTask" name="jflex">
+      <classpath>
+        <pathelement location="${lib.dir}/JFlex.jar" />
+      </classpath>
+    </taskdef>
+    WARNING: Hardcoded. JFlex's Ant task is horrible.
+    <jflex file="src/com/sk89q/craftbook/ic/custom/CustomICScanner.lex" destdir="${src.dir}" />
+  </target> -->
 </project>
