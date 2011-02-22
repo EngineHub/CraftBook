@@ -73,7 +73,7 @@ public class Bookcase {
                 player.print(bookReadLine);
                 player.printRaw(text);
             } else {
-                player.printError("Failed to fetch a line from the books file");
+                player.printError("Failed to fetch a line from the books file.");
             }
         } catch (IOException e) {
             player.printError("Failed to read the books file.");
