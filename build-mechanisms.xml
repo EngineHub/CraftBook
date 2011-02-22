@@ -27,6 +27,8 @@
     <replace file="${build.dir}/mechanisms/plugin.yml" token="__VERSION_MACRO__" value="${version}"/>
     <mkdir dir="${build.dir}/mechanisms/defaults"/>
     <copy tofile="${build.dir}/mechanisms/defaults/config.yml" file="${src.dir}/mechanisms/resources/config.yml"/>
+    <copy tofile="${build.dir}/mechanisms/defaults/books.txt" file="${src.dir}/mechanisms/resources/books.txt"/>
+    <copy tofile="${build.dir}/mechanisms/defaults/cauldron-recipes.txt" file="${src.dir}/mechanisms/resources/cauldron-recipes.txt"/>
     <jar jarfile="${dist.dir}/CraftBookMechanisms.jar" basedir="${build.dir}/mechanisms" manifest="${dist.dir}/mechanisms/manifest.mf"/>
   </target>
   

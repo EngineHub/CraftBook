@@ -60,9 +60,10 @@
     <antcall target="jar"/>
     <delete dir="${release.dir}"/>
     <mkdir dir="${release.dir}"/>
-    <!--<copy tofile="${release.dir}/README.txt" file="README.txt"/>
+    <copy tofile="${release.dir}/README.txt" file="README.txt"/>
     <copy tofile="${release.dir}/LICENSE.txt" file="LICENSE.txt"/>
-    <copy tofile="${release.dir}/CHANGELOG.txt" file="CHANGELOG.txt"/>-->
+    <copy tofile="${release.dir}/CHANGELOG.txt" file="CHANGELOG.txt"/>
+    <copy tofile="${release.dir}/CHANGELOG.txt" file="PERLSTONE-v1.0.txt"/>
     <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip plugin.yml common mechanisms"/>
     <mkdir dir="${release.dir}/src"/>
     <copy todir="${release.dir}/src">

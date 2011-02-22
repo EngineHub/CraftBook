@@ -20,7 +20,9 @@ package com.sk89q.craftbook.mech;
 
 import java.util.Random;
 import java.io.*;
+import sun.security.krb5.Config;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.worldedit.BlockVector;
 
 /**
@@ -42,12 +44,19 @@ public class Bookcase {
     protected BlockVector pt;
     
     /**
+     * Configuration.
+     */
+    protected MechanismsConfiguration config;
+    
+    /**
      * Construct a bookcase for a location.
      * 
      * @param pt
+     * @param config 
      */
-    public Bookcase(BlockVector pt) {
+    public Bookcase(BlockVector pt, MechanismsConfiguration config) {
         this.pt = pt;
+        this.config = config;
     }
     
     /**
@@ -64,10 +73,10 @@ public class Bookcase {
                 player.print(bookReadLine);
                 player.printRaw(text);
             } else {
-                player.printError("Failed to fetch a line from craftbook-books.txt.");
+                player.printError("Failed to fetch a line from the books file");
             }
         } catch (IOException e) {
-            player.printError("Failed to read craftbook-books.txt.");
+            player.printError("Failed to read the books fiel.");
         }
     }
 
@@ -77,9 +86,9 @@ public class Bookcase {
      * @return
      * @throws IOException
      */
-    protected static String getBookLine() throws IOException {
+    protected String getBookLine() throws IOException {
         RandomAccessFile file = new RandomAccessFile(
-                new File("craftbook-books.txt"), "r");
+                new File(config.dataFolder, "books.txt"), "r");
 
         long len = file.length();
         byte[] data = new byte[500];

@@ -41,6 +41,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             public void loadConfiguration() {
                 Configuration config = getConfiguration();
                 
+                dataFolder = getDataFolder();
                 bookcaseReadLine = config.getString("bookcase.read-line", bookcaseReadLine);
             }
         };

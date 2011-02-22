@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook;
 
+import java.io.File;
+
 /**
  * Configuration handler for CraftBook.
  * 
@@ -25,6 +27,7 @@ package com.sk89q.craftbook;
  */
 public abstract class MechanismsConfiguration {
     public String bookcaseReadLine = "You pick up a book...";
+    public File dataFolder;
     
     /**
      * Load the configuration data from somewhere. This may be called
