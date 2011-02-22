@@ -2,3 +2,6 @@ name: CraftBook (vehicles)
 main: com.sk89q.craftbook.bukkit.VehiclesPlugin
 version: __VERSION_MACRO__
 commands:
+    st:
+        description: Choose a stop
+        usage: /<command>

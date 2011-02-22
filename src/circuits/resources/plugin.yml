@@ -2,3 +2,9 @@ name: CraftBook (circuits)
 main: com.sk89q.craftbook.bukkit.CircuitsPlugin
 version: __VERSION_MACRO__
 commands:
+    ic:
+        description: IC-related commands
+        usage: /<command>
+    listics:
+        description: List the ICs available
+        usage: /<command>
