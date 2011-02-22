@@ -18,6 +18,33 @@
 
 package com.sk89q.craftbook.bukkit;
 
-public class MechanismsConfiguration {
+import com.sk89q.craftbook.CircuitsConfiguration;
 
+/**
+ * Plugin for CraftBook's redstone additions.
+ * 
+ * @author sk89q
+ */
+public class CircuitsPlugin extends BaseBukkitPlugin {
+    
+    protected CircuitsConfiguration config;
+    
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        
+        config = new CircuitsConfiguration() {
+            @Override
+            public void loadConfiguration() {
+            }
+        };
+    }
+    
+    @Override
+    protected void registerEvents() {
+    }
+    
+    public CircuitsConfiguration getLocalConfiguration() {
+        return config;
+    }
 }

@@ -1,0 +1,33 @@
+<project name="CraftBookCircuits" default="dist" basedir=".">
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}/circuits" deprecation="true"
+      includeantruntime="true" destdir="${build.dir}/circuits" debug="true">
+      <classpath>
+        <pathelement location="${build.dir}/common" />
+        <fileset refid="libs"/>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="jar" depends="compile">
+    <mkdir dir="${dist.dir}/circuits"/>
+    
+    <!-- Make the manifest -->
+    <manifest file="${dist.dir}/circuits/manifest.mf" mode="replace">
+      <attribute name="Implementation-Title" value="CraftBook (circuits)"/>
+      <attribute name="Implementation-Version" value="${version}"/>
+      <attribute name="CraftBook-Version" value="${version}"/>
+      <attribute name="Class-Path" value="CraftBook.jar WorldEdit.jar ../WorldEdit.jar"/>
+    </manifest>
+    
+    <!-- Make the plugin.yml file -->
+    <delete file="${build.dir}/circuits/plugin.yml"/>
+    <copy tofile="${build.dir}/circuits/plugin.yml" file="${src.dir}/circuits/resources/plugin.yml"/>
+    <replace file="${build.dir}/circuits/plugin.yml" token="__VERSION_MACRO__" value="${version}"/>
+    <mkdir dir="${build.dir}/circuits/defaults"/>
+    <copy tofile="${build.dir}/circuits/defaults/config.yml" file="${src.dir}/circuits/resources/config.yml"/>
+    <jar jarfile="${dist.dir}/CraftBookCircuits.jar" basedir="${build.dir}/circuits" manifest="${dist.dir}/circuits/manifest.mf"/>
+  </target>
+  
+</project>

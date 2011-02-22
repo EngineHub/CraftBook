@@ -17,11 +17,15 @@
 
   <import file="build-common.xml" />
   <import file="build-mechanisms.xml" />
+  <import file="build-circuits.xml" />
+  <import file="build-vehicles.xml" />
 
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${build.dir}/common" />
     <mkdir dir="${build.dir}/mechanisms" />
+    <mkdir dir="${build.dir}/circuits" />
+    <mkdir dir="${build.dir}/vehicles" />
   </target>
 
   <!-- Compile the source files -->
@@ -29,6 +33,8 @@
     <sequential>
       <antcall target="CraftBookCommon.compile"/>
       <antcall target="CraftBookMechanisms.compile"/>
+      <antcall target="CraftBookCircuits.compile"/>
+      <antcall target="CraftBookVehicles.compile"/>
     </sequential>
   </target>
 
@@ -37,6 +43,8 @@
     <sequential>
       <antcall target="CraftBookCommon.jar"/>
       <antcall target="CraftBookMechanisms.jar"/>
+      <antcall target="CraftBookCircuits.jar"/>
+      <antcall target="CraftBookVehicles.jar"/>
     </sequential>
   </target>
 

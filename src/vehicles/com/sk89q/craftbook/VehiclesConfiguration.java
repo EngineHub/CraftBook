@@ -16,16 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook;
 
 /**
  * Configuration handler for CraftBook.
  * 
  * @author sk89q
  */
-public abstract class MechanismsConfiguration {
-    public String bookcaseReadLine = "You pick up a book...";
-    
+public abstract class VehiclesConfiguration {
     /**
      * Load the configuration data from somewhere. This may be called
      * repeatedly to reload the configuration at any time.

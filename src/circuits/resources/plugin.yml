@@ -1,0 +1,4 @@
+name: CraftBook (circuits)
+main: com.sk89q.craftbook.bukkit.CircuitsPlugin
+version: __VERSION_MACRO__
+commands:

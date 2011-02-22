@@ -18,41 +18,33 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockListener;
-import org.bukkit.util.config.Configuration;
-import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.VehiclesConfiguration;
 
 /**
- * Plugin for CraftBook's mechanisms.
+ * Plugin for CraftBook's redstone additions.
  * 
  * @author sk89q
  */
-public class MechanismsPlugin extends BaseBukkitPlugin {
+public class VehiclesPlugin extends BaseBukkitPlugin {
     
-    protected MechanismsConfiguration config;
+    protected VehiclesConfiguration config;
     
     @Override
     public void onEnable() {
         super.onEnable();
         
-        config = new MechanismsConfiguration() {
+        config = new VehiclesConfiguration() {
             @Override
             public void loadConfiguration() {
-                Configuration config = getConfiguration();
-                
-                bookcaseReadLine = config.getString("bookcase.read-line", bookcaseReadLine);
             }
         };
     }
     
     @Override
     protected void registerEvents() {
-        BlockListener blockListener = new MechanismsBlockListener(this);
-        registerEvent(Event.Type.BLOCK_RIGHTCLICKED, blockListener);
     }
     
-    public MechanismsConfiguration getLocalConfiguration() {
+    public VehiclesConfiguration getLocalConfiguration() {
         return config;
     }
 }

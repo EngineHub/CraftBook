@@ -16,24 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.bukkit;
+package com.sk89q.craftbook;
 
-import org.bukkit.util.config.Configuration;
-import com.sk89q.craftbook.mech.MechanismsConfiguration;
-
-public class BukkitMechanismsConfiguration extends MechanismsConfiguration {
-    
-    protected CraftBookPlugin plugin;
-    
-    public BukkitMechanismsConfiguration(CraftBookPlugin plugin) {
-        this.plugin = plugin;
-    }
-
-    @Override
-    public void loadConfiguration() {
-        Configuration config = plugin.getConfiguration();
-        
-        bookcaseReadLine = config.getString("bookcase.read-line", bookcaseReadLine);
-    }
-
+/**
+ * Configuration handler for CraftBook.
+ * 
+ * @author sk89q
+ */
+public abstract class CircuitsConfiguration {
+    /**
+     * Load the configuration data from somewhere. This may be called
+     * repeatedly to reload the configuration at any time.
+     */
+    public abstract void loadConfiguration();
 }
