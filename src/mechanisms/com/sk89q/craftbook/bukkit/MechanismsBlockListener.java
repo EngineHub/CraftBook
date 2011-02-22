@@ -53,7 +53,8 @@ public class MechanismsBlockListener extends BlockListener {
         LocalPlayer player = plugin.wrap(event.getPlayer());
         
         if (block.getType() == Material.BOOKSHELF) {
-            Bookcase bookcase = new Bookcase(BukkitUtil.toVector(block));
+            Bookcase bookcase = new Bookcase(BukkitUtil.toVector(block),
+                    plugin.getLocalConfiguration());
             bookcase.read(player, plugin.getLocalConfiguration().bookcaseReadLine);
         }
     }
