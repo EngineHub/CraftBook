@@ -44,25 +44,34 @@ public class MechanicManager extends BlockListener {
     
     @Override
     public void onBlockRightClick(BlockRightClickEvent event) {
-        if (disbatchToMechanic(event)) return;
-        
-        // consider making a new Mechanic.
-        // i imagine this will tend to have slightly different conditions for different event types for efficiency.
-        switch (event.getBlock().getType()) {
-                case SIGN:
-                    // read the sign and do string ops to see what kind of Mechanic might be appropriate to instantiate.
-                    // if we should make: do so, then register, then pass the event, and we're done.
-                    // the details of detection should be left up the Mechanic implementations themselves as much as possible, so this should be done by looping through attempting a bunch of factory methods here.
-                    break;
-                case BOOKSHELF:
-                    // bookshelves are so simple and stateless they might actually be most efficiently done with purely static methods, even though that would represent a slight break in pattern.  that and bookshelf blocks tend to be fairly spammed.
-                    break;
-                default: // don't care.
+	// see if any mechanisms exist that might be triggered by events at that location (and check if one should be instantiated).
+        Mechanic $m = $triggers.get(BukkitUtil.toVector(event.getBlock()));
+        if ($m != null) {
+            // there's already a Mechanic that's triggerable by events at this location
+        } else {
+            // consider making a new Mechanic.
+            // i imagine this will tend to have slightly different conditions for different event types for efficiency.
+            switch (event.getBlock().getType()) {
+                    case SIGN:
+                        // read the sign and do string ops to see what kind of Mechanic might be appropriate to instantiate.
+                        //   the details of detection should be left up the Mechanic implementations themselves as much as possible, so this should be done by looping through attempting a bunch of factory methods here.
+                        // if we should make: do so, then register, then call it $m and break out.
+                        break;
+                    case BOOKSHELF:
+                        // bookshelves are so simple and stateless they might actually be most efficiently done with purely static methods, even though that would represent a slight break in pattern.  that and bookshelf blocks tend to be fairly spammed.
+                	return;
+                    default: // don't care.
+            }
         }
+        if ($m != null) {
+            $m.getBlockListener().onBlockRightClick(event);
+        } // else: there wasn't a Mechanic here, and there shouldn't be.
         
-        // i think it might be best if Mechanic gets a reference to BaseBukkitPlugin somehow and does the player-wrapping sort of things on its own, if it needs them.
-        //  many Mechanic implementers won't need to futz with those extra object allocations... and more importantly it means we don't have to make a whole dang set of listening interfaces for passing the wrapped object along with other objects that contain the unwrapped originals, because that's just too redundant for comfort.
+        // now find anyone who considers this position a definer, and tell them about it too.
+        //TODO
     }
+    // i think it might be best if Mechanic gets a reference to BaseBukkitPlugin somehow and does the player-wrapping sort of things on its own, if it needs them.
+    //  many Mechanic implementers won't need to futz with those extra object allocations... and more importantly it means we don't have to make a whole dang set of listening interfaces for passing the wrapped object along with other objects that contain the unwrapped originals, because that's just too redundant for comfort.
     
     
     
@@ -72,6 +81,7 @@ public class MechanicManager extends BlockListener {
                 if ($triggers.get($p) != null) throw new IllegalStateException("Position "+$p+" has already been claimed by another Mechanic; registration not performed.");
         for (BlockVector $p : $m.getTriggerPositions())
             $triggers.put($p, $m);
+        //TODO register definers
     }
     
     // MechanicManager is allowed to unload and discard a Mechanic without telling the Mechanic about it.  this means removing all of that Mechanic's triggering BlockVectors from the triggerDispatch map.
@@ -81,16 +91,6 @@ public class MechanicManager extends BlockListener {
                 if ($triggers.get($p) != $m) throw new IllegalStateException("Position "+$p+" has occupied by another Mechanic; deregistration not performed.");
         for (BlockVector $p : $m.getTriggerPositions())    
             $triggers.put($p, null);
-    }
-    
-    /**
-     * @return true if a Mechanic was found to eat the event (and processing the
-     *         event should thus stop); false otherwise.
-     */
-    private boolean disbatchToMechanic(BlockEvent event) {        // see the note at the top of file about type.
-        Mechanic $m = $triggers.get(BukkitUtil.toVector(event.getBlock()));
-        if ($m == null) return false;
-        $m.dealWithIt(event);
-        return true;
+        //TODO deregister definers
     }
 }
