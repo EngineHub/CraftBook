@@ -22,18 +22,22 @@ package com.sk89q.craftbook;
 import com.sk89q.craftbook.util.BlockWorldVector;
 
 /**
- * Mechanic factories detect a mechanic at a position and will return 
- * the corresponding mechanic if it matches.
+ * MechanicFactory attempts to detect a mechanism at a position and will produce
+ * the corresponding Mechanic if it matches.
  * 
  * @author sk89q
- * @param <T> returned mechanic
+ * @param <T>
+ *            returned mechanic
  */
 public interface MechanicFactory<T extends Mechanic> {
     /**
      * Detect the mechanic at a location.
      * 
      * @param pos
-     * @return null if no mechanic was detected
+     * @return null if no mechanism was detected
+     * @throws InvalidMechanismException
+     *             if it appears that the position is intended to me a
+     *             mechanism, but the mechanism is misconfigured and inoperable.
      */
-    public T detect(BlockWorldVector pos);
+    public T detect(BlockWorldVector pos) throws InvalidMechanismException;
 }
