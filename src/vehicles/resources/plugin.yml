@@ -1,4 +1,4 @@
-name: CraftBook (vehicles)
+name: CraftBookVehicles
 main: com.sk89q.craftbook.bukkit.VehiclesPlugin
 version: __VERSION_MACRO__
 commands:

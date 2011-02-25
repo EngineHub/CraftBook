@@ -1,4 +1,4 @@
-name: CraftBook (mechanisms)
+name: CraftBookMechanisms
 main: com.sk89q.craftbook.bukkit.MechanismsPlugin
 version: __VERSION_MACRO__
 commands:
