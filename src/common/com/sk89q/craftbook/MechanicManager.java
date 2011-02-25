@@ -68,7 +68,7 @@ public class MechanicManager {
      * 
      * @param factory
      */
-    public void registerMechanic(MechanicFactory<Mechanic> factory) {
+    public void register(MechanicFactory<Mechanic> factory) {
         factories.add(factory);
     }
     
