@@ -140,15 +140,15 @@ public class MechanicManager {
      * @param pos
      * @return a {@link Mechanic} or null
      */
-    protected Mechanic detect(BlockWorldVector pos) {
+    protected Mechanic detect(BlockWorldVector pos) throws InvalidMechanismException {
         for (MechanicFactory<? extends Mechanic> factory : factories) {
             Mechanic mechanic = factory.detect(pos);
-            
+
             if (mechanic != null) {
                 return mechanic;
             }
         }
-        
+
         return null;
     }
     
@@ -169,7 +169,11 @@ public class MechanicManager {
             }
         }
         
-        mechanic = detect(pos);
+        try {
+            mechanic = detect(pos);
+        } catch (InvalidMechanismException e) {
+            //FIXME tell the player about it.  maybe we have to throw this further out so we can get a player reference from the event the lead us here, since we're only thinking by position right now
+        }
         
         // No mechanic detected!
         if (mechanic == null) {
