@@ -28,7 +28,6 @@ import org.bukkit.event.world.WorldListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.BlockWorldVector2D;
 
 /**
