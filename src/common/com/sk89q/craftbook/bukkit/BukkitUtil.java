@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
 
@@ -33,6 +34,11 @@ public class BukkitUtil {
     
     public static BlockVector toVector(Block block) {
         return new BlockVector(block.getX(), block.getY(), block.getZ());
+    }
+    
+    public static BlockWorldVector toWorldVector(Block block) {
+        return new BlockWorldVector(block.getWorld(), block.getX(),
+                block.getY(), block.getZ());
     }
     
     public static Vector toVector(Location loc) {
