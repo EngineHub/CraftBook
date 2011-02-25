@@ -18,10 +18,10 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.util.config.Configuration;
+import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.mech.BookcaseFactory;
 
 /**
  * Plugin for CraftBook's mechanisms.
@@ -50,12 +50,17 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         };
         
         config.loadConfiguration();
+        
+        MechanicManager manager = new MechanicManager();
+        MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
+        adapter.register(manager);
+        
+        // Let's register mechanics!
+        manager.register(new BookcaseFactory(this));
     }
     
     @Override
     protected void registerEvents() {
-        BlockListener blockListener = new MechanismsBlockListener(this);
-        registerEvent(Event.Type.BLOCK_RIGHTCLICKED, blockListener);
     }
     
     public MechanismsConfiguration getLocalConfiguration() {

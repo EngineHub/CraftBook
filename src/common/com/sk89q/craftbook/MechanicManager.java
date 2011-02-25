@@ -52,14 +52,14 @@ public class MechanicManager {
     /**
      * List of factories that will be used to detect the mechanic at a location.
      */
-    protected final LinkedList<MechanicFactory<Mechanic>> factories;
+    protected final LinkedList<MechanicFactory<? extends Mechanic>> factories;
     
     /**
      * Construct the manager.
      */
     public MechanicManager() {
         triggers = new LinkedHashMap<BlockWorldVector, Mechanic>();
-        factories = new LinkedList<MechanicFactory<Mechanic>>();
+        factories = new LinkedList<MechanicFactory<? extends Mechanic>>();
     }
     
     /**
@@ -68,7 +68,7 @@ public class MechanicManager {
      * 
      * @param factory
      */
-    public void register(MechanicFactory<Mechanic> factory) {
+    public void register(MechanicFactory<? extends Mechanic> factory) {
         factories.add(factory);
     }
     
@@ -141,7 +141,7 @@ public class MechanicManager {
      * @return a {@link Mechanic} or null
      */
     protected Mechanic detect(BlockWorldVector pos) {
-        for (MechanicFactory<Mechanic> factory : factories) {
+        for (MechanicFactory<? extends Mechanic> factory : factories) {
             Mechanic mechanic = factory.detect(pos);
             
             if (mechanic != null) {

@@ -1,4 +1,3 @@
-package com.sk89q.craftbook.mech;
 // $Id$
 /*
  * CraftBook
@@ -18,11 +17,18 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+package com.sk89q.craftbook.mech;
+
 import java.util.Random;
 import java.io.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockRightClickEvent;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.worldedit.BlockVector;
+import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import static com.sk89q.craftbook.bukkit.BukkitUtil.*;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line
@@ -30,7 +36,7 @@ import com.sk89q.worldedit.BlockVector;
  *
  * @author sk89q
  */
-public class Bookcase {
+public class Bookcase extends Mechanic {
 
     /**
      * Used for picking random lines.
@@ -38,24 +44,19 @@ public class Bookcase {
     protected static Random rand = new Random();
     
     /**
-     * Holds the location of the bookcase.
-     */
-    protected BlockVector pt;
-    
-    /**
      * Configuration.
      */
-    protected MechanismsConfiguration config;
+    protected MechanismsPlugin plugin;
     
     /**
      * Construct a bookcase for a location.
      * 
      * @param pt
-     * @param config 
+     * @param plugin 
      */
-    public Bookcase(BlockVector pt, MechanismsConfiguration config) {
-        this.pt = pt;
-        this.config = config;
+    public Bookcase(BlockWorldVector pt, MechanismsPlugin plugin) {
+        super(pt);
+        this.plugin = plugin;
     }
     
     /**
@@ -87,7 +88,7 @@ public class Bookcase {
      */
     protected String getBookLine() throws IOException {
         RandomAccessFile file = new RandomAccessFile(
-                new File(config.dataFolder, "books.txt"), "r");
+                new File(plugin.getLocalConfiguration().dataFolder, "books.txt"), "r");
 
         long len = file.length();
         byte[] data = new byte[500];
@@ -122,6 +123,33 @@ public class Bookcase {
         }
 
         return null;
+    }
+    
+    /**
+     * Raised when a block is right clicked.
+     * 
+     * @param event
+     */
+    @Override
+    public void onRightClick(BlockRightClickEvent event) {
+        Player player = event.getPlayer();
+        read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseReadLine);
+    }
+
+    /**
+     * Unload this bookcase.
+     */
+    @Override
+    public void unload() {
+    }
+
+    /**
+     * Check if this bookcase is still active.
+     */
+    @Override
+    public boolean isActive() {
+        BlockWorldVector pos = getTriggerPositions().get(0);
+        return pos.getWorld().getBlockTypeIdAt(toLocation(pos)) == BlockID.BOOKCASE;
     }
 
 }

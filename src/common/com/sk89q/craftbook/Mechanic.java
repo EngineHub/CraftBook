@@ -123,6 +123,7 @@ public abstract class Mechanic {
     
     /**
      * Raised when a block is right clicked.
+     * 
      * @param event
      */
     public void onRightClick(BlockRightClickEvent event) {
