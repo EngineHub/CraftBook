@@ -21,25 +21,25 @@ package com.sk89q.craftbook.util;
 import org.bukkit.World;
 import com.sk89q.worldedit.Vector2D;
 
-public class WorldBlockVector2D extends WorldVector2D {
+public class BlockWorldVector2D extends WorldVector2D {
 
-    public WorldBlockVector2D(World world, double x, double z) {
+    public BlockWorldVector2D(World world, double x, double z) {
         super(world, x, z);
     }
 
-    public WorldBlockVector2D(World world, float x, float z) {
+    public BlockWorldVector2D(World world, float x, float z) {
         super(world, x, z);
     }
 
-    public WorldBlockVector2D(World world, int x, int z) {
+    public BlockWorldVector2D(World world, int x, int z) {
         super(world, x, z);
     }
 
-    public WorldBlockVector2D(World world, Vector2D pt) {
+    public BlockWorldVector2D(World world, Vector2D pt) {
         super(world, pt);
     }
 
-    public WorldBlockVector2D(World world) {
+    public BlockWorldVector2D(World world) {
         super(world);
     }
 

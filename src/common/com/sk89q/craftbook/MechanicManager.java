@@ -77,7 +77,7 @@ public class MechanicManager {
      * 
      * @param chunk
      */
-    public void unload(WorldBlockVector2D chunk) {
+    public void unload(BlockWorldVector2D chunk) {
         int chunkX = chunk.getBlockX();
         int chunkZ = chunk.getBlockZ();
         

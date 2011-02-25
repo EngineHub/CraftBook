@@ -23,9 +23,13 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.world.WorldListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.craftbook.util.BlockWorldVector2D;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -56,8 +60,11 @@ public class MechanicListenerAdapter {
     public void register(MechanicManager manager) {
         PluginManager pluginManager = plugin.getServer().getPluginManager();
         BlockListener blockListener = new MechanicBlockListener(manager);
-        
+        WorldListener worldListener = new MechanicWorldListener(manager);
+
         pluginManager.registerEvent(Type.BLOCK_RIGHTCLICKED, blockListener,
+                Priority.Normal, plugin);
+        pluginManager.registerEvent(Type.CHUNK_UNLOADED, worldListener,
                 Priority.Normal, plugin);
     }
     
@@ -82,6 +89,36 @@ public class MechanicListenerAdapter {
         @Override
         public void onBlockRightClick(BlockRightClickEvent event) {
             manager.handleBlockRightClick(event);
+        }
+    }
+    
+    /**
+     * Block listener for processing block events.
+     * 
+     * @author sk89q
+     */
+    protected static class MechanicWorldListener extends WorldListener {
+        
+        protected MechanicManager manager;
+        
+        /**
+         * Construct the listener.
+         * 
+         * @param manager
+         */
+        public MechanicWorldListener(MechanicManager manager) {
+            this.manager = manager;
+        }
+
+        /**
+         * Called when a chunk is unloade.d
+         */
+        @Override
+        public void onChunkUnloaded(ChunkUnloadEvent event) {
+            int chunkX = event.getChunk().getX();
+            int chunkZ = event.getChunk().getZ();
+            
+            manager.unload(new BlockWorldVector2D(event.getWorld(), chunkX, chunkZ));
         }
     }
 }
