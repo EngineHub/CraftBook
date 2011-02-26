@@ -216,60 +216,10 @@ public class MechanicManager {
      * @param chunk
      */
     public void unload(BlockWorldVector2D chunk) {
-//TODO:NAO: finish updating
-//        int chunkX = chunk.getBlockX();
-//        int chunkZ = chunk.getBlockZ();
-//        
-//        // We keep track of all the other trigger positions of the mechanics
-//        // that we are unloading so that we can remove them
-//        Set<BlockWorldVector> toUnload = new HashSet<BlockWorldVector>();
-//        
-//        Iterator<Entry<BlockWorldVector, Mechanic>> it = triggers.entrySet().iterator();
-//        
-//        while (it.hasNext()) {
-//            Map.Entry<BlockWorldVector, Mechanic> entry = it.next();
-//
-//            BlockWorldVector pos = entry.getKey();
-//            Mechanic mechanic = entry.getValue();
-//            
-//            // Different world! Abort
-//            if (!pos.getWorld().equals(chunk.getWorld())) {
-//                continue;
-//            }
-//
-//            int curChunkX = (int)Math.floor(pos.getBlockX() / 16.0);
-//            int curChunkZ = (int)Math.floor(pos.getBlockZ() / 16.0);
-//            
-//            // Not involved in this chunk!
-//            if (curChunkX != chunkX || curChunkZ != chunkZ) {
-//                continue;
-//            }
-//            
-//            // We don't want to double unload the mechanic
-//            if (toUnload.contains(pos)) {
-//                continue;
-//            }
-//            
-//            try {
-//                mechanic.unload();
-//            // Mechanic failed to unload for some reason
-//            } catch (Throwable t) {
-//                logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
-//                        + mechanic.getClass().getCanonicalName(), t);
-//            }
-//            
-//            // Now keep track of all the other trigger points
-//            for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
-//                toUnload.add(otherPos);
-//            }
-//            
-//            it.remove();
-//        }
-//        
-//        // Now let's remove the other points
-//        for (BlockWorldVector otherPos : toUnload) {
-//            triggers.remove(otherPos);
-//        }
+        Set<PersistentMechanic> folks = triggerman.getByChunk(chunk);
+        folks.addAll(definerman.getByChunk(chunk));
+        for (Mechanic m : folks)
+            unload(m);
     }
     
     /**
@@ -279,18 +229,18 @@ public class MechanicManager {
      * @param mechanic
      */
     protected void unload(Mechanic mechanic) {
-//TODO:NAO: finish updating
-//        try {
-//            mechanic.unload();
-//        // Mechanic failed to unload for some reason
-//        } catch (Throwable t) {
-//            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
-//                    + mechanic.getClass().getCanonicalName(), t);
-//        }
-//        
-//        for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
-//            triggers.remove(otherPos);
-//        }
+        try {
+            mechanic.unload();
+        } catch (Throwable t) { // Mechanic failed to unload for some reason
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
+                    + mechanic.getClass().getCanonicalName(), t);
+        }
+        
+        if (mechanic instanceof PersistentMechanic) {
+            PersistentMechanic pm = (PersistentMechanic)mechanic;
+            triggerman.deregisterMechanic(pm);
+            definerman.deregisterMechanic(pm);
+        }
     }
     
     
@@ -328,6 +278,31 @@ public class MechanicManager {
         public PersistentMechanic get(BlockWorldVector p) {
             return triggers.get(p);
         }
+        
+        public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
+            Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
+            int chunkX = chunk.getBlockX();
+            int chunkZ = chunk.getBlockZ();
+            Iterator<Entry<BlockWorldVector, PersistentMechanic>> it = triggers.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<BlockWorldVector, PersistentMechanic> entry = it.next();
+                BlockWorldVector pos = entry.getKey();
+                
+                // Different world! Abort
+                if (!pos.getWorld().equals(chunk.getWorld()))
+                    continue;
+                
+                int curChunkX = (int)Math.floor(pos.getBlockX() / 16.0);
+                int curChunkZ = (int)Math.floor(pos.getBlockZ() / 16.0);
+                // Not involved in this chunk!
+                if (curChunkX != chunkX || curChunkZ != chunkZ) {
+                    continue;
+                }
+                
+                folks.add(entry.getValue());
+            }
+            return folks;
+        }
     }
     
     private class DefinerKeeper {
@@ -363,6 +338,29 @@ public class MechanicManager {
         public void notify(BlockRightClickEvent event) {
             for (PersistentMechanic m : definers.get(toWorldVector(event.getBlock())))
                 m.onRightClick(event);
+        }
+        
+        public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
+            Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
+            int chunkX = chunk.getBlockX();
+            int chunkZ = chunk.getBlockZ();
+            for (Entry<BlockWorldVector, Set<PersistentMechanic>> entry : definers.entrySet()) {
+                BlockWorldVector pos = entry.getKey();
+                
+                // Different world! Abort
+                if (!pos.getWorld().equals(chunk.getWorld()))
+                    continue;
+                
+                int curChunkX = (int)Math.floor(pos.getBlockX() / 16.0);
+                int curChunkZ = (int)Math.floor(pos.getBlockZ() / 16.0);
+                // Not involved in this chunk!
+                if (curChunkX != chunkX || curChunkZ != chunkZ) {
+                    continue;
+                }
+                
+                folks.addAll(entry.getValue());
+            }
+            return folks;
         }
     }
     
