@@ -20,7 +20,8 @@
 package com.sk89q.craftbook;
 
 import java.util.*;
-import org.bukkit.event.block.BlockRightClickEvent;
+
+import org.bukkit.event.block.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 
 /**
@@ -75,5 +76,8 @@ public abstract class Mechanic {
      * @param event
      */
     public void onRightClick(BlockRightClickEvent event) {
+    }
+    
+    public void onBlockRedstoneChange(BlockRedstoneEvent event){
     }
 }
