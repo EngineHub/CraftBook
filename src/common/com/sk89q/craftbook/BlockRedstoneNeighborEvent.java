@@ -21,6 +21,10 @@ public class BlockRedstoneNeighborEvent extends BlockRedstoneEvent {
     }
     
     public boolean isDirect() {
+        // using block.isBlockIndirectlyPowered() is actually not correct
+        // here because we want to know if we're directly powered by the 
+        // redstone block that changed -- that's a slightly different question
+        // than if we're directly powered by any adjacent redstone.
         return false;   //TODO
     }
     
@@ -35,6 +39,10 @@ public class BlockRedstoneNeighborEvent extends BlockRedstoneEvent {
     public static BlockRedstoneEvent[] haveKittens(BlockRedstoneEvent source) {
         BlockRedstoneEvent[] kittens = new BlockRedstoneNeighborEvent[KITTENS];
         kittens[0] = source;
+        // it would probably be wise to check if the neighbor block is a redstone
+        // block itself and not send these if it is, since it'll presumably be getting 
+        // its very own BlockRedstoneEvent momentarily (or just did!) and it probably 
+        // doesn't really care about its neighbor a big.
         kittens[1] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.NORTH));
         kittens[2] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.EAST));
         kittens[3] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.SOUTH));
