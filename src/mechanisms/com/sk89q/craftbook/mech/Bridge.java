@@ -39,7 +39,7 @@ public class Bridge extends Mechanic {
         public Bridge detect(BlockWorldVector pt) throws InvalidMechanismException {
             Block block = pt.toBlock();
             // check if this looks at all like something we're interested in first
-            if (block.getTypeId() != BlockID.WALL_SIGN) return null;
+            if (block.getTypeId() != BlockID.SIGN_POST) return null;
             if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
             
             // okay, now we can start doing exploration of surrounding blocks
@@ -47,10 +47,10 @@ public class Bridge extends Mechanic {
             return new Bridge(block, plugin);
         }
     }
-
+    
     /**
      * @param trigger
-     *            if you didn't already check if this is a sign with appropriate
+     *            if you didn't already check if this is a signpost with appropriate
      *            text, you're going on Santa's naughty list.
      * @param plugin
      * @throws InvalidMechanismException
@@ -141,7 +141,7 @@ public class Bridge extends Mechanic {
     // the bridge.  if this were a PersistentMechanic, those six blocks
     // would be considered defining blocks, though.
     
-
+    
     public void onRightClick(BlockRightClickEvent event) {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(trigger)) return; //wth? our manager is insane
         flipState();
