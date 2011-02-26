@@ -46,6 +46,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
                 
                 dataFolder = getDataFolder();
                 bookcaseReadLine = config.getString("bookcase.read-line", bookcaseReadLine);
+                bridgeSettings = new Bridge.BridgeSettings(true);
             }
         };
         

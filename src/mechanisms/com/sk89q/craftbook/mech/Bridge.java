@@ -24,7 +24,7 @@ public class Bridge extends Mechanic {
         }
         
         protected MechanismsPlugin plugin;
-
+        
         /**
          * Explore around the trigger to find a Bridge; throw if things look funny.
          * 
@@ -63,7 +63,7 @@ public class Bridge extends Mechanic {
         if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
         BlockFace dir = SignUtil.getFacing(trigger);
         
-        this.plugin = plugin;
+        this.settings = plugin.getLocalConfiguration().bridgeSettings;  //FIXME this is teh hacksauce
         this.trigger = trigger;
         
         // Attempt to detect whether the bridge is above or below the sign,
@@ -128,7 +128,6 @@ public class Bridge extends Mechanic {
         // Win!
     }
     
-    protected MechanismsPlugin plugin;
     protected BridgeSettings settings;
     
     /** The signpost we came from. */
@@ -245,6 +244,18 @@ public class Bridge extends Mechanic {
     }
     
     public static class BridgeSettings {
+        public BridgeSettings(boolean addDefaults) {
+            allowedBlocks = new HashSet<Material>();
+            maxLength = 30;
+            
+            if (addDefaults) {
+                allowedBlocks.add(Material.COBBLESTONE);
+                allowedBlocks.add(Material.WOOD);
+                allowedBlocks.add(Material.GLASS);
+                allowedBlocks.add(Material.DOUBLE_STEP);
+            }
+        }
+        
         /**
          * If you put air in this... you go straight to hell do not pass go do
          * not collect 200 dollars.
