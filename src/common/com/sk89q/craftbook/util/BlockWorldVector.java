@@ -20,6 +20,9 @@
 package com.sk89q.craftbook.util;
 
 import org.bukkit.World;
+import org.bukkit.block.*;
+
+import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.worldedit.Vector;
 
 /**
@@ -83,6 +86,10 @@ public class BlockWorldVector extends WorldVector {
         super(world, x, y, z);
     }
     
+    public Block toBlock() {
+        return world.getBlockAt((int)x, (int)y, (int)z);
+    }
+    
     /**
      * Checks if another object is equivalent.
      *
@@ -96,9 +103,9 @@ public class BlockWorldVector extends WorldVector {
         }
         WorldVector other = (WorldVector)obj;
         return other.getWorld().equals(world)
-                && (int)other.getX() == (int)this.x && (int)other.getY() == (int)this.y
-                && (int)other.getZ() == (int)this.z;
-
+                && (int) other.getX() == (int) this.x
+                && (int) other.getY() == (int) this.y
+                && (int) other.getZ() == (int) this.z;
     }
 
     /**
@@ -108,9 +115,9 @@ public class BlockWorldVector extends WorldVector {
      */
     @Override
     public int hashCode() {
-        return (world.hashCode()) >> 19 ^
-                (Integer.valueOf((int)x).hashCode() >> 13) ^
-                (Integer.valueOf((int)y).hashCode() >> 7) ^
-                Integer.valueOf((int)z).hashCode();
+        return ((world.hashCode()) >> 19) ^
+                ((int)x >> 13) ^
+                ((int)y >> 7) ^
+                ((int)z);
     }
 }
