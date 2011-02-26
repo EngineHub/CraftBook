@@ -6,6 +6,7 @@ import org.bukkit.block.*;
 import org.bukkit.event.block.*;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
+import com.sk89q.craftbook.mech.Elevator.*;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.blocks.*;
 import com.sk89q.worldedit.regions.*;
@@ -36,17 +37,14 @@ public class Bridge extends Mechanic {
          *             it failed.
          */
         public Bridge detect(BlockWorldVector pt) throws InvalidMechanismException {
-            Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+            Block block = pt.toBlock();
             // check if this looks at all like something we're interested in first
-            if (block.getTypeId() == BlockID.WALL_SIGN) {
-                BlockState state = block.getState();
-                if (state instanceof Sign && ((Sign) state).getLine(1).equalsIgnoreCase("[Bridge]")) {
-                    // okay, now we can start doing exploration of surrounding blocks
-                    // and if something goes wrong in here then we throw fits.
-                    return new Bridge(block, plugin);
-                }
-            }
-            return null;
+            if (block.getTypeId() != BlockID.WALL_SIGN) return null;
+            if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
+            
+            // okay, now we can start doing exploration of surrounding blocks
+            // and if something goes wrong in here then we throw fits.
+            return new Bridge(block, plugin);
         }
     }
 
@@ -87,7 +85,7 @@ public class Bridge extends Mechanic {
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
-                throw new UnacceptableTypeException();
+                throw new UnacceptableMaterialException();
             }
         }
         
@@ -232,7 +230,7 @@ public class Bridge extends Mechanic {
     /**
      * Thrown when the bridge type is unacceptable.
      */
-    private static class UnacceptableTypeException extends InvalidMechanismException {}
+    private static class UnacceptableMaterialException extends InvalidMechanismException {}
     
     /**
      * Thrown when the bridge type is not constructed correctly.
@@ -244,6 +242,9 @@ public class Bridge extends Mechanic {
     }
     
     public static class BridgeSettings {
+        // are these settings shared between similar toggle things like doors?
+        // this should be elsewhere if so, even if doors and bridges end up
+        // having separate instances.
         public BridgeSettings(boolean addDefaults) {
             allowedBlocks = new HashSet<Material>();
             maxLength = 30;
