@@ -34,7 +34,8 @@ public interface MechanicFactory<T extends Mechanic> {
      * Detect the mechanic at a location.
      * 
      * @param pos
-     * @return null if no mechanism was detected
+     * @return a {@link Mechanic} if a mechanism could be found at the location;
+     *         null otherwise
      * @throws InvalidMechanismException
      *             if it appears that the position is intended to me a
      *             mechanism, but the mechanism is misconfigured and inoperable.

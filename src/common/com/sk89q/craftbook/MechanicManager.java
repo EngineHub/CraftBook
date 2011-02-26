@@ -1,4 +1,4 @@
-// $Id$
+// Id
 /*
  * CraftBook
  * Copyright (C) 2010 sk89q <http://www.sk89q.com>
@@ -45,21 +45,27 @@ public class MechanicManager {
     protected final Logger logger = Logger.getLogger("Minecraft.CraftBook");
     
     /**
-     * Maps mechanics to their respective world location.
-     */
-    protected final Map<BlockWorldVector, Mechanic> triggers;
-    
-    /**
-     * List of factories that will be used to detect the mechanic at a location.
+     * List of factories that will be used to detect mechanisms at a location.
      */
     protected final LinkedList<MechanicFactory<? extends Mechanic>> factories;
+    
+    private final TriggerKeeper triggerman;
+    
+    private final DefinerKeeper definerman;
+    
+    
+    
+    //
+    //  Setup
+    //
     
     /**
      * Construct the manager.
      */
     public MechanicManager() {
-        triggers = new LinkedHashMap<BlockWorldVector, Mechanic>();
         factories = new LinkedList<MechanicFactory<? extends Mechanic>>();
+        triggerman = new TriggerKeeper();
+        definerman = new DefinerKeeper();
     }
     
     /**
@@ -72,94 +78,60 @@ public class MechanicManager {
         factories.add(factory);
     }
     
-    /**
-     * Unload all mechanics inside the given chunk.
-     * 
-     * @param chunk
-     */
-    public void unload(BlockWorldVector2D chunk) {
-        int chunkX = chunk.getBlockX();
-        int chunkZ = chunk.getBlockZ();
-        
-        // We keep track of all the other trigger positions of the mechanics
-        // that we are unloading so that we can remove them
-        Set<BlockWorldVector> toUnload = new HashSet<BlockWorldVector>();
-        
-        Iterator<Entry<BlockWorldVector, Mechanic>> it
-            = triggers.entrySet().iterator();
-        
-        while (it.hasNext()) {
-            Map.Entry<BlockWorldVector, Mechanic> entry = it.next();
-
-            BlockWorldVector pos = entry.getKey();
-            Mechanic mechanic = entry.getValue();
-            
-            // Different world! Abort
-            if (!pos.getWorld().equals(chunk.getWorld())) {
-                continue;
-            }
-
-            int curChunkX = (int)Math.floor(pos.getBlockX() / 16.0);
-            int curChunkZ = (int)Math.floor(pos.getBlockZ() / 16.0);
-            
-            // Not involved in this chunk!
-            if (curChunkX != chunkX || curChunkZ != chunkZ) {
-                continue;
-            }
-            
-            // We don't want to double unload the mechanic
-            if (toUnload.contains(pos)) {
-                continue;
-            }
-            
-            try {
-                mechanic.unload();
-            // Mechanic failed to unload for some reason
-            } catch (Throwable t) {
-                logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
-                        + mechanic.getClass().getCanonicalName(), t);
-            }
-            
-            // Now keep track of all the other trigger points
-            for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
-                toUnload.add(otherPos);
-            }
-            
-            it.remove();
-        }
-        
-        // Now let's remove the other points
-        for (BlockWorldVector otherPos : toUnload) {
-            triggers.remove(otherPos);
-        }
-    }
+    
+    
+    
+    
+    //
+    //  Event handling
+    //
     
     /**
-     * Attempt to detect a mechanic at a location.
+     * Handle a block right click event.
      * 
-     * @param pos
-     * @return a {@link Mechanic} or null
+     * @param event
+     * @return true if there was a mechanic to process the event
      */
-    protected Mechanic detect(BlockWorldVector pos) throws InvalidMechanismException {
-        for (MechanicFactory<? extends Mechanic> factory : factories) {
-            Mechanic mechanic = factory.detect(pos);
-
+    public boolean handleBlockRightClick(BlockRightClickEvent event) {
+        if (!passesFilter(event))
+            return false;
+        
+        // annouce the event to anyone who considers it to be on one of their defining blocks
+        //TODO
+        
+        // see if this event could be occuring on any mechanism's triggering blocks.
+        BlockWorldVector pos = toWorldVector(event.getBlock());
+        try {
+            Mechanic mechanic = load(pos);
             if (mechanic != null) {
-                return mechanic;
+                mechanic.onRightClick(event);
+                return true;
             }
+        } catch (InvalidMechanismException $e) {
+            //FIXME tell the player about it.
         }
-
-        return null;
+        
+        return false;
     }
     
+    
+    
+
     /**
-     * Load a mechanic at a position.
+     * Load a Mechanic at a position. May return an already existing
+     * PersistentMechanic if one is triggered at that position, or return a new
+     * Mechanic (persistent or otherwise; if the new mechanic is persistent, it
+     * will have already been registered with this manager).
      * 
      * @param pos
-     * @return a {@link Mechanic} or null
+     * @return a {@link Mechanic} if a mechanism could be found at the location;
+     *         null otherwise
+     * @throws InvalidMechanismException
+     *             if it appears that the position is intended to me a
+     *             mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected Mechanic load(BlockWorldVector pos) {
-        Mechanic mechanic = triggers.get(pos);
+    protected Mechanic load(BlockWorldVector pos) throws InvalidMechanismException {
+        Mechanic mechanic = triggerman.get(pos);
         
         if (mechanic != null) {
             if (mechanic.isActive()) {
@@ -169,64 +141,37 @@ public class MechanicManager {
             }
         }
         
-        try {
-            mechanic = detect(pos);
-        } catch (InvalidMechanismException e) {
-            //FIXME tell the player about it.  maybe we have to throw this further out so we can get a player reference from the event the lead us here, since we're only thinking by position right now
-        }
+        mechanic = detect(pos);
         
         // No mechanic detected!
-        if (mechanic == null) {
+        if (mechanic == null)
             return null;
-        }
-
-        // Register mechanic trigger positions
-        for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
-            triggers.put(otherPos, mechanic);
+        
+        // Register mechanic if it's a persistent type 
+        if (mechanic instanceof PersistentMechanic) {
+            PersistentMechanic pm = (PersistentMechanic) mechanic;
+            triggerman.registerMechanic(pm);
+            definerman.registerMechanic(pm);
         }
         
         return mechanic;
     }
     
     /**
-     * Unload a mechanic. This will also remove the trigger points from
-     * this mechanic manager.
+     * Attempt to detect a mechanic at a location.
      * 
-     * @param mechanic
+     * @param pos
+     * @return a {@link Mechanic} if a mechanism could be found at the location;
+     *         null otherwise
+     * @throws InvalidMechanismException
+     *             if it appears that the position is intended to me a
+     *             mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected void unload(Mechanic mechanic) {
-        try {
-            mechanic.unload();
-        // Mechanic failed to unload for some reason
-        } catch (Throwable t) {
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
-                    + mechanic.getClass().getCanonicalName(), t);
-        }
-        
-        for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
-            triggers.remove(otherPos);
-        }
-    }
-    
-    /**
-     * Handle a block right click event.
-     * 
-     * @param event
-     * @return true if there was a mechanic to process the event
-     */
-    public boolean handleBlockRightClick(BlockRightClickEvent event) {
-        if (!passesFilter(event)) {
-            return false;
-        }
-        
-        BlockWorldVector pos = toWorldVector(event.getBlock());
-        Mechanic mechanic = load(pos);
-        if (mechanic != null) {
-            mechanic.onRightClick(event);
-            return true;
-        }
-        
-        return false;
+    protected Mechanic detect(BlockWorldVector pos) throws InvalidMechanismException {
+        Mechanic mechanic = null;
+        for (MechanicFactory<? extends Mechanic> factory : factories)
+            if ((mechanic = factory.detect(pos)) != null) break;
+        return mechanic;
     }
     
     /**
@@ -239,4 +184,164 @@ public class MechanicManager {
     protected boolean passesFilter(BlockEvent event) {
         return true;
     }
+    
+    
+    
+    
+    
+    //
+    //  Logic for dealing with PersistentMechanic instances.
+    //
+    
+    /**
+     * Unload all mechanics inside the given chunk.
+     * 
+     * @param chunk
+     */
+    public void unload(BlockWorldVector2D chunk) {
+//TODO:NAO: finish updating
+//        int chunkX = chunk.getBlockX();
+//        int chunkZ = chunk.getBlockZ();
+//        
+//        // We keep track of all the other trigger positions of the mechanics
+//        // that we are unloading so that we can remove them
+//        Set<BlockWorldVector> toUnload = new HashSet<BlockWorldVector>();
+//        
+//        Iterator<Entry<BlockWorldVector, Mechanic>> it = triggers.entrySet().iterator();
+//        
+//        while (it.hasNext()) {
+//            Map.Entry<BlockWorldVector, Mechanic> entry = it.next();
+//
+//            BlockWorldVector pos = entry.getKey();
+//            Mechanic mechanic = entry.getValue();
+//            
+//            // Different world! Abort
+//            if (!pos.getWorld().equals(chunk.getWorld())) {
+//                continue;
+//            }
+//
+//            int curChunkX = (int)Math.floor(pos.getBlockX() / 16.0);
+//            int curChunkZ = (int)Math.floor(pos.getBlockZ() / 16.0);
+//            
+//            // Not involved in this chunk!
+//            if (curChunkX != chunkX || curChunkZ != chunkZ) {
+//                continue;
+//            }
+//            
+//            // We don't want to double unload the mechanic
+//            if (toUnload.contains(pos)) {
+//                continue;
+//            }
+//            
+//            try {
+//                mechanic.unload();
+//            // Mechanic failed to unload for some reason
+//            } catch (Throwable t) {
+//                logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
+//                        + mechanic.getClass().getCanonicalName(), t);
+//            }
+//            
+//            // Now keep track of all the other trigger points
+//            for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
+//                toUnload.add(otherPos);
+//            }
+//            
+//            it.remove();
+//        }
+//        
+//        // Now let's remove the other points
+//        for (BlockWorldVector otherPos : toUnload) {
+//            triggers.remove(otherPos);
+//        }
+    }
+    
+    /**
+     * Unload a mechanic. This will also remove the trigger points from
+     * this mechanic manager.
+     * 
+     * @param mechanic
+     */
+    protected void unload(Mechanic mechanic) {
+//TODO:NAO: finish updating
+//        try {
+//            mechanic.unload();
+//        // Mechanic failed to unload for some reason
+//        } catch (Throwable t) {
+//            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
+//                    + mechanic.getClass().getCanonicalName(), t);
+//        }
+//        
+//        for (BlockWorldVector otherPos : mechanic.getTriggerPositions()) {
+//            triggers.remove(otherPos);
+//        }
+    }
+    
+    
+    
+    //
+    //  These are helper classes for tracking the state that 
+    //    dispatching to PersistentMechanic requires.
+    //
+    
+    private static final boolean CHECK_SANITY = true;
+    
+    private class TriggerKeeper {
+        public TriggerKeeper() {
+            triggers = new HashMap<BlockWorldVector, PersistentMechanic>();
+        }
+        
+        private final Map<BlockWorldVector, PersistentMechanic> triggers;
+        
+        public void registerMechanic(PersistentMechanic m) {
+            if (CHECK_SANITY) 
+                for (BlockWorldVector p : m.getTriggerPositions())
+                    if (triggers.get(p) != null) throw new CraftbookRuntimeException(new IllegalStateException("Position "+p+" has already been claimed by another Mechanic; registration not performed."));
+            for (BlockWorldVector p : m.getTriggerPositions())
+                triggers.put(p, m);
+        }
+        
+        public void deregisterMechanic(PersistentMechanic m) {
+            if (CHECK_SANITY) 
+                for (BlockWorldVector p : m.getTriggerPositions())
+                    if (triggers.get(p) != m) throw new CraftbookRuntimeException(new IllegalStateException("Position "+p+" has occupied by another Mechanic; deregistration not performed."));
+            for (BlockWorldVector p : m.getTriggerPositions())
+                triggers.put(p, null);
+        }
+        
+        public PersistentMechanic get(BlockWorldVector p) {
+            return triggers.get(p);
+        }
+    }
+    
+    private class DefinerKeeper {
+        public DefinerKeeper() {
+            definers = new HashMap<BlockWorldVector, Set<PersistentMechanic>>();
+        }
+        
+        private final Map<BlockWorldVector, Set<PersistentMechanic>> definers;
+        
+        public void registerMechanic(PersistentMechanic m) {
+            for (BlockWorldVector p : m.getDefiningPositions()) {
+                Set<PersistentMechanic> set = definers.get(p);
+                if (set == null) {
+                    set = new HashSet<PersistentMechanic>(4);
+                    definers.put(p, set);
+                }
+                set.add(m);
+            }
+        }
+        
+        public void updateMechanic(PersistentMechanic m, List<BlockWorldVector> oldDefiners) {
+            // this could be more efficient.
+            for (BlockWorldVector p : oldDefiners)
+                definers.get(p).remove(m);
+            registerMechanic(m);
+        }
+        
+        public void deregisterMechanic(PersistentMechanic m) {
+            for (BlockWorldVector p : m.getDefiningPositions())
+                definers.get(p).remove(m);
+        }
+    }
+    
 }

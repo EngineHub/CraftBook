@@ -55,7 +55,7 @@ public class Bookcase extends Mechanic {
      * @param plugin 
      */
     public Bookcase(BlockWorldVector pt, MechanismsPlugin plugin) {
-        super(pt);
+        super();
         this.plugin = plugin;
     }
     
@@ -148,8 +148,7 @@ public class Bookcase extends Mechanic {
      */
     @Override
     public boolean isActive() {
-        BlockWorldVector pos = getTriggerPositions().get(0);
-        return pos.getWorld().getBlockTypeIdAt(toLocation(pos)) == BlockID.BOOKCASE;
+        return false;   // this isn't a persistent mechanic, so the manager will never keep it around long enough to even check this.
     }
 
 }
