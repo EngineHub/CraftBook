@@ -164,21 +164,33 @@ public class Bridge extends Mechanic {
         
         // aaand we also only check if it's something we can 
         // smosh or not when deciding if we're open or closed.
-        // there are no errors upon weird blocks like obsidian 
-        // in the middle of a wooden bridge.
+        // there are no errors reported upon weird blocks like 
+        // obsidian in the middle of a wooden bridge, just weird
+        // results.
         if (canPassThrough(hinge.getType())) {
-            setToggleRegion(proximalBaseCenter.getType());
+            setToggleRegionClosed();
         } else {
-            setToggleRegion(Material.AIR);
+            setToggleRegionOpen();
         }
     }
-    
-    private void setToggleRegion(Material mat) {
+    private void setToggleRegionOpen() {
         for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
-            trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ()).setType(mat);
+            Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            if (b.getType() == getBridgeMaterial() || canPassThrough(b.getType()))
+                    b.setType(Material.AIR);
+        }
+    }
+    private void setToggleRegionClosed() {
+        for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
+            Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            if (canPassThrough(b.getType()))
+                    b.setType(getBridgeMaterial());
         }
     }
     
+    private Material getBridgeMaterial() {
+        return proximalBaseCenter.getType();
+    }
     
     
 
