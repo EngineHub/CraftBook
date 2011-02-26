@@ -22,6 +22,7 @@ import org.bukkit.util.config.Configuration;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.mech.BookcaseFactory;
+import com.sk89q.craftbook.mech.GateFactory;
 
 /**
  * Plugin for CraftBook's mechanisms.
@@ -57,6 +58,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         
         // Let's register mechanics!
         manager.register(new BookcaseFactory(this));
+        manager.register(new GateFactory(this));
     }
     
     @Override
