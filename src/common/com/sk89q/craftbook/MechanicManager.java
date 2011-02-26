@@ -23,8 +23,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.block.*;
 import com.sk89q.craftbook.util.*;
 import static com.sk89q.craftbook.bukkit.BukkitUtil.*;
 
@@ -97,7 +96,7 @@ public class MechanicManager {
             return false;
         
         // annouce the event to anyone who considers it to be on one of their defining blocks
-        //TODO
+        definerman.notify(event);
         
         // see if this event could be occuring on any mechanism's triggering blocks.
         BlockWorldVector pos = toWorldVector(event.getBlock());
@@ -113,6 +112,24 @@ public class MechanicManager {
         
         return false;
     }
+    
+    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        if (!passesFilter(event))
+            return;
+        
+        for (BlockRedstoneEvent kitten : BlockRedstoneNeighborEvent.haveKittens(event)) { 
+            BlockWorldVector pos = toWorldVector(event.getBlock());
+            try {
+                Mechanic mechanic = load(pos);
+                if (mechanic != null)
+                    mechanic.onBlockRedstoneChange(event);
+            } catch (InvalidMechanismException $e) {
+                //FIXME tell the... erm, sombody... about it.
+            }
+        }
+    }
+    
+    
     
     
     
@@ -341,6 +358,11 @@ public class MechanicManager {
         public void deregisterMechanic(PersistentMechanic m) {
             for (BlockWorldVector p : m.getDefiningPositions())
                 definers.get(p).remove(m);
+        }
+        
+        public void notify(BlockRightClickEvent event) {
+            for (PersistentMechanic m : definers.get(toWorldVector(event.getBlock())))
+                m.onRightClick(event);
         }
     }
     
