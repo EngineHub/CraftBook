@@ -20,7 +20,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import java.util.List;
-import org.bukkit.block.Block;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -35,6 +35,10 @@ public class BukkitUtil {
     
     public static BlockVector toVector(Block block) {
         return new BlockVector(block.getX(), block.getY(), block.getZ());
+    }
+    
+    public static BlockVector toVector(BlockFace face) {
+        return new BlockVector(face.getModX(), face.getModY(), face.getModZ());
     }
     
     public static BlockWorldVector toWorldVector(Block block) {
