@@ -68,7 +68,6 @@ public class Bridge extends Mechanic {
         
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above
-        Block proximalBaseCenter;
         Material mat;
         findBase: {
             proximalBaseCenter = trigger.getFace(BlockFace.UP);
@@ -134,6 +133,8 @@ public class Bridge extends Mechanic {
     
     /** The signpost we came from. */
     private Block trigger;
+    /** The block that determines bridge type. */
+    private Block proximalBaseCenter;
     /** The signpost on the other end. */
     private Block farside;
     /** The rectangle that we toggle. */
@@ -156,7 +157,26 @@ public class Bridge extends Mechanic {
     }
     
     private void flipState() {
-        //TODO
+        // this is kinda funky, but we only check one position 
+        // to see if the bridge is open and/or closable.
+        // efficiency choice :/
+        Block hinge = proximalBaseCenter.getFace(SignUtil.getFacing(trigger));
+        
+        // aaand we also only check if it's something we can 
+        // smosh or not when deciding if we're open or closed.
+        // there are no errors upon weird blocks like obsidian 
+        // in the middle of a wooden bridge.
+        if (canPassThrough(hinge.getType())) {
+            setToggleRegion(proximalBaseCenter.getType());
+        } else {
+            setToggleRegion(Material.AIR);
+        }
+    }
+    
+    private void setToggleRegion(Material mat) {
+        for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
+            trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ()).setType(mat);
+        }
     }
     
     
@@ -166,7 +186,7 @@ public class Bridge extends Mechanic {
      * @return whether the door can pass through this BlockType (and displace it
      *         if needed).
      */
-    private static boolean canPassThrough(BlockType t) {
+    private static boolean canPassThrough(Material t) {
         switch (t) {
             case AIR:
             case WATER:
