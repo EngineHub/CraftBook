@@ -48,6 +48,8 @@ public class Gate extends Mechanic {
      */
     protected MechanismsPlugin plugin;
     
+    private BlockWorldVector pt;
+    
     /**
      * Construct a gate for a location.
      * 
@@ -55,7 +57,8 @@ public class Gate extends Mechanic {
      * @param plugin 
      */
     public Gate(BlockWorldVector pt, MechanismsPlugin plugin) {
-        super(pt);
+        super();
+        this.pt = pt;
         this.plugin = plugin;
     }
     
@@ -164,8 +167,6 @@ public class Gate extends Mechanic {
      * @param pt
      * @param visitedColumns
      * @param close
-     * @param bag
-     * @param state
      * @return
      */
     private boolean recurseColumn(WorldVector pt,
@@ -268,7 +269,7 @@ public class Gate extends Mechanic {
     @Override
     public void onRightClick(BlockRightClickEvent event) {
         LocalPlayer player = plugin.wrap(event.getPlayer());
-        if (toggleGates(getTriggerPositions().get(0), false)) {
+        if (toggleGates(pt, false)) {
             player.print("Gate toggled!");
         } else {
             player.printError("Failed to find a gate!");
