@@ -19,6 +19,7 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
+import com.sk89q.craftbook.mech.*;
 
 /**
  * Configuration handler for CraftBook.
@@ -28,6 +29,7 @@ import java.io.File;
 public abstract class MechanismsConfiguration {
     public String bookcaseReadLine = "You pick up a book...";
     public File dataFolder;
+    public Bridge.BridgeSettings bridgeSettings;       //FIXME this is teh hacksauce
     
     /**
      * Load the configuration data from somewhere. This may be called

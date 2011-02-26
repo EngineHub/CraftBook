@@ -2,8 +2,6 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.block.*;
 
-import com.sk89q.craftbook.mech.*;
-
 /**
  * <p>
  * Convenience methods for dealing with some signpost data.

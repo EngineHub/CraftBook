@@ -18,15 +18,36 @@ import com.sk89q.worldedit.blocks.BlockID;
  * to normal torches. This is done every time a sign with [|] or [I] is right 
  * clicked by a player.
  *
- * @author sk89q
+ * @author fullwall
  */
-public class LightSwitch {
+
+
+public class LightSwitch extends Mechanic {
 	/**
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
      */
     private HistoryHashMap<BlockWorldVector,Long> recentLightToggles = new HistoryHashMap<BlockWorldVector,Long>(20);
+    
+    /**
+     * Configuration.
+     */
+    protected MechanismsPlugin plugin;
 
+	private BlockWorldVector pt;
+    
+    /**
+     * Construct a LightSwitch for a location.
+     * 
+     * @param pt
+     * @param plugin 
+     */
+    public LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
+        super();
+        this.pt = pt;
+        this.plugin = plugin;
+    }
+    
     /**
      * Toggle lights in the immediate area.
      * 
@@ -85,4 +106,14 @@ public class LightSwitch {
         }
         return false;
     }
+
+	@Override
+	public void unload() {
+		// No persistence.
+	}
+
+	@Override
+	public boolean isActive() {
+		return false; 	// Keeps no state
+	}
 }
