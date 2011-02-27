@@ -59,7 +59,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         // Let's register mechanics!
         manager.register(new BookcaseFactory(this));
         manager.register(new GateFactory(this));
-        manager.register(new Bridge.BridgeFactory(this));
+        manager.register(new Bridge.Factory(this));
         manager.register(new Elevator.Factory(this));
     }
     

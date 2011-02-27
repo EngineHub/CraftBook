@@ -19,8 +19,8 @@ import com.sk89q.worldedit.regions.*;
  * 
  */
 public class Bridge extends Mechanic {
-    public static class BridgeFactory implements MechanicFactory<Bridge> {
-        public BridgeFactory(MechanismsPlugin plugin) {
+    public static class Factory implements MechanicFactory<Bridge> {
+        public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
         }
         
