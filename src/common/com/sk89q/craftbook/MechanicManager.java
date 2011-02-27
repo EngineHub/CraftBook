@@ -106,8 +106,8 @@ public class MechanicManager {
                 mechanic.onRightClick(event);
                 return true;
             }
-        } catch (InvalidMechanismException $e) {
-            //FIXME tell the player about it.
+        } catch (InvalidMechanismException e) {
+            event.getPlayer().sendMessage(e.getMessage());
         }
         
         return false;
@@ -123,7 +123,7 @@ public class MechanicManager {
                 Mechanic mechanic = load(pos);
                 if (mechanic != null)
                     mechanic.onBlockRedstoneChange(event);
-            } catch (InvalidMechanismException $e) {
+            } catch (InvalidMechanismException e) {
                 //FIXME tell the... erm, sombody... about it.
             }
         }
