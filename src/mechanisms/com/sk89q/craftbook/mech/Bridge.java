@@ -104,9 +104,9 @@ public class Bridge extends Mechanic {
                 if ("[Bridge End]".equalsIgnoreCase(otherSignText)) break;
             }
             
-            farside = trigger.getFace(dir);
+            farside = farside.getFace(dir);
         }
-        if (farside.getType() == Material.SIGN_POST)
+        if (farside.getType() != Material.SIGN_POST)
             throw new InvalidConstructionException("[Bridge] sign required on other side (or it was too far away).");
         
         // Check the other side's base blocks for matching type
@@ -143,13 +143,13 @@ public class Bridge extends Mechanic {
     
     
     public void onRightClick(BlockRightClickEvent event) {
-        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(trigger)) return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         flipState();
         //notify event.getPlayer();
     }
     
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(trigger)) return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         flipState();
     }
     
@@ -165,8 +165,10 @@ public class Bridge extends Mechanic {
         // obsidian in the middle of a wooden bridge, just weird
         // results.
         if (canPassThrough(hinge.getType())) {
+            System.err.println("closing");
             setToggleRegionClosed();
         } else {
+            System.err.println("opening");
             setToggleRegionOpen();
         }
     }
