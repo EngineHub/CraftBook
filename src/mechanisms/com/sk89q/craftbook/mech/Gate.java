@@ -49,18 +49,29 @@ public class Gate extends Mechanic {
      */
     protected MechanismsPlugin plugin;
     
-    private BlockWorldVector pt;
+    /**
+     * Location of the gate.
+     */
+    protected BlockWorldVector pt;
+    
+    /**
+     * Indicates a DGate.
+     */
+    protected boolean smallSearchSize;
     
     /**
      * Construct a gate for a location.
      * 
      * @param pt
      * @param plugin 
+     * @param smallSearchSize 
      */
-    public Gate(BlockWorldVector pt, MechanismsPlugin plugin) {
+    public Gate(BlockWorldVector pt, MechanismsPlugin plugin,
+            boolean smallSearchSize) {
         super();
         this.pt = pt;
         this.plugin = plugin;
+        this.smallSearchSize = smallSearchSize;
     }
     
     /**
@@ -270,7 +281,7 @@ public class Gate extends Mechanic {
     @Override
     public void onRightClick(BlockRightClickEvent event) {
         LocalPlayer player = plugin.wrap(event.getPlayer());
-        if (toggleGates(pt, false)) {
+        if (toggleGates(pt, smallSearchSize)) {
             player.print("Gate toggled!");
         } else {
             player.printError("Failed to find a gate!");
@@ -284,7 +295,7 @@ public class Gate extends Mechanic {
      */
     @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-        setGateState(pt, event.getNewCurrent() > 0, false);
+        setGateState(pt, event.getNewCurrent() > 0, smallSearchSize);
     }
 
     @Override

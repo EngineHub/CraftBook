@@ -40,13 +40,17 @@ public class GateFactory implements MechanicFactory<Gate> {
         Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
-            if (state instanceof Sign
-                    && ((Sign) state).getLine(1).equalsIgnoreCase("[Gate]")) {
-                // this is a little funky because we don't actually look for the blocks
-                // that make up the movable parts of the gate until we're running the 
-                // event later... so the factory can succeed even if the signpost doesn't
-                // actually operate any gates correctly.  but it works!
-                return new Gate(pt, plugin);
+            if (state instanceof Sign) {
+                Sign sign = (Sign) state;
+                if (sign.getLine(1).equalsIgnoreCase("[Gate]")
+                        || sign.getLine(1).equalsIgnoreCase("[DGate]")) {
+                    // this is a little funky because we don't actually look for the blocks
+                    // that make up the movable parts of the gate until we're running the 
+                    // event later... so the factory can succeed even if the signpost doesn't
+                    // actually operate any gates correctly.  but it works!
+                    return new Gate(pt, plugin,
+                            sign.getLine(1).equalsIgnoreCase("[DGate]"));
+                }
             }
         }
         
