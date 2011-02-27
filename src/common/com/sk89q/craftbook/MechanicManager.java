@@ -109,7 +109,9 @@ public class MechanicManager {
                 return true;
             }
         } catch (InvalidMechanismException e) {
-            event.getPlayer().sendMessage(e.getMessage());
+            if (e.getMessage() != null) {
+                event.getPlayer().sendMessage(e.getMessage());
+            }
         }
 
         return false;
