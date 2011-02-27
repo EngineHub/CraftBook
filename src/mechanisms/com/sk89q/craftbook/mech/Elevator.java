@@ -87,16 +87,18 @@ public class Elevator extends Mechanic {
         
         // find destination sign
         shift = (dir == Direction.UP) ? BlockFace.UP : BlockFace.DOWN;
-        destination = trigger.getFace(shift);
+        int f = (dir == Direction.UP) ? 127 : 0;
+        destination = trigger;
+        if (destination.getY() == f)             // heading up from top or down from bottom
+            throw new InvalidConstructionException();
         while (true) {
-            Direction derp = isLift(destination);
-            if (derp != Direction.NONE) break;    // found it!
-            if (destination.getY() == 127)        // hit the top of the world
-                throw new InvalidConstructionException();
-            if (destination.getY() == 0)        // hit the bottom of the world
-                throw new InvalidConstructionException();
-            
             destination = destination.getFace(shift);
+            Direction derp = isLift(destination);
+            if (derp != Direction.NONE) break;   // found it!
+            if (destination.getY() == 127)       // hit the top of the world
+                throw new InvalidConstructionException();
+            if (destination.getY() == 0)         // hit the bottom of the world
+                throw new InvalidConstructionException();
         }
         // and if we made it here without exceptions, destination is set.
         
@@ -134,6 +136,8 @@ public class Elevator extends Mechanic {
                 destination.getY() + 1,
                 (int)Math.floor(player.getLocation().getZ())
         );
+        // well, unless that's already a ceiling.
+        if (!occupiable(floor)) floor = floor.getFace(BlockFace.DOWN);
         
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
