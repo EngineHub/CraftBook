@@ -63,7 +63,11 @@
     <copy tofile="${release.dir}/README.txt" file="README.txt"/>
     <copy tofile="${release.dir}/LICENSE.txt" file="LICENSE.txt"/>
     <copy tofile="${release.dir}/CHANGELOG.txt" file="CHANGELOG.txt"/>
-    <copy tofile="${release.dir}/CHANGELOG.txt" file="PERLSTONE-v1.0.txt"/>
+    <copy tofile="${release.dir}/PERLSTONE-v1.0.txt" file="PERLSTONE-v1.0.txt"/>
+    <copy tofile="${release.dir}/CraftBook.jar" file="${dist.dir}/CraftBook.jar"/>
+    <copy tofile="${release.dir}/CraftBookMechanisms.jar" file="${dist.dir}/CraftBookMechanisms.jar"/>
+    <copy tofile="${release.dir}/CraftBookCircuits.jar" file="${dist.dir}/CraftBookCircuits.jar"/>
+    <copy tofile="${release.dir}/CraftBookVehicles.jar" file="${dist.dir}/CraftBookVehicles.jar"/>
     <zip destfile="${release.dir}/craftbook-${version}.zip" basedir="${release.dir}" excludes="*.zip plugin.yml common mechanisms"/>
     <mkdir dir="${release.dir}/src"/>
     <copy todir="${release.dir}/src">
