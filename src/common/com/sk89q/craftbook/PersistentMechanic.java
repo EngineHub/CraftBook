@@ -1,18 +1,35 @@
+// Id
+/*
+ * CraftBook
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.sk89q.craftbook;
 
 import java.util.*;
-
+import org.bukkit.event.block.BlockEvent;
 import com.sk89q.craftbook.util.*;
 
 /**
- * <p>
  * PersistentMechanic exist to keep internal state in situations where the
  * instantiation of the Mechanic may be relatively expensive. However, they are
  * in many cases not appropriate tools since limitations in the core of Bukkit
  * mean that it is not always possible to catch all events that a
  * PersistentMechanic may need in order to perform the caching of mechanism
  * state this class was designed to facilitate with verifiable correctness.
- * </p>
  * 
  * <p>
  * A Mechanic at minimum has one or more BlockVector which it wishes to receive
@@ -46,7 +63,6 @@ import com.sk89q.craftbook.util.*;
  * </p>
  * 
  * @author hash
- * 
  */
 public abstract class PersistentMechanic extends Mechanic {
     /**
@@ -72,6 +88,8 @@ public abstract class PersistentMechanic extends Mechanic {
     /**
      * Get the list of trigger positions that this mechanic uses. This list is
      * constant and cannot change during the run of the mechanic.
+     * 
+     * @return list of trigger positions
      */
     public final List<BlockWorldVector> getTriggerPositions() {
         return triggers;
@@ -83,6 +101,16 @@ public abstract class PersistentMechanic extends Mechanic {
      * maintain the validity of their cached state. The contents of this last
      * may change over time and the MechanicManager of this Mechanic must be
      * informed after every change in order to maintain system consistency.
+     * 
+     * @return list of defining positions
      */
-    public abstract List<BlockWorldVector> getDefiningPositions();
+    public abstract List<BlockWorldVector> getWatchedPositions();
+    
+    /**
+     * Called when a watched block is changed in some manner.
+     * 
+     * @param evt
+     */
+    public void onWatchBlockNotification(BlockEvent evt) {
+    }
 }

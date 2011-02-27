@@ -27,8 +27,6 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import static com.sk89q.craftbook.bukkit.BukkitUtil.*;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line

@@ -19,16 +19,11 @@
 
 package com.sk89q.craftbook;
 
-import java.util.*;
-
 import org.bukkit.event.block.*;
-import com.sk89q.craftbook.util.BlockWorldVector;
 
 /**
- * <p>
  * A Mechanic is a an object that manages a set of BlockVectors to enhance those
  * positions with CraftBook functionality.
- * </p>
  * 
  * <p>
  * Mechanic instances are subject to lazy instantiation and must be able to
@@ -59,7 +54,6 @@ public abstract class Mechanic {
      * 
      * @return
      */
-    //XXX the name of this method makes it sound like a quiet boolean getter, not an expensive validator!
     public abstract boolean isActive();
     
     /**
@@ -78,6 +72,11 @@ public abstract class Mechanic {
     public void onRightClick(BlockRightClickEvent event) {
     }
     
+    /**
+     * Raised when an input redstone current changes.
+     * 
+     * @param event
+     */
     public void onBlockRedstoneChange(BlockRedstoneEvent event){
     }
 }

@@ -21,8 +21,6 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.World;
 import org.bukkit.block.*;
-
-import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.worldedit.Vector;
 
 /**

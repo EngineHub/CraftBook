@@ -1,3 +1,22 @@
+// $Id$
+/*
+ * CraftBook
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.sk89q.craftbook.mech;
 
 import java.util.*;
@@ -6,7 +25,6 @@ import org.bukkit.block.*;
 import org.bukkit.event.block.*;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
-import com.sk89q.craftbook.mech.Elevator.*;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.blocks.*;
 import com.sk89q.worldedit.regions.*;
@@ -36,6 +54,7 @@ public class Bridge extends Mechanic {
          *             if the area looked like it was intended to be a bridge, but
          *             it failed.
          */
+        @Override
         public Bridge detect(BlockWorldVector pt) throws InvalidMechanismException {
             Block block = pt.toBlock();
             // check if this looks at all like something we're interested in first
@@ -142,12 +161,14 @@ public class Bridge extends Mechanic {
     // would be considered defining blocks, though.
     
     
+    @Override
     public void onRightClick(BlockRightClickEvent event) {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         flipState();
         //notify event.getPlayer();
     }
     
+    @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         flipState();
@@ -213,10 +234,12 @@ public class Bridge extends Mechanic {
     
     
     
+    @Override
     public void unload() {
         /* we're not persistent */
     }
     
+    @Override
     public boolean isActive() {
         /* we're not persistent */
         return false;
@@ -227,17 +250,23 @@ public class Bridge extends Mechanic {
     /**
      * Thrown when the sign is an invalid direction.
      */
-    private static class InvalidDirectionException extends InvalidMechanismException {}
+    private static class InvalidDirectionException extends InvalidMechanismException {
+        private static final long serialVersionUID = -8169241147023551662L;
+    }
     
     /**
      * Thrown when the bridge type is unacceptable.
      */
-    private static class UnacceptableMaterialException extends InvalidMechanismException {}
+    private static class UnacceptableMaterialException extends InvalidMechanismException {
+        private static final long serialVersionUID = -2856504362189922160L;
+    }
     
     /**
      * Thrown when the bridge type is not constructed correctly.
      */
     private static class InvalidConstructionException extends InvalidMechanismException {
+        private static final long serialVersionUID = 8758644926222590049L;
+
         public InvalidConstructionException(String msg) {
             super(msg);
         }
@@ -273,15 +302,6 @@ public class Bridge extends Mechanic {
          */
         public boolean canUseBlock(Material b) {
             return allowedBlocks.contains(b);
-        }
-        
-        /**
-         * @param b
-         * @return true if the given block type can be used for a bridge; false
-         *         otherwise.
-         */
-        private boolean canUseBlock(Block b) {
-            return allowedBlocks.contains(b.getType());
         }
     }
 }
