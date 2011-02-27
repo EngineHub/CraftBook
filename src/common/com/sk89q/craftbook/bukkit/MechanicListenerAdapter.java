@@ -21,8 +21,7 @@ package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
-import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldListener;
 import org.bukkit.plugin.PluginManager;
@@ -63,6 +62,8 @@ public class MechanicListenerAdapter {
 
         pluginManager.registerEvent(Type.BLOCK_RIGHTCLICKED, blockListener,
                 Priority.Normal, plugin);
+        pluginManager.registerEvent(Type.REDSTONE_CHANGE, blockListener,
+                Priority.Normal, plugin);
         pluginManager.registerEvent(Type.CHUNK_UNLOADED, worldListener,
                 Priority.Normal, plugin);
     }
@@ -88,6 +89,11 @@ public class MechanicListenerAdapter {
         @Override
         public void onBlockRightClick(BlockRightClickEvent event) {
             manager.handleBlockRightClick(event);
+        }
+        
+        @Override
+        public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+            manager.onBlockRedstoneChange(event);
         }
     }
     
