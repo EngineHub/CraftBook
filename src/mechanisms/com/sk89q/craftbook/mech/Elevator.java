@@ -120,7 +120,7 @@ public class Elevator extends Mechanic {
     
     
     public void onRightClick(BlockRightClickEvent event) {
-        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(trigger)) return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         makeItSo(event.getPlayer());
     }
     
