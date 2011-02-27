@@ -71,7 +71,7 @@ public class BlockRedstoneNeighborEvent extends BlockRedstoneEvent {
      * source event (the original event is in index 0).
      */
     public static BlockRedstoneEvent[] haveKittens(BlockRedstoneEvent source) {
-        BlockRedstoneEvent[] kittens = new BlockRedstoneNeighborEvent[KITTENS];
+        BlockRedstoneEvent[] kittens = new BlockRedstoneEvent[KITTENS];
         kittens[0] = source;
         // it would probably be wise to check if the neighbor block is a redstone
         // block itself and not send these if it is, since it'll presumably be getting 

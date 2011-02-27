@@ -121,13 +121,11 @@ public class MechanicManager {
      * @param event
      */
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-        for (BlockRedstoneEvent kitten : BlockRedstoneNeighborEvent
-                .haveKittens(event)) {
-            BlockWorldVector pos = toWorldVector(event.getBlock());
+        for (BlockRedstoneEvent kitten : BlockRedstoneNeighborEvent.haveKittens(event)) {
             try {
-                Mechanic mechanic = load(pos);
+                Mechanic mechanic = load(toWorldVector(kitten.getBlock()));
                 if (mechanic != null)
-                mechanic.onBlockRedstoneChange(kitten);
+                    mechanic.onBlockRedstoneChange(kitten);
             } catch (InvalidMechanismException e) {
                 // FIXME tell the... erm, sombody... about it.
             }
