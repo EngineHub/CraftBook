@@ -90,7 +90,7 @@ public class MechanicManager {
      * @param event
      * @return true if there was a mechanic to process the event
      */
-    public boolean handleBlockRightClick(BlockRightClickEvent event) {
+    public boolean dispatchBlockRightClick(BlockRightClickEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
@@ -119,17 +119,26 @@ public class MechanicManager {
      * Handle the redstone block change event.
      * 
      * @param event
+     * @return true if there was a mechanic to process the event
      */
-    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-        for (BlockRedstoneEvent kitten : BlockRedstoneNeighborEvent.haveKittens(event)) {
-            try {
-                Mechanic mechanic = load(toWorldVector(kitten.getBlock()));
-                if (mechanic != null)
-                    mechanic.onBlockRedstoneChange(kitten);
-            } catch (InvalidMechanismException e) {
-                // FIXME tell the... erm, sombody... about it.
+    public boolean dispatchBlockRedstoneChange(BlockRedstoneEvent event) {
+        // We don't need to handle events that no mechanic we use makes use of
+        if (!passesFilter(event))
+            return false;
+
+        // See if this event could be occurring on any mechanism's triggering
+        // blocks
+        BlockWorldVector pos = toWorldVector(event.getBlock());
+        try {
+            Mechanic mechanic = load(pos);
+            if (mechanic != null) {
+                mechanic.onBlockRedstoneChange(event);
+                return true;
             }
+        } catch (InvalidMechanismException e) {
         }
+        
+        return false;
     }
 
     /**

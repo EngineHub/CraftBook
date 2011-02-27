@@ -22,6 +22,7 @@ package com.sk89q.craftbook.mech;
 import java.util.Set;
 import java.util.HashSet;
 import org.bukkit.World;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockRightClickEvent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
@@ -274,6 +275,16 @@ public class Gate extends Mechanic {
         } else {
             player.printError("Failed to find a gate!");
         }
+    }
+    
+    /**
+     * Raised when an input redstone current changes.
+     * 
+     * @param event
+     */
+    @Override
+    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        setGateState(pt, event.getNewCurrent() > 0, false);
     }
 
     @Override

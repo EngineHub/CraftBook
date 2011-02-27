@@ -27,13 +27,12 @@ import org.bukkit.event.block.*;
  * that the regular redstone event won't trigger on. This is a temporary
  * fix for the fact that Bukkit doesn't call the redstone events on blocks
  * we care about (signs, netherrack, pumpkins), and this class cannot be
- * depended upon to existin the future.
+ * depended upon to existing the future.
  *  
  * @author hash
  */
 public class BlockRedstoneNeighborEvent extends BlockRedstoneEvent {
     private static final long serialVersionUID = 5973553903502817198L;
-    public static final int KITTENS = 7;
     
     /**
      * Holds the block that is being detected for.
@@ -63,27 +62,4 @@ public class BlockRedstoneNeighborEvent extends BlockRedstoneEvent {
     public Block getCause() {
         return neighbor;
     }
-    
-    
-    /**
-     * @param source
-     * @return a new BlockRedstoneNeighborEvent for each position around the
-     * source event (the original event is in index 0).
-     */
-    public static BlockRedstoneEvent[] haveKittens(BlockRedstoneEvent source) {
-        BlockRedstoneEvent[] kittens = new BlockRedstoneEvent[KITTENS];
-        kittens[0] = source;
-        // it would probably be wise to check if the neighbor block is a redstone
-        // block itself and not send these if it is, since it'll presumably be getting 
-        // its very own BlockRedstoneEvent momentarily (or just did!) and it probably 
-        // doesn't really care about its neighbor a big.
-        kittens[1] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.NORTH));
-        kittens[2] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.EAST));
-        kittens[3] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.SOUTH));
-        kittens[4] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.WEST));
-        kittens[5] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.UP));
-        kittens[6] = new BlockRedstoneNeighborEvent(source, source.getBlock().getFace(BlockFace.DOWN));
-        return kittens;
-    } 
-    
 }
