@@ -19,7 +19,6 @@
 
 package com.sk89q.craftbook.circuits;
 
-import java.util.Random;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import com.sk89q.craftbook.Mechanic;
@@ -27,17 +26,11 @@ import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
- * This mechanism allow players to read bookshelves and get a random line
- * from a file as as "book."
+ * This mechanism allow players to toggle the fire on top of Netherrack.
  *
  * @author sk89q
  */
 public class Nettherrack extends Mechanic {
-
-    /**
-     * Used for picking random lines.
-     */
-    protected static Random rand = new Random();
     
     /**
      * Construct a bookcase for a location.
@@ -67,14 +60,14 @@ public class Nettherrack extends Mechanic {
     }
     
     /**
-     * Unload this bookcase.
+     * Unload this mechanic.
      */
     @Override
     public void unload() {
     }
 
     /**
-     * Check if this bookcase is still active.
+     * Check if this mechanic is still active.
      */
     @Override
     public boolean isActive() {
