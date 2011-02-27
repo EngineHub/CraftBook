@@ -19,6 +19,8 @@
 package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.circuits.NetherrackFactory;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -42,6 +44,13 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         };
         
         config.loadConfiguration();
+        
+        MechanicManager manager = new MechanicManager();
+        MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
+        adapter.register(manager);
+        
+        // Let's register mechanics!
+        manager.register(new NetherrackFactory());
     }
     
     @Override
