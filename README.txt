@@ -14,21 +14,3 @@ The source code can be found at https://github.com/sk89q/craftbook
 
 Chat with us! Fellow users and developers can be found hanging
 at #craftbook on irc.esper.net.
-
-
-Installation for hMod
----------------------
-
-  1. Create a "plugins" folder inside your "bin" folder.
-
-  2. Copy CraftBook.jar into "plugins".
-
-  3. Add "CraftBook" to the "plugins" line of your server.properties file.
-     If it's not already there, add the line. The line should look like this:
-  
-         plugins=CraftBook
-     
-     If you have multiple plugins, separate plugin names with commas.
-
-  4. Copy "craftbook-books.txt", "custom-ics.txt", and "cauldron-recipes.txt"
-     into the your "bin" folder (where the server files reside).
