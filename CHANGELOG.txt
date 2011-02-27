@@ -1,3 +1,6 @@
+3.0-alpha1:
+- FOR BUKKIT! About 50% completed!
+
 2.0preview11:
 - Added MC1260/MC0260 (water sensor), MC1261/MC0261 (lava sensor),
     MC1262/MC0262 (light sensor).
