@@ -186,10 +186,8 @@ public class Bridge extends Mechanic {
         // obsidian in the middle of a wooden bridge, just weird
         // results.
         if (canPassThrough(hinge.getType())) {
-            System.err.println("closing");
             setToggleRegionClosed();
         } else {
-            System.err.println("opening");
             setToggleRegionOpen();
         }
     }
