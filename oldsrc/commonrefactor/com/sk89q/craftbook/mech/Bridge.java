@@ -69,6 +69,51 @@ public class Bridge extends SignOrientedMechanism {
     }
 
     /**
+     * Returns whether a block can be used for the bridge.
+     * 
+     * @param id
+     * @return
+     */
+    private boolean canUseBlock(int id) {
+        return allowedBlocks.contains(id);
+    }
+    
+    /**
+     * Returns whether the door should pass through this block (and displace
+     * it if needed).
+     * 
+     * @param t
+     * @return
+     */
+    private static boolean canPassThrough(int t) {
+        return t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
+                || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
+                || t == BlockType.SNOW;
+    }
+    
+    /**
+     * Returns the direction of the bridge to open towards.
+     * 
+     * @return
+     * @throws InvalidDirection
+     */
+    private Direction getDirection() throws InvalidDirectionException {
+        int data = world.getData(x, y, z);
+        
+        if (data == 0x0) {
+            return Bridge.Direction.EAST;
+        } else if (data == 0x4) {
+            return Bridge.Direction.SOUTH;
+        } else if (data == 0x8) {
+            return Bridge.Direction.WEST;
+        } else if (data == 0xC) {
+            return Bridge.Direction.NORTH; 
+        } else {
+            throw new InvalidDirectionException();
+        }
+    }
+
+    /**
      * Toggles the bridge closest to a location.
      *
      * @param player
@@ -303,4 +348,44 @@ public class Bridge extends SignOrientedMechanism {
         return true;
     }
     
+    /**
+     * Thrown when the sign is an invalid direction.
+     */
+    private static class InvalidDirectionException extends Exception {
+        private static final long serialVersionUID = -3183606604247616362L;
+    }
+    
+    /**
+     * Thrown when the bridge type is unacceptable.
+     */
+    private static class UnacceptableTypeException extends Exception {
+        private static final long serialVersionUID = 8340723004466483212L;
+    }
+    
+    /**
+     * Thrown when the bridge type is not constructed correctly.
+     */
+    private static class InvalidConstructionException extends Exception {
+        private static final long serialVersionUID = 4943494589521864491L;
+
+        /**
+         * Construct the object.
+         * 
+         * @param msg
+         */
+        public InvalidConstructionException(String msg) {
+            super(msg);
+        }
+    }
+    
+    public static class BridgeSettings {
+        /**
+         * What bridges can be made out of.
+         */
+        public Set<Integer> allowedBlocks;
+        /**
+         * Max bridge length.
+         */
+        public int maxLength;
+    }
 }

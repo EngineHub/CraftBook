@@ -336,7 +336,9 @@ public class MechanicManager {
         }
         
         public void notify(BlockRightClickEvent event) {
-            for (PersistentMechanic m : definers.get(toWorldVector(event.getBlock())))
+            Set<PersistentMechanic> pms = definers.get(toWorldVector(event.getBlock()));
+            if (pms == null) return;
+            for (PersistentMechanic m : pms)
                 m.onRightClick(event);
         }
         
