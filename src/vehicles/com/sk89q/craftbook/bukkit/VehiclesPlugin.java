@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.event.Event;
+import org.bukkit.util.config.Configuration;
 import com.sk89q.craftbook.VehiclesConfiguration;
 
 /**
@@ -33,9 +35,18 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     public void onEnable() {
         super.onEnable();
         
+        createDefaultConfiguration("config.yml");
+        
+        final VehiclesPlugin plugin = this;
+        
         config = new VehiclesConfiguration() {
             @Override
             public void loadConfiguration() {
+                Configuration config = plugin.getConfiguration();
+
+                maxBoostBlock = config.getInt("max-boost-block", maxBoostBlock);
+                slow50xBlock = config.getInt("50x-slow-block", slow50xBlock);
+                slow20xBlock = config.getInt("20x-slow-block", slow20xBlock);
             }
         };
         
@@ -44,6 +55,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     
     @Override
     protected void registerEvents() {
+        CraftBookVehiclesListener vehiclesListener = new CraftBookVehiclesListener(this);
+        
+        registerEvent(Event.Type.VEHICLE_MOVE, vehiclesListener);
     }
     
     public VehiclesConfiguration getLocalConfiguration() {

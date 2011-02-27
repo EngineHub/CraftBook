@@ -24,6 +24,10 @@ package com.sk89q.craftbook;
  * @author sk89q
  */
 public abstract class VehiclesConfiguration {
+    public int maxBoostBlock = 41;
+    public int slow50xBlock = 88;
+    public int slow20xBlock = 13;
+    
     /**
      * Load the configuration data from somewhere. This may be called
      * repeatedly to reload the configuration at any time.
