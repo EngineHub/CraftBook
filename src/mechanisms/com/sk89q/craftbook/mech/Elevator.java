@@ -91,9 +91,9 @@ public class Elevator extends Mechanic {
         while (true) {
             Direction derp = isLift(destination);
             if (derp != Direction.NONE) break;    // found it!
-            if (destination.getY() == 0xF)        // hit the top of the world
+            if (destination.getY() == 127)        // hit the top of the world
                 throw new InvalidConstructionException();
-            if (destination.getY() == 0x0)        // hit the bottom of the world
+            if (destination.getY() == 0)        // hit the bottom of the world
                 throw new InvalidConstructionException();
             
             destination = destination.getFace(shift);
