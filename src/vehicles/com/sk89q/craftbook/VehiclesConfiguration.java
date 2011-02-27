@@ -27,6 +27,8 @@ public abstract class VehiclesConfiguration {
     public int maxBoostBlock = 41;
     public int slow50xBlock = 88;
     public int slow20xBlock = 13;
+    public boolean minecartSlowWhenEmpty = true;
+    public double minecartMaxSpeedModifier = 1;
     
     /**
      * Load the configuration data from somewhere. This may be called

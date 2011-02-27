@@ -7,8 +7,9 @@ reverse-block: 35
 deposit-block: 15
 eject-block: 42
 sort-block: 87
-dispensers: true
-decay-time: 0
-hinder-unoccupied-slowdown: true
+minecart-dispensers: true
+minecart-decay-time: 0
+minecart-slow-when-empty: false
+minecart-max-speed-modifier: 1
 in-cart-control: true
 hinder-pressure-plate-slow: true

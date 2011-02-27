@@ -22,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
@@ -33,11 +34,29 @@ public class CraftBookVehiclesListener extends VehicleListener {
     public CraftBookVehiclesListener(VehiclesPlugin plugin) {
         this.plugin = plugin;
     }
+    
+    /**
+     * Called when a vehicle is created.
+     */
+    @Override
+    public void onVehicleCreate(VehicleCreateEvent event) {
+        Vehicle vehicle = event.getVehicle();
+        
+        // Only working with minecarts
+        if (!(vehicle instanceof Minecart)) {
+            return;
+        }
+        
+        VehiclesConfiguration config = plugin.getLocalConfiguration();
+        
+        Minecart minecart = (Minecart) vehicle;
+        
+        minecart.setSlowWhenEmpty(config.minecartSlowWhenEmpty);
+        minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
+    }
 
     /**
      * Called when an vehicle moves.
-     *
-     * @param event
      */
     @Override
     public void onVehicleMove(VehicleMoveEvent event) {

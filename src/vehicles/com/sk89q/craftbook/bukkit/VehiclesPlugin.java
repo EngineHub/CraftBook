@@ -47,6 +47,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 maxBoostBlock = config.getInt("max-boost-block", maxBoostBlock);
                 slow50xBlock = config.getInt("50x-slow-block", slow50xBlock);
                 slow20xBlock = config.getInt("20x-slow-block", slow20xBlock);
+                minecartSlowWhenEmpty = config.getBoolean("minecart-slow-when-empty",
+                        minecartSlowWhenEmpty);
+                minecartMaxSpeedModifier = config.getDouble("minecart-max-speed-modifier",
+                        minecartMaxSpeedModifier);
             }
         };
         
@@ -56,7 +60,8 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     @Override
     protected void registerEvents() {
         CraftBookVehiclesListener vehiclesListener = new CraftBookVehiclesListener(this);
-        
+
+        registerEvent(Event.Type.VEHICLE_CREATE, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_MOVE, vehiclesListener);
     }
     
