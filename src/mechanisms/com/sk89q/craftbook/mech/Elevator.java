@@ -87,20 +87,16 @@ public class Elevator extends Mechanic {
         
         // find destination sign
         shift = (dir == Direction.UP) ? BlockFace.UP : BlockFace.DOWN;
-        // this isn't documented, but deep down inside bukkit code
-        // the getFace method turns into a vector shift sort of operation
-        // and then the coordinate gets bounding by a bitwise and before
-        // a block is actually retrieved.  So, end result: when you ask 
-        // for the block above the top block in the world, you'll get the
-        // same block back again!
         destination = trigger.getFace(shift);
         while (true) {
-            Direction derp = isLift(destination); // interestingly, this also means if you put a [lift up] at the top of the world, it just teleports to itself.
+            Direction derp = isLift(destination);
             if (derp != Direction.NONE) break;    // found it!
-            Block next = destination.getFace(shift);
-            if (next == destination)              // hit the edge of the world 
+            if (destination.getY() == 0xF)        // hit the top of the world
                 throw new InvalidConstructionException();
-            destination = next;
+            if (destination.getY() == 0x0)        // hit the bottom of the world
+                throw new InvalidConstructionException();
+            
+            destination = destination.getFace(shift);
         }
         // and if we made it here without exceptions, destination is set.
         
@@ -150,11 +146,9 @@ public class Elevator extends Mechanic {
                 foundGround = true;
                 break;
             }
-            floor = floor.getFace(shift);
-            // if there's a hole through bedrock on the bottom of the map
-            // then it's possible for it to be considered a valid destination
-            // but i think i'll leave that as an easter egg for anyone insane
-            // enough to test for that.
+            if (floor.getY() == 0x0)        // hit the bottom of the world
+                break;
+            floor = floor.getFace(BlockFace.DOWN);
         }
         if (!foundGround) {
             player.sendMessage("There is no floor at the destination!");
@@ -173,7 +167,7 @@ public class Elevator extends Mechanic {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
-        String title = ((Sign)destination.getState()).getLines()[1];
+        String title = ((Sign)destination.getState()).getLines()[0];
         if (title.length() != 0) {
             player.sendMessage("Floor: " + title);
         } else {
