@@ -171,7 +171,11 @@ public class Bridge extends Mechanic {
     @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
-        flipState();
+        if (event.getNewCurrent() == 0) {
+            setToggleRegionOpen();
+        } else {
+            setToggleRegionClosed();
+        }
     }
     
     private void flipState() {
