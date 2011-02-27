@@ -23,16 +23,15 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.*;
-
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.blocks.*;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that
  * teleport the player vertically when triggered.
  * 
+ * @author sk89q
  * @author hash
  * 
  */
@@ -56,6 +55,7 @@ public class Elevator extends Mechanic {
          *             if the area looked like it was intended to be an
          *             elevator, but it failed.
          */
+        @Override
         public Elevator detect(BlockWorldVector pt) throws InvalidMechanismException {
             Block block = pt.toBlock();
             // check if this looks at all like something we're interested in first
@@ -119,11 +119,13 @@ public class Elevator extends Mechanic {
     
     
     
+    @Override
     public void onRightClick(BlockRightClickEvent event) {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(trigger)) return; //wth? our manager is insane
         makeItSo(event.getPlayer());
     }
     
+    @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         /* we only affect players, so we don't care about redstone events */
     }
@@ -181,9 +183,6 @@ public class Elevator extends Mechanic {
     
     
     
-    private static Elevator.Direction isLift(BlockWorldVector pt) {
-        return isLift(pt.toBlock());
-    }
     private static Elevator.Direction isLift(Block block) {
         BlockState state = block.getState();
         if (!(state instanceof Sign)) return Direction.NONE;
@@ -230,21 +229,31 @@ public class Elevator extends Mechanic {
     
     
     
+    @Override
     public void unload() {
         /* we're not persistent */
     }
     
+    @Override
     public boolean isActive() {
         /* we're not persistent */
         return false;
     }
-    
-    
-    
+
     private static class NoDepartureException extends InvalidMechanismException {
-        public NoDepartureException() { super("Cannot depart from this lift (can only arrive)."); }
+        private static final long serialVersionUID = 3845311158458450314L;
+
+        public NoDepartureException() {
+            super("Cannot depart from this lift (can only arrive).");
+        }
     }
-    private static class InvalidConstructionException extends InvalidMechanismException {
-        public InvalidConstructionException() { super("This lift has no destination."); }
+
+    private static class InvalidConstructionException extends
+            InvalidMechanismException {
+        private static final long serialVersionUID = 2306504048848430689L;
+
+        public InvalidConstructionException() {
+            super("This lift has no destination.");
+        }
     }
 }
