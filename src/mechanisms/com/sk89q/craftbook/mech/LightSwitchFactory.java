@@ -46,7 +46,7 @@ public class LightSwitchFactory implements MechanicFactory<LightSwitch> {
 					|| ((Sign) state).getLine(1).equalsIgnoreCase("[I]")) {
 				return new LightSwitch(pt, plugin);
 			}
-			return null;
 		}
+        return null;
 	}
 }
