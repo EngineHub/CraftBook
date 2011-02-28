@@ -25,6 +25,8 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.util.Vector;
+
 import com.sk89q.craftbook.VehiclesConfiguration;
 
 public class CraftBookVehiclesListener extends VehicleListener {
@@ -88,10 +90,14 @@ public class CraftBookVehiclesListener extends VehicleListener {
 
         if (underType == config.maxBoostBlock) {
             minecart.setVelocity(minecart.getVelocity().normalize().multiply(100));
+        } else if (underType == config.boost25xBlock) {
+            minecart.setVelocity(minecart.getVelocity().multiply(1.25));
         } else if (underType == config.slow20xBlock) {
             minecart.setVelocity(minecart.getVelocity().multiply(0.8));
         } else if (underType == config.slow50xBlock) {
             minecart.setVelocity(minecart.getVelocity().multiply(0.5));
+        } else if (underType == config.reverseBlock) {
+            minecart.setVelocity((minecart.getVelocity().multiply(-1)));
         }
     }
 }

@@ -25,8 +25,10 @@ package com.sk89q.craftbook;
  */
 public abstract class VehiclesConfiguration {
     public int maxBoostBlock = 41;
+    public int boost25xBlock = 14;
     public int slow50xBlock = 88;
     public int slow20xBlock = 13;
+    public int reverseBlock = 35;
     public boolean minecartSlowWhenEmpty = true;
     public double minecartMaxSpeedModifier = 1;
     
