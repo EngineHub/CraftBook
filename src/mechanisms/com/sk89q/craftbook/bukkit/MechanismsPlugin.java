@@ -61,6 +61,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new GateFactory(this));
         manager.register(new Bridge.Factory(this));
         manager.register(new Elevator.Factory(this));
+        manager.register(new LightSwitchFactory(this));
+        manager.register(new CauldronFactory(this));
     }
     
     @Override

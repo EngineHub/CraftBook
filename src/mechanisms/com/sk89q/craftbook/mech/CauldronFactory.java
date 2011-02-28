@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.mech;
 
@@ -25,21 +25,20 @@ import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class CauldronFactory implements MechanicFactory<Cauldron> {
-    
-    protected MechanismsPlugin plugin;
-    
-    public BookcaseFactory(MechanismsPlugin plugin) {
-        this.plugin = plugin;
-    }
 
-    @Override
-    //TODO
-    public Bookcase detect(BlockWorldVector pt) {
-        if (pt.getWorld().getBlockTypeIdAt(toLocation(pt)) == BlockID.BOOKCASE) {
-            return new Cauldron(pt, plugin);
-        }
-        
-        return null;
-    }
+	protected MechanismsPlugin plugin;
+
+	public CauldronFactory(MechanismsPlugin plugin) {
+		this.plugin = plugin;
+	}
+
+	@Override
+	// TODO
+	public Cauldron detect(BlockWorldVector pt) {
+		if (pt.getWorld().getBlockTypeIdAt(toLocation(pt)) == BlockID.AIR) {
+			return new Cauldron(pt, plugin);
+		}
+		return null;
+	}
 
 }
