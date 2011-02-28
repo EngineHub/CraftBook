@@ -1,4 +1,3 @@
-package com.sk89q.craftbook.mech;
 // $Id$
 /*
  * CraftBook
@@ -17,8 +16,7 @@ package com.sk89q.craftbook.mech;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
-
+package com.sk89q.craftbook.mech;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -34,6 +32,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Handler for cauldrons.
@@ -78,17 +77,21 @@ public class Cauldron extends Mechanic{
      * @param player
      */
     public void preCauldron(Player player, World world, BlockWorldVector pt) {
-        int x = pt.getX();
-        int y = pt.getY();
-        int z = pt.getZ();
-
-        int rootY = y;
-        int below = world.getBlockTypeIdAt(x, y - 1, z);
-        int below2 = world.getBlockTypeIdAt(x, y - 2, z);
-        int s1 = world.getBlockTypeIdAt(x + 1, y, z);
-        int s3 = world.getBlockTypeIdAt(x - 1, y, z);
-        int s2 = world.getBlockTypeIdAt(x, y, z + 1);
-        int s4 = world.getBlockTypeIdAt(x, y, z - 1);
+        double x = pt.getX();
+        double y = pt.getY();
+        double z = pt.getZ();
+        
+        int ix = pt.getBlockX();
+        int iy = pt.getBlockY();
+        int iz = pt.getBlockZ();
+        
+        double rootY = y;  
+        int below = world.getBlockTypeIdAt(ix, iy - 1, iz);
+        int below2 = world.getBlockTypeIdAt(ix, iy - 2, iz);
+        int s1 = world.getBlockTypeIdAt(ix + 1, iy, iz);
+        int s3 = world.getBlockTypeIdAt(ix - 1, iy, iz);
+        int s2 = world.getBlockTypeIdAt(ix, iy, iz + 1);
+        int s4 = world.getBlockTypeIdAt(ix, iy, iz - 1);
 
         // Preliminary check so we don't waste CPU cycles
         if ((BlockID.isLava(below) || BlockID.isLava(below2))
@@ -112,7 +115,7 @@ public class Cauldron extends Mechanic{
      */
     private void performCauldron(Player player, World world, BlockWorldVector pt) {
         // Gotta start at a root Y then find our orientation
-        int rootY = pt.getY();
+        int rootY = pt.getBlockY();
 
         // Used to store cauldron blocks -- walls are counted
         Map<BlockWorldVector,Integer> visited = new HashMap<BlockWorldVector,Integer>();
@@ -186,14 +189,14 @@ public class Cauldron extends Mechanic{
                         if (!BlockID.isBottomDependentBlock(entry.getValue())) {
                             removeQueue.add(entry.getKey());
                         } else {
-                            world.getBlockAt(entry.getKey().getX(),entry.getKey().getY(),entry.getKey().getZ()).setType(Material.AIR);
+                            world.getBlockAt(entry.getKey().getBlockX(), entry.getKey().getBlockY(),entry.getKey().getBlockZ()).setType(Material.AIR);
                         }
                         ingredients.remove(entry.getValue());
                     }
                 }
                 
                 for (BlockWorldVector v : removeQueue) {
-                	world.getBlockAt(v.getX(),v.getY(),v.getZ()).setType(Material.AIR);
+                	world.getBlockAt(v.getBlockX(),v.getBlockY(),v.getBlockZ()).setType(Material.AIR);
                 }
 
                 // Give results
@@ -226,8 +229,8 @@ public class Cauldron extends Mechanic{
             Map<BlockWorldVector,Integer> visited) throws NotACauldronException {
 
         // Don't want to go too low or high
-        if (pt.getY() < minY) { return; }
-        if (pt.getY() > maxY) { return; }
+        if (pt.getBlockY() < minY) { return; }
+        if (pt.getBlockY() > maxY) { return; }
 
         // There is likely a leak in the cauldron (or this isn't a cauldron)
         if (visited.size() > 24) {
@@ -237,7 +240,7 @@ public class Cauldron extends Mechanic{
         // Prevent infinite looping
         if (visited.containsKey(pt)) { return; }
 
-        int type = world.getBlockTypeIdAt(pt.getX(),pt.getY(),pt.getZ());
+        int type = world.getBlockTypeIdAt(pt.getBlockX(),pt.getBlockY(),pt.getBlockZ());
 
         // Make water work reliably
         if (type == 9) {
@@ -256,7 +259,7 @@ public class Cauldron extends Mechanic{
         if (type == BlockID.STONE) { return; }
 
         // Must have a lava floor
-        Vector lavaPos = pt.subtract(0, pt.getY() - minY + 1, 0);
+        BlockWorldVector lavaPos = pt.subtract(0, pt.getBlockY() - minY + 1, 0);
         if (!BlockID.isLava(world.getBlockTypeIdAt(lavaPos))) {
             throw new NotACauldronException("Cauldron lacks lava below");
         }

@@ -1,6 +1,7 @@
 // $Id$
 /*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ * CraftBook
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.World;
@@ -77,9 +77,9 @@ public class LightSwitch extends Mechanic {
     	
     	World world = pt.getWorld();
     	
-    	int wx = pt.getX();
-        int wy = pt.getY();
-        int wz = pt.getZ();
+    	int wx = pt.getBlockX();
+        int wy = pt.getBlockY();
+        int wz = pt.getBlockZ();
         int aboveID = world.getBlockTypeIdAt(wx, wy, wz);
         
 
