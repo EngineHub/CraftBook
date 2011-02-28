@@ -36,7 +36,7 @@ public class CauldronFactory implements MechanicFactory<Cauldron> {
 	// TODO
 	public Cauldron detect(BlockWorldVector pt) {
 		if (pt.getWorld().getBlockTypeIdAt(toLocation(pt)) == BlockID.AIR) {
-			return new Cauldron(pt, plugin);
+			return new Cauldron(new CauldronCookbook(), pt, plugin);
 		}
 		return null;
 	}

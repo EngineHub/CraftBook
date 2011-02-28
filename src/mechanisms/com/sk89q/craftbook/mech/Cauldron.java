@@ -34,6 +34,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -47,14 +48,18 @@ public class Cauldron extends Mechanic{
      * Stores the recipes.
      */
     private CauldronCookbook recipes;
+    private BlockWorldVector pt;
+    private MechanismsPlugin plugin;
 
     /**
      * Construct the handler.
      * 
      * @param recipes
      */
-    public Cauldron(CauldronCookbook recipes) {
+    public Cauldron(CauldronCookbook recipes, BlockWorldVector pt, MechanismsPlugin plugin) {
         this.recipes = recipes;
+        this.pt = pt;
+        this.plugin = plugin;
     }
 
     /**
@@ -189,11 +194,11 @@ public class Cauldron extends Mechanic{
                     if (ingredients.contains(entry.getValue())) {
                         // Some blocks need to removed first otherwise they will
                         // drop an item, so let's remove those first
-                        if (!BlockID.isBottomDependentBlock(entry.getValue())) {
-                            removeQueue.add(entry.getKey());
-                        } else {
+                        //if (!BlockID.isBottomDependentBlock(entry.getValue())) {
+                        //   removeQueue.add(entry.getKey());
+                        // } else {
                             world.getBlockAt(entry.getKey().getBlockX(), entry.getKey().getBlockY(),entry.getKey().getBlockZ()).setType(Material.AIR);
-                        }
+                        // }
                         ingredients.remove(entry.getValue());
                     }
                 }
@@ -262,8 +267,8 @@ public class Cauldron extends Mechanic{
         if (type == BlockID.STONE) { return; }
 
         // Must have a lava floor
-        BlockWorldVector lavaPos = pt.subtract(0, pt.getBlockY() - minY + 1, 0);
-        if (world.getBlockTypeIdAt(lavaPos) == BlockID.LAVA) {
+        BlockWorldVector lavaPos = recurse(0, pt.getY() - minY + 1, pt);
+        if ((world.getBlockTypeIdAt(lavaPos.getX(), lavaPos.getY(), lavaPos.getZ())) == BlockID.LAVA) {
             throw new NotACauldronException("Cauldron lacks lava below");
         }
 
@@ -286,7 +291,7 @@ public class Cauldron extends Mechanic{
      * 
      */
 	private BlockWorldVector recurse(int i, int j, int k, BlockWorldVector pt) {
-		return new BlockWorldVector(pt.getWorld(), pt.getX() +i, pt.getY() +j, pt.getZ() +z);
+		return new BlockWorldVector(pt.getWorld(), pt.getX() +i, pt.getY() +j, pt.getZ() + k);
 	}
 
 	@Override
