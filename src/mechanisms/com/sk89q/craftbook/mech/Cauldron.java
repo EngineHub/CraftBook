@@ -1,3 +1,4 @@
+package com.sk89q.craftbook.mech;
 // $Id$
 /*
  * CraftBook
@@ -16,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-package com.sk89q.craftbook.mech;
+
+
 
 import java.util.Map;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -94,15 +97,15 @@ public class Cauldron extends Mechanic{
         int s4 = world.getBlockTypeIdAt(ix, iy, iz - 1);
 
         // Preliminary check so we don't waste CPU cycles
-        if ((BlockID.isLava(below) || BlockID.isLava(below2))
+        if ((below == BlockID.LAVA || below2 == BlockID.LAVA)
                 && (s1 == BlockID.STONE || s2 == BlockID.STONE
                 || s3 == BlockID.STONE || s4 == BlockID.STONE)) {
             // Cauldron is 2 units deep
-            if (BlockID.isLava(below)) {
+            if (below == BlockID.LAVA) {
                 rootY++;
             }
 
-            performCauldron(player, world, new BlockWorldVector(x, rootY, z));
+            performCauldron(player, world, new BlockWorldVector(pt.getWorld(), x, rootY, z));
         }
     }
 
@@ -260,18 +263,31 @@ public class Cauldron extends Mechanic{
 
         // Must have a lava floor
         BlockWorldVector lavaPos = pt.subtract(0, pt.getBlockY() - minY + 1, 0);
-        if (!BlockID.isLava(world.getBlockTypeIdAt(lavaPos))) {
+        if (world.getBlockTypeIdAt(lavaPos) == BlockID.LAVA) {
             throw new NotACauldronException("Cauldron lacks lava below");
         }
 
         // Now we recurse!
-        findCauldronContents(world, pt.add(1, 0, 0).toBlockVector(), minY, maxY, visited);
-        findCauldronContents(world, pt.add(-1, 0, 0).toBlockVector(), minY, maxY, visited);
-        findCauldronContents(world, pt.add(0, 0, 1).toBlockVector(), minY, maxY, visited);
-        findCauldronContents(world, pt.add(0, 0, -1).toBlockVector(), minY, maxY, visited);
-        findCauldronContents(world, pt.add(0, 1, 0).toBlockVector(), minY, maxY, visited);
-        findCauldronContents(world, pt.add(0, -1, 0).toBlockVector(), minY, maxY, visited);
+        findCauldronContents(world, recurse(1, 0, 0, pt), minY, maxY, visited);
+        findCauldronContents(world, recurse(-1, 0, 0, pt), minY, maxY, visited);
+        findCauldronContents(world, recurse(0, 0, 1, pt), minY, maxY, visited);
+        findCauldronContents(world, recurse(0, 0, -1, pt), minY, maxY, visited);
+        findCauldronContents(world, recurse(0, 1, 0, pt), minY, maxY, visited);
+        findCauldronContents(world, recurse(0, -1, 0, pt), minY, maxY, visited);
     }
+
+    /**
+     * Returns a new BlockWorldVector with i, j, and k
+     * added to pt's x, y and z.
+     * @param i
+     * @param j
+     * @param k
+     * @param pt
+     * 
+     */
+	private BlockWorldVector recurse(int i, int j, int k, BlockWorldVector pt) {
+		return new BlockWorldVector(pt.getWorld(), pt.getX() +i, pt.getY() +j, pt.getZ() +z);
+	}
 
 	@Override
 	public void unload() {
