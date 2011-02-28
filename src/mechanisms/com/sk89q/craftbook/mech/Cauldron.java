@@ -267,8 +267,8 @@ public class Cauldron extends Mechanic{
         if (type == BlockID.STONE) { return; }
 
         // Must have a lava floor
-        BlockWorldVector lavaPos = recurse(0, pt.getY() - minY + 1, pt);
-        if ((world.getBlockTypeIdAt(lavaPos.getX(), lavaPos.getY(), lavaPos.getZ())) == BlockID.LAVA) {
+        BlockWorldVector lavaPos = recurse(0, pt.getBlockY() - minY + 1, 0, pt);
+        if ((world.getBlockTypeIdAt(lavaPos.getBlockX(), lavaPos.getBlockY(), lavaPos.getBlockZ())) == BlockID.LAVA) {
             throw new NotACauldronException("Cauldron lacks lava below");
         }
 
