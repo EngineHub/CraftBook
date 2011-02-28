@@ -57,7 +57,8 @@ public class Cauldron extends Mechanic{
      * @param recipes
      */
     public Cauldron(CauldronCookbook recipes, BlockWorldVector pt, MechanismsPlugin plugin) {
-        this.recipes = recipes;
+        super();
+    	this.recipes = recipes;
         this.pt = pt;
         this.plugin = plugin;
     }
