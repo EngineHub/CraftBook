@@ -1,7 +1,7 @@
 CraftBook
 =========
 
-CraftBook adds mechanisms (bridges, gates), redstone additions (integrated circuits, programmable logic chips), and minecart enhancements to Minecraft SMP (multiplayer). It does this without requiring on client-side modifications by using heuristics based on block and sign  placement instead. It is currently a plugin for hMod, although CraftBook will be ported over to the Minecraft API once it becomes available and sufficient.
+CraftBook adds mechanisms (bridges, gates), redstone additions (integrated circuits, programmable logic chips), and minecart enhancements to Minecraft SMP (multiplayer). It does this without requiring on client-side modifications by using heuristics based on block and sign  placement instead. It is currently a plugin for hMod (which is now being ported to Bukkit), although CraftBook will be ported over to the Minecraft API once it becomes available and sufficient.
 
 About the Project
 -----------------
@@ -9,13 +9,13 @@ About the Project
 We have an IRC channel on Espernet: [#craftbook on irc.esper.net](irc://irc.esper.net/craftbook). You'll find fellow CraftBook users and developers there.
 
 * [https://github.com/sk89q/craftbook](https://github.com/sk89q/craftbook) - source code and the place to report issues
-* [https://www.assembla.com/spaces/craftbook/](https://www.assembla.com/spaces/craftbook/) -  main project issue tracker, where we plan and plot milestones (it's superior to GitHub's issue tracker)
+* [http://www.redmine.sk89q.com/projects/craftbook](http://www.redmine.sk89q.com/projects/craftbook) -  main project issue tracker, where we plan and plot milestones (it's superior to GitHub's issue tracker)
 * [http://wiki.sk89q.com/wiki/CraftBook](http://wiki.sk89q.com/wiki/CraftBook) - wiki-based documentation
 
 Contributing
 ------------
 
-We happily accept contributions. The best way to do this is to fork CraftBook on GitHub, add your changes, and then submit a pull request. We'll look at it, make comments, and merge it into CraftBook if everything works out. You can fix bugs, add features, write new ICs -- it's up to you. Check the assembla.com site for our "to do" list.
+We happily accept contributions. The best way to do this is to fork CraftBook on GitHub, add your changes, and then submit a pull request. We'll look at it, make comments, and merge it into CraftBook if everything works out. You can fix bugs, add features, write new ICs -- it's up to you. Check the redmine.sk89q.com site for our "to do" list.
 
 Make sure to keep these points in mind when submitting code:
 
