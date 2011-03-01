@@ -20,6 +20,7 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.World;
 import org.bukkit.block.*;
+import org.bukkit.event.block.*;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -85,6 +86,14 @@ public class LightSwitch extends Mechanic {
         super();
         this.pt = pt;
         this.plugin = plugin;
+    }
+    
+    
+
+    @Override
+    public void onRightClick(BlockRightClickEvent event) {
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(pt)) return; //wth? our manager is insane
+        toggleLights(pt);
     }
     
     /**
