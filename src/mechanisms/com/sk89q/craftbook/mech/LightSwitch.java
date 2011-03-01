@@ -19,10 +19,9 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.block.*;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
@@ -38,21 +37,43 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author fullwall
  */
-
-
 public class LightSwitch extends Mechanic {
-	/**
+    public static class Factory implements MechanicFactory<LightSwitch> {
+
+        protected MechanismsPlugin plugin;
+
+        public Factory(MechanismsPlugin plugin) {
+            this.plugin = plugin;
+        }
+
+        @Override
+        public LightSwitch detect(BlockWorldVector pt) {
+            Block block = pt.toBlock();
+            // check if this looks at all like something we're interested in first
+            if (block.getTypeId() != BlockID.WALL_SIGN)
+                return null;
+            String line = ((Sign) block.getState()).getLine(1);
+            if (!line.equalsIgnoreCase("[|]") && !line.equalsIgnoreCase("[I]"))
+                return null;
+
+            // okay, now we can start doing exploration of surrounding blocks
+            // and if something goes wrong in here then we throw fits.
+            return new LightSwitch(pt, plugin);
+        }
+    }
+    
+    /**
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
      */
     private HistoryHashMap<BlockWorldVector,Long> recentLightToggles = new HistoryHashMap<BlockWorldVector,Long>(20);
-    
+
     /**
      * Configuration.
      */
     protected MechanismsPlugin plugin;
-
-	private BlockWorldVector pt;
+    
+    private BlockWorldVector pt;
     
     /**
      * Construct a LightSwitch for a location.
@@ -60,7 +81,7 @@ public class LightSwitch extends Mechanic {
      * @param pt
      * @param plugin 
      */
-    public LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
+    private LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
         super();
         this.pt = pt;
         this.plugin = plugin;
@@ -72,9 +93,7 @@ public class LightSwitch extends Mechanic {
      * @param pt
      * @return
      */
- 
-    public boolean toggleLights(BlockWorldVector pt) {
-    	
+    private boolean toggleLights(BlockWorldVector pt) {
     	World world = pt.getWorld();
     	
     	int wx = pt.getBlockX();
@@ -82,7 +101,6 @@ public class LightSwitch extends Mechanic {
         int wz = pt.getBlockZ();
         int aboveID = world.getBlockTypeIdAt(wx, wy, wz);
         
-
         if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
                 || aboveID == BlockID.REDSTONE_TORCH_ON) {
 
@@ -124,14 +142,14 @@ public class LightSwitch extends Mechanic {
         }
         return false;
     }
-
-	@Override
-	public void unload() {
-		// No persistence.
-	}
-
-	@Override
-	public boolean isActive() {
-		return false; 	// Keeps no state
-	}
+    
+    @Override
+    public void unload() {
+        /* No persistence. */
+    }
+    
+    @Override
+    public boolean isActive() {
+        return false; /* Keeps no state */
+    }
 }
