@@ -266,11 +266,16 @@ public class Gate extends Mechanic {
             recurseColumn(new WorldVector(world, pt.add(0, 0, 1)), visitedColumns, close);
             recurseColumn(new WorldVector(world, pt.add(0, 0, -1)), visitedColumns, close);
         }
-
+        
         recurseColumn(new WorldVector(world, topPoint.add(1, 0, 0)), visitedColumns, close);
         recurseColumn(new WorldVector(world, topPoint.add(-1, 0, 0)), visitedColumns, close);
         recurseColumn(new WorldVector(world, topPoint.add(0, 0, 1)), visitedColumns, close);
         recurseColumn(new WorldVector(world, topPoint.add(0, 0, -1)), visitedColumns, close);
+        
+        recurseColumn(new WorldVector(world, topPoint.add(1, 1, 0)), visitedColumns, close);
+        recurseColumn(new WorldVector(world, topPoint.add(-1, 1, 0)), visitedColumns, close);
+        recurseColumn(new WorldVector(world, topPoint.add(0, 1, 1)), visitedColumns, close);
+        recurseColumn(new WorldVector(world, topPoint.add(0, 1, -1)), visitedColumns, close);
     }
     
     /**
