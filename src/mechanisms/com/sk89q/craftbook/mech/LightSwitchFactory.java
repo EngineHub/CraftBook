@@ -24,6 +24,8 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class LightSwitchFactory implements MechanicFactory<LightSwitch> {
 
