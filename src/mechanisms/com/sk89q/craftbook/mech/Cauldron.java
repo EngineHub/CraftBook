@@ -36,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
@@ -59,7 +60,7 @@ public class Cauldron extends Mechanic{
         public Cauldron detect(BlockWorldVector pt) {
             Block block = pt.toBlock();
             // check if this looks at all like something we're interested in first
-            if(block.getTypeId() == BlockId.AIR)
+            if(block.getTypeId() == BlockID.AIR)
             	return null;
     		return new Cauldron(new CauldronCookbook(), pt, plugin);
         }
