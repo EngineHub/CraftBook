@@ -28,7 +28,10 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockRightClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -44,6 +47,23 @@ import com.sk89q.worldedit.blocks.BlockID;
  * @author sk89q
  */
 public class Cauldron extends Mechanic{
+	public static class Factory implements MechanicFactory<Cauldron> {
+
+        protected MechanismsPlugin plugin;
+
+        public Factory(MechanismsPlugin plugin) {
+            this.plugin = plugin;
+        }
+
+        @Override
+        public Cauldron detect(BlockWorldVector pt) {
+            Block block = pt.toBlock();
+            // check if this looks at all like something we're interested in first
+            if(block.getTypeId() == BlockId.AIR)
+            	return null;
+    		return new Cauldron(new CauldronCookbook(), pt, plugin);
+        }
+	}
     /**
      * Stores the recipes.
      */
@@ -63,6 +83,12 @@ public class Cauldron extends Mechanic{
         this.plugin = plugin;
     }
 
+    
+    @Override
+    public void onRightClick(BlockRightClickEvent event) {
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(pt)) return; //wth? our manager is insane
+        preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt);
+    }
     /**
      * Thrown when a suspected formation is not actually a valid cauldron.
      */

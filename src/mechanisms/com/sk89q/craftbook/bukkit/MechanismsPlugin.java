@@ -21,6 +21,7 @@ package com.sk89q.craftbook.bukkit;
 import org.bukkit.util.config.Configuration;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.mech.*;
 
 /**
@@ -62,7 +63,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Bridge.Factory(this));
         manager.register(new Elevator.Factory(this));
         manager.register(new LightSwitch.Factory(this));
-        manager.register(new CauldronFactory(this));
+        manager.register(new Cauldron.Factory(this));
     }
     
     @Override

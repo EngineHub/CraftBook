@@ -18,6 +18,8 @@
 */
 package com.sk89q.craftbook.mech;
 
+import java.util.logging.Logger;
+
 import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.event.block.*;
@@ -103,20 +105,19 @@ public class LightSwitch extends Mechanic {
      * @return
      */
     private boolean toggleLights(BlockWorldVector pt) {
+    	Logger log = Logger.getLogger("Minecraft");
     	World world = pt.getWorld();
     	
     	int wx = pt.getBlockX();
         int wy = pt.getBlockY();
         int wz = pt.getBlockZ();
-        int aboveID = world.getBlockTypeIdAt(wx, wy, wz);
+        int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
         
         if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
                 || aboveID == BlockID.REDSTONE_TORCH_ON) {
-
         	// Check if block above is a redstone torch.
         	// Used to get what to change torches to.
             boolean on = (aboveID != BlockID.TORCH);
-            
             // Prevent spam
             Long lastUse = recentLightToggles.remove(pt);
             long currTime = System.currentTimeMillis();
@@ -125,7 +126,6 @@ public class LightSwitch extends Mechanic {
                 return true;
             }
             recentLightToggles.put(pt, currTime);
-            
             int changed = 0;
             for (int x = -10 + wx; x <= 10 + wx; x++) {
                 for (int y = -10 + wy; y <= 10 + wy; y++) {
@@ -140,7 +140,7 @@ public class LightSwitch extends Mechanic {
                             if (on) {
                             	world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
                             } else {
-                            	world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+                            	world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
                             }
                             changed++;
                         }
