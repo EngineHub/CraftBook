@@ -300,6 +300,8 @@ public class Gate extends Mechanic {
      */
     @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        if (event.getNewCurrent() == event.getOldCurrent()) return;
+        
         setGateState(pt, event.getNewCurrent() > 0, smallSearchSize);
     }
 
