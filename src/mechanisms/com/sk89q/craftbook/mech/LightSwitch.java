@@ -18,8 +18,6 @@
 */
 package com.sk89q.craftbook.mech;
 
-import java.util.logging.Logger;
-
 import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.event.block.*;
@@ -29,8 +27,6 @@ import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.craftbook.util.WorldVector;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -105,7 +101,6 @@ public class LightSwitch extends Mechanic {
      * @return
      */
     private boolean toggleLights(BlockWorldVector pt) {
-    	Logger log = Logger.getLogger("Minecraft");
     	World world = pt.getWorld();
     	
     	int wx = pt.getBlockX();
