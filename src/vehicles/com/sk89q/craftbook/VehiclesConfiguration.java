@@ -29,6 +29,9 @@ public abstract class VehiclesConfiguration {
     public int slow50xBlock = 88;
     public int slow20xBlock = 13;
     public int reverseBlock = 35;
+    public int stationBlock = 49;
+    public int sortBlock = 87;
+    
     public boolean minecartSlowWhenEmpty = true;
     public double minecartMaxSpeedModifier = 1;
     

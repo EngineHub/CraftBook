@@ -49,6 +49,8 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 slow50xBlock = config.getInt("50x-slow-block", slow50xBlock);
                 slow20xBlock = config.getInt("20x-slow-block", slow20xBlock);
                 reverseBlock = config.getInt("reverse-block", reverseBlock);
+                stationBlock = config.getInt("station-block", stationBlock);
+                sortBlock = config.getInt("sort-block", sortBlock);
                 minecartSlowWhenEmpty = config.getBoolean("minecart-slow-when-empty",
                         minecartSlowWhenEmpty);
                 minecartMaxSpeedModifier = config.getDouble("minecart-max-speed-modifier",
