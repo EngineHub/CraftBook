@@ -48,9 +48,11 @@ public class Cauldron extends Mechanic{
 	public static class Factory implements MechanicFactory<Cauldron> {
 
 		protected MechanismsPlugin plugin;
+		protected CauldronCookbook recipes;
 
 		public Factory(MechanismsPlugin plugin) {
 			this.plugin = plugin;
+			this.recipes = new CauldronCookbook();
 		}
 
 		@Override
@@ -59,7 +61,7 @@ public class Cauldron extends Mechanic{
 			// check if this looks at all like something we're interested in first
 			if(block.getTypeId() == BlockID.AIR)
 				return null;
-			return new Cauldron(plugin.recipes, pt, plugin);
+			return new Cauldron(this.recipes, pt, plugin);
 		}
 	}
 	/**
