@@ -18,7 +18,7 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.circuits.com.sk89q.craftbook.CircuitsConfiguration;
+import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.circuits.JackOLanternFactory;
 import com.sk89q.craftbook.circuits.NetherrackFactory;
