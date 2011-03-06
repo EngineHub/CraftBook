@@ -299,10 +299,14 @@ public class Gate extends Mechanic {
      * @param event
      */
     @Override
-    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(final BlockRedstoneEvent event) {
         if (event.getNewCurrent() == event.getOldCurrent()) return;
         
-        setGateState(pt, event.getNewCurrent() > 0, smallSearchSize);
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            public void run() {
+                setGateState(pt, event.getNewCurrent() > 0, smallSearchSize);
+            }
+        }, 2);
     }
 
     @Override
