@@ -23,6 +23,8 @@ import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.block.*;
+import org.bukkit.scheduler.*;
+
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
@@ -42,7 +44,7 @@ public class Bridge extends Mechanic {
             this.plugin = plugin;
         }
         
-        protected MechanismsPlugin plugin;
+        private MechanismsPlugin plugin;
         
         /**
          * Explore around the trigger to find a Bridge; throw if things look funny.
@@ -80,8 +82,9 @@ public class Bridge extends Mechanic {
         if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
         BlockFace dir = SignUtil.getFacing(trigger);
         
-        this.settings = plugin.getLocalConfiguration().bridgeSettings;  //FIXME this is teh hacksauce
         this.trigger = trigger;
+        this.global = plugin;
+        this.settings = plugin.getLocalConfiguration().bridgeSettings; 
         
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above
@@ -145,7 +148,8 @@ public class Bridge extends Mechanic {
         // Win!
     }
     
-    protected BridgeSettings settings;
+    private MechanismsPlugin global;
+    private BridgeSettings settings;
     
     /** The signpost we came from. */
     private Block trigger;
@@ -174,9 +178,9 @@ public class Bridge extends Mechanic {
         if (event.getNewCurrent() == event.getOldCurrent()) return;
         
         if (event.getNewCurrent() == 0) {
-            setToggleRegionOpen();
+            global.getServer().getScheduler().scheduleSyncDelayedTask(global, new ToggleRegionOpen(), 2);
         } else {
-            setToggleRegionClosed();
+            global.getServer().getScheduler().scheduleSyncDelayedTask(global, new ToggleRegionClosed(), 2);
         }
     }
     
@@ -192,23 +196,27 @@ public class Bridge extends Mechanic {
         // obsidian in the middle of a wooden bridge, just weird
         // results.
         if (canPassThrough(hinge.getType())) {
-            setToggleRegionClosed();
+            new ToggleRegionClosed().run();
         } else {
-            setToggleRegionOpen();
+            new ToggleRegionOpen().run();
         }
     }
-    private void setToggleRegionOpen() {
-        for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
-            Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            if (b.getType() == getBridgeMaterial() || canPassThrough(b.getType()))
-                    b.setType(Material.AIR);
+    private class ToggleRegionOpen implements Runnable {
+        public void run() {
+            for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
+                Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getType()))
+                        b.setType(Material.AIR);
+            }
         }
     }
-    private void setToggleRegionClosed() {
-        for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
-            Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            if (canPassThrough(b.getType()))
-                    b.setType(getBridgeMaterial());
+    private class ToggleRegionClosed implements Runnable {
+        public void run() {
+            for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
+                Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+                if (canPassThrough(b.getType()))
+                        b.setType(getBridgeMaterial());
+            }
         }
     }
     
