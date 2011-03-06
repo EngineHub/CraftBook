@@ -90,6 +90,7 @@ public class LightSwitch extends Mechanic {
 
     @Override
     public void onRightClick(BlockRightClickEvent event) {
+        if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(pt)) return; //wth? our manager is insane
         toggleLights(pt);
     }

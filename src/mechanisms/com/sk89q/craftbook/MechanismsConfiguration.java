@@ -45,6 +45,7 @@ public class MechanismsConfiguration {
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
+        lightSwitchSettings = new LightSwitchSettings(cfg);
     }
     
     public final File dataFolder;
@@ -53,6 +54,7 @@ public class MechanismsConfiguration {
     public final GateSettings gateSettings;
     public final ElevatorSettings elevatorSettings;
     public final CauldronSettings cauldronSettings;
+    public final LightSwitchSettings lightSwitchSettings;
     
     
     
@@ -126,5 +128,15 @@ public class MechanismsConfiguration {
             enable             = cfg.getBoolean("cauldron-enable",             true);
         }
         //FIXME the recipes should probably go here
+    }
+    
+    
+    
+    public class LightSwitchSettings {
+        public final boolean enable;
+
+        private LightSwitchSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("light-switch-enable",             true);
+        }
     }
 }
