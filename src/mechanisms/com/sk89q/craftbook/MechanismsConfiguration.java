@@ -43,12 +43,14 @@ public class MechanismsConfiguration {
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
         gateSettings = new GateSettings(cfg);
+        elevatorSettings = new ElevatorSettings(cfg);
     }
     
     public final File dataFolder;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
     public final GateSettings gateSettings;
+    public final ElevatorSettings elevatorSettings;
     
     
     
@@ -99,6 +101,16 @@ public class MechanismsConfiguration {
         private GateSettings(Configuration cfg) {
             enable             = cfg.getBoolean("gate-enable",             true);
             enableRedstone     = cfg.getBoolean("gate-redstone",           true);
+        }
+    }
+    
+    
+    
+    public class ElevatorSettings {
+        public final boolean enable;
+
+        private ElevatorSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("elevators-enable",             true);
         }
     }
 }

@@ -41,7 +41,7 @@ public class Elevator extends Mechanic {
             this.plugin = plugin;
         }
         
-        protected MechanismsPlugin plugin;
+        private MechanismsPlugin plugin;
 
         /**
          * Explore around the trigger to find a functional elevator; throw if
@@ -63,7 +63,7 @@ public class Elevator extends Mechanic {
             switch (dir) {
             case UP:
             case DOWN:
-                return new Elevator(block, dir);
+                return new Elevator(block, dir, plugin);
             case RECV:
                 throw new NoDepartureException();
             case NONE:
@@ -81,9 +81,10 @@ public class Elevator extends Mechanic {
      *            the direction (UP or DOWN) in which we're looking for a destination
      * @throws InvalidMechanismException
      */
-    private Elevator(Block trigger, Direction dir) throws InvalidMechanismException {
+    private Elevator(Block trigger, Direction dir, MechanismsPlugin plugin) throws InvalidMechanismException {
         super();
         this.trigger = trigger;
+        this.plugin = plugin;
         
         // find destination sign
         shift = (dir == Direction.UP) ? BlockFace.UP : BlockFace.DOWN;
@@ -107,7 +108,9 @@ public class Elevator extends Mechanic {
         // clicked from blocks other than the ones directly in the elevator 
         // shaft.
     }
-
+    
+    private MechanismsPlugin plugin;
+    
     private Block trigger;
     private BlockFace shift;
     private Block destination;
@@ -119,6 +122,8 @@ public class Elevator extends Mechanic {
     
     @Override
     public void onRightClick(BlockRightClickEvent event) {
+        if (!plugin.getLocalConfiguration().elevatorSettings.enable) return;
+        
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         makeItSo(event.getPlayer());
     }
