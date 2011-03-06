@@ -86,6 +86,7 @@ public class Cauldron extends Mechanic{
 
 	@Override
 	public void onRightClick(BlockRightClickEvent event) {
+	        if (!plugin.getLocalConfiguration().cauldronSettings.enable) return;
 		if (!BukkitUtil.toWorldVector(event.getBlock()).equals(pt)) return; //wth? our manager is insane
 		if(event.getPlayer().getItemInHand().getTypeId() >= 255 || event.getPlayer().getItemInHand().getType() == Material.AIR)
 			preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt);

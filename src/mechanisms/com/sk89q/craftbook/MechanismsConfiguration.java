@@ -44,6 +44,7 @@ public class MechanismsConfiguration {
         bridgeSettings = new BridgeSettings(cfg);
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
+        cauldronSettings = new CauldronSettings(cfg);
     }
     
     public final File dataFolder;
@@ -51,6 +52,7 @@ public class MechanismsConfiguration {
     public final BridgeSettings bridgeSettings;
     public final GateSettings gateSettings;
     public final ElevatorSettings elevatorSettings;
+    public final CauldronSettings cauldronSettings;
     
     
     
@@ -62,6 +64,7 @@ public class MechanismsConfiguration {
             enable      = cfg.getBoolean("bookshelf-enable",             true);
             readLine    = cfg.getString( "bookshelf-read-text",          "You pick up a book...");
         }
+        //FIXME the books file should probably be cached here too
     }
     
     
@@ -112,5 +115,16 @@ public class MechanismsConfiguration {
         private ElevatorSettings(Configuration cfg) {
             enable             = cfg.getBoolean("elevators-enable",             true);
         }
+    }
+    
+    
+    
+    public class CauldronSettings {
+        public final boolean enable;
+
+        private CauldronSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("cauldron-enable",             true);
+        }
+        //FIXME the recipes should probably go here
     }
 }
