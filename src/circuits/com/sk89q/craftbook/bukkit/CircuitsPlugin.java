@@ -20,8 +20,7 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.circuits.JackOLanternFactory;
-import com.sk89q.craftbook.circuits.NetherrackFactory;
+import com.sk89q.craftbook.circuits.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -51,8 +50,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         adapter.register(manager);
         
         // Let's register mechanics!
-        manager.register(new NetherrackFactory());
-        manager.register(new JackOLanternFactory());
+        manager.register(new Netherrack.Factory());
+        manager.register(new JackOLantern.Factory());
     }
     
     @Override

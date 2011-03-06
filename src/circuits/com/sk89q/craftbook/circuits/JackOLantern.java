@@ -19,8 +19,10 @@
 
 package com.sk89q.craftbook.circuits;
 
+import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
+
 import org.bukkit.event.block.BlockRedstoneEvent;
-import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -30,13 +32,28 @@ import com.sk89q.worldedit.blocks.BlockID;
  * @author sk89q
  */
 public class JackOLantern extends Mechanic {
+    public static class Factory implements MechanicFactory<JackOLantern> {
+        public Factory() {
+        }
+        
+        @Override
+        public JackOLantern detect(BlockWorldVector pt) {
+            int type = pt.getWorld().getBlockTypeIdAt(toLocation(pt));
+            
+            if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) {
+                return new JackOLantern(pt);
+            }
+            
+            return null;
+        }
+    }
     
     /**
      * Construct the mechanic for a location.
      * 
      * @param pt
      */
-    public JackOLantern(BlockWorldVector pt) {
+    private JackOLantern(BlockWorldVector pt) {
         super();
     }
     
@@ -66,5 +83,4 @@ public class JackOLantern extends Mechanic {
     public boolean isActive() {
         return false;
     }
-
 }
