@@ -42,11 +42,13 @@ public class MechanismsConfiguration {
         this.dataFolder = dataFolder;
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
+        gateSettings = new GateSettings(cfg);
     }
     
     public final File dataFolder;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
+    public final GateSettings gateSettings;
     
     
     
@@ -85,6 +87,18 @@ public class MechanismsConfiguration {
          */
         public boolean canUseBlock(Material b) {
             return allowedBlocks.contains(b);
+        }
+    }
+    
+    
+    
+    public class GateSettings {
+        public final boolean enable;
+        public final boolean enableRedstone;
+
+        private GateSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("gate-enable",             true);
+            enableRedstone     = cfg.getBoolean("gate-redstone",           true);
         }
     }
 }
