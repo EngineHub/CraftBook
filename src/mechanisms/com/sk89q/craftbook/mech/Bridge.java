@@ -149,7 +149,7 @@ public class Bridge extends Mechanic {
     }
     
     private MechanismsPlugin global;
-    private BridgeSettings settings;
+    private MechanismsConfiguration.BridgeSettings settings;
     
     /** The signpost we came from. */
     private Block trigger;
@@ -167,6 +167,8 @@ public class Bridge extends Mechanic {
     
     @Override
     public void onRightClick(BlockRightClickEvent event) {
+        if (!global.getLocalConfiguration().bridgeSettings.enable) return;
+        
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         flipState();
         //notify event.getPlayer();
@@ -174,6 +176,8 @@ public class Bridge extends Mechanic {
     
     @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        if (!global.getLocalConfiguration().bridgeSettings.enableRedstone) return;
+        
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         if (event.getNewCurrent() == event.getOldCurrent()) return;
         
@@ -281,39 +285,6 @@ public class Bridge extends Mechanic {
 
         public InvalidConstructionException(String msg) {
             super(msg);
-        }
-    }
-    
-    public static class BridgeSettings {
-        // are these settings shared between similar toggle things like doors?
-        // this should be elsewhere if so, even if doors and bridges end up
-        // having separate instances.
-        public BridgeSettings(boolean addDefaults) {
-            allowedBlocks = new HashSet<Material>();
-            maxLength = 30;
-            
-            if (addDefaults) {
-                allowedBlocks.add(Material.COBBLESTONE);
-                allowedBlocks.add(Material.WOOD);
-                allowedBlocks.add(Material.GLASS);
-                allowedBlocks.add(Material.DOUBLE_STEP);
-            }
-        }
-        
-        /**
-         * If you put air in this... you go straight to hell do not pass go do
-         * not collect 200 dollars.
-         */
-        public Set<Material> allowedBlocks;
-        public int maxLength;
-        
-        /**
-         * @param b
-         * @return true if the given block type can be used for a bridge; false
-         *         otherwise.
-         */
-        public boolean canUseBlock(Material b) {
-            return allowedBlocks.contains(b);
         }
     }
 }

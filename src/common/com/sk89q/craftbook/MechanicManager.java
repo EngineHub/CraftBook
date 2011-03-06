@@ -97,7 +97,7 @@ public class MechanicManager {
 
         // Announce the event to anyone who considers it to be on one of their
         // defining blocks
-        //watchBlockManager.notify(event);
+        watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering
         // blocks

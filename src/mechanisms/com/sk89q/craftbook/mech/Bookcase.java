@@ -130,8 +130,10 @@ public class Bookcase extends Mechanic {
      */
     @Override
     public void onRightClick(BlockRightClickEvent event) {
+        if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
+        
         Player player = event.getPlayer();
-        read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseReadLine);
+        read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseSettings.readLine);
     }
 
     /**

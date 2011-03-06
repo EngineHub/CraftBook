@@ -40,18 +40,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("books.txt");
         createDefaultConfiguration("cauldron-recipes.txt");
         
-        config = new MechanismsConfiguration() {
-            @Override
-            public void loadConfiguration() {
-                Configuration config = getConfiguration();
-                
-                dataFolder = getDataFolder();
-                bookcaseReadLine = config.getString("bookcase.read-line", bookcaseReadLine);
-                bridgeSettings = new Bridge.BridgeSettings(true);
-            }
-        };
-        
-        config.loadConfiguration();
+        config = new MechanismsConfiguration(getConfiguration(), getDataFolder());
         
         MechanicManager manager = new MechanicManager();
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
