@@ -29,7 +29,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.craftbukkit.entity.*;
 import org.bukkit.event.block.BlockRightClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -249,9 +248,7 @@ public class Cauldron extends Mechanic{
 						world.dropItem(player.getLocation(), i.getValue());
 					}
 				}
-				if (player instanceof CraftPlayer) {
-					((CraftPlayer)player).updateInventory();
-				}
+				player.updateInventory();
 				// Didn't find a recipe
 			} else {
 				player.sendMessage(ChatColor.RED + "Hmm, this doesn't make anything...");
