@@ -36,6 +36,10 @@ import org.bukkit.block.*;
  * 
  */
 public class SignUtil {
+    public static boolean isSign(Block keith) {
+        return (org.bukkit.material.Sign.class.isAssignableFrom(keith.getType().getData()));
+    }
+    
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
