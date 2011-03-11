@@ -1,4 +1,4 @@
-// $Id$
+// $Id$r
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  *
@@ -18,26 +18,49 @@
 
 package com.sk89q.craftbook;
 
+import java.io.*;
+
+import org.bukkit.*;
+import org.bukkit.util.config.*;
+
 /**
  * Configuration handler for CraftBook.
  * 
+ * All fields are final because it is never appropriate to modify them during
+ * operation, except for when the configuration is reloaded entirely, at which
+ * point it is appropriate to construct an entirely new configuration instance
+ * and update the plugin accordingly.
+ * 
  * @author sk89q
+ * @author hash
  */
-public abstract class VehiclesConfiguration {
-    public int maxBoostBlock = 41;
-    public int boost25xBlock = 14;
-    public int slow50xBlock = 88;
-    public int slow20xBlock = 13;
-    public int reverseBlock = 35;
-    public int stationBlock = 49;
-    public int sortBlock = 87;
+public class VehiclesConfiguration {
+    public VehiclesConfiguration(Configuration cfg, File dataFolder) {
+        this.dataFolder = dataFolder;
+        
+        matBoostMax =   Material.getMaterial(cfg.getInt("max-boost-block",      41));
+        matBoost25x =   Material.getMaterial(cfg.getInt("25x-boost-block",      14));
+        matSlow50x =    Material.getMaterial(cfg.getInt("50x-slow-block",       88));
+        matSlow20x =    Material.getMaterial(cfg.getInt("20x-slow-block",       13));
+        matReverse =    Material.getMaterial(cfg.getInt("reverse-block",        35));
+        matStation =    Material.getMaterial(cfg.getInt("station-block",        49));
+        matSorter =     Material.getMaterial(cfg.getInt("sort-block",           87));
+        
+        minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
+        minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
+    }
     
-    public boolean minecartSlowWhenEmpty = true;
-    public double minecartMaxSpeedModifier = 1;
+    public final File dataFolder;
     
-    /**
-     * Load the configuration data from somewhere. This may be called
-     * repeatedly to reload the configuration at any time.
-     */
-    public abstract void loadConfiguration();
+    public final Material matBoostMax;
+    public final Material matBoost25x;
+    public final Material matSlow50x;
+    public final Material matSlow20x;
+    public final Material matReverse;
+    public final Material matStation;
+    public final Material matSorter;
+    
+    public final boolean minecartSlowWhenEmpty;
+    public final double minecartMaxSpeedModifier;
+    
 }

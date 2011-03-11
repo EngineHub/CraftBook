@@ -20,7 +20,8 @@ package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.event.Event;
 import org.bukkit.util.config.Configuration;
-import com.sk89q.craftbook.VehiclesConfiguration;
+
+import com.sk89q.craftbook.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -37,28 +38,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         
         createDefaultConfiguration("config.yml");
         
-        final VehiclesPlugin plugin = this;
-        
-        config = new VehiclesConfiguration() {
-            @Override
-            public void loadConfiguration() {
-                Configuration config = plugin.getConfiguration();
-
-                maxBoostBlock = config.getInt("max-boost-block", maxBoostBlock);
-                boost25xBlock = config.getInt("25x-boost-block", boost25xBlock);
-                slow50xBlock = config.getInt("50x-slow-block", slow50xBlock);
-                slow20xBlock = config.getInt("20x-slow-block", slow20xBlock);
-                reverseBlock = config.getInt("reverse-block", reverseBlock);
-                stationBlock = config.getInt("station-block", stationBlock);
-                sortBlock = config.getInt("sort-block", sortBlock);
-                minecartSlowWhenEmpty = config.getBoolean("minecart-slow-when-empty",
-                        minecartSlowWhenEmpty);
-                minecartMaxSpeedModifier = config.getDouble("minecart-max-speed-modifier",
-                        minecartMaxSpeedModifier);
-            }
-        };
-        
-        config.loadConfiguration();
+        config = new VehiclesConfiguration(getConfiguration(), getDataFolder());
     }
     
     @Override
