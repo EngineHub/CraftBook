@@ -28,14 +28,18 @@ public class MinecartManager {
         mechanisms.put(cfg.matBoost25x, new CartBooster(1.25));
         mechanisms.put(cfg.matSlow20x,  new CartBooster(0.8));
         mechanisms.put(cfg.matSlow50x,  new CartBooster(0.5));
-        mechanisms.put(cfg.matReverse,  new CartBooster(-1));
+        mechanisms.put(cfg.matReverse,  new CartReverser());
         mechanisms.put(cfg.matSorter,   new CartSorter());
     }
     
     public void handleMinecartBlockChange(VehicleMoveEvent event) {
         Block to = event.getTo().getBlock();
         
+        //System.err.println("to=  "+to+";");
+        //System.err.println("from="+event.getFrom()+";");
+        //System.err.println("cart="+event.getVehicle().getLocation());
+        
         CartMechanism thingy = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
-        if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to);
+        if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
     }
 }

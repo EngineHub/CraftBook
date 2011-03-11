@@ -13,5 +13,5 @@ import org.bukkit.entity.*;
  * 
  */
 public interface CartMechanism {
-    public void impact(Minecart cart, Block entered);
+    public void impact(Minecart cart, Block entered, Block from);
 }

@@ -2,6 +2,9 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.material.*;
+
+import com.sk89q.worldedit.blocks.*;
 
 /**
  * <p>
@@ -37,7 +40,7 @@ import org.bukkit.block.*;
  */
 public class SignUtil {
     public static boolean isSign(Block keith) {
-        return (org.bukkit.material.Sign.class.isAssignableFrom(keith.getType().getData()));
+        return (keith.getTypeId() == BlockID.SIGN_POST || keith.getTypeId() == BlockID.WALL_SIGN);
     }
     
     /**

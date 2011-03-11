@@ -8,12 +8,12 @@ import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.blocks.*;
 
 public class CartSorter implements CartMechanism {
-    public void impact(Minecart cart, Block entered) {
+    public void impact(Minecart cart, Block entered, Block from) {
         Block director = null;
         Sign sign = null;
         pickDirector: {
             for (int i = 2; i <= 3; i++) {
-                director = entered.getFace(BlockFace.DOWN, 2);
+                director = entered.getFace(BlockFace.DOWN, i);
                 if (SignUtil.isSign(director)) {
                     sign = (Sign) director.getState();
                     if (sign.getLine(1).equalsIgnoreCase("[Sort]"))

@@ -10,7 +10,7 @@ public class CartBooster implements CartMechanism {
     
     private final double multiplier;
     
-    public void impact(Minecart cart, Block entered) {
+    public void impact(Minecart cart, Block entered, Block from) {
         cart.setVelocity(cart.getVelocity().normalize().multiply(multiplier));
     }
 }
