@@ -9,79 +9,87 @@ import com.sk89q.worldedit.blocks.*;
 
 public class CartSorter implements CartMechanism {
     public void impact(Minecart cart, Block entered) {
-        Block director = entered.getFace(BlockFace.DOWN, 2);
-        //TODO fix director selection; it's allowed to be another block further down, too.
-        if (SignUtil.isSign(director)) {
-                Sign sign = (Sign) director.getState();
-                if((sign).getLine(1).equalsIgnoreCase("[Sort]")) {
-                
-                // pick which sort conditions apply
-                //  (left dominates if both apply)
-                Hand dir = Hand.STRAIGHT;
-                if (isSortApplicable(sign.getLine(2), cart)) {
-                    dir = Hand.LEFT;
-                } else if (isSortApplicable((sign).getLine(3), cart)) {
-                    dir = Hand.RIGHT;
+        Block director = null;
+        Sign sign = null;
+        pickDirector: {
+            for (int i = 2; i <= 3; i++) {
+                director = entered.getFace(BlockFace.DOWN, 2);
+                if (SignUtil.isSign(director)) {
+                    sign = (Sign) director.getState();
+                    if (sign.getLine(1).equalsIgnoreCase("[Sort]"))
+                        break pickDirector; // found it
+                    else
+                        sign = null;
                 }
-                
-                // pick the track block to modify and the curve to give it. 
-                //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
-                //    this is required since there's not a north track and a south track; just a north-south track type.
-                byte trackData;
-                BlockFace next = SignUtil.getFacing(director);
-                switch (next) {
-                case WEST:
-                    switch (dir) {
-                    case LEFT:
-                        trackData = 9; break;
-                    case RIGHT:
-                        trackData = 8; break;
-                    default:
-                        trackData = 0;
-                    }
-                    break;
-                case EAST:
-                    switch (dir) {
-                    case LEFT:
-                        trackData = 7; break;
-                    case RIGHT:
-                        trackData = 6; break;
-                    default:
-                        trackData = 0;
-                    }
-                    break;
-                case NORTH:
-                    switch (dir) {
-                    case LEFT:
-                        trackData = 6; break;
-                    case RIGHT:
-                        trackData = 9; break;
-                    default:
-                        trackData = 1;
-                    }
-                    break;
-                case SOUTH:
-                    switch (dir) {
-                    case LEFT:
-                        trackData = 8; break;
-                    case RIGHT:
-                        trackData = 7; break;
-                    default:
-                        trackData = 1;
-                    }
-                    break;
-                default:
-                    //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
-                    return;
-                }
-                Block targetTrack = entered.getFace(next);
-                
-                // now check sanity real quick that there's actually a track after this,
-                // and then make the change.
-                if (targetTrack.getType() == Material.RAILS)
-                    targetTrack.setData(trackData);
             }
         }
+        if (sign == null) return;       // you can't have a sorter without some instructions here
+        
+        // pick which sort conditions apply
+        //  (left dominates if both apply)
+        Hand dir = Hand.STRAIGHT;
+        if (isSortApplicable(sign.getLine(2), cart)) {
+            dir = Hand.LEFT;
+        } else if (isSortApplicable((sign).getLine(3), cart)) {
+            dir = Hand.RIGHT;
+        }
+        
+        // pick the track block to modify and the curve to give it. 
+        //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
+        //    this is required since there's not a north track and a south track; just a north-south track type.
+        byte trackData;
+        BlockFace next = SignUtil.getFacing(director);
+        switch (next) {
+        case WEST:
+            switch (dir) {
+            case LEFT:
+                trackData = 9; break;
+            case RIGHT:
+                trackData = 8; break;
+            default:
+                trackData = 0;
+            }
+            break;
+        case EAST:
+            switch (dir) {
+            case LEFT:
+                trackData = 7; break;
+            case RIGHT:
+                trackData = 6; break;
+            default:
+                trackData = 0;
+            }
+            break;
+        case NORTH:
+            switch (dir) {
+            case LEFT:
+                trackData = 6; break;
+            case RIGHT:
+                trackData = 9; break;
+            default:
+                trackData = 1;
+            }
+            break;
+        case SOUTH:
+            switch (dir) {
+            case LEFT:
+                trackData = 8; break;
+            case RIGHT:
+                trackData = 7; break;
+            default:
+                trackData = 1;
+            }
+            break;
+        default:
+            //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
+            return;
+        }
+        Block targetTrack = entered.getFace(next);
+        
+        // now check sanity real quick that there's actually a track after this,
+        // and then make the change.
+        if (targetTrack.getType() == Material.RAILS)
+            targetTrack.setData(trackData);
     }
     
     private enum Hand {
