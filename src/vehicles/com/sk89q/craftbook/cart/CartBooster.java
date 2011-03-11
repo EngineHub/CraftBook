@@ -3,8 +3,9 @@ package com.sk89q.craftbook.cart;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 
-public class CartBooster implements CartMechanism {
+public class CartBooster extends CartMechanism {
     public CartBooster(double multiplier) {
+        super();
         this.multiplier = multiplier;
     }
     

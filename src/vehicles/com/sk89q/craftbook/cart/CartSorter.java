@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.blocks.*;
 
-public class CartSorter implements CartMechanism {
+public class CartSorter extends CartMechanism {
     public void impact(Minecart cart, Block entered, Block from) {
         Block director = null;
         Sign sign = null;

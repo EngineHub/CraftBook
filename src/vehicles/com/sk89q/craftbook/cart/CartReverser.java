@@ -5,7 +5,7 @@ import org.bukkit.entity.*;
 
 import com.sk89q.craftbook.util.*;
 
-public class CartReverser implements CartMechanism {
+public class CartReverser extends CartMechanism {
     public void impact(Minecart cart, Block entered, Block from) {
         Block director = null;
         Sign sign = null;
