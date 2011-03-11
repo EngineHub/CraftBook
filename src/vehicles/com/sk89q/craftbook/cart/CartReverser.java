@@ -22,8 +22,6 @@ public class CartReverser extends CartMechanism {
             }
         }
         
-        System.err.println("asdf");
-        
         if (sign == null)
             // there's no restrictions on when we reverse
             reverse(cart);
