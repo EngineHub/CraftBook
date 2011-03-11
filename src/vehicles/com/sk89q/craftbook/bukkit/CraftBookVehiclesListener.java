@@ -84,9 +84,9 @@ public class CraftBookVehiclesListener extends VehicleListener {
         // Ignore events that don't involve crossing the boundary from one block to another.
         Location from = event.getFrom();
         Location to = event.getTo();
-        if (from.getBlockX() == to.getBlockX()) return;
-        if (from.getBlockY() == to.getBlockY()) return;
-        if (from.getBlockZ() == to.getBlockZ()) return;
+        if (from.getBlockX() == to.getBlockX()
+         && from.getBlockY() == to.getBlockY()
+         && from.getBlockZ() == to.getBlockZ()) return;
         
         // ...Okay, go ahead then.
         cartman.handleMinecartBlockChange(event);
