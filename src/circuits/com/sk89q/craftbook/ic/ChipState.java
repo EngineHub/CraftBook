@@ -18,20 +18,28 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.*;
+
 /**
- * Represents a chip state. Chip states provide information about pin
- * inputs and outputs.
+ * <p>
+ * Represents a chip state. Chip states provide information about pin inputs and
+ * outputs.
+ * </p>
+ * 
+ * <p>
+ * Chip states keep state about pins, and have methods for mutating this state;
+ * however, note that this does NOT translate into immediate changes in the
+ * World. The chip state must still be applied to the World in order for changes
+ * to take place.
+ * </p>
  * 
  * @author sk89q
  * @author sturmeh
  */
 public interface ChipState {
-    
     /**
-     * Gets the value at a pin.
-     * 
      * @param pin
-     * @return
+     * @return the value at a pin.
      */
     public boolean get(int pin);
     
@@ -42,4 +50,29 @@ public interface ChipState {
      * @param value
      */
     public void set(int pin, boolean value);
+    
+    
+    
+    
+    
+    public static class Basic implements ChipState {
+        public Basic(BitSet bs, int size) {
+            super();
+            this.bs = bs;
+            this.size = size;
+        }
+
+        private final BitSet bs;
+        private final int size;
+        
+        public boolean get(int pin) {
+            return bs.get(pin);
+        }
+        
+        public void set(int pin, boolean value) {
+            if (pin > size) return;
+            bs.set(pin, value);
+        }
+        
+    }
 }
