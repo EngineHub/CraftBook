@@ -1,6 +1,6 @@
-<project name="CraftBookCommon" default="dist" basedir=".">
+<project name="CraftBookCommon" basedir=".">
 
-  <target name="compile" depends="init">
+  <target name="compile">
     <javac srcdir="${src.dir}/common" deprecation="true"
       includeantruntime="true" destdir="${build.dir}/common" debug="true">
       <classpath>

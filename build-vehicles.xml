@@ -1,6 +1,6 @@
-<project name="CraftBookVehicles" default="dist" basedir=".">
+<project name="CraftBookVehicles" basedir=".">
 
-  <target name="compile" depends="init">
+  <target name="compile">
     <javac srcdir="${src.dir}/vehicles" deprecation="true"
       includeantruntime="true" destdir="${build.dir}/vehicles" debug="true">
       <classpath>

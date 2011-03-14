@@ -1,6 +1,6 @@
-<project name="CraftBookCircuits" default="dist" basedir=".">
+<project name="CraftBookCircuits" basedir=".">
 
-  <target name="compile" depends="init">
+  <target name="compile">
     <javac srcdir="${src.dir}/circuits" deprecation="true"
       includeantruntime="true" destdir="${build.dir}/circuits" debug="true">
       <classpath>

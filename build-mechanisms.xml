@@ -1,6 +1,6 @@
-<project name="CraftBookMechanisms" default="dist" basedir=".">
+<project name="CraftBookMechanisms" basedir=".">
 
-  <target name="compile" depends="init">
+  <target name="compile">
     <javac srcdir="${src.dir}/mechanisms" deprecation="true"
       includeantruntime="true" destdir="${build.dir}/mechanisms" debug="true">
       <classpath>
