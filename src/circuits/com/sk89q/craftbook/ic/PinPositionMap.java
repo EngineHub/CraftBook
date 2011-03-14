@@ -22,31 +22,11 @@ public interface PinPositionMap {
      *         bounds).
      */
     public Block getBlock(Block center, int pin);
-    
-    
-    
-    
-    public static class FZISO implements PinPositionMap {
-        public Block getBlock(Block center, int pin) {
-            switch (pin) {
-            case 1:     // output 1
-                return center.getFace(SignUtil.getBack(center), 2);
-            default:
-                return null;
-            }
-        }
-    }
-    
-    public static class FSISO implements PinPositionMap {
-        public Block getBlock(Block center, int pin) {
-            switch (pin) {
-            case 1:     // input 1
-                return center.getFace(SignUtil.getFront(center), 1);
-            case 2:     // output 1
-                return center.getFace(SignUtil.getBack(center), 2);
-            default:
-                return null;
-            }
-        }
-    }
+
+    /**
+     * A PinPositionMap handles [1..getSize()] pins, inclusive.
+     * 
+     * @return how many pins this PinPositionMap handles.
+     */
+    public int getSize();
 }

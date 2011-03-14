@@ -56,9 +56,9 @@ public interface ChipState {
     
     
     public static class Basic implements ChipState {
-        public Basic(BitSet bs, int size) {
+        public Basic(int size) {
             super();
-            this.bs = bs;
+            this.bs = new BitSet();
             this.size = size;
         }
         

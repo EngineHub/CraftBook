@@ -41,14 +41,12 @@ public class ICMechanic extends PersistentMechanic {
     
     protected MechanismsPlugin plugin;
     protected String id;
-    protected ICFamily family;
     protected IC ic;
     
-    public ICMechanic(MechanismsPlugin plugin, String id, IC ic, ICFamily family) {
+    public ICMechanic(MechanismsPlugin plugin, String id, IC ic) {
         this.plugin = plugin;
         this.id = id;
         this.ic = ic;
-        this.family = family;
     }
     
     @Override
@@ -62,7 +60,7 @@ public class ICMechanic extends PersistentMechanic {
             Runnable runnable = new Runnable() {
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
-                    ChipState chipState = family.detect((Sign) state);
+                    ChipState chipState = family.detect((Sign) state);  //FIXME this belongs -inside- an IC so that it can return more specific types.  also my god why would you redo this per event?
                     ic.trigger(chipState);
                 }
             };
