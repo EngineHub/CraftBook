@@ -26,8 +26,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import com.sk89q.craftbook.PersistentMechanic;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -39,7 +38,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ICMechanic extends PersistentMechanic {
     
-    protected final MechanismsPlugin plugin;
+    protected final CircuitsPlugin plugin;
     protected final Block center;
     protected final IC ic;
     
@@ -49,7 +48,7 @@ public class ICMechanic extends PersistentMechanic {
      * @param ic
      * @param center I swear to god if this isn't a sign, fire and brimstone will rain
      */
-    public ICMechanic(MechanismsPlugin plugin, IC ic, Block center) {
+    public ICMechanic(CircuitsPlugin plugin, IC ic, Block center) {
         this.plugin = plugin;
         this.ic = ic;
         this.center = center;
