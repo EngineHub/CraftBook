@@ -61,7 +61,7 @@ public interface ChipState {
             this.bs = bs;
             this.size = size;
         }
-
+        
         private final BitSet bs;
         private final int size;
         

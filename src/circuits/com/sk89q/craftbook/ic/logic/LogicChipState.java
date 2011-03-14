@@ -31,99 +31,105 @@ import com.sk89q.worldedit.*;
  * LogicChipState can be used to describe any IC that has clearly defined input
  * and output wires.
  * 
- * FIXME ALL OF THIS IS CRAP. THIS SHOULD BE RE-DONE TO WRAP A ChipState.Basic
- * AND DO INDEX SHIFTING. This will allow PinPositionMap to work for
- * LogicChipState transparently.
- * 
- * @author Shaun (sturmeh)
- * @author sk89q
- * @author Lymia
+ * @author hash
  */
-public class LogicChipState {   // implements ChipState?
-    /**
-     * Construct the state.  
-     * 
-     * @param in
-     * @param out
-     */
-    protected LogicChipState(boolean[] in, boolean[] out) {
-        this.in = in;
-        this.out = out;
-        mem = Arrays.copyOf(out, out.length);
-    }
-    
-    /** input wire states */
-    private boolean[] in;
-    
-    /** output wire states */
-    private boolean[] out;
-    
-    /** old output wire states.  used to tell if we need to fire updates to the world or not after a change in input.
-     *  it is essential to keep this memory instead of re-checking the world because even if the out-wires are at full power we don't know if it's because of us or not. */
-    //         but this might not be the right place to do it, either.
-    private boolean[] mem;
-    
-    /** blorch */
-    private boolean hasErrored = false;
-    
-    
-    
+public interface LogicChipState extends ChipState {
     /**
      * @param n
      * @return the state of the n'th input.
      */
-    public boolean getIn(int n) {
-        return in[n - 1];
-    }
-    
-    /**
-     * @return an array of all input states.
-     */
-    public boolean[] getInputs() {
-        return Arrays.copyOf(in, in.length);
-    }
+    public boolean getIn(int n);
     
     /**
      * @param n
      * @return the state of the n'th output.
      */
-    public boolean getOut(int n) {
-        return out[n - 1];
-    }
-    
-    /**
-     * @return an array of all output states.
-     */
-    public boolean[] getOutputs() {
-        return Arrays.copyOf(out, out.length);
-    }
+    public boolean getOut(int n);
     
     /**
      * @param n
-     * @return the previous state of the n'th output.
+     * @param value the state to set the n'th output to.
      */
-    public boolean getLast(int n) {
-        return mem[n - 1];
+    public void setOut(int n, boolean value);
+    
+    
+    
+    
+    
+    public static class FZISO implements LogicChipState {
+        public FZISO(ChipState cs) {
+            super();
+            this.cs = cs;
+        }
+        
+        private final ChipState cs;
+        
+        public boolean getIn(int n) {
+            return get(n-1);
+        }
+        
+        public boolean getOut(int n) {
+            return false;
+        }
+        
+        public void setOut(int n, boolean value) {
+            ;
+        }
+        
+        /** 
+         * Delegates directly to the backing ChipState. Use of LogicChipState's
+         * more specific {@link #getIn(int)} and {@link #getOut(int)} methods is
+         * preferred.
+         */
+        public boolean get(int pin) {
+            return cs.get(pin);
+        }
+
+        /**
+         * Delegates directly to the backing ChipState. Use of LogicChipState's
+         * more specific {@link #setOut(int, boolean)} method is preferred.
+         */
+        public void set(int pin, boolean value) {
+            cs.set(pin, value);
+        }
     }
     
-    /**
-     * @return true if any outputs have been updated.
-     */
-    public boolean isModified() {
-        return Arrays.equals(out,mem);
-    }
-    
-    /**
-     * Triggers an IC error, disabling the IC from further processing.
-     */
-    public void triggerError() {
-        hasErrored = true;
-    }
-    
-    /**
-     * @return true if the IC has encountered an error state; false otherwise.
-     */
-    public boolean hasErrored() {
-        return hasErrored;
+    public static class FSISO implements LogicChipState {
+        public FSISO(ChipState cs) {
+            super();
+            this.cs = cs;
+        }
+        
+        private final ChipState cs;
+        private static final int inputs = 1;
+        
+        public boolean getIn(int n) {
+            return get(n-1);
+        }
+        
+        public boolean getOut(int n) {
+            return get(n-1+inputs);
+        }
+        
+        public void setOut(int n, boolean value) {
+            set(n-1+inputs, value);
+        }
+        
+        /** 
+         * Delegates directly to the backing ChipState. Use of LogicChipState's
+         * more specific {@link #getIn(int)} and {@link #getOut(int)} methods is
+         * preferred.
+         */
+        public boolean get(int pin) {
+            return cs.get(pin);
+        }
+
+        /**
+         * Delegates directly to the backing ChipState. Use of LogicChipState's
+         * more specific {@link #setOut(int, boolean)} method is preferred.
+         */
+        public void set(int pin, boolean value) {
+            cs.set(pin, value);
+        }
     }
 }
