@@ -41,4 +41,9 @@ public interface IC {
      */
     public void trigger(ChipState chip);
     
+    /**
+     * Proceed to unload the IC.
+     */
+    public void unload();
+    
 }

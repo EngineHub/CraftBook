@@ -19,27 +19,33 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * Represents a chip state. Chip states provide information about pin
- * inputs and outputs.
+ * Stores a mapping for a registered IC factory with its native family. This
+ * is used in {@link ICManager}.
  * 
  * @author sk89q
- * @author sturmeh
  */
-public interface ChipState {
+public class RegisteredICFactory {
+    
+    protected ICFactory factory;
+    protected ICFamily family;
     
     /**
-     * Gets the value at a pin.
+     * Construct the object.
      * 
-     * @param pin
-     * @return
+     * @param factory
+     * @param family
      */
-    public boolean get(int pin);
+    public RegisteredICFactory(ICFactory factory, ICFamily family) {
+        this.factory = factory;
+        this.family = family;
+    }
     
-    /**
-     * Set a pin's value.
-     * 
-     * @param pin
-     * @param value
-     */
-    public void set(int pin, boolean value);
+    public ICFactory getFactory() {
+        return factory;
+    }
+    
+    public ICFamily getFamily() {
+        return family;
+    }
+    
 }

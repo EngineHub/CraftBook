@@ -18,8 +18,7 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 /**
  * IC families handle the logic required in figuring out where pins are
@@ -34,10 +33,9 @@ public interface ICFamily {
      * Return a {@link ChipState} that provides an interface to access
      * the I/O pins.
      * 
-     * @param world
      * @param sign
      * @return
      */
-    public ChipState detect(World world, Block sign);
+    public ChipState detect(Sign sign);
     
 }
