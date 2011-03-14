@@ -6,24 +6,21 @@ import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.ic.logic.*;
 import com.sk89q.craftbook.util.*;
 
-public class FZISO implements ICFamily<LogicChipState> {
+public class FZISO extends ICFamily.LogicICFamily {
     /**
      * Package-visible: we expect to always be able to just use the singleton instance in ICFamily.
      */
-    FZISO() {}
+    FZISO() {
+        super(new PPM());
+    }
     
     public LogicChipState getState(Block center) {
-        ChipState cs = new ChipState.Basic(PPM.getSize());
-        for (int i = 1; i < PPM.getSize(); i++)
-            cs.set(i, PPM.getBlock(center, i).isBlockPowered());        //FIXME i want a method that tells me if it's a redstone block and if its powered, damn it.
-        return new LCS(cs);
+        return new LCS(new ChipState.Basic(center, PPM));
     }
     
     public void applyState(LogicChipState state, Block center) {
         /* no-op for ZISOs, since they don't have any output. */
     }
-    
-    public static final PPM PPM = new PPM();    ///lol
     
     
     
@@ -58,6 +55,10 @@ public class FZISO implements ICFamily<LogicChipState> {
         
         public boolean getIn(int n) {
             return get(n-1);
+        }
+        
+        public int inputSize() {
+            return 1;
         }
         
         public boolean getOut(int n) {

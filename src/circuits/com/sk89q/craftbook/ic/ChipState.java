@@ -19,6 +19,7 @@
 package com.sk89q.craftbook.ic;
 
 import java.util.*;
+import org.bukkit.block.*;
 
 /**
  * <p>
@@ -60,6 +61,12 @@ public interface ChipState {
             super();
             this.bs = new BitSet();
             this.size = size;
+        }
+        
+        public Basic(Block center, PinPositionMap ppm) {
+            this(ppm.getSize());
+            for (int i = 1; i < ppm.getSize(); i++)
+                set(i, ppm.getBlock(center, i).isBlockPowered());        //FIXME i want a method that tells me if it's a redstone block and if its powered, damn it.
         }
         
         private final BitSet bs;

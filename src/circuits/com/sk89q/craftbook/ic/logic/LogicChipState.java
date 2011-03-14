@@ -51,4 +51,9 @@ public interface LogicChipState extends ChipState {
      * @param value the state to set the n'th output to.
      */
     public void setOut(int n, boolean value);
+    
+    /**
+     * @return the number of inputs this chip accepts.
+     */
+    public int inputSize();
 }

@@ -3,28 +3,22 @@ package com.sk89q.craftbook.ic.families;
 import org.bukkit.block.*;
 
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.ic.families.FZISO.*;
 import com.sk89q.craftbook.ic.logic.*;
 import com.sk89q.craftbook.util.*;
 
-public class FSISO implements ICFamily<LogicChipState> {
+public class FSISO extends ICFamily.LogicICFamily {
     /**
      * Package-visible: we expect to always be able to just use the singleton instance in ICFamily.
      */
-    FSISO() {}
+    FSISO() {
+        super(new PPM());
+    }
     
     public LogicChipState getState(Block center) {
-        ChipState cs = new ChipState.Basic(PPM.getSize());
-        for (int i = 1; i < PPM.getSize(); i++)
-            cs.set(i, PPM.getBlock(center, i).isBlockPowered());        //FIXME i want a method that tells me if it's a redstone block and if its powered, damn it.
-        return new LCS(cs);
+        return new LCS(new ChipState.Basic(center, PPM));
     }
     
-    public void applyState(LogicChipState state, Block center) {
-        for (int i = LCS.inputs+1; i < PPM.getSize(); i++)
-            PPM.getBlock(center, i);    // .setWirePowerLevel(cs.get(i))        //FIXME i want a method that sets the power level of a block if it's redstone, damn it.
-    }
-    
-    public static final PPM PPM = new PPM();    ///lol
     
     
     
@@ -58,18 +52,21 @@ public class FSISO implements ICFamily<LogicChipState> {
         }
         
         private final ChipState cs;
-        private static final int inputs = 1;
         
         public boolean getIn(int n) {
             return get(n-1);
         }
         
+        public int inputSize() {
+            return 1;
+        }
+        
         public boolean getOut(int n) {
-            return get(n-1+inputs);
+            return get(n-1+inputSize());
         }
         
         public void setOut(int n, boolean value) {
-            set(n-1+inputs, value);
+            set(n-1+inputSize(), value);
         }
         
         /** 
