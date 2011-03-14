@@ -62,7 +62,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
     }
     
     
-
+    
     @Override
     public ICMechanic detect(BlockWorldVector pt) throws InvalidMechanismException {
         Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
@@ -79,7 +79,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
         
         return null;
     }
-
+    
     /**
      * Sets up an IC at the specified location.
      * 
@@ -95,8 +95,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
         // No registration! No IC! Abort
         if (factory == null) return null;
         
-        IC ic = factory.create(block);
-        return new ICMechanic(plugin, id, ic);
+        return new ICMechanic(plugin, factory.create(block), block);
     }
 
 }

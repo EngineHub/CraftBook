@@ -37,8 +37,8 @@ public interface ICFamily<CST extends ChipState> {
     // these could be specified in a map and picked out by strings or something
     //  but there's really no reason for that level of indirection because ICs always know which family they're a member of at compile time anyway
     //  and as far as extensibility by third parties, well, they can keep their ICFamily singletons wherever they want.  craftbook doesn't need to know about it an any central place.
-    public static final ICFamily<LogicChipState> FZISO = new FZISO();
-    public static final ICFamily<LogicChipState> FSISO = new FSISO();
+    public static final FZISO FZISO = new FZISO();
+    public static final FSISO FSISO = new FSISO();
     
     
     

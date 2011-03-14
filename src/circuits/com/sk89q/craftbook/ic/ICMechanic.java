@@ -39,35 +39,39 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ICMechanic extends PersistentMechanic {
     
-    protected MechanismsPlugin plugin;
-    protected String id;
-    protected IC ic;
+    protected final MechanismsPlugin plugin;
+    protected final Block center;
+    protected final IC ic;
     
-    public ICMechanic(MechanismsPlugin plugin, String id, IC ic) {
+    /**
+     * 
+     * @param plugin
+     * @param ic
+     * @param center I swear to god if this isn't a sign, fire and brimstone will rain
+     */
+    public ICMechanic(MechanismsPlugin plugin, IC ic, Block center) {
         this.plugin = plugin;
-        this.id = id;
         this.ic = ic;
+        this.center = center;
     }
     
     @Override
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-        BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        // Mind you!  an ICMechanic can get events from more than just the sign that is its defining center, if it's a bigshit IC.
+        // Therefore, never assume that the event's block is the center of an IC, or even a sign block for that matter.
         
-        if (block.getTypeId() == BlockID.WALL_SIGN) {
-            final BlockState state = block.getState();
-            
-            Runnable runnable = new Runnable() {
-                public void run() {
-                    // Assuming that the plugin host isn't going wonky here
-                    ChipState chipState = family.detect((Sign) state);  //FIXME this belongs -inside- an IC so that it can return more specific types.  also my god why would you redo this per event?
-                    ic.trigger(chipState);
-                }
-            };
-            
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(
-                    plugin, runnable, 2);
-        }
+        Runnable runnable = new Runnable() {
+            public void run() {
+                if (isActive()) return;        // we've become invalid and TODO ought to commit suicide
+                                               //   ... kind of a costly check to be running so often :/
+                
+                ChipState chipState = ic.getFamily().getState(center);
+                ic.trigger(chipState);
+                ic.getFamily().applyState(chipState, center);
+            }
+        };
+        
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, runnable, 2);
     }
     
     @Override
@@ -77,20 +81,15 @@ public class ICMechanic extends PersistentMechanic {
     
     @Override
     public boolean isActive() {
-        BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
-        
-        if (block.getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = block.getState();
+        if (center.getTypeId() == BlockID.WALL_SIGN) {
+            Sign sign = (Sign) center.getState();
             
-            if (state instanceof Sign) {
-                Sign sign = (Sign) state;
-                
-                Matcher matcher = ICMechanicFactory.codePattern.matcher(sign.getLine(1));
-                
-                if (matcher.matches()) {
-                    return matcher.group(1).equalsIgnoreCase(id);
-                }
+            Matcher matcher = ICMechanicFactory.codePattern.matcher(sign.getLine(1));
+            
+            if (matcher.matches()) {
+                //FIXME son of a bitch why can't i get the IC's ID here?  it's in ICFactory.  Should it be?
+                //return matcher.group(1).equalsIgnoreCase(ic.g);
+                return true;
             }
         }
         

@@ -19,14 +19,15 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.ic.families.*;
+
 /**
  * Integrated circuits are represented by this interface. For self-triggered
  * ICs, see {@link SelfTriggeredIC}.
  *
  * @author sk89q
  */
-public interface IC {
-    
+public interface IC<CST extends ChipState, FT extends ICFamily<CST>> {
     /**
      * @return the title of the IC -- i.e. the human-readable name, not the IC
      *         ID string.
@@ -34,11 +35,20 @@ public interface IC {
     public String getTitle();
     
     /**
-     * Get a new state to use.
-     *
-     * @param chip chip state.
+     * @return the ICFamily implementation that is used to define the
+     *         translations between the world and the pins of the IC.
      */
-    public void trigger(ChipState chip);
+    public FT getFamily();
+    
+    /**
+     * Perform logic on the state; the state given contains the most recent view
+     * of pins in the world, and any changes applied to the state will be
+     * applied to the world after this method returns.
+     * 
+     * @param chip
+     *            chip state.
+     */
+    public void trigger(CST chip);
     
     /**
      * Proceed to unload the IC.
