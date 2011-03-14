@@ -28,9 +28,8 @@ package com.sk89q.craftbook.ic;
 public interface IC {
     
     /**
-     * Get the title of the IC.
-     *
-     * @return
+     * @return the title of the IC -- i.e. the human-readable name, not the IC
+     *         ID string.
      */
     public String getTitle();
     
