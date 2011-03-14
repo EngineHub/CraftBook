@@ -26,7 +26,17 @@ import org.bukkit.block.Block;
  * @author sk89q
  */
 public interface ICFactory {
+    /**
+     * @param center the Block that contains the sign that defines the IC
+     * @return a new IC
+     */
+    public IC create(Block center);
 
-    public IC create(Block block);
-    
+    /**
+     * ICFactory instances are registered in ICMechanicFactory using this
+     * string, and as such it determines when this factory is called.
+     * 
+     * @return the MC ID string as it would appear on a sign (i.e. "[MC1000]").
+     */
+    public String getID();
 }

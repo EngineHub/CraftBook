@@ -56,7 +56,7 @@ public class ICMechanic extends PersistentMechanic {
         
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final BlockState state = block.getState();
-
+            
             Runnable runnable = new Runnable() {
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
@@ -69,12 +69,12 @@ public class ICMechanic extends PersistentMechanic {
                     plugin, runnable, 2);
         }
     }
-
+    
     @Override
     public void unload() {
         ic.unload();
     }
-
+    
     @Override
     public boolean isActive() {
         BlockWorldVector pt = getTriggerPositions().get(0);
