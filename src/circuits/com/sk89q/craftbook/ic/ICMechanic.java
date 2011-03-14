@@ -27,6 +27,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.bukkit.*;
+import com.sk89q.craftbook.ic.families.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -36,11 +37,10 @@ import com.sk89q.worldedit.blocks.BlockID;
  * 
  * @author sk89q
  */
-public class ICMechanic extends PersistentMechanic {
-    
+public class ICMechanic<ICT extends IC<CST, FT>, CST extends ChipState, FT extends ICFamily<CST>> extends PersistentMechanic {
     protected final CircuitsPlugin plugin;
     protected final Block center;
-    protected final IC ic;
+    protected final ICT ic;
     
     /**
      * 
@@ -48,7 +48,7 @@ public class ICMechanic extends PersistentMechanic {
      * @param ic
      * @param center I swear to god if this isn't a sign, fire and brimstone will rain
      */
-    public ICMechanic(CircuitsPlugin plugin, IC ic, Block center) {
+    public ICMechanic(CircuitsPlugin plugin, ICT ic, Block center) {
         this.plugin = plugin;
         this.ic = ic;
         this.center = center;
@@ -64,7 +64,7 @@ public class ICMechanic extends PersistentMechanic {
                 if (isActive()) return;        // we've become invalid and TODO ought to commit suicide
                                                //   ... kind of a costly check to be running so often :/
                 
-                ChipState chipState = ic.getFamily().getState(center);
+                CST chipState = ic.getFamily().getState(center);
                 ic.trigger(chipState);
                 ic.getFamily().applyState(chipState, center);
             }

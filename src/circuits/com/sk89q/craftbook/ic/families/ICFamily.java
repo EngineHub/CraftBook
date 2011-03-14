@@ -3,8 +3,6 @@ package com.sk89q.craftbook.ic.families;
 import org.bukkit.block.*;
 
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.ic.families.FSISO.*;
-import com.sk89q.craftbook.ic.families.FZISO.*;
 import com.sk89q.craftbook.ic.logic.*;
 
 public interface ICFamily<CST extends ChipState> {

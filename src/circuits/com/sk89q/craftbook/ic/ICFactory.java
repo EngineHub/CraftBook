@@ -20,18 +20,20 @@ package com.sk89q.craftbook.ic;
 
 import org.bukkit.block.Block;
 
+import com.sk89q.craftbook.ic.families.*;
+
 /**
  * Factories are used to generate instances of ICs.
  * 
  * @author sk89q
  */
-public interface ICFactory {
+public interface ICFactory<ICT extends IC<CST, FT>, CST extends ChipState, FT extends ICFamily<CST>> {
     /**
      * @param center the Block that contains the sign that defines the IC
      * @return a new IC
      */
-    public IC create(Block center);
-
+    public ICT create(Block center);
+    
     /**
      * ICFactory instances are registered in ICMechanicFactory using this
      * string, and as such it determines when this factory is called.
