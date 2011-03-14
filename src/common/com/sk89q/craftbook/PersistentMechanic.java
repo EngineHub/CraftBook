@@ -24,12 +24,14 @@ import org.bukkit.event.block.BlockEvent;
 import com.sk89q.craftbook.util.*;
 
 /**
+ * <p>
  * PersistentMechanic exist to keep internal state in situations where the
  * instantiation of the Mechanic may be relatively expensive. However, they are
  * in many cases not appropriate tools since limitations in the core of Bukkit
  * mean that it is not always possible to catch all events that a
  * PersistentMechanic may need in order to perform the caching of mechanism
  * state this class was designed to facilitate with verifiable correctness.
+ * </p>
  * 
  * <p>
  * A Mechanic at minimum has one or more BlockVector which it wishes to receive
@@ -74,6 +76,7 @@ public abstract class PersistentMechanic extends Mechanic {
      */
     protected PersistentMechanic(BlockWorldVector... triggers) {
         super();
+        if (triggers.length < 1) throw new IllegalArgumentException("A mechanism must have at least one triggering block!");
         this.triggers = Collections.unmodifiableList(Arrays.asList(triggers));
     }
     
