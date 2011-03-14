@@ -14,3 +14,5 @@ The source code can be found at https://github.com/sk89q/craftbook
 
 Chat with us! Fellow users and developers can be found hanging
 at #craftbook on irc.esper.net.
+
+A not so special mention to Tahg goes here.
