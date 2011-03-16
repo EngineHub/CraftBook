@@ -74,7 +74,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
                 // Attempt to detect the text on the sign to see if it's an IC
                 Matcher matcher = codePattern.matcher(sign.getLine(1));
                 if (matcher.matches()) {
-                    return setup(block, matcher.group(1));
+                    return setup(sign, matcher.group(1));
                 }
             }
         }
@@ -89,7 +89,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
      * @param block
      * @return
      */
-    protected ICMechanic setup(Block block, String id) {
+    protected ICMechanic setup(Sign sign, String id) {
         RegisteredICFactory registration = manager.get(id);
         
         // No registration! No IC! Abort
@@ -98,9 +98,9 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
         }
         
         ICFactory factory = registration.getFactory();
-        IC ic = factory.create(block);
+        IC ic = factory.create(sign);
         return new ICMechanic(plugin, id, ic, registration.getFamily(),
-                BukkitUtil.toWorldVector(block));
+                BukkitUtil.toWorldVector(sign.getBlock()));
     }
 
 }

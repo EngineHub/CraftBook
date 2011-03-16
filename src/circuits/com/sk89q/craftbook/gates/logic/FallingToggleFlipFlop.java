@@ -19,7 +19,7 @@
 package com.sk89q.craftbook.gates.logic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -28,8 +28,8 @@ import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
 public class FallingToggleFlipFlop extends AbstractIC {
 
-    public FallingToggleFlipFlop(Server server, Block block) {
-        super(server, block);
+    public FallingToggleFlipFlop(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -39,7 +39,6 @@ public class FallingToggleFlipFlop extends AbstractIC {
 
     @Override
     public String getSignTitle() {
-                ///////////////
         return "FALLING TOGGLE";
     }
 
@@ -57,8 +56,8 @@ public class FallingToggleFlipFlop extends AbstractIC {
         }
 
         @Override
-        public IC create(Block block) {
-            return new FallingToggleFlipFlop(getServer(), block);
+        public IC create(Sign sign) {
+            return new FallingToggleFlipFlop(getServer(), sign);
         }
     }
 

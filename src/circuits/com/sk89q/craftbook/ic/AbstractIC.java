@@ -19,7 +19,7 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 /**
  * A base abstract IC that all ICs can inherit from.
@@ -29,19 +29,19 @@ import org.bukkit.block.Block;
 public abstract class AbstractIC implements IC {
     
     private Server server;
-    private Block block;
+    private Sign sign;
     
-    public AbstractIC(Server server, Block block) {
+    public AbstractIC(Server server, Sign block) {
         this.server = server;
-        this.block = block;
+        this.sign = block;
     }
     
     protected Server getServer() {
         return server;
     }
     
-    protected Block getBlock() {
-        return block;
+    protected Sign getSign() {
+        return sign;
     }
 
     @Override

@@ -21,7 +21,7 @@ package com.sk89q.craftbook.gates.world;
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import com.sk89q.craftbook.gates.logic.FallingToggleFlipFlop;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -30,8 +30,8 @@ import com.sk89q.craftbook.ic.IC;
 
 public class RisingServerTimeModulus extends AbstractIC {
 
-    public RisingServerTimeModulus(Server server, Block block) {
-        super(server, block);
+    public RisingServerTimeModulus(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class RisingServerTimeModulus extends AbstractIC {
      * @return
      */
     private boolean isServerTimeOdd() {
-        long time = getBlock().getWorld().getTime() % 2;
+        long time = getSign().getBlock().getWorld().getTime() % 2;
         if (time < 0) time += 2;
         return (time == 1);
     }
@@ -69,8 +69,8 @@ public class RisingServerTimeModulus extends AbstractIC {
         }
 
         @Override
-        public IC create(Block block) {
-            return new FallingToggleFlipFlop(getServer(), block);
+        public IC create(Sign sign) {
+            return new FallingToggleFlipFlop(getServer(), sign);
         }
     }
 

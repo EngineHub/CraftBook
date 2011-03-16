@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -33,10 +32,10 @@ public interface ICFactory {
      * Create an IC instance given a block. This should not fail and
      * return a null.
      * 
-     * @param block
+     * @param sign
      * @return
      */
-    public IC create(Block block);
+    public IC create(Sign sign);
     
     /**
      * Verify that the IC can be created with the given sign. The sign will
