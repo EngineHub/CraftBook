@@ -101,6 +101,10 @@ public class SignUtil {
             }
     }
     
+    public static Block getFrontBlock(Block sign) {
+        return sign.getRelative(getFront(sign));
+    }
+    
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -147,6 +151,10 @@ public class SignUtil {
             default:
                 return BlockFace.SELF;
             }
+    }
+    
+    public static Block getBackBlock(Block sign) {
+        return sign.getRelative(getBack(sign));
     }
     
     /**
@@ -196,6 +204,10 @@ public class SignUtil {
             }
     }
     
+    public static Block getLeftBlock(Block sign) {
+        return sign.getRelative(getLeft(sign));
+    }
+    
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -241,6 +253,10 @@ public class SignUtil {
             default:
                     return BlockFace.SELF;
             }
+    }
+    
+    public static Block getRightBlock(Block sign) {
+        return sign.getRelative(getRight(sign));
     }
     
     /**

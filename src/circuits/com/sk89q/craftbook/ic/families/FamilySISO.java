@@ -18,20 +18,46 @@
 
 package com.sk89q.craftbook.ic.families;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
- * Handles detection for t 
+ * Handles detection for the single input single output family.
+ *  
  * @author sk89q
  */
 public class FamilySISO extends AbstractICFamily {
 
     @Override
     public ChipState detect(Sign sign) {
-        // TODO Auto-generated method stub
-        return null;
+        return new ChipStateSISO(sign);
     }
+    
+    public static class ChipStateSISO implements ChipState {
+        
+        protected Sign sign;
+        
+        public ChipStateSISO(Sign sign) {
+            this.sign = sign;
+        }
 
+        @Override
+        public boolean get(int pin) {
+            Block front = SignUtil.getFrontBlock(sign.getBlock());
+            return front.isBlockIndirectlyPowered();
+        }
+
+        @Override
+        public void set(int pin, boolean value) {
+            BlockFace face = SignUtil.getBack(sign.getBlock());
+            ICUtil.setState(sign.getBlock().getRelative(face).getRelative(face), value);
+        }
+        
+    }
+    
 }

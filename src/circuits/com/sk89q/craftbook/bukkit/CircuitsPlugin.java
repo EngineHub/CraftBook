@@ -21,6 +21,11 @@ package com.sk89q.craftbook.bukkit;
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.circuits.*;
+import com.sk89q.craftbook.gates.logic.Repeater;
+import com.sk89q.craftbook.ic.ICFamily;
+import com.sk89q.craftbook.ic.ICManager;
+import com.sk89q.craftbook.ic.ICMechanicFactory;
+import com.sk89q.craftbook.ic.families.FamilySISO;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -30,6 +35,7 @@ import com.sk89q.craftbook.circuits.*;
 public class CircuitsPlugin extends BaseBukkitPlugin {
     
     protected CircuitsConfiguration config;
+    protected ICManager icManager;
     
     @Override
     public void onEnable() {
@@ -49,9 +55,15 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
         
+        // Let's register ICs!
+        icManager = new ICManager();
+        ICFamily familySISO = new FamilySISO();
+        icManager.register("MC1000", new Repeater.RepeaterFactory(), familySISO);
+        
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
         manager.register(new JackOLantern.Factory());
+        manager.register(new ICMechanicFactory(this, icManager));
     }
     
     @Override

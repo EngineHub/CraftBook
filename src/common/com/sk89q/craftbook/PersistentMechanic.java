@@ -72,9 +72,18 @@ public abstract class PersistentMechanic extends Mechanic {
      *            positions that can trigger this mechanic. These may never be
      *            revised.
      */
-    protected PersistentMechanic(BlockWorldVector... triggers) {
+    public PersistentMechanic(BlockWorldVector ... triggers) {
         super();
         this.triggers = Collections.unmodifiableList(Arrays.asList(triggers));
+    }
+    
+    /**
+     * Construct the object.
+     */
+    public PersistentMechanic() {
+        super();
+        this.triggers = Collections.unmodifiableList(
+                new ArrayList<BlockWorldVector>());
     }
     
     /**

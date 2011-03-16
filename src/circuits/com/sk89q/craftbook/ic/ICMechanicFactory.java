@@ -36,7 +36,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
      * The pattern used to match an IC on a sign.
      */
     public static final Pattern codePattern =
-            Pattern.compile("^\\[(MC[^\\]]+\\)]$", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("^\\[(MC[^\\]]+)\\]$", Pattern.CASE_INSENSITIVE);
     
     /**
      * Manager of ICs.
@@ -99,7 +99,8 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
         
         ICFactory factory = registration.getFactory();
         IC ic = factory.create(block);
-        return new ICMechanic(plugin, id, ic, registration.getFamily());
+        return new ICMechanic(plugin, id, ic, registration.getFamily(),
+                BukkitUtil.toWorldVector(block));
     }
 
 }

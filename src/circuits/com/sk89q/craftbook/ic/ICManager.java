@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,7 +34,8 @@ public class ICManager {
      * 
      * @see RegisteredICFactory
      */
-    protected Map<String, RegisteredICFactory> registered;
+    protected Map<String, RegisteredICFactory> registered
+            = new HashMap<String, RegisteredICFactory>();
     
     /**
      * Register an IC with the manager. The casing of the ID can be of any

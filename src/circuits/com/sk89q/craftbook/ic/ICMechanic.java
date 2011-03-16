@@ -44,7 +44,9 @@ public class ICMechanic extends PersistentMechanic {
     protected ICFamily family;
     protected IC ic;
     
-    public ICMechanic(CircuitsPlugin plugin, String id, IC ic, ICFamily family) {
+    public ICMechanic(CircuitsPlugin plugin, String id, IC ic,
+            ICFamily family, BlockWorldVector pos) {
+        super(pos);
         this.plugin = plugin;
         this.id = id;
         this.ic = ic;
