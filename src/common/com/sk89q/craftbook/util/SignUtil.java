@@ -2,7 +2,6 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.material.*;
 
 import com.sk89q.worldedit.blocks.*;
 
