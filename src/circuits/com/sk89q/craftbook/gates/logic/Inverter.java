@@ -25,23 +25,23 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-public class Repeater extends AbstractIC {
+public class Inverter extends AbstractIC {
 
     @Override
     public String getTitle() {
-        return "Repeater";
+        return "Inverter";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        output(chip, 0, input(chip, 0));
+        output(chip, 0, !input(chip, 0));
     }
 
     public static class Factory extends AbstractICFactory {
 
         @Override
         public IC create(Block block) {
-            return new Repeater();
+            return new Inverter();
         }
     }
 
