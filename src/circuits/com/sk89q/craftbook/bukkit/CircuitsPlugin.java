@@ -69,6 +69,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1020", new RisingRandomBit.Factory(server), familySISO);
         icManager.register("MC1025", new RisingServerTimeModulus.Factory(server), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
+        icManager.register("MC1111", new RisingWirelessReceiver.Factory(server), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
