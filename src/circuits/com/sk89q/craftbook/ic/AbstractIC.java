@@ -18,12 +18,31 @@
 
 package com.sk89q.craftbook.ic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+
 /**
  * A base abstract IC that all ICs can inherit from.
  * 
  * @author sk89q
  */
 public abstract class AbstractIC implements IC {
+    
+    private Server server;
+    private Block block;
+    
+    public AbstractIC(Server server, Block block) {
+        this.server = server;
+        this.block = block;
+    }
+    
+    protected Server getServer() {
+        return server;
+    }
+    
+    protected Block getBlock() {
+        return block;
+    }
 
     @Override
     public void unload() {

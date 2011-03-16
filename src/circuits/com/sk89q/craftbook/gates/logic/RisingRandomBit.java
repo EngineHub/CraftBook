@@ -19,6 +19,7 @@
 package com.sk89q.craftbook.gates.logic;
 
 import java.util.Random;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -29,6 +30,10 @@ import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 public class RisingRandomBit extends AbstractIC {
     
     protected Random random = new Random();
+
+    public RisingRandomBit(Server server, Block block) {
+        super(server, block);
+    }
 
     @Override
     public String getTitle() {
@@ -44,9 +49,13 @@ public class RisingRandomBit extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
+        public Factory(Server server) {
+            super(server);
+        }
+
         @Override
         public IC create(Block block) {
-            return new RisingRandomBit();
+            return new RisingRandomBit(getServer(), block);
         }
     }
 

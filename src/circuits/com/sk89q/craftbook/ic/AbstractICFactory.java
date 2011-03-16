@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook.ic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -27,6 +29,16 @@ import org.bukkit.entity.Player;
  * @author sk89q
  */
 public abstract class AbstractICFactory implements ICFactory {
+    
+    private Server server;
+    
+    public AbstractICFactory(Server server) {
+        this.server = server;
+    }
+    
+    protected Server getServer() {
+        return server;
+    }
 
     public void verify(Sign sign, Player player) throws ICVerificationException {
         // No default check needed

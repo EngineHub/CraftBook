@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -26,6 +27,10 @@ import com.sk89q.craftbook.ic.IC;
 import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
 public class Repeater extends AbstractIC {
+
+    public Repeater(Server server, Block block) {
+        super(server, block);
+    }
 
     @Override
     public String getTitle() {
@@ -39,9 +44,13 @@ public class Repeater extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
+        public Factory(Server server) {
+            super(server);
+        }
+
         @Override
         public IC create(Block block) {
-            return new Repeater();
+            return new Repeater(getServer(), block);
         }
     }
 
