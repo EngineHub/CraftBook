@@ -19,8 +19,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
-
 /**
  * Integrated circuits are represented by this interface. For self-triggered
  * ICs, see {@link SelfTriggeredIC}.
