@@ -27,7 +27,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -39,12 +39,12 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ICMechanic extends PersistentMechanic {
     
-    protected MechanismsPlugin plugin;
+    protected CircuitsPlugin plugin;
     protected String id;
     protected ICFamily family;
     protected IC ic;
     
-    public ICMechanic(MechanismsPlugin plugin, String id, IC ic, ICFamily family) {
+    public ICMechanic(CircuitsPlugin plugin, String id, IC ic, ICFamily family) {
         this.plugin = plugin;
         this.id = id;
         this.ic = ic;

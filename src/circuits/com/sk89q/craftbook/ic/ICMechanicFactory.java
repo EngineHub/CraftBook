@@ -26,7 +26,7 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -46,7 +46,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
     /**
      * Holds the reference to the plugin.
      */
-    protected MechanismsPlugin plugin;
+    protected CircuitsPlugin plugin;
     
     /**
      * Construct the object.
@@ -54,7 +54,7 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
      * @param plugin
      * @param manager
      */
-    public ICMechanicFactory(MechanismsPlugin plugin, ICManager manager) {
+    public ICMechanicFactory(CircuitsPlugin plugin, ICManager manager) {
         this.plugin = plugin;
         this.manager = manager;
     }

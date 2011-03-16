@@ -18,34 +18,25 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-
 /**
- * Factories are used to generate instances of ICs.
+ * Shortcut methods for a triple input IC. The included static methods allow
+ * mapping inputs and outputs to a ChipState. The first three inputs are
+ * 0, 1, and 2 while the outputs are 4 and beyond.
  * 
  * @author sk89q
  */
-public interface ICFactory {
-
-    /**
-     * Create an IC instance given a block. This should not fail and
-     * return a null.
-     * 
-     * @param block
-     * @return
-     */
-    public IC create(Block block);
+public class TripleInputChipState {
     
-    /**
-     * Verify that the IC can be created with the given sign. The sign will
-     * be for the given IC factory.
-     * 
-     * @param sign
-     * @param player
-     * @throws ICVerificationException if there was an error
-     */
-    public void verify(Sign sign, Player player) throws ICVerificationException;
+    private TripleInputChipState() {
+        // Can't construct this
+    }
+
+    public static boolean input(ChipState chipState, int num) {
+        return chipState.get(num);
+    }
+
+    public static void output(ChipState chipState, int num, boolean val) {
+        chipState.set(3 + num, val);
+    }
     
 }

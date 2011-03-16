@@ -16,36 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.gates.logic;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-/**
- * Factories are used to generate instances of ICs.
- * 
- * @author sk89q
- */
-public interface ICFactory {
+public class Repeater extends AbstractIC {
 
-    /**
-     * Create an IC instance given a block. This should not fail and
-     * return a null.
-     * 
-     * @param block
-     * @return
-     */
-    public IC create(Block block);
-    
-    /**
-     * Verify that the IC can be created with the given sign. The sign will
-     * be for the given IC factory.
-     * 
-     * @param sign
-     * @param player
-     * @throws ICVerificationException if there was an error
-     */
-    public void verify(Sign sign, Player player) throws ICVerificationException;
-    
+    @Override
+    public String getTitle() {
+        return "Repeater";
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+        output(chip, 0, input(chip, 0));
+    }
+
+    public static class RepeaterFactory extends AbstractICFactory {
+
+        @Override
+        public IC create(Block block) {
+            return new Repeater();
+        }
+    }
+
 }

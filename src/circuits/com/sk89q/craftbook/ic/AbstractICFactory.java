@@ -18,34 +18,17 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 /**
- * Factories are used to generate instances of ICs.
+ * Abstract IC factory.
  * 
  * @author sk89q
  */
-public interface ICFactory {
+public abstract class AbstractICFactory implements ICFactory {
 
-    /**
-     * Create an IC instance given a block. This should not fail and
-     * return a null.
-     * 
-     * @param block
-     * @return
-     */
-    public IC create(Block block);
-    
-    /**
-     * Verify that the IC can be created with the given sign. The sign will
-     * be for the given IC factory.
-     * 
-     * @param sign
-     * @param player
-     * @throws ICVerificationException if there was an error
-     */
-    public void verify(Sign sign, Player player) throws ICVerificationException;
-    
+    public void verify(Sign sign, Player player) throws ICVerificationException {
+        // No default check needed
+    }
 }

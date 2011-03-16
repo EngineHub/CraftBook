@@ -43,6 +43,13 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     protected static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
     /**
+     * Called on load.
+     */
+    @Override
+    public void onLoad() {
+    }
+
+    /**
      * Called when the plugin is enabled. This is where configuration is loaded,
      * and the plugin is setup.
      */

@@ -16,36 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.families;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
+import com.sk89q.craftbook.ic.AbstractICFamily;
+import com.sk89q.craftbook.ic.ChipState;
 
 /**
- * Factories are used to generate instances of ICs.
- * 
+ * Handles detection for t 
  * @author sk89q
  */
-public interface ICFactory {
+public class FamilySISO extends AbstractICFamily {
 
-    /**
-     * Create an IC instance given a block. This should not fail and
-     * return a null.
-     * 
-     * @param block
-     * @return
-     */
-    public IC create(Block block);
-    
-    /**
-     * Verify that the IC can be created with the given sign. The sign will
-     * be for the given IC factory.
-     * 
-     * @param sign
-     * @param player
-     * @throws ICVerificationException if there was an error
-     */
-    public void verify(Sign sign, Player player) throws ICVerificationException;
-    
+    @Override
+    public ChipState detect(Sign sign) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

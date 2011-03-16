@@ -18,34 +18,26 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-
 /**
- * Factories are used to generate instances of ICs.
+ * Thrown when an IC verification fails.
  * 
  * @author sk89q
  */
-public interface ICFactory {
-
-    /**
-     * Create an IC instance given a block. This should not fail and
-     * return a null.
-     * 
-     * @param block
-     * @return
-     */
-    public IC create(Block block);
+public class ICVerificationException extends Exception {
     
-    /**
-     * Verify that the IC can be created with the given sign. The sign will
-     * be for the given IC factory.
-     * 
-     * @param sign
-     * @param player
-     * @throws ICVerificationException if there was an error
-     */
-    public void verify(Sign sign, Player player) throws ICVerificationException;
+    private static final long serialVersionUID = -6417847809527566970L;
+
+    public ICVerificationException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
+
+    public ICVerificationException(String msg) {
+        super(msg);
+    }
+
+    public ICVerificationException(Throwable throwable) {
+        super(throwable);
+    }
+    
     
 }
