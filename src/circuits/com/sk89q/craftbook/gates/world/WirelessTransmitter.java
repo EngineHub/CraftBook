@@ -53,6 +53,7 @@ public class WirelessTransmitter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         setValue(band, input(chip, 0));
+        output(chip, 0, input(chip, 0));
     }
     
     public static Boolean getValue(String band) {

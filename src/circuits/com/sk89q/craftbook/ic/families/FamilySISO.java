@@ -48,7 +48,7 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public boolean get(int pin) {
-            if (pin == 1) {
+            if (pin == 0) {
                 Block front = SignUtil.getFrontBlock(sign.getBlock());
                 return front.isBlockIndirectlyPowered();
             } else if (pin == 3) {

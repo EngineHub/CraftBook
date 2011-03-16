@@ -49,7 +49,11 @@ public class RisingWirelessReceiver extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         if (input(chip, 0)) {
-            output(chip, 0, WirelessTransmitter.getValue(band));
+            Boolean val = WirelessTransmitter.getValue(band);
+            if (val == null) {
+                val = false;
+            }
+            output(chip, 0, val);
         }
     }
 
