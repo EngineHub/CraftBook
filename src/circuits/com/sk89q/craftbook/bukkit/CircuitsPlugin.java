@@ -60,6 +60,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familySISO = new FamilySISO();
         icManager.register("MC1000", new Repeater.Factory(), familySISO);
         icManager.register("MC1001", new Inverter.Factory(), familySISO);
+        icManager.register("MC1017", new RisingToggleFlipFlop.Factory(), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());

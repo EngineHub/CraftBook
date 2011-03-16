@@ -35,6 +35,10 @@ public class TripleInputChipState {
         return chipState.get(num);
     }
 
+    public static boolean getOutput(ChipState chipState, int num) {
+        return chipState.get(3 + num);
+    }
+
     public static void output(ChipState chipState, int num, boolean val) {
         chipState.set(3 + num, val);
     }

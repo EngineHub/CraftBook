@@ -48,14 +48,23 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public boolean get(int pin) {
-            Block front = SignUtil.getFrontBlock(sign.getBlock());
-            return front.isBlockIndirectlyPowered();
+            if (pin == 1) {
+                Block front = SignUtil.getFrontBlock(sign.getBlock());
+                return front.isBlockIndirectlyPowered();
+            } else if (pin == 3) {
+                BlockFace face = SignUtil.getBack(sign.getBlock());
+                return sign.getBlock().getRelative(face).getRelative(face).isBlockIndirectlyPowered();
+            } else {
+                return false;
+            }
         }
 
         @Override
         public void set(int pin, boolean value) {
-            BlockFace face = SignUtil.getBack(sign.getBlock());
-            ICUtil.setState(sign.getBlock().getRelative(face).getRelative(face), value);
+            if (pin == 3) {
+                BlockFace face = SignUtil.getBack(sign.getBlock());
+                ICUtil.setState(sign.getBlock().getRelative(face).getRelative(face), value);
+            }
         }
         
     }
