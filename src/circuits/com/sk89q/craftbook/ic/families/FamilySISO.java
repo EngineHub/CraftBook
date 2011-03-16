@@ -21,9 +21,11 @@ package com.sk89q.craftbook.ic.families;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.SignUtil;
 
 /**
@@ -34,26 +36,36 @@ import com.sk89q.craftbook.util.SignUtil;
 public class FamilySISO extends AbstractICFamily {
 
     @Override
-    public ChipState detect(Sign sign) {
-        return new ChipStateSISO(sign);
+    public ChipState detect(BlockWorldVector source, Sign sign) {
+        return new ChipStateSISO(source, sign);
     }
     
     public static class ChipStateSISO implements ChipState {
         
         protected Sign sign;
+        protected BlockWorldVector source;
         
-        public ChipStateSISO(Sign sign) {
+        public ChipStateSISO(BlockWorldVector source, Sign sign) {
             this.sign = sign;
+            this.source = source;
+        }
+        
+        protected Block getBlock(int pin) {
+            if (pin == 0) {
+                return SignUtil.getFrontBlock(sign.getBlock());
+            } else if (pin == 3) {
+                BlockFace face = SignUtil.getBack(sign.getBlock());
+                return sign.getBlock().getRelative(face).getRelative(face);
+            } else {
+                return null;
+            }
         }
 
         @Override
         public boolean get(int pin) {
-            if (pin == 0) {
-                Block front = SignUtil.getFrontBlock(sign.getBlock());
-                return front.isBlockIndirectlyPowered();
-            } else if (pin == 3) {
-                BlockFace face = SignUtil.getBack(sign.getBlock());
-                return sign.getBlock().getRelative(face).getRelative(face).isBlockIndirectlyPowered();
+            Block block = getBlock(pin);
+            if (block != null) {
+                return block.isBlockIndirectlyPowered();
             } else {
                 return false;
             }
@@ -61,9 +73,21 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public void set(int pin, boolean value) {
-            if (pin == 3) {
-                BlockFace face = SignUtil.getBack(sign.getBlock());
-                ICUtil.setState(sign.getBlock().getRelative(face).getRelative(face), value);
+            Block block = getBlock(pin);
+            if (block != null) {
+                ICUtil.setState(block, value);
+            } else {
+                return;
+            }
+        }
+
+        @Override
+        public boolean isTriggered(int pin) {
+            Block block = getBlock(pin);
+            if (block != null) {
+                return BukkitUtil.toWorldVector(block).equals(source);
+            } else {
+                return false;
             }
         }
         

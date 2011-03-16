@@ -22,10 +22,10 @@ package com.sk89q.craftbook.mech;
 import java.util.Set;
 import java.util.HashSet;
 import org.bukkit.World;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.BlockRightClickEvent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
@@ -301,7 +301,7 @@ public class Gate extends Mechanic {
      * @param event
      */
     @Override
-    public void onBlockRedstoneChange(final BlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
         if (!plugin.getLocalConfiguration().gateSettings.enableRedstone) return;
         
         if (event.getNewCurrent() == event.getOldCurrent()) return;

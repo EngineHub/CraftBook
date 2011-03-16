@@ -77,6 +77,6 @@ public abstract class Mechanic {
      * 
      * @param event
      */
-    public void onBlockRedstoneChange(BlockRedstoneEvent event){
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event){
     }
 }

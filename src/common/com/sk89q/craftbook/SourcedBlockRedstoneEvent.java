@@ -16,39 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook;
+
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
 /**
- * Represents a chip state. Chip states provide information about pin
- * inputs and outputs.
+ * A variation of the redstone event with a source block.
  * 
  * @author sk89q
- * @author sturmeh
  */
-public interface ChipState {
+public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
     
-    /**
-     * Gets the value at a pin.
-     * 
-     * @param pin
-     * @return
-     */
-    public boolean get(int pin);
+    private static final long serialVersionUID = 1031838877588760298L;
     
-    /**
-     * Set a pin's value.
-     * 
-     * @param pin
-     * @param value
-     */
-    public void set(int pin, boolean value);
+    protected Block source;
+
+    public SourcedBlockRedstoneEvent(Block source, Block block, int old, int n) {
+        super(block, old, n);
+        this.source = source;
+    }
     
-    /**
-     * Returns whether this pin was triggered.
-     * 
-     * @param pin
-     * @return 
-     */
-    public boolean isTriggered(int pin);
-    
+    public Block getSource() {
+        return source;  
+    }
 }

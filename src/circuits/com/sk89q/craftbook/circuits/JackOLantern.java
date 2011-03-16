@@ -21,7 +21,6 @@ package com.sk89q.craftbook.circuits;
 
 import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
 
-import org.bukkit.event.block.BlockRedstoneEvent;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -61,7 +60,7 @@ public class JackOLantern extends Mechanic {
      * Raised when an input redstone current changes.
      */
     @Override
-    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         if (event.getNewCurrent() > 0) {
             event.getBlock().setTypeId(BlockID.JACKOLANTERN);
         } else {

@@ -19,12 +19,9 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.block.*;
-import org.bukkit.scheduler.*;
-
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
@@ -175,7 +172,7 @@ public class Bridge extends Mechanic {
     }
     
     @Override
-    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         if (!global.getLocalConfiguration().bridgeSettings.enableRedstone) return;
         
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane

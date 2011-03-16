@@ -24,8 +24,8 @@ import java.util.regex.Matcher;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
@@ -54,7 +54,7 @@ public class ICMechanic extends PersistentMechanic {
     }
     
     @Override
-    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
         
@@ -64,7 +64,8 @@ public class ICMechanic extends PersistentMechanic {
             Runnable runnable = new Runnable() {
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
-                    ChipState chipState = family.detect((Sign) state);
+                    ChipState chipState = family.detect(
+                            BukkitUtil.toWorldVector(event.getSource()), (Sign) state);
                     ic.trigger(chipState);
                 }
             };

@@ -129,7 +129,7 @@ public class Elevator extends Mechanic {
     }
     
     @Override
-    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         /* we only affect players, so we don't care about redstone events */
     }
     

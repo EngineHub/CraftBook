@@ -123,7 +123,7 @@ public class MechanicManager {
      * @param event
      * @return true if there was a mechanic to process the event
      */
-    public boolean dispatchBlockRedstoneChange(BlockRedstoneEvent event) {
+    public boolean dispatchBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
