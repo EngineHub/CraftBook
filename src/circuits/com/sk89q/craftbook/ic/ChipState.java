@@ -42,4 +42,12 @@ public interface ChipState {
      * @param value
      */
     public void set(int pin, boolean value);
+    
+    /**
+     * Returns whether this pin was triggered.
+     * 
+     * @param pin
+     */
+    //public void triggered(int pin);
+    
 }
