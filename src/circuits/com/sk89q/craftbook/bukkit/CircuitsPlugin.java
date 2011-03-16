@@ -62,6 +62,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1001", new Inverter.Factory(), familySISO);
         icManager.register("MC1017", new RisingToggleFlipFlop.Factory(), familySISO);
         icManager.register("MC1018", new FallingToggleFlipFlop.Factory(), familySISO);
+        icManager.register("MC1020", new RisingRandomBit.Factory(), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());

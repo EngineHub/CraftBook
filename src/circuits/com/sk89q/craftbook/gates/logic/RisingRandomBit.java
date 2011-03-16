@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import java.util.Random;
 import org.bukkit.block.Block;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -25,17 +26,19 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-public class FallingToggleFlipFlop extends AbstractIC {
+public class RisingRandomBit extends AbstractIC {
+    
+    protected Random random = new Random();
 
     @Override
     public String getTitle() {
-        return "Falling Toggle Flip Flop";
+        return "Rising Random Bit";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (!input(chip, 0)) {
-            output(chip, 0, getOutput(chip, 0));
+        if (input(chip, 0)) {
+            output(chip, 0, random.nextBoolean());
         }
     }
 
@@ -43,7 +46,7 @@ public class FallingToggleFlipFlop extends AbstractIC {
 
         @Override
         public IC create(Block block) {
-            return new FallingToggleFlipFlop();
+            return new RisingRandomBit();
         }
     }
 
