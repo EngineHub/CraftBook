@@ -23,7 +23,7 @@ import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.circuits.*;
 import com.sk89q.craftbook.gates.logic.*;
-import com.sk89q.craftbook.gates.world.RisingServerTimeModulus;
+import com.sk89q.craftbook.gates.world.*;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
@@ -68,6 +68,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1018", new FallingToggleFlipFlop.Factory(server), familySISO);
         icManager.register("MC1020", new RisingRandomBit.Factory(server), familySISO);
         icManager.register("MC1025", new RisingServerTimeModulus.Factory(server), familySISO);
+        icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
