@@ -40,6 +40,11 @@ public class RisingServerTimeModulus extends AbstractIC {
     }
 
     @Override
+    public String getSignTitle() {
+        return "SERVER TIME MOD";
+    }
+
+    @Override
     public void trigger(ChipState chip) {
         if (input(chip, 0)) {
             output(chip, 0, isServerTimeOdd());

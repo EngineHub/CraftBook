@@ -38,6 +38,12 @@ public class FallingToggleFlipFlop extends AbstractIC {
     }
 
     @Override
+    public String getSignTitle() {
+                ///////////////
+        return "FALLING TOGGLE";
+    }
+
+    @Override
     public void trigger(ChipState chip) {
         if (!input(chip, 0)) {
             output(chip, 0, getOutput(chip, 0));

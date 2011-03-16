@@ -38,6 +38,11 @@ public class Repeater extends AbstractIC {
     }
 
     @Override
+    public String getSignTitle() {
+        return "REPEATER";
+    }
+
+    @Override
     public void trigger(ChipState chip) {
         output(chip, 0, input(chip, 0));
     }

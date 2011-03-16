@@ -38,6 +38,11 @@ public class Inverter extends AbstractIC {
     }
 
     @Override
+    public String getSignTitle() {
+        return "INVERTER";
+    }
+
+    @Override
     public void trigger(ChipState chip) {
         output(chip, 0, !input(chip, 0));
     }

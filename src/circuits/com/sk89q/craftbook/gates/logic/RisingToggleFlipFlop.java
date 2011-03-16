@@ -37,6 +37,11 @@ public class RisingToggleFlipFlop extends AbstractIC {
         return "Rising Toggle Flip Flop";
     }
 
+
+    @Override
+    public String getSignTitle() {
+        return "RISING TOGGLE";
+    }
     @Override
     public void trigger(ChipState chip) {
         if (input(chip, 0)) {

@@ -35,6 +35,13 @@ public interface IC {
     public String getTitle();
     
     /**
+     * Get the title that is shown on the sign.
+     * 
+     * @return
+     */
+    public String getSignTitle();
+    
+    /**
      * Get a new state to use.
      *
      * @param chip chip state.

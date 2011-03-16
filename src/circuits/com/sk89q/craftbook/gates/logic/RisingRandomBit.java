@@ -41,6 +41,11 @@ public class RisingRandomBit extends AbstractIC {
     }
 
     @Override
+    public String getSignTitle() {
+        return "RANDOM BIT";
+    }
+
+    @Override
     public void trigger(ChipState chip) {
         if (input(chip, 0)) {
             output(chip, 0, random.nextBoolean());
