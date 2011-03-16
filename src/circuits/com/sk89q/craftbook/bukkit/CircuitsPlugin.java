@@ -64,12 +64,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familySISO = new FamilySISO();
         icManager.register("MC1000", new Repeater.Factory(server), familySISO);
         icManager.register("MC1001", new Inverter.Factory(server), familySISO);
-        icManager.register("MC1017", new RisingToggleFlipFlop.Factory(server), familySISO);
-        icManager.register("MC1018", new FallingToggleFlipFlop.Factory(server), familySISO);
-        icManager.register("MC1020", new RisingRandomBit.Factory(server), familySISO);
-        icManager.register("MC1025", new RisingServerTimeModulus.Factory(server), familySISO);
+        icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
+        icManager.register("MC1018", new ToggleFlipFlop.Factory(server, false), familySISO);
+        icManager.register("MC1020", new RandomBit.Factory(server, true), familySISO);
+        icManager.register("MC1025", new ServerTimeModulus.Factory(server, true), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
-        icManager.register("MC1111", new RisingWirelessReceiver.Factory(server), familySISO);
+        icManager.register("MC1111", new WirelessReceiver.Factory(server, true), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());

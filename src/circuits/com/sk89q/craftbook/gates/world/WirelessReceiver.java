@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.gates.logic;
+package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
@@ -26,38 +26,51 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-public class RisingToggleFlipFlop extends AbstractIC {
+public class WirelessReceiver extends AbstractIC {
+    
+    protected boolean risingEdge;
+    protected String band;
 
-    public RisingToggleFlipFlop(Server server, Sign sign) {
+    public WirelessReceiver(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
+        
+        this.risingEdge = risingEdge;
+        band = sign.getLine(2);
     }
 
     @Override
     public String getTitle() {
-        return "Rising Toggle Flip Flop";
+        return "Wireless Receiver";
     }
-
 
     @Override
     public String getSignTitle() {
-        return "RISING TOGGLE";
+        return "RECEIVER";
     }
+
     @Override
     public void trigger(ChipState chip) {
         if (input(chip, 0)) {
-            output(chip, 0, getOutput(chip, 0));
+            Boolean val = WirelessTransmitter.getValue(band);
+            if (val == null) {
+                val = false;
+            }
+            output(chip, 0, val);
         }
     }
 
     public static class Factory extends AbstractICFactory {
+        
+        protected boolean risingEdge;
 
-        public Factory(Server server) {
+        public Factory(Server server, boolean risingEdge) {
             super(server);
+            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new RisingToggleFlipFlop(getServer(), sign);
+            return new WirelessReceiver(getServer(), sign, risingEdge);
         }
     }
 

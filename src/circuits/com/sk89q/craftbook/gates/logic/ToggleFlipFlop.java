@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import java.util.Random;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -27,40 +26,45 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-public class RisingRandomBit extends AbstractIC {
+public class ToggleFlipFlop extends AbstractIC {
     
-    protected Random random = new Random();
+    protected boolean risingEdge;
 
-    public RisingRandomBit(Server server, Sign sign) {
+    public ToggleFlipFlop(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
+        this.risingEdge = risingEdge;
     }
 
     @Override
     public String getTitle() {
-        return "Rising Random Bit";
+        return "Toggle Flip Flop";
     }
 
     @Override
     public String getSignTitle() {
-        return "RANDOM BIT";
+        return "TOGGLE";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (input(chip, 0)) {
-            output(chip, 0, random.nextBoolean());
+        if ((risingEdge && input(chip, 0))
+                || (!risingEdge && !input(chip, 0))) {
+            output(chip, 0, getOutput(chip, 0));
         }
     }
 
     public static class Factory extends AbstractICFactory {
+        
+        protected boolean risingEdge;
 
-        public Factory(Server server) {
+        public Factory(Server server, boolean risingEdge) {
             super(server);
+            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new RisingRandomBit(getServer(), sign);
+            return new ToggleFlipFlop(getServer(), sign, risingEdge);
         }
     }
 

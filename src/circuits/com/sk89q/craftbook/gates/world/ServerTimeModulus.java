@@ -16,48 +16,67 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.gates.logic;
+package com.sk89q.craftbook.gates.world;
 
+import static com.sk89q.craftbook.ic.TripleInputChipState.input;
+import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-public class FallingToggleFlipFlop extends AbstractIC {
+public class ServerTimeModulus extends AbstractIC {
+    
+    protected boolean risingEdge;
 
-    public FallingToggleFlipFlop(Server server, Sign sign) {
+    public ServerTimeModulus(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
+        this.risingEdge = risingEdge;
     }
 
     @Override
     public String getTitle() {
-        return "Falling Toggle Flip Flop";
+        return "Server Time Modulus";
     }
 
     @Override
     public String getSignTitle() {
-        return "FALLING TOGGLE";
+        return "SERVER TIME MOD";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (!input(chip, 0)) {
-            output(chip, 0, getOutput(chip, 0));
+        if ((risingEdge && input(chip, 0))
+                || (!risingEdge && !input(chip, 0))) {
+            output(chip, 0, isServerTimeOdd());
         }
     }
 
-    public static class Factory extends AbstractICFactory {
+    /**
+     * Returns true if the relative time is odd.
+     * 
+     * @return
+     */
+    private boolean isServerTimeOdd() {
+        long time = getSign().getBlock().getWorld().getTime() % 2;
+        if (time < 0) time += 2;
+        return (time == 1);
+    }
 
-        public Factory(Server server) {
+    public static class Factory extends AbstractICFactory {
+        
+        protected boolean risingEdge;
+
+        public Factory(Server server, boolean risingEdge) {
             super(server);
+            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new FallingToggleFlipFlop(getServer(), sign);
+            return new ServerTimeModulus(getServer(), sign, risingEdge);
         }
     }
 

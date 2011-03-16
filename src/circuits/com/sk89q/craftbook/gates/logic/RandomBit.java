@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.gates.world;
+package com.sk89q.craftbook.gates.logic;
 
+import java.util.Random;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -26,46 +27,47 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
-public class RisingWirelessReceiver extends AbstractIC {
+public class RandomBit extends AbstractIC {
     
-    protected String band;
+    protected Random random = new Random();
+    
+    protected boolean risingEdge;
 
-    public RisingWirelessReceiver(Server server, Sign sign) {
+    public RandomBit(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
-        
-        band = sign.getLine(2);
+        this.risingEdge = risingEdge;
     }
 
     @Override
     public String getTitle() {
-        return "Wireless Receiver";
+        return "Random Bit";
     }
 
     @Override
     public String getSignTitle() {
-        return "RECEIVER";
+        return "RANDOM BIT";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (input(chip, 0)) {
-            Boolean val = WirelessTransmitter.getValue(band);
-            if (val == null) {
-                val = false;
-            }
-            output(chip, 0, val);
+        if ((risingEdge && input(chip, 0))
+                || (!risingEdge && !input(chip, 0))) {
+            output(chip, 0, random.nextBoolean());
         }
     }
 
     public static class Factory extends AbstractICFactory {
+        
+        protected boolean risingEdge;
 
-        public Factory(Server server) {
+        public Factory(Server server, boolean risingEdge) {
             super(server);
+            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new RisingWirelessReceiver(getServer(), sign);
+            return new RandomBit(getServer(), sign, risingEdge);
         }
     }
 
