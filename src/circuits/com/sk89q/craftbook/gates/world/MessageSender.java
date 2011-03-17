@@ -69,7 +69,7 @@ public class MessageSender extends AbstractIC {
 		String message = getSign().getLine(3);
 		List<Player> players = getServer().matchPlayer(name);
 		if(players.size() == 1) {
-			players.get(0).sendMessage(message);
+			players.get(0).sendMessage(message.replace("&", "§"));
 			sent = true;
 		}
 		return sent;
