@@ -76,6 +76,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
+        icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
