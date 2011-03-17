@@ -70,7 +70,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1025", new ServerTimeModulus.Factory(server, true), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server, true), familySISO);
-        icManager.register("MC1230", new DayCheck.Factory(server, true), familySISO);
+        icManager.register("MC1201", new CreatureSpawner.Factory(server, true), familySISO);
+        icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);
+        icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
+        icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         

@@ -27,41 +27,37 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class DayCheck extends AbstractIC {
+public class TimeControl extends AbstractIC {
 
 	protected boolean risingEdge;
 
-	public DayCheck(Server server, Sign sign, boolean risingEdge) {
+	public TimeControl(Server server, Sign sign, boolean risingEdge) {
 		super(server, sign);
 		this.risingEdge = risingEdge;
 	}
 
 	@Override
 	public String getTitle() {
-		return "Day Check";
+		return "Time Control";
 	}
 
 	@Override
 	public String getSignTitle() {
-		return "DAY CHECK";
+		return "TIME CONTROL";
 	}
 
 	@Override
 	public void trigger(ChipState chip) {
 		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			output(chip, 0, isDay());
-		}
-	}
+			Long time;
+			if(input(chip, 0)) 
+				time = 0L;
+			else
+				time = 13000L;
+			getSign().getWorld().setTime(time);
 
-	/**
-	 * Returns true if the current time is day.
-	 * 
-	 * @return
-	 */
-	private boolean isDay() {
-		long time = getSign().getBlock().getWorld().getTime() % 24000;
-		if (time < 0) time += 24000;
-		return (time < 13000l);
+			output(chip, 0, input(chip, 0));
+		}
 	}
 
 	public static class Factory extends AbstractICFactory {
@@ -75,7 +71,7 @@ public class DayCheck extends AbstractIC {
 
 		@Override
 		public IC create(Sign sign) {
-			return new DayCheck(getServer(), sign, risingEdge);
+			return new TimeControl(getServer(), sign, risingEdge);
 		}
 	}
 
