@@ -57,10 +57,9 @@ public class CreatureSpawner extends AbstractIC {
 	@Override
 	public void trigger(ChipState chip) {
 		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			String type = getSign().getLine(2);
-			String rider = getSign().getLine(3);
-			
-			if(CreatureType.valueOf(type) != null) {
+			String type = getSign().getLine(2).trim();
+			String rider = getSign().getLine(3).trim();
+			if(CreatureType.fromName(type) != null) {
 				Location loc = getSign().getBlock().getLocation();
                 int maxY = Math.min(128, loc.getBlockY() + 10);
                 int x = loc.getBlockX();
@@ -69,10 +68,10 @@ public class CreatureSpawner extends AbstractIC {
                 for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
                     if (BlockType.canPassThrough(getSign().getWorld().getBlockTypeIdAt(x, y, z))) {
                     	//TODO: Doesn't spawn riders yet.
-                        if (rider.length() != 0 && CreatureType.valueOf(rider) != null) {
-                        	getSign().getWorld().spawnCreature(new Location(getSign().getWorld(), x,y,z), CreatureType.valueOf(type));
+                        if (rider.length() != 0 && CreatureType.fromName(rider) != null) {
+                        	getSign().getWorld().spawnCreature(new Location(getSign().getWorld(), x,y,z), CreatureType.fromName(type));
                         } else {
-                            getSign().getWorld().spawnCreature(new Location(getSign().getWorld(), x, y, z), CreatureType.valueOf(type));
+                            getSign().getWorld().spawnCreature(new Location(getSign().getWorld(), x, y, z), CreatureType.fromName(type));
                         }
                         return;
                     }

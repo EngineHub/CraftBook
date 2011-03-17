@@ -20,62 +20,61 @@ package com.sk89q.craftbook.gates.world;
 
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import static com.sk89q.craftbook.ic.TripleInputChipState.output;
-
-import java.util.List;
-
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class MessageSender extends AbstractIC {
+public class LavaSensor extends AbstractIC {
 
 	protected boolean risingEdge;
 
-	public MessageSender(Server server, Sign sign, boolean risingEdge) {
+	public LavaSensor(Server server, Sign sign, boolean risingEdge) {
 		super(server, sign);
 		this.risingEdge = risingEdge;
 	}
 
 	@Override
 	public String getTitle() {
-		return "Message Sender";
+		return "Lava Sensor";
 	}
 
 	@Override
 	public String getSignTitle() {
-		return "MESSAGE SENDER";
+		return "LAVA SENSOR";
 	}
 
 	@Override
 	public void trigger(ChipState chip) {
 		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			output(chip, 0, sendMessage());
+			output(chip, 0, hasWater());
 		}
 	}
 
 	/**
-	 * Returns true if a message was sent.
+	 * Returns true if the sign has water at the specified location.
 	 * 
 	 * @return
 	 */
-	private boolean sendMessage() {
-		boolean sent = false;
-		String name = getSign().getLine(2);
-		String message = getSign().getLine(3);
-		Player player = getServer().getPlayer(name);
-		//FIXME: There is a cached block problem somewhere if the sign is destroyed and replaced.
-		//Until the player relogs, the sign will continue sending to the name on the first sign.
-		if (player != null) {
-			player.sendMessage(message.replace("&", "\u00A7"));
-			sent = true;
-		}
-		return sent;
+	private boolean hasWater() {
+		int x = getSign().getBlock().getLocation().getBlockX();
+		int yOffset = getSign().getBlock().getLocation().getBlockY();
+		int z = getSign().getBlock().getLocation().getBlockZ();
+		try{
+            String yOffsetLine = getSign().getLine(2);
+            if (yOffsetLine.length() > 0) {
+                yOffset += Integer.parseInt(yOffsetLine);
+            } else {
+                yOffset -= 1;
+            }
+        } catch (NumberFormatException e) {
+            yOffset -= 1;
+        }
+        int blockID = getSign().getBlock().getWorld().getBlockTypeIdAt(x, yOffset, z);
+
+		return (blockID == 10 || blockID == 11);
 	}
 
 	public static class Factory extends AbstractICFactory {
@@ -89,7 +88,7 @@ public class MessageSender extends AbstractIC {
 
 		@Override
 		public IC create(Sign sign) {
-			return new MessageSender(getServer(), sign, risingEdge);
+			return new LavaSensor(getServer(), sign, risingEdge);
 		}
 	}
 

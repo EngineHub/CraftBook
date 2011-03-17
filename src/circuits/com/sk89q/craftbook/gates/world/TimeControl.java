@@ -48,16 +48,14 @@ public class TimeControl extends AbstractIC {
 
 	@Override
 	public void trigger(ChipState chip) {
-		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			Long time;
-			if(input(chip, 0)) 
-				time = 0L;
-			else
-				time = 13000L;
-			getSign().getWorld().setTime(time);
+		Long time;
+		if (input(chip, 0))
+			time = 0L;
+		else
+			time = 13000L;
+		getSign().getWorld().setTime(time);
 
-			output(chip, 0, input(chip, 0));
-		}
+		output(chip, 0, input(chip, 0));
 	}
 
 	public static class Factory extends AbstractICFactory {

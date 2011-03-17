@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -57,24 +58,21 @@ public class ItemDispenser extends AbstractIC {
 		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
 			String item = getSign().getLine(2);
 			int amount = 1;
-
 			try {
 				amount = Math.min(64,
-						Math.max(-1, Integer.parseInt(getSign().getLine(2))));
+						Math.max(-1, Integer.parseInt(getSign().getLine(3))));
 			} catch (NumberFormatException e) {
 			}
-			String material = getSign().getLine(3);
 			byte data = 0;
-			if (material.contains(":")) {
-				data = Byte.parseByte(material.split(":")[1]);
-				material = material.split(":")[0];
+			if (item.contains(":")) {
+				data = Byte.parseByte(item.split(":")[1]);
+				item = item.split(":")[0];
 			}
-			Material mat = Material.matchMaterial(getSign().getLine(3));
+			Material mat = Material.matchMaterial(item);
 			if (mat == null)
 				return;
 			int id = mat.getId();
-
-			if (id != 0 && id != 36 && !(id >= 36 && id <= 34)) {
+			if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
 				Location loc = getSign().getBlock().getLocation();
 				int maxY = Math.min(128, loc.getBlockY() + 10);
 				int x = loc.getBlockX();
@@ -83,9 +81,13 @@ public class ItemDispenser extends AbstractIC {
 				for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
 					if (BlockType.canPassThrough(getSign().getWorld()
 							.getBlockTypeIdAt(x, y, z))) {
+						
+						ItemStack stack = new ItemStack(id, amount);
+						stack.setData(new MaterialData(id, data));
+						
 						getSign().getWorld().dropItemNaturally(
 								new Location(getSign().getWorld(), x, y, z),
-								new ItemStack(id, amount, data));
+								stack);
 						return;
 					}
 				}
