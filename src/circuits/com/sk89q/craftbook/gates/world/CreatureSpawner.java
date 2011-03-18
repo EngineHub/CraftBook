@@ -19,16 +19,10 @@
 package com.sk89q.craftbook.gates.world;
 
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -37,62 +31,72 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 public class CreatureSpawner extends AbstractIC {
 
-	protected boolean risingEdge;
+    protected boolean risingEdge;
 
-	public CreatureSpawner(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign);
-		this.risingEdge = risingEdge;
-	}
+    public CreatureSpawner(Server server, Sign sign, boolean risingEdge) {
+        super(server, sign);
+        this.risingEdge = risingEdge;
+    }
 
-	@Override
-	public String getTitle() {
-		return "Creature Spawner";
-	}
+    @Override
+    public String getTitle() {
+        return "Creature Spawner";
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "CREATURE SPAWNER";
-	}
+    @Override
+    public String getSignTitle() {
+        return "CREATURE SPAWNER";
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			String type = getSign().getLine(2).trim();
-			String rider = getSign().getLine(3).trim();
-			if(CreatureType.fromName(type) != null) {
-				Location loc = getSign().getBlock().getLocation();
+    @Override
+    public void trigger(ChipState chip) {
+        if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
+            String type = getSign().getLine(2).trim();
+            String rider = getSign().getLine(3).trim();
+            if (CreatureType.fromName(type) != null) {
+                Location loc = getSign().getBlock().getLocation();
                 int maxY = Math.min(128, loc.getBlockY() + 10);
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
 
                 for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
-                    if (BlockType.canPassThrough(getSign().getWorld().getBlockTypeIdAt(x, y, z))) {
-                    	//TODO: Doesn't spawn riders yet.
-                        if (rider.length() != 0 && CreatureType.fromName(rider) != null) {
-                        	getSign().getWorld().spawnCreature(new Location(getSign().getWorld(), x,y,z), CreatureType.fromName(type));
+                    if (BlockType.canPassThrough(getSign().getWorld()
+                            .getBlockTypeIdAt(x, y, z))) {
+                        // TODO: Doesn't spawn riders yet.
+                        if (rider.length() != 0
+                                && CreatureType.fromName(rider) != null) {
+                            getSign().getWorld()
+                                    .spawnCreature(
+                                            new Location(getSign().getWorld(),
+                                                    x, y, z),
+                                            CreatureType.fromName(type));
                         } else {
-                            getSign().getWorld().spawnCreature(new Location(getSign().getWorld(), x, y, z), CreatureType.fromName(type));
+                            getSign().getWorld()
+                                    .spawnCreature(
+                                            new Location(getSign().getWorld(),
+                                                    x, y, z),
+                                            CreatureType.fromName(type));
                         }
                         return;
                     }
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		protected boolean risingEdge;
+        protected boolean risingEdge;
 
-		public Factory(Server server, boolean risingEdge) {
-			super(server);
-			this.risingEdge = risingEdge;
-		}
+        public Factory(Server server, boolean risingEdge) {
+            super(server);
+            this.risingEdge = risingEdge;
+        }
 
-		@Override
-		public IC create(Sign sign) {
-			return new CreatureSpawner(getServer(), sign, risingEdge);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+            return new CreatureSpawner(getServer(), sign, risingEdge);
+        }
+    }
 
 }

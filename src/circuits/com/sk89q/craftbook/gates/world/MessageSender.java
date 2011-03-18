@@ -20,14 +20,9 @@ package com.sk89q.craftbook.gates.world;
 
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import static com.sk89q.craftbook.ic.TripleInputChipState.output;
-
-import java.util.List;
-
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -35,62 +30,64 @@ import com.sk89q.craftbook.ic.IC;
 
 public class MessageSender extends AbstractIC {
 
-	protected boolean risingEdge;
+    protected boolean risingEdge;
 
-	public MessageSender(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign);
-		this.risingEdge = risingEdge;
-	}
+    public MessageSender(Server server, Sign sign, boolean risingEdge) {
+        super(server, sign);
+        this.risingEdge = risingEdge;
+    }
 
-	@Override
-	public String getTitle() {
-		return "Message Sender";
-	}
+    @Override
+    public String getTitle() {
+        return "Message Sender";
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "MESSAGE SENDER";
-	}
+    @Override
+    public String getSignTitle() {
+        return "MESSAGE SENDER";
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			output(chip, 0, sendMessage());
-		}
-	}
+    @Override
+    public void trigger(ChipState chip) {
+        if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
+            output(chip, 0, sendMessage());
+        }
+    }
 
-	/**
-	 * Returns true if a message was sent.
-	 * 
-	 * @return
-	 */
-	private boolean sendMessage() {
-		boolean sent = false;
-		String name = getSign().getLine(2);
-		String message = getSign().getLine(3);
-		Player player = getServer().getPlayer(name);
-		//FIXME: There is a cached block problem somewhere if the sign is destroyed and replaced.
-		//Until the player relogs, the sign will continue sending to the name on the first sign.
-		if (player != null) {
-			player.sendMessage(message.replace("&", "\u00A7"));
-			sent = true;
-		}
-		return sent;
-	}
+    /**
+     * Returns true if a message was sent.
+     * 
+     * @return
+     */
+    private boolean sendMessage() {
+        boolean sent = false;
+        String name = getSign().getLine(2);
+        String message = getSign().getLine(3);
+        Player player = getServer().getPlayer(name);
+        // FIXME: There is a cached block problem somewhere if the sign is
+        // destroyed and replaced.
+        // Until the player relogs, the sign will continue sending to the name
+        // on the first sign.
+        if (player != null) {
+            player.sendMessage(message.replace("&", "\u00A7"));
+            sent = true;
+        }
+        return sent;
+    }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		protected boolean risingEdge;
+        protected boolean risingEdge;
 
-		public Factory(Server server, boolean risingEdge) {
-			super(server);
-			this.risingEdge = risingEdge;
-		}
+        public Factory(Server server, boolean risingEdge) {
+            super(server);
+            this.risingEdge = risingEdge;
+        }
 
-		@Override
-		public IC create(Sign sign) {
-			return new MessageSender(getServer(), sign, risingEdge);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+            return new MessageSender(getServer(), sign, risingEdge);
+        }
+    }
 
 }

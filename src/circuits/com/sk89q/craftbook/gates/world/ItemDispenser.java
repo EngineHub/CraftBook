@@ -19,15 +19,12 @@
 package com.sk89q.craftbook.gates.world;
 
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -36,78 +33,78 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
-	protected boolean risingEdge;
+    protected boolean risingEdge;
 
-	public ItemDispenser(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign);
-		this.risingEdge = risingEdge;
-	}
+    public ItemDispenser(Server server, Sign sign, boolean risingEdge) {
+        super(server, sign);
+        this.risingEdge = risingEdge;
+    }
 
-	@Override
-	public String getTitle() {
-		return "Item Dispenser";
-	}
+    @Override
+    public String getTitle() {
+        return "Item Dispenser";
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "ITEM DISPENSER";
-	}
+    @Override
+    public String getSignTitle() {
+        return "ITEM DISPENSER";
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			String item = getSign().getLine(2);
-			int amount = 1;
-			try {
-				amount = Math.min(64,
-						Math.max(-1, Integer.parseInt(getSign().getLine(3))));
-			} catch (NumberFormatException e) {
-			}
-			byte data = 0;
-			if (item.contains(":")) {
-				data = Byte.parseByte(item.split(":")[1]);
-				item = item.split(":")[0];
-			}
-			Material mat = Material.matchMaterial(item);
-			if (mat == null)
-				return;
-			int id = mat.getId();
-			if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
-				Location loc = getSign().getBlock().getLocation();
-				int maxY = Math.min(128, loc.getBlockY() + 10);
-				int x = loc.getBlockX();
-				int z = loc.getBlockZ();
+    @Override
+    public void trigger(ChipState chip) {
+        if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
+            String item = getSign().getLine(2);
+            int amount = 1;
+            try {
+                amount = Math.min(64,
+                        Math.max(-1, Integer.parseInt(getSign().getLine(3))));
+            } catch (NumberFormatException e) {
+            }
+            byte data = 0;
+            if (item.contains(":")) {
+                data = Byte.parseByte(item.split(":")[1]);
+                item = item.split(":")[0];
+            }
+            Material mat = Material.matchMaterial(item);
+            if (mat == null)
+                return;
+            int id = mat.getId();
+            if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
+                Location loc = getSign().getBlock().getLocation();
+                int maxY = Math.min(128, loc.getBlockY() + 10);
+                int x = loc.getBlockX();
+                int z = loc.getBlockZ();
 
-				for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
-					if (BlockType.canPassThrough(getSign().getWorld()
-							.getBlockTypeIdAt(x, y, z))) {
-						
-						ItemStack stack = new ItemStack(id, amount);
-						stack.setData(new MaterialData(id, data));
-						
-						getSign().getWorld().dropItemNaturally(
-								new Location(getSign().getWorld(), x, y, z),
-								stack);
-						return;
-					}
-				}
-			}
-		}
-	}
+                for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
+                    if (BlockType.canPassThrough(getSign().getWorld()
+                            .getBlockTypeIdAt(x, y, z))) {
 
-	public static class Factory extends AbstractICFactory {
+                        ItemStack stack = new ItemStack(id, amount);
+                        stack.setData(new MaterialData(id, data));
 
-		protected boolean risingEdge;
+                        getSign().getWorld().dropItemNaturally(
+                                new Location(getSign().getWorld(), x, y, z),
+                                stack);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
-		public Factory(Server server, boolean risingEdge) {
-			super(server);
-			this.risingEdge = risingEdge;
-		}
+    public static class Factory extends AbstractICFactory {
 
-		@Override
-		public IC create(Sign sign) {
-			return new ItemDispenser(getServer(), sign, risingEdge);
-		}
-	}
+        protected boolean risingEdge;
+
+        public Factory(Server server, boolean risingEdge) {
+            super(server);
+            this.risingEdge = risingEdge;
+        }
+
+        @Override
+        public IC create(Sign sign) {
+            return new ItemDispenser(getServer(), sign, risingEdge);
+        }
+    }
 
 }
