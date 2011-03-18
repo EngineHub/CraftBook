@@ -93,8 +93,14 @@ public class ICMechanic extends PersistentMechanic {
                 
                 Matcher matcher = ICMechanicFactory.codePattern.matcher(sign.getLine(1));
                 
-                if (matcher.matches()) {
-                    return matcher.group(1).equalsIgnoreCase(id);
+                if (!matcher.matches()) {
+                    return false;
+                } else if (!matcher.group(1).equalsIgnoreCase(id)) {
+                    return false;
+                } else if (ic instanceof PersistentIC) {
+                    return ((PersistentIC) ic).isActive();
+                } else {
+                    return false;
                 }
             }
         }
