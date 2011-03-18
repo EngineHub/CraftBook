@@ -62,6 +62,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         // Let's register ICs!
         icManager = new ICManager();
         ICFamily familySISO = new FamilySISO();
+        icManager.register("MC9999", new ResurrectDumbledoor.Factory(server, true), familySISO);
         icManager.register("MC1000", new Repeater.Factory(server), familySISO);
         icManager.register("MC1001", new Inverter.Factory(server), familySISO);
         icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
