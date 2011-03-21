@@ -50,5 +50,14 @@ public interface ChipState {
      * @return 
      */
     public boolean isTriggered(int pin);
+
+    /**
+     * Returns whether this pin is connected and valid
+     *
+     * @param pin
+     * @return
+     */
+    public boolean isValid(int pin);
+
     
 }

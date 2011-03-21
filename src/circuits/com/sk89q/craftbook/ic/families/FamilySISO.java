@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.ic.families;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -51,14 +52,21 @@ public class FamilySISO extends AbstractICFamily {
         }
         
         protected Block getBlock(int pin) {
-            if (pin == 0) {
-                return SignUtil.getFrontBlock(sign.getBlock());
-            } else if (pin == 3) {
-                BlockFace face = SignUtil.getBack(sign.getBlock());
-                return sign.getBlock().getRelative(face).getRelative(face);
-            } else {
-                return null;
+
+            switch (pin)
+            {
+                case 0:
+                    return SignUtil.getFrontBlock(sign.getBlock());
+
+                case 3:
+                    BlockFace face = SignUtil.getBack(sign.getBlock());
+                    return sign.getBlock().getRelative(face).getRelative(face);
+
+                default:
+                    return null;
+
             }
+
         }
 
         @Override
@@ -86,6 +94,16 @@ public class FamilySISO extends AbstractICFamily {
             Block block = getBlock(pin);
             if (block != null) {
                 return BukkitUtil.toWorldVector(block).equals(source);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public boolean isValid(int pin) {
+            Block block = getBlock(pin);
+            if (block != null) {
+                return block.getType() == Material.REDSTONE_WIRE;
             } else {
                 return false;
             }
