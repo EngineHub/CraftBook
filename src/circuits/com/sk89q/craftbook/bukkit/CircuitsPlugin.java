@@ -85,8 +85,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //3ISOs
-        icManager.register("MC3002", new AndGate.Factory(server), familySISO);
-        icManager.register("MC3003", new NandGate.Factory(server), familySISO);
+        icManager.register("MC3002", new AndGate.Factory(server), family3ISO);
+        icManager.register("MC3003", new NandGate.Factory(server), family3ISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
