@@ -27,6 +27,7 @@ import com.sk89q.craftbook.gates.world.*;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
+import com.sk89q.craftbook.ic.families.Family3ISO;
 import com.sk89q.craftbook.ic.families.FamilySISO;
 
 /**
@@ -62,6 +63,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         // Let's register ICs!
         icManager = new ICManager();
         ICFamily familySISO = new FamilySISO();
+        ICFamily family3ISO = new Family3ISO();
+        
+        //SISOs
         icManager.register("MC9999", new ResurrectDumbledore.Factory(server, true), familySISO);
         icManager.register("MC1000", new Repeater.Factory(server), familySISO);
         icManager.register("MC1001", new Inverter.Factory(server), familySISO);
@@ -79,6 +83,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
+        
+        //3ISOs
+        icManager.register("MC3002", new AndGate.Factory(server), familySISO);
+        icManager.register("MC3003", new NandGate.Factory(server), familySISO);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
