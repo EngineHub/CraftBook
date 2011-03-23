@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldListener;
 import org.bukkit.plugin.PluginManager;
@@ -67,12 +68,35 @@ public class MechanicListenerAdapter {
         BlockListener blockListener = new MechanicBlockListener(manager);
         WorldListener worldListener = new MechanicWorldListener(manager);
 
-        pluginManager.registerEvent(Type.BLOCK_RIGHTCLICKED, blockListener,
+        pluginManager.registerEvent(Type.PLAYER_INTERACT, blockListener,
                 Priority.Normal, plugin);
         pluginManager.registerEvent(Type.REDSTONE_CHANGE, blockListener,
                 Priority.Normal, plugin);
-        pluginManager.registerEvent(Type.CHUNK_UNLOADED, worldListener,
+        pluginManager.registerEvent(Type.CHUNK_UNLOAD, worldListener,
                 Priority.Normal, plugin);
+    }
+    
+    /**
+     * Player listener for detecting interactions with mechanic triggers.
+     * 
+     * @author hash
+     * 
+     */
+    protected static class PlayerBlockListener extends PlayerListener {
+        protected MechanicManager manager;
+        
+        /**
+         * Construct the listener.
+         * 
+         * @param manager
+         */
+        public PlayerBlockListener(MechanicManager manager) {
+            this.manager = manager;
+        }
+        
+        public void onPlayerInteract(PlayerInteractEvent event) {
+            manager.dispatchBlockRightClick(event);
+        }
     }
     
     /**
@@ -91,11 +115,6 @@ public class MechanicListenerAdapter {
          */
         public MechanicBlockListener(MechanicManager manager) {
             this.manager = manager;
-        }
-        
-        @Override
-        public void onBlockRightClick(BlockRightClickEvent event) {
-            manager.dispatchBlockRightClick(event);
         }
         
         @Override
@@ -261,10 +280,10 @@ public class MechanicListenerAdapter {
         }
 
         /**
-         * Called when a chunk is unloade.d
+         * Called when a chunk is unloaded.
          */
         @Override
-        public void onChunkUnloaded(ChunkUnloadEvent event) {
+        public void onChunkUnload(ChunkUnloadEvent event) {
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
             

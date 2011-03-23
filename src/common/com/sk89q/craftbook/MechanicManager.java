@@ -22,7 +22,11 @@ package com.sk89q.craftbook;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.event.*;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.*;
+
 import com.sk89q.craftbook.util.*;
 import static com.sk89q.craftbook.bukkit.BukkitUtil.*;
 
@@ -87,6 +91,9 @@ public class MechanicManager {
     /**
      * Handle a block right click event.
      * 
+     * @deprecated apparently BlockRightClickEvent has been pretty much
+     *             completely purged from Bukkit, and as a result this is no
+     *             longer called directly.
      * @param event
      * @return true if there was a mechanic to process the event
      */
@@ -94,11 +101,11 @@ public class MechanicManager {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
-
+        
         // Announce the event to anyone who considers it to be on one of their
         // defining blocks
         watchBlockManager.notify(event);
-
+        
         // See if this event could be occurring on any mechanism's triggering
         // blocks
         BlockWorldVector pos = toWorldVector(event.getBlock());
@@ -113,10 +120,38 @@ public class MechanicManager {
                 event.getPlayer().sendMessage(e.getMessage());
             }
         }
-
+        
         return false;
     }
-
+    
+    /**
+     * Handle a block right click event.
+     * 
+     * @param event
+     * @return true if there was a mechanic to process the event
+     */
+    public boolean dispatchBlockRightClick(PlayerInteractEvent event) {
+        // We don't need to handle events that no mechanic we use makes use of
+        if (!passesFilter(event))
+            return false;
+        
+        // See if this event could be occurring on any mechanism's triggering blocks
+        BlockWorldVector pos = toWorldVector(event.getClickedBlock());
+        try {
+            Mechanic mechanic = load(pos);
+            if (mechanic != null) {
+                mechanic.onRightClick(EventProcessor.toTrigger(event));
+                return true;
+            }
+        } catch (InvalidMechanismException e) {
+            if (e.getMessage() != null) {
+                event.getPlayer().sendMessage(e.getMessage());
+            }
+        }
+        
+        return false;
+    }
+    
     /**
      * Handle the redstone block change event.
      * 
@@ -211,7 +246,7 @@ public class MechanicManager {
      * @return true if the event should be processed by this manager; false
      *         otherwise.
      */
-    protected boolean passesFilter(BlockEvent event) {
+    protected boolean passesFilter(Event event) {
         return true;
     }
 

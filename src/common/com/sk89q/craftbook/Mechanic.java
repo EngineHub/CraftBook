@@ -19,6 +19,7 @@
 
 package com.sk89q.craftbook;
 
+import org.bukkit.block.*;
 import org.bukkit.event.block.*;
 
 /**
@@ -75,6 +76,6 @@ public abstract class Mechanic {
      * 
      * @param event
      */
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event){
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
     }
 }
