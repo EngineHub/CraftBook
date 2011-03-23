@@ -46,13 +46,11 @@ public abstract class Mechanic {
      * in the world.
      */
     public abstract void unload();
-    
+
     /**
-     * Return true if this mechanic is still active in the world. For example,
-     * for a gate, it should check to see if the [Gate] sign still exists
-     * at the trigger points.
-     * 
-     * @return
+     * @return true if this mechanic is still active in the world; false
+     *         otherwise. For example, for a gate, it should check to see if the
+     *         [Gate] sign still exists at the trigger points.
      */
     public abstract boolean isActive();
     

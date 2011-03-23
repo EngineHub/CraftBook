@@ -171,7 +171,7 @@ public class Elevator extends Mechanic {
         // Teleport!
         Location subspaceRift = player.getLocation().clone();
         subspaceRift.setY(floor.getY() + 1);
-        player.teleportTo(subspaceRift);
+        player.teleport(subspaceRift);
         
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can

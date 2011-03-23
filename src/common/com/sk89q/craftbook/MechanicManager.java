@@ -208,7 +208,8 @@ public class MechanicManager {
      * code so that code isn't checked unnecessarily.
      * 
      * @param event
-     * @return
+     * @return true if the event should be processed by this manager; false
+     *         otherwise.
      */
     protected boolean passesFilter(BlockEvent event) {
         return true;
