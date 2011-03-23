@@ -65,10 +65,11 @@ public class MechanicListenerAdapter {
      */
     public void register(MechanicManager manager) {
         PluginManager pluginManager = plugin.getServer().getPluginManager();
+        PlayerListener playerListener = new MechanicPlayerListener(manager);
         BlockListener blockListener = new MechanicBlockListener(manager);
         WorldListener worldListener = new MechanicWorldListener(manager);
 
-        pluginManager.registerEvent(Type.PLAYER_INTERACT, blockListener,
+        pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener,
                 Priority.Normal, plugin);
         pluginManager.registerEvent(Type.REDSTONE_CHANGE, blockListener,
                 Priority.Normal, plugin);
@@ -82,7 +83,7 @@ public class MechanicListenerAdapter {
      * @author hash
      * 
      */
-    protected static class PlayerBlockListener extends PlayerListener {
+    protected static class MechanicPlayerListener extends PlayerListener {
         protected MechanicManager manager;
         
         /**
@@ -90,7 +91,7 @@ public class MechanicListenerAdapter {
          * 
          * @param manager
          */
-        public PlayerBlockListener(MechanicManager manager) {
+        public MechanicPlayerListener(MechanicManager manager) {
             this.manager = manager;
         }
         
