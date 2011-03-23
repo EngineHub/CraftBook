@@ -18,7 +18,7 @@ import org.bukkit.inventory.*;
 public class EventProcessor {
     public static BlockRightClickEvent toTrigger(PlayerInteractEvent original) {
         return new BlockRightClickEvent(
-                Type.CUSTOM_EVENT,      // I don't think this is even legal.
+                Type.PLAYER_INTERACT,
                 original.getClickedBlock(),
                 BlockFace.SELF,
                 original.getItem(),
