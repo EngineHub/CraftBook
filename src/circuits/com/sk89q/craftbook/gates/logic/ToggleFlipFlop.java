@@ -49,7 +49,7 @@ public class ToggleFlipFlop extends AbstractIC {
     public void trigger(ChipState chip) {
         if ((risingEdge && input(chip, 0))
                 || (!risingEdge && !input(chip, 0))) {
-            output(chip, 0, getOutput(chip, 0));
+            output(chip, 0, !getOutput(chip, 0));
         }
     }
 
