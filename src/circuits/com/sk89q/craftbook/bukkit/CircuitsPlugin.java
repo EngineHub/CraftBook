@@ -83,10 +83,19 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
+        	//Missing: 1205, -06, 1240, -41, 1420
         
         //3ISOs
         icManager.register("MC3002", new AndGate.Factory(server), family3ISO);
         icManager.register("MC3003", new NandGate.Factory(server), family3ISO);
+        icManager.register("MC3020", new XorGate.Factory(server), family3ISO);
+        icManager.register("MC3021", new XnorGate.Factory(server), family3ISO);
+        icManager.register("MC3030", new RsNorFlipFlop.Factory(server), family3ISO);
+        icManager.register("MC3034", new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
+        	//Missing: 3031, -32, -33, -36, -40, 3101, 3231
+        
+        //3I3Os
+        	//Missing: the whole damn family, 4000, -10, 4100, -10, 4200
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
