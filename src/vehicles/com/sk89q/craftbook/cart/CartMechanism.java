@@ -18,11 +18,12 @@ public abstract class CartMechanism {
     /**
      * Determins if a cart mechanism should be enabled.
      * 
-     * @param director
+     * @param base the block on which the rails sit
      * @return true if no redstone is attached to the block; otherwise, true if
      *         powered and false if unpowered.
      */
-    public boolean isActive(Block director) {
+    public boolean isActive(Block base) {
+        
         //TODO
         return true;
     }
