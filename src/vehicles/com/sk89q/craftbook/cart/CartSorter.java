@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.cart;
 
+import static com.sk89q.craftbook.cart.CartUtils.pickDirector;
+
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
@@ -9,21 +11,9 @@ import com.sk89q.worldedit.blocks.*;
 
 public class CartSorter extends CartMechanism {
     public void impact(Minecart cart, Block entered, Block from) {
-        Block director = null;
-        Sign sign = null;
-        pickDirector: {
-            for (int i = 2; i <= 3; i++) {
-                director = entered.getFace(BlockFace.DOWN, i);
-                if (SignUtil.isSign(director)) {
-                    sign = (Sign) director.getState();
-                    if (sign.getLine(1).equalsIgnoreCase("[Sort]"))
-                        break pickDirector; // found it
-                    else
-                        sign = null;
-                }
-            }
-        }
-        if (sign == null) return;       // you can't have a sorter without some instructions here
+        Block director = pickDirector(entered.getFace(BlockFace.DOWN, 1), "sort");
+        if (director == null) return;
+        Sign sign = (Sign) director.getState();
         
         // pick which sort conditions apply
         //  (left dominates if both apply)
