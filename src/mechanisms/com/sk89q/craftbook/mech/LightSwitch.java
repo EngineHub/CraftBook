@@ -24,16 +24,18 @@ import org.bukkit.event.player.*;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.MechanismsConfiguration.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone
- * to normal torches. This is done every time a sign with [|] or [I] is right 
- * clicked by a player.
+ * torches (off) to redstone torches (on) to normal torches. This is done every
+ * time a sign with [|] or [I] is right-clicked by a player.
  *
  * @author fullwall
+ * @author wizjany
  */
 public class LightSwitch extends Mechanic {
     public static class Factory extends AbstractMechanicFactory<LightSwitch> {
@@ -83,7 +85,7 @@ public class LightSwitch extends Mechanic {
             throw new ProcessedMechanismException();
         }
     }
-    
+
     /**
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
@@ -94,49 +96,62 @@ public class LightSwitch extends Mechanic {
      * Configuration.
      */
     protected MechanismsPlugin plugin;
-    
+    private MechanismsConfiguration.LightSwitchSettings settings;
+
     private BlockWorldVector pt;
-    
+
     /**
      * Construct a LightSwitch for a location.
-     * 
+     *
      * @param pt
-     * @param plugin 
+     * @param plugin
      */
     private LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
         super();
         this.pt = pt;
         this.plugin = plugin;
     }
-    
-    
+
+
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
-        toggleLights(pt);
+        if (!toggleLights(pt)) {
+            event.getPlayer().sendMessage("The lightswitch needs a torch above it.");
+        }
     }
-    
+
     /**
      * Toggle lights in the immediate area.
-     * 
+     *
      * @param pt
      * @return
      */
     private boolean toggleLights(BlockWorldVector pt) {
     	World world = pt.getWorld();
-    	
+
     	int wx = pt.getBlockX();
         int wy = pt.getBlockY();
         int wz = pt.getBlockZ();
         int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
-        
-        if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
+
+
+        if (aboveID == BlockID.TORCH //|| aboveID == BlockID.REDSTONE_TORCH_OFF
                 || aboveID == BlockID.REDSTONE_TORCH_ON) {
-        	// Check if block above is a redstone torch.
+        	// Check what kind of torch the block above is.
         	// Used to get what to change torches to.
-            boolean on = (aboveID != BlockID.TORCH);
+            int on = 0;
+            if (aboveID == BlockID.TORCH) {
+                on = 2;
+            } else if (aboveID == BlockID.REDSTONE_TORCH_ON) {
+                on = 1;
+            //} else if (aboveID == BlockID.REDSTONE_TORCH_OFF) {
+            //    on = 0;
+            } else { //not a lightswitch
+                return true;
+            }
             // Prevent spam
             Long lastUse = recentLightToggles.remove(pt);
             long currTime = System.currentTimeMillis();
@@ -146,21 +161,24 @@ public class LightSwitch extends Mechanic {
             }
             recentLightToggles.put(pt, currTime);
             int changed = 0;
-            for (int x = -10 + wx; x <= 10 + wx; x++) {
-                for (int y = -10 + wy; y <= 10 + wy; y++) {
-                    for (int z = -5 + wz; z <= 5 + wz; z++) {
+            int offset = plugin.getLocalConfiguration().lightSwitchSettings.radius;
+            for (int x =  wx - offset; x <= offset + wx; x++) {
+                for (int y = wy - offset; y <= offset + wy; y++) {
+                    for (int z = wz - offset; z <= offset + wz; z++) {
                         int id = world.getBlockTypeIdAt(x, y, z);
-                        if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
+                        if (id == BlockID.TORCH //|| id == BlockID.REDSTONE_TORCH_OFF
                                 || id == BlockID.REDSTONE_TORCH_ON) {
                             // Limit the maximum number of changed lights
-                            if (changed >= 20) {
+                            if (changed >= plugin.getLocalConfiguration().lightSwitchSettings.changed) {
                                 return true;
                             }
-                            if (on) {
-                            	world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
-                            } else {
+                            if (on == 2) { //bright -> dim
                             	world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
-                            }
+                            } else if (on == 1) { //dim -> bright
+                            	world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+                            } //else if (on == 0) { //off -> dim
+                                //world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+                            //}
                             changed++;
                         }
                     }
@@ -170,12 +188,12 @@ public class LightSwitch extends Mechanic {
         }
         return false;
     }
-    
+
     @Override
     public void unload() {
         /* No persistence. */
     }
-    
+
     @Override
     public boolean isActive() {
         return false; /* Keeps no state */
