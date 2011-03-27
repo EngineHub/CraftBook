@@ -32,7 +32,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone
- * to normal torches. This is done every time a sign with [|] or [I] is right 
+ * to normal torches. This is done every time a sign with [|] or [I] is right
  * clicked by a player.
  *
  * @author fullwall
@@ -61,7 +61,7 @@ public class LightSwitch extends Mechanic {
             return new LightSwitch(pt, plugin);
         }
     }
-    
+
     /**
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
@@ -72,22 +72,22 @@ public class LightSwitch extends Mechanic {
      * Configuration.
      */
     protected MechanismsPlugin plugin;
-    
+
     private BlockWorldVector pt;
-    
+
     /**
      * Construct a LightSwitch for a location.
-     * 
+     *
      * @param pt
-     * @param plugin 
+     * @param plugin
      */
     private LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
         super();
         this.pt = pt;
         this.plugin = plugin;
     }
-    
-    
+
+
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
@@ -95,26 +95,36 @@ public class LightSwitch extends Mechanic {
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
         toggleLights(pt);
     }
-    
+
     /**
      * Toggle lights in the immediate area.
-     * 
+     *
      * @param pt
      * @return
      */
     private boolean toggleLights(BlockWorldVector pt) {
     	World world = pt.getWorld();
-    	
+
     	int wx = pt.getBlockX();
         int wy = pt.getBlockY();
         int wz = pt.getBlockZ();
         int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
-        
+
+
         if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
                 || aboveID == BlockID.REDSTONE_TORCH_ON) {
-        	// Check if block above is a redstone torch.
+        	// Check what kind of torch the block above is.
         	// Used to get what to change torches to.
-            boolean on = (aboveID != BlockID.TORCH);
+            int on = 0;
+            if (aboveID == BlockID.TORCH) {
+                on = 2;
+            } else if (aboveID == BlockID.REDSTONE_TORCH_ON) {
+                on = 1;
+            } else if (aboveID == BlockID.REDSTONE_TORCH_OFF) {
+                on = 0;
+            } else {
+                //Stop messing with my variables
+            }
             // Prevent spam
             Long lastUse = recentLightToggles.remove(pt);
             long currTime = System.currentTimeMillis();
@@ -134,10 +144,12 @@ public class LightSwitch extends Mechanic {
                             if (changed >= 20) {
                                 return true;
                             }
-                            if (on) {
+                            if (on == 2) { //bright -> off
+                            	world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_OFF);
+                            } else if (on == 1) { //dim -> bright
                             	world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
-                            } else {
-                            	world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+                            } else if (on == 0) { //off -> dim
+                                world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
                             }
                             changed++;
                         }
@@ -148,12 +160,12 @@ public class LightSwitch extends Mechanic {
         }
         return false;
     }
-    
+
     @Override
     public void unload() {
         /* No persistence. */
     }
-    
+
     @Override
     public boolean isActive() {
         return false; /* Keeps no state */
