@@ -91,42 +91,6 @@ public class MechanicManager {
     /**
      * Handle a block right click event.
      * 
-     * @deprecated apparently BlockRightClickEvent has been pretty much
-     *             completely purged from Bukkit, and as a result this is no
-     *             longer called directly.
-     * @param event
-     * @return true if there was a mechanic to process the event
-     */
-    public boolean dispatchBlockRightClick(BlockRightClickEvent event) {
-        // We don't need to handle events that no mechanic we use makes use of
-        if (!passesFilter(event))
-            return false;
-        
-        // Announce the event to anyone who considers it to be on one of their
-        // defining blocks
-        watchBlockManager.notify(event);
-        
-        // See if this event could be occurring on any mechanism's triggering
-        // blocks
-        BlockWorldVector pos = toWorldVector(event.getBlock());
-        try {
-            Mechanic mechanic = load(pos);
-            if (mechanic != null) {
-                mechanic.onRightClick(event);
-                return true;
-            }
-        } catch (InvalidMechanismException e) {
-            if (e.getMessage() != null) {
-                event.getPlayer().sendMessage(e.getMessage());
-            }
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Handle a block right click event.
-     * 
      * @param event
      * @return true if there was a mechanic to process the event
      */
@@ -135,12 +99,19 @@ public class MechanicManager {
         if (!passesFilter(event))
             return false;
         
+        // Announce the event to anyone who considers it to be on one of their defining blocks
+        //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
+        //watchBlockManager.notify(event);
+        
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return false;
+        
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
             Mechanic mechanic = load(pos);
             if (mechanic != null) {
-                mechanic.onRightClick(EventProcessor.toTrigger(event));
+                mechanic.onRightClick(event);
                 return true;
             }
         } catch (InvalidMechanismException e) {

@@ -29,7 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.Mechanic;
@@ -85,9 +85,9 @@ public class Cauldron extends Mechanic{
 
 
 	@Override
-	public void onRightClick(BlockRightClickEvent event) {
+	public void onRightClick(PlayerInteractEvent event) {
 	        if (!plugin.getLocalConfiguration().cauldronSettings.enable) return;
-		if (!BukkitUtil.toWorldVector(event.getBlock()).equals(pt)) return; //wth? our manager is insane
+		if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
 		if(event.getPlayer().getItemInHand().getTypeId() >= 255 || event.getPlayer().getItemInHand().getType() == Material.AIR)
 			preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt);
 	}

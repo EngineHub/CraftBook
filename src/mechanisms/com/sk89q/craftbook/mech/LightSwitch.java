@@ -21,6 +21,7 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.*;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -89,9 +90,9 @@ public class LightSwitch extends Mechanic {
     
 
     @Override
-    public void onRightClick(BlockRightClickEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
-        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(pt)) return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
         toggleLights(pt);
     }
     

@@ -23,6 +23,8 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.*;
+
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
@@ -121,10 +123,10 @@ public class Elevator extends Mechanic {
     
     
     @Override
-    public void onRightClick(BlockRightClickEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().elevatorSettings.enable) return;
         
-        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         makeItSo(event.getPlayer());
     }
     

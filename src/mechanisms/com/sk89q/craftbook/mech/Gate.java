@@ -22,7 +22,8 @@ package com.sk89q.craftbook.mech;
 import java.util.Set;
 import java.util.HashSet;
 import org.bukkit.World;
-import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.player.*;
+
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -284,7 +285,7 @@ public class Gate extends Mechanic {
      * @param event
      */
     @Override
-    public void onRightClick(BlockRightClickEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().gateSettings.enable) return;
         
         LocalPlayer player = plugin.wrap(event.getPlayer());

@@ -21,6 +21,7 @@ package com.sk89q.craftbook;
 
 import org.bukkit.block.*;
 import org.bukkit.event.block.*;
+import org.bukkit.event.player.*;
 
 /**
  * A Mechanic is a an object that manages a set of BlockVectors to enhance those
@@ -68,7 +69,7 @@ public abstract class Mechanic {
      * 
      * @param event
      */
-    public void onRightClick(BlockRightClickEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
     }
     
     /**

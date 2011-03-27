@@ -22,7 +22,8 @@ package com.sk89q.craftbook.mech;
 import java.util.Random;
 import java.io.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.player.*;
+
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -129,7 +130,7 @@ public class Bookcase extends Mechanic {
      * @param event
      */
     @Override
-    public void onRightClick(BlockRightClickEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
         
         Player player = event.getPlayer();

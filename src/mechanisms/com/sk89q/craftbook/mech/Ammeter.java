@@ -20,7 +20,8 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.Material;
-import org.bukkit.event.block.BlockRightClickEvent;
+import org.bukkit.event.player.*;
+
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
@@ -40,11 +41,11 @@ public class Ammeter extends Mechanic {
     
 
     @Override
-    public void onRightClick(BlockRightClickEvent event) {
-    	if(event.getPlayer().getItemInHand().getType() == Material.COAL && event.getBlock().getType() == Material.REDSTONE_WIRE)
+    public void onRightClick(PlayerInteractEvent event) {
+    	if(event.getPlayer().getItemInHand().getType() == Material.COAL && event.getClickedBlock().getType() == Material.REDSTONE_WIRE)
     	{
-    		String line = getCurrentLine(event.getBlock().getData());
-    		event.getPlayer().sendMessage("Current is: " + org.bukkit.ChatColor.RED + event.getBlock().getData() + " " + org.bukkit.ChatColor.DARK_GREEN + line);
+    		String line = getCurrentLine(event.getClickedBlock().getData());
+    		event.getPlayer().sendMessage("Current is: " + org.bukkit.ChatColor.RED + event.getClickedBlock().getData() + " " + org.bukkit.ChatColor.DARK_GREEN + line);
     	}
     }
     private String getCurrentLine(byte data) {
