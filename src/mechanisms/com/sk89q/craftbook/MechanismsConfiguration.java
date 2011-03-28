@@ -134,9 +134,13 @@ public class MechanismsConfiguration {
     
     public class LightSwitchSettings {
         public final boolean enable;
+        public final int radius;
+        public final int changed;
 
         private LightSwitchSettings(Configuration cfg) {
             enable             = cfg.getBoolean("light-switch-enable",             true);
+            radius             = cfg.getInt("light-switch-radius",                 10);
+            changed            = cfg.getInt("light-switch-maxChange",              20);
         }
     }
 }

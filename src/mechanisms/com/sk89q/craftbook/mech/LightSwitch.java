@@ -26,16 +26,18 @@ import org.bukkit.event.player.*;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.MechanismsConfiguration.*;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone
- * to normal torches. This is done every time a sign with [|] or [I] is right
- * clicked by a player.
+ * torches (off) to redstone torches (on) to normal torches. This is done every
+ * time a sign with [|] or [I] is right-clicked by a player.
  *
  * @author fullwall
+ * @author wizjany
  */
 public class LightSwitch extends Mechanic {
     public static class Factory implements MechanicFactory<LightSwitch> {
@@ -72,6 +74,7 @@ public class LightSwitch extends Mechanic {
      * Configuration.
      */
     protected MechanismsPlugin plugin;
+    private MechanismsConfiguration.LightSwitchSettings settings;
 
     private BlockWorldVector pt;
 
@@ -122,8 +125,8 @@ public class LightSwitch extends Mechanic {
                 on = 1;
             } else if (aboveID == BlockID.REDSTONE_TORCH_OFF) {
                 on = 0;
-            } else {
-                //Stop messing with my variables
+            } else { //not a lightswitch
+                return true;
             }
             // Prevent spam
             Long lastUse = recentLightToggles.remove(pt);
@@ -134,14 +137,15 @@ public class LightSwitch extends Mechanic {
             }
             recentLightToggles.put(pt, currTime);
             int changed = 0;
-            for (int x = -10 + wx; x <= 10 + wx; x++) {
-                for (int y = -10 + wy; y <= 10 + wy; y++) {
-                    for (int z = -5 + wz; z <= 5 + wz; z++) {
+            int offset = plugin.getLocalConfiguration().lightSwitchSettings.radius;
+            for (int x =  wx - offset; x <= offset + wx; x++) {
+                for (int y = wy - offset; y <= offset + wy; y++) {
+                    for (int z = wz - offset; z <= offset + wz; z++) {
                         int id = world.getBlockTypeIdAt(x, y, z);
                         if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
                                 || id == BlockID.REDSTONE_TORCH_ON) {
                             // Limit the maximum number of changed lights
-                            if (changed >= 20) {
+                            if (changed >= plugin.getLocalConfiguration().lightSwitchSettings.changed) {
                                 return true;
                             }
                             if (on == 2) { //bright -> off
