@@ -24,6 +24,7 @@ import org.bukkit.event.player.*;
 
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.MechanismsConfiguration;
 
 /**
  * This allows users to Right-click to check the power level of redstone
@@ -33,16 +34,18 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 public class Ammeter extends Mechanic {
 
     protected MechanismsPlugin plugin;
-    
+    private MechanismsConfiguration.AmmeterSettings settings;
+
     public Ammeter(MechanismsPlugin plugin) {
         super();
         this.plugin = plugin;
     }
-    
+
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
-    	if(event.getPlayer().getItemInHand().getType() == Material.COAL && event.getClickedBlock().getType() == Material.REDSTONE_WIRE)
+        if (!plugin.getLocalConfiguration().ammeterSettings.enable) return;
+    	if (event.getPlayer().getItemInHand().getType() == Material.COAL && event.getClickedBlock().getType() == Material.REDSTONE_WIRE)
     	{
     		String line = getCurrentLine(event.getClickedBlock().getData());
     		event.getPlayer().sendMessage("Current is: " + org.bukkit.ChatColor.RED + event.getClickedBlock().getData() + " " + org.bukkit.ChatColor.DARK_GREEN + line);

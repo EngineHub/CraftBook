@@ -24,6 +24,7 @@ import org.bukkit.event.player.*;
 
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.MechanismsConfiguration;
 
 /**
  * This allows users to right-click to check the light level of any block
@@ -33,6 +34,7 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 public class LightMeter extends Mechanic {
 
     protected MechanismsPlugin plugin;
+    private MechanismsConfiguration.LightMeterSettings settings;
 
     public LightMeter(MechanismsPlugin plugin) {
         super();
@@ -42,6 +44,7 @@ public class LightMeter extends Mechanic {
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+        if (!plugin.getLocalConfiguration().lightMeterSettings.enable) return;
     	if(event.getPlayer().getItemInHand().getType() == Material.GLOWSTONE_DUST)
     	{
     		String line = getLightLevelLine(event.getClickedBlock().getLightLevel());

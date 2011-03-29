@@ -11,3 +11,5 @@ cauldron-enable: true
 light-switch-enable: true
 light-switch-radius: 10
 light-switch-maxChange: 20
+ammeter-enable: true
+lightmeter-enable: true

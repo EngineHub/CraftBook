@@ -28,12 +28,12 @@ import com.sk89q.craftbook.mech.*;
 
 /**
  * Configuration handler for CraftBook.
- * 
+ *
  * All fields are final because it is never appropriate to modify them during
  * operation, except for when the configuration is reloaded entirely, at which
  * point it is appropriate to construct an entirely new configuration instance
  * and update the plugin accordingly.
- * 
+ *
  * @author sk89q
  * @author hash
  */
@@ -46,8 +46,10 @@ public class MechanismsConfiguration {
         elevatorSettings = new ElevatorSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
         lightSwitchSettings = new LightSwitchSettings(cfg);
+        ammeterSettings = new AmmeterSettings(cfg);
+        lightMeterSettings = new LightMeterSettings(cfg);
     }
-    
+
     public final File dataFolder;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
@@ -55,9 +57,11 @@ public class MechanismsConfiguration {
     public final ElevatorSettings elevatorSettings;
     public final CauldronSettings cauldronSettings;
     public final LightSwitchSettings lightSwitchSettings;
-    
-    
-    
+    public final AmmeterSettings ammeterSettings;
+    public final LightMeterSettings lightMeterSettings;
+
+
+
     public class BookcaseSettings {
         public final boolean enable;
         public final String readLine;
@@ -68,15 +72,15 @@ public class MechanismsConfiguration {
         }
         //FIXME the books file should probably be cached here too
     }
-    
-    
-    
+
+
+
     public class BridgeSettings {
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
         public final Set<Material> allowedBlocks;
-        
+
         private BridgeSettings(Configuration cfg) {
             enable             = cfg.getBoolean("bridge-enable",             true);
             enableRedstone     = cfg.getBoolean("bridge-redstone",           true);
@@ -86,7 +90,7 @@ public class MechanismsConfiguration {
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
         }
-        
+
         /**
          * @param b
          * @return true if the given block type can be used for a bridge; false
@@ -96,9 +100,9 @@ public class MechanismsConfiguration {
             return allowedBlocks.contains(b);
         }
     }
-    
-    
-    
+
+
+
     public class GateSettings {
         public final boolean enable;
         public final boolean enableRedstone;
@@ -108,9 +112,9 @@ public class MechanismsConfiguration {
             enableRedstone     = cfg.getBoolean("gate-redstone",           true);
         }
     }
-    
-    
-    
+
+
+
     public class ElevatorSettings {
         public final boolean enable;
 
@@ -118,9 +122,9 @@ public class MechanismsConfiguration {
             enable             = cfg.getBoolean("elevators-enable",             true);
         }
     }
-    
-    
-    
+
+
+
     public class CauldronSettings {
         public final boolean enable;
 
@@ -129,9 +133,9 @@ public class MechanismsConfiguration {
         }
         //FIXME the recipes should probably go here
     }
-    
-    
-    
+
+
+
     public class LightSwitchSettings {
         public final boolean enable;
         public final int radius;
@@ -143,4 +147,25 @@ public class MechanismsConfiguration {
             changed            = cfg.getInt("light-switch-maxChange",              20);
         }
     }
+
+
+
+    public class AmmeterSettings {
+        public final boolean enable;
+
+        private AmmeterSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("ammeter-enable",             true);
+        }
+    }
+
+
+
+    public class LightMeterSettings {
+        public final boolean enable;
+
+        private LightMeterSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("lightmeter-enable",             true);
+        }
+    }
+
 }
