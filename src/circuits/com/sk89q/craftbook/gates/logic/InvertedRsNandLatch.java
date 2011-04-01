@@ -22,8 +22,8 @@ public class InvertedRsNandLatch extends AbstractIC {
     
     @Override
     public void trigger(ChipState chip) {
-        boolean set = chip.get(1);
-        boolean reset = chip.get(2);
+        boolean set = chip.get(0);
+        boolean reset = chip.get(1);
         if (!set && !reset) {
             chip.set(3, true);
         } else if (set && !reset) {
