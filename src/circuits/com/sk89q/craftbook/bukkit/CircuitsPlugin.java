@@ -101,7 +101,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3030", new RsNorFlipFlop.Factory(server), family3ISO);
         icManager.register("MC3031", new InvertedRsNandLatch.Factory(server), family3ISO);
         icManager.register("MC3032", new JkFlipFlop.Factory(server), family3ISO);
-        //Missing: 3033
+        icManager.register("MC3033", new RsNandLatch.Factory(server), family3ISO);
         icManager.register("MC3034", new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
         //Missing: 3036
         //Missing: 3040
