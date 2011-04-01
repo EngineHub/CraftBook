@@ -75,15 +75,23 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1025", new ServerTimeModulus.Factory(server, true), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server, true), familySISO);
-        icManager.register("MC1200", new CreatureSpawner.Factory(server, true), familySISO);
-        icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);
+        icManager.register("MC1200", new CreatureSpawner.Factory(server, true), familySISO);    // REQ PERM
+        icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);      // REQ PERM
+        //Missing: 1202 (replaced by dispenser?)                                                // REQ PERM
+        //Missing: 1205                                                                         // REQ PERM
+        //Missing: 1206                                                                         // REQ PERM
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
-        icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);
+        icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);        // REQ PERM
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
+        //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
+        //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
+        //Missing: 1420
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
-        	//Missing: 1205, -06, 1240, -41, 1420
+        
+        //SI3Os
+        //Missing: 2020 (?)
         
         //3ISOs
         icManager.register("MC3002", new AndGate.Factory(server), family3ISO);
@@ -91,11 +99,21 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3020", new XorGate.Factory(server), family3ISO);
         icManager.register("MC3021", new XnorGate.Factory(server), family3ISO);
         icManager.register("MC3030", new RsNorFlipFlop.Factory(server), family3ISO);
+        //Missing: 3031
+        //Missing: 3032
+        //Missing: 3033
         icManager.register("MC3034", new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
-        	//Missing: 3031, -32, -33, -36, -40, 3101, 3231
+        //Missing: 3036
+        //Missing: 3040
+        //Missing: 3101
+        //Missing: 3231                                                                         // REQ PERM
         
         //3I3Os
-        	//Missing: the whole damn family, 4000, -10, 4100, -10, 4200
+        //Missing: 4000
+        //Missing: 4010
+        //Missing: 4100
+        //Missing: 4110
+        //Missing: 4200
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
