@@ -26,23 +26,18 @@ package com.sk89q.craftbook.ic;
  * @author sk89q
  */
 public interface IC {
-    
     /**
-     * Get the title of the IC.
-     *
-     * @return
+     * @return the title of the IC.
      */
     public String getTitle();
     
     /**
-     * Get the title that is shown on the sign.
-     * 
-     * @return
+     * @return the title that is shown on the sign.
      */
     public String getSignTitle();
     
     /**
-     * Get a new state to use.
+     * Recieve a new state to process on.
      *
      * @param chip chip state.
      */
@@ -52,5 +47,4 @@ public interface IC {
      * Proceed to unload the IC.
      */
     public void unload();
-    
 }

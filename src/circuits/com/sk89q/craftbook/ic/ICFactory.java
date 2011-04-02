@@ -27,24 +27,39 @@ import org.bukkit.entity.Player;
  * @author sk89q
  */
 public interface ICFactory {
-
     /**
-     * Create an IC instance given a block. This should not fail and
-     * return a null.
+     * Create an IC instance given a block. The verify method should already
+     * have been called before this function, so this should have no reason to
+     * fail or return a null.
      * 
      * @param sign
-     * @return
+     * @return an IC ready to be used
      */
     public IC create(Sign sign);
-    
+
     /**
-     * Verify that the IC can be created with the given sign. The sign will
-     * be for the given IC factory.
+     * Verify that the IC can be created in the area of the world defined by the
+     * given sign; throw exceptions if not.
+     * 
+     * This does NOT verify permissions, since that is only done when placing
+     * blocks for a new IC, and this can be invoked many times in the life of an
+     * IC.
      * 
      * @param sign
      * @param player
-     * @throws ICVerificationException if there was an error
+     *            who to report errors to. May be a no-op player if verification
+     *            is taking place on an IC that is already built, but should
+     *            never be null.
+     * @throws ICVerificationException
+     *             if the area of the world defined by the sign does not
+     *             represent a valid setup for this type of IC.
      */
     public void verify(Sign sign, Player player) throws ICVerificationException;
     
+    /**
+     * @return the final segment of a permission string (i.e. "mc1200" for
+     *         "craftbook.ic.restricted.mc1200"), or null if no permissions are
+     *         required for creating this type of IC.
+     */
+    public String getPermissionName();
 }

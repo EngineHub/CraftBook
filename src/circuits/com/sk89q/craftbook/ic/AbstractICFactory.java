@@ -40,6 +40,10 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     public void verify(Sign sign, Player player) throws ICVerificationException {
-        // No default check needed
+        // No default check needed; if the sign just has the right ID string, that's good enough in most cases.
+    }
+    
+    public String getPermissionName() {
+        return null;
     }
 }

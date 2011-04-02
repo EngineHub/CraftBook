@@ -134,8 +134,7 @@ public class MechanicManager {
         if (!passesFilter(event))
             return false;
 
-        // See if this event could be occurring on any mechanism's triggering
-        // blocks
+        // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getBlock());
         try {
             Mechanic mechanic = load(pos);
@@ -191,7 +190,9 @@ public class MechanicManager {
     }
 
     /**
-     * Attempt to detect a mechanic at a location.
+     * Attempt to detect a mechanic at a location. This is only called in
+     * response to events for which a trigger block for an existing
+     * PersistentMechanic cannot be found.
      * 
      * @param pos
      * @return a {@link Mechanic} if a mechanism could be found at the location;
@@ -200,8 +201,7 @@ public class MechanicManager {
      *             if it appears that the position is intended to me a
      *             mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected Mechanic detect(BlockWorldVector pos)
-            throws InvalidMechanismException {
+    protected Mechanic detect(BlockWorldVector pos) throws InvalidMechanismException {
         Mechanic mechanic = null;
         for (MechanicFactory<? extends Mechanic> factory : factories)
             if ((mechanic = factory.detect(pos)) != null)

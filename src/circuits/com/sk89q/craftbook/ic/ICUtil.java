@@ -18,8 +18,9 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
-import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
 
 /**
  * IC utility functions.
@@ -39,24 +40,26 @@ public class ICUtil {
      * @return whether something was changed
      */
     public static boolean setState(Block block, boolean state) {
-        if (block.getTypeId() == BlockID.LEVER) {
-            byte data = block.getData();
-            int newData = data & 0x7;
-
-            if (!state) {
-                newData = data & 0x7;
-            } else {
-                newData = data | 0x8;
-            }
-
-            if (newData != data) {
-                block.setData((byte) newData, true);
-            }
-            
+        if (block.getType() != Material.LEVER) return false;
+        byte data = block.getData();
+        int newData = data & 0x7;
+        
+        if (!state)
+            newData = data & 0x7;
+        else
+            newData = data | 0x8;
+        
+        if (newData != data) {
+            block.setData((byte)newData, true);
             return true;
         }
-        
         return false;
     }
     
+    public static boolean canBuild(Player player, ICFactory pattern) {
+        if (pattern.getPermissionName() == null) return true;
+        String perm = "craftbook.ic.restricted." + pattern.getPermissionName();
+        //TODO nom me some WEPIF
+        return true;
+    }
 }

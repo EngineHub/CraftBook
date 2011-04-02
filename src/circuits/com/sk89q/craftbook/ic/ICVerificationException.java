@@ -18,12 +18,14 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.*;
+
 /**
  * Thrown when an IC verification fails.
  * 
  * @author sk89q
  */
-public class ICVerificationException extends Exception {
+public class ICVerificationException extends InvalidMechanismException {
     
     private static final long serialVersionUID = -6417847809527566970L;
 
