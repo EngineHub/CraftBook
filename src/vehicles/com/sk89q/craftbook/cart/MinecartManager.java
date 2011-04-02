@@ -1,12 +1,15 @@
 package com.sk89q.craftbook.cart;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.vehicle.*;
 import org.bukkit.util.*;
+
+import static com.sk89q.craftbook.cart.CartUtils.pickDirector;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
@@ -18,10 +21,11 @@ public class MinecartManager {
         this.plugin = plugin;
         reloadConfiguration(plugin.getLocalConfiguration());
     }
-    
+
     private VehiclesPlugin plugin;
     private Map<Material,CartMechanism> mechanisms;
-    
+    private Map<String,CartMechanism> otherMechanisms;
+
     public void reloadConfiguration(VehiclesConfiguration cfg) {
         mechanisms = new EnumMap<Material,CartMechanism>(Material.class);
         mechanisms.put(cfg.matBoostMax, new CartBooster(100));
@@ -31,16 +35,24 @@ public class MinecartManager {
         mechanisms.put(cfg.matReverse,  new CartReverser());
         mechanisms.put(cfg.matSorter,   new CartSorter());
         mechanisms.put(cfg.matStation,  new CartStation());
+        otherMechanisms = new HashMap<String,CartMechanism>();
+        otherMechanisms.put("Print",    new CartMessage(plugin));
     }
-    
+
     public void handleMinecartBlockChange(VehicleMoveEvent event) {
         Block to = event.getTo().getBlock();
-        
-        //System.err.println("to=  "+to+";");
-        //System.err.println("from="+event.getFrom()+";");
-        //System.err.println("cart="+event.getVehicle().getLocation());
-        
-        CartMechanism thingy = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
-        if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+
+        CartMechanism matchedMech = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
+        if (matchedMech != null) {
+            matchedMech.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+            return;
+        }
+        for (Iterator<Entry<String,CartMechanism>> it = otherMechanisms.entrySet().iterator(); it.hasNext();) {
+            Entry<String,CartMechanism> nextMech = it.next();
+            Block director = pickDirector(to.getFace(BlockFace.DOWN, 1), nextMech.getKey());
+            if (director == null) return;
+            matchedMech = nextMech.getValue();
+            matchedMech.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+        }
     }
 }
