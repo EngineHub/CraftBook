@@ -39,7 +39,7 @@ public abstract class AbstractICFactory implements ICFactory {
         return server;
     }
 
-    public void verify(Sign sign, Player player) throws ICVerificationException {
+    public void verify(Sign sign) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string, that's good enough in most cases.
     }
     

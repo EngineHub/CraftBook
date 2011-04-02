@@ -21,6 +21,8 @@ package com.sk89q.craftbook.ic;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
+import com.sk89q.bukkit.migration.PermissionsResolverManager;
+import com.sk89q.bukkit.migration.PermissionsResolverServerListener;
 
 /**
  * IC utility functions.
@@ -54,12 +56,5 @@ public class ICUtil {
             return true;
         }
         return false;
-    }
-    
-    public static boolean canBuild(Player player, ICFactory pattern) {
-        if (pattern.getPermissionName() == null) return true;
-        String perm = "craftbook.ic.restricted." + pattern.getPermissionName();
-        //TODO nom me some WEPIF
-        return true;
     }
 }

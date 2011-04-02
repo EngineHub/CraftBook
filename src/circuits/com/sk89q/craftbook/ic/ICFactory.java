@@ -19,7 +19,7 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 /**
  * Factories are used to generate instances of ICs.
@@ -46,15 +46,11 @@ public interface ICFactory {
      * IC.
      * 
      * @param sign
-     * @param player
-     *            who to report errors to. May be a no-op player if verification
-     *            is taking place on an IC that is already built, but should
-     *            never be null.
      * @throws ICVerificationException
      *             if the area of the world defined by the sign does not
      *             represent a valid setup for this type of IC.
      */
-    public void verify(Sign sign, Player player) throws ICVerificationException;
+    public void verify(Sign sign) throws ICVerificationException;
     
     /**
      * @return the final segment of a permission string (i.e. "mc1200" for
