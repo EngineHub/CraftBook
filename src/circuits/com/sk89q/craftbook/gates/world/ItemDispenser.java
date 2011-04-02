@@ -91,20 +91,23 @@ public class ItemDispenser extends AbstractIC {
             }
         }
     }
-
+    
     public static class Factory extends AbstractICFactory {
-
+        
         protected boolean risingEdge;
-
+        
         public Factory(Server server, boolean risingEdge) {
             super(server);
             this.risingEdge = risingEdge;
         }
-
+        
         @Override
         public IC create(Sign sign) {
             return new ItemDispenser(getServer(), sign, risingEdge);
         }
+        
+        public String getPermissionName() {
+            return "mc1201";
+        }
     }
-
 }

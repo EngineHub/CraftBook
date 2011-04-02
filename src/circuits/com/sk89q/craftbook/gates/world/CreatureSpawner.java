@@ -97,6 +97,9 @@ public class CreatureSpawner extends AbstractIC {
         public IC create(Sign sign) {
             return new CreatureSpawner(getServer(), sign, risingEdge);
         }
+        
+        public String getPermissionName() {
+            return "mc1200";
+        }
     }
-
 }

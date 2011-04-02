@@ -60,7 +60,7 @@ public class ICMechanic extends PersistentMechanic {
         
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final BlockState state = block.getState();
-
+            
             Runnable runnable = new Runnable() {
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
@@ -69,17 +69,18 @@ public class ICMechanic extends PersistentMechanic {
                     ic.trigger(chipState);
                 }
             };
-            
+            //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually running per set of inputs in a given time window.
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(
                     plugin, runnable, 2);
         }
     }
-
+    
     @Override
     public void unload() {
         ic.unload();
+        //FIXME: cancel any scheduled updates.  (do them nao?) 
     }
-
+    
     @Override
     public boolean isActive() {
         BlockWorldVector pt = getTriggerPositions().get(0);
@@ -107,9 +108,12 @@ public class ICMechanic extends PersistentMechanic {
         
         return false;
     }
-
+    
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
+        // this seems a little strange; you'd think you'd be watching the input blocks, right?
+        // nope.  redstone events get reported to blocks adjacent to the redstone, 
+        // so we don't have to do that for any single-block IC.
         return new ArrayList<BlockWorldVector>();
     }
 

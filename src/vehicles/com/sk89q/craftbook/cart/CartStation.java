@@ -19,6 +19,7 @@ public class CartStation extends CartMechanism {
         } else {
             // park it.
             stop(cart);
+            //cart.teleport(entered.getLocation());     // i'd really love to enforce centering on this, but in practice rounding errors and such seem to be rapeful.
         }
     }
     
@@ -26,8 +27,8 @@ public class CartStation extends CartMechanism {
         cart.setVelocity(FUUUUUUUUUUUUUUUUU(SignUtil.getFacing(director)));
     }
     
-    public static BlockVector FUUUUUUUUUUUUUUUUU(BlockFace face) {
-        return new BlockVector(face.getModX(), face.getModY(), face.getModZ());
+    public static Vector FUUUUUUUUUUUUUUUUU(BlockFace face) {
+        return new Vector(face.getModX()*0.1, face.getModY()*0.1, face.getModZ()*0.1);
     }
     
     // ought to have an autolaunch-when-enter option someday.

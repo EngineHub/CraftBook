@@ -58,49 +58,39 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
         this.plugin = plugin;
         this.manager = manager;
     }
-
+    
     @Override
-    public ICMechanic detect(BlockWorldVector pt)
-            throws InvalidMechanismException {
-        
+    public ICMechanic detect(BlockWorldVector pt) throws InvalidMechanismException {        
         Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
         
-        if (block.getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = block.getState();
-            
-            if (state instanceof Sign) {
-                Sign sign = (Sign) state;
-                
-                // Attempt to detect the text on the sign to see if it's an IC
-                Matcher matcher = codePattern.matcher(sign.getLine(1));
-                if (matcher.matches()) {
-                    return setup(sign, matcher.group(1));
-                }
-            }
-        }
+        // if we're not looking at a wall sign, it can't be an IC.
+        if (block.getTypeId() != BlockID.WALL_SIGN) return null;
+        Sign sign = (Sign)block.getState();
         
-        return null;
-    }
-    
-    /**
-     * Sets up an IC at the specified location.
-     * 
-     * @param pt
-     * @param block
-     * @return
-     */
-    protected ICMechanic setup(Sign sign, String id) {
+        // detect the text on the sign to see if it's any kind of IC at all.
+        Matcher matcher = codePattern.matcher(sign.getLine(1));
+        if (!matcher.matches()) return null;
+        String id = matcher.group(1);
+        // after this point, we don't return null if we can't make an IC: we throw shit,
+        //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
+        
+        // now actually try to pull up an IC of that id number.
         RegisteredICFactory registration = manager.get(id);
+        if (registration == null) throw new InvalidMechanismException("\""+sign.getLine(1)+"\" should be an IC ID, but no IC registered under that ID could be found.");
         
-        // No registration! No IC! Abort
-        if (registration == null) {
-            return null;
-        }
+        // check if it's a valid configuration (deferring details to the IC itself).
+        // part of this was probably done when the blocks definig it were placed, too,
+        //   but bukkit doesn't provide all the events we would need to know if things might have changed to make it invalid, so here we go.
+        //TODO: this
+        //IMPL: a fake player object that routes error messages to /dev/null so i can reuse verification functions
         
-        ICFactory factory = registration.getFactory();
-        IC ic = factory.create(sign);
-        return new ICMechanic(plugin, id, ic, registration.getFamily(),
-                BukkitUtil.toWorldVector(sign.getBlock()));
+        // okay, everything checked out.  we can finally make it.
+        return new ICMechanic(
+                plugin,
+                id,
+                registration.getFactory().create(sign),
+                registration.getFamily(),
+                pt
+       );
     }
-
 }
