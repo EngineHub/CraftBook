@@ -104,7 +104,7 @@ public class CraftBookVehiclesListener extends VehicleListener {
 
         VehiclesConfiguration config = plugin.getLocalConfiguration();
         if (config.minecartDestroyOnExit) {
-            (new CartDestroyer()).destroyCart(event, config.minecartDropOnExit);
+            (new CartDestroyer()).destroyCart(event, config.minecartDestroyOnCreature, config.minecartDropOnExit);
         }
     }
 }

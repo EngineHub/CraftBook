@@ -15,12 +15,16 @@ import org.bukkit.World;
  */
 
 public class CartDestroyer {
-    public void destroyCart(VehicleExitEvent event, Boolean drop) {
+    public void destroyCart(VehicleExitEvent event, Boolean creature, Boolean drop) {
 
         Minecart minecart = (Minecart) event.getVehicle();
         LivingEntity entity = event.getExited();
-        //destroy cart
-        minecart.remove();
+        //destroy cart; creature being true means we SHOULD delete a creature occupied cart
+        if (!creature && entity instanceof Creature) {
+            return;
+        } else {
+            minecart.remove();
+        }
         //drop cart if we're supposed to
         if (drop) {
             Location location = entity.getLocation();
