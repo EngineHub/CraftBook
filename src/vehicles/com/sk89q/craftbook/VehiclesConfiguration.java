@@ -47,6 +47,8 @@ public class VehiclesConfiguration {
         matSorter =     Material.getMaterial(cfg.getInt("sort-block",           87));
         
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
+        minecartDestroyOnExit = cfg.getBoolean("minecart-destroy-on-exit",      false);
+        minecartDropOnExit = cfg.getBoolean("minecart-drop-on-exit",            false);
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
     }
     
@@ -61,6 +63,8 @@ public class VehiclesConfiguration {
     public final Material matSorter;
     
     public final boolean minecartSlowWhenEmpty;
+    public final boolean minecartDestroyOnExit;
+    public final boolean minecartDropOnExit;
     public final double minecartMaxSpeedModifier;
     
 }

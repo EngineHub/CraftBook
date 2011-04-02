@@ -36,6 +36,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.VehiclesConfiguration;
@@ -47,32 +48,32 @@ import com.sk89q.worldedit.blocks.BlockID;
  * Preprocesses event data coming directly from bukkit and passes it off to
  * appropriate logic in MinecartManager.
  */
-public class CraftBookVehiclesListener extends VehicleListener { 
+public class CraftBookVehiclesListener extends VehicleListener {
     public CraftBookVehiclesListener(VehiclesPlugin plugin) {
         this.plugin = plugin;
         this.cartman = new MinecartManager(plugin);
     }
-    
+
     protected VehiclesPlugin plugin;
     protected MinecartManager cartman;
-    
+
     /**
      * Called when a vehicle is created.
      */
     @Override
     public void onVehicleCreate(VehicleCreateEvent event) {
         Vehicle vehicle = event.getVehicle();
-        
+
         // Ignore events not relating to minecrarts.
         if (!(vehicle instanceof Minecart)) return;
-        
+
         // Modify the vehicle properties according to config.
         VehiclesConfiguration config = plugin.getLocalConfiguration();
         Minecart minecart = (Minecart) vehicle;
         minecart.setSlowWhenEmpty(config.minecartSlowWhenEmpty);
         minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
     }
-    
+
     /**
      * Called when an vehicle moves.
      */
@@ -80,15 +81,30 @@ public class CraftBookVehiclesListener extends VehicleListener {
     public void onVehicleMove(VehicleMoveEvent event) {
         // Ignore events not relating to minecrarts.
         if (!(event.getVehicle() instanceof Minecart)) return;
-        
+
         // Ignore events that don't involve crossing the boundary from one block to another.
         Location from = event.getFrom();
         Location to = event.getTo();
         if (from.getBlockX() == to.getBlockX()
          && from.getBlockY() == to.getBlockY()
          && from.getBlockZ() == to.getBlockZ()) return;
-        
+
         // ...Okay, go ahead then.
         cartman.handleMinecartBlockChange(event);
+    }
+
+
+    /**
+     * Called when a entity exits a vehicle
+     */
+    @Override
+    public void onVehicleExit(VehicleExitEvent event) {
+        Vehicle vehicle = event.getVehicle();
+        if (!(vehicle instanceof Minecart)) return;
+
+        VehiclesConfiguration config = plugin.getLocalConfiguration();
+        if (config.minecartDestroyOnExit) {
+            (new CartDestroyer()).destroyCart(event, config.minecartDropOnExit);
+        }
     }
 }

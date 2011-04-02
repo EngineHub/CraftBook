@@ -13,3 +13,5 @@ minecart-slow-when-empty: false
 minecart-max-speed-modifier: 1
 in-cart-control: true
 hinder-pressure-plate-slow: true
+minecart-destroy-on-exit: false
+minecart-drop-on-exit: false
