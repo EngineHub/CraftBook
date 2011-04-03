@@ -1,3 +1,21 @@
+// $Id$
+/*
+ * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.sk89q.craftbook.cart;
 
 import static com.sk89q.craftbook.cart.CartUtils.pickDirector;
@@ -14,7 +32,7 @@ public class CartSorter extends CartMechanism {
         Block director = pickDirector(entered.getFace(BlockFace.DOWN, 1), "sort");
         if (director == null) return;
         Sign sign = (Sign) director.getState();
-        
+
         // pick which sort conditions apply
         //  (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
@@ -23,10 +41,10 @@ public class CartSorter extends CartMechanism {
         } else if (isSortApplicable((sign).getLine(3), cart)) {
             dir = Hand.RIGHT;
         }
-        
-        // pick the track block to modify and the curve to give it. 
+
+        // pick the track block to modify and the curve to give it.
         //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
-        //    this is required since there's not a north track and a south track; just a north-south track type.
+        //   this is required since there's not a north track and a south track; just a north-south track type.
         byte trackData;
         BlockFace next = SignUtil.getFacing(director);
         switch (next) {
@@ -75,17 +93,17 @@ public class CartSorter extends CartMechanism {
             return;
         }
         Block targetTrack = entered.getFace(next);
-        
+
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.
         if (targetTrack.getType() == Material.RAILS)
             targetTrack.setData(trackData);
     }
-    
+
     private enum Hand {
         STRAIGHT, LEFT, RIGHT;
     }
-    
+
     public static boolean isSortApplicable(String line, Minecart minecart) {
         if (line.equalsIgnoreCase("All")) {
             return true;

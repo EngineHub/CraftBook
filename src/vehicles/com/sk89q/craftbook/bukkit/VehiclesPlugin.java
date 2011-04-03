@@ -25,32 +25,31 @@ import com.sk89q.craftbook.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
- * 
+ *
  * @author sk89q
  */
 public class VehiclesPlugin extends BaseBukkitPlugin {
-    
+
     protected VehiclesConfiguration config;
-    
+
     @Override
     public void onEnable() {
         super.onEnable();
-        
     }
-    
+
     @Override
     protected void registerEvents() {
         createDefaultConfiguration("config.yml");
-        
+
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfiguration(), getDataFolder());
-        
+
         CraftBookVehiclesListener vehiclesListener = new CraftBookVehiclesListener(this);
         registerEvent(Event.Type.VEHICLE_CREATE, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_MOVE, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_EXIT, vehiclesListener);
     }
-    
+
     public VehiclesConfiguration getLocalConfiguration() {
         return config;
     }

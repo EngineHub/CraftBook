@@ -1,4 +1,4 @@
-// $Id$r
+// $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  *
@@ -25,19 +25,19 @@ import org.bukkit.util.config.*;
 
 /**
  * Configuration handler for CraftBook.
- * 
+ *
  * All fields are final because it is never appropriate to modify them during
  * operation, except for when the configuration is reloaded entirely, at which
  * point it is appropriate to construct an entirely new configuration instance
  * and update the plugin accordingly.
- * 
+ *
  * @author sk89q
  * @author hash
  */
 public class VehiclesConfiguration {
     public VehiclesConfiguration(Configuration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
-        
+
         matBoostMax =   Material.getMaterial(cfg.getInt("max-boost-block",      41));
         matBoost25x =   Material.getMaterial(cfg.getInt("25x-boost-block",      14));
         matSlow50x =    Material.getMaterial(cfg.getInt("50x-slow-block",       88));
@@ -45,18 +45,18 @@ public class VehiclesConfiguration {
         matReverse =    Material.getMaterial(cfg.getInt("reverse-block",        35));
         matStation =    Material.getMaterial(cfg.getInt("station-block",        49));
         matSorter =     Material.getMaterial(cfg.getInt("sort-block",           87));
-        
-        minecartSlowWhenEmpty =   cfg.getBoolean("minecart-slow-when-empty",    true);
-        minecartDestroyOnExit =   cfg.getBoolean("minecart-destroy-on-exit",    false);
-        minecartDestroyOnCreatre =cfg.getBoolean("minecart-destroy-on-creature-exit", false);
-        minecartDropOnExit =      cfg.getBoolean("minecart-drop-on-exit",       false);
-        minecartMessageEmitters = cfg.getBoolean("minecart-track-messages",     true);
+
+        minecartSlowWhenEmpty =     cfg.getBoolean("minecart-slow-when-empty",          true);
+        minecartDestroyOnExit =     cfg.getBoolean("minecart-destroy-on-exit",          false);
+        minecartDestroyOnCreatre =  cfg.getBoolean("minecart-destroy-on-creature-exit", false);
+        minecartDropOnExit =        cfg.getBoolean("minecart-drop-on-exit",             false);
+        minecartMessageEmitters =   cfg.getBoolean("minecart-track-messages",           true);
 
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
     }
-    
+
     public final File dataFolder;
-    
+
     public final Material matBoostMax;
     public final Material matBoost25x;
     public final Material matSlow50x;
@@ -64,7 +64,7 @@ public class VehiclesConfiguration {
     public final Material matReverse;
     public final Material matStation;
     public final Material matSorter;
-    
+
     public final boolean minecartSlowWhenEmpty;
     public final boolean minecartDestroyOnExit;
     public final boolean minecartDestroyOnCreature;
@@ -72,5 +72,4 @@ public class VehiclesConfiguration {
     public final boolean minecartMessageEmitters;
 
     public final double minecartMaxSpeedModifier;
-    
 }
