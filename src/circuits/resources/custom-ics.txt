@@ -15,7 +15,7 @@
 // Languages
 // ---------
 //
-// (More may me added at a later date)
+// (More may be added at a later date)
 // perlstone_v1.0: Perlstone v1.0
 // perlstone32_v1: Perlstone32 v1
 
