@@ -47,6 +47,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         CraftBookVehiclesListener vehiclesListener = new CraftBookVehiclesListener(this);
         registerEvent(Event.Type.VEHICLE_CREATE, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_MOVE, vehiclesListener);
+        registerEvent(Event.Type.VEHICLE_ENTER, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_EXIT, vehiclesListener);
     }
 

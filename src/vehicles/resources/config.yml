@@ -16,3 +16,4 @@ hinder-pressure-plate-slow: true
 minecart-destroy-on-exit: false
 minecart-destroy-on-creature-exit: false
 minecart-drop-on-exit: false
+minecart-launch-on-station-enter: false

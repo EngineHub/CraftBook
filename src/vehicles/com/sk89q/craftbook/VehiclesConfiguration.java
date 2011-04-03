@@ -48,9 +48,10 @@ public class VehiclesConfiguration {
 
         minecartSlowWhenEmpty =     cfg.getBoolean("minecart-slow-when-empty",          true);
         minecartDestroyOnExit =     cfg.getBoolean("minecart-destroy-on-exit",          false);
-        minecartDestroyOnCreatre =  cfg.getBoolean("minecart-destroy-on-creature-exit", false);
+        minecartDestroyOnCreature =  cfg.getBoolean("minecart-destroy-on-creature-exit", false);
         minecartDropOnExit =        cfg.getBoolean("minecart-drop-on-exit",             false);
         minecartMessageEmitters =   cfg.getBoolean("minecart-track-messages",           true);
+        minecartLaunchOnStation =   cfg.getBoolean("minecart-launch-on-station-enter",  false);
 
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
     }
@@ -70,6 +71,7 @@ public class VehiclesConfiguration {
     public final boolean minecartDestroyOnCreature;
     public final boolean minecartDropOnExit;
     public final boolean minecartMessageEmitters;
+    public final boolean minecartLaunchOnStation;
 
     public final double minecartMaxSpeedModifier;
 }

@@ -33,11 +33,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.entity.Vehicle;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleListener;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.util.Vector;
+
+import static com.sk89q.craftbook.cart.CartUtils.pickDirector;
 
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.*;
@@ -93,9 +92,23 @@ public class CraftBookVehiclesListener extends VehicleListener {
         cartman.handleMinecartBlockChange(event);
     }
 
+    /**
+     * Called when an entity enters a vehicle
+     */
+    @Override
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        Vehicle vehicle = event.getVehicle();
+        if (!(vehicle instanceof Minecart)) return;
+
+        VehiclesConfiguration config = plugin.getLocalConfiguration();
+        if (config.minecartLaunchOnStation && event.isCancelled() == false &&
+                   vehicle.getLocation().getBlock().getFace(BlockFace.DOWN).getType() == config.matStation) {
+            (new CartStation()).enterLaunch((Minecart) vehicle);
+        }
+    }
 
     /**
-     * Called when a entity exits a vehicle
+     * Called when an entity exits a vehicle
      */
     @Override
     public void onVehicleExit(VehicleExitEvent event) {
