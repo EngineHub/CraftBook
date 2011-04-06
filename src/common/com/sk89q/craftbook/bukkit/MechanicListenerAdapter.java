@@ -95,8 +95,11 @@ public class MechanicListenerAdapter {
             this.manager = manager;
         }
         
+        @Override
         public void onPlayerInteract(PlayerInteractEvent event) {
-            manager.dispatchBlockRightClick(event);
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                manager.dispatchBlockRightClick(event);
+        }
         }
     }
     
