@@ -20,9 +20,7 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.World;
 import org.bukkit.block.*;
-import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
-
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;

@@ -89,6 +89,7 @@ public class CauldronCookbook {
 	 * Gets a recipe by its ingredients. The list will be sorted.
 	 *
 	 * @param ingredients
+	 * @return 
 	 */
 	public Recipe find(Map<Integer,Integer> ingredients) {
 		for (Recipe recipe : recipes) {
@@ -227,8 +228,10 @@ public class CauldronCookbook {
 		/**
 		 * Construct the instance. The list will be sorted.
 		 * 
+                 * @param name 
 		 * @param ingredients
 		 * @param results
+		 * @param groups 
 		 */
 		public Recipe(String name, List<Integer> ingredients,
 				List<Integer> results, String[] groups) {

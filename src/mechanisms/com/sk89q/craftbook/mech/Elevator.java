@@ -22,9 +22,7 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
-import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
-
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;

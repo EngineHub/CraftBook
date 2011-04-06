@@ -20,11 +20,8 @@ package com.sk89q.craftbook;
 
 import java.io.File;
 import java.util.*;
-
 import org.bukkit.*;
 import org.bukkit.util.config.*;
-
-import com.sk89q.craftbook.mech.*;
 
 /**
  * Configuration handler for CraftBook.
