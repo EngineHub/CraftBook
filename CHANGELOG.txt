@@ -1,3 +1,39 @@
+3.0alpha2:
+- New stuff was added. Not sure what...
+- ICs are implemented, but not all yet. Here's a summary of what is available:
+    MC9999: ResurrectDumbledore
+    MC1000: Repeater
+    MC1001: Inverter
+    MC1017: ToggleFlipFlop
+    MC1018: ToggleFlipFlop
+    MC1020: RandomBit
+    MC1025: ServerTimeModulus
+    MC1110: WirelessTransmitter
+    MC1111: WirelessReceiver
+    MC1200: CreatureSpawner
+    MC1201: ItemDispenser
+    MC1230: DaySensor
+    MC1231: TimeControl
+    MC1260: WaterSensor
+    MC1261: LavaSensor
+    MC1262: LightSensor
+    MC1510: MessageSender
+    MC3002: AndGate
+    MC3003: NandGate
+    MC3020: XorGate
+    MC3021: XnorGate
+    MC3030: RsNorFlipFlop
+    MC3031: InvertedRsNandLatch
+    MC3032: JkFlipFlop
+    MC3033: RsNandLatch
+    MC3034: EdgeTriggerDFlipFlop
+    MC3036: LevelTriggeredDFlipFlop
+    MC3040: Multiplexer
+    MC3101: DownCounter
+Some of those require the craftbook.ic.safe permissions, while others
+require craftbook.ic.restricted (mob spawner, etc.).
+- Now all features require permissions. Use craftbook.mech.*
+
 3.0-alpha1:
 - FOR BUKKIT! About 50% completed!
 
