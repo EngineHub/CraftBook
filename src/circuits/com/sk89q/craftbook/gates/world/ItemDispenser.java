@@ -32,7 +32,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockType;
 
-@RestrictedIC
 public class ItemDispenser extends AbstractIC {
 
     protected boolean risingEdge;
@@ -94,7 +93,7 @@ public class ItemDispenser extends AbstractIC {
         }
     }
     
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
         
         protected boolean risingEdge;
         

@@ -22,14 +22,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.MechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
+public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     
     /**
      * The pattern used to match an IC on a sign.
@@ -75,12 +76,8 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
         
         // now actually try to pull up an IC of that id number.
         RegisteredICFactory registration = manager.get(id);
-        if (registration == null) throw new InvalidMechanismException("\""+sign.getLine(1)+"\" should be an IC ID, but no IC registered under that ID could be found.");
-        
-        // check if it's a valid configuration (deferring details to the IC itself).
-        // part of this was probably done when the blocks definig it were placed, too,
-        //   but bukkit doesn't provide all the events we would need to know if things might have changed to make it invalid, so here we go.
-        registration.getFactory().verify(sign);
+        if (registration == null) throw new InvalidMechanismException(
+                "\""+sign.getLine(1)+"\" should be an IC ID, but no IC registered under that ID could be found.");
         
         // okay, everything checked out.  we can finally make it.
         return new ICMechanic(
@@ -89,6 +86,61 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
                 registration.getFactory().create(sign),
                 registration.getFamily(),
                 pt
-       );
+        );
+    }
+    
+    /**
+     * Detect the mechanic at a placed sign.
+     */
+    @Override
+    public ICMechanic detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+            throws InvalidMechanismException {   
+        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        
+        Matcher matcher = codePattern.matcher(sign.getLine(1));
+        if (!matcher.matches()) return null;
+        String id = matcher.group(1);
+        
+        if (block.getTypeId() != BlockID.WALL_SIGN) {
+            throw new InvalidMechanismException("Only wall signs are used for ICs.");
+        }
+        
+        RegisteredICFactory registration = manager.get(id);
+        if (registration == null)
+            throw new InvalidMechanismException("Unknown IC detected: " + id);
+        
+        ICFactory factory = registration.getFactory();
+        
+        if (factory instanceof RestrictedIC) {
+            if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) {
+                throw new ICVerificationException("You don't have permission to use "
+                        + registration.getId() + ".");
+            }
+        } else {
+            if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) {
+                throw new ICVerificationException("You don't have permission to use "
+                        + registration.getId() + ".");
+            }
+        }
+        
+        factory.verify(sign);
+        
+        IC ic = registration.getFactory().create(sign);
+        
+        sign.setLine(1, "[" + registration.getId() + "]");
+        
+        ICMechanic mechanic = new ICMechanic(
+                plugin,
+                id,
+                ic,
+                registration.getFamily(),
+                pt
+        );
+
+        sign.setLine(0, ic.getSignTitle());
+        
+        player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
+        
+        return mechanic;
     }
 }

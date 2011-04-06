@@ -41,7 +41,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         
         config = new MechanismsConfiguration(getConfiguration(), getDataFolder());
         
-        MechanicManager manager = new MechanicManager();
+        MechanicManager manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
         

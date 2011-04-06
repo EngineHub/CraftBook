@@ -48,7 +48,7 @@ public class ICManager {
      */
     public void register(String id, ICFactory factory, ICFamily nativeFamily) {
         RegisteredICFactory registration
-                = new RegisteredICFactory(factory, nativeFamily);
+                = new RegisteredICFactory(id, factory, nativeFamily);
         
         // Lowercase the ID so that we can do case in-sensitive lookups
         registered.put(id.toLowerCase(), registration);

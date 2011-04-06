@@ -19,8 +19,6 @@
 
 package com.sk89q.craftbook;
 
-import org.bukkit.block.*;
-import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 
 /**

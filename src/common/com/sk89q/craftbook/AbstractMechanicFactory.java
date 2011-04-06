@@ -16,8 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook;
 
-public interface RestrictedIC {
+import org.bukkit.block.Sign;
+import com.sk89q.craftbook.util.BlockWorldVector;
+
+public abstract class AbstractMechanicFactory<T extends Mechanic>
+        implements MechanicFactory<T> {
+    public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
+            throws InvalidMechanismException {
+        return null;
+    }
 
 }

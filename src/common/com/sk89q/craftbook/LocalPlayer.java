@@ -27,4 +27,5 @@ public interface LocalPlayer {
     public void print(String message);
     public void printError(String message);
     public void printRaw(String message);
+    public boolean hasPermission(String perm);
 }

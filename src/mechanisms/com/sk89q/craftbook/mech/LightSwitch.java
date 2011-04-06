@@ -36,7 +36,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  * @author fullwall
  */
 public class LightSwitch extends Mechanic {
-    public static class Factory implements MechanicFactory<LightSwitch> {
+    public static class Factory extends AbstractMechanicFactory<LightSwitch> {
 
         protected MechanismsPlugin plugin;
 

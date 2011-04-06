@@ -68,7 +68,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         new PermissionsResolverServerListener(perms).register(this);
         
         
-        MechanicManager manager = new MechanicManager();
+        MechanicManager manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
         

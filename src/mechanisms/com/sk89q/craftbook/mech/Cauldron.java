@@ -19,20 +19,20 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
@@ -44,7 +44,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  * @author sk89q
  */
 public class Cauldron extends Mechanic {
-    public static class Factory implements MechanicFactory<Cauldron> {
+    public static class Factory extends AbstractMechanicFactory<Cauldron> {
 
         protected MechanismsPlugin plugin;
         protected CauldronCookbook recipes;

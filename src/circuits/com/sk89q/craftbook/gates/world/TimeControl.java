@@ -28,7 +28,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
-@RestrictedIC
 public class TimeControl extends AbstractIC {
 
     protected boolean risingEdge;
@@ -60,7 +59,7 @@ public class TimeControl extends AbstractIC {
         output(chip, 0, input(chip, 0));
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         protected boolean risingEdge;
 

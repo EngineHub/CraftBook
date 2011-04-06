@@ -23,11 +23,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.sk89q.bukkit.migration.PermissionsResolverManager;
 import com.sk89q.craftbook.LocalPlayer;
 
 /**
@@ -36,6 +38,11 @@ import com.sk89q.craftbook.LocalPlayer;
  * @author sk89q
  */
 public abstract class BaseBukkitPlugin extends JavaPlugin {
+    
+    /**
+     * The permissions resolver in use.
+     */
+    private PermissionsResolverManager perms;
     
     /**
      * Logger for messages.
@@ -60,6 +67,11 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         // Make the data folder for the plugin where configuration files
         // and other data files will be stored
         getDataFolder().mkdirs();
+        
+        // Prepare permissions
+        perms = new PermissionsResolverManager(
+                getConfiguration(), getServer(), getDescription().getName(), logger);
+        perms.load();
         
         // Register events
         registerEvents();
@@ -148,6 +160,26 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * @return
      */
     public LocalPlayer wrap(Player player) {
-        return new BukkitPlayer(player);
+        return new BukkitPlayer(this, player);
+    }
+    
+    /**
+     * Checks permissions.
+     * 
+     * @param sender
+     * @param perm
+     * @return 
+     */
+    public boolean hasPermission(CommandSender sender, String perm) {
+        if (sender.isOp()) {
+            return true;
+        }
+        
+        // Invoke the permissions resolver
+        if (sender instanceof Player) {
+            return perms.hasPermission(((Player) sender).getName(), perm);
+        }
+        
+        return false;
     }
 }

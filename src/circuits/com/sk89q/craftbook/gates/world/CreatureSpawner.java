@@ -30,7 +30,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockType;
 
-@RestrictedIC
 public class CreatureSpawner extends AbstractIC {
 
     protected boolean risingEdge;
@@ -86,7 +85,7 @@ public class CreatureSpawner extends AbstractIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         protected boolean risingEdge;
 

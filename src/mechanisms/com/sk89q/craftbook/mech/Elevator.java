@@ -36,7 +36,7 @@ import com.sk89q.craftbook.util.*;
  * 
  */
 public class Elevator extends Mechanic {
-    public static class Factory implements MechanicFactory<Elevator> {
+    public static class Factory extends AbstractMechanicFactory<Elevator> {
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
         }

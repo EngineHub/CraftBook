@@ -19,6 +19,7 @@
 
 package com.sk89q.craftbook;
 
+import org.bukkit.block.Sign;
 import com.sk89q.craftbook.util.BlockWorldVector;
 
 /**
@@ -41,4 +42,17 @@ public interface MechanicFactory<T extends Mechanic> {
      *             mechanism, but the mechanism is misconfigured and inoperable.
      */
     public T detect(BlockWorldVector pos) throws InvalidMechanismException;
+    
+    /**
+     * Detect the mechanic at a placed sign.
+     * 
+     * @param pos
+     * @param player 
+     * @param sign 
+     * @return 
+     * @throws InvalidMechanismException
+     */
+    public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
+            throws InvalidMechanismException;
+    
 }

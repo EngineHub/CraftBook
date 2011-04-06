@@ -34,7 +34,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class Netherrack extends Mechanic {
     
-	public static class Factory implements MechanicFactory<Netherrack> {
+	public static class Factory extends AbstractMechanicFactory<Netherrack> {
         public Factory() {
         }
         

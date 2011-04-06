@@ -24,9 +24,11 @@ import com.sk89q.craftbook.LocalPlayer;
 
 public class BukkitPlayer implements LocalPlayer {
     
+    protected BaseBukkitPlugin plugin;
     protected Player player;
     
-    public BukkitPlayer(Player player) {
+    public BukkitPlayer(BaseBukkitPlugin plugin, Player player) {
+        this.plugin = plugin;
         this.player = player;
     }
 
@@ -43,6 +45,11 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public void printRaw(String message) {
         player.sendMessage(message);
+    }
+
+    @Override
+    public boolean hasPermission(String perm) {
+        return plugin.hasPermission(player, perm);
     }
 
 }

@@ -27,6 +27,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class MessageSender extends AbstractIC {
 
@@ -75,7 +76,7 @@ public class MessageSender extends AbstractIC {
         return sent;
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         protected boolean risingEdge;
 

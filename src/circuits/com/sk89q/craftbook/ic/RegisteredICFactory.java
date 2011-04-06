@@ -26,18 +26,25 @@ package com.sk89q.craftbook.ic;
  */
 public class RegisteredICFactory {
     
+    protected String id;
     protected ICFactory factory;
     protected ICFamily family;
     
     /**
      * Construct the object.
      * 
+     * @param id 
      * @param factory
      * @param family
      */
-    public RegisteredICFactory(ICFactory factory, ICFamily family) {
+    public RegisteredICFactory(String id, ICFactory factory, ICFamily family) {
+        this.id = id;
         this.factory = factory;
         this.family = family;
+    }
+    
+    public String getId() {
+        return id;
     }
     
     public ICFactory getFactory() {

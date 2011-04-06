@@ -73,6 +73,8 @@ public class MechanicListenerAdapter {
                 Priority.Normal, plugin);
         pluginManager.registerEvent(Type.REDSTONE_CHANGE, blockListener,
                 Priority.Normal, plugin);
+        pluginManager.registerEvent(Type.SIGN_CHANGE, blockListener,
+                Priority.Normal, plugin);
         pluginManager.registerEvent(Type.CHUNK_UNLOAD, worldListener,
                 Priority.Normal, plugin);
     }
@@ -119,6 +121,11 @@ public class MechanicListenerAdapter {
          */
         public MechanicBlockListener(MechanicManager manager) {
             this.manager = manager;
+        }
+
+        @Override
+        public void onSignChange(SignChangeEvent event) {
+            manager.dispatchSignChange(event);
         }
         
         @Override

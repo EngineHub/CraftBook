@@ -20,14 +20,15 @@
 package com.sk89q.craftbook.mech;
 
 import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Random;
-import java.io.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.*;
-
+import org.bukkit.event.player.PlayerInteractEvent;
+import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -155,7 +156,7 @@ public class Bookcase extends Mechanic {
         return false;   // this isn't a persistent mechanic, so the manager will never keep it around long enough to even check this.
     }
 
-    public static class Factory implements MechanicFactory<Bookcase> {
+    public static class Factory extends AbstractMechanicFactory<Bookcase> {
         
         protected MechanismsPlugin plugin;
         

@@ -12,6 +12,7 @@ import org.bukkit.block.*;
  */
 public abstract class RedstoneUtil {
     /**
+     * @param block 
      * @param face
      * @return Boolean.TRUE if power is supplied by the given face;
      *         Boolean.FALSE if there is a potential power source at the given

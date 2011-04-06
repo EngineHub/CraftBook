@@ -19,17 +19,16 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.player.*;
-
+import org.bukkit.event.player.PlayerInteractEvent;
+import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -327,7 +326,7 @@ public class Gate extends Mechanic {
         return false; // This keeps no state
     }
 
-    public static class Factory implements MechanicFactory<Gate> {
+    public static class Factory extends AbstractMechanicFactory<Gate> {
         
         protected MechanismsPlugin plugin;
         
