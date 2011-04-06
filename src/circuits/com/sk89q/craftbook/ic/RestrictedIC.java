@@ -18,28 +18,10 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-/**
- * Abstract IC factory.
- * 
- * @author sk89q
- */
-public abstract class AbstractICFactory implements ICFactory {
-    
-    private Server server;
-    
-    public AbstractICFactory(Server server) {
-        this.server = server;
-    }
-    
-    protected Server getServer() {
-        return server;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RestrictedIC {
 
-    public void verify(Sign sign) throws ICVerificationException {
-        // No default check needed; if the sign just has the right ID string,
-        // that's good enough in most cases.
-    }
 }

@@ -19,7 +19,6 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.block.Sign;
-import org.bukkit.command.CommandSender;
 
 /**
  * Factories are used to generate instances of ICs.
@@ -51,11 +50,4 @@ public interface ICFactory {
      *             represent a valid setup for this type of IC.
      */
     public void verify(Sign sign) throws ICVerificationException;
-    
-    /**
-     * @return the final segment of a permission string (i.e. "mc1200" for
-     *         "craftbook.ic.restricted.mc1200"), or null if no permissions are
-     *         required for creating this type of IC.
-     */
-    public String getPermissionName();
 }

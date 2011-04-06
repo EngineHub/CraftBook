@@ -20,9 +20,6 @@ package com.sk89q.craftbook.ic;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import com.sk89q.bukkit.migration.PermissionsResolverManager;
-import com.sk89q.bukkit.migration.PermissionsResolverServerListener;
 
 /**
  * IC utility functions.

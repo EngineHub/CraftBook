@@ -18,20 +18,10 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.net.*;
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.bukkit.util.Vector;
-
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -100,13 +90,5 @@ public class ICMechanicFactory implements MechanicFactory<ICMechanic> {
                 registration.getFamily(),
                 pt
        );
-    }
-    
-    //TODO: check this sometime during sign place events.
-    private boolean canBuild(Player player, ICFactory pattern) {
-        if (pattern.getPermissionName() == null) return true;
-        String perm = "craftbook.ic.restricted." + pattern.getPermissionName();
-        
-        return plugin.getPermissionsResolver().hasPermission(player.getName(), perm);
     }
 }

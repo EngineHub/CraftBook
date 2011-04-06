@@ -19,16 +19,9 @@
 package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.Server;
-import org.bukkit.event.Event.*;
-import org.bukkit.event.block.*;
-import org.bukkit.event.player.*;
-import org.bukkit.event.world.*;
-import org.bukkit.plugin.*;
-
 import com.sk89q.bukkit.migration.*;
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.bukkit.MechanicListenerAdapter.*;
 import com.sk89q.craftbook.circuits.*;
 import com.sk89q.craftbook.gates.logic.*;
 import com.sk89q.craftbook.gates.world.*;

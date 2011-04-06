@@ -29,8 +29,10 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockType;
 
+@RestrictedIC
 public class ItemDispenser extends AbstractIC {
 
     protected boolean risingEdge;
@@ -104,10 +106,6 @@ public class ItemDispenser extends AbstractIC {
         @Override
         public IC create(Sign sign) {
             return new ItemDispenser(getServer(), sign, risingEdge);
-        }
-        
-        public String getPermissionName() {
-            return "mc1201";
         }
     }
 }

@@ -25,9 +25,6 @@ import com.sk89q.craftbook.ic.IC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
-
 public class RsNorFlipFlop extends AbstractIC {
 
     public RsNorFlipFlop(Server server, Sign sign) {

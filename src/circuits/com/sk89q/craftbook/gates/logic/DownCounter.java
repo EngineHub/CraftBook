@@ -3,7 +3,6 @@ package com.sk89q.craftbook.gates.logic;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.*;
 
 /**
  * Counter counts down each time clock input toggles from low to high, it starts 
