@@ -64,6 +64,35 @@ public class Bridge extends Mechanic {
             // and if something goes wrong in here then we throw fits.
             return new Bridge(block, plugin);
         }
+        
+        /**
+         * Detect the mechanic at a placed sign.
+         * 
+         * @throws ProcessedMechanismException 
+         */
+        @Override
+        public Bridge detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+                throws InvalidMechanismException, ProcessedMechanismException {
+            if (sign.getLine(1).equalsIgnoreCase("[Bridge]")) {
+                if (!player.hasPermission("craftbook.mech.bridge")) {
+                    throw new InsufficientPermissionsException();
+                }
+                
+                sign.setLine(1, "[Bridge]");
+                player.print("Bridge created.");
+            } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
+                if (!player.hasPermission("craftbook.mech.bridge")) {
+                    throw new InsufficientPermissionsException();
+                }
+                
+                sign.setLine(1, "[Bridge End]");
+                player.print("Bridge endpoint created.");
+            } else {
+                return null;
+            }
+            
+            throw new ProcessedMechanismException();
+        }
     }
     
     /**

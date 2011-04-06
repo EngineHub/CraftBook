@@ -317,9 +317,14 @@ public class MechanicManager {
     protected Mechanic detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
         Mechanic mechanic = null;
-        for (MechanicFactory<? extends Mechanic> factory : factories)
-            if ((mechanic = factory.detect(pos, player, sign)) != null)
+        for (MechanicFactory<? extends Mechanic> factory : factories) {
+            try {
+                if ((mechanic = factory.detect(pos, player, sign)) != null)
+                    break;
+            } catch (ProcessedMechanismException e) {
                 break;
+            }
+        }
         return mechanic;
     }
 

@@ -38,6 +38,10 @@ public class Ammeter extends Mechanic {
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+        if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.ammeter.use")) {
+            return;
+        }
+        
         if (event.getPlayer().getItemInHand().getType() == Material.COAL
                 && event.getClickedBlock().getType() == Material.REDSTONE_WIRE) {
             String line = getCurrentLine(event.getClickedBlock().getData());

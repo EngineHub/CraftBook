@@ -71,6 +71,47 @@ public class Elevator extends Mechanic {
                 return null;
             }
         }
+        
+        /**
+         * Detect the mechanic at a placed sign.
+         * 
+         * @throws ProcessedMechanismException 
+         */
+        @Override
+        public Elevator detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+                throws InvalidMechanismException, ProcessedMechanismException {   
+            Direction dir = isLift(sign.getBlock());
+            switch (dir) {
+                case UP:
+                    if (!player.hasPermission("craftbook.mech.elevator")) {
+                        throw new InsufficientPermissionsException();
+                    }
+                    
+                    player.print("Elevator up sign created.");
+                    sign.setLine(1, "[Lift Up]");
+                    break;
+                case DOWN:
+                    if (!player.hasPermission("craftbook.mech.elevator")) {
+                        throw new InsufficientPermissionsException();
+                    }
+                    
+                    player.print("Elevator down sign created.");
+                    sign.setLine(1, "[Lift Down]");
+                    break;
+                case RECV:
+                    if (!player.hasPermission("craftbook.mech.elevator")) {
+                        throw new InsufficientPermissionsException();
+                    }
+                    
+                    player.print("Elevator target sign created.");
+                    sign.setLine(1, "[Lift]");
+                    break;
+                default:    // there are no uncovered cases, i don't know why eclipse insists this be here
+                    return null;
+            }
+            
+            throw new ProcessedMechanismException();
+        }
     }
 
     /**
@@ -125,6 +166,14 @@ public class Elevator extends Mechanic {
         if (!plugin.getLocalConfiguration().elevatorSettings.enable) return;
         
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
+        
+        LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
+        
+        if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
+            localPlayer.printError("You don't have permission to use elevators.");
+            return;
+        }
+        
         makeItSo(event.getPlayer());
     }
     

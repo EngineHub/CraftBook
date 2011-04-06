@@ -51,8 +51,9 @@ public interface MechanicFactory<T extends Mechanic> {
      * @param sign 
      * @return 
      * @throws InvalidMechanismException
+     * @throws ProcessedMechanismException 
      */
     public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
-            throws InvalidMechanismException;
+            throws InvalidMechanismException, ProcessedMechanismException;
     
 }

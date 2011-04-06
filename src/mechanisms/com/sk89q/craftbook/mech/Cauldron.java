@@ -32,6 +32,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -89,8 +91,16 @@ public class Cauldron extends Mechanic {
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+        LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
+        
         if (!plugin.getLocalConfiguration().cauldronSettings.enable)
             return;
+        
+        if (!localPlayer.hasPermission("craftbook.mech.cauldron")) {
+            localPlayer.printError("You don't have permission to use this.");
+            return;
+        }
+        
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt))
             return; // wth? our manager is insane
         if (event.getPlayer().getItemInHand().getTypeId() >= 255

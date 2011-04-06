@@ -27,8 +27,11 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -354,6 +357,35 @@ public class Gate extends Mechanic {
             }
             
             return null;
+        }
+        
+        /**
+         * Detect the mechanic at a placed sign.
+         * 
+         * @throws ProcessedMechanismException 
+         */
+        @Override
+        public Gate detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+                throws InvalidMechanismException, ProcessedMechanismException {
+            if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
+                if (!player.hasPermission("craftbook.mech.gate")) {
+                    throw new InsufficientPermissionsException();
+                }
+                
+                sign.setLine(1, "[Gate]");
+                player.print("Gate created.");
+            } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
+                if (!player.hasPermission("craftbook.mech.gate")) {
+                    throw new InsufficientPermissionsException();
+                }
+                
+                sign.setLine(1, "[DGate]");
+                player.print("Small gate created.");
+            } else {
+                return null;
+            }
+            
+            throw new ProcessedMechanismException();
         }
 
     }

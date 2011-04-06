@@ -58,6 +58,30 @@ public class LightSwitch extends Mechanic {
             // and if something goes wrong in here then we throw fits.
             return new LightSwitch(pt, plugin);
         }
+        
+        /**
+         * Detect the mechanic at a placed sign.
+         * 
+         * @throws ProcessedMechanismException 
+         */
+        @Override
+        public LightSwitch detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+                throws InvalidMechanismException, ProcessedMechanismException {
+            String line = sign.getLine(1);
+            
+            if (line.equalsIgnoreCase("[|]") || line.equalsIgnoreCase("[I]")) {
+                if (!player.hasPermission("craftbook.mech.light-switch")) {
+                    throw new InsufficientPermissionsException();
+                }
+                
+                sign.setLine(1, "[I]");
+                player.print("Light switch created.");
+            } else {
+                return null;
+            }
+            
+            throw new ProcessedMechanismException();
+        }
     }
     
     /**

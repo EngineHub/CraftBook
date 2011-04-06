@@ -1,6 +1,7 @@
 // $Id$
 /*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ * CraftBook
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +19,16 @@
 
 package com.sk89q.craftbook;
 
-import org.bukkit.block.Sign;
-import com.sk89q.craftbook.util.BlockWorldVector;
+/**
+ * Thrown when a mechanism has been processed but no mechanism needed to
+ * be instantiated.
+ * 
+ * @author sk89q
+ */
+public class ProcessedMechanismException extends CraftbookException {
+    private static final long serialVersionUID = -6917162805444409894L;
 
-public abstract class AbstractMechanicFactory<T extends Mechanic>
-        implements MechanicFactory<T> {
-    public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
-            throws InvalidMechanismException, ProcessedMechanismException {
-        return null;
+    public ProcessedMechanismException() {
+        super();
     }
-
 }
