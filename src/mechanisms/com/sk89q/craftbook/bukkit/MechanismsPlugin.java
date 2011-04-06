@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.util.config.Configuration;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
@@ -47,8 +46,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         adapter.register(manager);
         
         // Let's register mechanics!
-        manager.register(new BookcaseFactory(this));
-        manager.register(new GateFactory(this));
+        manager.register(new Bookcase.Factory(this));
+        manager.register(new Gate.Factory(this));
         manager.register(new Bridge.Factory(this));
         manager.register(new Elevator.Factory(this));
         manager.register(new LightSwitch.Factory(this));

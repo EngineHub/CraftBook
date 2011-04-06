@@ -22,10 +22,14 @@ package com.sk89q.craftbook.mech;
 import java.util.Set;
 import java.util.HashSet;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.event.player.*;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -321,5 +325,37 @@ public class Gate extends Mechanic {
     @Override
     public boolean isActive() {
         return false; // This keeps no state
+    }
+
+    public static class Factory implements MechanicFactory<Gate> {
+        
+        protected MechanismsPlugin plugin;
+        
+        public Factory(MechanismsPlugin plugin) {
+            this.plugin = plugin;
+        }
+
+        @Override
+        public Gate detect(BlockWorldVector pt) {
+            Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+            if (block.getTypeId() == BlockID.WALL_SIGN) {
+                BlockState state = block.getState();
+                if (state instanceof Sign) {
+                    Sign sign = (Sign) state;
+                    if (sign.getLine(1).equalsIgnoreCase("[Gate]")
+                            || sign.getLine(1).equalsIgnoreCase("[DGate]")) {
+                        // this is a little funky because we don't actually look for the blocks
+                        // that make up the movable parts of the gate until we're running the 
+                        // event later... so the factory can succeed even if the signpost doesn't
+                        // actually operate any gates correctly.  but it works!
+                        return new Gate(pt, plugin,
+                                sign.getLine(1).equalsIgnoreCase("[DGate]"));
+                    }
+                }
+            }
+            
+            return null;
+        }
+
     }
 }

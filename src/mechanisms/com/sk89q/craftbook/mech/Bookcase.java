@@ -19,6 +19,7 @@
 
 package com.sk89q.craftbook.mech;
 
+import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
 import java.util.Random;
 import java.io.*;
 import org.bukkit.entity.Player;
@@ -26,8 +27,10 @@ import org.bukkit.event.player.*;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line
@@ -152,4 +155,22 @@ public class Bookcase extends Mechanic {
         return false;   // this isn't a persistent mechanic, so the manager will never keep it around long enough to even check this.
     }
 
+    public static class Factory implements MechanicFactory<Bookcase> {
+        
+        protected MechanismsPlugin plugin;
+        
+        public Factory(MechanismsPlugin plugin) {
+            this.plugin = plugin;
+        }
+
+        @Override
+        public Bookcase detect(BlockWorldVector pt) {
+            if (pt.getWorld().getBlockTypeIdAt(toLocation(pt)) == BlockID.BOOKCASE) {
+                return new Bookcase(pt, plugin);
+            }
+            
+            return null;
+        }
+
+    }
 }
