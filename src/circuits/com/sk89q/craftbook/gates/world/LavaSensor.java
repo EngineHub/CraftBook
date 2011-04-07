@@ -21,11 +21,13 @@ package com.sk89q.craftbook.gates.world;
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class LavaSensor extends AbstractIC {
 
@@ -59,9 +61,11 @@ public class LavaSensor extends AbstractIC {
 	 * @return
 	 */
 	private boolean hasWater() {
-		int x = getSign().getBlock().getLocation().getBlockX();
-		int yOffset = getSign().getBlock().getLocation().getBlockY();
-		int z = getSign().getBlock().getLocation().getBlockZ();
+		Block b = SignUtil.getBackBlock(getSign().getBlock());
+		
+		int x = b.getX();
+		int yOffset = b.getY();
+		int z = b.getZ();
 		try{
             String yOffsetLine = getSign().getLine(2);
             if (yOffsetLine.length() > 0) {
