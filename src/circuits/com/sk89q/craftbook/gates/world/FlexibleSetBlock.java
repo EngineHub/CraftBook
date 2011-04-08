@@ -30,9 +30,13 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.sk89q.craftbook.ic.RestrictedIC;
 =======
 >>>>>>> febd56c... Fixed Water/Lava sensor locations. Added Flexible Set IC (MC1207)
+=======
+import com.sk89q.craftbook.ic.RestrictedIC;
+>>>>>>> 5c13ee3... Flex Set is now appropriately restricted.
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sun.org.apache.xpath.internal.axes.AxesWalker;
@@ -127,10 +131,14 @@ public class FlexibleSetBlock extends AbstractIC {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public static class Factory extends AbstractICFactory implements RestrictedIC {
 =======
 	public static class Factory extends AbstractICFactory {
 >>>>>>> febd56c... Fixed Water/Lava sensor locations. Added Flexible Set IC (MC1207)
+=======
+	public static class Factory extends AbstractICFactory implements RestrictedIC {
+>>>>>>> 5c13ee3... Flex Set is now appropriately restricted.
 
 		public Factory(Server server) {
 			super(server);
