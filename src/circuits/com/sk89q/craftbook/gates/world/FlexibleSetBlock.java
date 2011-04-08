@@ -29,6 +29,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sun.org.apache.xpath.internal.axes.AxesWalker;
@@ -122,7 +123,7 @@ public class FlexibleSetBlock extends AbstractIC {
 		
 	}
 	
-	public static class Factory extends AbstractICFactory {
+	public static class Factory extends AbstractICFactory implements RestrictedIC {
 
 		public Factory(Server server) {
 			super(server);
