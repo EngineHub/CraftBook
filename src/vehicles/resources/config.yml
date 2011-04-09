@@ -7,6 +7,7 @@ reverse-block: 35
 deposit-block: 15
 eject-block: 42
 sort-block: 87
+teleport-block: 89
 minecart-dispensers: true
 minecart-decay-time: 0
 minecart-slow-when-empty: false

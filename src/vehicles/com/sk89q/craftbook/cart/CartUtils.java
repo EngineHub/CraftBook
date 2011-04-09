@@ -3,6 +3,7 @@ package com.sk89q.craftbook.cart;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.*;
+import org.bukkit.Location;
 
 import com.sk89q.craftbook.util.*;
 
@@ -28,6 +29,12 @@ public abstract class CartUtils {
         return null;
     }
     
+    public static Location centerBlock(Location loc) {
+        Location toLoc = loc;
+        toLoc.setX(loc.getX() + 0.5D);
+        toLoc.setZ(loc.getZ() + 0.5D);
+        return toLoc;
+    }
     
     public static void reverse(Minecart cart) {
         cart.setVelocity(cart.getVelocity().normalize().multiply(-1));

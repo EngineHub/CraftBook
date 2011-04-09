@@ -31,6 +31,8 @@ public class MinecartManager {
         mechanisms.put(cfg.matReverse,  new CartReverser());
         mechanisms.put(cfg.matSorter,   new CartSorter());
         mechanisms.put(cfg.matStation,  new CartStation());
+        mechanisms.put(cfg.matEject,    new CartEjector());
+        mechanisms.put(cfg.matTeleport, new CartTeleporter());
     }
     
     public void handleMinecartBlockChange(VehicleMoveEvent event) {
