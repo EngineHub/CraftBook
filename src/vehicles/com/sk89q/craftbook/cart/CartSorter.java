@@ -5,6 +5,8 @@ import static com.sk89q.craftbook.cart.CartUtils.pickDirector;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.blocks.*;
@@ -135,7 +137,6 @@ public class CartSorter extends CartMechanism {
         }
 
         String[] parts = line.split(":");
-
         if (parts.length >= 2) {
             if (player != null && parts[0].equalsIgnoreCase("Held")) {
                 try {
@@ -151,10 +152,75 @@ public class CartSorter extends CartMechanism {
                 }
             } else if (parts[0].equalsIgnoreCase("Mob")) {
                 String testMob = parts[1];
-                test.toString().toLowerCase().equalsIgnoreCase(testMob);
+                if (test.toString().toLowerCase().replace("craft", "").equalsIgnoreCase(testMob)) {
+                    return true;
+                }
+            } else if (parts[0].equalsIgnoreCase("Chest") &&
+                    minecart instanceof StorageMinecart) {
+                ItemStack itemstack = stringToItemStack(line.split(":", 2)[1]);
+                Inventory inv = (((StorageMinecart) minecart).getInventory());
+                //due to the documentation of the contains() methods being way off, these only
+                //match EXACT itemstacks. Still waiting for a "containsAtLeast()"; fun, contains()
+                //also doesn't check for data, herp derp
+                if (itemstack.getAmount() != 0) {
+                    if (inv.contains(itemstack, itemstack.getAmount())) return true;
+                } else if (itemstack.getAmount() == 0) {
+                    if (inv.contains(itemstack, 1)) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+   /**
+    * Parse a string in the form "id:data*amount". It also accepts formats
+    * without the data or amount, ie "id:data", "id:amount", or "id".
+    *
+    * @return ItemStack
+   */
+    public static ItemStack stringToItemStack(String pattern) {
+        int id = 0;
+        int amt = 0;
+        byte data = 0;
+        ItemStack itemschtackky = new ItemStack(0);
+
+        String[] amountPattern = pattern.split("\\*", 2);
+        String[] dataPattern = amountPattern[0].split(":", 2);
+
+        //check for amt and data
+        try {
+            if (amountPattern.length == 2) {
+                amt = Integer.parseInt(amountPattern[1]);
+            }
+            if (dataPattern.length == 2) {
+                data = Byte.parseByte(dataPattern[1]);
+                id = Integer.parseInt(dataPattern[0]);
+            } else if (dataPattern.length == 1) {
+                id = Integer.parseInt(dataPattern[0]);
+            }
+        } catch (NumberFormatException e) { //wai u do dis to me?
+        }
+        //set stuff to results
+        if (data != 0) {
+            if (amt != 0) {
+                MaterialData material = new MaterialData(id, data);
+                itemschtackky.setAmount(amt);
+                itemschtackky.setTypeId(id);
+                itemschtackky.setData(material);
+            } else if (amt == 0) {
+                MaterialData material = new MaterialData(id, data);
+                itemschtackky.setTypeId(id);
+                itemschtackky.setData(material);
+            }
+        } else if (data == 0) {
+            if (amt !=0) {
+                itemschtackky.setAmount(amt);
+                itemschtackky.setTypeId(id);
+            } else if (amt == 0) {
+                itemschtackky.setTypeId(id);
             }
         }
 
-        return false;
+        return itemschtackky;
     }
 }
