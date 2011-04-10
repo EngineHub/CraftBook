@@ -1,0 +1,11 @@
+bookshelf-enable: true
+bookshelf-read-text: You pick up a book...
+bridge-enable: true
+bridge-redstone: true
+bridge-max-length: 30
+bridge-blocks: 4,5,20,43
+gate-enable: true
+gate-redstone: true
+elevators-enable: true
+cauldron-enable: true
+light-switch-enable: true
