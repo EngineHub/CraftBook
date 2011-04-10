@@ -55,6 +55,8 @@ public class Family3I3O extends AbstractICFamily {
         protected Block getBlock(int pin) 
         {
         	
+        	//TODO: messes up based on direction.
+        	
         	Block bsign = sign.getBlock();
         	BlockFace fback = SignUtil.getBack(bsign);
         	
