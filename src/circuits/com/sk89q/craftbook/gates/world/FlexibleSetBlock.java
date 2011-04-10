@@ -21,7 +21,6 @@ package com.sk89q.craftbook.gates.world;
 import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -31,8 +30,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sun.org.apache.xpath.internal.axes.AxesWalker;
 
 public class FlexibleSetBlock extends AbstractIC {
 
