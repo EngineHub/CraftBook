@@ -28,7 +28,6 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
 
 public class WaterSensor extends AbstractIC {
 
