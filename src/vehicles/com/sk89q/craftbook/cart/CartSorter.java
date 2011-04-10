@@ -9,7 +9,6 @@ import org.bukkit.inventory.*;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.blocks.*;
 
 public class CartSorter extends CartMechanism {
     public void impact(Minecart cart, Block entered, Block from) {

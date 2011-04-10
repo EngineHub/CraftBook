@@ -6,14 +6,11 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.vehicle.*;
-import org.bukkit.util.*;
 
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
-import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.blocks.*;
 
 public class MinecartManager {
     public MinecartManager(VehiclesPlugin plugin) {
@@ -59,4 +56,3 @@ public class MinecartManager {
         }
     }
 }
-
