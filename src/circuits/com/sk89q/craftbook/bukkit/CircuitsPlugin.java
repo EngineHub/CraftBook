@@ -76,6 +76,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familySISO = new FamilySISO();
         ICFamily family3ISO = new Family3ISO();
         ICFamily familySI3O = new FamilySI3O();
+        ICFamily family3I3O = new Family3I3O();
         
         //SISOs
         icManager.register("MC9999", new ResurrectDumbledore.Factory(server, true), familySISO);
@@ -128,6 +129,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 4100
         //Missing: 4110
         //Missing: 4200
+        icManager.register("MC4999", new TripleRepeater.Factory(server), family3I3O);
         
         // Let's register mechanics!
         manager.register(new Netherrack.Factory());
