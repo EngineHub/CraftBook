@@ -32,7 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.bukkit.BukkitUtil;

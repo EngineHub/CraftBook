@@ -18,30 +18,14 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.util.Vector;
-
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Preprocesses event data coming directly from bukkit and passes it off to

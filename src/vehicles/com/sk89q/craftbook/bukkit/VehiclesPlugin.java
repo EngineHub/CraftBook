@@ -19,8 +19,6 @@
 package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.event.Event;
-import org.bukkit.util.config.Configuration;
-
 import com.sk89q.craftbook.*;
 
 /**
