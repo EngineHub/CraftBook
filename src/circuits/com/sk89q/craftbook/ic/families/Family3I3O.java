@@ -24,47 +24,61 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.SignUtil;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
 /**
- * Handles detection for the triple-input single-output family.
+ * Handles detection for the triple-input triple-output family.
  *  
  * @author robhol
  */
-public class Family3ISO extends AbstractICFamily {
+public class Family3I3O extends AbstractICFamily {
 
     @Override
     public ChipState detect(BlockWorldVector source, Sign sign) {
-        return new ChipState3ISO(source, sign);
+        return new ChipState3I3O(source, sign);
     }
     
-    public static class ChipState3ISO implements ChipState {
+    public static class ChipState3I3O implements ChipState {
         
         protected Sign sign;
         protected BlockWorldVector source;
         
-        public ChipState3ISO(BlockWorldVector source, Sign sign) {
+        public ChipState3I3O(BlockWorldVector source, Sign sign) {
             this.sign = sign;
             this.source = source;
         }
         
-        protected Block getBlock(int pin) {
-
+        protected Block getBlock(int pin) 
+        {
+        	
+        	Block bsign = sign.getBlock();
+        	BlockFace fback = SignUtil.getBack(bsign);
+        	
             switch (pin)
             {
                 case 0:
-                    return SignUtil.getFrontBlock(sign.getBlock());
+                    return SignUtil.getFrontBlock(bsign);
+                    
                 case 1:
                     return SignUtil.getLeftBlock(sign.getBlock());
+                    
                 case 2:
                     return SignUtil.getRightBlock(sign.getBlock());
 
                 case 3:
-                    BlockFace face = SignUtil.getBack(sign.getBlock());
-                    return sign.getBlock().getRelative(face).getRelative(face);
+                    return bsign.getRelative(fback).getRelative(fback).getRelative(fback);
+                    
+                case 4:
+                	return bsign.getRelative(fback).getRelative(fback)
+                		.getRelative( SignUtil.getCounterClockWise(fback) );
+                
+                case 5:
+                	return bsign.getRelative(fback).getRelative(fback)
+                		.getRelative( SignUtil.getClockWise(fback) );
 
                 default:
                     return null;
