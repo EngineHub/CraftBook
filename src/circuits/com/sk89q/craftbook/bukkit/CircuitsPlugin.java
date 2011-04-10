@@ -28,8 +28,7 @@ import com.sk89q.craftbook.gates.world.*;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
-import com.sk89q.craftbook.ic.families.Family3ISO;
-import com.sk89q.craftbook.ic.families.FamilySISO;
+import com.sk89q.craftbook.ic.families.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -76,6 +75,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager = new ICManager();
         ICFamily familySISO = new FamilySISO();
         ICFamily family3ISO = new Family3ISO();
+        ICFamily familySI3O = new FamilySI3O();
         
         //SISOs
         icManager.register("MC9999", new ResurrectDumbledore.Factory(server, true), familySISO);
@@ -105,6 +105,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         
         //SI3Os
         //Missing: 2020 (?)
+        icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs
         icManager.register("MC3002", new AndGate.Factory(server), family3ISO);

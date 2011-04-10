@@ -278,4 +278,43 @@ public class SignUtil {
         else
             return true;
     }
+    
+    /**
+     * @param BlockFace
+     *            Start from direction
+     * @return clockwise direction
+     */
+    public static BlockFace getClockWise(BlockFace yourFace) 
+    {
+        switch (yourFace) 
+        {
+	        case NORTH: return BlockFace.EAST;
+	        case EAST: return BlockFace.SOUTH;
+	        case SOUTH: return BlockFace.WEST;
+	        case WEST: return BlockFace.NORTH;
+	
+			default: return BlockFace.SELF;
+		}
+    }
+    
+    /**
+     * @param BlockFace
+     *            Start from direction
+     * @return clockwise direction
+     */
+    public static BlockFace getCounterClockWise(BlockFace yourFace) 
+    {
+        switch (yourFace) 
+        {
+	        case NORTH: return BlockFace.WEST;
+	        case EAST: return BlockFace.NORTH;
+	        case SOUTH: return BlockFace.EAST;
+	        case WEST: return BlockFace.SOUTH;
+	
+			default: return BlockFace.SELF;
+		}
+    }
+    
+    
+    
 }
