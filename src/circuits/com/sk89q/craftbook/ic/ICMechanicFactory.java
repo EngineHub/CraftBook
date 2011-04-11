@@ -79,14 +79,26 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         if (registration == null) throw new InvalidMechanismException(
                 "\""+sign.getLine(1)+"\" should be an IC ID, but no IC registered under that ID could be found.");
         
+        IC ic = registration.getFactory().create(sign);
+        
         // okay, everything checked out.  we can finally make it.
-        return new ICMechanic(
-                plugin,
-                id,
-                registration.getFactory().create(sign),
-                registration.getFamily(),
-                pt
-        );
+        if (ic instanceof SelfTriggeredIC) {
+            return new SelfTriggeredICMechanic(
+                    plugin,
+                    id,
+                    ic,
+                    registration.getFamily(),
+                    pt
+            );
+        } else {
+            return new SelfTriggeredICMechanic(
+                    plugin,
+                    id,
+                    ic,
+                    registration.getFamily(),
+                    pt
+            );
+        }
     }
     
     /**
@@ -129,13 +141,25 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         
         sign.setLine(1, "[" + registration.getId() + "]");
         
-        ICMechanic mechanic = new ICMechanic(
-                plugin,
-                id,
-                ic,
-                registration.getFamily(),
-                pt
-        );
+        ICMechanic mechanic;
+        
+        if (ic instanceof SelfTriggeredIC) {
+            mechanic = new SelfTriggeredICMechanic(
+                    plugin,
+                    id,
+                    ic,
+                    registration.getFamily(),
+                    pt
+            );
+        } else {
+            mechanic = new SelfTriggeredICMechanic(
+                    plugin,
+                    id,
+                    ic,
+                    registration.getFamily(),
+                    pt
+            );
+        }
 
         sign.setLine(0, ic.getSignTitle());
         

@@ -55,14 +55,6 @@ public abstract class Mechanic {
     public abstract boolean isActive();
     
     /**
-     * Think. This is called every 2 ticks if this mechanic is self-triggering.
-     * Implementation should be aware that the mechanic may no longer exist
-     * in the world.
-     */
-    public void think() {
-    }
-    
-    /**
      * Raised when a block is right clicked.
      * 
      * @param event

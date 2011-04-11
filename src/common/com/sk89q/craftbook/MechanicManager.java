@@ -22,6 +22,7 @@ package com.sk89q.craftbook;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -31,6 +32,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.ChangedSign;
 import com.sk89q.craftbook.util.*;
 import static com.sk89q.craftbook.bukkit.BukkitUtil.*;
@@ -78,6 +80,11 @@ public class MechanicManager {
      * utilized yet.
      */
     private final WatchBlockManager watchBlockManager;
+    
+    /**
+     * List of mechanics that think on a routine basis.
+     */
+    private Set<Mechanic> thinkingMechanics = new LinkedHashSet<Mechanic>();
 
     /**
      * Construct the manager.
@@ -277,6 +284,10 @@ public class MechanicManager {
             PersistentMechanic pm = (PersistentMechanic) mechanic;
             triggersManager.register(pm);
             watchBlockManager.register(pm);
+            
+            if (mechanic instanceof SelfTriggeringMechanic) {
+                thinkingMechanics.add(mechanic);
+            }
         }
 
         return mechanic;
@@ -341,6 +352,22 @@ public class MechanicManager {
     }
 
     /**
+     * Handles chunk load.
+     * 
+     * @param chunk
+     */
+    public void enumerate(Chunk chunk) {
+        for (BlockState state : chunk.getTileEntities()) {
+            if (state instanceof Sign) {
+                try {
+                    load(BukkitUtil.toWorldVector(state.getBlock()));
+                } catch (InvalidMechanismException e) {
+                }
+            }
+        }
+    }
+
+    /**
      * Unload all mechanics inside the given chunk.
      * 
      * @param chunk
@@ -368,11 +395,31 @@ public class MechanicManager {
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
                     + mechanic.getClass().getCanonicalName(), t);
         }
+        
+        thinkingMechanics.remove(mechanic);
 
         if (mechanic instanceof PersistentMechanic) {
             PersistentMechanic pm = (PersistentMechanic) mechanic;
             triggersManager.deregister(pm);
             watchBlockManager.deregister(pm);
+        }
+    }
+    
+    /**
+     * Causes all thinking mechanics to think.
+     */
+    public void think() {
+        for (Mechanic mechanic : thinkingMechanics) {
+            if (mechanic.isActive()) {
+                try {
+                    ((SelfTriggeringMechanic) mechanic).think();
+                } catch (Throwable t) { // Mechanic failed to unload for some reason
+                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for "
+                            + mechanic.getClass().getCanonicalName(), t);
+                }
+            } else {
+                unload(mechanic);
+            }
         }
     }
 }

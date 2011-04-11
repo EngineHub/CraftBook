@@ -131,6 +131,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         manager.register(new Netherrack.Factory());
         manager.register(new JackOLantern.Factory());
         manager.register(new ICMechanicFactory(this, icManager));
+        
+        getServer().getScheduler().scheduleSyncRepeatingTask(this,
+                new MechanicClock(manager), 0, 2);
     }
     
     @Override
