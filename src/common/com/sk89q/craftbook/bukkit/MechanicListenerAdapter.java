@@ -25,6 +25,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldListener;
 import org.bukkit.plugin.PluginManager;
@@ -288,6 +289,14 @@ public class MechanicListenerAdapter {
          */
         public MechanicWorldListener(MechanicManager manager) {
             this.manager = manager;
+        }
+        
+        /**
+         * Called when a chunk is loaded.
+         */
+        @Override
+        public void onChunkLoad(ChunkLoadEvent event) {
+            manager.enumerate(event.getChunk());
         }
 
         /**

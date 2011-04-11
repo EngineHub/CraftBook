@@ -1,6 +1,5 @@
 // $Id$
 /*
- * CraftBook
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,21 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.ic;
 
-/**
- * Mechanics with this interface indicate that they think outside of
- * event handling. Self-triggered ICs used this, for example.
- * 
- * @author sk89q
- */
-public interface SelfTriggeringMechanic {
+import com.sk89q.craftbook.SelfTriggeringMechanic;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.util.BlockWorldVector;
 
-    /**
-     * Think. This is called every 2 ticks if this mechanic is self-triggering.
-     * Implementation should be aware that the mechanic may no longer exist
-     * in the world.
-     */
-    public void think();
-    
+public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
+
+    public SelfTriggeredICMechanic(CircuitsPlugin plugin, String id, IC ic,
+            ICFamily family, BlockWorldVector pos) {
+        super(plugin, id, ic, family, pos);
+    }
+
+    @Override
+    public void think() {
+        ((SelfTriggeringMechanic) ic).think();
+    }
+
 }
