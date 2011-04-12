@@ -37,11 +37,9 @@ public class MinecartManager {
     
     public void handleMinecartBlockChange(VehicleMoveEvent event) {
         Block to = event.getTo().getBlock();
-        
-        //System.err.println("to=  "+to+";");
-        //System.err.println("from="+event.getFrom()+";");
-        //System.err.println("cart="+event.getVehicle().getLocation());
-        
+
+        if (to.isBlockPowered()) return;
+
         CartMechanism thingy = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
         if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
     }

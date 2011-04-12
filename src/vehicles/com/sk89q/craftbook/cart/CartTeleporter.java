@@ -23,7 +23,8 @@ public class CartTeleporter extends CartMechanism {
         String[] pts = line.split(",");
         if (pts.length != 3) return;
         if (!sign.getLine(3).equals("")) {
-           world = cart.getServer().getWorld(sign.getLine(3));
+            world = cart.getServer().getWorld(sign.getLine(3));
+            if (world == null) world = cart.getWorld();
         }
 
         Double x = new Double(0D);

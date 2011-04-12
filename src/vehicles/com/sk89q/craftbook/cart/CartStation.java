@@ -3,6 +3,7 @@ package com.sk89q.craftbook.cart;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.*;
+import org.bukkit.Location;
 
 import com.sk89q.craftbook.util.*;
 import static com.sk89q.craftbook.cart.CartUtils.*;
@@ -12,14 +13,19 @@ public class CartStation extends CartMechanism {
         Block thingy = entered.getFace(BlockFace.DOWN, 1);
         Block director = pickDirector(thingy, "station");
         if (director == null) return;
-        
-        if (isActive(thingy)) {
-            // standardize its speed and direction.
-            launch(cart, director);
-        } else {
-            // park it.
-            stop(cart);
-            //cart.teleport(entered.getLocation());     // i'd really love to enforce centering on this, but in practice rounding errors and such seem to be rapeful.
+
+        Byte data = entered.getData();
+        Location loc = entered.getLocation();
+        Boolean adjustAxis = true;
+        if (data == 1 || data == 2 || data == 3) {
+           adjustAxis = false;
+        }
+        if (adjustAxis) {
+           loc.setX(loc.getX() + 0.5D);
+           loc.setZ(loc.getZ() + 0.5D);
+        }
+        cart.teleport(loc);
+        stop(cart);
         }
     }
     
