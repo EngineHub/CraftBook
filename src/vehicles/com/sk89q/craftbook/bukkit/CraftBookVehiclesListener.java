@@ -33,9 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.entity.Vehicle;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleListener;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.VehiclesConfiguration;
@@ -90,5 +88,15 @@ public class CraftBookVehiclesListener extends VehicleListener {
         
         // ...Okay, go ahead then.
         cartman.handleMinecartBlockChange(event);
+    }
+
+    /**
+     * Called when an entity enters a vehicle.
+     */
+    @Override
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        if (!(event.getVehicle() instanceof Minecart)) return;
+
+        cartman.handleMinecartEnter(event);
     }
 }

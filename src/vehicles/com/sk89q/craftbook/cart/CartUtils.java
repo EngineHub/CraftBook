@@ -1,9 +1,13 @@
 package com.sk89q.craftbook.cart;
 
+import java.util.ArrayList;
+
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.*;
 import org.bukkit.Location;
+import org.bukkit.event.block.*;
+import org.bukkit.Material;
 
 import com.sk89q.craftbook.util.*;
 
@@ -42,5 +46,58 @@ public abstract class CartUtils {
     
     public static void stop(Minecart cart) {
         cart.setVelocity(new Vector(0,0,0));
+    }
+
+    /**
+     * Ok this is super hacky, I need to get the SourcedBlockRedstoneEvent
+     * from the CraftBookCommon but it only sends it to mechanisms not vehicles.
+     *
+     * @param event
+     * @return an arraylist of blocks
+     */
+    public static ArrayList<Block> poweredByRSCEvent(BlockRedstoneEvent event) {
+        Block source = event.getBlock();
+        ArrayList<Block> affected = new ArrayList<Block>();
+        String affectedStuff = new String();
+        //if block is torch > check for orientation
+        if (source.getType() == Material.REDSTONE_TORCH_OFF) {
+            return affected;
+        } else if (source.getType() == Material.REDSTONE_TORCH_ON) {
+            byte data = source.getData();
+            switch (data) {
+                case 5:
+                    affectedStuff = "UNSWE";
+                    break;
+                case 1:
+                    affectedStuff = "UDSWE";
+                    break;
+                case 2:
+                    affectedStuff = "UDNWE";
+                    break;
+                case 3:
+                    affectedStuff = "UDNSW";
+                    break;
+                case 4:
+                    affectedStuff = "UDNSE";
+                    break;
+                default: //stop fucking with torches you prick
+                    break;
+            }
+            if (affectedStuff.contains("U")) affected.add(source.getFace(BlockFace.UP));
+            if (affectedStuff.contains("D")) affected.add(source.getFace(BlockFace.DOWN));
+            if (affectedStuff.contains("N")) affected.add(source.getFace(BlockFace.NORTH));
+            if (affectedStuff.contains("S")) affected.add(source.getFace(BlockFace.SOUTH));
+            if (affectedStuff.contains("W")) affected.add(source.getFace(BlockFace.WEST));
+            if (affectedStuff.contains("E")) affected.add(source.getFace(BlockFace.EAST));
+            return affected;
+        } else if (source.getType() == Material.REDSTONE_WIRE) {
+            affected.add(source.getFace(BlockFace.UP));
+            affected.add(source.getFace(BlockFace.NORTH));
+            affected.add(source.getFace(BlockFace.SOUTH));
+            affected.add(source.getFace(BlockFace.WEST));
+            affected.add(source.getFace(BlockFace.EAST));
+            return affected;
+        }
+        return affected;
     }
 }

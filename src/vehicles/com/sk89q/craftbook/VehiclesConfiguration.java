@@ -50,6 +50,7 @@ public class VehiclesConfiguration {
 
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
+        minecartLaunchFromStation = cfg.getBoolean("minecart-autolaunch-from-station", true);
     }
     
     public final File dataFolder;
@@ -65,6 +66,7 @@ public class VehiclesConfiguration {
     public final Material matTeleport;
     
     public final boolean minecartSlowWhenEmpty;
+    public final boolean minecartLaunchFromStation;
     public final double minecartMaxSpeedModifier;
     
 }

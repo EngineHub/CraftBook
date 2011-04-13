@@ -8,6 +8,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.vehicle.*;
 import org.bukkit.util.*;
 
+import static com.sk89q.craftbook.cart.CartUtils.*;
+
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
@@ -43,4 +45,18 @@ public class MinecartManager {
         CartMechanism thingy = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
         if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
     }
+
+    public void handleMinecartEnter(VehicleEnterEvent event) {
+        Entity entity = event.getEntered();
+        Vehicle cart = event.getVehicle();
+
+        //this is for the autolaunch station
+        Block base = cart.getLocation().getBlock().getFace(BlockFace.DOWN);
+        if (base.getType() == plugin.getLocalConfiguration().matStation) {
+            Block director = pickDirector(base, "station");
+            if (director == null) return;
+            (new CartStation()).launch(((Minecart) cart), director);
+        }
+    }
 }
+
