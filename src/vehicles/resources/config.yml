@@ -11,6 +11,7 @@ sort-block: 87
 teleport-block: 89
 minecart-dispensers: true
 minecart-decay-time: 0
+minecart-autolaunch-from-station: true
 minecart-slow-when-empty: false
 minecart-max-speed-modifier: 1
 in-cart-control: true

@@ -1,8 +1,12 @@
 package com.sk89q.craftbook.cart;
 
+import java.util.ArrayList;
+
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.*;
+import org.bukkit.event.block.*;
+import org.bukkit.Material;
 
 import com.sk89q.craftbook.util.*;
 
@@ -35,5 +39,72 @@ public abstract class CartUtils {
     
     public static void stop(Minecart cart) {
         cart.setVelocity(new Vector(0,0,0));
+    }
+
+    /**
+     * Kami-sama, is this really necessary?
+     *
+     * @param event
+     * @return an arraylist of blocks
+     * @author IDon'tGetPaidForThis
+     */
+    public static ArrayList<Block> poweredByRSCEvent(BlockRedstoneEvent event) {
+        Block source = event.getBlock();
+        ArrayList<Block> affected = new ArrayList<Block>();
+
+        //if block is torch > check for orientation
+        if (source.getType() == Material.REDSTONE_TORCH_OFF) {
+            return affected;
+        } else if (source.getType() == Material.REDSTONE_TORCH_ON) {
+            byte data = source.getData();
+            switch (data) {
+                case 5:
+                    affected.add(source.getFace(BlockFace.UP));
+                    affected.add(source.getFace(BlockFace.NORTH));
+                    affected.add(source.getFace(BlockFace.SOUTH));
+                    affected.add(source.getFace(BlockFace.WEST));
+                    affected.add(source.getFace(BlockFace.EAST));
+                    break;
+                case 1:
+                    affected.add(source.getFace(BlockFace.UP));
+                    affected.add(source.getFace(BlockFace.DOWN));
+                    affected.add(source.getFace(BlockFace.SOUTH));
+                    affected.add(source.getFace(BlockFace.WEST));
+                    affected.add(source.getFace(BlockFace.EAST));
+                    break;
+                case 2:
+                    affected.add(source.getFace(BlockFace.UP));
+                    affected.add(source.getFace(BlockFace.DOWN));
+                    affected.add(source.getFace(BlockFace.NORTH));
+                    affected.add(source.getFace(BlockFace.WEST));
+                    affected.add(source.getFace(BlockFace.EAST));
+                    break;
+                case 3:
+                    affected.add(source.getFace(BlockFace.UP));
+                    affected.add(source.getFace(BlockFace.DOWN));
+                    affected.add(source.getFace(BlockFace.NORTH));
+                    affected.add(source.getFace(BlockFace.SOUTH));
+                    affected.add(source.getFace(BlockFace.WEST));
+                    break;
+                case 4:
+                    affected.add(source.getFace(BlockFace.UP));
+                    affected.add(source.getFace(BlockFace.DOWN));
+                    affected.add(source.getFace(BlockFace.NORTH));
+                    affected.add(source.getFace(BlockFace.SOUTH));
+                    affected.add(source.getFace(BlockFace.EAST));
+                    break;
+                default: //stop fucking with torches you prick
+                    break;
+            }
+            return affected;
+        } else if (source.getType() == Material.REDSTONE_WIRE) {
+            affected.add(source.getFace(BlockFace.UP));
+            affected.add(source.getFace(BlockFace.NORTH));
+            affected.add(source.getFace(BlockFace.SOUTH));
+            affected.add(source.getFace(BlockFace.WEST));
+            affected.add(source.getFace(BlockFace.EAST));
+            return affected;
+        }
+        return affected;
     }
 }
