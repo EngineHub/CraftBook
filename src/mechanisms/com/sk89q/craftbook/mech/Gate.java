@@ -30,7 +30,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -49,7 +49,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author sk89q
  */
-public class Gate extends Mechanic {
+public class Gate extends AbstractMechanic {
     
     /**
      * Plugin.

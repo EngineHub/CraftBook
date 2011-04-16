@@ -25,7 +25,6 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
 public class WirelessTransmitter extends AbstractIC {
     
@@ -52,8 +51,8 @@ public class WirelessTransmitter extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        setValue(band, input(chip, 0));
-        output(chip, 0, input(chip, 0));
+        setValue(band, chip.getInput(0));
+        chip.setOutput(0, chip.getInput(0));
     }
     
     public static Boolean getValue(String band) {

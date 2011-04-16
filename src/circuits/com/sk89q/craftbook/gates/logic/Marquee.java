@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.logic;
 
@@ -24,9 +24,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 
 public class Marquee extends AbstractIC {
 
@@ -45,31 +42,27 @@ public class Marquee extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip)
-    {
+    public void trigger(ChipState chip) {
 
-    	if (!input(chip, 0))
-    		return;
-    	
+        if (!chip.getInput(0))
+            return;
+
         int pin = 0;
-        
-        try
-        {
-        	pin = Integer.parseInt(getSign().getLine(2)) - 1;
+
+        try {
+            pin = Integer.parseInt(getSign().getLine(2)) - 1;
+        } catch (Exception e) {
         }
-        catch (Exception e)
-        {}
-        
-        for (int i = 0; i < 3; i++)
-        	output(chip, i,  (i == pin) ); // Current pin to high, all others low
-        
+
+        for (int i = 0; i < chip.getInputCount(); i++)
+            chip.setOutput(i, (i == pin)); // Current pin to high, all others low
+
         pin++;
         if (pin == 3)
-        	pin = 0;
-        
+            pin = 0;
+
         getSign().setLine(2, Integer.toString(pin + 1));
-        
-        
+
     }
 
     public static class Factory extends AbstractICFactory {

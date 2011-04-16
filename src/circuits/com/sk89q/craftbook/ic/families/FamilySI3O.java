@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic.families;
 
@@ -24,7 +24,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.SignUtil;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -32,7 +31,7 @@ import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the single input single output family.
- *  
+ * 
  * @author robhol
  */
 public class FamilySI3O extends AbstractICFamily {
@@ -41,40 +40,35 @@ public class FamilySI3O extends AbstractICFamily {
     public ChipState detect(BlockWorldVector source, Sign sign) {
         return new ChipStateSI3O(source, sign);
     }
-    
+
     public static class ChipStateSI3O implements ChipState {
-        
+
         protected Sign sign;
         protected BlockWorldVector source;
-        
+
         public ChipStateSI3O(BlockWorldVector source, Sign sign) {
             this.sign = sign;
             this.source = source;
         }
-        
-        protected Block getBlock(int pin) 
-        {
-        	
-        	Block bsign = sign.getBlock();
-        	BlockFace fback = SignUtil.getBack(bsign);
-        	
-            switch (pin)
-            {
+
+        protected Block getBlock(int pin) {
+
+            Block bsign = sign.getBlock();
+            BlockFace fback = SignUtil.getBack(bsign);
+
+            switch (pin) {
                 case 0:
                     return SignUtil.getFrontBlock(bsign);
-
-                case 3:
+                case 1:
                     return bsign.getRelative(fback).getRelative(fback);
-                    
-                case 4:
-                	return bsign.getRelative(fback).getRelative( SignUtil.getCounterClockWise(fback) );
-                
-                case 5:
-                	return bsign.getRelative(fback).getRelative( SignUtil.getClockWise(fback) );
-
+                case 2:
+                    return bsign.getRelative(fback).getRelative(
+                            SignUtil.getCounterClockWise(fback));
+                case 3:
+                    return bsign.getRelative(fback).getRelative(
+                            SignUtil.getClockWise(fback));
                 default:
                     return null;
-
             }
 
         }
@@ -118,7 +112,32 @@ public class FamilySI3O extends AbstractICFamily {
                 return false;
             }
         }
-        
+
+        @Override
+        public boolean getInput(int inputIndex) {
+            return get(inputIndex);
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+            return get(outputIndex + 1);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+            set(outputIndex + 1, value);
+        }
+
+        @Override
+        public int getInputCount() {
+            return 1;
+        }
+
+        @Override
+        public int getOutputCount() {
+            return 3;
+        }
+
     }
-    
+
 }

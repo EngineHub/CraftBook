@@ -18,7 +18,9 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.Chunk;
 import org.bukkit.Server;
+import org.bukkit.World;
 import com.sk89q.bukkit.migration.*;
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
@@ -40,6 +42,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     protected CircuitsConfiguration config;
     protected ICManager icManager;
     private PermissionsResolverManager perms;
+    private MechanicManager manager;
     
     @Override
     public void onEnable() {
@@ -66,17 +69,32 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         );
         new PermissionsResolverServerListener(perms).register(this);
         
-        
-        MechanicManager manager = new MechanicManager(this);
+        manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
+        
+        registerICs();
+        
+        // Let's register mechanics!
+        manager.register(new Netherrack.Factory());
+        manager.register(new JackOLantern.Factory());
+        manager.register(new ICMechanicFactory(this, icManager));
+        
+        setupSelfTriggered();
+    }
+    
+    /**
+     * Register ICs.
+     */
+    private void registerICs() {
+        Server server = getServer();
         
         // Let's register ICs!
         icManager = new ICManager();
         ICFamily familySISO = new FamilySISO();
         ICFamily family3ISO = new Family3ISO();
         ICFamily familySI3O = new FamilySI3O();
-        ICFamily family3I3O = new Family3I3O();
+        //ICFamily family3I3O = new Family3I3O();
         
         //SISOs
         icManager.register("MC9999", new ResurrectDumbledore.Factory(server, true), familySISO);
@@ -129,13 +147,33 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 4100
         //Missing: 4110
         //Missing: 4200
-        icManager.register("MC4999", new TripleRepeater.Factory(server), family3I3O);
+    }
+    
+    /**
+     * Setup the required components of self-triggered ICs.
+     */
+    private void setupSelfTriggered() {
+        logger.info("CraftBook: Enumerating chunks for self-triggered components...");
         
-        // Let's register mechanics!
-        manager.register(new Netherrack.Factory());
-        manager.register(new JackOLantern.Factory());
-        manager.register(new ICMechanicFactory(this, icManager));
+        long start = System.currentTimeMillis();
+        int numWorlds = 0;
+        int numChunks = 0;
         
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                manager.enumerate(chunk);
+                numChunks++;
+            }
+            
+            numWorlds++;
+        }
+        
+        long time = System.currentTimeMillis() - start;
+        
+        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
+                + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
+        
+        // Set up the clock for self-triggered ICs.
         getServer().getScheduler().scheduleSyncRepeatingTask(this,
                 new MechanicClock(manager), 0, 2);
     }

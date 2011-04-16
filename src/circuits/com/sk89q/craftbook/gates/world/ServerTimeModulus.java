@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -48,9 +46,9 @@ public class ServerTimeModulus extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if ((risingEdge && input(chip, 0))
-                || (!risingEdge && !input(chip, 0))) {
-            output(chip, 0, isServerTimeOdd());
+        if ((risingEdge && chip.getInput(0))
+                || (!risingEdge && !chip.getInput(0))) {
+            chip.setOutput(0, isServerTimeOdd());
         }
     }
 

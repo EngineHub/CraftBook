@@ -35,6 +35,22 @@ public interface ChipState {
      */
     public boolean get(int pin);
     
+    /*
+     * Gets the value for an input.
+     * 
+     * @param inputIndex 0-indexed number
+     * @return
+     */
+    public boolean getInput(int inputIndex);
+    
+    /*
+     * Gets the value for an output.
+     * 
+     * @param outputIndex 0-indexed number
+     * @return
+     */
+    public boolean getOutput(int outputIndex);
+    
     /**
      * Set a pin's value.
      * 
@@ -42,6 +58,14 @@ public interface ChipState {
      * @param value
      */
     public void set(int pin, boolean value);
+    
+    /*
+     * Sets the value for an output.
+     * 
+     * @param outputIndex 0-indexed number
+     * @return
+     */
+    public void setOutput(int outputIndex, boolean value);
     
     /**
      * Returns whether this pin was triggered.
@@ -59,5 +83,18 @@ public interface ChipState {
      */
     public boolean isValid(int pin);
 
+    /**
+     * Get the number of inputs.
+     * 
+     * @return
+     */
+    public int getInputCount();
+
+    /**
+     * Get the number of outputs.
+     * 
+     * @return
+     */
+    public int getOutputCount();
     
 }

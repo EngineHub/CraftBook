@@ -35,7 +35,7 @@ import com.sk89q.craftbook.util.*;
  * @author hash
  * 
  */
-public class Elevator extends Mechanic {
+public class Elevator extends AbstractMechanic {
     public static class Factory extends AbstractMechanicFactory<Elevator> {
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;

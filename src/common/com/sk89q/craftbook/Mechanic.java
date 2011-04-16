@@ -1,7 +1,6 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * A Mechanic is a an object that manages a set of BlockVectors to enhance those
@@ -39,34 +38,37 @@ import org.bukkit.event.player.*;
  * @author sk89q
  * @author hash
  */
-public abstract class Mechanic {
+public interface Mechanic {
+
     /**
      * Unload this mechanic. This should free any allocated resources and
      * de-initialize. This may be called once the mechanic no longer exists
      * in the world.
      */
-    public abstract void unload();
+    public void unload();
+    
 
     /**
      * @return true if this mechanic is still active in the world; false
      *         otherwise. For example, for a gate, it should check to see if the
      *         [Gate] sign still exists at the trigger points.
      */
-    public abstract boolean isActive();
+    public boolean isActive();
     
+
     /**
      * Raised when a block is right clicked.
      * 
      * @param event
      */
-    public void onRightClick(PlayerInteractEvent event) {
-    }
+    public void onRightClick(PlayerInteractEvent event);
     
+
     /**
      * Raised when an input redstone current changes.
      * 
      * @param event
      */
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-    }
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event);
+
 }

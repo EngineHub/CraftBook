@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -39,7 +39,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author sk89q
  */
-public class Bookcase extends Mechanic {
+public class Bookcase extends AbstractMechanic {
 
     /**
      * Used for picking random lines.

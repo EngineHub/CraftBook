@@ -32,7 +32,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author sk89q
  */
-public class Netherrack extends Mechanic {
+public class Netherrack extends AbstractMechanic {
     
 	public static class Factory extends AbstractMechanicFactory<Netherrack> {
         public Factory() {

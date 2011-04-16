@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -53,7 +52,7 @@ public class ItemDispenser extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
+        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
             String item = getSign().getLine(2);
             int amount = 1;
             try {
@@ -92,16 +91,17 @@ public class ItemDispenser extends AbstractIC {
             }
         }
     }
-    
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
-        
+
+    public static class Factory extends AbstractICFactory implements
+            RestrictedIC {
+
         protected boolean risingEdge;
-        
+
         public Factory(Server server, boolean risingEdge) {
             super(server);
             this.risingEdge = risingEdge;
         }
-        
+
         @Override
         public IC create(Sign sign) {
             return new ItemDispenser(getServer(), sign, risingEdge);

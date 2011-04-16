@@ -64,7 +64,7 @@ import com.sk89q.craftbook.util.*;
  * 
  * @author hash
  */
-public abstract class PersistentMechanic extends Mechanic {
+public abstract class PersistentMechanic extends AbstractMechanic {
     /**
      * Construct the object.
      * 

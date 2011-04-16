@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -31,43 +29,43 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class WaterSensor extends AbstractIC {
 
-	protected boolean risingEdge;
+    protected boolean risingEdge;
 
-	public WaterSensor(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign);
-		this.risingEdge = risingEdge;
-	}
+    public WaterSensor(Server server, Sign sign, boolean risingEdge) {
+        super(server, sign);
+        this.risingEdge = risingEdge;
+    }
 
-	@Override
-	public String getTitle() {
-		return "Water Sensor";
-	}
+    @Override
+    public String getTitle() {
+        return "Water Sensor";
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "WATER SENSOR";
-	}
+    @Override
+    public String getSignTitle() {
+        return "WATER SENSOR";
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			output(chip, 0, hasWater());
-		}
-	}
+    @Override
+    public void trigger(ChipState chip) {
+        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+            chip.setOutput(0, hasWater());
+        }
+    }
 
-	/**
-	 * Returns true if the sign has water at the specified location.
-	 * 
-	 * @return
-	 */
-	private boolean hasWater() {
-		
-		Block b = SignUtil.getBackBlock(getSign().getBlock());
-		
-		int x = b.getX();
-		int yOffset = b.getY();
-		int z = b.getZ();
-		try{
+    /**
+     * Returns true if the sign has water at the specified location.
+     * 
+     * @return
+     */
+    private boolean hasWater() {
+
+        Block b = SignUtil.getBackBlock(getSign().getBlock());
+
+        int x = b.getX();
+        int yOffset = b.getY();
+        int z = b.getZ();
+        try {
             String yOffsetLine = getSign().getLine(2);
             if (yOffsetLine.length() > 0) {
                 yOffset += Integer.parseInt(yOffsetLine);
@@ -77,24 +75,25 @@ public class WaterSensor extends AbstractIC {
         } catch (NumberFormatException e) {
             yOffset -= 1;
         }
-        int blockID = getSign().getBlock().getWorld().getBlockTypeIdAt(x, yOffset, z);
+        int blockID = getSign().getBlock().getWorld()
+                .getBlockTypeIdAt(x, yOffset, z);
 
-		return (blockID == 8 || blockID == 9);
-	}
+        return (blockID == 8 || blockID == 9);
+    }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		protected boolean risingEdge;
+        protected boolean risingEdge;
 
-		public Factory(Server server, boolean risingEdge) {
-			super(server);
-			this.risingEdge = risingEdge;
-		}
+        public Factory(Server server, boolean risingEdge) {
+            super(server);
+            this.risingEdge = risingEdge;
+        }
 
-		@Override
-		public IC create(Sign sign) {
-			return new WaterSensor(getServer(), sign, risingEdge);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+            return new WaterSensor(getServer(), sign, risingEdge);
+        }
+    }
 
 }

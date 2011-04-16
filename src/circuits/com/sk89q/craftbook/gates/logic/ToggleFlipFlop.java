@@ -24,7 +24,6 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
 public class ToggleFlipFlop extends AbstractIC {
     
@@ -47,9 +46,9 @@ public class ToggleFlipFlop extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if ((risingEdge && input(chip, 0))
-                || (!risingEdge && !input(chip, 0))) {
-            output(chip, 0, !getOutput(chip, 0));
+        if ((risingEdge && chip.getInput(0))
+                || (!risingEdge && !chip.getInput(0))) {
+            chip.setOutput(0, !chip.getOutput(0));
         }
     }
 
