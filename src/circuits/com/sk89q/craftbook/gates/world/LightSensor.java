@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -29,66 +27,68 @@ import com.sk89q.craftbook.ic.IC;
 
 public class LightSensor extends AbstractIC {
 
-	protected boolean risingEdge;
+    protected boolean risingEdge;
 
-	public LightSensor(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign);
-		this.risingEdge = risingEdge;
-	}
+    public LightSensor(Server server, Sign sign, boolean risingEdge) {
+        super(server, sign);
+        this.risingEdge = risingEdge;
+    }
 
-	@Override
-	public String getTitle() {
-		return "Light Sensor";
-	}
+    @Override
+    public String getTitle() {
+        return "Light Sensor";
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "LIGHT SENSOR";
-	}
+    @Override
+    public String getSignTitle() {
+        return "LIGHT SENSOR";
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-			output(chip, 0, hasLight());
-		}
-	}
+    @Override
+    public void trigger(ChipState chip) {
+        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+            chip.setOutput(0, hasLight());
+        }
+    }
 
-	/**
-	 * Returns true if the sign has a light level above the specified.
-	 * 
-	 * @return
-	 */
-	private boolean hasLight() {
-		int lightLevel = (int) getSign().getWorld().getBlockAt(
-				getSign().getBlock().getLocation().getBlockX(),
-				getSign().getBlock().getLocation().getBlockY() + 1,
-				getSign().getBlock().getLocation().getBlockZ()).getLightLevel();
-		int specifiedLevel = 0;
-		try {
-			String specified = getSign().getLine(2);
-			if (specified.length() > 0) {
-				specifiedLevel = Integer.parseInt(specified);
-			}
-		} catch (NumberFormatException e) {
-			// eat the exception.
-		}
+    /**
+     * Returns true if the sign has a light level above the specified.
+     * 
+     * @return
+     */
+    private boolean hasLight() {
+        int lightLevel = (int) getSign()
+                .getWorld()
+                .getBlockAt(getSign().getBlock().getLocation().getBlockX(),
+                        getSign().getBlock().getLocation().getBlockY() + 1,
+                        getSign().getBlock().getLocation().getBlockZ())
+                .getLightLevel();
+        int specifiedLevel = 0;
+        try {
+            String specified = getSign().getLine(2);
+            if (specified.length() > 0) {
+                specifiedLevel = Integer.parseInt(specified);
+            }
+        } catch (NumberFormatException e) {
+            // eat the exception.
+        }
 
-		return lightLevel >= specifiedLevel;
-	}
+        return lightLevel >= specifiedLevel;
+    }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		protected boolean risingEdge;
+        protected boolean risingEdge;
 
-		public Factory(Server server, boolean risingEdge) {
-			super(server);
-			this.risingEdge = risingEdge;
-		}
+        public Factory(Server server, boolean risingEdge) {
+            super(server);
+            this.risingEdge = risingEdge;
+        }
 
-		@Override
-		public IC create(Sign sign) {
-			return new LightSensor(getServer(), sign, risingEdge);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+            return new LightSensor(getServer(), sign, risingEdge);
+        }
+    }
 
 }

@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -50,8 +48,8 @@ public class MessageSender extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
-            output(chip, 0, sendMessage());
+        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+            chip.setOutput(0, sendMessage());
         }
     }
 

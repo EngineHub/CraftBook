@@ -24,7 +24,6 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
 public class Inverter extends AbstractIC {
 
@@ -44,7 +43,7 @@ public class Inverter extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        output(chip, 0, !input(chip, 0));
+        chip.setOutput(0, !chip.getInput(0));
     }
 
     public static class Factory extends AbstractICFactory {

@@ -78,6 +78,8 @@ public class MechanicListenerAdapter {
                 Priority.Normal, plugin);
         pluginManager.registerEvent(Type.CHUNK_UNLOAD, worldListener,
                 Priority.Normal, plugin);
+        pluginManager.registerEvent(Type.CHUNK_LOAD, worldListener,
+                Priority.Normal, plugin);
     }
     
     /**
@@ -278,7 +280,7 @@ public class MechanicListenerAdapter {
      * 
      * @author sk89q
      */
-    protected static class MechanicWorldListener extends WorldListener {
+    protected class MechanicWorldListener extends WorldListener {
         
         protected MechanicManager manager;
         
@@ -295,8 +297,13 @@ public class MechanicListenerAdapter {
          * Called when a chunk is loaded.
          */
         @Override
-        public void onChunkLoad(ChunkLoadEvent event) {
-            manager.enumerate(event.getChunk());
+        public void onChunkLoad(final ChunkLoadEvent event) {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    manager.enumerate(event.getChunk());
+                }
+            }, 2);
         }
 
         /**

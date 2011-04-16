@@ -30,7 +30,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author sk89q
  */
-public class JackOLantern extends Mechanic {
+public class JackOLantern extends AbstractMechanic {
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
         public Factory() {
         }

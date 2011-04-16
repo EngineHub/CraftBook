@@ -86,12 +86,12 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             return new SelfTriggeredICMechanic(
                     plugin,
                     id,
-                    ic,
+                    (SelfTriggeredIC) ic,
                     registration.getFamily(),
                     pt
             );
         } else {
-            return new SelfTriggeredICMechanic(
+            return new ICMechanic(
                     plugin,
                     id,
                     ic,
@@ -147,12 +147,12 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             mechanic = new SelfTriggeredICMechanic(
                     plugin,
                     id,
-                    ic,
+                    (SelfTriggeredIC) ic,
                     registration.getFamily(),
                     pt
             );
         } else {
-            mechanic = new SelfTriggeredICMechanic(
+            mechanic = new ICMechanic(
                     plugin,
                     id,
                     ic,

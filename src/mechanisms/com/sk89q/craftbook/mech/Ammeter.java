@@ -21,13 +21,13 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.Material;
 import org.bukkit.event.player.*;
-import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
  */
-public class Ammeter extends Mechanic {
+public class Ammeter extends AbstractMechanic {
 
     protected MechanismsPlugin plugin;
 

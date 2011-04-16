@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic.families;
 
@@ -31,7 +31,7 @@ import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * Handles detection for the single input single output family.
- *  
+ * 
  * @author sk89q
  */
 public class FamilySISO extends AbstractICFamily {
@@ -40,31 +40,27 @@ public class FamilySISO extends AbstractICFamily {
     public ChipState detect(BlockWorldVector source, Sign sign) {
         return new ChipStateSISO(source, sign);
     }
-    
+
     public static class ChipStateSISO implements ChipState {
-        
+
         protected Sign sign;
         protected BlockWorldVector source;
-        
+
         public ChipStateSISO(BlockWorldVector source, Sign sign) {
             this.sign = sign;
             this.source = source;
         }
-        
+
         protected Block getBlock(int pin) {
 
-            switch (pin)
-            {
+            switch (pin) {
                 case 0:
                     return SignUtil.getFrontBlock(sign.getBlock());
-
-                case 3:
+                case 1:
                     BlockFace face = SignUtil.getBack(sign.getBlock());
                     return sign.getBlock().getRelative(face).getRelative(face);
-
                 default:
                     return null;
-
             }
 
         }
@@ -108,7 +104,32 @@ public class FamilySISO extends AbstractICFamily {
                 return false;
             }
         }
-        
+
+        @Override
+        public boolean getInput(int inputIndex) {
+            return get(inputIndex);
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+            return get(outputIndex + 1);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+            set(outputIndex + 1, value);
+        }
+
+        @Override
+        public int getInputCount() {
+            return 1;
+        }
+
+        @Override
+        public int getOutputCount() {
+            return 1;
+        }
+
     }
-    
+
 }

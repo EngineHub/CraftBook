@@ -84,7 +84,7 @@ public class MechanicManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    private Set<Mechanic> thinkingMechanics = new LinkedHashSet<Mechanic>();
+    private Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
 
     /**
      * Construct the manager.
@@ -245,6 +245,10 @@ public class MechanicManager {
             PersistentMechanic pm = (PersistentMechanic) mechanic;
             triggersManager.register(pm);
             watchBlockManager.register(pm);
+            
+            if (mechanic instanceof SelfTriggeringMechanic) {
+                thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+            }
         }
 
         return mechanic;
@@ -286,7 +290,7 @@ public class MechanicManager {
             watchBlockManager.register(pm);
             
             if (mechanic instanceof SelfTriggeringMechanic) {
-                thinkingMechanics.add(mechanic);
+                thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
             }
         }
 
@@ -360,7 +364,11 @@ public class MechanicManager {
         for (BlockState state : chunk.getTileEntities()) {
             if (state instanceof Sign) {
                 try {
-                    load(BukkitUtil.toWorldVector(state.getBlock()));
+                    try {
+                        load(BukkitUtil.toWorldVector(state.getBlock()));
+                    } catch (NullPointerException t) {
+                        t.printStackTrace();
+                    }
                 } catch (InvalidMechanismException e) {
                 }
             }
@@ -409,10 +417,10 @@ public class MechanicManager {
      * Causes all thinking mechanics to think.
      */
     public void think() {
-        for (Mechanic mechanic : thinkingMechanics) {
+        for (SelfTriggeringMechanic mechanic : thinkingMechanics) {
             if (mechanic.isActive()) {
                 try {
-                    ((SelfTriggeringMechanic) mechanic).think();
+                    mechanic.think();
                 } catch (Throwable t) { // Mechanic failed to unload for some reason
                     logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for "
                             + mechanic.getClass().getCanonicalName(), t);

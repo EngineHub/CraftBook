@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
@@ -51,7 +50,7 @@ public class CreatureSpawner extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && input(chip, 0) || (!risingEdge && !input(chip, 0))) {
+        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
             String type = getSign().getLine(2).trim();
             String rider = getSign().getLine(3).trim();
             if (CreatureType.fromName(type) != null) {

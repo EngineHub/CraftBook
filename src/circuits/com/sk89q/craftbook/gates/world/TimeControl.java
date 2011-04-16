@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -50,13 +48,13 @@ public class TimeControl extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         Long time;
-        if (input(chip, 0))
+        if (chip.getInput(0))
             time = 0L;
         else
             time = 13000L;
         getSign().getWorld().setTime(time);
 
-        output(chip, 0, input(chip, 0));
+        chip.setOutput(0, chip.getInput(0));
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

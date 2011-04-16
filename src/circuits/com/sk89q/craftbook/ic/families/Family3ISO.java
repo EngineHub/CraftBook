@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic.families;
 
@@ -31,7 +31,7 @@ import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the triple-input single-output family.
- *  
+ * 
  * @author robhol
  */
 public class Family3ISO extends AbstractICFamily {
@@ -40,37 +40,31 @@ public class Family3ISO extends AbstractICFamily {
     public ChipState detect(BlockWorldVector source, Sign sign) {
         return new ChipState3ISO(source, sign);
     }
-    
+
     public static class ChipState3ISO implements ChipState {
-        
+
         protected Sign sign;
         protected BlockWorldVector source;
-        
+
         public ChipState3ISO(BlockWorldVector source, Sign sign) {
             this.sign = sign;
             this.source = source;
         }
-        
-        protected Block getBlock(int pin) {
 
-            switch (pin)
-            {
+        protected Block getBlock(int pin) {
+            switch (pin) {
                 case 0:
                     return SignUtil.getFrontBlock(sign.getBlock());
                 case 1:
                     return SignUtil.getLeftBlock(sign.getBlock());
                 case 2:
                     return SignUtil.getRightBlock(sign.getBlock());
-
                 case 3:
                     BlockFace face = SignUtil.getBack(sign.getBlock());
                     return sign.getBlock().getRelative(face).getRelative(face);
-
                 default:
                     return null;
-
             }
-
         }
 
         @Override
@@ -112,7 +106,32 @@ public class Family3ISO extends AbstractICFamily {
                 return false;
             }
         }
-        
+
+        @Override
+        public boolean getInput(int inputIndex) {
+            return get(inputIndex);
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+            return get(outputIndex + 3);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+            set(outputIndex + 3, value);
+        }
+
+        @Override
+        public int getInputCount() {
+            return 3;
+        }
+
+        @Override
+        public int getOutputCount() {
+            return 1;
+        }
+
     }
-    
+
 }

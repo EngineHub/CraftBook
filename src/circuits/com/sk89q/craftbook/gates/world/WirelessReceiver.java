@@ -24,7 +24,6 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import static com.sk89q.craftbook.ic.TripleInputChipState.*;
 
 public class WirelessReceiver extends AbstractIC {
     
@@ -50,12 +49,12 @@ public class WirelessReceiver extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (input(chip, 0)) {
+        if (chip.getInput(0)) {
             Boolean val = WirelessTransmitter.getValue(band);
             if (val == null) {
                 val = false;
             }
-            output(chip, 0, val);
+            chip.setOutput(0, val);
         }
     }
 

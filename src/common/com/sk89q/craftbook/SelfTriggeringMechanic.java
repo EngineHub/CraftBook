@@ -25,7 +25,7 @@ package com.sk89q.craftbook;
  * 
  * @author sk89q
  */
-public interface SelfTriggeringMechanic {
+public interface SelfTriggeringMechanic extends Mechanic {
 
     /**
      * Think. This is called every 2 ticks if this mechanic is self-triggering.

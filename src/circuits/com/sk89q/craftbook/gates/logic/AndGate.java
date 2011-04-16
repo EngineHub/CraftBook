@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.logic;
 
@@ -24,9 +24,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import static com.sk89q.craftbook.ic.TripleInputChipState.input;
-import static com.sk89q.craftbook.ic.TripleInputChipState.output;
 
 public class AndGate extends AbstractIC {
 
@@ -45,23 +42,18 @@ public class AndGate extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip)
-    {
+    public void trigger(ChipState chip) {
 
         int on = 0, valid = 0;
-        for (int i=0; i < 3; i++)
-        {
-            if (!chip.isValid(i))
-                continue;
+        for (int i = 0; i < chip.getInputCount(); i++) {
+            valid++;
 
-            valid ++;
-
-            if (input(chip, i))
+            if (chip.getInput(i))
                 on++;
         }
 
-        //Condition; all valid must be ON, at least one valid.
-        output(chip, 0, (on == valid && valid > 0) );
+        // Condition; all valid must be ON, at least one valid.
+        chip.setOutput(0, (on == valid && valid > 0));
     }
 
     public static class Factory extends AbstractICFactory {
