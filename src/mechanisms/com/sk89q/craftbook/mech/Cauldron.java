@@ -96,7 +96,6 @@ public class Cauldron extends Mechanic {
             return;
         
         if (!localPlayer.hasPermission("craftbook.mech.cauldron")) {
-            localPlayer.printError("You don't have permission to use this.");
             return;
         }
         
