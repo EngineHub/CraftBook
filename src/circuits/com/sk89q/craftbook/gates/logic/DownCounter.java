@@ -59,7 +59,7 @@ public class DownCounter extends AbstractIC {
         boolean inf = config[1].equals("INF");
 
         // Get current counter value from line 4 of sign
-        String line4 = getSign().getLines()[4];
+        String line4 = getSign().getLines()[3];
         int curVal = Integer.parseInt(line4);
         int oldVal = curVal;
 
