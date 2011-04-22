@@ -147,6 +147,17 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 4100
         //Missing: 4110
         //Missing: 4200
+        
+        //Self triggered
+        icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
+        icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
+        icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
+        
+        //Missing: 0020
+	    //Missing: 0230     
+	    //Missing: 0262
+	    //Missing: 0420     
+        
     }
     
     /**
