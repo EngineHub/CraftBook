@@ -247,7 +247,10 @@ public class MechanicManager {
             watchBlockManager.register(pm);
             
             if (mechanic instanceof SelfTriggeringMechanic) {
-                thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+            	synchronized(this)
+            	{
+            		thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+            	}
             }
         }
 
@@ -290,7 +293,10 @@ public class MechanicManager {
             watchBlockManager.register(pm);
             
             if (mechanic instanceof SelfTriggeringMechanic) {
-                thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+            	synchronized(this)
+            	{
+            		thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+            	}
             }
         }
 
@@ -404,7 +410,10 @@ public class MechanicManager {
                     + mechanic.getClass().getCanonicalName(), t);
         }
         
-        thinkingMechanics.remove(mechanic);
+        synchronized(this)
+        {
+        	thinkingMechanics.remove(mechanic);
+        }
 
         if (mechanic instanceof PersistentMechanic) {
             PersistentMechanic pm = (PersistentMechanic) mechanic;
@@ -417,17 +426,28 @@ public class MechanicManager {
      * Causes all thinking mechanics to think.
      */
     public void think() {
-        for (SelfTriggeringMechanic mechanic : thinkingMechanics) {
-            if (mechanic.isActive()) {
-                try {
-                    mechanic.think();
-                } catch (Throwable t) { // Mechanic failed to unload for some reason
-                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for "
-                            + mechanic.getClass().getCanonicalName(), t);
-                }
-            } else {
-                unload(mechanic);
-            }
-        }
+    	
+    	SelfTriggeringMechanic[] mechs;
+    	
+    	synchronized(this)
+    	{
+    		//Copy to array to get rid of concurrency snafus
+    		mechs = new SelfTriggeringMechanic[thinkingMechanics.size()];
+    		thinkingMechanics.toArray(mechs);
+    	}
+    		
+    	for (SelfTriggeringMechanic mechanic : mechs) {
+    		if (mechanic.isActive()) {
+    			try {
+    				mechanic.think();
+    			} catch (Throwable t) { // Mechanic failed to unload for some reason
+    				logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for "
+    						+ mechanic.getClass().getCanonicalName(), t);
+    			}
+    		} else {
+    			unload(mechanic);
+    		}
+    	}
     }
 }
+
