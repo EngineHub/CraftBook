@@ -53,9 +53,9 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
     public void think(ChipState chip) {
             Boolean val = WirelessTransmitter.getValue(band);
             
-            if (val == null) {
-                val = false;
-            }
+            if (val == null)
+                return;
+            
             chip.setOutput(0, val);
     }
 
