@@ -20,23 +20,13 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
-public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
+public class WirelessReceiverST extends WirelessRecieverBase {
     
-    protected String band;
-    
-    protected Sign isign;
-
     public WirelessReceiverST(Server server, Sign sign) {
         super(server, sign);
-        
-        isign = sign;
-        band = sign.getLine(2);
     }
 
     @Override
@@ -47,16 +37,6 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
     @Override
     public String getSignTitle() {
         return "ST RECEIVER";
-    }
-
-    @Override
-    public void think(ChipState chip) {
-            Boolean val = WirelessTransmitter.getValue(band);
-            
-            if (val == null)
-                return;
-            
-            chip.setOutput(0, val);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -70,13 +50,4 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
             return new WirelessReceiverST(getServer(), sign);
         }
     }
-
-	@Override
-	public boolean isActive() {
-		return true;
-	}
-
-	@Override
-	public void trigger(ChipState chip) { }
-
 }

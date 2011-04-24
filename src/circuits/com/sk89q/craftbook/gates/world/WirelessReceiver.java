@@ -20,21 +20,18 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class WirelessReceiver extends AbstractIC {
+public class WirelessReceiver extends WirelessRecieverBase {
     
     protected boolean risingEdge;
-    protected String band;
 
     public WirelessReceiver(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
         
         this.risingEdge = risingEdge;
-        band = sign.getLine(2);
     }
 
     @Override
@@ -49,12 +46,8 @@ public class WirelessReceiver extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-            Boolean val = WirelessTransmitter.getValue(band);
-            if (val == null)
-                return;
-            
-            chip.setOutput(0, val);
+        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+            this.think(chip);
         }
     }
 
