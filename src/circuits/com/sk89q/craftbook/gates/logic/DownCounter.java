@@ -59,8 +59,15 @@ public class DownCounter extends AbstractIC {
         boolean inf = config[1].equals("INF");
 
         // Get current counter value from line 4 of sign
-        String line4 = getSign().getLines()[4];
-        int curVal = Integer.parseInt(line4);
+        String line4 = getSign().getLines()[3];
+        int curVal = 0;
+        
+        try {
+			curVal = Integer.parseInt(line4);
+		} catch (Exception e) {
+			curVal = resetVal;
+		}
+        
         int oldVal = curVal;
 
         // If clock input triggered
@@ -81,7 +88,7 @@ public class DownCounter extends AbstractIC {
 
         // Update counter value stored on sign if it's changed
         if (curVal != oldVal)
-            getSign().getLines()[3] = (Integer.toString(curVal));
+            getSign().setLine(3,Integer.toString(curVal));
     }
     
     public static class Factory extends AbstractICFactory {
