@@ -119,7 +119,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
         //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
-        icManager.register("MC1240", new DivideByN.Factory(server, true), familySISO);
+        icManager.register("MC1420", new DivideByN.Factory(server, true), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os
@@ -155,7 +155,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
         icManager.register("MC0262", new LightSensor.FactoryST(server), familySISO);
-        icManager.register("MC0240", new DivideByN.FactoryST(server), familySISO);
+        icManager.register("MC0420", new DivideByN.FactoryST(server), familySISO);
     }
     
     /**
