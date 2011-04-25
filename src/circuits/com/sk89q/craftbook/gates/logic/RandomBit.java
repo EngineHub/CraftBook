@@ -51,7 +51,9 @@ public class RandomBit extends AbstractIC {
     public void trigger(ChipState chip) {
         if ((risingEdge && chip.getInput(0))
                 || (!risingEdge && !chip.getInput(0))) {
-            chip.setOutput(0, random.nextBoolean());
+            for (int i = 0; i < chip.getOutputCount(); i++) {
+                chip.setOutput(i, random.nextBoolean());
+            }            
         }
     }
 
