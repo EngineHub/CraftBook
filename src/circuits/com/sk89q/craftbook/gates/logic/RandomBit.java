@@ -63,7 +63,7 @@ public class RandomBit extends BothTriggeredIC {
     }
 
     @Override
-    public void think(ChipState chip) {            
+    public void work(ChipState chip) {            
         for (int i = 0; i < chip.getOutputCount(); i++) {
             chip.setOutput(i, random.nextBoolean());
         }

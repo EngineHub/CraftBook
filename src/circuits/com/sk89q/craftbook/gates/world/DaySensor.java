@@ -45,7 +45,7 @@ public class DaySensor extends BothTriggeredIC {
     }
 
     @Override
-    public void think(ChipState chip) {
+    public void work(ChipState chip) {
         chip.setOutput(0, isDay());
     }
 

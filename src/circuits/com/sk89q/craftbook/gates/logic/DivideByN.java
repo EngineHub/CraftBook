@@ -20,13 +20,13 @@ public class DivideByN extends BothTriggeredIC {
         } catch (NumberFormatException nfe) {
             // Jerks invalid IC! How to tell?
         }
-        this.limit = limitTemp;
+        this.limit = limitTemp - 1;
         this.ticks = 0;
     }
 
     @Override
-    public void think(ChipState state) {
-        if (this.ticks > this.limit) {
+    public void work(ChipState state) {
+        if (this.ticks >= this.limit) {
             state.setOutput(0, true);
             this.ticks = 0;
         } else {
