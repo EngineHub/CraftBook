@@ -43,7 +43,7 @@ public abstract class BothTriggeredIC extends AbstractIC implements SelfTriggere
 
     @Override
     public final void trigger(ChipState chip) {
-        if ((risingEdge != null) || (risingEdge && chip.getInput(0)) || (!risingEdge && !chip.getInput(0))) {
+        if ((risingEdge != null) || !(risingEdge ^ chip.getInput(0))) {
             this.think(chip);
         }
     }
