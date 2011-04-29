@@ -20,42 +20,20 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
+
+import com.sk89q.craftbook.gates.logic.BothTriggeredIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class WirelessReceiver extends AbstractIC {
+public class WirelessReceiver extends BothTriggeredIC {
     
-    protected boolean risingEdge;
     protected String band;
 
-    public WirelessReceiver(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign);
+    public WirelessReceiver(Server server, Sign sign, boolean selfTriggered, Boolean risingEdge) {
+        super(server, sign, selfTriggered, risingEdge, "Wireless Reciever", "RECIEVER");
         
-        this.risingEdge = risingEdge;
-        band = sign.getLine(2);
-    }
-
-    @Override
-    public String getTitle() {
-        return "Wireless Receiver";
-    }
-
-    @Override
-    public String getSignTitle() {
-        return "RECEIVER";
-    }
-
-    @Override
-    public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-            Boolean val = WirelessTransmitter.getValue(band);
-            if (val == null)
-                return;
-            
-            chip.setOutput(0, val);
-        }
+        this.band = sign.getLine(2);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -69,8 +47,29 @@ public class WirelessReceiver extends AbstractIC {
 
         @Override
         public IC create(Sign sign) {
-            return new WirelessReceiver(getServer(), sign, risingEdge);
+            return new WirelessReceiver(getServer(), sign, false, this.risingEdge);
         }
+    }
+    
+    public static class FactoryST extends AbstractICFactory {
+        
+        public FactoryST(Server server) {
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+            return new WirelessReceiver(getServer(), sign, true, null);
+        }
+    }
+
+    @Override
+    protected void work(ChipState chip) {
+        Boolean val = WirelessTransmitter.getValue(band);
+        if (val == null)
+            return;
+        
+        chip.setOutput(0, val);
     }
 
 }

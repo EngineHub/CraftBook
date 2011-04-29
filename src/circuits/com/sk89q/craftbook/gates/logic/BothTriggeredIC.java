@@ -16,6 +16,7 @@ public abstract class BothTriggeredIC extends AbstractIC implements SelfTriggere
         this.title = title;
         this.signTitle = signTitle;
         this.clock = clock;
+        this.triggered = false;
     }
     
     public BothTriggeredIC(Server server, Sign block, boolean selfTriggered, Boolean risingEdge, String title, String signTitle) {
@@ -31,6 +32,7 @@ public abstract class BothTriggeredIC extends AbstractIC implements SelfTriggere
     private final String title;
     private final String signTitle;
     private final Integer clock;
+    private boolean triggered;
     
     protected abstract void work(ChipState chip);
     
@@ -51,8 +53,17 @@ public abstract class BothTriggeredIC extends AbstractIC implements SelfTriggere
 
     @Override
     public final void trigger(ChipState chip) {
-        if ((risingEdge != null) || !(risingEdge ^ chip.getInput(0))) {
-            this.work(new DeclockedChipState(chip, this.clock));
+        if (this.risingEdge != null) {
+            if (this.clock != null) {
+                if (this.risingEdge == chip.getInput(this.clock) && !this.triggered) {
+                    this.work(new DeclockedChipState(chip, this.clock));
+                    this.triggered = true;
+                } else if (this.risingEdge != chip.getInput(this.clock)) {
+                    this.triggered = false;
+                }
+            } else {
+                this.work(chip);
+            }
         }
     }
     
