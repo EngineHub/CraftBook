@@ -115,6 +115,7 @@ public class Bookcase extends AbstractMechanic {
                 if (found) {
                     if (data[i] == 10 || data[i] == 13 || i >= len) {
                         if (last != 10 && last != 13) {
+                            file.close();
                             return buffer.toString();
                         }
                     } else {
@@ -128,6 +129,7 @@ public class Bookcase extends AbstractMechanic {
             }
         }
 
+        file.close();
         return null;
     }
     
