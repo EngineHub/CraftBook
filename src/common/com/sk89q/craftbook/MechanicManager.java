@@ -145,7 +145,7 @@ public class MechanicManager {
             }
             
             event.setCancelled(true);
-            block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN));
+            block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
             block.setTypeId(0);
         }
         
