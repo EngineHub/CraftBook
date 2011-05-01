@@ -15,5 +15,8 @@ minecart-autolaunch-from-station: true
 minecart-slow-when-empty: false
 minecart-max-speed-modifier: 1
 minecart-enable-message-emitters: true
+minecart-destroy-on-exit: false
+minecart-drop-on-exit: false
+minecart-destroy-on-creature-exit: false
 in-cart-control: true
 hinder-pressure-plate-slow: true

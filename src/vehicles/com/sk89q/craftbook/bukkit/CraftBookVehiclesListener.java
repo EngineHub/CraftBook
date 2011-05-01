@@ -99,4 +99,14 @@ public class CraftBookVehiclesListener extends VehicleListener {
 
         cartman.handleMinecartEnter(event);
     }
+
+    /**
+     * Called when an entity exits a vehicle.
+     */
+    @Override
+    public void onVehicleExit(VehicleExitEvent event) {
+        if (!(event.getVehicle() instanceof Minecart)) return;
+
+        cartman.handleMinecartExit(event);
+    }
 }

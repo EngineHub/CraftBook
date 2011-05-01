@@ -8,6 +8,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.vehicle.*;
 import org.bukkit.util.*;
+import org.bukkit.inventory.ItemStack;
 
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
@@ -74,6 +75,23 @@ public class MinecartManager {
             Block director = pickDirector(base, "station");
             if (director == null) return;
             (new CartStation()).launch(((Minecart) cart), director);
+        }
+    }
+
+    public void handleMinecartExit(VehicleExitEvent event) {
+        Entity entity = event.getExited();
+        Vehicle cart = event.getVehicle();
+
+        if (event.isCancelled()) return;
+
+        // destroy/drop on exit
+        if (plugin.getLocalConfiguration().minecartDestroyOnExit) {
+            if (!(plugin.getLocalConfiguration().minecartDestroyOnCreature)
+                 && !(entity instanceof Player)) return;
+            cart.remove();
+            if (plugin.getLocalConfiguration().minecartDropOnExit) {
+                cart.getWorld().dropItem(cart.getLocation(), new ItemStack(328, 1));
+            }
         }
     }
 }

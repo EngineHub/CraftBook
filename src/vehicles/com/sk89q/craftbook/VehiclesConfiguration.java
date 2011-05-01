@@ -52,6 +52,9 @@ public class VehiclesConfiguration {
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
         minecartLaunchFromStation = cfg.getBoolean("minecart-autolaunch-from-station", true);
         minecartMessageEmitters = cfg.getBoolean("minecart-enable-message-emitters", true);
+        minecartDestroyOnExit = cfg.getBoolean("minecart-destroy-on-exit", false);
+        minecartDropOnExit = cfg.getBoolean("minecart-drop-on-exit", false);
+        minecartDestroyOnCreature = cfg.getBoolean("minecart-destroy-on-creature-exit", false);
     }
     
     public final File dataFolder;
@@ -69,6 +72,9 @@ public class VehiclesConfiguration {
     public final boolean minecartSlowWhenEmpty;
     public final boolean minecartLaunchFromStation;
     public final boolean minecartMessageEmitters;
+    public final boolean minecartDestroyOnExit;
+    public final boolean minecartDestroyOnCreature;
+    public final boolean minecartDropOnExit;
     public final double minecartMaxSpeedModifier;
     
 }

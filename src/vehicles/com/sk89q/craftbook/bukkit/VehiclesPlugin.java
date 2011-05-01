@@ -49,6 +49,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         registerEvent(Event.Type.VEHICLE_CREATE, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_MOVE, vehiclesListener);
         registerEvent(Event.Type.VEHICLE_ENTER, vehiclesListener);
+        registerEvent(Event.Type.VEHICLE_EXIT, vehiclesListener);
 
         CraftBookBlockListener blockListener = new CraftBookBlockListener(this);
         registerEvent(Event.Type.REDSTONE_CHANGE, blockListener);
