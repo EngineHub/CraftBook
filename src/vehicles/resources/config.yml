@@ -14,5 +14,6 @@ minecart-decay-time: 0
 minecart-autolaunch-from-station: true
 minecart-slow-when-empty: false
 minecart-max-speed-modifier: 1
+minecart-enable-message-emitters: true
 in-cart-control: true
 hinder-pressure-plate-slow: true

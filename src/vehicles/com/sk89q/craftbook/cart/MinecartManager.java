@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.cart;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -23,6 +24,7 @@ public class MinecartManager {
     
     private VehiclesPlugin plugin;
     private Map<Material,CartMechanism> mechanisms;
+    private Map<String,CartMechanism> anyBlockMechanisms;
     
     public void reloadConfiguration(VehiclesConfiguration cfg) {
         mechanisms = new EnumMap<Material,CartMechanism>(Material.class);
@@ -35,15 +37,31 @@ public class MinecartManager {
         mechanisms.put(cfg.matStation,  new CartStation());
         mechanisms.put(cfg.matEject,    new CartEjector());
         mechanisms.put(cfg.matTeleport, new CartTeleporter());
+
+        anyBlockMechanisms = new HashMap<String,CartMechanism>();
+        anyBlockMechanisms.put("print", new CartMessageEmitter(plugin));
     }
     
     public void handleMinecartBlockChange(VehicleMoveEvent event) {
         Block to = event.getTo().getBlock();
 
         if (to.isBlockPowered()) return;
-
-        CartMechanism thingy = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
-        if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+        CartMechanism matchedMech = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
+        if (matchedMech != null) {
+            matchedMech.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+        } else {
+            if (!(to.getFace(BlockFace.DOWN, 1).getState() instanceof Sign)
+                  && !(to.getFace(BlockFace.DOWN, 2).getState() instanceof Sign)) {
+                return;
+            }
+            for (Iterator<Entry<String,CartMechanism>> it = anyBlockMechanisms.entrySet().iterator(); it.hasNext();) {
+                Entry<String,CartMechanism> nextMech = it.next();
+                Block director = pickDirector(to.getFace(BlockFace.DOWN, 1), nextMech.getKey(), -1);
+                if (director == null) return;
+                matchedMech = nextMech.getValue();
+                matchedMech.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+            }
+        }
     }
 
     public void handleMinecartEnter(VehicleEnterEvent event) {

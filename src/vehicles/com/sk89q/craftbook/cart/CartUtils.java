@@ -15,19 +15,33 @@ public abstract class CartUtils {
     /**
      * Search for a "director" sign one or two blocks below the block that
      * supports the cart tracks.
-     * 
-     * @param base
-     *            the block beneath the tracks
-     * @param keyword
-     *            the case-insensitive keyword to search for between brackets on
-     *            the second line of the sign.
+     *
+     * @param base the block beneath the tracks
+     * @param keyword the case-insensitive keyword to search for between brackets
+     * @param line the line number on which to search for the keyword; -1 searches all lines
+     *
      * @return a director sign if one can be found; null otherwise.
      */
     public static Block pickDirector(Block base, String keyword) {
+        return pickDirector(base, keyword, 1);
+    }
+
+    public static Block pickDirector(Block base, String keyword, int lineNum) {
+        if (lineNum == -1) {
+            for (int i = 1; i <= 2; i++) {
+                Block director = base.getFace(BlockFace.DOWN, i);
+                if (SignUtil.isSign(director)) {
+                    for (String line : ((Sign) director.getState()).getLines()) {
+                        if (line.equalsIgnoreCase("[" + keyword + "]")) return director;
+                    }
+                }
+            }
+        }
+        if (lineNum < 0 || lineNum > 3) return null; // screw with me, I screw with you
         for (int i = 1; i <= 2; i++) {
             Block director = base.getFace(BlockFace.DOWN, i);
             if (SignUtil.isSign(director))
-                if (((Sign)director.getState()).getLine(1).equalsIgnoreCase("["+keyword+"]"))
+                if (((Sign) director.getState()).getLine(lineNum).equalsIgnoreCase("["+keyword+"]"))
                     return director;
         }
         return null;
