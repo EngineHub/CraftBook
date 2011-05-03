@@ -42,12 +42,12 @@ public class LightningSummon extends AbstractIC {
 
     @Override
     public String getTitle() {
-        return "Lightning Summon";
+        return "Zeus Bolt";
     }
 
     @Override
     public String getSignTitle() {
-        return "LIGHTNING SUMMON";
+        return "ZEUS BOLT";
     }
 
     @Override
