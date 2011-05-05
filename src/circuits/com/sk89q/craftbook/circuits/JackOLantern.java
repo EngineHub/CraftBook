@@ -61,11 +61,15 @@ public class JackOLantern extends AbstractMechanic {
      */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+        byte data;
+        
+        data = event.getBlock().getData();
         if (event.getNewCurrent() > 0) {
             event.getBlock().setTypeId(BlockID.JACKOLANTERN);
         } else {
             event.getBlock().setTypeId(BlockID.PUMPKIN);
         }
+        event.getBlock().setData(data, true);
     }
     
     /**
