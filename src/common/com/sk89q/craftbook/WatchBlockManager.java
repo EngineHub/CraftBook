@@ -19,7 +19,6 @@
 
 package com.sk89q.craftbook;
 
-import static com.sk89q.craftbook.bukkit.BukkitUtil.toWorldVector;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,8 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import org.bukkit.event.block.BlockEvent;
-import com.sk89q.craftbook.util.BlockWorldVector;
-import com.sk89q.craftbook.util.BlockWorldVector2D;
+import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * Holds the blocks that are watched by mechanics.
@@ -99,7 +98,7 @@ class WatchBlockManager {
      */
     public void notify(BlockEvent event) {
         Set<PersistentMechanic> pms =
-                watchBlocks.get(toWorldVector(event.getBlock()));
+                watchBlocks.get(BukkitUtil.toWorldVector(event.getBlock()));
         
         if (pms == null) {
             return;

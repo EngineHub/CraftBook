@@ -24,8 +24,11 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.*;
 import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
+import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that
@@ -57,7 +60,7 @@ public class Elevator extends AbstractMechanic {
          */
         @Override
         public Elevator detect(BlockWorldVector pt) throws InvalidMechanismException {
-            Block block = pt.toBlock();
+            Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             Direction dir = isLift(block);
             switch (dir) {

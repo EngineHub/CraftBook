@@ -25,8 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import com.sk89q.craftbook.util.BlockWorldVector;
-import com.sk89q.craftbook.util.BlockWorldVector2D;
+import com.sk89q.worldedit.*;
 
 /**
  * This keeps track of trigger blocks. Trigger blocks are what triggers

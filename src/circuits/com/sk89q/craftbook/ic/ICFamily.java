@@ -19,7 +19,8 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.util.BlockWorldVector;
+
+import com.sk89q.worldedit.*;
 
 /**
  * IC families handle the logic required in figuring out where pins are
