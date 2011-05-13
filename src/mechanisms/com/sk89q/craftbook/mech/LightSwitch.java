@@ -22,11 +22,12 @@ import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.event.player.*;
 import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone
@@ -46,7 +47,7 @@ public class LightSwitch extends AbstractMechanic {
 
         @Override
         public LightSwitch detect(BlockWorldVector pt) {
-            Block block = pt.toBlock();
+            Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.WALL_SIGN)
                 return null;
@@ -125,7 +126,7 @@ public class LightSwitch extends AbstractMechanic {
      * @return
      */
     private boolean toggleLights(BlockWorldVector pt) {
-    	World world = pt.getWorld();
+    	World world = BukkitUtil.toWorld(pt);
     	
     	int wx = pt.getBlockX();
         int wy = pt.getBlockY();

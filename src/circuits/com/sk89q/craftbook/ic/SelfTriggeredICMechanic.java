@@ -22,9 +22,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.bukkit.*;
 
 public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
     
@@ -39,7 +39,7 @@ public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggerin
     @Override
     public void think() {
         BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         BlockState state = block.getState();
         
         if (state instanceof Sign) {

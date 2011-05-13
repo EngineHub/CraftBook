@@ -32,11 +32,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.BlockWorldVector;
-import com.sk89q.craftbook.util.BlockWorldVector2D;
-import com.sk89q.craftbook.util.WorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -149,7 +148,8 @@ public class MechanicListenerAdapter {
             if (!wasChange) {
                 return;
             }
-
+            
+            LocalWorld w = BukkitUtil.getLocalWorld(world);
             int x = v.getBlockX();
             int y = v.getBlockY();
             int z = v.getBlockZ();
@@ -191,22 +191,22 @@ public class MechanicListenerAdapter {
                     //w.fakeData(x, y, z, newLevel);
 
                     int above =          world.getBlockTypeIdAt(x,     y + 1, z);
-
+                    
                     int westSide =       world.getBlockTypeIdAt(x,     y,     z + 1);
                     int westSideAbove =  world.getBlockTypeIdAt(x,     y + 1, z + 1);
                     int westSideBelow =  world.getBlockTypeIdAt(x,     y - 1, z + 1);
                     int eastSide =       world.getBlockTypeIdAt(x,     y,     z - 1);
                     int eastSideAbove =  world.getBlockTypeIdAt(x,     y + 1, z - 1);
                     int eastSideBelow =  world.getBlockTypeIdAt(x,     y - 1, z - 1);
-
+                    
                     int northSide =      world.getBlockTypeIdAt(x - 1, y,     z);
                     int northSideAbove = world.getBlockTypeIdAt(x - 1, y + 1, z);
                     int northSideBelow = world.getBlockTypeIdAt(x - 1, y - 1, z);
                     int southSide =      world.getBlockTypeIdAt(x + 1, y,     z);
                     int southSideAbove = world.getBlockTypeIdAt(x + 1, y + 1, z);
                     int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
-
-
+                    
+                    
                     // Make sure that the wire points to only this block
                     if (!BlockType.isRedstoneBlock(westSide)
                             && !BlockType.isRedstoneBlock(eastSide)
@@ -215,10 +215,10 @@ public class MechanicListenerAdapter {
                             && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
                             && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
                         // Possible blocks north / south
-                        handleDirectWireInput(new WorldVector(world, x - 1, y, z), isOn, block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(world, x + 1, y, z), isOn, block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(world, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(world, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
                     }
 
                     if (!BlockType.isRedstoneBlock(northSide)
@@ -228,14 +228,14 @@ public class MechanicListenerAdapter {
                             && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
                             && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
                         // Possible blocks west / east
-                        handleDirectWireInput(new WorldVector(world, x, y, z - 1), isOn, block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(world, x, y, z + 1), isOn, block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(world, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(world, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
                     }
 
                     // Can be triggered from below
-                    handleDirectWireInput(new WorldVector(world, x, y + 1, z), isOn, block, oldLevel, newLevel);
+                    handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
 
                     return;
                 }
@@ -243,17 +243,17 @@ public class MechanicListenerAdapter {
                 // For redstone wires, the code already exited this method
                 // Non-wire blocks proceed
 
-                handleDirectWireInput(new WorldVector(world, x - 1, y, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x + 1, y, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x, y, z - 1), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x, y, z + 1), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(world, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
 
                 // Can be triggered from below
-                handleDirectWireInput(new WorldVector(world, x, y + 1, z), isOn, block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
 
                 return;
             } finally {
@@ -272,7 +272,7 @@ public class MechanicListenerAdapter {
          */
         protected void handleDirectWireInput(WorldVector pt,
                 boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
-            Block block = pt.getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+            Block block = ((BukkitWorld)pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
             manager.dispatchBlockRedstoneChange(
                     new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
         }
@@ -317,7 +317,7 @@ public class MechanicListenerAdapter {
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
             
-            manager.unload(new BlockWorldVector2D(event.getWorld(), chunkX, chunkZ));
+            manager.unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ));
         }
     }
 }

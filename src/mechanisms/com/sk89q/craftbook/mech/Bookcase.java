@@ -19,7 +19,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -30,7 +29,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -170,7 +169,7 @@ public class Bookcase extends AbstractMechanic {
 
         @Override
         public Bookcase detect(BlockWorldVector pt) {
-            if (pt.getWorld().getBlockTypeIdAt(toLocation(pt)) == BlockID.BOOKCASE) {
+            if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE) {
                 return new Bookcase(pt, plugin);
             }
             

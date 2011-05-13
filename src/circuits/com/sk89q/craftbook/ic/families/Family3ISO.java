@@ -18,12 +18,13 @@
 
 package com.sk89q.craftbook.ic.families;
 
-import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.BlockWorldVector;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.bukkit.*;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

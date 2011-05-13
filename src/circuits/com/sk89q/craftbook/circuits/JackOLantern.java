@@ -19,11 +19,10 @@
 
 package com.sk89q.craftbook.circuits;
 
-import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
-
 import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
@@ -37,7 +36,7 @@ public class JackOLantern extends AbstractMechanic {
         
         @Override
         public JackOLantern detect(BlockWorldVector pt) {
-            int type = pt.getWorld().getBlockTypeIdAt(toLocation(pt));
+            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
             
             if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) {
                 return new JackOLantern(pt);
