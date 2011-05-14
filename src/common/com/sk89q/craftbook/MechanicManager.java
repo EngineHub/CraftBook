@@ -32,10 +32,10 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.ChangedSign;
 import com.sk89q.craftbook.util.*;
-import static com.sk89q.craftbook.bukkit.BukkitUtil.*;
+import com.sk89q.worldedit.*;
+import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
@@ -371,7 +371,7 @@ public class MechanicManager {
             if (state instanceof Sign) {
                 try {
                     try {
-                        load(BukkitUtil.toWorldVector(state.getBlock()));
+                        load(toWorldVector(state.getBlock()));
                     } catch (NullPointerException t) {
                         t.printStackTrace();
                     }

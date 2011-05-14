@@ -34,10 +34,10 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * Handler for cauldrons.
@@ -57,7 +57,7 @@ public class Cauldron extends AbstractMechanic {
 
         @Override
         public Cauldron detect(BlockWorldVector pt) {
-            Block block = pt.toBlock();
+            Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in
             // first
             if (block.getTypeId() == BlockID.AIR)
@@ -166,9 +166,9 @@ public class Cauldron extends AbstractMechanic {
     /**
      * Attempt to perform a cauldron recipe.
      * 
-     * @param pt
      * @param player
-     * @param recipes
+     * @param world
+     * @param pt
      */
     private void performCauldron(Player player, World world, BlockWorldVector pt) {
         // Gotta start at a root Y then find our orientation

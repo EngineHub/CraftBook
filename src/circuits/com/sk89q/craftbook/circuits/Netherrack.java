@@ -20,12 +20,11 @@
 
 package com.sk89q.craftbook.circuits;
 
-import static com.sk89q.craftbook.bukkit.BukkitUtil.toLocation;
-
 import org.bukkit.block.Block;
 import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
@@ -40,7 +39,7 @@ public class Netherrack extends AbstractMechanic {
         
         @Override
         public Netherrack detect(BlockWorldVector pt) {
-            int type = pt.getWorld().getBlockTypeIdAt(toLocation(pt));
+            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
             
             if (type == BlockID.NETHERRACK) {
                 return new Netherrack(pt);

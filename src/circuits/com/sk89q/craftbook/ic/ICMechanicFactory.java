@@ -25,10 +25,10 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.*;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     
@@ -61,7 +61,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     
     @Override
     public ICMechanic detect(BlockWorldVector pt) throws InvalidMechanismException {        
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         
         // if we're not looking at a wall sign, it can't be an IC.
         if (block.getTypeId() != BlockID.WALL_SIGN) return null;
@@ -107,7 +107,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {   
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         
         Matcher matcher = codePattern.matcher(sign.getLine(1));
         if (!matcher.matches()) return null;

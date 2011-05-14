@@ -26,10 +26,10 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.util.BlockWorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.*;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this
@@ -56,7 +56,7 @@ public class ICMechanic extends PersistentMechanic {
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
         BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final BlockState state = block.getState();
@@ -84,7 +84,7 @@ public class ICMechanic extends PersistentMechanic {
     @Override
     public boolean isActive() {
         BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = pt.getWorld().getBlockAt(BukkitUtil.toLocation(pt));
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();

@@ -23,9 +23,12 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.player.*;
 import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.*;
+import com.sk89q.worldedit.bukkit.*;
 import com.sk89q.worldedit.regions.*;
 
 /**
@@ -55,7 +58,7 @@ public class Bridge extends AbstractMechanic {
          */
         @Override
         public Bridge detect(BlockWorldVector pt) throws InvalidMechanismException {
-            Block block = pt.toBlock();
+            Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
             if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
