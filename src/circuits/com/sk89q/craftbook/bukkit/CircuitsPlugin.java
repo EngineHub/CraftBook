@@ -120,11 +120,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
         //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
-        //Missing: 1420
+        icManager.register("MC1420", new DivideByN.Factory(server, true), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os
-        //Missing: 2020 (?)
+        icManager.register("MC2020", new RandomBit.Factory(server, true), familySI3O);
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs
@@ -150,15 +150,13 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 4200
         
         //Self triggered
-        icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
-        icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
-        icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
-        
-        //Missing: 0020
-	    //Missing: 0230     
-	    //Missing: 0262
-	    //Missing: 0420     
-        
+        icManager.register("MC0020", new RandomBit.FactoryST(server), familySISO);
+        icManager.register("MC0111", new WirelessReceiver.FactoryST(server), familySISO);
+        icManager.register("MC0230", new DaySensor.FactoryST(server), familySISO);
+        icManager.register("MC0260", new WaterSensor.FactoryST(server), familySISO);
+        icManager.register("MC0261", new LavaSensor.FactoryST(server), familySISO);
+        icManager.register("MC0262", new LightSensor.FactoryST(server), familySISO);
+        icManager.register("MC0420", new DivideByN.FactoryST(server), familySISO);
     }
     
     /**

@@ -19,40 +19,20 @@
 package com.sk89q.craftbook.gates.logic;
 
 import java.util.Random;
+
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
+
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class RandomBit extends AbstractIC {
+public class RandomBit extends BothTriggeredIC {
+
+    private final Random random = new Random();
     
-    protected Random random = new Random();
-    
-    protected boolean risingEdge;
-
-    public RandomBit(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign);
-        this.risingEdge = risingEdge;
-    }
-
-    @Override
-    public String getTitle() {
-        return "Random Bit";
-    }
-
-    @Override
-    public String getSignTitle() {
-        return "RANDOM BIT";
-    }
-
-    @Override
-    public void trigger(ChipState chip) {
-        if ((risingEdge && chip.getInput(0))
-                || (!risingEdge && !chip.getInput(0))) {
-            chip.setOutput(0, random.nextBoolean());
-        }
+    public RandomBit(Server server, Sign sign, boolean selfTriggered, Boolean risingEdge) {
+        super(server, sign, selfTriggered, risingEdge, "Random Bit", "RANDOM BIT");
     }
 
     public static class Factory extends AbstractICFactory {
@@ -66,8 +46,26 @@ public class RandomBit extends AbstractIC {
 
         @Override
         public IC create(Sign sign) {
-            return new RandomBit(getServer(), sign, risingEdge);
+            return new RandomBit(getServer(), sign, false, risingEdge);
         }
     }
 
+    public static class FactoryST extends AbstractICFactory {
+        
+        public FactoryST(Server server) {
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+            return new RandomBit(getServer(), sign, true, null);
+        }
+    }
+
+    @Override
+    public void work(ChipState chip) {            
+        for (int i = 0; i < chip.getOutputCount(); i++) {
+            chip.setOutput(i, random.nextBoolean());
+        }
+    }
 }

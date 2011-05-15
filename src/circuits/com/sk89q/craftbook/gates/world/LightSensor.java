@@ -20,35 +20,21 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
+
+import com.sk89q.craftbook.gates.logic.BothTriggeredIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class LightSensor extends AbstractIC {
+public class LightSensor extends BothTriggeredIC {
 
-    protected boolean risingEdge;
-
-    public LightSensor(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign);
-        this.risingEdge = risingEdge;
+    public LightSensor(Server server, Sign sign, boolean selfTriggered, Boolean risingEdge) {
+        super(server, sign, selfTriggered, risingEdge, "Light Sensor", "LIGHT SENSOR");
     }
 
     @Override
-    public String getTitle() {
-        return "Light Sensor";
-    }
-
-    @Override
-    public String getSignTitle() {
-        return "LIGHT SENSOR";
-    }
-
-    @Override
-    public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
-            chip.setOutput(0, hasLight());
-        }
+    public void work(ChipState chip) {
+        chip.setOutput(0, hasLight());
     }
 
     /**
@@ -87,8 +73,19 @@ public class LightSensor extends AbstractIC {
 
         @Override
         public IC create(Sign sign) {
-            return new LightSensor(getServer(), sign, risingEdge);
+            return new LightSensor(getServer(), sign, false, risingEdge);
         }
     }
 
+    public static class FactoryST extends AbstractICFactory {
+
+        public FactoryST(Server server) {
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+            return new LightSensor(getServer(), sign, true, null);
+        }
+    }
 }
