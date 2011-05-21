@@ -16,55 +16,54 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.gates.world;
+package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import java.util.Random;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class DaySensor extends AbstractIC {
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
-    protected boolean risingEdge;
+public class TripleRandomBit extends AbstractIC {
 
-    public DaySensor(Server server, Sign sign, boolean risingEdge) {
+    protected Random random = new Random();
+
+    public TripleRandomBit(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
     public String getTitle() {
-        return "Day Sensor";
+        return "Triple Random Bit";
     }
 
     @Override
     public String getSignTitle() {
-        return "DAY SENSOR";
+        return "3-BIT RANDOM";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0)
-                || (!risingEdge && !chip.getInput(0))) {
-            boolean day = (getSign().getBlock().getWorld().getFullTime() % 24000L) < 13000L;
-            chip.setOutput(0, day);
+        if (!chip.getInput(0)) return;
+
+        for (int out = 0; out < 3; out++) {
+            chip.setOutput(out, random.nextBoolean());
         }
     }
 
     public static class Factory extends AbstractICFactory {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new DaySensor(getServer(), sign, risingEdge);
+            return new TripleRandomBit(getServer(), sign);
         }
     }
 
