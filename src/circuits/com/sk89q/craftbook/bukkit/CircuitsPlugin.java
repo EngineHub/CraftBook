@@ -124,9 +124,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os
-        //Missing: 2020 (?)
+        icManager.register("MC2020", new TripleRandomBit.Factory(server), familySI3O);
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
-        
+
         //3ISOs
         icManager.register("MC3002", new AndGate.Factory(server), family3ISO);
         icManager.register("MC3003", new NandGate.Factory(server), family3ISO);
@@ -151,12 +151,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         
         //Self triggered
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
+        icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
+        icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
         
         //Missing: 0020
-	    //Missing: 0230     
-	    //Missing: 0262
 	    //Missing: 0420     
         
     }

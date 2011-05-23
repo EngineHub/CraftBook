@@ -20,6 +20,8 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+import org.bukkit.Location;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -57,12 +59,8 @@ public class LightSensor extends AbstractIC {
      * @return
      */
     private boolean hasLight() {
-        int lightLevel = (int) getSign()
-                .getWorld()
-                .getBlockAt(getSign().getBlock().getLocation().getBlockX(),
-                        getSign().getBlock().getLocation().getBlockY() + 1,
-                        getSign().getBlock().getLocation().getBlockZ())
-                .getLightLevel();
+        Location loc = getSign().getBlock().getLocation();
+        int lightLevel = (int) loc.getWorld().getBlockAt(loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ()).getLightLevel();
         int specifiedLevel = 0;
         try {
             String specified = getSign().getLine(2);
