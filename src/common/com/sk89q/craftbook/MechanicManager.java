@@ -407,7 +407,7 @@ public class MechanicManager {
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
-                    + mechanic.getClass().getCanonicalName(), t);
+                    + ( ( mechanic != null) ? mechanic.getClass().getCanonicalName() : "(unknown mechanic)" ), t);
         }
         
         synchronized(this)

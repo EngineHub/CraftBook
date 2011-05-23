@@ -46,13 +46,13 @@ public class NandGate extends AbstractIC {
 
         int on = 0, valid = 0;
         for (int i = 0; i < chip.getInputCount(); i++) {
-            if (!chip.isValid(i))
-                continue;
+        	if (chip.isValid(i))
+            {
+        		valid++;
 
-            valid++;
-
-            if (chip.getInput(i))
-                on++;
+	            if (chip.getInput(i))
+	                on++;
+            }
         }
 
         // Condition; all valid must NOT be ON, at least one valid.

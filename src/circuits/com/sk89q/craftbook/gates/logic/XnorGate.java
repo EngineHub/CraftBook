@@ -45,12 +45,29 @@ public class XnorGate extends AbstractIC {
     public void trigger(ChipState chip)
     {
 
-    	//Select second input = 2 if valid, otherwise 3. Convenience, ho!
-    	boolean a = chip.get(0);
-    	boolean b = chip.isValid(1) ? chip.get(1) : chip.get(2);
+    	Boolean a = null;
+    	Boolean b = null;
     	
-    	boolean result = (a && b) || (!a && !b); //the bastard child of AND and NOR 
-    	chip.set(3, result);
+    	//New input handling: any/first two valid inputs discovered. Moar flexibility!
+    	for (int i = 0; i < chip.getInputCount(); i++)
+    	{
+    		if (chip.isValid(i))
+    		{
+    			boolean pinval = chip.getInput(i);
+    			//Got pin value, assign to first free variable, break if got both.
+    			if (a == null) a = pinval;
+    			else if (b == null) b = pinval;
+    			else break;
+    		}
+    	}
+    	
+    	if (a == null || b == null)
+    		return;
+    	
+    
+    	
+    	boolean result = (a && b) || (!a && !b);
+    	chip.setOutput(0, result);
         
     }
 
