@@ -18,12 +18,10 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.avaje.ebean.enhance.ant.OfflineFileTransform;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
