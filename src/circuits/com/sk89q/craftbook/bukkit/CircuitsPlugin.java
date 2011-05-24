@@ -154,6 +154,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
+        icManager.register("MC0421", new Monostable.Factory(server), familySISO);
         
         //Missing: 0020
 	    //Missing: 0230     
