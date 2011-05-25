@@ -120,6 +120,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         //Skipping [MC1263] because FalseBook uses [MC(0,1)263]
         icManager.register("MC1264", new EntitySensor.Factory(server, true), familySISO);
+        
+        icManager.register("MC1290", new SignSpinner.Factory(server, true), familySISO);
 
         //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
         //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
