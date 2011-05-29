@@ -115,7 +115,7 @@ public class Bridge extends AbstractMechanic {
         BlockFace dir = SignUtil.getFacing(trigger);
         
         this.trigger = trigger;
-        this.global = plugin;
+        this.plugin = plugin;
         this.settings = plugin.getLocalConfiguration().bridgeSettings; 
         
         // Attempt to detect whether the bridge is above or below the sign,
@@ -180,7 +180,7 @@ public class Bridge extends AbstractMechanic {
         // Win!
     }
     
-    private MechanismsPlugin global;
+    private MechanismsPlugin plugin;
     private MechanismsConfiguration.BridgeSettings settings;
     
     /** The signpost we came from. */
@@ -199,12 +199,12 @@ public class Bridge extends AbstractMechanic {
     
     @Override
     public void onRightClick(PlayerInteractEvent event) {
-        if (!global.getLocalConfiguration().bridgeSettings.enable) return;
+        if (!plugin.getLocalConfiguration().bridgeSettings.enable) return;
         
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) 
             return; //wth? our manager is insane
         
-        BukkitPlayer player = new BukkitPlayer(global, event.getPlayer());
+        BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if ( !player.hasPermission("craftbook.mech.bridge.use"))
         {
             player.printError("You don't have permission to use bridges.");
@@ -218,15 +218,15 @@ public class Bridge extends AbstractMechanic {
     
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-        if (!global.getLocalConfiguration().bridgeSettings.enableRedstone) return;
+        if (!plugin.getLocalConfiguration().bridgeSettings.enableRedstone) return;
         
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
         if (event.getNewCurrent() == event.getOldCurrent()) return;
         
         if (event.getNewCurrent() == 0) {
-            global.getServer().getScheduler().scheduleSyncDelayedTask(global, new ToggleRegionOpen(), 2);
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
         } else {
-            global.getServer().getScheduler().scheduleSyncDelayedTask(global, new ToggleRegionClosed(), 2);
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(), 2);
         }
     }
     
