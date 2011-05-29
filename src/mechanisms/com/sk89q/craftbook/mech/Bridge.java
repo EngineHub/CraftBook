@@ -25,6 +25,7 @@ import org.bukkit.event.player.*;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.*;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.*;
@@ -39,6 +40,7 @@ import com.sk89q.worldedit.regions.*;
  * 
  */
 public class Bridge extends AbstractMechanic {
+    
     public static class Factory extends AbstractMechanicFactory<Bridge> {
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
@@ -97,6 +99,7 @@ public class Bridge extends AbstractMechanic {
             throw new ProcessedMechanismException();
         }
     }
+    //Factory ends here
     
     /**
      * @param trigger
@@ -198,8 +201,18 @@ public class Bridge extends AbstractMechanic {
     public void onRightClick(PlayerInteractEvent event) {
         if (!global.getLocalConfiguration().bridgeSettings.enable) return;
         
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) 
+            return; //wth? our manager is insane
+        
+        BukkitPlayer player = new BukkitPlayer(global, event.getPlayer());
+        if ( !player.hasPermission("craftbook.mech.bridge.use"))
+        {
+            player.printError("You don't have permission to use bridges.");
+            return;
+        }
+        
         flipState();
+        
         //notify event.getPlayer();
     }
     
