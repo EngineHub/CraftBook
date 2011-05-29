@@ -132,7 +132,10 @@ class TriggerBlockManager {
                 continue;
             }
             
-            folks.add(entry.getValue());
+            PersistentMechanic pMechanic = entry.getValue();
+            
+            if (pMechanic != null)
+                folks.add(entry.getValue());
         }
         return folks;
     }

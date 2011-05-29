@@ -403,6 +403,13 @@ public class MechanicManager {
      * @param mechanic
      */
     protected void unload(Mechanic mechanic) {
+            
+        if (mechanic == null)
+        {
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
+            return;   
+        }
+        
         try {
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
