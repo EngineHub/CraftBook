@@ -113,6 +113,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);  // REQ PERM
         //Missing: 1205                                                                         // REQ PERM
         //Missing: 1206                                                                         // REQ PERM
+        icManager.register("MC1209", new SchematicPaster.Factory(server, true), familySISO); // REQ PERM
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);        // REQ PERM
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
@@ -163,8 +164,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 0020
 	    //Missing: 0230     
 	    //Missing: 0262
-	    //Missing: 0420     
-        
+	    //Missing: 0420        
     }
     
     /**
