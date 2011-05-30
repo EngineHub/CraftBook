@@ -97,9 +97,12 @@ public class EntitySensor extends AbstractIC {
     public EntitySensor(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
         this.risingEdge = risingEdge;
-        Configuration config = server.getPluginManager().getPlugin("CraftBookCircuits").getConfiguration();
-        maxArea = config.getInt("max-entity-sensor-area", 16*16*4);
-        maxDistance = config.getInt("max-entity-sensor-distance", 16*3);
+        maxArea = 16*16*4;
+        maxDistance = 16*3;
+        //This doesn't actually work apparently.
+        //Configuration config = server.getPluginManager().getPlugin("CraftBookCircuits").getConfiguration();
+        //maxArea = config.getInt("max-entity-sensor-area", 16*16*4);
+        //maxDistance = config.getInt("max-entity-sensor-distance", 16*3);
     }
 
     @Override
@@ -138,7 +141,7 @@ public class EntitySensor extends AbstractIC {
         List<Character> matchClass = new LinkedList<Character>();
         
         //parse
-        //Line 2: Get search infos
+        //Line 2: Get search info
         if (sign.getLine(2).length() == 0) {
             throw new ICVerificationException("Example usage: Line 1: p:*Notch|v:Cart  Line 2: @10  or  2,2,2;4,4,4");
         }
