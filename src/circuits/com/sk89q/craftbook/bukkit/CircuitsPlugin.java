@@ -113,11 +113,17 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);  // REQ PERM
         //Missing: 1205                                                                         // REQ PERM
         //Missing: 1206                                                                         // REQ PERM
+        icManager.register("MC1209", new SchematicPaster.Factory(server, true), familySISO); // REQ PERM
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);        // REQ PERM
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
+        //Skipping [MC1263] because FalseBook uses [MC(0,1)263]
+        icManager.register("MC1264", new EntitySensor.Factory(server, true), familySISO);
+        
+        icManager.register("MC1290", new SignSpinner.Factory(server, true), familySISO);
+
         //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
         //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
         //Missing: 1420
@@ -140,6 +146,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3036", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
+        icManager.register("MC3201", new SimpleSong.Factory(server, true), family3ISO);
         //Missing: 3231                                                                         // REQ PERM
         
         //3I3Os
@@ -159,8 +166,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 0020
 	    //Missing: 0230     
 	    //Missing: 0262
-	    //Missing: 0420     
-        
+	    //Missing: 0420        
     }
     
     /**

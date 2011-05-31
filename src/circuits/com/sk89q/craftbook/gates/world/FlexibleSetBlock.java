@@ -25,6 +25,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -122,6 +123,43 @@ public class FlexibleSetBlock extends AbstractIC {
         @Override
         public IC create(Sign sign) {
             return new FlexibleSetBlock(getServer(), sign);
+        }
+        
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+	        String line3 = sign.getLine(2).toUpperCase();
+	        if (line3.length() < 5)
+	            throw new ICVerificationException("Syntax example: X+3:3");
+	
+	
+	        // Get and validate axis
+	        String axis = line3.substring(0, 1);
+	        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
+	            throw new ICVerificationException("Must provide an axis X, Y, or Z");
+	
+	        // Get and validate operator
+	        String op = line3.substring(1, 2);
+	        if (!op.equals("+") && !op.equals("-"))
+	            throw new ICVerificationException("Must give either + or -");
+	
+	        // Get and validate distance
+	        String sdist = line3.substring(2, 3);
+	        try {
+	            Integer.parseInt(sdist);
+	        } catch (NumberFormatException e) {
+	            throw new ICVerificationException("Must give an integer");
+	        }
+	
+	        // Syntax requires a : at idx 3
+	        if (!line3.substring(3, 4).equals(":"))
+	            throw new ICVerificationException("Must have a :");
+	
+	        String sblock = line3.substring(4);
+	        try {
+	            Integer.parseInt(sblock);
+	        } catch (NumberFormatException e) {
+	            throw new ICVerificationException("Must give a block ID number");
+	        }
         }
     }
 

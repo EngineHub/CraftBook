@@ -1,6 +1,6 @@
 // $Id$
 /*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ * Copyright (C) 2011 purpleposeidon@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +54,15 @@ public class LightningSummon extends AbstractIC {
     public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
             Location loc = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
+            if (getSign().getLine(2).length() != 0) {
+                try {
+                    double y = Integer.parseInt(getSign().getLine(2)) + loc.getY();
+                    loc.setY(y);
+                }
+                catch (NumberFormatException e) {
+                    return;
+                }
+            }
             getSign().getWorld().strikeLightning(loc);
         }
     }
