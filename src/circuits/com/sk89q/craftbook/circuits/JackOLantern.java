@@ -68,7 +68,7 @@ public class JackOLantern extends AbstractMechanic {
         } else {
             event.getBlock().setTypeId(BlockID.PUMPKIN);
         }
-        event.getBlock().setData(data, true);
+        event.getBlock().setData(data, false);
     }
     
     /**
