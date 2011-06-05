@@ -17,6 +17,18 @@ import com.sk89q.craftbook.*;
  * 
  */
 public abstract class CartMechanism {
+    /**
+     * Represents the power input state of a cart mechanism.
+     */
+    public enum Power { 
+        /** No power supply is connected.  (This may cause a mechanism to either default to its ON or OFF behavior or do something else entirely; it depends on the mechanism. */
+        NA,
+        /** At least one power supply is connected, and at least one power supply is on. */  
+        ON,
+        /** At least one power supply is connected, and zero power supplies are on. */
+        OFF
+    }
+    
     public abstract void impact(Minecart cart, Block entered, Block from);
     
     /**
