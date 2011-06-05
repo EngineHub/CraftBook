@@ -39,6 +39,7 @@ public class CraftBookVehiclesListener extends VehicleListener {
     
     protected VehiclesPlugin plugin;
     protected MinecartManager cartman;
+    public static final boolean PROCESS_BOUNDARY_CROSS_ONLY = false;
     
     /**
      * Called when a vehicle is created.
@@ -65,12 +66,14 @@ public class CraftBookVehiclesListener extends VehicleListener {
         // Ignore events not relating to minecrarts.
         if (!(event.getVehicle() instanceof Minecart)) return;
         
-        // Ignore events that don't involve crossing the boundary from one block to another.
-        Location from = event.getFrom();
-        Location to = event.getTo();
-        if (from.getBlockX() == to.getBlockX()
-         && from.getBlockY() == to.getBlockY()
-         && from.getBlockZ() == to.getBlockZ()) return;
+        if (PROCESS_BOUNDARY_CROSS_ONLY) {
+            // Ignore events that don't involve crossing the boundary from one block to another.
+            Location from = event.getFrom();
+            Location to = event.getTo();
+            if (from.getBlockX() == to.getBlockX()
+             && from.getBlockY() == to.getBlockY()
+             && from.getBlockZ() == to.getBlockZ()) return;
+        }
         
         // ...Okay, go ahead then.
         cartman.handleMinecartBlockChange(event);
