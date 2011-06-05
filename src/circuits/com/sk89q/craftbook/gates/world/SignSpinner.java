@@ -31,6 +31,8 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
+import com.sk89q.worldedit.data.BlockData;
+
 
 /*
  * [MC1290] Sign Spinner
@@ -44,6 +46,13 @@ import com.sk89q.craftbook.util.SignUtil;
 public class SignSpinner extends AbstractIC {
 
     protected boolean risingEdge;
+    
+    static Material spinnable[] = new Material[] {
+            Material.PUMPKIN, Material.JACK_O_LANTERN,
+            Material.DIODE_BLOCK_ON, Material.DIODE_BLOCK_OFF,
+            Material.FURNACE, Material.BURNING_FURNACE, Material.DISPENSER,
+            Material.WOOD_STAIRS, Material.COBBLESTONE_STAIRS,
+            Material.DETECTOR_RAIL, Material.RAILS, Material.POWERED_RAIL};
 
     public SignSpinner(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
@@ -80,86 +89,31 @@ public class SignSpinner extends AbstractIC {
             	loc.setY(loc.getY()+1);
             	Block here = loc.getBlock();
             	Material m = here.getType();
-            	int data = here.getData();
-            	if (m == Material.FENCE) {} //spins the fence posts
-            	else if (m == Material.SOUL_SAND) {} //spins in grave
+            	
+            	if (m == Material.FENCE || m == Material.SOUL_SAND) {} //spins fence posts; souls spin in graves
             	else if (m == Material.SIGN_POST) {
+            	    int data = here.getData();
             		data = data + rotation % 16;
+            		here.setData((byte) data, true);
             	}
-            	else if (m == Material.PUMPKIN || m == Material.JACK_O_LANTERN) {
-            		data = (data + blockRotation) % 4;
+            	else {
+            	    boolean validMaterial = false;
+            	    for (Material s : spinnable) {
+            	        if (m == s) {
+            	            byte data = here.getData();
+            	            for (byte r = blockRotation; r != 0; r--) {
+            	                data = (byte) BlockData.rotate90(m.getId(), data);
+            	            }
+            	            here.setData(data, true);
+            	            validMaterial = true;
+            	            break;
+            	        }
+            	    }
+            	    if (!validMaterial) break;
+            	    //TODO: Update block (So that spinning a diode next to a torch will get the proper behavior)
             	}
-            	//and now it all goes to hell
-            	//(WorldEdit's BlockDataCycler does not rotate things properly)
-            	else if (m == Material.DIODE_BLOCK_ON || m == Material.DIODE_BLOCK_OFF) {
-            		int direction = data & 0x3;
-            		direction = (direction+blockRotation) % 4;
-            		data &= ~0x3;
-            		data |= direction;
-            	}
-            	else if (m == Material.FURNACE || m == Material.BURNING_FURNACE || m == Material.DISPENSER) {
-            		data -= 2;
-            		//EWNS
-            		byte rotationsMap[][] = {
-            				{0, 3, 1, 2},
-            				{1, 2, 0, 3},
-            				{2, 0, 3, 1},
-            				{3, 1, 2, 0}
-            		};
-            		data = rotationsMap[data][blockRotation];
-            		data += 2;
-            	}
-            	else if (m == Material.WOOD_STAIRS || m == Material.COBBLESTONE_STAIRS) {
-            		//SNWE
-            		byte rotationsMap[][] = {
-            				{0, 2, 1, 3},
-            				{1, 3, 0, 2},
-            				{2, 1, 3, 0},
-            				{3, 0, 2, 1}
-            		};
-            		data = rotationsMap[data][blockRotation];
-            	}
-            	else if (m == Material.DETECTOR_RAIL || m == Material.RAILS || m == Material.POWERED_RAIL) {
-            		byte powerState = 0;
-            		if (m == Material.POWERED_RAIL) {
-            			//Doesn't have rotations, instead has power
-            			powerState = (byte) (data & 0x8);
-            			data ^= powerState;
-            		}
-            		if (data == 0 || data == 1) {
-            			//east-west or north-south rails
-	            		if (blockRotation % 2 == 1) {
-	            			if (data == 0) data = 1;
-	            			else data = 0;
-	            		}
-	            		//otherwise, it'd be back where it was
-            		}
-            		else if (2 <= data && data <= 5) {
-            			//A ramp
-            			data -= 2;
-                		//SNWE
-                		byte rotationsMap[][] = {
-                				{0, 2, 1, 3},
-                				{1, 3, 0, 2},
-                				{2, 1, 3, 0},
-                				{3, 0, 2, 1}
-                		};
-                		data = rotationsMap[data][blockRotation];
-            			data += 2;
-            		}
-            		else if (6 <= data && data <= 9) {
-            			//curved rail
-            			data -= 6;
-            			data = (data + blockRotation) % 4;
-            			data += 6;
-            			//should be a regular rail!
-            		}
-            		data |= powerState; //put the power state back in
-            	}
-            	else { //stop at an unspinable block
-            		break;
-            	}
-            	here.setData((byte) data, true);
+            	//TODO: Spin attached torches, levers, trap doors.
+            	//Spinning walls signs might cause too much excitement and packets?
             }
         }
 	}
