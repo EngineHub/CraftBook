@@ -404,8 +404,7 @@ public class MechanicManager {
      */
     protected void unload(Mechanic mechanic) {
             
-        if (mechanic == null)
-        {
+        if (mechanic == null) {
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
             return;   
         }
@@ -413,12 +412,10 @@ public class MechanicManager {
         try {
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload "
-                    + ( ( mechanic != null) ? mechanic.getClass().getCanonicalName() : "(unknown mechanic)" ), t);
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName(), t);
         }
         
-        synchronized(this)
-        {
+        synchronized (this) {
         	thinkingMechanics.remove(mechanic);
         }
 
