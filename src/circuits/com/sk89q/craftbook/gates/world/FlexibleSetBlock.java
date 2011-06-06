@@ -21,6 +21,7 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -53,18 +54,21 @@ public class FlexibleSetBlock extends AbstractIC {
 
         chip.setOutput(0, chip.getInput(0));
 
-        if (line3.length() < 5)
+        if (line3.length() < 5) {
             return;
+        }
 
         // Get and validate axis
         String axis = line3.substring(0, 1);
-        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
+        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) {
             return;
+        }
 
         // Get and validate operator
         String op = line3.substring(1, 2);
-        if (!op.equals("+") && !op.equals("-"))
+        if (!op.equals("+") && !op.equals("-")) {
             return;
+        }
 
         // Get and validate distance
         String sdist = line3.substring(2, 3);
@@ -75,12 +79,14 @@ public class FlexibleSetBlock extends AbstractIC {
             return;
         }
 
-        if (op.equals("-"))
+        if (op.equals("-")) {
             dist = -dist;
+        }
 
         // Syntax requires a : at idx 3
-        if (!line3.substring(3, 4).equals(":"))
+        if (!line3.substring(3, 4).equals(":")) {
             return;
+        }
 
         String sblock = line3.substring(4);
         int block = -1;
@@ -99,22 +105,24 @@ public class FlexibleSetBlock extends AbstractIC {
         int y = body.getY();
         int z = body.getZ();
 
-        if (axis.equals("X"))
+        if (axis.equals("X")) {
             x += dist;
-        else if (axis.equals("Y"))
+        } else if (axis.equals("Y")) {
             y += dist;
-        else
+        } else {
             z += dist;
+        }
 
-        if (inp)
+        if (inp) {
             body.getWorld().getBlockAt(x, y, z).setTypeId(block);
-        else if (hold)
+        } else if (hold) {
             body.getWorld().getBlockAt(x, y, z).setTypeId(0);
+        }
 
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
             super(server);
@@ -124,42 +132,46 @@ public class FlexibleSetBlock extends AbstractIC {
         public IC create(Sign sign) {
             return new FlexibleSetBlock(getServer(), sign);
         }
-        
+
         @Override
         public void verify(Sign sign) throws ICVerificationException {
-	        String line3 = sign.getLine(2).toUpperCase();
-	        if (line3.length() < 5)
-	            throw new ICVerificationException("Syntax example: X+3:3");
-	
-	
-	        // Get and validate axis
-	        String axis = line3.substring(0, 1);
-	        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
-	            throw new ICVerificationException("Must provide an axis X, Y, or Z");
-	
-	        // Get and validate operator
-	        String op = line3.substring(1, 2);
-	        if (!op.equals("+") && !op.equals("-"))
-	            throw new ICVerificationException("Must give either + or -");
-	
-	        // Get and validate distance
-	        String sdist = line3.substring(2, 3);
-	        try {
-	            Integer.parseInt(sdist);
-	        } catch (NumberFormatException e) {
-	            throw new ICVerificationException("Must give an integer");
-	        }
-	
-	        // Syntax requires a : at idx 3
-	        if (!line3.substring(3, 4).equals(":"))
-	            throw new ICVerificationException("Must have a :");
-	
-	        String sblock = line3.substring(4);
-	        try {
-	            Integer.parseInt(sblock);
-	        } catch (NumberFormatException e) {
-	            throw new ICVerificationException("Must give a block ID number");
-	        }
+            String line3 = sign.getLine(2).toUpperCase();
+            if (line3.length() < 5) {
+                throw new ICVerificationException("Syntax example: X+3:3");
+            }
+
+
+            // Get and validate axis
+            String axis = line3.substring(0, 1);
+            if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) {
+                throw new ICVerificationException("Must provide an axis X, Y, or Z");
+            }
+
+            // Get and validate operator
+            String op = line3.substring(1, 2);
+            if (!op.equals("+") && !op.equals("-")) {
+                throw new ICVerificationException("Must give either + or -");
+            }
+
+            // Get and validate distance
+            String sdist = line3.substring(2, 3);
+            try {
+                Integer.parseInt(sdist);
+            } catch (NumberFormatException e) {
+                throw new ICVerificationException("Must give an integer");
+            }
+
+            // Syntax requires a : at idx 3
+            if (!line3.substring(3, 4).equals(":")) {
+                throw new ICVerificationException("Must have a :");
+            }
+
+            String sblock = line3.substring(4);
+            try {
+                Integer.parseInt(sblock);
+            } catch (NumberFormatException e) {
+                throw new ICVerificationException("Must give a block ID number");
+            }
         }
     }
 

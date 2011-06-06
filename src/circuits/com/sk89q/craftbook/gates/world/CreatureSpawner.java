@@ -78,7 +78,7 @@ public class CreatureSpawner extends AbstractIC {
                         }
                         return;
                     }
-                } 
+                }
             }
         }
     }

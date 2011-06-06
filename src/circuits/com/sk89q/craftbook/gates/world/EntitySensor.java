@@ -42,22 +42,22 @@ import com.sk89q.worldedit.Vector2D;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
-/* 
+/**
  * Checks an area for entities.
  * 
  * USAGE EXAMPLES:
  * 
- * 	[MC1246]
+ *  [MC1246]
  *  p:c
  *  @5
  *  Looks for players in a radius of 5
- *  
- *  
+ * 
+ * 
  *  [MC1246]
  *  i:357
  *  @5
  *  Will detect a dropped cookie
- *  
+ * 
  *  c:p|i:357 checks for players or for cookies
  *  v:*Cart checks for all types of minecarts
  *  p:notch checks for Notch
@@ -71,10 +71,10 @@ import com.sk89q.worldedit.regions.CuboidRegion;
  *  	matchString := '*' string_to_start_with | string_to_be
  * 
  * 	Line 3: Search area. Syntax:
- *  	@radius - search in that radius (Actually, the box containing the sphere of that radius) 
+ *  	@radius - search in that radius (Actually, the box containing the sphere of that radius)
  *  	x1,y1,z1;x2,y2,z2 - Specifies a cuboid to search in. They extend out from opposite sides of the sign,
  *  						so if both are positive, then the sign will be included. If one has all negative components,
- *  						the sign will not be included. 
+ *  						the sign will not be included.
  *  	x1,y1,z1Xx2,y2,z2 - Like above, except using hexadecimal.
  * 
  * 	The following options for letter are available:
@@ -83,7 +83,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
  *  	a: Alive entities (Mobs, Animals, Players)
  *  	v: Vehicle
  *  	c: Entity class: Either 'm' for Monster, 'a' for Animal, 'p' for Player, 'v' for Vehicle
- *  
+ * 
  *  @author purpleposeidon
  */
 
@@ -91,7 +91,14 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 public class EntitySensor extends AbstractIC {
 
     protected boolean risingEdge;
-    protected final static int maxArea = 16*16*4, maxDistance = 16*3;
+    /**
+     * Maximum size of the region to search
+     */
+    protected final static int maxArea = 16 * 16 * 4;
+    /**
+     * How far away the search region can be from the sign
+     */
+    protected final static int maxDistance = 16 * 3;
 
     public EntitySensor(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
@@ -107,7 +114,7 @@ public class EntitySensor extends AbstractIC {
     public String getSignTitle() {
         return "THING SENSOR";
     }
-    
+
     @Override
     public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0)
@@ -121,19 +128,21 @@ public class EntitySensor extends AbstractIC {
         }
     }
 
-    public static boolean doMatch(Sign sign, boolean verify_only) throws ICVerificationException {
+    public static boolean doMatch(Sign sign, boolean verify_only)
+    throws ICVerificationException {
         List<String> matchPlayer = new LinkedList<String>();
-        List<Integer> matchItem = new LinkedList<Integer>(); //honestly, it'd be just as easy to have it match name instead of ID.
+        List<Integer> matchItem = new LinkedList<Integer>();
         List<String> matchAlive = new LinkedList<String>();
         List<String> matchVehicle = new LinkedList<String>();
         List<Character> matchClass = new LinkedList<Character>();
-        
-        //parse
-        //Line 2: Get search info
+        String pattern_syntax_msg = "Pattern syntax is searchType:matchItem. Use ?:? to get searchTypes.";
+
         if (sign.getLine(2).length() == 0) {
             throw new ICVerificationException("Example usage: Line 1: p:*Notch|v:Cart  Line 2: @10  or  2,2,2;4,4,4");
         }
-        String pattern_syntax_msg = "Pattern syntax is searchType:matchItem. Use ?:? to get searchTypes.";
+        /*
+         * Parse search info from Line 2
+         */
         for (String pattern : sign.getLine(2).split("\\|")) {
             pattern = pattern.toLowerCase();
             if (pattern.length() < 3) {
@@ -141,7 +150,9 @@ public class EntitySensor extends AbstractIC {
             }
             String searchType = pattern.substring(0, 3);
             String item = pattern.substring(2);
-            if (searchType.charAt(1) != ':') throw new ICVerificationException("Line 2: " + pattern_syntax_msg);
+            if (searchType.charAt(1) != ':') {
+                throw new ICVerificationException("Line 2: " + pattern_syntax_msg);
+            }
             switch (searchType.charAt(0)) {
             case 'p':
                 matchPlayer.add(item);
@@ -162,36 +173,46 @@ public class EntitySensor extends AbstractIC {
                 break;
             case 'c':
                 for (char c: item.toCharArray()) {
-                    String i = ""+c;
+                    String i = "" + c;
                     if (!"mcpv".contains(i)) {
-                        throw new ICVerificationException("Line 2: Unknown class " + i + ". Valid are m(onster), c(reature), p(layer), v(ehicle)");
+                        throw new ICVerificationException("Line 2: Unknown class " + i
+                                + ". Valid are m(onster), c(reature), p(layer), v(ehicle)");
                     }
                     matchClass.add(item.charAt(0));
                 }
                 break;
             default:
-                throw new ICVerificationException("Line 2: Unknown searchType "+searchType.charAt(0)+":, use  p(layer) i(tem) a(live) v(ehicle) c(lass). Eg, p:Notch");
+                throw new ICVerificationException("Line 2: Unknown searchType " + searchType.charAt(0)
+                        + ":, use  p(layer) i(tem) a(live) v(ehicle) c(lass). Eg, p:Notch");
             }
         }
+
+        /*
+         * Get search region from line 3
+         */
         CuboidRegion cube;
         String line3 = sign.getLine(3);
         String line3_clueless = "Line 3: Search area. '@5' for a 10x10x10, or '-3,-3,-3;2,2,5' to look in that cuboid";
-        if (line3.length() == 0) throw new ICVerificationException(line3_clueless);
         Vector here = BukkitUtil.toVector(sign.getBlock());
+
+        if (line3.length() == 0) {
+            throw new ICVerificationException(line3_clueless);
+        }
         if (line3.contains(";") || line3.contains("X")) {
-        	int radix;
-        	if (line3.contains("X")) radix = 16;
-        	else radix = 10;
-        	
-            String[] vectors = line3.split("[X;]");;
-            if (vectors.length != 2) throw new ICVerificationException("Line 3: Need 2 points to define cuboid. 2,2,2;3,3,3");
+            int radix = line3.contains("X") ? 16 : 10;
+            String[] vectors = line3.split("[X;]");
             Vector p1, p2;
+
+            if (vectors.length != 2) {
+                throw new ICVerificationException("Line 3: Need 2 points to define cuboid. 2,2,2;3,3,3");
+            }
+
             try {
-            	p1 = parseVector(vectors[0], radix);
-            	p2 = parseVector(vectors[1], radix);
+                p1 = parseVector(vectors[0], radix);
+                p2 = parseVector(vectors[1], radix);
             }
             catch (NumberFormatException e) {
-            	throw new ICVerificationException("Line 3: Invalid number, " + e);
+                throw new ICVerificationException("Line 3: Invalid number, " + e);
             }
             p1 = here.add(p1);
             p2 = here.subtract(p2);
@@ -199,6 +220,7 @@ public class EntitySensor extends AbstractIC {
         }
         else if (line3.startsWith("@")) {
             int i;
+
             try {
                 i = Integer.parseInt(line3.substring(1));
             }
@@ -207,82 +229,108 @@ public class EntitySensor extends AbstractIC {
             }
             Vector v = BukkitUtil.toVector(sign.getBlock());
             cube = new CuboidRegion(v.add(i, i, i), v.add(-i, -i, -i));
-        }
-        else {
+        } else {
             throw new ICVerificationException(line3_clueless);
         }
-        
+
         int area = cube.getWidth()*cube.getHeight();
         if (area > maxArea) {
-        	throw new ICVerificationException("Search area of "+area+" square meters is larger than the maximum permitted, " + maxArea);
+            throw new ICVerificationException("Search area of " + area
+                    + " square meters is larger than the maximum permitted, " + maxArea);
         }
-        
-        Vector cubeCenter = cube.getPos1().add(cube.getPos2()).divide(2);
-        
-        if (cubeCenter.distanceSq(here) > maxDistance*maxDistance) {
-        	throw new ICVerificationException("The center of the search area is too far away from the sign");
-        }
-        
-        if (verify_only) return false;
 
-        //now search. Finally.
+        Vector cubeCenter = cube.getPos1().add(cube.getPos2()).divide(2);
+
+        if (cubeCenter.distanceSq(here) > maxDistance*maxDistance) {
+            throw new ICVerificationException("The center of the search area is too far away from the sign");
+        }
+
+        if (verify_only) {
+            return false;
+        }
+
+        /*
+         * Perform search
+         */
         World world = sign.getWorld();
-        
+
         for (Vector2D chunkVector : cube.getChunks()) {
             for (Entity entity : world.getChunkAt(chunkVector.getBlockX(), chunkVector.getBlockZ()).getEntities()) {
                 Vector entityVector = BukkitUtil.toVector(entity.getLocation());
-                if (!cube.contains(entityVector)) continue;
-                
+                if (!cube.contains(entityVector)) {
+                    continue;
+                }
+
                 if (entity instanceof Player) {
                     String name = ((Player)entity).getName();
-                    if (checkMatch(name, matchPlayer)) return true;
+                    if (checkMatch(name, matchPlayer)) {
+                        return true;
+                    }
                 }
                 if (entity instanceof Item) {
                     int typeId = ((Item)entity).getItemStack().getTypeId();
-                    if (matchItem.contains(typeId)) return true;
+                    if (matchItem.contains(typeId)) {
+                        return true;
+                    }
                 }
                 if (entity instanceof LivingEntity) {
                     String name = ((LivingEntity)entity).toString();
-                    if (checkMatch(name, matchAlive)) return true;
+                    if (checkMatch(name, matchAlive)) {
+                        return true;
+                    }
                 }
                 if (entity instanceof Vehicle) {
                     String name = ((Vehicle)entity).toString();
-                    if (checkMatch(name, matchVehicle)) return true;
+                    if (checkMatch(name, matchVehicle)) {
+                        return true;
+                    }
                 }
                 for (Character c : matchClass) {
-                    if (c == 'm' && entity instanceof Monster) return true;
-                    if (c == 'c' && entity instanceof Creature) return true;
-                    if (c == 'p' && entity instanceof Player) return true;
-                    if (c == 'v' && entity instanceof Vehicle) return true;
+                    if ((c == 'm' && entity instanceof Monster)
+                            || (c == 'c' && entity instanceof Creature)
+                            || (c == 'p' && entity instanceof Player)
+                            || (c == 'v' && entity instanceof Vehicle)) {
+                        return true;
+                    }
                 }
             }
         }
-        return false; //found nothing
+
+        return false;   /* found nothing */
     }
-    
+
     static Vector parseVector(String src, int radix) throws NumberFormatException {
         Vector result = new Vector();
         String[] comps = src.split(",");
-        if (comps.length != 3) throw new NumberFormatException("Must have 3 comma-seperated components in vector");
+
+        if (comps.length != 3) {
+            throw new NumberFormatException("Must have 3 comma-seperated components in vector");
+        }
         result = result.setX(Integer.parseInt(comps[0], radix));
         result = result.setY(Integer.parseInt(comps[1], radix));
         result = result.setZ(Integer.parseInt(comps[2], radix));
         return result;
     }
-    
+
     static boolean checkMatch(String name, List<String> options) {
-        if (options.size() == 0) return false;
+        if (options.size() == 0) {
+            return false;
+        }
         name = name.toLowerCase();
-        System.out.println("Checking " + name + " against " + options);
-        if (name.startsWith("craft")) name = name.substring("craft".length());
-        System.out.println("-->" + name);
-        System.out.println(name.trim() == options.get(0).trim());
-        for (String o : options) {
-            if (o.charAt(0) == '*') {
-                if (name.contains(o.substring(1))) return true;
+        if (name.startsWith("craft")) {
+            //Remove that
+            name = name.substring("craft".length());
+        }
+        for (String option : options) {
+            if (option.charAt(0) == '*') {
+                if (name.contains(option.substring(1))) {
+                    return true;
+                }
             }
             else {
-                if (name == o) return true;
+                if (name == option) {
+                    return true;
+                }
             }
         }
         return false;
@@ -301,10 +349,10 @@ public class EntitySensor extends AbstractIC {
         public void verify(Sign sign) throws ICVerificationException {
             doMatch(sign, true);
         }
-        
+
         @Override
         public IC create(Sign sign) {
-            return new EntitySensor(getServer(), sign, risingEdge); 
+            return new EntitySensor(getServer(), sign, risingEdge);
         }
     }
 

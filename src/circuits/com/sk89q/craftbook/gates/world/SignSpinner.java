@@ -30,29 +30,30 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
-
 import com.sk89q.worldedit.data.BlockData;
 
-
-/*
- * [MC1290] Sign Spinner
- * 2nd line: How many steps to spin. This is a value from -16 to +16.
- * Every 4 is a full block rotation. Blocks will rotate only if the rotation is a multiple of 4.
+/**
+ * [MC1290] Sign Spinner 2nd line: How many steps to spin. This is a value from
+ * -16 to +16. Every 4 is a full block rotation. Blocks will rotate only if the
+ * rotation is a multiple of 4.
  * 
- * The following blocks rotate: Signs, pumpkins, diodes, furnaces, dispensers, stairs, rails
- * The following blocks transfer rotational power: fence posts, soul sand
+ * The following blocks rotate: Signs, pumpkins, diodes, furnaces, dispensers,
+ * stairs, rails The following blocks transfer rotational power: fence posts,
+ * soul sand
+ * 
+ * @author purpleposeidon
  */
 
 public class SignSpinner extends AbstractIC {
 
     protected boolean risingEdge;
-    
-    static Material spinnable[] = new Material[] {
-            Material.PUMPKIN, Material.JACK_O_LANTERN,
-            Material.DIODE_BLOCK_ON, Material.DIODE_BLOCK_OFF,
-            Material.FURNACE, Material.BURNING_FURNACE, Material.DISPENSER,
-            Material.WOOD_STAIRS, Material.COBBLESTONE_STAIRS,
-            Material.DETECTOR_RAIL, Material.RAILS, Material.POWERED_RAIL};
+
+    static Material spinnable[] = new Material[] { Material.PUMPKIN,
+        Material.JACK_O_LANTERN, Material.DIODE_BLOCK_ON,
+        Material.DIODE_BLOCK_OFF, Material.FURNACE,
+        Material.BURNING_FURNACE, Material.DISPENSER, Material.WOOD_STAIRS,
+        Material.COBBLESTONE_STAIRS, Material.DETECTOR_RAIL,
+        Material.RAILS, Material.POWERED_RAIL };
 
     public SignSpinner(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
@@ -69,57 +70,65 @@ public class SignSpinner extends AbstractIC {
         return "ROTOR";
     }
 
-	@Override
-	public void trigger(ChipState chip) {
+    @Override
+    public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
             Location loc = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
             int rotation;
-            try {
-            	rotation = Integer.parseInt(getSign().getLine(2));
-            }
-            catch (NumberFormatException e) {
-            	rotation = 1;
-            }
-            rotation %= 16;
             byte blockRotation = 0;
-            if ((rotation % 4) == 0)
-            	blockRotation = (byte) (rotation / 4);
-            
+
+            try {
+                rotation = Integer.parseInt(getSign().getLine(2));
+            } catch (NumberFormatException e) {
+                rotation = 1;
+            }
+
+            rotation %= 16;
+
+            if ((rotation % 4) == 0) {
+                blockRotation = (byte) (rotation / 4);
+            }
+
             for (int i = 0; i < 16; i++) {
-            	loc.setY(loc.getY()+1);
-            	Block here = loc.getBlock();
-            	Material m = here.getType();
-            	
-            	if (m == Material.FENCE || m == Material.SOUL_SAND) {} //spins fence posts; souls spin in graves
-            	else if (m == Material.SIGN_POST) {
-            	    int data = here.getData();
-            		data = data + rotation % 16;
-            		here.setData((byte) data, true);
-            	}
-            	else {
-            	    boolean validMaterial = false;
-            	    for (Material s : spinnable) {
-            	        if (m == s) {
-            	            byte data = here.getData();
-            	            for (byte r = blockRotation; r != 0; r--) {
-            	                data = (byte) BlockData.rotate90(m.getId(), data);
-            	            }
-            	            here.setData(data, true);
-            	            validMaterial = true;
-            	            break;
-            	        }
-            	    }
-            	    if (!validMaterial) break;
-            	    //TODO: Update block (So that spinning a diode next to a torch will get the proper behavior)
-            	}
-            	//TODO: Spin attached torches, levers, trap doors.
-            	//Spinning walls signs might cause too much excitement and packets?
+                loc.setY(loc.getY() + 1);
+                Block here = loc.getBlock();
+                Material m = here.getType();
+
+                if (m == Material.FENCE || m == Material.SOUL_SAND) {
+                    /* spins fence posts; souls spin in graves */
+                }
+                else if (m == Material.SIGN_POST) {
+                    int data = here.getData();
+                    data = data + rotation % 16;
+                    here.setData((byte) data, true);
+                } else {
+                    boolean validMaterial = false;
+                    for (Material s : spinnable) {
+                        if (m == s) {
+                            byte data = here.getData();
+                            for (byte r = blockRotation; r != 0; r--) {
+                                data = (byte) BlockData.rotate90(m.getId(), data);
+                            }
+                            here.setData(data, true);
+                            validMaterial = true;
+                            break;
+                        }
+                    }
+                    if (!validMaterial) {
+                        break;
+                    }
+                    // TODO: Update block (So that spinning a diode between a torch
+                    // and redstone dust will cause proper behavior)
+                }
+                // TODO: Spin attached torches, levers, trap doors.
+                // Spinning walls signs might cause too much excitement and
+                // packets?
             }
         }
-	}
-	
-    
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    }
+
+    public static class Factory extends AbstractICFactory implements
+    RestrictedIC {
 
         protected boolean risingEdge;
 
@@ -134,5 +143,3 @@ public class SignSpinner extends AbstractIC {
         }
     }
 }
-
-
