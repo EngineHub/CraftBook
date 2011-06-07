@@ -156,10 +156,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
         
-        //Missing: 0020
-	    //Missing: 0230     
-	    //Missing: 0262
-	    //Missing: 0420     
+        /* Implimented by NeverCast on 7/Jun/2011 */
+        icManager.register("MC0020", new RandomIC.Factory(server), familySISO);
+        icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
+        icManager.register("MC0262", new LightSensorST.Factory(server), familySISO); 
         
     }
     
