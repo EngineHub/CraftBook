@@ -39,7 +39,7 @@ public class CraftBookVehiclesListener extends VehicleListener {
     
     protected VehiclesPlugin plugin;
     protected MinecartManager cartman;
-    public static final boolean PROCESS_BOUNDARY_CROSS_ONLY = false;
+    public static final boolean PROCESS_BOUNDARY_CROSS_ONLY = false;    // it's possible that this condition may later be applied on a per-mechanism basis; unsure.
     
     /**
      * Called when a vehicle is created.

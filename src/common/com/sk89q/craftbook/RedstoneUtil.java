@@ -1,6 +1,9 @@
 package com.sk89q.craftbook;
 
+import org.bukkit.*;
 import org.bukkit.block.*;
+
+import com.sk89q.worldedit.blocks.*;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic
@@ -12,15 +15,64 @@ import org.bukkit.block.*;
  */
 public abstract class RedstoneUtil {
     /**
-     * @param block 
-     * @param face
-     * @return Boolean.TRUE if power is supplied by the given face;
-     *         Boolean.FALSE if there is a potential power source at the given
-     *         face, but it is not providing power; null if there is no
-     *         potential power source at the given face.
+     * Represents the power input state of a mechanism.
      */
-    public static Boolean isBlockFacePowered(Block block, BlockFace face) {
-        if (block.isBlockFacePowered(face)) return true;
-        return com.sk89q.worldedit.blocks.BlockType.isRedstoneBlock(block.getFace(face).getTypeId()) ? Boolean.FALSE : null;
+    public enum Power { 
+        /** No potential power source is connected.  (This may cause a mechanism to either default to its ON or OFF behavior or do something else entirely; it depends on the mechanism. */
+        NA,
+        /** At least one potential power source is connected, and at least power source is on. */  
+        ON,
+        /** At least one potential power source is connected, but zero are on. */
+        OFF
+    }
+    
+    /**
+     * @param mech
+     * @param face
+     * @return Power.ON if the block on mech's face is a potential power source and is powered;
+     *         Power.Off if the block on mech's face is a potential power source but it is not providing power;
+     *         Power.NA if there is no potential power source at the given face.
+     */
+    public static Power isPowered(Block mech, BlockFace face) {
+        Block pow = mech.getFace(face);
+        if (isPotentialPowerSource(mech, pow)) {
+            if (pow.isBlockPowered()) return Power.ON;
+            return Power.OFF;
+        }
+        return Power.NA;
+    }
+    
+    /**
+     * @param pow
+     * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be wires).
+     */
+    public static boolean isPotentialPowerSource(Block pow) {
+        return (pow.getType() == Material.REDSTONE_WIRE);
+        //return BlockType.isRedstoneBlock(pow.getTypeId());
+    }
+    
+    /**
+     * @param mech
+     * @param pow
+     * @return true if a mechanism in the mech block is able to receive power from the pow block (i.e. if it's a power conductor and if it has a sense of directionality it is also pointing at mech).
+     */
+    public static boolean isPotentialPowerSource(Block mech, Block pow) {
+        //FIXME this method doesn't actually take direction into account which is its stated purpose
+        return (pow.getType() == Material.REDSTONE_WIRE);
+    }
+    
+    
+    
+    public static void debug(Block block) {
+        System.out.println("block "+block+" power debug:");
+        System.out.println("\tblock.isBlockPowered() : "+block.isBlockPowered());
+        System.out.println("\tblock.isBlockIndirectlyPowered() : "+block.isBlockIndirectlyPowered());
+        for (BlockFace bf : BlockFace.values()) {
+            System.out.println("\tblock.isBlockFacePowered("+bf+") : "+block.isBlockFacePowered(bf));
+            System.out.println("\tblock.getFace("+bf+").isBlockPowered() : "+block.getFace(bf).isBlockPowered());
+            System.out.println("\tblock.isBlockFaceIndirectlyPowered("+bf+") : "+block.isBlockFaceIndirectlyPowered(bf));
+            System.out.println("\tblock.getFace("+bf+").isBlockIndirectlyPowered("+bf+") : "+block.getFace(bf).isBlockIndirectlyPowered());
+        }
+        System.out.println();
     }
 }
