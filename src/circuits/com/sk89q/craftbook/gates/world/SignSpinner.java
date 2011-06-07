@@ -1,6 +1,6 @@
 // $Id$
 /*
- * Copyright (C) 2011 purpleposeidon@gmail.com
+ * Copyright (C) 2011 wiz's mom
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
