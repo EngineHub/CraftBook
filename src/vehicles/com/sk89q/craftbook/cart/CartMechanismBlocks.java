@@ -53,20 +53,15 @@ public class CartMechanismBlocks {
      * 
      * @param unknown
      *            the block to examine.
-     * @param mat
-     *            to be considered a base, the unknown block must match this
-     *            material type.
      */
-    public static CartMechanismBlocks find(Block unknown, Material mat) throws InvalidMechanismException {
+    public static CartMechanismBlocks find(Block unknown) throws InvalidMechanismException {
         final int ti = unknown.getTypeId();
         if (SignUtil.isSign(ti))
             return findBySign(unknown);
-        else if (ti == mat.getId())
-            return findByBase(unknown);
         else if (BlockType.isRailBlock(ti))
             return findByRail(unknown);
         else
-            throw new InvalidMechanismException("wat");
+            return findByBase(unknown);
     }
 
     /**
@@ -101,8 +96,8 @@ public class CartMechanismBlocks {
             );
         }
         return new CartMechanismBlocks(
-                rail.getFace(BlockFace.DOWN, 1),
                 rail,
+                rail.getFace(BlockFace.DOWN, 1),
                 null
         );
     }
