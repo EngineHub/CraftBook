@@ -18,8 +18,17 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
+import org.bukkit.event.Event.*;
+import org.bukkit.event.block.*;
+import org.bukkit.event.vehicle.*;
+
 import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.cart.*;
+import com.sk89q.craftbook.mech.*;
+import com.sk89q.worldedit.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -28,12 +37,17 @@ import com.sk89q.craftbook.*;
  */
 public class VehiclesPlugin extends BaseBukkitPlugin {
     
-    protected VehiclesConfiguration config;
+    private VehiclesConfiguration config;
+    private VehicleListener lvehicle;
+    private BlockListener lblock;
+    private MinecartManager cartman;
+    
     
     @Override
     public void onEnable() {
         super.onEnable();
         
+        cartman = new MinecartManager(this);
     }
     
     @Override
@@ -43,12 +57,78 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfiguration(), getDataFolder());
         
-        CraftBookVehiclesListener vehiclesListener = new CraftBookVehiclesListener(this);
-        registerEvent(Event.Type.VEHICLE_CREATE, vehiclesListener);
-        registerEvent(Event.Type.VEHICLE_MOVE, vehiclesListener);
+        lvehicle = new CraftBookVehicleListener();
+        lblock = new CraftBookVehicleBlockListener();
+        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_CREATE,  lvehicle, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_MOVE,    lvehicle, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.REDSTONE_CHANGE, lblock,   Priority.Normal, this);
     }
     
     public VehiclesConfiguration getLocalConfiguration() {
         return config;
+    }
+    
+    
+    
+    /**
+     * Preprocesses event data coming directly from bukkit and passes it off to
+     * appropriate logic in MinecartManager.
+     */
+    class CraftBookVehicleListener extends VehicleListener {
+        public CraftBookVehicleListener() {}
+        
+        public static final boolean PROCESS_BOUNDARY_CROSS_ONLY = false;    // it's possible that this condition may later be applied on a per-mechanism basis; unsure.
+        
+        /**
+         * Called when a vehicle is created.
+         */
+        @Override
+        public void onVehicleCreate(VehicleCreateEvent event) {
+            Vehicle vehicle = event.getVehicle();
+            
+            // Ignore events not relating to minecrarts.
+            if (!(vehicle instanceof Minecart)) return;
+            
+            // Modify the vehicle properties according to config.
+            VehiclesConfiguration config = getLocalConfiguration();
+            Minecart minecart = (Minecart) vehicle;
+            minecart.setSlowWhenEmpty(config.minecartSlowWhenEmpty);
+            minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
+        }
+        
+        /**
+         * Called when an vehicle moves.
+         */
+        @Override
+        public void onVehicleMove(VehicleMoveEvent event) {
+            // Ignore events not relating to minecrarts.
+            if (!(event.getVehicle() instanceof Minecart)) return;
+            
+            if (PROCESS_BOUNDARY_CROSS_ONLY) {
+                // Ignore events that don't involve crossing the boundary from one block to another.
+                Location from = event.getFrom();
+                Location to = event.getTo();
+                if (from.getBlockX() == to.getBlockX()
+                 && from.getBlockY() == to.getBlockY()
+                 && from.getBlockZ() == to.getBlockZ()) return;
+            }
+            
+            // ...Okay, go ahead then.
+            cartman.impact(event);
+        }
+    }
+    
+    
+    
+    class CraftBookVehicleBlockListener extends BlockListener {
+        public CraftBookVehicleBlockListener() {}
+        
+        @Override
+        public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+            // ignore events that are only changes in current strength
+            if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
+            
+            cartman.impact(event);
+        }
     }
 }
