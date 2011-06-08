@@ -4,6 +4,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.*;
 
+import com.sk89q.craftbook.RedstoneUtil.*;
 import com.sk89q.craftbook.util.*;
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
@@ -13,6 +14,8 @@ public class CartReverser extends CartMechanism {
         if (cart == null) return;
         
         // go
+        if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
+        
         if (blocks.sign == null) {
             // there's no restrictions on when we reverse
             reverse(cart);
