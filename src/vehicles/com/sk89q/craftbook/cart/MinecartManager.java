@@ -2,6 +2,7 @@ package com.sk89q.craftbook.cart;
 
 import java.util.*;
 import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.vehicle.*;
@@ -30,18 +31,6 @@ public class MinecartManager {
             ent.getValue().setMaterial(ent.getKey());
     }
     
-    public void impact(BlockRedstoneEvent event) {
-        try {
-            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getBlock());
-            CartMechanism thingy = mechanisms.get(cmb.base.getType());
-            if (thingy != null)
-                thingy.impact(CartMechanism.getCart(cmb.rail), cmb);
-        } catch (InvalidMechanismException e) {
-            /* okay, so there's nothing interesting to see here.  carry on then, eh? */
-            return;
-        }
-    }
-    
     public void impact(VehicleMoveEvent event) {
         try {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
@@ -51,6 +40,35 @@ public class MinecartManager {
         } catch (InvalidMechanismException e) {
             /* okay, so there's nothing interesting to see here.  carry on then, eh? */
             return;
+        }
+    }
+    
+    public void impact(BlockRedstoneEvent event) {
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DelayedImpact(event));
+    }
+
+    /**
+     * Bukkit reports redstone events before updating the status of the relevant
+     * blocks... which had the rather odd effect of causing only input wires
+     * from the north causing the responses intended. Scheduling the impact
+     * check one tick later dodges the whole issue.
+     */
+    private class DelayedImpact implements Runnable {
+        public DelayedImpact(BlockRedstoneEvent event) {
+            huh = event.getBlock();
+        }
+        private final Block huh;
+        
+        public void run() {
+            try {
+                CartMechanismBlocks cmb = CartMechanismBlocks.find(huh);
+                CartMechanism thingy = mechanisms.get(cmb.base.getType());
+                if (thingy != null)
+                    thingy.impact(CartMechanism.getCart(cmb.rail), cmb); 
+            } catch (InvalidMechanismException e) {
+                /* okay, so there's nothing interesting to see here.  carry on then, eh? */
+                return;
+            }
         }
     }
 }
