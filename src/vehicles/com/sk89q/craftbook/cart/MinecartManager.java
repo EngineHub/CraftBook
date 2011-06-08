@@ -1,10 +1,9 @@
 package com.sk89q.craftbook.cart;
 
 import java.util.*;
-
 import org.bukkit.*;
-import org.bukkit.block.*;
 import org.bukkit.entity.*;
+import org.bukkit.event.block.*;
 import org.bukkit.event.vehicle.*;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.*;
@@ -27,16 +26,31 @@ public class MinecartManager {
         mechanisms.put(cfg.matReverse,  new CartReverser());
         mechanisms.put(cfg.matSorter,   new CartSorter());
         mechanisms.put(cfg.matStation,  new CartStation());
+        for (Map.Entry<Material,CartMechanism> ent : mechanisms.entrySet())
+            ent.getValue().setMaterial(ent.getKey());
     }
     
-    public void handleMinecartBlockChange(VehicleMoveEvent event) {
-        Block to = event.getTo().getBlock();
-        
-        //System.err.println("to=  "+to+";");
-        //System.err.println("from="+event.getFrom()+";");
-        //System.err.println("cart="+event.getVehicle().getLocation());
-        
-        CartMechanism thingy = mechanisms.get(to.getFace(BlockFace.DOWN).getType());
-        if (thingy != null) thingy.impact((Minecart)event.getVehicle(), to, event.getFrom().getBlock());
+    public void impact(BlockRedstoneEvent event) {
+        try {
+            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getBlock());
+            CartMechanism thingy = mechanisms.get(cmb.base.getType());
+            if (thingy != null)
+                thingy.impact(CartMechanism.getCart(cmb.rail), cmb);
+        } catch (InvalidMechanismException $e) {
+            /* okay, so there's nothing interesting to see here.  carry on then, eh? */
+            return;
+        }
+    }
+    
+    public void impact(VehicleMoveEvent event) {
+        try {
+            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
+            CartMechanism thingy = mechanisms.get(cmb.base.getType());
+            if (thingy != null)
+                thingy.impact((Minecart)event.getVehicle(), cmb);
+        } catch (InvalidMechanismException $e) {
+            /* okay, so there's nothing interesting to see here.  carry on then, eh? */
+            return;
+        }
     }
 }
