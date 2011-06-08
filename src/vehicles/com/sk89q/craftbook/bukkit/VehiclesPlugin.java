@@ -27,7 +27,6 @@ import org.bukkit.event.vehicle.*;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.cart.*;
-import com.sk89q.craftbook.mech.*;
 import com.sk89q.worldedit.*;
 
 /**
