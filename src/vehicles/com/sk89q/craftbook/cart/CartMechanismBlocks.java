@@ -58,7 +58,7 @@ public class CartMechanismBlocks {
      *            to be considered a base, the unknown block must match this
      *            material type.
      */
-    public CartMechanismBlocks find(Block unknown, Material mat) throws InvalidMechanismException {
+    public static CartMechanismBlocks find(Block unknown, Material mat) throws InvalidMechanismException {
         final int ti = unknown.getTypeId();
         if (SignUtil.isSign(ti))
             return findBySign(unknown);
@@ -85,8 +85,8 @@ public class CartMechanismBlocks {
      * @param rail
      *            the block containing the rails.
      */
-    public CartMechanismBlocks findByRail(Block rail) throws InvalidMechanismException {
-        if (!BlockType.isRailBlock(sign.getTypeId())) throw new InvalidMechanismException("rail argument must be a rail!");
+    public static CartMechanismBlocks findByRail(Block rail) throws InvalidMechanismException {
+        if (!BlockType.isRailBlock(rail.getTypeId())) throw new InvalidMechanismException("rail argument must be a rail!");
         if (SignUtil.isSign(rail.getFace(BlockFace.DOWN, 2).getTypeId())) {
             return new CartMechanismBlocks(
                     rail,
@@ -112,19 +112,19 @@ public class CartMechanismBlocks {
      *            the block on which the rails sit; the type of this block is
      *            what determines the mechanism type.
      */
-    public CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
+    public static CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
         if (!BlockType.isRailBlock(base.getFace(BlockFace.UP, 1).getTypeId())) throw new InvalidMechanismException("could not find rails.");
-        if (SignUtil.isSign(rail.getFace(BlockFace.DOWN, 1).getTypeId())) {
+        if (SignUtil.isSign(base.getFace(BlockFace.DOWN, 1).getTypeId())) {
             return new CartMechanismBlocks(
                     base.getFace(BlockFace.UP, 1),
                     base,
-                    rail.getFace(BlockFace.DOWN, 1)
+                    base.getFace(BlockFace.DOWN, 1)
             );
-        } else if (SignUtil.isSign(rail.getFace(BlockFace.DOWN, 2).getTypeId())) {
+        } else if (SignUtil.isSign(base.getFace(BlockFace.DOWN, 2).getTypeId())) {
             return new CartMechanismBlocks(
                     base.getFace(BlockFace.UP, 1),
                     base,
-                    rail.getFace(BlockFace.DOWN, 2)
+                    base.getFace(BlockFace.DOWN, 2)
             );
         }
         throw new InvalidMechanismException("could not find sign.");
@@ -140,7 +140,7 @@ public class CartMechanismBlocks {
      *            the block containing the sign that gives additional
      *            configuration to the mechanism.
      */
-    public CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
+    public static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
         if (!SignUtil.isSign(sign)) throw new InvalidMechanismException("sign argument must be a sign!");
         if (BlockType.isRailBlock(sign.getFace(BlockFace.UP, 2).getTypeId())) {
             return new CartMechanismBlocks(
