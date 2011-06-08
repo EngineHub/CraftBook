@@ -76,8 +76,15 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      */
     class CraftBookVehicleListener extends VehicleListener {
         public CraftBookVehicleListener() {}
-        
-        public static final boolean PROCESS_BOUNDARY_CROSS_ONLY = false;    // it's possible that this condition may later be applied on a per-mechanism basis; unsure.
+
+        /**
+         * Beware that turning this on makes it impossible for stations to
+         * enforce their brake locking, and it also radically changes the impact
+         * of mechanisms like boosters and brakes that multiply cart properties,
+         * since it changes whether or not they are capable of multiplying their
+         * own effects.
+         */
+        public static final boolean PROCESS_BOUNDARY_CROSS_ONLY = false;
         
         /**
          * Called when a vehicle is created.
