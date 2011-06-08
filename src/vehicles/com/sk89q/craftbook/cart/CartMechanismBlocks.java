@@ -45,6 +45,30 @@ public class CartMechanismBlocks {
         this.base = base;
         this.sign = sign;
     }
+
+    /**
+     * <p>
+     * Detecting factory; defers to one of the other three specific detecting
+     * factories based on whether the given unknown block appears to be a sign,
+     * rail, or base.
+     * 
+     * @param unknown
+     *            the block to examine.
+     * @param mat
+     *            to be considered a base, the unknown block must match this
+     *            material type.
+     */
+    public CartMechanismBlocks find(Block unknown, Material mat) throws InvalidMechanismException {
+        final int ti = unknown.getTypeId();
+        if (SignUtil.isSign(ti))
+            return findBySign(unknown);
+        else if (ti == mat.getId())
+            return findByBase(unknown);
+        else if (BlockType.isRailBlock(ti))
+            return findByRail(unknown);
+        else
+            throw new InvalidMechanismException("wat");
+    }
     
     /**
      * <p>
