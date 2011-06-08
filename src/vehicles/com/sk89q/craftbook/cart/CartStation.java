@@ -49,7 +49,7 @@ public class CartStation extends CartMechanism {
      * WorldEdit's Vector type collides with Bukkit's Vector type here.  It's not pleasant.
      */
     public static Vector FUUUUUUUUUUUUUUUUU(BlockFace face) {
-        return new Vector(face.getModX()*0.1, face.getModY()*0.1, face.getModZ()*0.1);
+        return new Vector(face.getModX()*0.05, face.getModY()*0.05, face.getModZ()*0.05);
     }
     
     // someday: stations with an additional flag on the third line could autolaunch when players enter a parked cart.
