@@ -35,8 +35,9 @@ public abstract class RedstoneUtil {
      */
     public static Power isPowered(Block mech, BlockFace face) {
         Block pow = mech.getFace(face);
+        //debug(pow);
         if (isPotentialPowerSource(mech, pow)) {
-            if (pow.isBlockPowered()) return Power.ON;
+            if (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) return Power.ON;
             return Power.OFF;
         }
         return Power.NA;

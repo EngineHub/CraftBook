@@ -38,6 +38,7 @@ public abstract class CartMechanism {
     public Power isActive(Block base, Block rail, Block sign) {
         boolean isWired = false;
         if (sign != null) {
+            //System.out.println("\tsign:");
             switch (isActive(sign)) {
                 case ON: return Power.ON; 
                 case NA: break;
@@ -45,6 +46,7 @@ public abstract class CartMechanism {
             }
         }
         if (base != null) {
+            //System.out.println("\tbase:");
             switch (isActive(base)) {
                 case ON: return Power.ON; 
                 case NA: break;
@@ -52,7 +54,8 @@ public abstract class CartMechanism {
             }
         }
         if (rail != null) {
-            switch (isActive(base)) {
+            //System.out.println("\trail:");
+            switch (isActive(rail)) {
                 case ON: return Power.ON; 
                 case NA: break;
                 case OFF: isWired = true;
@@ -68,7 +71,14 @@ public abstract class CartMechanism {
     private Power isActive(Block block) {
         boolean isWired = false;
         for (BlockFace face : powerSupplyOptions) {
-            switch (RedstoneUtil.isPowered(block, face)) {
+            //System.out.println("\t\tdirection:"+face);
+            Power p = RedstoneUtil.isPowered(block, face);
+            //switch (p) {
+            //    case ON:  System.out.println("\t\t\tpower:ON");  break;
+            //    case NA:  System.out.println("\t\t\tpower:NA");  break;
+            //    case OFF: System.out.println("\t\t\tpower:OFF"); break;
+            //}
+            switch (p) {
                 case ON: return Power.ON;
                 case NA: break;
                 case OFF: isWired = true;
