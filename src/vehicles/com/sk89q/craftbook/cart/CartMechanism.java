@@ -36,7 +36,7 @@ public abstract class CartMechanism {
      
     
     protected Material material; void setMaterial(Material mat) { material = mat; }
-    protected static final BlockFace[] powerSupplyOptions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
+    public static final BlockFace[] powerSupplyOptions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
     
     /**
      * Determins if a cart mechanism should be enabled.
@@ -110,12 +110,9 @@ public abstract class CartMechanism {
     public static Minecart getCart(Block rail) {
         for (Entity ent : rail.getChunk().getEntities()) {
             if (!(ent instanceof Minecart)) continue;
-            if (ent.getLocation().getX() > rail.getLocation().getX()+1) continue;
-            if (ent.getLocation().getY() > rail.getLocation().getY()+1) continue;
-            if (ent.getLocation().getZ() > rail.getLocation().getZ()+1) continue;
-            if (ent.getLocation().getX() < rail.getLocation().getX()) continue;
-            if (ent.getLocation().getY() < rail.getLocation().getY()) continue;
-            if (ent.getLocation().getZ() < rail.getLocation().getZ()) continue;
+            if (ent.getLocation().getBlockX() != rail.getLocation().getBlockX()) continue;
+            if (ent.getLocation().getBlockY() != rail.getLocation().getBlockY()) continue;
+            if (ent.getLocation().getBlockZ() != rail.getLocation().getBlockZ()) continue;
             return (Minecart) ent;
         }
         return null;

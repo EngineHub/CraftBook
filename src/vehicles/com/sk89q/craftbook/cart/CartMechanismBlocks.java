@@ -47,7 +47,6 @@ public class CartMechanismBlocks {
     }
 
     /**
-     * <p>
      * Detecting factory; defers to one of the other three specific detecting
      * factories based on whether the given unknown block appears to be a sign,
      * rail, or base.

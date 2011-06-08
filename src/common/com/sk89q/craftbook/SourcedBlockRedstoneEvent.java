@@ -31,7 +31,12 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
     private static final long serialVersionUID = 1031838877588760298L;
     
     protected Block source;
-
+    
+    public SourcedBlockRedstoneEvent(BlockRedstoneEvent event, Block block) {
+        super(block, event.getOldCurrent(), event.getNewCurrent());
+        this.source = event.getBlock();
+    }
+    
     public SourcedBlockRedstoneEvent(Block source, Block block, int old, int n) {
         super(block, old, n);
         this.source = source;

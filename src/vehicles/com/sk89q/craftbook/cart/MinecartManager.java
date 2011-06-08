@@ -36,7 +36,7 @@ public class MinecartManager {
             CartMechanism thingy = mechanisms.get(cmb.base.getType());
             if (thingy != null)
                 thingy.impact(CartMechanism.getCart(cmb.rail), cmb);
-        } catch (InvalidMechanismException $e) {
+        } catch (InvalidMechanismException e) {
             /* okay, so there's nothing interesting to see here.  carry on then, eh? */
             return;
         }
@@ -48,7 +48,7 @@ public class MinecartManager {
             CartMechanism thingy = mechanisms.get(cmb.base.getType());
             if (thingy != null)
                 thingy.impact((Minecart)event.getVehicle(), cmb);
-        } catch (InvalidMechanismException $e) {
+        } catch (InvalidMechanismException e) {
             /* okay, so there's nothing interesting to see here.  carry on then, eh? */
             return;
         }

@@ -19,6 +19,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.*;
@@ -127,7 +128,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             // ignore events that are only changes in current strength
             if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
             
-            cartman.impact(event);
+            // remember that bukkit only gives us redstone events for wires and things that already respond to redstone, which is entirely unhelpful.
+            // So: issue four actual events per bukkit event.
+            for (BlockFace bf : CartMechanism.powerSupplyOptions)
+                cartman.impact(new SourcedBlockRedstoneEvent(event, event.getBlock().getFace(bf)));
         }
     }
 }
