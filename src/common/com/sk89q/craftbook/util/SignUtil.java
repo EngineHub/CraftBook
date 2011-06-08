@@ -58,7 +58,10 @@ import com.sk89q.worldedit.blocks.*;
  */
 public class SignUtil {
     public static boolean isSign(Block keith) {
-        return (keith.getTypeId() == BlockID.SIGN_POST || keith.getTypeId() == BlockID.WALL_SIGN);
+        return isSign(keith.getTypeId());
+    }
+    public static boolean isSign(int typeid) {
+        return (typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN);
     }
     
     /**
