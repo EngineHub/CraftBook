@@ -18,15 +18,27 @@
 
 package com.sk89q.craftbook;
 
+import java.io.*;
+
+import org.bukkit.util.config.*;
+
 /**
  * Configuration handler for CraftBook.
  * 
  * @author sk89q
  */
-public abstract class CircuitsConfiguration {
-    /**
-     * Load the configuration data from somewhere. This may be called
-     * repeatedly to reload the configuration at any time.
-     */
-    public abstract void loadConfiguration();
+public class CircuitsConfiguration {
+    public CircuitsConfiguration(Configuration cfg, File dataFolder) {
+        this.dataFolder = dataFolder;
+        
+        enableNetherstone = cfg.getBoolean("redstone-netherstone", false);
+        enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
+        enableICs         = cfg.getBoolean("redstone-ics", true);
+    }
+    
+    public final File dataFolder;
+
+    public final boolean enableNetherstone;
+    public final boolean enablePumpkins;
+    public final boolean enableICs;
 }

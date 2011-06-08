@@ -22,8 +22,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
 import com.sk89q.bukkit.migration.*;
-import com.sk89q.craftbook.CircuitsConfiguration;
-import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.circuits.*;
 import com.sk89q.craftbook.gates.logic.*;
 import com.sk89q.craftbook.gates.world.*;
@@ -47,18 +46,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        
-        createDefaultConfiguration("custom-ics.txt");
-        
-        config = new CircuitsConfiguration() {
-            @Override
-            public void loadConfiguration() {
-            }
-        };
-        
-        config.loadConfiguration();
-        
         Server server = getServer();
+        
+        createDefaultConfiguration("config.yml");
+        createDefaultConfiguration("custom-ics.txt");
+        config = new CircuitsConfiguration(getConfiguration(), getDataFolder());
         
         // Prepare to answer permissions questions.
         perms = new PermissionsResolverManager(
@@ -76,11 +68,16 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerICs();
         
         // Let's register mechanics!
-        manager.register(new Netherrack.Factory());
-        manager.register(new JackOLantern.Factory());
-        manager.register(new ICMechanicFactory(this, icManager));
-        
-        setupSelfTriggered();
+        if (config.enableNetherstone) {
+            manager.register(new Netherrack.Factory());
+        }
+        if (config.enablePumpkins) {
+            manager.register(new JackOLantern.Factory());
+        }
+        if (config.enableICs) {
+            manager.register(new ICMechanicFactory(this, icManager));
+            setupSelfTriggered();
+        }
     }
     
     /**
