@@ -69,12 +69,13 @@ public class CartMechanismBlocks {
         else
             throw new InvalidMechanismException("wat");
     }
-    
+
     /**
      * <p>
-     * Detecting factory, based on the position of the rails. The base must
-     * be one block below and the sign two or three blocks below. Signs are
-     * guaranteed to be signs and rails are guaranteed to be rails.
+     * Detecting factory, based on the position of the rails. The base must be
+     * one block below and the sign if it exists must be two or three blocks
+     * below. Signs are guaranteed to be signs (unless they're null) and rails
+     * are guaranteed to be rails.
      * </p>
      * 
      * <p>
@@ -96,17 +97,22 @@ public class CartMechanismBlocks {
         } else if (SignUtil.isSign(rail.getFace(BlockFace.DOWN, 3).getTypeId())) {
             return new CartMechanismBlocks(
                     rail,
-                    rail.getFace(BlockFace.DOWN, 2),
+                    rail.getFace(BlockFace.DOWN, 1),
                     rail.getFace(BlockFace.DOWN, 3)
             );
         }
-        throw new InvalidMechanismException("could not find sign.");
+        return new CartMechanismBlocks(
+                rail.getFace(BlockFace.DOWN, 1),
+                rail,
+                null
+        );
     }
-    
+
     /**
-     * Detecting factory, based on the position of the base. The rails must
-     * be one block above and the sign one or two blocks below. Signs are
-     * guaranteed to be signs and rails are guaranteed to be rails.
+     * Detecting factory, based on the position of the base. The rails must be
+     * one block above and the sign if it exists must be one or two blocks
+     * below. Signs are guaranteed to be signs (unless they're null) and rails
+     * are guaranteed to be rails.
      * 
      * @param base
      *            the block on which the rails sit; the type of this block is
@@ -127,7 +133,11 @@ public class CartMechanismBlocks {
                     base.getFace(BlockFace.DOWN, 2)
             );
         }
-        throw new InvalidMechanismException("could not find sign.");
+        return new CartMechanismBlocks(
+                base.getFace(BlockFace.UP, 1),
+                base,
+                null
+        );
     }
     
     /**
