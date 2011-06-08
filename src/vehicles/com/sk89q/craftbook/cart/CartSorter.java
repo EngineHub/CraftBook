@@ -1,18 +1,16 @@
 package com.sk89q.craftbook.cart;
 
-import static com.sk89q.craftbook.cart.CartUtils.pickDirector;
-
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
-
 import com.sk89q.craftbook.util.*;
 
 public class CartSorter extends CartMechanism {
-    public void impact(Minecart cart, Block entered, Block from) {
-        Block director = pickDirector(entered.getFace(BlockFace.DOWN, 1), "sort");
-        if (director == null) return;
-        Sign sign = (Sign) director.getState();
+    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+        // validate
+        if (cart == null) return;
+        if (!blocks.matches("sort")) return;
+        Sign sign = (Sign)blocks.sign.getState();
         
         // pick which sort conditions apply
         //  (left dominates if both apply)
@@ -27,7 +25,7 @@ public class CartSorter extends CartMechanism {
         //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
         //    this is required since there's not a north track and a south track; just a north-south track type.
         byte trackData;
-        BlockFace next = SignUtil.getFacing(director);
+        BlockFace next = SignUtil.getFacing(blocks.sign);
         switch (next) {
         case WEST:
             switch (dir) {
@@ -73,7 +71,7 @@ public class CartSorter extends CartMechanism {
             //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
             return;
         }
-        Block targetTrack = entered.getFace(next);
+        Block targetTrack = blocks.rail.getFace(next);
         
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.

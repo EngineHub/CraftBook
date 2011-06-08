@@ -179,6 +179,7 @@ public class CartMechanismBlocks {
      * @param mat
      * @return true if the base block is the same type as the given material.
      */
+    // this tends to be redundant if checked within a CartMechanism, since it's axiomatic that that CartMechanism by virtue of its configured base material. 
     public boolean matches(Material mat) {
         return (base.getType() == mat);
     }

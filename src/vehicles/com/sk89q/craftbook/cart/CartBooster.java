@@ -11,7 +11,11 @@ public class CartBooster extends CartMechanism {
     
     private final double multiplier;
     
-    public void impact(Minecart cart, Block entered, Block from) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+        // validate
+        if (cart == null) return;
+        
+        // go
         cart.setVelocity(cart.getVelocity().normalize().multiply(multiplier));
     }
 }
