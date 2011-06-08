@@ -1,17 +1,15 @@
 package com.sk89q.craftbook.cart;
 
-import static com.sk89q.craftbook.cart.CartUtils.stop;
-
 import java.util.*;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.*;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.worldedit.blocks.*;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their
@@ -23,9 +21,22 @@ import com.sk89q.worldedit.blocks.*;
  * 
  */
 public abstract class CartMechanism {
-    protected static final BlockFace[] powerSupplyOptions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
+    /**
+     * Called by MinecartManager after either a vehicle move event or a redstone
+     * event results in CartMechanismBlocks concluding there is a base block of
+     * this CartMechanism's material type involved.
+     * 
+     * @param cart
+     *            if triggered by a move event, the cart involved; if triggered
+     *            by redstone, a cart in the rail block or null if none.
+     * @param blocks
+     */
+    public abstract void impact(Minecart cart, CartMechanismBlocks blocks);
     
-    public abstract void impact(Minecart cart, Block entered, Block from);
+     
+    
+    protected Material material; void setMaterial(Material mat) { material = mat; }
+    protected static final BlockFace[] powerSupplyOptions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
     
     /**
      * Determins if a cart mechanism should be enabled.
@@ -35,7 +46,7 @@ public abstract class CartMechanism {
      * @param sign the block containing the signpost that gives additional configuration to the mechanism, or null if not interested.
      * @return the appropriate Power state (see the documentation for {@link RedstoneUtil.Power}'s members).
      */
-    public Power isActive(Block base, Block rail, Block sign) {
+    public Power isActive(Block rail, Block base, Block sign) {
         boolean isWired = false;
         if (sign != null) {
             //System.out.println("\tsign:");
@@ -85,5 +96,28 @@ public abstract class CartMechanism {
             }
         }
         return (isWired ? Power.OFF : Power.NA);
+    }
+
+    /**
+     * @param rail
+     *            the block we're searching for carts (mostly likely containing
+     *            rails generally, though it's not strictly relevant).
+     * @return a Minecart if one is found within the given block, or null if
+     *         none found. (If there is more than one minecart within the block,
+     *         the first one encountered when traversing the list of Entity in
+     *         the Chunk is the one returned.)
+     */
+    public static Minecart getCart(Block rail) {
+        for (Entity ent : rail.getChunk().getEntities()) {
+            if (!(ent instanceof Minecart)) continue;
+            if (ent.getLocation().getX() > rail.getLocation().getX()+1) continue;
+            if (ent.getLocation().getY() > rail.getLocation().getY()+1) continue;
+            if (ent.getLocation().getZ() > rail.getLocation().getZ()+1) continue;
+            if (ent.getLocation().getX() < rail.getLocation().getX()) continue;
+            if (ent.getLocation().getY() < rail.getLocation().getY()) continue;
+            if (ent.getLocation().getZ() < rail.getLocation().getZ()) continue;
+            return (Minecart) ent;
+        }
+        return null;
     }
 }
