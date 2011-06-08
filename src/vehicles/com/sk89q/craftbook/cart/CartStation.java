@@ -8,27 +8,29 @@ import org.bukkit.util.*;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.util.*;
+import com.sk89q.worldedit.blocks.*;
 import com.sk89q.worldedit.bukkit.*;
 
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
 public class CartStation extends CartMechanism {
-    public void impact(Minecart cart, Block entered, Block from) {
-        Block base = entered.getFace(BlockFace.DOWN, 1);
-        Block director = pickDirector(base, "station");
-        if (director == null) return;   // can't have stations without signs.
+    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+        // validate
+        if (cart == null) return;
+        if (!blocks.matches("station")) return;
         
-        switch (isActive(base, entered, director)) {
+        // go
+        switch (isActive(blocks.rail, blocks.base, blocks.sign)) {
             case ON:
                 // standardize its speed and direction.
-                launch(cart, director);
+                launch(cart, blocks.sign);
                 break;
             case OFF:
             case NA:
                 // park it.
                 stop(cart);
                 // recenter it
-                Location l = entered.getLocation();
+                Location l = blocks.rail.getLocation();
                 l.setX(l.getX()+0.5);
                 l.setY(l.getY()+0.5);
                 l.setZ(l.getZ()+0.5);
