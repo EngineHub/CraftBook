@@ -51,6 +51,13 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Bridge.Factory(this));
         manager.register(new Elevator.Factory(this));
         manager.register(new LightSwitch.Factory(this));
+        manager.register(new HiddenSwitch.Factory(this));
+        
+        /*
+         * Until fixed, Cauldron must be at the bottom of the registration list as 
+         * it'll conflict with other mechanics
+         */
+        
         manager.register(new Cauldron.Factory(this));
     }
     
