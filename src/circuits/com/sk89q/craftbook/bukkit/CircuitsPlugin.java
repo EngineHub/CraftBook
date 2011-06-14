@@ -106,6 +106,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1200", new CreatureSpawner.Factory(server, true), familySISO);    // REQ PERM
         icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);  
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);  // REQ PERM
+        icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);  // REQ PERM
         //Missing: 1202 (replaced by dispenser?)                                                // REQ PERM
         icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);  // REQ PERM
         //Missing: 1205                                                                         // REQ PERM
