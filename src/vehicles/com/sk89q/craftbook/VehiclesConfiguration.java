@@ -46,6 +46,7 @@ public class VehiclesConfiguration {
         matStation =    Material.getMaterial(cfg.getInt("station-block",        49));
         matSorter =     Material.getMaterial(cfg.getInt("sort-block",           87));
         matEjector =    Material.getMaterial(cfg.getInt("eject-block",          42));
+        matDeposit =    Material.getMaterial(cfg.getInt("deposit-block",        15));
         
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
@@ -61,6 +62,7 @@ public class VehiclesConfiguration {
     public final Material matStation;
     public final Material matSorter;
     public final Material matEjector;
+    public final Material matDeposit;
     
     public final boolean minecartSlowWhenEmpty;
     public final double minecartMaxSpeedModifier;
