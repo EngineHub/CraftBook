@@ -48,7 +48,7 @@ public class FlexibleSetBlock extends AbstractIC {
     public void trigger(ChipState chip) {
 
         String line3 = getSign().getLine(2).toUpperCase();
-        String line4 = getSign().getLine(3);
+        String line4 = getSign().getLine(3).toUpperCase();
 
         chip.setOutput(0, chip.getInput(0));
 
@@ -81,15 +81,79 @@ public class FlexibleSetBlock extends AbstractIC {
         if (!line3.substring(3, 4).equals(":"))
             return;
 
-        String sblock = line3.substring(4);
-        int block = -1;
+<<<<<<< HEAD
+        // The remaining string must be either a type id or a typeid:datavalue.
+        // No type id may contain a colon, so this will not break any existing blocks.
+        String[] onblockparams = line3.substring(4).split(":");
+        int onblocktype = 0;
+        Byte onblockdata = 0;
+        boolean setonblockdata = false;
+        if (onblockparams.length > 0) {
+	        try {
+	        	onblocktype = Integer.parseInt(onblockparams[0]);
+	        } catch (Exception e) { return; }
+        }
+        if (onblockparams.length > 1) {
+	        try {
+	        	onblockdata = Byte.parseByte(onblockparams[1]);
+	        	setonblockdata = true;
+	        } catch (Exception e) { setonblockdata = false; }
+        }
+        
+        // Syntax for line 4 (optional): [<any string containing an h>|<typeid>[:<dataval>]]
+        // 
+        // Strings containing an h are equivalent to the number 0. On a falling edge, the target
+        // block will be replaced with the specified block type and data value, if specified.
+        // 
+        // No existing line 4 string will parse properly according to this syntax, and will therefore
+        // be ignored.
+        String[] offblockparams = line4.split(":");
+        int offblocktype = 0;
+        boolean setoffblocktype = false;
+        Byte offblockdata = 0;
+        boolean setoffblockdata = false;
+        if (line4.contains("H")) {
+        	offblocktype = 0;
+        	setoffblocktype = true;
+        } else {
+            if (offblockparams.length > 0) {
+	            try {
+	            	offblocktype = Integer.parseInt(offblockparams[0]);
+	            	setoffblocktype = true;
+	            } catch (Exception e) { setoffblocktype = false; }
+            }
+            if (offblockparams.length > 1) {
+            	try {
+	            	offblockdata = Byte.parseByte(offblockparams[1]);
+	            	setoffblockdata = true;
+	            } catch (Exception e) { setoffblockdata = false; }
+            }
+=======
+        String sonblock = line3.substring(4);
+        int onblock = -1;
         try {
-            block = Integer.parseInt(sblock);
+            onblock = Integer.parseInt(sonblock);
         } catch (Exception e) {
             return;
+>>>>>>> 99674799c617b2f7fcba2721a340f5969e9ba303
+        }
+        
+        // Syntax for line 4 (optional): H[:<off block type>]
+        // Causes the block to be toggled between two types
+        int offblock = 0;
+        if (line4.length() > 2) {
+            String soffblock = line4.substring(2);
+            try {
+                offblock = Integer.parseInt(soffblock);
+            } catch (Exception e) {
+                return;
+            }
         }
 
-        boolean hold = line4.toUpperCase().contains("H");
+<<<<<<< HEAD
+=======
+        boolean hold = line4.contains("H");
+>>>>>>> 99674799c617b2f7fcba2721a340f5969e9ba303
         boolean inp = chip.getInput(0);
 
         Block body = SignUtil.getBackBlock(getSign().getBlock());
@@ -105,10 +169,22 @@ public class FlexibleSetBlock extends AbstractIC {
         else
             z += dist;
 
+<<<<<<< HEAD
+        if (inp) {
+        	Block targetblock = body.getWorld().getBlockAt(x, y, z);
+        	targetblock.setTypeId(onblocktype);
+        	if (setonblockdata) targetblock.setData(onblockdata);
+        } else if (setoffblocktype) {
+        	Block targetblock = body.getWorld().getBlockAt(x, y, z);
+        	targetblock.setTypeId(offblocktype);
+        	if (setoffblockdata) targetblock.setData(offblockdata);
+        }
+=======
         if (inp)
-            body.getWorld().getBlockAt(x, y, z).setTypeId(block);
+            body.getWorld().getBlockAt(x, y, z).setTypeId(onblock);
         else if (hold)
-            body.getWorld().getBlockAt(x, y, z).setTypeId(0);
+            body.getWorld().getBlockAt(x, y, z).setTypeId(offblock);
+>>>>>>> 99674799c617b2f7fcba2721a340f5969e9ba303
 
     }
 
