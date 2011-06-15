@@ -40,6 +40,8 @@ public class CartEjector extends CartMechanism {
         Location ejectLocation = ejectTarget.getLocation();
         ejectLocation.setX(ejectLocation.getX()+0.5);
         ejectLocation.setZ(ejectLocation.getZ()+0.5);
+        ejectLocation.setPitch(ent.getLocation().getPitch());
+        ejectLocation.setYaw(ent.getLocation().getYaw());
         ent.teleport(ejectLocation);
         
         // notice!
