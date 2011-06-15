@@ -14,7 +14,7 @@ import com.sk89q.worldedit.bukkit.*;
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
 public class CartStation extends CartMechanism {
-    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;

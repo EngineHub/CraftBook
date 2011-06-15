@@ -10,7 +10,7 @@ import com.sk89q.craftbook.util.*;
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
 public class CartEjector extends CartMechanism {
-    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         

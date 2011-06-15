@@ -30,8 +30,15 @@ public abstract class CartMechanism {
      *            if triggered by a move event, the cart involved; if triggered
      *            by redstone, a cart in the rail block or null if none.
      * @param blocks
+     * @param minor
+     *            true if the triggering event is somehow 'minor' (namely, a
+     *            move event from one part of the same block to another); false
+     *            otherwise (i.e. redstone events or move events that cross
+     *            block boundaries). Most CartMechanism can safely ignore minor
+     *            events; CartStation is an example of an exception because its
+     *            brake-locking functionality.
      */
-    public abstract void impact(Minecart cart, CartMechanismBlocks blocks);
+    public abstract void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor);
     
      
     

@@ -15,11 +15,12 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.RedstoneUtil.*;
 
 public class CartDeposit extends CartMechanism {
-    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         
         // care?
+        if (minor) return;
         if (!(cart instanceof StorageMinecart)) return;
         Inventory cartinventory = ((StorageMinecart)cart).getInventory();
         
