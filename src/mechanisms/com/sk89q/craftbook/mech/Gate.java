@@ -295,6 +295,7 @@ public class Gate extends AbstractMechanic {
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (toggleGates(pt, smallSearchSize)) {
             player.print("Gate toggled!");
+            event.setCancelled(true);
         } else {
             player.printError("Failed to find a gate!");
         }
