@@ -57,11 +57,24 @@ public class LightSensor extends AbstractIC {
      * @return
      */
     private boolean hasLight() {
+        int x = getSign().getBlock().getLocation().getBlockX();
+        int y = getSign().getBlock().getLocation().getBlockY();
+        int z = getSign().getBlock().getLocation().getBlockZ();
+        int yOffset = 1;
+        try {
+        	// Get Y offset from (the otherwise unused) line 4.
+        	// This makes LightSensor consistent with the capabilities of LavaSensor and WaterSensor.
+            String yOffsetLine = getSign().getLine(3);
+            if (yOffsetLine.length() > 0) {
+                yOffset = Integer.parseInt(yOffsetLine);
+            }
+        } catch (NumberFormatException e) {
+            yOffset = 1;
+        }
+    	
         int lightLevel = (int) getSign()
                 .getWorld()
-                .getBlockAt(getSign().getBlock().getLocation().getBlockX(),
-                        getSign().getBlock().getLocation().getBlockY() + 1,
-                        getSign().getBlock().getLocation().getBlockZ())
+                .getBlockAt(x, y + yOffset, z)
                 .getLightLevel();
         int specifiedLevel = 0;
         try {
