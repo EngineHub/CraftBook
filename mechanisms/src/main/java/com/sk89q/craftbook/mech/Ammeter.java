@@ -32,6 +32,7 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.*;
 
 /**
@@ -51,37 +52,54 @@ public class Ammeter extends AbstractMechanic {
             return;
         }
 
+        Block block = event.getClickedBlock();
         if (event.getPlayer().getItemInHand().getType() == Material.COAL
-                && event.getClickedBlock().getType() == Material.REDSTONE_WIRE) {
-            String power = CalculatePowerLevel(event.getClickedBlock());
-            String line = getCurrentLine(event.getClickedBlock().getData());
+                && (BlockType.canTransferRedstone(block.getTypeId()) ||
+                        BlockType.isRedstoneSource(block.getTypeId()))) {
+            int data = getSpecialData(block);
+            String line = getCurrentLine(data);
+            int current = Integer.valueOf(data);
             event.getPlayer().sendMessage(
-                    ChatColor.YELLOW
-                            + "Ammeter: " + line
-                            + ChatColor.WHITE + " "
-                            + power + " A");
+                    ChatColor.YELLOW + "Ammeter: " + line + ChatColor.WHITE +
+                    " " + current + " A");
         }
     }
 
-    private String CalculatePowerLevel(Block clickedBlock) {
-        if(clickedBlock.getFace(BlockFace.NORTH).getType() == Material.REDSTONE_TORCH_ON
-                && clickedBlock.getFace(BlockFace.SOUTH).getType() == Material.REDSTONE_TORCH_ON
-                && clickedBlock.getFace(BlockFace.EAST).getType() == Material.REDSTONE_TORCH_ON
-                && clickedBlock.getFace(BlockFace.WEST).getType() == Material.REDSTONE_TORCH_ON){
-            return ChatColor.RED + "OVER 9000" + ChatColor.WHITE;
-        }else{
-            return "" + clickedBlock.getData();
+    private int getSpecialData(Block block) {
+        Material type = block.getType();
+        byte data = block.getData();
+        int current = 0;
+        if (type == Material.LEVER || type == Material.STONE_BUTTON) {
+            if ((data & 0x8) == 0x8) {
+                current = 15;
+            }
+        } else if (type == Material.STONE_PLATE || type == Material.STONE_PLATE) {
+            if ((data & 0x1) == 0x1) {
+                current = 15;
+            }
+        } else if (type == Material.POWERED_RAIL || type == Material.DETECTOR_RAIL) {
+            if (data >= 0x8) {
+                current = 15;
+            }
+        } else if (type == Material.REDSTONE_TORCH_ON) {
+            current = 15;
+        } else if (type == Material.REDSTONE_TORCH_OFF) {
+            current = 0;
+        } else if (type == Material.REDSTONE_WIRE) {
+            current = data;
         }
+        return current;
     }
 
-    private String getCurrentLine(byte data) {
+    private String getCurrentLine(int data) {
         String line = ChatColor.YELLOW + "[";
-        if (data > 10)
+        if (data > 10) {
             line = line + ChatColor.DARK_GREEN;
-        else if (data > 5)
+        } else if (data > 5) {
             line = line + ChatColor.GOLD;
-        else if (data > 0)
+        } else if (data > 0) {
             line = line + ChatColor.DARK_RED;
+        }
         for (int i = 0; i < data; i++) {
             line = line + "|";
         }
@@ -112,7 +130,8 @@ public class Ammeter extends AbstractMechanic {
 
         public Ammeter detect(BlockWorldVector pt) {
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.REDSTONE_WIRE) {
+            if (BlockType.canTransferRedstone(block.getTypeId()) ||
+                    BlockType.isRedstoneSource(block.getTypeId())) {
                 return new Ammeter(plugin);
             }
 

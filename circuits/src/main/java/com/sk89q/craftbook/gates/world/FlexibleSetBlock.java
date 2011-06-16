@@ -1,3 +1,21 @@
+// $Id$
+/*
+* Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
@@ -11,20 +29,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class FlexibleSetBlock extends AbstractIC {
-
-    public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
-
-        public Factory(Server server) {
-            super(server);
-        }
-
-        @Override
-        public IC create(Sign sign) {
-            return new FlexibleSetBlock(getServer(), sign);
-        }
-
-    }
 
     public FlexibleSetBlock(Server server, Sign block) {
         super(server, block);
@@ -45,22 +49,22 @@ public class FlexibleSetBlock extends AbstractIC {
         // Clock trigger!
         FlexiBlockDescription desc = getDescription(chip);
         //Invalid description
-        if(desc == null){
+        if (desc == null) {
             return;
         }
         Block setBlock = getSign().getBlock().getRelative(desc.xOff, desc.yOff, desc.zOff);
-        
+
         boolean clock = chip.get(0);
-        if(clock){
-            if(desc.blockType == -1){
+        if (clock) {
+            if(desc.blockType == -1) {
                 setBlock.setTypeId(desc.blockId);
-            }else{
+            } else {
                 setBlock.setTypeIdAndData(desc.blockId, desc.blockType, true);
             }
-        }else if(desc.hold){
-            if(desc.toggleBlockType == -1){
+        } else if (desc.hold) {
+            if (desc.toggleBlockType == -1) {
                 setBlock.setTypeId(desc.toggleBlockId);
-            }else{
+            } else {
                 setBlock.setTypeIdAndData(desc.toggleBlockId, desc.toggleBlockType, true);
             }
         }
@@ -102,21 +106,21 @@ public class FlexibleSetBlock extends AbstractIC {
             }
             /* Parse optional hold and toggle settings */
             String[] holdAndToggle = s.getLine(3).trim().split(":", 2);
-            if(holdAndToggle.length == 1){
+            if (holdAndToggle.length == 1) {
                 d.hold = holdAndToggle[0].equalsIgnoreCase("h");
                 d.toggleBlockId = 0;
                 d.toggleBlockType = -1;
-            }else if(holdAndToggle.length == 2){
+            } else if(holdAndToggle.length == 2) {
                 d.hold = holdAndToggle[0].equalsIgnoreCase("h");
-                if(holdAndToggle[1].contains(":")){
+                if (holdAndToggle[1].contains(":")) {
                     String[] blockAndType = holdAndToggle[1].split(":", 2);
                     d.toggleBlockId = Integer.parseInt(blockAndType[0]);
                     d.toggleBlockType = Byte.parseByte(blockAndType[1]);
-                }else{
+                } else {
                     d.toggleBlockId = Integer.parseInt(holdAndToggle[1]);
                     d.toggleBlockType = -1;
                 }
-            }else{
+            } else {
                 d.hold = false;
             }
         } catch (Exception e) {
@@ -132,6 +136,17 @@ public class FlexibleSetBlock extends AbstractIC {
         byte blockType;
         int toggleBlockId;
         byte toggleBlockType;
+    }
+
+    public static class Factory extends AbstractICFactory {
+        public Factory(Server server) {
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+            return new FlexibleSetBlock(getServer(), sign);
+        }
     }
 
 }
