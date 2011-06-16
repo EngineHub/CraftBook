@@ -29,6 +29,7 @@ public class MinecartManager {
         mechanisms.put(cfg.matStation,  new CartStation());
         mechanisms.put(cfg.matEjector,  new CartEjector());
         mechanisms.put(cfg.matDeposit,  new CartDeposit());
+        mechanisms.put(cfg.matDispenser,new CartDispenser());
         for (Map.Entry<Material,CartMechanism> ent : mechanisms.entrySet())
             ent.getValue().setMaterial(ent.getKey());
     }
