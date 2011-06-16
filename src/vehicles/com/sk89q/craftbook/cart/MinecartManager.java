@@ -37,8 +37,15 @@ public class MinecartManager {
         try {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
             CartMechanism thingy = mechanisms.get(cmb.base.getType());
-            if (thingy != null)
-                thingy.impact((Minecart)event.getVehicle(), cmb);
+            if (thingy != null) {
+                Location from = event.getFrom();
+                Location to = event.getTo();
+                boolean crossesBlockBoundary = 
+                       from.getBlockX() == to.getBlockX()
+                    && from.getBlockY() == to.getBlockY()
+                    && from.getBlockZ() == to.getBlockZ();
+                thingy.impact((Minecart)event.getVehicle(), cmb, crossesBlockBoundary);
+            }
         } catch (InvalidMechanismException e) {
             /* okay, so there's nothing interesting to see here.  carry on then, eh? */
             return;
@@ -66,7 +73,7 @@ public class MinecartManager {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(huh);
                 CartMechanism thingy = mechanisms.get(cmb.base.getType());
                 if (thingy != null)
-                    thingy.impact(CartMechanism.getCart(cmb.rail), cmb); 
+                    thingy.impact(CartMechanism.getCart(cmb.rail), cmb, false); 
             } catch (InvalidMechanismException e) {
                 /* okay, so there's nothing interesting to see here.  carry on then, eh? */
                 return;

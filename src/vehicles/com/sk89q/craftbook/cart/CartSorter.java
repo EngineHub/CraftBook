@@ -6,7 +6,10 @@ import org.bukkit.entity.*;
 import com.sk89q.craftbook.util.*;
 
 public class CartSorter extends CartMechanism {
-    public void impact(Minecart cart, CartMechanismBlocks blocks) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+        // care?
+        if (minor) return;
+        
         // validate
         if (cart == null) return;
         if (!blocks.matches("sort")) return;
