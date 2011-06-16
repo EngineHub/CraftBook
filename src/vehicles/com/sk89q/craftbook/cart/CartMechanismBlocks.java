@@ -187,4 +187,12 @@ public class CartMechanismBlocks {
     public boolean matches(Material mat) {
         return (base.getType() == mat);
     }
+    
+    /**
+     * @return a Sign BlockState, or null if there is no sign block.
+     * @throws ClassCastException if there a sign block is set, but it's not *actually* a sign block.
+     */
+    public Sign getSign() {
+        return (sign == null) ? null : (Sign)sign.getState();
+    }
 }
