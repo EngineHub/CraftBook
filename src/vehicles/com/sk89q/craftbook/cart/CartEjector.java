@@ -7,6 +7,8 @@ import org.bukkit.util.*;
 
 import com.sk89q.craftbook.RedstoneUtil.*;
 import com.sk89q.craftbook.util.*;
+import com.sk89q.worldedit.bukkit.*;
+
 import static com.sk89q.craftbook.cart.CartUtils.*;
 
 public class CartEjector extends CartMechanism {
@@ -37,12 +39,7 @@ public class CartEjector extends CartMechanism {
         //   the cart also comes to a dead halt at the time of writing, and i have no idea why.
         Entity ent = cart.getPassenger();
         cart.eject();
-        Location ejectLocation = ejectTarget.getLocation();
-        ejectLocation.setX(ejectLocation.getX()+0.5);
-        ejectLocation.setZ(ejectLocation.getZ()+0.5);
-        ejectLocation.setPitch(ent.getLocation().getPitch());
-        ejectLocation.setYaw(ent.getLocation().getYaw());
-        ent.teleport(ejectLocation);
+        ent.teleport(BukkitUtil.center(ejectTarget.getLocation()));
         
         // notice!
         //  if a client tries to board a cart immediately before it crosses an ejector,
