@@ -52,13 +52,13 @@ public class FlexibleSetBlock extends AbstractIC {
         
         boolean clock = chip.get(0);
         if(clock){
-            if(desc.blockType == -1){
+            if(!desc.applyBlockType){
                 setBlock.setTypeId(desc.blockId);
             }else{
                 setBlock.setTypeIdAndData(desc.blockId, desc.blockType, true);
             }
         }else if(desc.hold){
-            if(desc.toggleBlockType == -1){
+            if(!desc.applyToggleBlockType){
                 setBlock.setTypeId(desc.toggleBlockId);
             }else{
                 setBlock.setTypeIdAndData(desc.toggleBlockId, desc.toggleBlockType, true);
@@ -96,25 +96,27 @@ public class FlexibleSetBlock extends AbstractIC {
                 String[] blockAndType = posAndBlock[1].split(":", 2);
                 d.blockId = Integer.parseInt(blockAndType[0]);
                 d.blockType = Byte.parseByte(blockAndType[1]);
+                d.applyBlockType = true;
             } else {
                 d.blockId = Integer.parseInt(posAndBlock[1]);
-                d.blockType = -1;
+                d.applyBlockType = false;
             }
             /* Parse optional hold and toggle settings */
             String[] holdAndToggle = s.getLine(3).trim().split(":", 2);
             if(holdAndToggle.length == 1){
                 d.hold = holdAndToggle[0].equalsIgnoreCase("h");
                 d.toggleBlockId = 0;
-                d.toggleBlockType = -1;
+                d.applyToggleBlockType = false;
             }else if(holdAndToggle.length == 2){
                 d.hold = holdAndToggle[0].equalsIgnoreCase("h");
                 if(holdAndToggle[1].contains(":")){
                     String[] blockAndType = holdAndToggle[1].split(":", 2);
                     d.toggleBlockId = Integer.parseInt(blockAndType[0]);
                     d.toggleBlockType = Byte.parseByte(blockAndType[1]);
+                    d.applyToggleBlockType = true;
                 }else{
                     d.toggleBlockId = Integer.parseInt(holdAndToggle[1]);
-                    d.toggleBlockType = -1;
+                    d.applyToggleBlockType = false;
                 }
             }else{
                 d.hold = false;
@@ -130,8 +132,10 @@ public class FlexibleSetBlock extends AbstractIC {
         boolean hold;
         int blockId;
         byte blockType;
+        boolean applyBlockType;
         int toggleBlockId;
         byte toggleBlockType;
+        boolean applyToggleBlockType;
     }
 
 }
