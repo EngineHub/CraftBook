@@ -57,7 +57,7 @@ public class FlexibleSetBlock extends AbstractIC {
             }else{
                 setBlock.setTypeIdAndData(desc.blockId, desc.blockType, true);
             }
-        }else if(desc.hold){
+        }else if(desc.applyToggleBlock){
             if(!desc.applyToggleBlockType){
                 setBlock.setTypeId(desc.toggleBlockId);
             }else{
@@ -84,42 +84,55 @@ public class FlexibleSetBlock extends AbstractIC {
                 break;
             }
             /* Parse delta */
-            if (!(posAndBlock[0].charAt(1) == '+' | posAndBlock[0].charAt(1) == '-')) {
+            if (!(posAndBlock[0].charAt(1) == '+' || posAndBlock[0].charAt(1) == '-')) {
                 return null;
             } else if (posAndBlock[0].charAt(1) == '-') {
                 d.xOff *= -1;
                 d.yOff *= -1;
                 d.zOff *= -1;
             }
-            /* Parse block information */
+            /* Parse block information: failure to provide block info will throw into
+               surrounding try/catch block and abort */
             if (posAndBlock[1].contains(":")) {
-                String[] blockAndType = posAndBlock[1].split(":", 2);
-                d.blockId = Integer.parseInt(blockAndType[0]);
-                d.blockType = Byte.parseByte(blockAndType[1]);
+                String[] blockParams = posAndBlock[1].split(":");
+                d.blockId = Integer.parseInt(blockParams[0]);
+                d.blockType = Byte.parseByte(blockParams[1]);
                 d.applyBlockType = true;
             } else {
                 d.blockId = Integer.parseInt(posAndBlock[1]);
                 d.applyBlockType = false;
             }
             /* Parse optional hold and toggle settings */
-            String[] holdAndToggle = s.getLine(3).trim().split(":", 2);
-            if(holdAndToggle.length == 1){
-                d.hold = holdAndToggle[0].equalsIgnoreCase("h");
+            String line4 = s.getLine(3).trim().toLowerCase();
+            if (line4.contains("h")) {
+                /* Apply hold settings: toggle with air */
+                d.applyToggleBlock = true;
                 d.toggleBlockId = 0;
                 d.applyToggleBlockType = false;
-            }else if(holdAndToggle.length == 2){
-                d.hold = holdAndToggle[0].equalsIgnoreCase("h");
-                if(holdAndToggle[1].contains(":")){
-                    String[] blockAndType = holdAndToggle[1].split(":", 2);
-                    d.toggleBlockId = Integer.parseInt(blockAndType[0]);
-                    d.toggleBlockType = Byte.parseByte(blockAndType[1]);
-                    d.applyToggleBlockType = true;
-                }else{
-                    d.toggleBlockId = Integer.parseInt(holdAndToggle[1]);
+            } else if (line4.contains(":")) {
+                String[] toggleParams = line4.split(":");
+                if (toggleParams.length > 0) {
+                    try {
+                        d.toggleBlockId = Integer.parseInt(toggleParams[0]);
+                        d.applyToggleBlock = true;
+                    } catch (Exception e) {
+                        d.applyToggleBlock = false;
+                    }
+                } else {
+                    d.applyToggleBlock = false;
+                }
+                if (toggleParams.length > 1) {
+                    try {
+                        d.toggleBlockType = Byte.parseByte(toggleParams[1]);
+                        d.applyToggleBlockType = true;
+                    } catch (Exception e) {
+                        d.applyToggleBlockType = false;
+                    }
+                } else {
                     d.applyToggleBlockType = false;
                 }
-            }else{
-                d.hold = false;
+            } else {
+                d.applyToggleBlock = false;
             }
         } catch (Exception e) {
             return null;
@@ -129,10 +142,10 @@ public class FlexibleSetBlock extends AbstractIC {
 
     private class FlexiBlockDescription {
         int xOff, yOff, zOff;
-        boolean hold;
         int blockId;
         byte blockType;
         boolean applyBlockType;
+        boolean applyToggleBlock;
         int toggleBlockId;
         byte toggleBlockType;
         boolean applyToggleBlockType;
