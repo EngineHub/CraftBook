@@ -9,6 +9,7 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class FlexibleSetBlock extends AbstractIC {
 
@@ -48,7 +49,7 @@ public class FlexibleSetBlock extends AbstractIC {
         if(desc == null){
             return;
         }
-        Block setBlock = getSign().getBlock().getRelative(desc.xOff, desc.yOff, desc.zOff);
+        Block setBlock = SignUtil.getBackBlock(getSign().getBlock()).getRelative(desc.xOff, desc.yOff, desc.zOff);
         
         boolean clock = chip.get(0);
         if(clock){
@@ -70,26 +71,33 @@ public class FlexibleSetBlock extends AbstractIC {
         FlexiBlockDescription d = new FlexiBlockDescription();
         try {
             Sign s = getSign();
-            /* Parse position */
+            /* Parse position. For maximum flexibility within the one-character limit, offsets may be in hexadecimal. */
             String[] posAndBlock = s.getLine(2).split(":", 2);
             switch (posAndBlock[0].toLowerCase().charAt(0)) {
-            case 'y':
-                d.yOff = Integer.parseInt(posAndBlock[0].substring(2));
-                break;
             case 'x':
-                d.xOff = Integer.parseInt(posAndBlock[0].substring(2));
+                d.xOff = Integer.parseInt(posAndBlock[0].substring(1).replaceAll("^[+]", ""), 16);
+                break;
+            case 'y':
+                d.yOff = Integer.parseInt(posAndBlock[0].substring(1).replaceAll("^[+]", ""), 16);
                 break;
             case 'z':
-                d.zOff = Integer.parseInt(posAndBlock[0].substring(2));
+                d.zOff = Integer.parseInt(posAndBlock[0].substring(1).replaceAll("^[+]", ""), 16);
                 break;
-            }
-            /* Parse delta */
-            if (!(posAndBlock[0].charAt(1) == '+' || posAndBlock[0].charAt(1) == '-')) {
-                return null;
-            } else if (posAndBlock[0].charAt(1) == '-') {
-                d.xOff *= -1;
-                d.yOff *= -1;
-                d.zOff *= -1;
+            default:
+                /* New alternative position syntax: [+-]xOff[+-]yOff[+-]zOff
+                      For example: +0+1+0 is equivalent to Y+1
+                                   -5+2-3 specifies the block at relative offset (-5, 2, -3)
+                                   +0+F+0 specifies a block 15 above the IC block
+                */
+                if (posAndBlock[0].matches("([-+][0-9a-fA-F]){3}")) {
+                    d.xOff = Integer.parseInt(posAndBlock[0].substring(0, 2).replaceAll("^[+]", ""), 16);
+                    d.yOff = Integer.parseInt(posAndBlock[0].substring(2, 4).replaceAll("^[+]", ""), 16);
+                    d.zOff = Integer.parseInt(posAndBlock[0].substring(4, 6).replaceAll("^[+]", ""), 16);
+                } else {
+                    /* If neither the old or the new syntax match, fail. */
+                    return null;
+                }
+                break;
             }
             /* Parse block information: failure to provide block info will throw into
                surrounding try/catch block and abort */
@@ -109,7 +117,7 @@ public class FlexibleSetBlock extends AbstractIC {
                 d.applyToggleBlock = true;
                 d.toggleBlockId = 0;
                 d.applyToggleBlockType = false;
-            } else if (line4.contains(":")) {
+            } else {
                 String[] toggleParams = line4.split(":");
                 if (toggleParams.length > 0) {
                     try {
@@ -131,8 +139,6 @@ public class FlexibleSetBlock extends AbstractIC {
                 } else {
                     d.applyToggleBlockType = false;
                 }
-            } else {
-                d.applyToggleBlock = false;
             }
         } catch (Exception e) {
             return null;
