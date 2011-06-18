@@ -214,6 +214,8 @@ public class Bridge extends AbstractMechanic {
         flipState();
         
         //notify event.getPlayer();
+        
+        event.setCancelled(true);
     }
     
     @Override

@@ -9,6 +9,7 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class FlexibleSetBlock extends AbstractIC {
 
@@ -48,17 +49,17 @@ public class FlexibleSetBlock extends AbstractIC {
         if(desc == null){
             return;
         }
-        Block setBlock = getSign().getBlock().getRelative(desc.xOff, desc.yOff, desc.zOff);
+        Block setBlock = SignUtil.getBackBlock(getSign().getBlock()).getRelative(desc.xOff, desc.yOff, desc.zOff);
         
         boolean clock = chip.get(0);
         if(clock){
-            if(desc.blockType == -1){
+            if(!desc.applyBlockType){
                 setBlock.setTypeId(desc.blockId);
             }else{
                 setBlock.setTypeIdAndData(desc.blockId, desc.blockType, true);
             }
-        }else if(desc.hold){
-            if(desc.toggleBlockType == -1){
+        }else if(desc.applyToggleBlock){
+            if(!desc.applyToggleBlockType){
                 setBlock.setTypeId(desc.toggleBlockId);
             }else{
                 setBlock.setTypeIdAndData(desc.toggleBlockId, desc.toggleBlockType, true);
@@ -70,54 +71,74 @@ public class FlexibleSetBlock extends AbstractIC {
         FlexiBlockDescription d = new FlexiBlockDescription();
         try {
             Sign s = getSign();
-            /* Parse position */
+            /* Parse position. For maximum flexibility within the one-character limit, offsets may be in hexadecimal. */
             String[] posAndBlock = s.getLine(2).split(":", 2);
             switch (posAndBlock[0].toLowerCase().charAt(0)) {
-            case 'y':
-                d.yOff = Integer.parseInt(posAndBlock[0].substring(2));
-                break;
             case 'x':
-                d.xOff = Integer.parseInt(posAndBlock[0].substring(2));
+                d.xOff = Integer.parseInt(posAndBlock[0].substring(1).replaceAll("^[+]", ""), 16);
+                break;
+            case 'y':
+                d.yOff = Integer.parseInt(posAndBlock[0].substring(1).replaceAll("^[+]", ""), 16);
                 break;
             case 'z':
-                d.zOff = Integer.parseInt(posAndBlock[0].substring(2));
+                d.zOff = Integer.parseInt(posAndBlock[0].substring(1).replaceAll("^[+]", ""), 16);
+                break;
+            default:
+                /* New alternative position syntax: [+-]xOff[+-]yOff[+-]zOff
+                      For example: +0+1+0 is equivalent to Y+1
+                                   -5+2-3 specifies the block at relative offset (-5, 2, -3)
+                                   +0+F+0 specifies a block 15 above the IC block
+                */
+                if (posAndBlock[0].matches("([-+][0-9a-fA-F]){3}")) {
+                    d.xOff = Integer.parseInt(posAndBlock[0].substring(0, 2).replaceAll("^[+]", ""), 16);
+                    d.yOff = Integer.parseInt(posAndBlock[0].substring(2, 4).replaceAll("^[+]", ""), 16);
+                    d.zOff = Integer.parseInt(posAndBlock[0].substring(4, 6).replaceAll("^[+]", ""), 16);
+                } else {
+                    /* If neither the old or the new syntax match, fail. */
+                    return null;
+                }
                 break;
             }
-            /* Parse delta */
-            if (!(posAndBlock[0].charAt(1) == '+' | posAndBlock[0].charAt(1) == '-')) {
-                return null;
-            } else if (posAndBlock[0].charAt(1) == '-') {
-                d.xOff *= -1;
-                d.yOff *= -1;
-                d.zOff *= -1;
-            }
-            /* Parse block information */
+            /* Parse block information: failure to provide block info will throw into
+               surrounding try/catch block and abort */
             if (posAndBlock[1].contains(":")) {
-                String[] blockAndType = posAndBlock[1].split(":", 2);
-                d.blockId = Integer.parseInt(blockAndType[0]);
-                d.blockType = Byte.parseByte(blockAndType[1]);
+                String[] blockParams = posAndBlock[1].split(":");
+                d.blockId = Integer.parseInt(blockParams[0]);
+                d.blockType = Byte.parseByte(blockParams[1]);
+                d.applyBlockType = true;
             } else {
                 d.blockId = Integer.parseInt(posAndBlock[1]);
-                d.blockType = -1;
+                d.applyBlockType = false;
             }
             /* Parse optional hold and toggle settings */
-            String[] holdAndToggle = s.getLine(3).trim().split(":", 2);
-            if(holdAndToggle.length == 1){
-                d.hold = holdAndToggle[0].equalsIgnoreCase("h");
+            String line4 = s.getLine(3).trim().toLowerCase();
+            if (line4.contains("h")) {
+                /* Apply hold settings: toggle with air */
+                d.applyToggleBlock = true;
                 d.toggleBlockId = 0;
-                d.toggleBlockType = -1;
-            }else if(holdAndToggle.length == 2){
-                d.hold = holdAndToggle[0].equalsIgnoreCase("h");
-                if(holdAndToggle[1].contains(":")){
-                    String[] blockAndType = holdAndToggle[1].split(":", 2);
-                    d.toggleBlockId = Integer.parseInt(blockAndType[0]);
-                    d.toggleBlockType = Byte.parseByte(blockAndType[1]);
-                }else{
-                    d.toggleBlockId = Integer.parseInt(holdAndToggle[1]);
-                    d.toggleBlockType = -1;
+                d.applyToggleBlockType = false;
+            } else {
+                String[] toggleParams = line4.split(":");
+                if (toggleParams.length > 0) {
+                    try {
+                        d.toggleBlockId = Integer.parseInt(toggleParams[0]);
+                        d.applyToggleBlock = true;
+                    } catch (Exception e) {
+                        d.applyToggleBlock = false;
+                    }
+                } else {
+                    d.applyToggleBlock = false;
                 }
-            }else{
-                d.hold = false;
+                if (toggleParams.length > 1) {
+                    try {
+                        d.toggleBlockType = Byte.parseByte(toggleParams[1]);
+                        d.applyToggleBlockType = true;
+                    } catch (Exception e) {
+                        d.applyToggleBlockType = false;
+                    }
+                } else {
+                    d.applyToggleBlockType = false;
+                }
             }
         } catch (Exception e) {
             return null;
@@ -127,11 +148,13 @@ public class FlexibleSetBlock extends AbstractIC {
 
     private class FlexiBlockDescription {
         int xOff, yOff, zOff;
-        boolean hold;
         int blockId;
         byte blockType;
+        boolean applyBlockType;
+        boolean applyToggleBlock;
         int toggleBlockId;
         byte toggleBlockType;
+        boolean applyToggleBlockType;
     }
 
 }

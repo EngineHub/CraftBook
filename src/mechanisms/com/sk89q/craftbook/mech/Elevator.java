@@ -178,6 +178,8 @@ public class Elevator extends AbstractMechanic {
         }
         
         makeItSo(event.getPlayer());
+        
+        event.setCancelled(true);
     }
     
     @Override
