@@ -1,4 +1,4 @@
 name: CraftBookCommon
 main: com.sk89q.craftbook.bukkit.CraftBookPlugin
-version: __VERSION_MACRO__
+version: "${project.version}"
 commands:

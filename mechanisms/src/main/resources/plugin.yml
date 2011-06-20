@@ -1,6 +1,6 @@
 name: CraftBookMechanisms
 main: com.sk89q.craftbook.bukkit.MechanismsPlugin
-version: __VERSION_MACRO__
+version: "${project.version}"
 commands:
     savearea:
         description: Save an area

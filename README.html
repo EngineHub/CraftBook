@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CraftBook ${version}</title>
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  background: #efefef;
+  color: #333;
+}
+#wrapper {
+  margin: 20px auto 20px auto;
+  width: 600px;
+  background: #fff;
+  padding: 40px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  box-shadow: 0 0 2px #999;
+  -webkit-box-shadow: 0 0 3px #999;
+}
+a img {
+  border: 0;
+}
+body, th, td, input {
+  font: 13px/17px "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
+}
+a:link, a:visited {
+  color: #00688f;
+  text-decoration: underline;
+}
+a:hover, a:active {
+  color: #000;
+  border: 0;
+}
+h1 {
+  font: 170% "Trebuchet MS", Georgia, serif;
+  font-weight: bold;
+  color: #0c366b;
+  margin: 15px 0 5px 0;
+}
+h2 {
+  font: 130% "Trebuchet MS", Georgia, serif;
+  font-weight: bold;
+  color: #5b5b5b;
+  margin: 50px 0 5px 0;
+    padding: 0 0 3px 0;
+    border-bottom: 1px solid #ccc;
+}
+.warning {
+  background: #fffedf;
+  padding: 8px;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  font-size: 90%;
+}
+.subtle {
+  color: #999;
+}
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+
+<h1>CraftBook ${version}</h1>
+<p>Thanks for choosing CraftBook!</p>
+<h2>First Steps</h2>
+
+<p>Now, to begin, you want to:</p>
+<ol>
+  <li><strong>Install the plugin:</strong> Copy CraftBook.jar and all or any of the other .jar files (depending on the features that you want) into your Bukkit server's &quot;plugins&quot; directory. If the folder doesn't exist, create it.</li>
+  <li><strong>Change the configuration:</strong> Run your server once (with CraftBook) and then edit the config.yml files that is generated inside each &quot;plugins/CraftBook____&quot; folder. (Note: Some configuration files are currently blank.)</li>
+  <li><strong>Learn how to use:</strong> Visit the <a href="http://craftbook.sk89q.com/wiki/">CraftBook wiki</a> to learn how to use the features.</li>
+</ol>
+<p class="warning"><strong>Gotcha:</strong> You need to have <a href="http://www.sk89q.com/projects/worldedit/">WorldEdit</a> installed! It's used by CraftBook in a number of places. If you don't want to install the plugin, that's okay &mdash; just put WorldEdit.jar into your Bukkit root folder (outside of plugins/) and CraftBook will still be able use it.</p>
+<p>Be sure to:</p>
+<ul>
+  <li>Subscribe to <a href="http://minecraftnews.sk89q.com/">SK's Minecraft blog</a> for news about CraftBook</li>
+  <li>Submit bug reports and suggestions to the <a href="http://redmine.sk89q.com/projects/craftbook/issues">issue tracker</a></li>
+  <li>Check out the <a href="http://craftbook.sk89q.com/wiki/">CraftBook wiki</a></li>
+</ul>
+<h2>Want to make CraftBook better?</h2>
+<p>CraftBook is entirely open source! You can download all of the plugin code to learn from it, modify it for your own self, or even contribute back!</p>
+<ul>
+  <li><a href="https://github.com/sk89q/craftbook">Download CraftBook code from GitHub</a></li>
+  <li>You can also <a href="http://www.sk89q.com/donate/">donate</a></li>
+  </ul>
+<p>The code is covered under the GNU General Public License v3.</p>
+<p class="subtle">Maven information: ${groupId}/${artifactId}/${version}</p>
+</div>
+</body>
+</html>

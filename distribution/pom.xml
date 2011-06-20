@@ -1,0 +1,62 @@
+<!--
+  Maven build file for CraftBook
+  Copyright (c) 2010, 2011 sk89q <http://www.sk89q.com> 
+  CraftBook is available under the GNU General Public License v3
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.sk89q.craftbook</groupId>
+    <artifactId>craftbook</artifactId>
+    <version>3.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>distribution</artifactId>
+  <version>3.0-SNAPSHOT</version>
+  <name>CraftBook Distribution</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.sk89q.craftbook</groupId>
+      <artifactId>common</artifactId>
+      <version>[3.0-SNAPSHOT,)</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sk89q.craftbook</groupId>
+      <artifactId>mechanisms</artifactId>
+      <version>[3.0-SNAPSHOT,)</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sk89q.craftbook</groupId>
+      <artifactId>circuits</artifactId>
+      <version>[3.0-SNAPSHOT,)</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sk89q.craftbook</groupId>
+      <artifactId>vehicles</artifactId>
+      <version>[3.0-SNAPSHOT,)</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- Plugins -->
+    <plugins>
+      <!-- Assembly plugin -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
+        </configuration>
+        <executions>
+          <execution>
+            <id>release</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

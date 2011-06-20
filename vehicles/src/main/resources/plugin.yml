@@ -1,6 +1,6 @@
 name: CraftBookVehicles
 main: com.sk89q.craftbook.bukkit.VehiclesPlugin
-version: __VERSION_MACRO__
+version: "${project.version}"
 commands:
     st:
         description: Choose a stop
