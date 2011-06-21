@@ -52,6 +52,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Elevator.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
+        manager.register(new Ammeter.Factory(this));
         
         /*
          * Until fixed, Cauldron must be at the bottom of the registration list as 
