@@ -1,5 +1,6 @@
 control-blocks: true
 max-boost-block: 41
+25x-boost-block: 14
 50x-slow-block: 88
 20x-slow-block: 13
 station-block: 49
