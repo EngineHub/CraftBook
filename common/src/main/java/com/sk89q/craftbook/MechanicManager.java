@@ -35,9 +35,6 @@ import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.ChangedSign;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
 import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
 
 /**
