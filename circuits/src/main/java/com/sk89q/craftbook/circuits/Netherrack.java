@@ -21,6 +21,8 @@
 package com.sk89q.craftbook.circuits;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -73,6 +75,27 @@ public class Netherrack extends AbstractMechanic {
             if (above.getTypeId() == BlockID.FIRE) {
                 above.setTypeId(BlockID.AIR);
             }
+        }
+    }
+    
+    /**
+     * Raised when clicked.
+     */
+    @Override
+    public void onLeftClick(PlayerInteractEvent event) {
+        if (event.getBlockFace() != BlockFace.UP) {
+            return;
+        }
+        
+        Block block = event.getClickedBlock();
+        
+        if (block.isBlockIndirectlyPowered()) {
+            event.setCancelled(true);
+            return;
+        }
+        block = block.getRelative(0, -1, 0);
+        if (block.isBlockIndirectlyPowered()) {
+            event.setCancelled(true);
         }
     }
     
