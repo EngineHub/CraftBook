@@ -1,6 +1,6 @@
 name: CraftBookCircuits
 main: com.sk89q.craftbook.bukkit.CircuitsPlugin
-version: __VERSION_MACRO__
+version: ${project.version}
 commands:
     ic:
         description: IC-related commands
