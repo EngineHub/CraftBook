@@ -1,42 +1,42 @@
 // $Id$
 /*
-* Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class FlexibleSetBlock extends AbstractIC {
 
-    public FlexibleSetBlock(Server server, Sign block) {
-        super(server, block);
+    public FlexibleSetBlock(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
     public String getTitle() {
-        return "Flexible Set Block";
+        return "Flexible Set";
     }
 
     @Override
@@ -46,99 +46,75 @@ public class FlexibleSetBlock extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        // Clock trigger!
-        FlexiBlockDescription desc = getDescription(chip);
-        //Invalid description
-        if (desc == null) {
+
+        String line3 = getSign().getLine(2).toUpperCase();
+        String line4 = getSign().getLine(3);
+
+        chip.setOutput(0, chip.getInput(0));
+
+        if (line3.length() < 5)
+            return;
+
+        // Get and validate axis
+        String axis = line3.substring(0, 1);
+        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
+            return;
+
+        // Get and validate operator
+        String op = line3.substring(1, 2);
+        if (!op.equals("+") && !op.equals("-"))
+            return;
+
+        // Get and validate distance
+        String sdist = line3.substring(2, 3);
+        int dist = -1;
+        try {
+            dist = Integer.parseInt(sdist);
+        } catch (Exception e) {
             return;
         }
-        Block setBlock = getSign().getBlock().getRelative(desc.xOff, desc.yOff, desc.zOff);
 
-        boolean clock = chip.get(0);
-        if (clock) {
-            if(desc.blockType == -1) {
-                setBlock.setTypeId(desc.blockId);
-            } else {
-                setBlock.setTypeIdAndData(desc.blockId, desc.blockType, true);
-            }
-        } else if (desc.hold) {
-            if (desc.toggleBlockType == -1) {
-                setBlock.setTypeId(desc.toggleBlockId);
-            } else {
-                setBlock.setTypeIdAndData(desc.toggleBlockId, desc.toggleBlockType, true);
-            }
-        }
-    }
+        if (op.equals("-"))
+            dist = -dist;
 
-    private FlexiBlockDescription getDescription(ChipState chip) {
-        FlexiBlockDescription d = new FlexiBlockDescription();
+        // Syntax requires a : at idx 3
+        if (!line3.substring(3, 4).equals(":"))
+            return;
+
+        String sblock = line3.substring(4);
+        int block = -1;
         try {
-            Sign s = getSign();
-            /* Parse position */
-            String[] posAndBlock = s.getLine(2).split(":", 2);
-            switch (posAndBlock[0].toLowerCase().charAt(0)) {
-            case 'y':
-                d.yOff = Integer.parseInt(posAndBlock[0].substring(2));
-                break;
-            case 'x':
-                d.xOff = Integer.parseInt(posAndBlock[0].substring(2));
-                break;
-            case 'z':
-                d.zOff = Integer.parseInt(posAndBlock[0].substring(2));
-                break;
-            }
-            /* Parse delta */
-            if (!(posAndBlock[0].charAt(1) == '+' | posAndBlock[0].charAt(1) == '-')) {
-                return null;
-            } else if (posAndBlock[0].charAt(1) == '-') {
-                d.xOff *= -1;
-                d.yOff *= -1;
-                d.zOff *= -1;
-            }
-            /* Parse block information */
-            if (posAndBlock[1].contains(":")) {
-                String[] blockAndType = posAndBlock[1].split(":", 2);
-                d.blockId = Integer.parseInt(blockAndType[0]);
-                d.blockType = Byte.parseByte(blockAndType[1]);
-            } else {
-                d.blockId = Integer.parseInt(posAndBlock[1]);
-                d.blockType = -1;
-            }
-            /* Parse optional hold and toggle settings */
-            String[] holdAndToggle = s.getLine(3).trim().split(":", 2);
-            if (holdAndToggle.length == 1) {
-                d.hold = holdAndToggle[0].equalsIgnoreCase("h");
-                d.toggleBlockId = 0;
-                d.toggleBlockType = -1;
-            } else if(holdAndToggle.length == 2) {
-                d.hold = holdAndToggle[0].equalsIgnoreCase("h");
-                if (holdAndToggle[1].contains(":")) {
-                    String[] blockAndType = holdAndToggle[1].split(":", 2);
-                    d.toggleBlockId = Integer.parseInt(blockAndType[0]);
-                    d.toggleBlockType = Byte.parseByte(blockAndType[1]);
-                } else {
-                    d.toggleBlockId = Integer.parseInt(holdAndToggle[1]);
-                    d.toggleBlockType = -1;
-                }
-            } else {
-                d.hold = false;
-            }
+            block = Integer.parseInt(sblock);
         } catch (Exception e) {
-            return null;
+            return;
         }
-        return d;
+
+        boolean hold = line4.toUpperCase().contains("H");
+        boolean inp = chip.getInput(0);
+
+        Block body = SignUtil.getBackBlock(getSign().getBlock());
+
+        int x = body.getX();
+        int y = body.getY();
+        int z = body.getZ();
+
+        if (axis.equals("X"))
+            x += dist;
+        else if (axis.equals("Y"))
+            y += dist;
+        else
+            z += dist;
+
+        if (inp)
+            body.getWorld().getBlockAt(x, y, z).setTypeId(block);
+        else if (hold)
+            body.getWorld().getBlockAt(x, y, z).setTypeId(0);
+
     }
 
-    private class FlexiBlockDescription {
-        int xOff, yOff, zOff;
-        boolean hold;
-        int blockId;
-        byte blockType;
-        int toggleBlockId;
-        byte toggleBlockType;
-    }
+    public static class Factory extends AbstractICFactory implements
+            RestrictedIC {
 
-    public static class Factory extends AbstractICFactory {
         public Factory(Server server) {
             super(server);
         }
