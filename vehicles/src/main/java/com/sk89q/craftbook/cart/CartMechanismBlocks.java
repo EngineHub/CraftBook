@@ -165,6 +165,16 @@ public class CartMechanismBlocks {
     public final Block rail;
     public final Block base;
     public final Block sign;
+    public Block from;
+
+    /**
+     * This is a stupid but necessary thing since hash completely broke the
+     * ability to get the from location of the move event from a mechanism
+     * itself.
+     */
+    public void setFromBlock(Block block) {
+        this.from = block;
+    }
 
     /**
      * @param mechname

@@ -29,6 +29,7 @@ public class MinecartManager {
         mechanisms.put(cfg.matStation,  new CartStation());
         mechanisms.put(cfg.matEjector,  new CartEjector());
         mechanisms.put(cfg.matDeposit,  new CartDeposit());
+        mechanisms.put(cfg.matTeleport, new CartTeleporter());
         mechanisms.put(cfg.matDispenser,new CartDispenser());
         for (Map.Entry<Material,CartMechanism> ent : mechanisms.entrySet())
             ent.getValue().setMaterial(ent.getKey());
@@ -37,6 +38,7 @@ public class MinecartManager {
     public void impact(VehicleMoveEvent event) {
         try {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
+            cmb.setFromBlock(event.getFrom().getBlock()); // WAI
             CartMechanism thingy = mechanisms.get(cmb.base.getType());
             if (thingy != null) {
                 Location from = event.getFrom();

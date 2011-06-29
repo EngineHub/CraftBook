@@ -1,0 +1,62 @@
+package com.sk89q.craftbook.cart;
+
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.util.*;
+
+import com.sk89q.craftbook.RedstoneUtil.*;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.worldedit.bukkit.*;
+
+import static com.sk89q.craftbook.cart.CartUtils.*;
+
+public class CartTeleporter extends CartMechanism {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+        // validate
+        if (cart == null) return;
+        if (blocks.sign == null) return;
+
+        // enabled?
+        if (isActive(blocks.rail, blocks.base, blocks.sign) == Power.OFF) return;
+
+        // go
+        World world = cart.getWorld();
+        String line = blocks.getSign().getLine(2);
+        String[] pts = line.split(",");
+        if (pts.length != 3) return;
+        if (!blocks.getSign().getLine(3).equals("")) {
+            world = cart.getServer().getWorld(blocks.getSign().getLine(3));
+        }
+
+        Double x = new Double(0D);
+        Double y = new Double(0D);
+        Double z = new Double(0D);
+        try {
+            x = Double.parseDouble(pts[0]);
+            y = Double.parseDouble(pts[1]);
+            z = Double.parseDouble(pts[2]);
+        } catch (NumberFormatException e) {
+            // incorrect format, just set them still and let them figure it out
+            x = blocks.from.getLocation().getX();
+            y = blocks.from.getLocation().getY();
+            z = blocks.from.getLocation().getZ();
+            cart.setVelocity(new Vector(0D, 0D, 0D));
+        }
+
+        Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0));
+        if (cart.getWorld() == world) {
+            cart.teleport(loc);
+        } else {
+            Minecart toCart = world.spawn(loc, Minecart.class);
+            Entity passenger = cart.getPassenger();
+            if (passenger != null) {
+                cart.eject();
+                passenger.teleport(loc);
+                toCart.setPassenger(passenger);
+            }
+            toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
+            cart.remove();
+        }
+    }
+}
