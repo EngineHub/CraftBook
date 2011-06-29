@@ -17,9 +17,6 @@ public class CartTeleporter extends CartMechanism {
         if (cart == null) return;
         if (blocks.sign == null) return;
 
-        // enabled?
-        if (isActive(blocks.rail, blocks.base, blocks.sign) == Power.OFF) return;
-
         // go
         World world = cart.getWorld();
         String line = blocks.getSign().getLine(2);
@@ -38,9 +35,15 @@ public class CartTeleporter extends CartMechanism {
             z = Double.parseDouble(pts[2]);
         } catch (NumberFormatException e) {
             // incorrect format, just set them still and let them figure it out
-            x = blocks.from.getLocation().getX();
-            y = blocks.from.getLocation().getY();
-            z = blocks.from.getLocation().getZ();
+            if (blocks.from != null) {
+                x = blocks.from.getLocation().getX();
+                y = blocks.from.getLocation().getY();
+                z = blocks.from.getLocation().getZ();
+            } else {
+                x = (double) blocks.rail.getX();
+                y = (double) blocks.rail.getY();
+                z = (double) blocks.rail.getZ();
+            }
             cart.setVelocity(new Vector(0D, 0D, 0D));
         }
 
