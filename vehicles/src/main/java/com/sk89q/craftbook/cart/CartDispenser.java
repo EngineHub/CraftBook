@@ -93,6 +93,6 @@ public class CartDispenser extends CartMechanism {
             if (!inv.contains(ItemType.MINECART.getID())) return;
             inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
         }
-        blocks.rail.getWorld().spawnMinecart(BukkitUtil.center(blocks.rail.getLocation()));
+        blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), Minecart.class);
     }
 }
