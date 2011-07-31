@@ -29,14 +29,13 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
     
     protected String band;
-    
-    protected Sign isign;
+    protected String worldName;
 
     public WirelessReceiverST(Server server, Sign sign) {
         super(server, sign);
         
-        isign = sign;
         band = sign.getLine(2);
+        worldName = sign.getWorld().getName();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
 
     @Override
     public void think(ChipState chip) {
-            Boolean val = WirelessTransmitter.getValue(band);
+            Boolean val = WirelessTransmitter.getValue(worldName, band);
             
             if (val == null)
                 return;
