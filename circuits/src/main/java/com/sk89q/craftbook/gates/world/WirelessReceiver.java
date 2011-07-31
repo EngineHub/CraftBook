@@ -29,12 +29,14 @@ public class WirelessReceiver extends AbstractIC {
     
     protected boolean risingEdge;
     protected String band;
+    protected String worldName;
 
     public WirelessReceiver(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
         
         this.risingEdge = risingEdge;
         band = sign.getLine(2);
+        worldName = sign.getWorld().getName();
     }
 
     @Override
@@ -50,7 +52,7 @@ public class WirelessReceiver extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         if (chip.getInput(0)) {
-            Boolean val = WirelessTransmitter.getValue(band);
+            Boolean val = WirelessTransmitter.getValue(worldName, band);
             if (val == null)
                 return;
             
