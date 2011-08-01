@@ -1,3 +1,14 @@
 redstone-netherstone: false
 redstone-pumpkins: true
 redstone-ics: true
+transmitter-states:
+    #use: false | true (use this extension or not)
+    #method: sqlite | mysql | file
+    #host: localhost (needed for mysql only)
+    #user: root (needed for mysql only)
+    #password: (needed for mysql only
+    #database: minecraft (needed for mysql only
+    #path: default | costum (costum is the relative path. Used for sqlite and file)
+    #filename: default | costum (costum is the filename (please use an(y) extension) Used for sqlite and file)
+    #exclude-worlds: (here you can decalre worlds for excluding)
+    #debug: false | true (debug mode with some exception display) 
