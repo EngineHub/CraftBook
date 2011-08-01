@@ -62,7 +62,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         Server server = getServer();
         createDefaultConfiguration("config.yml");
         createDefaultConfiguration("custom-ics.txt");
-        createDefaultConfiguration("transmitter.db");
         config = new CircuitsConfiguration(getConfiguration(), getDataFolder());
         // Prepare to answer permissions questions.
         perms = new PermissionsResolverManager(
