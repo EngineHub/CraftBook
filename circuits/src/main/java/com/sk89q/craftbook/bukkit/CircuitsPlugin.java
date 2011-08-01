@@ -240,6 +240,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     }
     
     private void loadTransmitterState(ConfigurationNode ts) {
+    	if (ts == null) { return; }
     	if (ts.getBoolean("use", false)) {
     		
     		final boolean DEBUG = ts.getBoolean("debug", false);
@@ -475,6 +476,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	}
     
     private void saveTransmitterState(ConfigurationNode ts) {
+    	if (ts == null) { return; }
     	if (ts.getBoolean("use", false)) {
     		logger.info("Craftbook: Begin saving.");
     		final boolean DEBUG = ts.getBoolean("debug", false);
@@ -679,7 +681,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 						logger.warning("Craftbook: Something went terribly wrong with the File writing. Check that!");
 					}
     			}
-		}
+			}
     	} //end use if
     }
     
