@@ -680,7 +680,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 						logger.warning("Craftbook: Something went terribly wrong with the File writing. Check that!");
 					}
     			}
-			}
+		}
     	} //end use if
     }
     
