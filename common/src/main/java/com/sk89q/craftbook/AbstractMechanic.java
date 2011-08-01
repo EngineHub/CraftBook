@@ -27,4 +27,8 @@ public abstract class AbstractMechanic implements Mechanic {
     
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
     }
+    
+    public void onLeftClick(PlayerInteractEvent event) {
+    }
+    
 }

@@ -65,6 +65,14 @@ public interface Mechanic {
     
 
     /**
+     * Raised when block is left clicked.
+     * 
+     * @param event
+     */
+    public void onLeftClick(PlayerInteractEvent event);
+    
+
+    /**
      * Raised when an input redstone current changes.
      * 
      * @param event

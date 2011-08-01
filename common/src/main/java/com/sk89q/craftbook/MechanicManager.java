@@ -185,6 +185,38 @@ public class MechanicManager {
     }
     
     /**
+     * Handle a block left click event.
+     * 
+     * @param event
+     * @return true if there was a mechanic to process the event
+     */
+    public boolean dispatchBlockLeftClick(PlayerInteractEvent event) {
+        // We don't need to handle events that no mechanic we use makes use of
+        if (!passesFilter(event))
+            return false;
+        
+        // Announce the event to anyone who considers it to be on one of their defining blocks
+        //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
+        //watchBlockManager.notify(event);
+        
+        // See if this event could be occurring on any mechanism's triggering blocks
+        BlockWorldVector pos = toWorldVector(event.getClickedBlock());
+        try {
+            Mechanic mechanic = load(pos);
+            if (mechanic != null) {
+                mechanic.onLeftClick(event);
+                return true;
+            }
+        } catch (InvalidMechanismException e) {
+            if (e.getMessage() != null) {
+                event.getPlayer().sendMessage(e.getMessage());
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Handle the redstone block change event.
      * 
      * @param event
