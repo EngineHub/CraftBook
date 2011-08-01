@@ -16,7 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.gates.world;
+package com.sk89q.craftbook.gates.logic;
+
+import java.util.Set;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
@@ -67,6 +69,11 @@ public class WirelessTransmitter extends AbstractIC {
     public static void setValue(String worldName, String band, boolean val) {
     	if (!memory.containsKey(worldName)) { init(worldName); }
         memory.get(worldName).put(band, val);
+    }
+    
+    public static Set<String> getKeys(String worldName) { //needed for state saving!
+    	if (!memory.containsKey(worldName)) { init(worldName); }
+    	return memory.get(worldName).keySet();
     }
 
     private static void init(String worldName) {
