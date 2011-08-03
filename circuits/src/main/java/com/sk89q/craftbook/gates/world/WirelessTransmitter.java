@@ -16,7 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.gates.world;
+package com.sk89q.craftbook.gates.logic;
+
+import java.util.Set;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
@@ -28,15 +30,19 @@ import com.sk89q.craftbook.util.HistoryHashMap;
 
 public class WirelessTransmitter extends AbstractIC {
     
-    protected static HistoryHashMap<String, Boolean> memory
-            = new HistoryHashMap<String, Boolean>(100);
+    /*protected static HistoryHashMap<String, Boolean> memory
+            = new HistoryHashMap<String, Boolean>(Integer.MAX_VALUE); */
+    protected static HistoryHashMap<String, HistoryHashMap<String, Boolean>> memory 
+    		= new HistoryHashMap<String, HistoryHashMap<String, Boolean>>(10); //if there actual more than 10 worlds, than... wow :)
     
     protected String band;
-
+    protected String worldName;
+    
     public WirelessTransmitter(Server server, Sign sign) {
         super(server, sign);
         
         band = sign.getLine(2);
+        worldName = sign.getWorld().getName();
     }
 
     @Override
@@ -51,18 +57,29 @@ public class WirelessTransmitter extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        setValue(band, chip.getInput(0));
+        setValue(worldName, band, chip.getInput(0));
         chip.setOutput(0, chip.getInput(0));
     }
     
-    public static Boolean getValue(String band) {
-        return memory.get(band);
+    public static Boolean getValue(String worldName, String band) {
+    	if (!memory.containsKey(worldName)) { init(worldName); }
+        return memory.get(worldName).get(band);
     }
     
-    public static void setValue(String band, boolean val) {
-        memory.put(band, val);
+    public static void setValue(String worldName, String band, boolean val) {
+    	if (!memory.containsKey(worldName)) { init(worldName); }
+        memory.get(worldName).put(band, val);
+    }
+    
+    public static Set<String> getKeys(String worldName) { //needed for state saving!
+    	if (!memory.containsKey(worldName)) { init(worldName); }
+    	return memory.get(worldName).keySet();
     }
 
+    private static void init(String worldName) {
+    	memory.put(worldName, new HistoryHashMap<String, Boolean>(10000)); //I think there shouldn't be more than 10000 bands....
+    }
+    
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {

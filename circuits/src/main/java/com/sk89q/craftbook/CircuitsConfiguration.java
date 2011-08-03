@@ -31,9 +31,10 @@ public class CircuitsConfiguration {
     public CircuitsConfiguration(Configuration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
         
-        enableNetherstone = cfg.getBoolean("redstone-netherstone", false);
-        enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
-        enableICs         = cfg.getBoolean("redstone-ics", true);
+        enableNetherstone	= cfg.getBoolean("redstone-netherstone", false);
+        enablePumpkins		= cfg.getBoolean("redstone-pumpkins", true);
+        enableICs		= cfg.getBoolean("redstone-ics", true);
+        transmitterstates	= cfg.getNode("transmitter-states");
     }
     
     public final File dataFolder;
@@ -41,4 +42,5 @@ public class CircuitsConfiguration {
     public final boolean enableNetherstone;
     public final boolean enablePumpkins;
     public final boolean enableICs;
+    public final ConfigurationNode transmitterstates;
 }
