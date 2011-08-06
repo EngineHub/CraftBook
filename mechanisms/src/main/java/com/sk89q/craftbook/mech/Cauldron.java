@@ -29,6 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -102,8 +103,14 @@ public class Cauldron extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt))
             return; // wth? our manager is insane
         if (event.getPlayer().getItemInHand().getTypeId() >= 255
-                || event.getPlayer().getItemInHand().getType() == Material.AIR)
-            preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt);
+                || event.getPlayer().getItemInHand().getType() == Material.AIR) {
+            if (preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt)) {
+                event.setUseInteractedBlock(Result.DENY);
+                event.setUseItemInHand(Result.DENY);
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
     /**
@@ -129,7 +136,7 @@ public class Cauldron extends AbstractMechanic {
      * @param player
      * @param world
      */
-    public void preCauldron(Player player, World world, BlockWorldVector pt) {
+    public boolean preCauldron(Player player, World world, BlockWorldVector pt) {
         double x = pt.getX();
         double y = pt.getY();
         double z = pt.getZ();
@@ -160,7 +167,9 @@ public class Cauldron extends AbstractMechanic {
             }
             performCauldron(player, world, new BlockWorldVector(pt.getWorld(),
                     x, rootY, z));
+            return true;
         }
+        return false;
     }
 
     /**

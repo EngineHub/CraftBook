@@ -28,6 +28,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.*;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.*;
 
 /**
@@ -174,7 +175,6 @@ public class Elevator extends AbstractMechanic {
         
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
             localPlayer.printError("You don't have permission to use elevators.");
-            return;
         }
         
         makeItSo(event.getPlayer());
@@ -194,7 +194,7 @@ public class Elevator extends AbstractMechanic {
                 (int)Math.floor(player.getLocation().getZ())
         );
         // well, unless that's already a ceiling.
-        if (!occupiable(floor)) floor = floor.getFace(BlockFace.DOWN);
+        if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
         
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
@@ -209,7 +209,7 @@ public class Elevator extends AbstractMechanic {
             }
             if (floor.getY() == 0x0)        // hit the bottom of the world
                 break;
-            floor = floor.getFace(BlockFace.DOWN);
+            floor = floor.getRelative(BlockFace.DOWN);
         }
         if (!foundGround) {
             player.sendMessage("There is no floor at the destination!");
@@ -236,8 +236,6 @@ public class Elevator extends AbstractMechanic {
         }
     }
     
-    
-    
     private static Elevator.Direction isLift(Block block) {
         BlockState state = block.getState();
         if (!(state instanceof Sign)) return Direction.NONE;
@@ -252,37 +250,9 @@ public class Elevator extends AbstractMechanic {
         return Direction.NONE;
     }
     
-    //XXX this is terrible, terrible, TERRIBLE abstraction and really should be located elsewhere.
     private static boolean occupiable(Block block) {
-        final int id = block.getTypeId();
-        return id == 0 // Air
-                || id == 8 // Water
-                || id == 9 // Water
-                || id == 6 // Saplings
-                || id == 37 // Yellow flower
-                || id == 38 // Red flower
-                || id == 39 // Brown mushroom
-                || id == 40 // Red mush room
-                || id == 50 // Torch
-                || id == 51 // Fire
-                || id == 55 // Redstone wire
-                || id == 59 // Crops
-                || id == 63 // Sign post
-                || id == 65 // Ladder
-                || id == 66 // Minecart tracks
-                || id == 68 // Wall sign
-                || id == 69 // Lever
-                || id == 70 // Stone pressure plate
-                || id == 72 // Wooden pressure plate
-                || id == 75 // Redstone torch (off)
-                || id == 76 // Redstone torch (on)
-                || id == 77 // Stone button
-                || id == 78 // Snow
-                || id == 83 // Reed
-                || id == 90; // Portal
+        return BlockType.canPassThrough(block.getTypeId());
     }
-    
-    
     
     @Override
     public void unload() {

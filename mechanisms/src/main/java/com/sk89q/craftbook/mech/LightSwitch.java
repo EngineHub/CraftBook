@@ -126,17 +126,17 @@ public class LightSwitch extends AbstractMechanic {
      * @return
      */
     private boolean toggleLights(BlockWorldVector pt) {
-    	World world = BukkitUtil.toWorld(pt);
-    	
-    	int wx = pt.getBlockX();
+        World world = BukkitUtil.toWorld(pt);
+
+        int wx = pt.getBlockX();
         int wy = pt.getBlockY();
         int wz = pt.getBlockZ();
         int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
-        
+
         if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
                 || aboveID == BlockID.REDSTONE_TORCH_ON) {
-        	// Check if block above is a redstone torch.
-        	// Used to get what to change torches to.
+            // Check if block above is a redstone torch.
+            // Used to get what to change torches to.
             boolean on = (aboveID != BlockID.TORCH);
             // Prevent spam
             Long lastUse = recentLightToggles.remove(pt);
@@ -158,9 +158,9 @@ public class LightSwitch extends AbstractMechanic {
                                 return true;
                             }
                             if (on) {
-                            	world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+                                world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
                             } else {
-                            	world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+                                world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
                             }
                             changed++;
                         }

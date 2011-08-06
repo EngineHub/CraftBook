@@ -28,6 +28,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.*;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -180,7 +181,6 @@ public class MechanicManager {
                 event.getPlayer().sendMessage(e.getMessage());
             }
         }
-        
         return false;
     }
     
@@ -279,10 +279,9 @@ public class MechanicManager {
             watchBlockManager.register(pm);
             
             if (mechanic instanceof SelfTriggeringMechanic) {
-            	synchronized(this)
-            	{
-            		thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
-            	}
+                synchronized (this) {
+                    thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+                }
             }
         }
 
@@ -325,10 +324,9 @@ public class MechanicManager {
             watchBlockManager.register(pm);
             
             if (mechanic instanceof SelfTriggeringMechanic) {
-            	synchronized(this)
-            	{
-            		thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
-            	}
+                synchronized (this) {
+                    thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
+                }
             }
         }
 
@@ -448,7 +446,7 @@ public class MechanicManager {
         }
         
         synchronized (this) {
-        	thinkingMechanics.remove(mechanic);
+            thinkingMechanics.remove(mechanic);
         }
 
         if (mechanic instanceof PersistentMechanic) {
@@ -462,28 +460,26 @@ public class MechanicManager {
      * Causes all thinking mechanics to think.
      */
     public void think() {
-    	
-    	SelfTriggeringMechanic[] mechs;
-    	
-    	synchronized(this)
-    	{
-    		//Copy to array to get rid of concurrency snafus
-    		mechs = new SelfTriggeringMechanic[thinkingMechanics.size()];
-    		thinkingMechanics.toArray(mechs);
-    	}
-    		
-    	for (SelfTriggeringMechanic mechanic : mechs) {
-    		if (mechanic.isActive()) {
-    			try {
-    				mechanic.think();
-    			} catch (Throwable t) { // Mechanic failed to unload for some reason
-    				logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for "
-    						+ mechanic.getClass().getCanonicalName(), t);
-    			}
-    		} else {
-    			unload(mechanic);
-    		}
-    	}
+
+        SelfTriggeringMechanic[] mechs;
+
+        synchronized (this) {
+            // Copy to array to get rid of concurrency snafus
+            mechs = new SelfTriggeringMechanic[thinkingMechanics.size()];
+            thinkingMechanics.toArray(mechs);
+        }
+
+        for (SelfTriggeringMechanic mechanic : mechs) {
+            if (mechanic.isActive()) {
+                try {
+                    mechanic.think();
+                } catch (Throwable t) { // Mechanic failed to unload for some reason
+                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass().getCanonicalName(), t);
+                }
+            } else {
+                unload(mechanic);
+            }
+        }
     }
 }
 
