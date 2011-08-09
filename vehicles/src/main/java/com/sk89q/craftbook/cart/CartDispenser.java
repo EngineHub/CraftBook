@@ -74,6 +74,7 @@ public class CartDispenser extends CartMechanism {
      * @param inv the inventory to place a cart item in, or null if we don't care.
      */
     private void collect(Minecart cart, Inventory inv) {
+        cart.eject();
         cart.setDamage(9000);
         cart.remove();
         if (inv != null) {
