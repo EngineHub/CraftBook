@@ -252,6 +252,10 @@ public class Elevator extends AbstractMechanic {
         if (sign.getLines()[1].equalsIgnoreCase("[Lift]")) return Direction.RECV;
         return Direction.NONE;
     }
+
+    private static boolean occupiable(Block block) {
+        return BlockType.canPassThrough(block.getTypeId());
+    }
     
     @Override
     public void unload() {
