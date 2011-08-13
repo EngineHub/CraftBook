@@ -32,6 +32,9 @@ import com.sk89q.worldedit.blocks.*;
 import com.sk89q.worldedit.bukkit.*;
 import com.sk89q.worldedit.regions.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
  * blocks.
@@ -176,7 +179,14 @@ public class Bridge extends AbstractMechanic {
         toggle.contract(BukkitUtil.toVector(SignUtil.getFront(trigger)));
         toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
         toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
-        
+
+        // Record all regions the trigger sign is in
+        ApplicableRegionSet triggerRegionSet = MechanismsPlugin.worldGuard.getRegionManager(trigger.getWorld()).getApplicableRegions(BukkitUtil.toVector(trigger));
+        Iterator triggerRegionIterator = triggerRegionSet.iterator();
+        while (triggerRegionIterator.hasNext()) {
+            ProtectedRegion region = (ProtectedRegion) triggerRegionIterator.next();
+            triggerRegions.add(region.getId());
+
         // Win!
     }
     
@@ -249,23 +259,43 @@ public class Bridge extends AbstractMechanic {
     }
     private class ToggleRegionOpen implements Runnable {
         public void run() {
+
+            // Get World Guard region manager
+            RegionManager regionManager = MechanismsPlugin.worldGuard.getRegionManager(trigger.getWorld());
+
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getType()))
+                if ((b.getType() == getBridgeMaterial() || canPassThrough(b.getType())) && blockRegionAllowed(regionManager, b, triggerRegions))
                         b.setType(Material.AIR);
             }
         }
     }
     private class ToggleRegionClosed implements Runnable {
         public void run() {
+
+            // Get World Guard region manager
+            RegionManager regionManager = MechanismsPlugin.worldGuard.getRegionManager(trigger.getWorld());
+
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getType()))
+                if (canPassThrough(b.getType()) && blockRegionAllowed(regionManager, b, triggerRegions))
                         b.setType(getBridgeMaterial());
             }
         }
     }
-    
+
+    public static Boolean blockRegionAllowed(RegionManager regionManager, Block b, ArrayList<String> triggerRegions) {
+        ApplicableRegionSet blockRegionSet = regionManager.getApplicableRegions(BukkitUtil.toVector(b));
+        Iterator blockRegionIterator = blockRegionSet.iterator();
+        while (blockRegionIterator.hasNext()) {
+            ProtectedRegion region = (ProtectedRegion) blockRegionIterator.next();
+            if (!triggerRegions.contains(region.getId())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private Material getBridgeMaterial() {
         return proximalBaseCenter.getType();
     }
