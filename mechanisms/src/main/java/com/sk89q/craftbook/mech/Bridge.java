@@ -19,6 +19,9 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.player.*;
@@ -186,7 +189,7 @@ public class Bridge extends AbstractMechanic {
         while (triggerRegionIterator.hasNext()) {
             ProtectedRegion region = (ProtectedRegion) triggerRegionIterator.next();
             triggerRegions.add(region.getId());
-
+        }
         // Win!
     }
     
@@ -205,7 +208,8 @@ public class Bridge extends AbstractMechanic {
     // we never poke them; just check that they're sane when we're building
     // the bridge.  if this were a PersistentMechanic, those six blocks
     // would be considered defining blocks, though.
-    
+
+    private ArrayList<String> triggerRegions = new ArrayList<String>();
     
     @Override
     public void onRightClick(PlayerInteractEvent event) {

@@ -22,6 +22,10 @@ import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.mech.*;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import org.bukkit.Server;
+import org.bukkit.event.Event;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * Plugin for CraftBook's mechanisms.
@@ -31,6 +35,9 @@ import com.sk89q.craftbook.mech.*;
 public class MechanismsPlugin extends BaseBukkitPlugin {
     
     protected MechanismsConfiguration config;
+    private final MechanismsPluginListener pluginListener = new MechanismsPluginListener();
+    public static WorldGuardPlugin worldGuard = null;
+    public static Server server = null;
     
     @Override
     public void onEnable() {
@@ -60,6 +67,10 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
          */
         
         manager.register(new Cauldron.Factory(this));
+
+        server = this.getServer();
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Event.Priority.Low, this);
     }
     
     @Override
