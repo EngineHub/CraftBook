@@ -22,6 +22,7 @@ package com.sk89q.craftbook.mech;
 import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.*;
 import org.bukkit.block.Block;
 import com.sk89q.craftbook.AbstractMechanic;
@@ -40,6 +41,7 @@ public class LightStone extends AbstractMechanic {
         this.plugin = plugin;
     }
 
+    @Override
     public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.lightstone.use")) {
             return;
@@ -52,21 +54,19 @@ public class LightStone extends AbstractMechanic {
             int light = Integer.valueOf(data);
             event.getPlayer().sendMessage(
                     ChatColor.YELLOW + "LightStone: " + line + ChatColor.WHITE +
-                    " " + light + " A");
+                    " " + light + " L");
         }
     }
     
     private int getLightLevel(Block block) {
         int light = block.getLightLevel();
-        return light;
+        return light;                
     }
     
     private String getLightLevel(int data) {
         String line = ChatColor.YELLOW + "[";
-        if (data > 10) {
-            line = line + ChatColor.DARK_GREEN;
-        } else if (data > 5) {
-            line = line + ChatColor.GOLD;
+        if (data >= 8) {
+            line = line + ChatColor.GREEN;
         } else if (data > 0) {
             line = line + ChatColor.DARK_RED;
         }
