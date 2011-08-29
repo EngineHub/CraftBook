@@ -74,6 +74,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         if (config.enablePumpkins) {
             manager.register(new JackOLantern.Factory());
         }
+        if (config.enableGlowStone) {
+            manager.register(new GlowStone.Factory());
+        }
         if (config.enableICs) {
             manager.register(new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
