@@ -47,7 +47,7 @@ public class LightStone extends AbstractMechanic {
             return;
         }
 
-        Block block = event.getClickedBlock();
+        Block block = event.getClickedBlock().getRelative(event.getBlockFace());
         if (event.getPlayer().getItemInHand().getType() == Material.GLOWSTONE_DUST) {
             int data = getLightLevel(block);
             String line = getLightLevel(data);
