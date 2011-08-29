@@ -39,7 +39,6 @@ public class MechanismsConfiguration {
         this.dataFolder = dataFolder;
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
-        doorSettings = new DoorSettings(cfg);
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
@@ -53,7 +52,6 @@ public class MechanismsConfiguration {
     public final ElevatorSettings elevatorSettings;
     public final CauldronSettings cauldronSettings;
     public final LightSwitchSettings lightSwitchSettings;
-    public final DoorSettings doorSettings;
     
     
     public class BookcaseSettings {
@@ -94,36 +92,7 @@ public class MechanismsConfiguration {
             return allowedBlocks.contains(b);
         }
     }
-    
-    public class DoorSettings {
-        public final boolean enable;
-        public final boolean enableRedstone;
-        public final int maxLength;
-        public final Set<Material> allowedBlocks;
-        
-        private DoorSettings(Configuration cfg) {
-            enable             = cfg.getBoolean("bridge-enable",             true);
-            enableRedstone     = cfg.getBoolean("bridge-redstone",           true);
-            maxLength          = cfg.getInt(    "bridge-max-length",         30);
-            List<Integer> tids = cfg.getIntList("bridge-blocks",             Arrays.asList(4,5,20,43));
-            Set<Material> allowedBlocks = new HashSet<Material>();
-            for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
-            this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
-        }
-        
-        /**
-         * @param b
-         * @return true if the given block type can be used for a bridge; false
-         *         otherwise.
-         */
-        public boolean canUseBlock(Material b) {
-            return allowedBlocks.contains(b);
-        }
-    }
-    
-    
-    
-    
+
     public class GateSettings {
         public final boolean enable;
         public final boolean enableRedstone;
