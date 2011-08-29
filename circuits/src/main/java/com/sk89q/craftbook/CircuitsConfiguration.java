@@ -34,6 +34,7 @@ public class CircuitsConfiguration {
         enableNetherstone = cfg.getBoolean("redstone-netherstone", false);
         enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
         enableICs         = cfg.getBoolean("redstone-ics", true);
+        enableGlowStone   = cfg.getBoolean("redstone-glowstone", true);
     }
     
     public final File dataFolder;
@@ -41,4 +42,5 @@ public class CircuitsConfiguration {
     public final boolean enableNetherstone;
     public final boolean enablePumpkins;
     public final boolean enableICs;
+    public final boolean enableGlowStone;
 }
