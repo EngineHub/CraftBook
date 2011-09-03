@@ -1,28 +1,27 @@
 // $Id$
 /*
-* CraftBook
-* Copyright (C) 2010 sk89q <http://www.sk89q.com>
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * CraftBook
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.sk89q.craftbook.mech;
 
 import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.*;
 import org.bukkit.block.Block;
 import com.sk89q.craftbook.AbstractMechanic;
@@ -30,8 +29,8 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 
 /**
-* This allows users to Right-click to check the light level.
-*/
+ * This allows users to Right-click to check the light level.
+ */
 public class LightStone extends AbstractMechanic {
 
     protected MechanismsPlugin plugin;
