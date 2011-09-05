@@ -54,7 +54,6 @@ public class MechanismsConfiguration {
     public final LightSwitchSettings lightSwitchSettings;
     
     
-    
     public class BookcaseSettings {
         public final boolean enable;
         public final String readLine;
@@ -93,9 +92,7 @@ public class MechanismsConfiguration {
             return allowedBlocks.contains(b);
         }
     }
-    
-    
-    
+
     public class GateSettings {
         public final boolean enable;
         public final boolean enableRedstone;
