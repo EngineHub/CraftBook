@@ -24,7 +24,7 @@ public class CartReverser extends CartMechanism {
             // there's no restrictions on when we reverse
             reverse(cart);
         } else {
-            if (!blocks.matches("[Reverse]")) {
+            if (!blocks.matches("reverse")) {
                 // i dunno what it is, but it doesn't restrict reverse
                 reverse(cart);
             } else {
