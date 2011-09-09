@@ -18,8 +18,12 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -112,7 +116,19 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         Matcher matcher = codePattern.matcher(sign.getLine(1));
         if (!matcher.matches()) return null;
         String id = matcher.group(1);
+
+
+        List<String> regions = BaseBukkitPlugin.worldGuard.getRegionManager(BaseBukkitPlugin.server.getWorld(pt.getWorld().getName())).getApplicableRegionsIDs(pt);
+        for (String region : regions) {
+            BaseBukkitPlugin.server.getLogger().info(region);
+            if (plugin.getLocalConfiguration().regionBlacklist.contains(region))
+                throw new InvalidMechanismException("You cannot use ICs here.");
+        }
         
+        if(!plugin.getLocalConfiguration().allowWilderness && regions.isEmpty()) {
+            throw new InvalidMechanismException("You cannot use ICs here.");
+        }
+
         if (block.getTypeId() != BlockID.WALL_SIGN) {
             throw new InvalidMechanismException("Only wall signs are used for ICs.");
         }
