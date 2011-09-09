@@ -124,7 +124,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             if (plugin.getLocalConfiguration().regionBlacklist.contains(region))
                 throw new InvalidMechanismException("You cannot use ICs here.");
         }
-        
+
         if(!plugin.getLocalConfiguration().allowWilderness && regions.isEmpty()) {
             throw new InvalidMechanismException("You cannot use ICs here.");
         }
@@ -151,7 +151,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             }
         }
         
-        factory.verify(sign);
+        factory.verify(sign, player);
         
         IC ic = registration.getFactory().create(sign);
         

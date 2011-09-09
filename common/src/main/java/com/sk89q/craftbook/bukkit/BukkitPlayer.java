@@ -52,4 +52,9 @@ public class BukkitPlayer implements LocalPlayer {
         return plugin.hasPermission(player, perm);
     }
 
+    @Override
+    public boolean nameEquals(String name){
+        return player.getName().contentEquals(name);
+    }
+
 }
