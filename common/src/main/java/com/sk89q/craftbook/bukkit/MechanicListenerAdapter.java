@@ -71,7 +71,7 @@ public class MechanicListenerAdapter {
         WorldListener worldListener = new MechanicWorldListener(manager);
 
         pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener,
-                Priority.Normal, plugin);
+                Priority.Monitor, plugin);
         pluginManager.registerEvent(Type.REDSTONE_CHANGE, blockListener,
                 Priority.Normal, plugin);
         pluginManager.registerEvent(Type.SIGN_CHANGE, blockListener,
