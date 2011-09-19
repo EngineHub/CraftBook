@@ -35,7 +35,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     
     protected MechanismsConfiguration config;
     private final CraftBookPluginListener pluginListener = new CraftBookPluginListener();
-    public static WorldGuardPlugin worldGuard = null;
     public static Server server = null;
     
     @Override
