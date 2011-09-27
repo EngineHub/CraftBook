@@ -38,12 +38,12 @@ public class BlockSensor extends AbstractIC {
 
     @Override
     public String getTitle() {
-        return "Water Sensor";
+        return "Block Sensor";
     }
 
     @Override
     public String getSignTitle() {
-        return "WATER SENSOR";
+        return "BLOCK SENSOR";
     }
 
     @Override
