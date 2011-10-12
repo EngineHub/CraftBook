@@ -153,6 +153,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         //Self triggered
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
+        icManager.register("MC0112", new WirelessSetBlockST.Factory(server), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
