@@ -61,10 +61,10 @@ public class MultipleSetBlock extends AbstractIC {
         int z = body.getZ();
 
         String[] coords;
-        coords = line3.split(":");
+        coords = line3.replaceAll("\\+","").split(":");
         
         if ( coords.length != 4 )
-        	return;
+            return;
 
         int block = -1;
         try {
@@ -73,54 +73,24 @@ public class MultipleSetBlock extends AbstractIC {
             return;
         }
 
-        if ( !coords[0].substring(0, 1).equals("0") ) {
-	        if ( coords[0].substring(0, 1).equals("+") ) {
-	        	x += Integer.parseInt(coords[0].substring(1));
-	        } else {
-	        	x -= Integer.parseInt(coords[0].substring(1));
-	        }
+        x += Integer.parseInt(coords[0]);
+        y += Integer.parseInt(coords[1]);
+        z += Integer.parseInt(coords[2]);
+
+        if (!inp) {
+            block = 0;
         }
 
-        if ( !coords[1].substring(0, 1).equals("0") ) {
-	        if ( coords[1].substring(0, 1).equals("+") ) {
-	        	y += Integer.parseInt(coords[1].substring(1));
-	        } else {
-	        	y -= Integer.parseInt(coords[1].substring(1));
-	        }
-        }
-
-        if ( !coords[2].substring(0, 1).equals("0") ) {
-	        if ( coords[2].substring(0, 1).equals("+") ) {
-	        	z += Integer.parseInt(coords[2].substring(1));
-	        } else {
-	        	z -= Integer.parseInt(coords[2].substring(1));
-	        }
-        }
-
-        if (inp) {
-        	if ( dim.length == 3 ) {
-	        	for( int lx = -1; lx < (Integer.parseInt(dim[0]) - 1); lx++ ) {
-	        		for( int ly = -1; ly < (Integer.parseInt(dim[1]) - 1); ly++ ) {
-	        			for( int lz = -1; lz < (Integer.parseInt(dim[2]) - 1); lz++ ) {
-	        				body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeId(block);
-	        			}
-	        		}
-	        	}
-        	} else {
-        		body.getWorld().getBlockAt(x, y, z).setTypeId(block);
-        	}
+        if ( dim.length == 3 ) {
+            for( int lx = 0; lx < (Integer.parseInt(dim[0])); lx++ ) {
+                for( int ly = 0; ly < (Integer.parseInt(dim[1])); ly++ ) {
+                    for( int lz = 0; lz < (Integer.parseInt(dim[2])); lz++ ) {
+                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeId(block);
+                    }
+                }
+            }
         } else {
-        	if ( dim.length == 3 ) {
-	        	for( int lx = -1; lx < (Integer.parseInt(dim[0]) - 1); lx++ ) {
-	        		for( int ly = -1; ly < (Integer.parseInt(dim[1]) - 1); ly++ ) {
-	        			for( int lz = -1; lz < (Integer.parseInt(dim[2]) - 1); lz++ ) {
-	        				body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeId(0);
-	        			}
-	        		}
-	        	}
-        	} else {
-        		body.getWorld().getBlockAt(x, y, z).setTypeId(0);
-        	}
+            body.getWorld().getBlockAt(x, y, z).setTypeId(block);
         }
     }
 
