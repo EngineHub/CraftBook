@@ -29,12 +29,12 @@
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
-      <version>4.7-SNAPSHOT</version>
+      <version>5.0</version>
     </dependency>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.0-R1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   
