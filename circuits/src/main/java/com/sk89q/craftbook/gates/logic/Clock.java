@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -95,7 +96,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC{
         }
         
         @Override
-        public void verify(Sign sign) throws ICVerificationException 
+        public void verify(Sign sign, LocalPlayer player) throws ICVerificationException
         {
         	int lol = -1;
         	try

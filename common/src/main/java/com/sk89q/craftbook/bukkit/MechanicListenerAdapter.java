@@ -21,6 +21,7 @@ package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.block.*;
@@ -70,7 +71,7 @@ public class MechanicListenerAdapter {
         WorldListener worldListener = new MechanicWorldListener(manager);
 
         pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener,
-                Priority.Normal, plugin);
+                Priority.Monitor, plugin);
         pluginManager.registerEvent(Type.REDSTONE_CHANGE, blockListener,
                 Priority.Normal, plugin);
         pluginManager.registerEvent(Type.SIGN_CHANGE, blockListener,
@@ -101,6 +102,7 @@ public class MechanicListenerAdapter {
         
         @Override
         public void onPlayerInteract(PlayerInteractEvent event) {
+            if (event.isCancelled() || event.useInteractedBlock() == Event.Result.DENY) return;
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
             }

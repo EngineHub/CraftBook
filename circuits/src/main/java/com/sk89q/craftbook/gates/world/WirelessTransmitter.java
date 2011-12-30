@@ -18,12 +18,10 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.HistoryHashMap;
 
 public class WirelessTransmitter extends AbstractIC {
@@ -36,7 +34,7 @@ public class WirelessTransmitter extends AbstractIC {
     public WirelessTransmitter(Server server, Sign sign) {
         super(server, sign);
         
-        band = sign.getLine(2);
+        band = sign.getLine(2) + ":" + sign.getLine(3);
     }
 
     @Override
@@ -72,6 +70,13 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public IC create(Sign sign) {
             return new WirelessTransmitter(getServer(), sign);
+        }
+
+        @Override
+        public void verify(Sign sign, LocalPlayer player) throws ICVerificationException
+        {
+            if(!player.nameEquals(sign.getLine(3)))
+                throw new ICVerificationException("4th line must be your player name!");
         }
     }
 

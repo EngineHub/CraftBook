@@ -1,3 +1,5 @@
 redstone-netherstone: false
 redstone-pumpkins: true
 redstone-ics: true
+allow-wilderness: true
+region-blacklist: []

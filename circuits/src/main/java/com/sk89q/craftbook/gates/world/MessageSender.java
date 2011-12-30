@@ -18,14 +18,11 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class MessageSender extends AbstractIC {
 
@@ -86,6 +83,13 @@ public class MessageSender extends AbstractIC {
         @Override
         public IC create(Sign sign) {
             return new MessageSender(getServer(), sign, risingEdge);
+        }
+
+        @Override
+        public void verify(Sign sign, LocalPlayer player) throws ICVerificationException
+        {
+            if(!player.nameEquals(sign.getLine(2)))
+                throw new ICVerificationException("Sign doesn't match player's name.");
         }
     }
 

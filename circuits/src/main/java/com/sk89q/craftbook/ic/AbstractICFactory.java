@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
@@ -38,7 +39,7 @@ public abstract class AbstractICFactory implements ICFactory {
         return server;
     }
 
-    public void verify(Sign sign) throws ICVerificationException {
+    public void verify(Sign sign, LocalPlayer player) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
     }

@@ -19,8 +19,13 @@
 package com.sk89q.craftbook;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.util.config.*;
+
+import javax.swing.plaf.synth.Region;
 
 /**
  * Configuration handler for CraftBook.
@@ -35,6 +40,8 @@ public class CircuitsConfiguration {
         enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
         enableICs         = cfg.getBoolean("redstone-ics", true);
         enableGlowStone   = cfg.getBoolean("redstone-glowstone", true);
+        allowWilderness   = cfg.getBoolean("allow-wilderness", true);
+        regionBlacklist   = cfg.getStringList("region-blacklist", new ArrayList<String>());
     }
     
     public final File dataFolder;
@@ -43,4 +50,6 @@ public class CircuitsConfiguration {
     public final boolean enablePumpkins;
     public final boolean enableICs;
     public final boolean enableGlowStone;
+    public final boolean allowWilderness;
+    public final List<String> regionBlacklist;
 }

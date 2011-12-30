@@ -23,6 +23,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -43,6 +46,11 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * The permissions resolver in use.
      */
     private PermissionsResolverManager perms;
+
+    public static WorldGuardPlugin worldGuard = null;
+    public static CraftBookPluginListener pluginListener = new CraftBookPluginListener();
+
+    public static Server server = null;
     
     /**
      * Logger for messages.
@@ -72,7 +80,11 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         perms = new PermissionsResolverManager(
                 getConfiguration(), getServer(), getDescription().getName(), logger);
         perms.load();
-        
+
+        // Hook into WorldGuard
+        server = getServer();
+        registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Event.Priority.Low);
+
         // Register events
         registerEvents();
     }
