@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.mech;
 
@@ -132,7 +132,7 @@ public class Bridge extends AbstractMechanic {
         // first assuming that the bridge is above
         Material mat;
         findBase: {
-            proximalBaseCenter = trigger.getFace(BlockFace.UP);
+            proximalBaseCenter = trigger.getFace(dir);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() == mat)
@@ -215,8 +215,7 @@ public class Bridge extends AbstractMechanic {
             return; //wth? our manager is insane
         
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
-        if ( !player.hasPermission("craftbook.mech.bridge.use"))
-        {
+        if ( !player.hasPermission("craftbook.mech.bridge.use")) {
             player.printError("You don't have permission to use bridges.");
             return;
         }

@@ -19,18 +19,18 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.event.player.*;
 import org.bukkit.block.Block;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.*;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
@@ -44,6 +44,7 @@ public class Ammeter extends AbstractMechanic {
         this.plugin = plugin;
     }
 
+    @Override
     public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.ammeter.use")) {
             return;
