@@ -4,6 +4,10 @@ bridge-enable: true
 bridge-redstone: true
 bridge-max-length: 30
 bridge-blocks: [4,5,20,43]
+door-enable: true
+door-redstone: true
+door-max-length: 30
+door-blocks: [4,5,20,43]
 gate-enable: true
 gate-redstone: true
 elevators-enable: true
