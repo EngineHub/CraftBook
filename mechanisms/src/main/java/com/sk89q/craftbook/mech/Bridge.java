@@ -132,20 +132,20 @@ public class Bridge extends AbstractMechanic {
         // first assuming that the bridge is above
         Material mat;
         findBase: {
-            proximalBaseCenter = trigger.getFace(dir);
+            proximalBaseCenter = trigger.getRelative(dir);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getFace(SignUtil.getRight(trigger)).getType()) == mat)
+                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
             }
-            proximalBaseCenter = trigger.getFace(BlockFace.DOWN);
+            proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getFace(SignUtil.getRight(trigger)).getType()) == mat)
+                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
@@ -154,7 +154,7 @@ public class Bridge extends AbstractMechanic {
         }
         
         // Find the other side
-        farside = trigger.getFace(dir);
+        farside = trigger.getRelative(dir);
         for (int i = 0; i <= settings.maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
@@ -168,16 +168,16 @@ public class Bridge extends AbstractMechanic {
                 if ("[Bridge End]".equalsIgnoreCase(otherSignText)) break;
             }
             
-            farside = farside.getFace(dir);
+            farside = farside.getRelative(dir);
         }
         if (farside.getType() != Material.SIGN_POST)
             throw new InvalidConstructionException("[Bridge] sign required on other side (or it was too far away).");
         
         // Check the other side's base blocks for matching type
-        Block distalBaseCenter = farside.getFace(trigger.getFace(proximalBaseCenter));
+        Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat)
-         || (distalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getFace(SignUtil.getRight(trigger)).getType() != mat))
+         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
@@ -243,7 +243,7 @@ public class Bridge extends AbstractMechanic {
         // this is kinda funky, but we only check one position 
         // to see if the bridge is open and/or closable.
         // efficiency choice :/
-        Block hinge = proximalBaseCenter.getFace(SignUtil.getFacing(trigger));
+        Block hinge = proximalBaseCenter.getRelative(SignUtil.getFacing(trigger));
         
         // aaand we also only check if it's something we can 
         // smosh or not when deciding if we're open or closed.

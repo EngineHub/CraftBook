@@ -128,14 +128,14 @@ public class Door extends AbstractMechanic {
         Material mat;
         findBase: {
             if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-                proximalBaseCenter = trigger.getFace(BlockFace.UP);
+                proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             } else if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-                proximalBaseCenter = trigger.getFace(BlockFace.DOWN);
+                proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             }    
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getFace(SignUtil.getRight(trigger)).getType()) == mat)
+                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
                     break findBase;
                 throw new InvalidConstructionException("Blocks adjacent to the door block must be of the same type.");
             } else {
@@ -144,9 +144,9 @@ public class Door extends AbstractMechanic {
         }
         // Find the other side
         if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-            otherSide = trigger.getFace(BlockFace.UP);
+            otherSide = trigger.getRelative(BlockFace.UP);
         } else if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-            otherSide = trigger.getFace(BlockFace.DOWN);
+            otherSide = trigger.getRelative(BlockFace.DOWN);
         }
         for (int i = 0; i <= settings.maxLength; i++) {
             // about the loop index:
@@ -162,9 +162,9 @@ public class Door extends AbstractMechanic {
             }
             
             if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-                otherSide = otherSide.getFace(BlockFace.UP);
+                otherSide = otherSide.getRelative(BlockFace.UP);
             } else if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-                otherSide = otherSide.getFace(BlockFace.DOWN);
+                otherSide = otherSide.getRelative(BlockFace.DOWN);
             }    
         }
        
@@ -174,14 +174,14 @@ public class Door extends AbstractMechanic {
         Block distalBaseCenter = null;
         
         if (((Sign)otherSide.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-            distalBaseCenter = otherSide.getFace(BlockFace.UP);
+            distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         } else if (((Sign)otherSide.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-            distalBaseCenter = otherSide.getFace(BlockFace.DOWN);
+            distalBaseCenter = otherSide.getRelative(BlockFace.DOWN);
         }    
         
         if ((distalBaseCenter.getType() != mat)
-         || (distalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getFace(SignUtil.getRight(trigger)).getType() != mat))
+         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
