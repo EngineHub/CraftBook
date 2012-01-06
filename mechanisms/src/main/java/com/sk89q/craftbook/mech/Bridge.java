@@ -15,22 +15,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.event.player.*;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.*;
+import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.*;
-import com.sk89q.worldedit.bukkit.*;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.regions.CuboidRegion;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
@@ -122,20 +132,20 @@ public class Bridge extends AbstractMechanic {
         // first assuming that the bridge is above
         Material mat;
         findBase: {
-            proximalBaseCenter = trigger.getFace(BlockFace.UP);
+            proximalBaseCenter = trigger.getRelative(dir);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getFace(SignUtil.getRight(trigger)).getType()) == mat)
+                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
             }
-            proximalBaseCenter = trigger.getFace(BlockFace.DOWN);
+            proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getFace(SignUtil.getRight(trigger)).getType()) == mat)
+                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
@@ -144,7 +154,7 @@ public class Bridge extends AbstractMechanic {
         }
         
         // Find the other side
-        farside = trigger.getFace(dir);
+        farside = trigger.getRelative(dir);
         for (int i = 0; i <= settings.maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
@@ -158,16 +168,16 @@ public class Bridge extends AbstractMechanic {
                 if ("[Bridge End]".equalsIgnoreCase(otherSignText)) break;
             }
             
-            farside = farside.getFace(dir);
+            farside = farside.getRelative(dir);
         }
         if (farside.getType() != Material.SIGN_POST)
             throw new InvalidConstructionException("[Bridge] sign required on other side (or it was too far away).");
         
         // Check the other side's base blocks for matching type
-        Block distalBaseCenter = farside.getFace(trigger.getFace(proximalBaseCenter));
+        Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat)
-         || (distalBaseCenter.getFace(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getFace(SignUtil.getRight(trigger)).getType() != mat))
+         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
@@ -205,8 +215,7 @@ public class Bridge extends AbstractMechanic {
             return; //wth? our manager is insane
         
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
-        if ( !player.hasPermission("craftbook.mech.bridge.use"))
-        {
+        if ( !player.hasPermission("craftbook.mech.bridge.use")) {
             player.printError("You don't have permission to use bridges.");
             return;
         }
@@ -234,14 +243,14 @@ public class Bridge extends AbstractMechanic {
         // this is kinda funky, but we only check one position 
         // to see if the bridge is open and/or closable.
         // efficiency choice :/
-        Block hinge = proximalBaseCenter.getFace(SignUtil.getFacing(trigger));
+        Block hinge = proximalBaseCenter.getRelative(SignUtil.getFacing(trigger));
         
         // aaand we also only check if it's something we can 
         // smosh or not when deciding if we're open or closed.
         // there are no errors reported upon weird blocks like 
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (canPassThrough(hinge.getType())) {
+        if (canPassThrough(hinge.getTypeId())) {
             new ToggleRegionClosed().run();
         } else {
             new ToggleRegionOpen().run();
@@ -251,7 +260,7 @@ public class Bridge extends AbstractMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getType()))
+                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId()))
                         b.setType(Material.AIR);
             }
         }
@@ -260,7 +269,7 @@ public class Bridge extends AbstractMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getType()))
+                if (canPassThrough(b.getTypeId()))
                         b.setType(getBridgeMaterial());
             }
         }
@@ -276,17 +285,17 @@ public class Bridge extends AbstractMechanic {
      * @return whether the door can pass through this BlockType (and displace it
      *         if needed).
      */
-    private static boolean canPassThrough(Material t) {
-        switch (t) {
-            case AIR:
-            case WATER:
-            case STATIONARY_WATER:
-            case LAVA:
-            case STATIONARY_LAVA:
-            case SNOW:
-                return true;
-            default:
-                return false;
+    private static boolean canPassThrough(int t) {
+        if (t != BlockID.WATER
+            && t != BlockID.STATIONARY_WATER
+            && t != BlockID.LAVA
+            && t != BlockID.STATIONARY_LAVA
+            && t != BlockID.FENCE
+            && t != BlockID.SNOW
+            && t != 0) {
+            return false;
+        } else {
+            return true;
         }
     }
     

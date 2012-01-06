@@ -1,22 +1,18 @@
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class HiddenSwitch extends AbstractMechanic {

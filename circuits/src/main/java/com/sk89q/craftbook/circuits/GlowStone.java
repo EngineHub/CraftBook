@@ -24,6 +24,9 @@ import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -70,6 +73,17 @@ public class GlowStone extends AbstractMechanic {
             event.getBlock().setTypeId(BlockID.GLASS);
         }
         event.getBlock().setData(data, false);
+    }
+    
+    /**
+     * Raised when clicked.
+     */
+    @Override
+    public void onLeftClick(PlayerInteractEvent event) {
+        if (event.getClickedBlock().isBlockPowered() && event.getClickedBlock().getTypeId() == BlockID.LIGHTSTONE) {
+            event.setCancelled(true);
+            return;
+        }
     }
 
     /**

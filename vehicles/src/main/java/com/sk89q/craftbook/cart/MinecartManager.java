@@ -1,13 +1,18 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.*;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.block.*;
-import org.bukkit.event.vehicle.*;
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.*;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+
+import java.util.EnumMap;
+import java.util.Map;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Minecart;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 public class MinecartManager {
     public MinecartManager(VehiclesPlugin plugin) {

@@ -18,16 +18,23 @@
 */
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.World;
-import org.bukkit.block.*;
-import org.bukkit.event.player.*;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.worldedit.*;
+
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.*;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone

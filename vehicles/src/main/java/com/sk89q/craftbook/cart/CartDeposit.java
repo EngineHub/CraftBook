@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.cart;
 
-import java.io.Console;
+import com.sk89q.craftbook.RedstoneUtil.Power;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Material;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.RedstoneUtil.*;
 
 public class CartDeposit extends CartMechanism {
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -57,7 +56,7 @@ public class CartDeposit extends CartMechanism {
         }
         
         // are there any containers?
-        if (containers.size() == 0) return;
+        if (containers.isEmpty()) return;
         
         // go
         ItemStack[] trivialstackarray = {};
@@ -121,7 +120,7 @@ public class CartDeposit extends CartMechanism {
             
             //System.out.println("deposited, " + transferitems.size() + " items left over.");
             
-            for (ContainerBlock container: containers) {
+            for (Chest container: containers) {
                 if (leftovers.size() <= 0) break;
                 Inventory containerinventory = container.getInventory();
                 

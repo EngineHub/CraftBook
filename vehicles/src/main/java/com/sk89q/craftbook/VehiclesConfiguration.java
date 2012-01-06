@@ -18,11 +18,11 @@
 
 package com.sk89q.craftbook;
 
-import java.io.*;
 
-import org.bukkit.*;
-import org.bukkit.util.config.*;
+import java.io.File;
 
+import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
 /**
  * Configuration handler for CraftBook.
  * 

@@ -19,18 +19,20 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.io.File;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+
+import de.schlichtherle.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line

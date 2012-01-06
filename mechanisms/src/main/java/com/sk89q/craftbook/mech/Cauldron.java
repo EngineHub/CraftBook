@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -32,13 +33,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.*;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Handler for cauldrons.

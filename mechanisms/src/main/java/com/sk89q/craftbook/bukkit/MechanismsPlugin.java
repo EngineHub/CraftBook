@@ -20,8 +20,15 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.mech.*;
+import com.sk89q.craftbook.mech.Ammeter;
+import com.sk89q.craftbook.mech.Bookcase;
+import com.sk89q.craftbook.mech.Bridge;
+import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Door;
+import com.sk89q.craftbook.mech.Elevator;
+import com.sk89q.craftbook.mech.Gate;
+import com.sk89q.craftbook.mech.HiddenSwitch;
+import com.sk89q.craftbook.mech.LightSwitch;
 
 /**
  * Plugin for CraftBook's mechanisms.
@@ -38,6 +45,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         createDefaultConfiguration("books.txt");
         createDefaultConfiguration("cauldron-recipes.txt");
+        createDefaultConfiguration("config.yml");
         
         config = new MechanismsConfiguration(getConfiguration(), getDataFolder());
         
@@ -49,6 +57,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Bookcase.Factory(this));
         manager.register(new Gate.Factory(this));
         manager.register(new Bridge.Factory(this));
+        manager.register(new Door.Factory(this));
         manager.register(new Elevator.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
