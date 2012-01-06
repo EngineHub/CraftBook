@@ -258,6 +258,7 @@ public class Gate extends AbstractMechanic {
                     && cur != BlockID.LAVA
                     && cur != BlockID.STATIONARY_LAVA
                     && cur != BlockID.FENCE
+                    && cur != BlockID.SNOW
                     && cur != 0) {
                 break;
             }
