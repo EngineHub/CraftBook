@@ -20,8 +20,14 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.mech.*;
+import com.sk89q.craftbook.mech.Ammeter;
+import com.sk89q.craftbook.mech.Bookcase;
+import com.sk89q.craftbook.mech.Bridge;
+import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Elevator;
+import com.sk89q.craftbook.mech.Gate;
+import com.sk89q.craftbook.mech.HiddenSwitch;
+import com.sk89q.craftbook.mech.LightSwitch;
 
 /**
  * Plugin for CraftBook's mechanisms.

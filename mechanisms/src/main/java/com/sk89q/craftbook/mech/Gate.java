@@ -260,7 +260,7 @@ public class Gate extends AbstractMechanic {
                     && cur != BlockID.FENCE
                     && cur != BlockID.SNOW
                     && cur != 0) {
-                break;
+                    break;
             }
 
             //bag.setBlockID(w, x, y1, z, close ? BlockID.FENCE : 0);

@@ -19,9 +19,13 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
-import java.util.*;
-import org.bukkit.*;
-import org.bukkit.util.config.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
 
 /**
  * Configuration handler for CraftBook.

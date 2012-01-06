@@ -19,18 +19,28 @@
 
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.event.player.*;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.*;
+import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.*;
-import com.sk89q.worldedit.bukkit.*;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.regions.CuboidRegion;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
@@ -241,7 +251,7 @@ public class Bridge extends AbstractMechanic {
         // there are no errors reported upon weird blocks like 
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (canPassThrough(hinge.getType())) {
+        if (canPassThrough(hinge.getTypeId())) {
             new ToggleRegionClosed().run();
         } else {
             new ToggleRegionOpen().run();
@@ -251,7 +261,7 @@ public class Bridge extends AbstractMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getType()))
+                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId()))
                         b.setType(Material.AIR);
             }
         }
@@ -260,7 +270,7 @@ public class Bridge extends AbstractMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getType()))
+                if (canPassThrough(b.getTypeId()))
                         b.setType(getBridgeMaterial());
             }
         }
@@ -276,17 +286,17 @@ public class Bridge extends AbstractMechanic {
      * @return whether the door can pass through this BlockType (and displace it
      *         if needed).
      */
-    private static boolean canPassThrough(Material t) {
-        switch (t) {
-            case AIR:
-            case WATER:
-            case STATIONARY_WATER:
-            case LAVA:
-            case STATIONARY_LAVA:
-            case SNOW:
-                return true;
-            default:
-                return false;
+    private static boolean canPassThrough(int t) {
+        if (t != BlockID.WATER
+            && t != BlockID.STATIONARY_WATER
+            && t != BlockID.LAVA
+            && t != BlockID.STATIONARY_LAVA
+            && t != BlockID.FENCE
+            && t != BlockID.SNOW
+            && t != 0) {
+            return false;
+        } else {
+            return true;
         }
     }
     

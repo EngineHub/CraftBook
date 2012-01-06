@@ -19,19 +19,16 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.MechanismsConfiguration;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+
 import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.*;
 
