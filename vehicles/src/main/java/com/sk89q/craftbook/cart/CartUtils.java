@@ -1,10 +1,7 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.util.*;
-
-import com.sk89q.craftbook.util.*;
+import org.bukkit.entity.Minecart;
+import org.bukkit.util.Vector;
 
 public abstract class CartUtils {
     public static void reverse(Minecart cart) {
