@@ -1,15 +1,12 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.vehicle.*;
-import org.bukkit.util.*;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.blocks.*;
-import com.sk89q.worldedit.bukkit.*;
+import org.bukkit.util.Vector;
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Minecart;
+import com.sk89q.craftbook.util.SignUtil;
 
 import static com.sk89q.craftbook.cart.CartUtils.*;
 

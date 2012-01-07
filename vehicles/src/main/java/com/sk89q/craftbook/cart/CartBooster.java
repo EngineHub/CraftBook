@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.entity.*;
-import org.bukkit.util.Vector;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
-import com.sk89q.craftbook.RedstoneUtil.*;
+import org.bukkit.util.Vector;
+import org.bukkit.entity.Minecart;
 
 public class CartBooster extends CartMechanism {
     public CartBooster(double multiplier) {

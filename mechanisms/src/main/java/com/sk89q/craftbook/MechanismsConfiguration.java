@@ -19,9 +19,14 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
-import java.util.*;
-import org.bukkit.*;
-import org.bukkit.util.config.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.util.config.Configuration;
 
 /**
  * Configuration handler for CraftBook.
@@ -39,6 +44,7 @@ public class MechanismsConfiguration {
         this.dataFolder = dataFolder;
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
+        doorSettings = new DoorSettings(cfg);        
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
@@ -48,6 +54,7 @@ public class MechanismsConfiguration {
     public final File dataFolder;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
+    public final DoorSettings doorSettings;    
     public final GateSettings gateSettings;
     public final ElevatorSettings elevatorSettings;
     public final CauldronSettings cauldronSettings;
@@ -94,6 +101,32 @@ public class MechanismsConfiguration {
         }
     }
     
+    public class DoorSettings {
+        public final boolean enable;
+        public final boolean enableRedstone;
+        public final int maxLength;
+        public final Set<Material> allowedBlocks;
+        
+        private DoorSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("door-enable",             true);
+            enableRedstone     = cfg.getBoolean("door-redstone",           true);
+            maxLength          = cfg.getInt(    "door-max-length",         30);
+            List<Integer> tids = cfg.getIntList("door-blocks",             Arrays.asList(4,5,20,43));
+            Set<Material> allowedBlocks = new HashSet<Material>();
+            for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
+            this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
+        }
+        
+        /**
+         * @param b
+         * @return true if the given block type can be used for a bridge; false
+         *         otherwise.
+         */
+        public boolean canUseBlock(Material b) {
+            return allowedBlocks.contains(b);
+        }
+    }
+
     
     
     public class GateSettings {

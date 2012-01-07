@@ -18,17 +18,21 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.*;
-import org.bukkit.event.block.*;
-import org.bukkit.event.vehicle.*;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.cart.CartMechanism;
+import com.sk89q.craftbook.cart.MinecartManager;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.cart.*;
-import com.sk89q.worldedit.*;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.bukkit.event.vehicle.VehicleListener;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 /**
  * Plugin for CraftBook's redstone additions.

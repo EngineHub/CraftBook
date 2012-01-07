@@ -1,15 +1,11 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.util.*;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.RedstoneUtil.*;
-import com.sk89q.craftbook.util.*;
-import com.sk89q.worldedit.bukkit.*;
-
-import static com.sk89q.craftbook.cart.CartUtils.*;
 
 public class CartTeleporter extends CartMechanism {
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -47,7 +43,7 @@ public class CartTeleporter extends CartMechanism {
             cart.setVelocity(new Vector(0D, 0D, 0D));
         }
 
-        Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0));
+        Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0) {});
         if (cart.getWorld() == world) {
             cart.teleport(loc);
         } else {
