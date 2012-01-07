@@ -132,7 +132,7 @@ public class Bridge extends AbstractMechanic {
         // first assuming that the bridge is above
         Material mat;
         findBase: {
-            proximalBaseCenter = trigger.getRelative(dir);
+            proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
