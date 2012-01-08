@@ -212,10 +212,6 @@ public class Door extends AbstractMechanic {
             return; 
               
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
-//        if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door]")) {
-//            player.printError("You cannot");
-//            return;
-//        }
         if ( !player.hasPermission("craftbook.mech.door.use")) {
             player.printError("You don't have permission to use doors.");
             return;
