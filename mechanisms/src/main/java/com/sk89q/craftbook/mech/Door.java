@@ -55,8 +55,8 @@ public class Door extends AbstractMechanic {
         }
         
         private MechanismsPlugin plugin;     
-        
-                /**
+                
+        /**
          * Detect the mechanic at a placed sign.
          * 
          * @throws ProcessedMechanismException 
@@ -77,6 +77,13 @@ public class Door extends AbstractMechanic {
                 }
                 
                 sign.setLine(1, "[Door Up]");
+                player.print("Door created.");
+            } else if (sign.getLine(1).equalsIgnoreCase("[Door]")) {
+                if (!player.hasPermission("craftbook.mech.door")) {
+                    throw new InsufficientPermissionsException();
+                }
+                
+                sign.setLine(1, "[Door]");
                 player.print("Door created.");
             } else {
                 return null;
@@ -100,7 +107,7 @@ public class Door extends AbstractMechanic {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
-            if (!((Sign)block.getState()).getLine(1).contains("Door")) return null;       
+            if (!((Sign)block.getState()).getLine(1).contains("Door") || ((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Door]")) return null;
             
             // okay, now we can start doing exploration of surrounding blocks
             // and if something goes wrong in here then we throw fits.
@@ -159,6 +166,7 @@ public class Door extends AbstractMechanic {
                 String otherSignText = ((Sign)otherSide.getState()).getLines()[1];
                 if ("[Door Down]".equalsIgnoreCase(otherSignText)) break;
                 if ("[Door Up]".equalsIgnoreCase(otherSignText)) break;
+                if ("[Door]".equalsIgnoreCase(otherSignText)) break;
             }
             
             if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
@@ -173,11 +181,11 @@ public class Door extends AbstractMechanic {
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
         
-        if (((Sign)otherSide.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-            distalBaseCenter = otherSide.getRelative(BlockFace.UP);
-        } else if (((Sign)otherSide.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+        if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
             distalBaseCenter = otherSide.getRelative(BlockFace.DOWN);
-        }    
+        } else if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+            distalBaseCenter = otherSide.getRelative(BlockFace.UP);
+        }
         
         if ((distalBaseCenter.getType() != mat)
          || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
@@ -202,8 +210,12 @@ public class Door extends AbstractMechanic {
         
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) 
             return; 
-        
+              
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
+//        if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door]")) {
+//            player.printError("You cannot");
+//            return;
+//        }
         if ( !player.hasPermission("craftbook.mech.door.use")) {
             player.printError("You don't have permission to use doors.");
             return;
