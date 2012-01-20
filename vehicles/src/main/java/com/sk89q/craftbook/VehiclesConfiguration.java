@@ -51,7 +51,11 @@ public class VehiclesConfiguration {
         matDispenser =  Material.getMaterial(54);     // this can't be configurable because we need it to be a chest!
         
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
+        minecartRemoveEntities = cfg.getBoolean("minecart-remove-entities",     false);
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
+        
+        boatRemoveEntities = cfg.getBoolean("boat-remove-entities",             false);
+        boatBreakReturn = cfg.getBoolean("boat-break-return-boat",              false);
     }
     
     public final File dataFolder;
@@ -69,6 +73,9 @@ public class VehiclesConfiguration {
     public final Material matDispenser;
     
     public final boolean minecartSlowWhenEmpty;
+    public final boolean minecartRemoveEntities;
     public final double minecartMaxSpeedModifier;
     
+    public final boolean boatRemoveEntities;
+    public final boolean boatBreakReturn;
 }
