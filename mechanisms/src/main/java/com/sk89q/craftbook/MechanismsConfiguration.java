@@ -42,22 +42,26 @@ import org.bukkit.util.config.Configuration;
 public class MechanismsConfiguration {
     public MechanismsConfiguration(Configuration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
+        ammeterSettings = new AmmeterSettings(cfg);
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
         doorSettings = new DoorSettings(cfg);        
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
+        lightStoneSettings = new LightStoneSettings(cfg);
         lightSwitchSettings = new LightSwitchSettings(cfg);
     }
     
     public final File dataFolder;
+    public final AmmeterSettings ammeterSettings;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
     public final DoorSettings doorSettings;    
     public final GateSettings gateSettings;
     public final ElevatorSettings elevatorSettings;
     public final CauldronSettings cauldronSettings;
+    public final LightStoneSettings lightStoneSettings;
     public final LightSwitchSettings lightSwitchSettings;
     
     
@@ -145,7 +149,7 @@ public class MechanismsConfiguration {
         public final boolean enable;
 
         private ElevatorSettings(Configuration cfg) {
-            enable             = cfg.getBoolean("elevators-enable",             true);
+            enable             = cfg.getBoolean("elevators-enable",        true);
         }
     }
     
@@ -155,7 +159,7 @@ public class MechanismsConfiguration {
         public final boolean enable;
 
         private CauldronSettings(Configuration cfg) {
-            enable             = cfg.getBoolean("cauldron-enable",             true);
+            enable             = cfg.getBoolean("cauldron-enable",         true);
         }
         //FIXME the recipes should probably go here
     }
@@ -166,7 +170,22 @@ public class MechanismsConfiguration {
         public final boolean enable;
 
         private LightSwitchSettings(Configuration cfg) {
-            enable             = cfg.getBoolean("light-switch-enable",             true);
+            enable             = cfg.getBoolean("light-switch-enable",     true);
         }
     }
+    
+    public class LightStoneSettings {
+        public final boolean enable;
+
+        private LightStoneSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("light-stone-enable",      true);
+        }
+    }    
+    public class AmmeterSettings {
+        public final boolean enable;
+
+        private AmmeterSettings(Configuration cfg) {
+            enable             = cfg.getBoolean("ammeter-enable",          true);
+        }
+    }        
 }

@@ -28,7 +28,9 @@ import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
+import com.sk89q.craftbook.mech.LightStone;
 import com.sk89q.craftbook.mech.LightSwitch;
+
 
 /**
  * Plugin for CraftBook's mechanisms.
@@ -59,6 +61,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Bridge.Factory(this));
         manager.register(new Door.Factory(this));
         manager.register(new Elevator.Factory(this));
+        manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new Ammeter.Factory(this));
