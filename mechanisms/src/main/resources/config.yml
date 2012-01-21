@@ -1,3 +1,4 @@
+ammeter-enable: true
 bookshelf-enable: true
 bookshelf-read-text: You pick up a book...
 bridge-enable: true
@@ -13,3 +14,4 @@ gate-redstone: true
 elevators-enable: true
 cauldron-enable: true
 light-switch-enable: true
+light-stone-enable: true
