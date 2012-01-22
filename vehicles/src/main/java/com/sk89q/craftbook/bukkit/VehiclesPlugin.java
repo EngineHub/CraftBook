@@ -38,6 +38,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -72,6 +73,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         lvehicle = new CraftBookVehicleListener();
         lblock = new CraftBookVehicleBlockListener();
         getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_CREATE,  lvehicle, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_EXIT,  lvehicle, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_DESTROY,  lvehicle, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_COLLISION_ENTITY,  lvehicle, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_MOVE,    lvehicle, Priority.Normal, this);
@@ -126,6 +128,21 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
         }
         
+        /**
+         * Called when a vehicle is exited
+         */
+        
+        @Override
+        public void onVehicleExit(VehicleExitEvent event) {
+            Vehicle vehicle = event.getVehicle();
+            
+            if (!(vehicle instanceof Minecart)) return;
+            
+            VehiclesConfiguration config = getLocalConfiguration();
+            if (config.minecartRemoveOnExit) {
+                vehicle.remove();
+            }
+        }
         /**
          * Called when an vehicle moves.
          */
