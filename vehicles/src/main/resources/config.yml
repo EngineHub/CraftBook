@@ -9,9 +9,14 @@ deposit-block: 15
 eject-block: 42
 teleport-block: 89
 sort-block: 87
+minecart-remove-entities: false
+minecart-remove-on-exit: false
 minecart-dispensers: true
 minecart-decay-time: 0
 minecart-slow-when-empty: false
 minecart-max-speed-modifier: 1
 in-cart-control: true
 hinder-pressure-plate-slow: true
+
+boat-break-return-boat: false
+boat-remove-entities: false
