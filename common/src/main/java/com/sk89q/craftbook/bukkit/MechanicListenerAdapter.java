@@ -22,7 +22,6 @@ package com.sk89q.craftbook.bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
@@ -92,7 +91,7 @@ public class MechanicListenerAdapter {
             this.manager = manager;
         }
         
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onPlayerInteract(PlayerInteractEvent event) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
@@ -122,12 +121,12 @@ public class MechanicListenerAdapter {
             this.manager = manager;
         }
 
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onSignChange(SignChangeEvent event) {
             manager.dispatchSignChange(event);
         }
         
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             int oldLevel = event.getOldCurrent();
             int newLevel = event.getNewCurrent();
@@ -296,7 +295,7 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is loaded.
          */
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onChunkLoad(final ChunkLoadEvent event) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                 @Override
@@ -309,7 +308,7 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is unloaded.
          */
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onChunkUnload(ChunkUnloadEvent event) {
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();

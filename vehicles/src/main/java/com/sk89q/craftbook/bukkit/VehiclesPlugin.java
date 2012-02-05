@@ -32,7 +32,6 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -91,7 +90,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle hits an entity 
          */
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
             VehiclesConfiguration config = getLocalConfiguration();
             Vehicle vehicle = event.getVehicle();
@@ -109,7 +108,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle is created.
          */
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onVehicleCreate(VehicleCreateEvent event) {
             Vehicle vehicle = event.getVehicle();
             
@@ -127,7 +126,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
          * Called when a vehicle is exited
          */
         
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onVehicleExit(VehicleExitEvent event) {
             Vehicle vehicle = event.getVehicle();
             
@@ -141,7 +140,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when an vehicle moves.
          */
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
@@ -151,7 +150,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle is destroied.
          */
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onVehicleDestroy(VehicleDestroyEvent event) {
             if (!(event.getVehicle() instanceof Boat)) return;
             
@@ -174,7 +173,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     class CraftBookVehicleBlockListener implements Listener {
         public CraftBookVehicleBlockListener() {}
         
-        @EventHandler(priority = EventPriority.NORMAL)
+        @EventHandler
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             // ignore events that are only changes in current strength
             if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
