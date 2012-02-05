@@ -25,51 +25,59 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 
-public class LightSensor extends AbstractIC {
+public class LightSensorST extends AbstractIC implements SelfTriggeredIC {
 
     protected boolean risingEdge;
 
-    public LightSensor(Server server, Sign sign, boolean risingEdge) {
+    public LightSensorST(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
         this.risingEdge = risingEdge;
     }
 
     @Override
     public String getTitle() {
-        return "Light Sensor";
+        return "Self-Triggered Light Sensor";
     }
 
     @Override
     public String getSignTitle() {
-        return "LIGHT SENSOR";
+        return "ST LIGHT SENSOR";
+    }
+    
+    @Override
+    public void trigger(ChipState chip)
+    {}
+	
+    @Override
+    public boolean isActive() {
+    	return true;
     }
 
     @Override
-    public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
-        	int x=0;
-        	int y=1;
-        	int z=0;
-        	int min=10;
-        	try {
-        		String[] st = getSign().getLine(3).split(":");
-        		if(st.length != 3) throw new Exception();
-        		x = Integer.parseInt(st[0]);
-        		y = Integer.parseInt(st[1]);
-        		z = Integer.parseInt(st[2]);
-        	} catch (Exception e) {}
-        	
-        	try {
-        		min = Integer.parseInt(getSign().getLine(2));
-        	} catch (Exception e) {
-        		getSign().setLine(2, Integer.toString(min));
-        		getSign().update();
-        	}
+    public void think(ChipState chip) {
+    	int x=0;
+    	int y=1;
+    	int z=0;
+    	int min=10;
+    	try {
+    		String[] st = getSign().getLine(3).split(":");
+    		if(st.length != 3) throw new Exception();
+    		x = Integer.parseInt(st[0]);
+    		y = Integer.parseInt(st[1]);
+    		z = Integer.parseInt(st[2]);
+    	} catch (Exception e) {}
 
-            chip.setOutput(0, hasLight(min, x, y, z));
-        }
+    	try {
+    		min = Integer.parseInt(getSign().getLine(2));
+    	} catch (Exception e) {
+    		getSign().setLine(2, Integer.toString(min));
+    		getSign().update();
+    	}
+
+    	chip.setOutput(0, hasLight(min, x, y, z));
     }
 
     /**
@@ -94,14 +102,13 @@ public class LightSensor extends AbstractIC {
 
         protected boolean risingEdge;
 
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new LightSensor(getServer(), sign, risingEdge);
+            return new LightSensorST(getServer(), sign, risingEdge);
         }
     }
 

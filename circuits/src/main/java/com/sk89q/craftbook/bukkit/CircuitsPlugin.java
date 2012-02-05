@@ -118,7 +118,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os
-        icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O); //Missing: 2020 (?) 3 bit RNG
+        icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O);
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs
@@ -148,10 +148,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
+        icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
-        //Missing: 0020
-	//Missing: 0230
+        //Missing: 0020 self-triggered RNG (may cause server load issues)
 	//Missing: 0262
 	//Missing: 0420     
         
