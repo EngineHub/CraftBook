@@ -92,7 +92,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //ICFamily family3I3O = new Family3I3O();
         
         //SISOs
-        icManager.register("MC9999", new ResurrectDumbledore.Factory(server, true), familySISO);
         icManager.register("MC1000", new Repeater.Factory(server), familySISO);
         icManager.register("MC1001", new Inverter.Factory(server), familySISO);
         icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
