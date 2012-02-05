@@ -24,8 +24,6 @@ import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**

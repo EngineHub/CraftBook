@@ -227,7 +227,7 @@ public class Cauldron extends AbstractMechanic {
                 if (groups != null) {
                     boolean found = false;
 
-                    for (String group : groups) {
+                    for (@SuppressWarnings("unused") String group : groups) {
                         found = true;
                         break;
                         // TODO: Add an isInGroup method
@@ -286,6 +286,7 @@ public class Cauldron extends AbstractMechanic {
                         world.dropItem(player.getLocation(), i.getValue());
                     }
                 }
+                //FIXME: deprecated call
                 player.updateInventory();
                 // Didn't find a recipe
             } else {

@@ -28,13 +28,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.*;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.ChangedSign;
-import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.*;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
 

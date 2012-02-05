@@ -241,9 +241,9 @@ public class Door extends AbstractMechanic {
         Block hinge = null;
                 
         if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-            hinge = proximalBaseCenter.getFace(BlockFace.UP);
+            hinge = proximalBaseCenter.getRelative(BlockFace.UP);
         } else {
-            hinge = proximalBaseCenter.getFace(BlockFace.DOWN);
+            hinge = proximalBaseCenter.getRelative(BlockFace.DOWN);
         }
 
         // aaand we also only check if it's something we can 

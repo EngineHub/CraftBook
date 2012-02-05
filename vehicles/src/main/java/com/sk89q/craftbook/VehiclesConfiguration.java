@@ -22,20 +22,20 @@ package com.sk89q.craftbook;
 import java.io.File;
 
 import org.bukkit.Material;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 /**
- * Configuration handler for CraftBook.
+ * FileConfiguration handler for CraftBook.
  * 
  * All fields are final because it is never appropriate to modify them during
- * operation, except for when the configuration is reloaded entirely, at which
- * point it is appropriate to construct an entirely new configuration instance
+ * operation, except for when the FileConfiguration is reloaded entirely, at which
+ * point it is appropriate to construct an entirely new FileConfiguration instance
  * and update the plugin accordingly.
  * 
  * @author sk89q
  * @author hash
  */
 public class VehiclesConfiguration {
-    public VehiclesConfiguration(Configuration cfg, File dataFolder) {
+    public VehiclesConfiguration(FileConfiguration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
         
         matBoostMax =   Material.getMaterial(cfg.getInt("max-boost-block",      41));

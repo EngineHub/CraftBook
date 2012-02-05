@@ -27,8 +27,8 @@ public class HiddenSwitch extends AbstractMechanic {
         @Override
         public HiddenSwitch detect(BlockWorldVector pos)
             throws InvalidMechanismException {
-            int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
-            // In the future add a check here to test if you can actually build wall signs on this block.
+            // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
+            //FIXME In the future add a check here to test if you can actually build wall signs on this block.
             World wrd = BukkitUtil.toWorld(pos);
             if(isValidWallsign(wrd, pos.add(1,0,0))
                     || isValidWallsign(wrd, pos.add(-1,0,0))

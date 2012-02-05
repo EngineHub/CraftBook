@@ -147,7 +147,7 @@ public class Elevator extends AbstractMechanic {
         if (destination.getY() == f)             // heading up from top or down from bottom
             throw new InvalidConstructionException();
         while (true) {
-            destination = destination.getFace(shift);
+            destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
             if (derp != Direction.NONE) break;   // found it!
             if (destination.getY() == 127)       // hit the top of the world

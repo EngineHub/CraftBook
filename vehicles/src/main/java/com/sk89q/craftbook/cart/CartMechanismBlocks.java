@@ -84,22 +84,22 @@ public class CartMechanismBlocks {
      */
     public static CartMechanismBlocks findByRail(Block rail) throws InvalidMechanismException {
         if (!BlockType.isRailBlock(rail.getTypeId())) throw new InvalidMechanismException("rail argument must be a rail!");
-        if (SignUtil.isSign(rail.getFace(BlockFace.DOWN, 2).getTypeId())) {
+        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2).getTypeId())) {
             return new CartMechanismBlocks(
                     rail,
-                    rail.getFace(BlockFace.DOWN, 1),
-                    rail.getFace(BlockFace.DOWN, 2)
+                    rail.getRelative(BlockFace.DOWN, 1),
+                    rail.getRelative(BlockFace.DOWN, 2)
             );
-        } else if (SignUtil.isSign(rail.getFace(BlockFace.DOWN, 3).getTypeId())) {
+        } else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3).getTypeId())) {
             return new CartMechanismBlocks(
                     rail,
-                    rail.getFace(BlockFace.DOWN, 1),
-                    rail.getFace(BlockFace.DOWN, 3)
+                    rail.getRelative(BlockFace.DOWN, 1),
+                    rail.getRelative(BlockFace.DOWN, 3)
             );
         }
         return new CartMechanismBlocks(
                 rail,
-                rail.getFace(BlockFace.DOWN, 1),
+                rail.getRelative(BlockFace.DOWN, 1),
                 null
         );
     }
@@ -115,22 +115,22 @@ public class CartMechanismBlocks {
      *            what determines the mechanism type.
      */
     public static CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
-        if (!BlockType.isRailBlock(base.getFace(BlockFace.UP, 1).getTypeId())) throw new InvalidMechanismException("could not find rails.");
-        if (SignUtil.isSign(base.getFace(BlockFace.DOWN, 1).getTypeId())) {
+        if (!BlockType.isRailBlock(base.getRelative(BlockFace.UP, 1).getTypeId())) throw new InvalidMechanismException("could not find rails.");
+        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1).getTypeId())) {
             return new CartMechanismBlocks(
-                    base.getFace(BlockFace.UP, 1),
+                    base.getRelative(BlockFace.UP, 1),
                     base,
-                    base.getFace(BlockFace.DOWN, 1)
+                    base.getRelative(BlockFace.DOWN, 1)
             );
-        } else if (SignUtil.isSign(base.getFace(BlockFace.DOWN, 2).getTypeId())) {
+        } else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2).getTypeId())) {
             return new CartMechanismBlocks(
-                    base.getFace(BlockFace.UP, 1),
+                    base.getRelative(BlockFace.UP, 1),
                     base,
-                    base.getFace(BlockFace.DOWN, 2)
+                    base.getRelative(BlockFace.DOWN, 2)
             );
         }
         return new CartMechanismBlocks(
-                base.getFace(BlockFace.UP, 1),
+                base.getRelative(BlockFace.UP, 1),
                 base,
                 null
         );
@@ -148,16 +148,16 @@ public class CartMechanismBlocks {
      */
     public static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
         if (!SignUtil.isSign(sign)) throw new InvalidMechanismException("sign argument must be a sign!");
-        if (BlockType.isRailBlock(sign.getFace(BlockFace.UP, 2).getTypeId())) {
+        if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 2).getTypeId())) {
             return new CartMechanismBlocks(
-                    sign.getFace(BlockFace.UP, 2),
-                    sign.getFace(BlockFace.UP, 1),
+                    sign.getRelative(BlockFace.UP, 2),
+                    sign.getRelative(BlockFace.UP, 1),
                     sign
             );
-        } else if (BlockType.isRailBlock(sign.getFace(BlockFace.UP, 3).getTypeId())) {
+        } else if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 3).getTypeId())) {
             return new CartMechanismBlocks(
-                    sign.getFace(BlockFace.UP, 3),
-                    sign.getFace(BlockFace.UP, 2),
+                    sign.getRelative(BlockFace.UP, 3),
+                    sign.getRelative(BlockFace.UP, 2),
                     sign
             );
         }

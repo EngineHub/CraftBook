@@ -25,11 +25,9 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.sk89q.bukkit.migration.PermissionsResolverManager;
+import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.craftbook.LocalPlayer;
 
 /**
@@ -69,9 +67,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         getDataFolder().mkdirs();
         
         // Prepare permissions
-        perms = new PermissionsResolverManager(
-                getConfiguration(), getServer(), getDescription().getName(), logger);
-        perms.load();
+        PermissionsResolverManager.initialize(this);
+        perms = PermissionsResolverManager.getInstance();
         
         // Register events
         registerEvents();
@@ -96,20 +93,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * @param listener
      * @param priority
      */
-    protected void registerEvent(Event.Type type, Listener listener, Priority priority) {
-        getServer().getPluginManager()
-                .registerEvent(type, listener, priority, this);
-    }
     
-    /**
-     * Register an event at normal priority.
-     * 
-     * @param type
-     * @param listener
-     */
-    protected void registerEvent(Event.Type type, Listener listener) {
-        getServer().getPluginManager()
-                .registerEvent(type, listener, Priority.Normal, this);
+    protected void registerEvents(Listener listener) {
+    	getServer().getPluginManager().registerEvents(listener, this);
     }
     
     /**

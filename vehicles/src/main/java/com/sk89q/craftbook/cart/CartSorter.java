@@ -87,7 +87,7 @@ public class CartSorter extends CartMechanism {
             //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
             return;
         }
-        Block targetTrack = blocks.rail.getFace(next);
+        Block targetTrack = blocks.rail.getRelative(next);
         
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.

@@ -3,7 +3,6 @@ package com.sk89q.craftbook;
 import org.bukkit.*;
 import org.bukkit.block.*;
 
-import com.sk89q.worldedit.blocks.*;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic
@@ -34,7 +33,7 @@ public abstract class RedstoneUtil {
      *         Power.NA if there is no potential power source at the given face.
      */
     public static Power isPowered(Block mech, BlockFace face) {
-        Block pow = mech.getFace(face);
+        Block pow = mech.getRelative(face);
         //debug(pow);
         if (isPotentialPowerSource(mech, pow)) {
             if (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) return Power.ON;
@@ -70,9 +69,9 @@ public abstract class RedstoneUtil {
         System.out.println("\tblock.isBlockIndirectlyPowered() : "+block.isBlockIndirectlyPowered());
         for (BlockFace bf : BlockFace.values()) {
             System.out.println("\tblock.isBlockFacePowered("+bf+") : "+block.isBlockFacePowered(bf));
-            System.out.println("\tblock.getFace("+bf+").isBlockPowered() : "+block.getFace(bf).isBlockPowered());
+            System.out.println("\tblock.getFace("+bf+").isBlockPowered() : "+block.getRelative(bf).isBlockPowered());
             System.out.println("\tblock.isBlockFaceIndirectlyPowered("+bf+") : "+block.isBlockFaceIndirectlyPowered(bf));
-            System.out.println("\tblock.getFace("+bf+").isBlockIndirectlyPowered("+bf+") : "+block.getFace(bf).isBlockIndirectlyPowered());
+            System.out.println("\tblock.getFace("+bf+").isBlockIndirectlyPowered("+bf+") : "+block.getRelative(bf).isBlockIndirectlyPowered());
         }
         System.out.println();
     }

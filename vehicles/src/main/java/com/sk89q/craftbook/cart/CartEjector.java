@@ -28,7 +28,7 @@ public class CartEjector extends CartMechanism {
             if (!blocks.matches("eject")) {
                 ejectTarget = blocks.rail;
             } else {
-                ejectTarget = blocks.rail.getFace(SignUtil.getFront(blocks.sign));
+                ejectTarget = blocks.rail.getRelative(SignUtil.getFront(blocks.sign));
             }
         }
         // if you use just

@@ -21,7 +21,6 @@ package com.sk89q.craftbook;
 
 import java.util.*;
 import org.bukkit.event.block.BlockEvent;
-import com.sk89q.craftbook.util.*;
 import com.sk89q.worldedit.*;
 
 /**

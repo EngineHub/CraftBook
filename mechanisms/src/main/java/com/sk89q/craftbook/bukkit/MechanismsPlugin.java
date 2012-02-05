@@ -49,7 +49,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("cauldron-recipes.txt");
         createDefaultConfiguration("config.yml");
         
-        config = new MechanismsConfiguration(getConfiguration(), getDataFolder());
+        config = new MechanismsConfiguration(getConfig(), getDataFolder());
         
         MechanicManager manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);

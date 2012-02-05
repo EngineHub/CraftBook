@@ -31,15 +31,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -51,8 +50,8 @@ import org.bukkit.inventory.ItemStack;
 public class VehiclesPlugin extends BaseBukkitPlugin {
     
     private VehiclesConfiguration config;
-    private VehicleListener lvehicle;
-    private BlockListener lblock;
+    private Listener lvehicle;
+    private Listener lblock;
     private MinecartManager cartman;
     
     
@@ -68,16 +67,12 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("config.yml");
         
         // config has to be loaded before the listeners are built because they cache stuff
-        config = new VehiclesConfiguration(getConfiguration(), getDataFolder());
+        config = new VehiclesConfiguration(getConfig(), getDataFolder());
         
         lvehicle = new CraftBookVehicleListener();
         lblock = new CraftBookVehicleBlockListener();
-        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_CREATE,  lvehicle, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_EXIT,  lvehicle, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_DESTROY,  lvehicle, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_COLLISION_ENTITY,  lvehicle, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_MOVE,    lvehicle, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.REDSTONE_CHANGE, lblock,   Priority.Normal, this);
+        getServer().getPluginManager().registerEvents(lvehicle, this);
+        getServer().getPluginManager().registerEvents(lblock, this);
     }
     
     public VehiclesConfiguration getLocalConfiguration() {
@@ -90,13 +85,13 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      * Preprocesses event data coming directly from bukkit and passes it off to
      * appropriate logic in MinecartManager.
      */
-    class CraftBookVehicleListener extends VehicleListener {
+    class CraftBookVehicleListener implements Listener {
         public CraftBookVehicleListener() {}
         
         /**
          * Called when a vehicle hits an entity 
          */
-        @Override
+        @EventHandler(priority = EventPriority.NORMAL)
         public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
             VehiclesConfiguration config = getLocalConfiguration();
             Vehicle vehicle = event.getVehicle();
@@ -114,7 +109,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle is created.
          */
-        @Override
+        @EventHandler(priority = EventPriority.NORMAL)
         public void onVehicleCreate(VehicleCreateEvent event) {
             Vehicle vehicle = event.getVehicle();
             
@@ -132,7 +127,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
          * Called when a vehicle is exited
          */
         
-        @Override
+        @EventHandler(priority = EventPriority.NORMAL)
         public void onVehicleExit(VehicleExitEvent event) {
             Vehicle vehicle = event.getVehicle();
             
@@ -146,7 +141,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when an vehicle moves.
          */
-        @Override
+        @EventHandler(priority = EventPriority.NORMAL)
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
@@ -156,7 +151,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle is destroied.
          */
-        @Override
+        @EventHandler(priority = EventPriority.NORMAL)
         public void onVehicleDestroy(VehicleDestroyEvent event) {
             if (!(event.getVehicle() instanceof Boat)) return;
             
@@ -176,10 +171,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     
     
     
-    class CraftBookVehicleBlockListener extends BlockListener {
+    class CraftBookVehicleBlockListener implements Listener {
         public CraftBookVehicleBlockListener() {}
         
-        @Override
+        @EventHandler(priority = EventPriority.NORMAL)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             // ignore events that are only changes in current strength
             if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
@@ -187,7 +182,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             // remember that bukkit only gives us redstone events for wires and things that already respond to redstone, which is entirely unhelpful.
             // So: issue four actual events per bukkit event.
             for (BlockFace bf : CartMechanism.powerSupplyOptions)
-                cartman.impact(new SourcedBlockRedstoneEvent(event, event.getBlock().getFace(bf)));
+                cartman.impact(new SourcedBlockRedstoneEvent(event, event.getBlock().getRelative(bf)));
         }
     }
 }

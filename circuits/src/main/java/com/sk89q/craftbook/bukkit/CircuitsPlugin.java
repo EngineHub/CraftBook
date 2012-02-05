@@ -21,7 +21,8 @@ package com.sk89q.craftbook.bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
-import com.sk89q.bukkit.migration.*;
+// import com.sk89q.bukkit.migration.*;
+import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.circuits.*;
 import com.sk89q.craftbook.gates.logic.*;
@@ -46,21 +47,15 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        Server server = getServer();
+//        Server server = getServer();
         
         createDefaultConfiguration("config.yml");
         createDefaultConfiguration("custom-ics.txt");
-        config = new CircuitsConfiguration(getConfiguration(), getDataFolder());
+        config = new CircuitsConfiguration(getConfig(), getDataFolder());
         
-        // Prepare to answer permissions questions.
-        perms = new PermissionsResolverManager(
-                getConfiguration(),     //FIXME this uh, isn't right.
-                server,
-                getDescription().getName(),
-                logger
-        );
-        new PermissionsResolverServerListener(perms).register(this);
-        
+        PermissionsResolverManager.initialize(this);
+        perms = PermissionsResolverManager.getInstance();
+                
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
@@ -113,7 +108,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 1202 (replaced by dispenser?)                                                // REQ PERM
         icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);  // REQ PERM
         //Missing: 1205                                                                         // REQ PERM
-        //Missing: 1206                                                                         // REQ PERM
+        //Missing: 1206         
+        //Missing: 1207
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);        // REQ PERM
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
@@ -121,11 +117,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
         //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
-        //Missing: 1420
+        //Missing: 1420 clock divider
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os
-        //Missing: 2020 (?)
+        // icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O);//Missing: 2020 (?) 3 bit RNG
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs
