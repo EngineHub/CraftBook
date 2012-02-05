@@ -79,7 +79,10 @@ public class Marquee extends AbstractIC {
         
         if(next==0) next=3;
         else if(next==4) next=1;
+        
+        // set the next output and update sign
         getSign().setLine(2, Integer.toString(next));
+        getSign().update();
 
     }
 
