@@ -74,12 +74,12 @@ public class ArrowBarrage extends AbstractIC {
         	
             Block signBlock = getSign().getBlock();
         	BlockFace face = SignUtil.getBack(signBlock);
-            Block body =  signBlock.getRelative(face).getRelative(face);
+            Block targetDir =  signBlock.getRelative(face).getRelative(face);
             
-            float x = body.getX() - signBlock.getX();
-            float z = body.getZ() - signBlock.getZ();
+            float x = targetDir.getX() - signBlock.getX();
+            float z = targetDir.getZ() - signBlock.getZ();
         	Vector velocity = new Vector(x, vert, z);
-        	Location shootLoc = new Location(getSign().getWorld(), body.getX() + 0.5, body.getY() + 0.5, body.getZ() + 0.5);
+        	Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
         	for(int i = 0; i < 5; i++)
         		getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
 
