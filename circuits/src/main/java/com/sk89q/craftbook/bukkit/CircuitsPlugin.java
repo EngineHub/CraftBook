@@ -118,7 +118,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os
-        icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O);//Missing: 2020 (?) 3 bit RNG
+        icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O); //Missing: 2020 (?) 3 bit RNG
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs

@@ -36,7 +36,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      * The pattern used to match an IC on a sign.
      */
     public static final Pattern codePattern =
-            Pattern.compile("^\\[(MC[^\\]]+)\\]$", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("^\\[(MC[^\\]]+)\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
     
     /**
      * Manager of ICs.
@@ -112,6 +112,10 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         Matcher matcher = codePattern.matcher(sign.getLine(1));
         if (!matcher.matches()) return null;
         String id = matcher.group(1);
+        String suffix = "";
+        String[] str = sign.getLine(1).split("]");
+        if(str.length > 1)
+        	suffix=str[1];
         
         if (block.getTypeId() != BlockID.WALL_SIGN) {
             throw new InvalidMechanismException("Only wall signs are used for ICs.");
@@ -139,7 +143,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         
         IC ic = registration.getFactory().create(sign);
         
-        sign.setLine(1, "[" + registration.getId() + "]");
+        sign.setLine(1, "[" + registration.getId() + "]" + suffix);
         
         ICMechanic mechanic;
         

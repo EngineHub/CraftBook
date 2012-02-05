@@ -47,21 +47,39 @@ public class Marquee extends AbstractIC {
         if (!chip.getInput(0))
             return;
 
-        int pin = 0;
+    	boolean reverse = false;
+    	int next = 0;
+    	try {
+    		String[] st = getSign().getLine(1).split("]");
+    		if(st.length > 1) reverse = st[1].equalsIgnoreCase("r");
+    		next = Integer.parseInt(getSign().getLine(2));
+    	} catch (Exception e) {}
+    	
+    	if(next == 0) {
+    		next = (reverse) ? 3 : 1;
+    	}
+        for (int i = 0; i < chip.getOutputCount(); i++)
+            chip.setOutput(i, false); // Clear all pins
 
-        try {
-            pin = Integer.parseInt(getSign().getLine(2)) - 1;
-        } catch (Exception e) {
-        }
-
-        for (int i = 0; i < chip.getInputCount(); i++)
-            chip.setOutput(i, (i == pin)); // Current pin to high, all others low
-
-        pin++;
-        if (pin == 3)
-            pin = 0;
-
-        getSign().setLine(2, Integer.toString(pin + 1));
+    	switch (next) {
+    		case 1:
+    			chip.setOutput(1, true);
+    			break;
+    		case 2:
+    			chip.setOutput(0, true);
+    			break;
+    		case 3:
+    			chip.setOutput(2, true);
+    			break;
+    	}	
+    	
+        
+        if(reverse) next--;
+        else next++;
+        
+        if(next==0) next=3;
+        else if(next==4) next=1;
+        getSign().setLine(2, Integer.toString(next));
 
     }
 
