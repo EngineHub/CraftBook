@@ -39,14 +39,15 @@ public class SetBlockBelow extends AbstractIC {
 
     @Override
     public String getTitle() {
-        return "Set Block Above";
+        return "Set Block Below";
     }
 
     @Override
     public String getSignTitle() {
-        return "SET BLOCK ABOVE";
+        return "SET BLOCK BELOW";
     }
 
+    //TODO: add block metadata support
     @Override
     public void trigger(ChipState chip) {
 
@@ -56,7 +57,8 @@ public class SetBlockBelow extends AbstractIC {
         chip.setOutput(0, chip.getInput(0));
 
         int block = -1;
-        block = BlockType.lookup(sblock, true).getID();
+        BlockType bt = BlockType.lookup(sblock, true);
+        if(bt != null) block = bt.getID();
 
         //FIXME hack for broken WorldEdit <=5.1
         if(block == -1)

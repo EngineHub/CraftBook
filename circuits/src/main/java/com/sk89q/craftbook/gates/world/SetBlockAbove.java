@@ -47,6 +47,7 @@ public class SetBlockAbove extends AbstractIC {
         return "SET BLOCK ABOVE";
     }
 
+    //TODO: add block metadata support
     @Override
     public void trigger(ChipState chip) {
 
@@ -56,7 +57,8 @@ public class SetBlockAbove extends AbstractIC {
         chip.setOutput(0, chip.getInput(0));
 
         int block = -1;
-        block = BlockType.lookup(sblock, true).getID();
+        BlockType bt = BlockType.lookup(sblock, true);
+        if(bt != null) block = bt.getID();
 
         //FIXME hack for broken WorldEdit <=5.1
         if(block == -1)

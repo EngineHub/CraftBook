@@ -47,7 +47,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-//        Server server = getServer();
         
         createDefaultConfiguration("config.yml");
         createDefaultConfiguration("custom-ics.txt");
@@ -110,8 +109,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);  // REQ PERM
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);        // REQ PERM
-        //Missing: 1240 (replaced by dispenser?)                                                // REQ PERM
-        //Missing: 1241 (replaced by dispenser?)                                                // REQ PERM
+        icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // REQ PERM
+        icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // REQ PERM
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
