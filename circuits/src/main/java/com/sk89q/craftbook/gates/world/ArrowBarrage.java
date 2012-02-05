@@ -22,6 +22,7 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
@@ -72,11 +73,13 @@ public class ArrowBarrage extends AbstractIC {
         	if(vert < -1) vert = -1;
         	
             Block signBlock = getSign().getBlock();
-            Block body = SignUtil.getBackBlock(signBlock);
-            float x = signBlock.getX() - body.getX();
-            float z = signBlock.getZ() - body.getZ();
+        	BlockFace face = SignUtil.getBack(signBlock);
+            Block body =  signBlock.getRelative(face).getRelative(face);
+            
+            float x = body.getX() - signBlock.getX();
+            float z = body.getZ() - signBlock.getZ();
         	Vector velocity = new Vector(x, vert, z);
-        	Location shootLoc = new Location(getSign().getWorld(), signBlock.getX() + 0.5, signBlock.getY() + 0.5, signBlock.getZ() + 0.5);
+        	Location shootLoc = new Location(getSign().getWorld(), body.getX() + 0.5, body.getY() + 0.5, body.getZ() + 0.5);
         	for(int i = 0; i < 5; i++)
         		getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
 
