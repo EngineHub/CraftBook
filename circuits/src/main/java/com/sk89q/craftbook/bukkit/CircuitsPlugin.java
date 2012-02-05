@@ -114,7 +114,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
-        //Missing: 1420 clock divider
+        icManager.register("MC1420", new ClockDivider.Factory(server, true), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
         //SI3Os

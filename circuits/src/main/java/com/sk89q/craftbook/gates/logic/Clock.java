@@ -74,8 +74,8 @@ public class Clock extends AbstractIC implements SelfTriggeredIC{
     		chip.setOutput(0, !chip.getOutput(0));
     	}
     	
-    	sign.setLine(3, Integer.toString(tick));
-    	
+    	// don't update, would cause lag!
+    	sign.setLine(3, Integer.toString(tick));    	
     }
     
     @Override
@@ -102,7 +102,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC{
         	{
         		lol = Integer.parseInt(sign.getLine(2));
         	} catch (NumberFormatException e) {
-				throw new ICVerificationException("Invalid number format.");
+				throw new ICVerificationException("The fourth line must be a number between 5 and 15.");
 			}
         	
         	lol = Math.max(lol, 5);
