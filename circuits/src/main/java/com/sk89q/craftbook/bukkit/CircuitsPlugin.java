@@ -99,18 +99,18 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1025", new ServerTimeModulus.Factory(server, true), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server, true), familySISO);
-        icManager.register("MC1200", new CreatureSpawner.Factory(server, true), familySISO);    // REQ PERM
-        icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);  	// Restricted
-        //Missing: 1202 (replaced by dispenser?)                                                // REQ PERM
-        icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);  // Restricted
-        icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO);          // REQ PERM
-        icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO);          // REQ PERM
-        icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);  // REQ PERM
-        icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);  // REQ PERM
+        icManager.register("MC1200", new CreatureSpawner.Factory(server, true), familySISO);     // Restricted
+        icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);  	 // Restricted
+        //Missing: 1202 (replaced by dispenser?)                                                 // Restricted
+        icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);     // Restricted
+        icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO);             // Restricted
+        icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO);             // Restricted
+        icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
+        icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);          // Restricted
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
-        icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);        // REQ PERM
-        icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // REQ PERM
-        icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // REQ PERM
+        icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);         // Restricted
+        icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // Restricted
+        icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // Restricted
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
