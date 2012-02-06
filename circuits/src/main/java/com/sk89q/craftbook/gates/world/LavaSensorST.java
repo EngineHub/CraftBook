@@ -43,7 +43,7 @@ public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 
     @Override
     public void think(ChipState chip) {
-        chip.setOutput(0, hasWater());
+        chip.setOutput(0, hasLava());
     }
 
     public static class Factory extends AbstractICFactory {

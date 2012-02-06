@@ -57,7 +57,7 @@ public class DaySensor extends AbstractIC {
      * 
      * @return
      */
-    private boolean isDay() {
+    protected boolean isDay() {
         long time = getSign().getBlock().getWorld().getTime() % 24000;
         if (time < 0)
             time += 24000;

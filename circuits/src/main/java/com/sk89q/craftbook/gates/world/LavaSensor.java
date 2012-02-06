@@ -49,16 +49,16 @@ public class LavaSensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
-            chip.setOutput(0, hasWater());
+            chip.setOutput(0, hasLava());
         }
     }
 
     /**
-     * Returns true if the sign has water at the specified location.
+     * Returns true if the sign has lava at the specified location.
      * 
      * @return
      */
-    protected boolean hasWater() {
+    protected boolean hasLava() {
         Block b = SignUtil.getBackBlock(getSign().getBlock());
 
         int x = b.getX();
