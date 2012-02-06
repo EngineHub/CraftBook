@@ -188,7 +188,7 @@ public class SignUtil {
      *         direction, the result is rounded to the nearest ordinal
      *         direction.
      */
-    public static BlockFace getLeft(Block sign) {
+    public static BlockFace getRight(Block sign) {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:
@@ -239,7 +239,7 @@ public class SignUtil {
      *         direction, the result is rounded to the nearest ordinal
      *         direction.
      */
-    public static BlockFace getRight(Block sign) {
+    public static BlockFace getLeft(Block sign) {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:
