@@ -49,29 +49,34 @@ public class LightSensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
-        	int x=0;
-        	int y=1;
-        	int z=0;
-        	int min=10;
-        	try {
-        		String[] st = getSign().getLine(3).split(":");
-        		if(st.length != 3) throw new Exception();
-        		x = Integer.parseInt(st[0]);
-        		y = Integer.parseInt(st[1]);
-        		z = Integer.parseInt(st[2]);
-        	} catch (Exception e) {}
-        	
-        	try {
-        		min = Integer.parseInt(getSign().getLine(2));
-        	} catch (Exception e) {
-        		getSign().setLine(2, Integer.toString(min));
-        		getSign().update();
-        	}
-
-            chip.setOutput(0, hasLight(min, x, y, z));
+            chip.setOutput(0, getTargetLighted());
         }
     }
 
+    protected boolean getTargetLighted() {
+    	int x=0;
+    	int y=1;
+    	int z=0;
+    	int min=10;
+    	try {
+    		String[] st = getSign().getLine(3).split(":");
+    		if(st.length != 3) throw new Exception();
+    		x = Integer.parseInt(st[0]);
+    		y = Integer.parseInt(st[1]);
+    		z = Integer.parseInt(st[2]);
+    	} catch (Exception e) {}
+
+    	try {
+    		min = Integer.parseInt(getSign().getLine(2));
+    	} catch (Exception e) {
+    		getSign().setLine(2, Integer.toString(min));
+    		getSign().update();
+    	}
+    	
+    	return hasLight(min, x, y, z);
+    }
+
+    
     /**
      * Returns true if the sign has a light level above the specified.
      * 

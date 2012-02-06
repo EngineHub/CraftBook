@@ -18,23 +18,15 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import java.util.Random;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
-public class Random3Bit extends AbstractIC {
-    
-    protected Random random = new Random();
-    
-    protected boolean risingEdge;
-
+public class Random3Bit extends RandomBit {
+        
     public Random3Bit(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign);
-        this.risingEdge = risingEdge;
+        super(server, sign, risingEdge);
     }
 
     @Override
@@ -47,15 +39,6 @@ public class Random3Bit extends AbstractIC {
         return "3-BIT RANDOM";
     }
 
-    @Override
-    public void trigger(ChipState chip) {
-        if ((risingEdge && chip.getInput(0))
-                || (!risingEdge && !chip.getInput(0))) {
-        	int k = chip.getOutputCount();
-            for (int i = 0; i < k; i++)
-                chip.setOutput(i, random.nextBoolean());
-        }
-    }
 
     public static class Factory extends AbstractICFactory {
         

@@ -58,7 +58,7 @@ public class LavaSensor extends AbstractIC {
      * 
      * @return
      */
-    private boolean hasWater() {
+    protected boolean hasWater() {
         Block b = SignUtil.getBackBlock(getSign().getBlock());
 
         int x = b.getX();
