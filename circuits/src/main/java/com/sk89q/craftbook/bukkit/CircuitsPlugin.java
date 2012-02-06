@@ -134,8 +134,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3036", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
-        //Missing: 3231                                                                         // REQ PERM
-        
+        icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);		// Restricted
+
+        //Missing: 3231                                                                         // Restricted        
         //3I3Os
         //Missing: 4000
         //Missing: 4010
