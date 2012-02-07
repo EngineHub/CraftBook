@@ -20,12 +20,12 @@ public class TStormSensorST extends AbstractIC implements SelfTriggeredIC {
 
     @Override
     public String getTitle() {
-        return "Is It Rain";
+        return "Is It a Storm";
     }
 
     @Override
     public String getSignTitle() {
-        return "IS IT RAIN";
+        return "IS IT A STORM";
     }
     
     @Override

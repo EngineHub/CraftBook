@@ -35,7 +35,7 @@ public class WeatherControl extends AbstractIC {
     	int thunderDuration = duration;
     	try {
     		String[] st = getSign().getLine(1).split("]");
-    		if(st.length > 1) tstorm = st[1].equalsIgnoreCase("r");
+    		if(st.length > 1) tstorm = st[1].equalsIgnoreCase("t");
     		duration = Integer.parseInt(getSign().getLine(2));
     	} catch (Exception e) {}
     	try {
