@@ -26,6 +26,7 @@ import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.circuits.*;
 import com.sk89q.craftbook.gates.logic.*;
+import com.sk89q.craftbook.gates.weather.*;
 import com.sk89q.craftbook.gates.world.*;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
@@ -155,7 +156,17 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 0020 self-triggered RNG (may cause server load issues)
 	//Missing: 0262
 	//Missing: 0420     
-        
+        //Xtra ICs
+        //SISOs
+        icManager.register("MCX230", new RainSensor.Factory(server, true), familySISO);
+        icManager.register("MCX231", new TStormSensor.Factory(server, true), familySISO);
+        icManager.register("MCX233", new WeatherControl.Factory(server, true), familySISO);
+        //3ISOs
+        icManager.register("MCT233", new WeatherControlAdvanced.Factory(server, true), family3ISO);
+        //Self triggered
+        icManager.register("MCZ230", new RainSensorST.Factory(server, true), familySISO);
+        icManager.register("MCZ231", new TStormSensorST.Factory(server, true), familySISO);
+
     }
     
     /**
