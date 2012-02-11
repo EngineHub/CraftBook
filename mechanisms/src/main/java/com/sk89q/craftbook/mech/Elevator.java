@@ -93,7 +93,7 @@ public class Elevator extends AbstractMechanic {
         @Override
         public Elevator detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {   
-            Direction dir = isLift(sign.getBlock());
+            Direction dir = isLift(sign);
             switch (dir) {
                 case UP:
                     if (!player.hasPermission("craftbook.mech.elevator")) {
@@ -249,7 +249,10 @@ public class Elevator extends AbstractMechanic {
         BlockState state = block.getState();
         if (!(state instanceof Sign)) return Direction.NONE;
         
-        Sign sign = (Sign)state;
+        return isLift((Sign)state);
+    }
+    
+    private static Elevator.Direction isLift(Sign sign) {
         // if you were really feeling frisky this could definitely 
         // be optomized by converting the string to a char[] and then
         // doing work
