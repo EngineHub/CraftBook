@@ -28,6 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
@@ -95,12 +96,21 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             VehiclesConfiguration config = getLocalConfiguration();
             Vehicle vehicle = event.getVehicle();
             Entity entity = event.getEntity();
+            
             if (entity instanceof Player) return;
             if (!config.boatRemoveEntities && !config.minecartRemoveEntities) return;
+            
             if (config.boatRemoveEntities ==  true && (vehicle instanceof Boat)) {
-                event.getEntity().remove();
+                if (config.boatRemoveEntitiesOtherBoats != true && 
+                        (entity instanceof Boat)) return;
+                
+                entity.remove();
             }
+            
             if (config.minecartRemoveEntities ==  true && (vehicle instanceof Minecart)) {
+                if (config.minecartRemoveEntitiesOtherCarts != true && 
+                        (entity instanceof Minecart)) return;
+                
                 entity.remove();
             }
         }
