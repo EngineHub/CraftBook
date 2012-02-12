@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import com.sk89q.worldedit.*;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 
 /**
  * This keeps track of trigger blocks. Trigger blocks are what triggers

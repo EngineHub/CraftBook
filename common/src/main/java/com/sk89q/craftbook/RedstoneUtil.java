@@ -1,7 +1,9 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
 
 
 /**

@@ -19,7 +19,8 @@
 package com.sk89q.craftbook;
 
 import org.bukkit.block.Sign;
-import com.sk89q.worldedit.*;
+
+import com.sk89q.worldedit.BlockWorldVector;
 
 public abstract class AbstractMechanicFactory<T extends Mechanic>
         implements MechanicFactory<T> {

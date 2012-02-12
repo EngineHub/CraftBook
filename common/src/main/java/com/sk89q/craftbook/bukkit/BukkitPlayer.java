@@ -20,6 +20,7 @@ package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.LocalPlayer;
 
 public class BukkitPlayer implements LocalPlayer {
