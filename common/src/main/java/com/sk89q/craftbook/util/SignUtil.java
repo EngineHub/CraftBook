@@ -19,10 +19,11 @@
 
 package com.sk89q.craftbook.util;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
-import com.sk89q.worldedit.blocks.*;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * <p>

@@ -19,22 +19,29 @@
 
 package com.sk89q.craftbook;
 
-import java.util.*;
+import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.*;
-import org.bukkit.event.block.*;
-import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.ChangedSign;
-import com.sk89q.worldedit.*;
+
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.BlockWorldVector;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
+
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have

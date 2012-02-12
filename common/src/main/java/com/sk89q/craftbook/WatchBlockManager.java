@@ -25,9 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
 import org.bukkit.event.block.BlockEvent;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.bukkit.*;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Holds the blocks that are watched by mechanics.
