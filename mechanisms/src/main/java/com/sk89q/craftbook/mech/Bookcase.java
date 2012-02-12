@@ -27,7 +27,7 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-import de.schlichtherle.io.File;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
