@@ -53,9 +53,13 @@ public class VehiclesConfiguration {
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
         minecartRemoveOnExit = cfg.getBoolean("minecart-remove-on-exit",        false);        
         minecartRemoveEntities = cfg.getBoolean("minecart-remove-entities",     false);
+        minecartRemoveEntitiesOtherCarts = cfg.getBoolean("minecart-remove-"
+                + "entities-othercarts",                                        false);
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
         
         boatRemoveEntities = cfg.getBoolean("boat-remove-entities",             false);
+        boatRemoveEntitiesOtherBoats = cfg.getBoolean("boat-remove-"
+                + "entities-otherboats",                                        false);
         boatBreakReturn = cfg.getBoolean("boat-break-return-boat",              false);
     }
     
@@ -76,8 +80,10 @@ public class VehiclesConfiguration {
     public final boolean minecartSlowWhenEmpty;
     public final boolean minecartRemoveOnExit;
     public final boolean minecartRemoveEntities;
+    public final boolean minecartRemoveEntitiesOtherCarts;
     public final double minecartMaxSpeedModifier;
     
     public final boolean boatRemoveEntities;
+    public final boolean boatRemoveEntitiesOtherBoats;
     public final boolean boatBreakReturn;
 }
