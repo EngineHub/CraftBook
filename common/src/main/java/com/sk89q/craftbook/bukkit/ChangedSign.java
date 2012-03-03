@@ -18,12 +18,16 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.util.List;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.material.MaterialData;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
 public class ChangedSign implements Sign {
 
@@ -111,6 +115,30 @@ public class ChangedSign implements Sign {
 
     public byte getRawData() {
         return sign.getRawData();
+    }
+
+    public Location getLocation() {
+        return sign.getLocation();
+    }
+
+    public void setRawData(byte b) {
+        sign.setRawData(b);
+    }
+
+    public void setMetadata(String string, MetadataValue mv) {
+        sign.setMetadata(string, mv);
+    }
+
+    public List<MetadataValue> getMetadata(String string) {
+        return sign.getMetadata(string);
+    }
+
+    public boolean hasMetadata(String string) {
+        return sign.hasMetadata(string);
+    }
+
+    public void removeMetadata(String string, Plugin plugin) {
+        sign.removeMetadata(string, plugin);
     }
 
 }
