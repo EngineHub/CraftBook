@@ -71,7 +71,7 @@ public class ItemDispenser extends AbstractIC {
             int id = mat.getId();
             if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
                 Location loc = getSign().getBlock().getLocation();
-                int maxY = Math.min(128, loc.getBlockY() + 10);
+                int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
 

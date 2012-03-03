@@ -142,7 +142,7 @@ public class Elevator extends AbstractMechanic {
         
         // find destination sign
         shift = (dir == Direction.UP) ? BlockFace.UP : BlockFace.DOWN;
-        int f = (dir == Direction.UP) ? 127 : 0;
+        int f = (dir == Direction.UP) ? trigger.getWorld().getMaxHeight() : 0;
         destination = trigger;
         if (destination.getY() == f)             // heading up from top or down from bottom
             throw new InvalidConstructionException();
@@ -150,7 +150,7 @@ public class Elevator extends AbstractMechanic {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
             if (derp != Direction.NONE) break;   // found it!
-            if (destination.getY() == 127)       // hit the top of the world
+            if (destination.getY() == trigger.getWorld().getMaxHeight())       // hit the top of the world
                 throw new InvalidConstructionException();
             if (destination.getY() == 0)         // hit the bottom of the world
                 throw new InvalidConstructionException();

@@ -55,7 +55,7 @@ public class CreatureSpawner extends AbstractIC {
             String rider = getSign().getLine(3).trim();
             if (CreatureType.fromName(type) != null) {
                 Location loc = getSign().getBlock().getLocation();
-                int maxY = Math.min(128, loc.getBlockY() + 10);
+                int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
 
