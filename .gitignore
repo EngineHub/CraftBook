@@ -1,8 +1,12 @@
 # Eclipse stuff
-/.classpath
-/.project
-/.settings
-/.checkstyle
+.classpath
+.project
+.settings
+.checkstyle
+*/.classpath
+*/.project
+*/.settings
+*/.checkstyle
 
 # netbeans
 /nbproject
@@ -12,7 +16,7 @@
 
 # maven
 /target
-
+*/target
 # vim
 .*.sw[a-p]
 
