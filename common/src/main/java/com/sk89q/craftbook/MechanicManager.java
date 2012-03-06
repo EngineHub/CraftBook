@@ -42,7 +42,6 @@ import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.BlockWorldVector;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
 
-
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
  * registered triggerability, and dispatches incoming events by checking for
@@ -175,10 +174,11 @@ public class MechanicManager {
         
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
+	
         try {
             Mechanic mechanic = load(pos);
             if (mechanic != null) {
-                mechanic.onRightClick(event);
+		mechanic.onRightClick(event);
                 return true;
             }
         } catch (InvalidMechanismException e) {

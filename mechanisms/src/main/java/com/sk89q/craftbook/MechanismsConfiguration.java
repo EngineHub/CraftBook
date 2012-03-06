@@ -51,6 +51,7 @@ public class MechanismsConfiguration {
         cauldronSettings = new CauldronSettings(cfg);
         lightStoneSettings = new LightStoneSettings(cfg);
         lightSwitchSettings = new LightSwitchSettings(cfg);
+	hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
     }
     
     public final File dataFolder;
@@ -63,6 +64,7 @@ public class MechanismsConfiguration {
     public final CauldronSettings cauldronSettings;
     public final LightStoneSettings lightStoneSettings;
     public final LightSwitchSettings lightSwitchSettings;
+    public final HiddenSwitchSettings hiddenSwitchSettings;
     
     
     
@@ -189,5 +191,12 @@ public class MechanismsConfiguration {
         private AmmeterSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("ammeter-enable",          true);
         }
+    }
+    public class HiddenSwitchSettings {
+	public final boolean enable;
+	
+	private HiddenSwitchSettings(FileConfiguration cfg) {
+		enable = cfg.getBoolean("hidden-switches-enable",true);
+	}
     }        
 }
