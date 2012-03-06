@@ -54,14 +54,13 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         MechanicManager manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
-        
+
         // Let's register mechanics!
         manager.register(new Bookcase.Factory(this));
         manager.register(new Gate.Factory(this));
         manager.register(new Bridge.Factory(this));
         manager.register(new Door.Factory(this));
         manager.register(new Elevator.Factory(this));
-        manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new Ammeter.Factory(this));
@@ -72,6 +71,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
          */
         
         manager.register(new Cauldron.Factory(this));
+        manager.register(new LightStone.Factory(this));
     }
     
     @Override
