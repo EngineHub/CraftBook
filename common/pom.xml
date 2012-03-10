@@ -58,9 +58,6 @@
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
-            <manifestEntries>
-              <Class-Path>WorldEdit.jar ../WorldEdit.jar lib/WorldEdit.jar</Class-Path>
-            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
