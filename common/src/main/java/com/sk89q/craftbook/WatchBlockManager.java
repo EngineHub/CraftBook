@@ -113,10 +113,10 @@ class WatchBlockManager {
     }
 
     /**
-     * Get a list of mechanics that in a specified chunk.
+     * Get the set of mechanics in a specified chunk.
      * 
      * @param chunk
-     * @return
+     * @return the set of mechanics in a specified chunk.
      */
     public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
         Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();

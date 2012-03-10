@@ -91,7 +91,8 @@ public class Gate extends AbstractMechanic {
      * 
      * @param pt
      * @param smallSearchSize
-     * @return
+     * @return true if a gate was found and blocks were changed; false
+     *         otherwise.
      */
     public boolean toggleGates(WorldVector pt, boolean smallSearchSize) {
         LocalWorld world = pt.getWorld();
@@ -136,11 +137,12 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Set gate states of gates closest to a location.
-     *
+     * 
      * @param pt
      * @param close
-     * @param smallSearchSize 
-     * @return
+     * @param smallSearchSize
+     * @return true if a gate was found and blocks were changed; false
+     *         otherwise.
      */
     public boolean setGateState(WorldVector pt, boolean close,
             boolean smallSearchSize) {
@@ -191,7 +193,8 @@ public class Gate extends AbstractMechanic {
      * @param pt
      * @param visitedColumns
      * @param close
-     * @return
+     * @return true if a gate column was found and blocks were changed; false
+     *         otherwise.
      */
     private boolean recurseColumn(WorldVector pt,
             Set<BlockVector> visitedColumns, Boolean close) {

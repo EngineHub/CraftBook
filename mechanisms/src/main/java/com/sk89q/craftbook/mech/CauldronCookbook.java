@@ -85,12 +85,15 @@ public class CauldronCookbook {
 		recipes.add(recipe);
 	}
 
-	/**
-	 * Gets a recipe by its ingredients. The list will be sorted.
-	 *
-	 * @param ingredients
-	 * @return 
-	 */
+    /**
+     * Gets a recipe by its ingredients. If multiple recipies have the all of
+     * the specified ingredients, the first one that matches will be selected
+     * (the list is checked in the same order as recipes are entered in the
+     * config file).
+     * 
+     * @param ingredients
+     * @return a recipe matching the given ingredients
+     */
 	public Recipe find(Map<Integer,Integer> ingredients) {
 		for (Recipe recipe : recipes) {
 			if (recipe.hasAllIngredients(ingredients)) {
@@ -103,7 +106,7 @@ public class CauldronCookbook {
 	/**
 	 * Get the number of recipes.
 	 * 
-	 * @return
+	 * @return the number of recipes.
 	 */
 	public int size() {
 		return recipes.size();
@@ -156,9 +159,6 @@ public class CauldronCookbook {
 
 	/**
 	 * Parse a list of cauldron items.
-	 * 
-	 * @param list
-	 * @return
 	 */
 	private List<Integer> parseCauldronItems(String list) {
 		String[] parts = list.split(",");
@@ -198,6 +198,7 @@ public class CauldronCookbook {
 		}
 		return out;
 	}
+	
 	/**
 	 *
 	 * @author sk89q
@@ -275,7 +276,6 @@ public class CauldronCookbook {
 		 * Checks to see if all the ingredients are met.
 		 *
 		 * @param check
-		 * @return
 		 */
 		public boolean hasAllIngredients(Map<Integer,Integer> check) {
 			for (Map.Entry<Integer,Integer> entry : ingredientLookup.entrySet()) {
@@ -295,13 +295,5 @@ public class CauldronCookbook {
 		public List<Integer> getResults() {
 			return results;
 		}
-		/**
-		 * Read a file containing cauldron recipes.
-		 *
-		 * @param file
-		 * @return
-		 * @throws IOException
-		 */
-
 	}
 }

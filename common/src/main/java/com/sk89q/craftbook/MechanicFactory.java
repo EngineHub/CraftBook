@@ -48,11 +48,14 @@ public interface MechanicFactory<T extends Mechanic> {
      * Detect the mechanic at a placed sign.
      * 
      * @param pos
-     * @param player 
-     * @param sign 
-     * @return 
+     * @param player
+     * @param sign
+     * @return a {@link Mechanic} if a mechanism could be found at the location;
+     *         null otherwise
      * @throws InvalidMechanismException
-     * @throws ProcessedMechanismException 
+     *             if it appears that the position is intended to me a
+     *             mechanism, but the mechanism is misconfigured and inoperable.
+     * @throws ProcessedMechanismException
      */
     public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException, ProcessedMechanismException;

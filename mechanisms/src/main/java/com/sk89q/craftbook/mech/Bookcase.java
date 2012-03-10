@@ -91,8 +91,9 @@ public class Bookcase extends AbstractMechanic {
     /**
      * Get a line from the book lines file.
      * 
-     * @return
+     * @return a line from the book lines file.
      * @throws IOException
+     *             if we have trouble with the "books.txt" configuration file.
      */
     protected String getBookLine() throws IOException {
         RandomAccessFile file = new RandomAccessFile(

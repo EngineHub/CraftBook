@@ -130,7 +130,8 @@ public class LightSwitch extends AbstractMechanic {
      * Toggle lights in the immediate area.
      * 
      * @param pt
-     * @return
+     * @return true if the block was recogized as a lightswitch; this may or may
+     *         not mean that any lights were actually toggled.
      */
     private boolean toggleLights(BlockWorldVector pt) {
         World world = BukkitUtil.toWorld(pt);

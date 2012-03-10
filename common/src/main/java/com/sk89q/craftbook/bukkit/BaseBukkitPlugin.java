@@ -92,11 +92,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     /**
      * Register an event.
      * 
-     * @param type
      * @param listener
-     * @param priority
      */
-    
     protected void registerEvents(Listener listener) {
     	getServer().getPluginManager().registerEvents(listener, this);
     }
@@ -144,8 +141,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     /**
      * Get a player.
      * 
-     * @param player Bukkit Player object
-     * @return
+     * @param player
+     *            Bukkit Player object
+     * @return a (new!) object wrapping Bukkit's player type with our own.
      */
     public LocalPlayer wrap(Player player) {
         return new BukkitPlayer(this, player);
@@ -156,7 +154,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * 
      * @param sender
      * @param perm
-     * @return 
+     * @return true if the sender has the requested permission, false otherwise
      */
     public boolean hasPermission(CommandSender sender, String perm) {
         if (sender.isOp()) {
