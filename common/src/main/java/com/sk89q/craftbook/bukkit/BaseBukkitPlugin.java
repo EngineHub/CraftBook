@@ -129,7 +129,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                     e.printStackTrace();
                 } finally {
                     try {
-                        if (input != null)
                             input.close();
                     } catch (IOException e) {}
 
