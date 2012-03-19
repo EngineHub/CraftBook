@@ -87,10 +87,8 @@ public class ArrowShooter extends AbstractIC {
     	Vector velocity = new Vector(x, vert, z);
     	Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
 
-    	
-    	getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
-
-
+    	for(int i = 0; i < n; i++)
+    	    getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
     }
 
     public static class Factory extends AbstractICFactory implements
