@@ -182,12 +182,10 @@ public class Bridge extends AbstractMechanic {
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)));
-        toggle.contract(BukkitUtil.toVector(SignUtil.getFront(trigger)));
-        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
-        toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
-        
-        // Win!
+        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
+                BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), 
+                BukkitUtil.toVector(SignUtil.getFront(trigger)));       
     }
     
     private MechanismsPlugin plugin;

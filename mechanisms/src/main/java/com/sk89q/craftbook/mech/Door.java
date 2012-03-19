@@ -194,14 +194,9 @@ public class Door extends AbstractMechanic {
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
-        toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
-        toggle.contract(BukkitUtil.toVector(BlockFace.UP));
-        toggle.contract(BukkitUtil.toVector(BlockFace.DOWN));
-        
-        // Onward to victory!
-
-
+        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
+                BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        toggle.contract(BukkitUtil.toVector(BlockFace.UP), BukkitUtil.toVector(BlockFace.DOWN));
     }
     
     @Override
