@@ -27,7 +27,10 @@ import org.bukkit.block.Block;
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -44,18 +47,16 @@ public class LightStone extends AbstractMechanic {
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
-        if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.lightstone.use")) {
-            return;
-        }
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (!event.getPlayer().hasPermission("craftbook.mech.lightstone.use")) return;
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
-        if (event.getPlayer().getItemInHand().getTypeId() == 348) {
-            int data = getLightLevel(block);
-            String line = getLightLevel(data);
-            int light = Integer.valueOf(data);
+        if (event.getPlayer().getItemInHand().getTypeId() == ItemID.LIGHTSTONE_DUST) {
+            int lightLevel = getLightLevel(block);
+            String lightLevelLine = getLightLine(lightLevel);
             event.getPlayer().sendMessage(
-                    ChatColor.YELLOW + "LightStone: " + line + ChatColor.WHITE +
-                    " " + light + " L");
+                    ChatColor.YELLOW + "LightStone: " + ChatColor.YELLOW + "[" + lightLevelLine 
+                    + ChatColor.YELLOW + "] " + lightLevel + " L");
         }
     }
     
@@ -64,21 +65,20 @@ public class LightStone extends AbstractMechanic {
         return light;                
     }
     
-    private String getLightLevel(int data) {
-        String line = ChatColor.YELLOW + "[";
-        if (data >= 8) {
+    private String getLightLine(int data) {
+        String line = null;
+        if (data >= 9) {
             line = line + ChatColor.GREEN;
-        } else if (data > 0) {
+        } else {
             line = line + ChatColor.DARK_RED;
         }
         for (int i = 0; i < data; i++) {
             line = line + "|";
-        }
+            }
         line = line + ChatColor.BLACK;
         for (int i = data; i < 15; i++) {
-            line = line + "|";
+            line = line + "|"; 
         }
-        line = line + ChatColor.YELLOW + "]";
         return line;
     }
 
