@@ -89,8 +89,7 @@ public class LightStone extends AbstractMechanic {
         return false; // this isn't a persistent mechanic, so the manager will
         // never keep it around long enough to even check this.
     }
-
-
+    
     public static class Factory extends AbstractMechanicFactory<LightStone> {
 
         protected MechanismsPlugin plugin;
