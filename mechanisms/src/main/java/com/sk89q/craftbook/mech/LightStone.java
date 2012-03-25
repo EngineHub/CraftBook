@@ -66,7 +66,7 @@ public class LightStone extends AbstractMechanic {
     }
     
     private String getLightLine(int data) {
-        String line = null;
+        String line = "";
         if (data >= 9) {
             line = line + ChatColor.GREEN;
         } else {
@@ -74,7 +74,7 @@ public class LightStone extends AbstractMechanic {
         }
         for (int i = 0; i < data; i++) {
             line = line + "|";
-            }
+        }
         line = line + ChatColor.BLACK;
         for (int i = data; i < 15; i++) {
             line = line + "|"; 
