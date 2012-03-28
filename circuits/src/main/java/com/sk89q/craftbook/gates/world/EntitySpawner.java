@@ -21,19 +21,19 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.CreatureType;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.entity.EntityType;
 
-public class CreatureSpawner extends AbstractIC {
+public class EntitySpawner extends AbstractIC {
 
     protected boolean risingEdge;
 
-    public CreatureSpawner(Server server, Sign sign, boolean risingEdge) {
+    public EntitySpawner(Server server, Sign sign, boolean risingEdge) {
         super(server, sign);
         this.risingEdge = risingEdge;
     }
@@ -53,7 +53,7 @@ public class CreatureSpawner extends AbstractIC {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
             String type = getSign().getLine(2).trim();
             String rider = getSign().getLine(3).trim();
-            if (CreatureType.fromName(type) != null) {
+            if (EntityType.fromName(type) != null) {
                 Location loc = getSign().getBlock().getLocation();
                 int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();
@@ -64,18 +64,18 @@ public class CreatureSpawner extends AbstractIC {
                             .getBlockTypeIdAt(x, y, z))) {
                         // TODO: Doesn't spawn riders yet.
                         if (rider.length() != 0
-                                && CreatureType.fromName(rider) != null) {
+                                && EntityType.fromName(rider) != null) {
                             getSign().getWorld()
                                     .spawnCreature(
                                             new Location(getSign().getWorld(),
                                                     x, y, z),
-                                            CreatureType.fromName(type));
+                                            EntityType.fromName(type));
                         } else {
                             getSign().getWorld()
                                     .spawnCreature(
                                             new Location(getSign().getWorld(),
                                                     x, y, z),
-                                            CreatureType.fromName(type));
+                                            EntityType.fromName(type));
                         }
                         return;
                     }
@@ -95,7 +95,7 @@ public class CreatureSpawner extends AbstractIC {
 
         @Override
         public IC create(Sign sign) {
-            return new CreatureSpawner(getServer(), sign, risingEdge);
+            return new EntitySpawner(getServer(), sign, risingEdge);
         }
     }
 }
