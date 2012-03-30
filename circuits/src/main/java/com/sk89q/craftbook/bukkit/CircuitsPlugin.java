@@ -100,7 +100,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1025", new ServerTimeModulus.Factory(server, true), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server, true), familySISO);
-        icManager.register("MC1200", new CreatureSpawner.Factory(server, true), familySISO);     // Restricted
+        icManager.register("MC1200", new EntitySpawner.Factory(server, true), familySISO);     // Restricted
         icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);  	 // Restricted
         //Missing: 1202 (replaced by dispenser?)                                                 // Restricted
         icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);     // Restricted
