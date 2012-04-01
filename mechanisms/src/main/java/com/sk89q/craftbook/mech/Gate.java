@@ -202,7 +202,8 @@ public class Gate extends AbstractMechanic {
         World world = ((BukkitWorld)pt.getWorld()).getWorld();
         if (visitedColumns.size() > 14) { return false; }
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
-        if (world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.FENCE) {
+        if (world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.FENCE
+                && world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.NETHER_BRICK_FENCE) {
             return false;
         }
         
@@ -214,7 +215,8 @@ public class Gate extends AbstractMechanic {
 
         // Find the top most fence
         for (int y1 = y + 1; y1 <= y + 12; y1++) {
-            if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE) {
+            if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
+                    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
                 y = y1;
             } else {
                 break;
@@ -230,7 +232,9 @@ public class Gate extends AbstractMechanic {
         if (close == null) {
             // Close the gate if the block below does not exist as a fence
             // block, otherwise open the gate
-            close = world.getBlockTypeIdAt(x, y - 1, z) != BlockID.FENCE;
+
+            close = world.getBlockTypeIdAt(x, y - 1, z) != BlockID.FENCE
+                    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.NETHER_BRICK_FENCE;
         }
 
         // Recursively go to connected fence blocks of the same level
@@ -259,6 +263,9 @@ public class Gate extends AbstractMechanic {
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
         int minY = Math.max(0, y - 12);
+        int ID = 0;
+        if (close)
+            ID = world.getBlockAt(x, y, z).getTypeId();
         for (int y1 = y - 1; y1 >= minY; y1--) {
             int cur = world.getBlockTypeIdAt(x, y1, z);
 
@@ -268,13 +275,14 @@ public class Gate extends AbstractMechanic {
                     && cur != BlockID.LAVA
                     && cur != BlockID.STATIONARY_LAVA
                     && cur != BlockID.FENCE
+                    && cur != BlockID.NETHER_BRICK_FENCE
                     && cur != BlockID.SNOW
                     && cur != 0) {
                     break;
             }
 
-            //bag.setBlockID(w, x, y1, z, close ? BlockID.FENCE : 0);
-            world.getBlockAt(x, y1, z).setTypeId(close ? BlockID.FENCE : 0);
+            //bag.setBlockID(w, x, y1, z, ID);
+            world.getBlockAt(x, y1, z).setTypeId(ID);
 
             WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
             recurseColumn(new BlockWorldVector(topPoint, pt.add(1, 0, 0)), visitedColumns, close);
