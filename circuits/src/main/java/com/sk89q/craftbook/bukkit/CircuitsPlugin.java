@@ -113,6 +113,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // Restricted
         icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // Restricted
         icManager.register("MC1250", new FireShooter.Factory(server, true), familySISO);        // Restricted
+        icManager.register("MC1251", new FireBarrage.Factory(server, true), familySISO);        // Restricted
         icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
