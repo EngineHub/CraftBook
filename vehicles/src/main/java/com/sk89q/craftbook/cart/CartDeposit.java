@@ -121,7 +121,7 @@ public class CartDeposit extends CartMechanism {
             //System.out.println("deposited, " + transferitems.size() + " items left over.");
             
             for (Chest container: containers) {
-                if (leftovers.size() <= 0) break;
+                if (transferitems.size() <= 0) break;
                 Inventory containerinventory = container.getInventory();
                 
                 leftovers.addAll(containerinventory.addItem((ItemStack[]) transferitems.toArray(trivialstackarray)).values());
