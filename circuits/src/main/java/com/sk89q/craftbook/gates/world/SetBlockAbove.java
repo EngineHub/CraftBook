@@ -47,11 +47,14 @@ public class SetBlockAbove extends AbstractIC {
         return "SET BLOCK ABOVE";
     }
 
-    //TODO: add block metadata support
     @Override
     public void trigger(ChipState chip) {
 
-        String sblock = getSign().getLine(2).toUpperCase().trim();
+        String sblockdat = getSign().getLine(2).toUpperCase().trim();
+        String sblock = sblockdat.split(":")[0];
+        String smeta = "";
+        if(sblockdat.split(":").length>1)
+        	smeta = sblockdat.split(":")[1];
         String force = getSign().getLine(3).toUpperCase().trim();
 
         chip.setOutput(0, chip.getInput(0));
@@ -68,6 +71,15 @@ public class SetBlockAbove extends AbstractIC {
         		return;
         	}
         
+        byte meta = -1;
+        try {
+        	if(!smeta.equalsIgnoreCase(""))
+        		meta = Byte.parseByte(smeta);
+        } catch (Exception e) {
+        	return;
+        }
+
+        
         Block body = SignUtil.getBackBlock(getSign().getBlock());
 
         int x = body.getX();
@@ -76,6 +88,8 @@ public class SetBlockAbove extends AbstractIC {
         
         if(force.equals("FORCE") || body.getWorld().getBlockAt(x, y+1, z).getType() == Material.AIR) {
         	body.getWorld().getBlockAt(x, y+1, z).setTypeId(block);
+        	if(!(meta==-1))
+        		body.getWorld().getBlockAt(x, y+1, z).setData(meta);
         }
     }
 
