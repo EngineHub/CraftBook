@@ -28,74 +28,80 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 
 public class EntitySpawner extends AbstractIC {
 
-    protected boolean risingEdge;
+	protected boolean risingEdge;
 
-    public EntitySpawner(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign);
-        this.risingEdge = risingEdge;
-    }
+	public EntitySpawner(Server server, Sign sign, boolean risingEdge) {
+		super(server, sign);
+		this.risingEdge = risingEdge;
+	}
 
-    @Override
-    public String getTitle() {
-        return "Creature Spawner";
-    }
+	@Override
+	public String getTitle() {
+		return "Creature Spawner";
+	}
 
-    @Override
-    public String getSignTitle() {
-        return "CREATURE SPAWNER";
-    }
+	@Override
+	public String getSignTitle() {
+		return "CREATURE SPAWNER";
+	}
 
-    @Override
-    public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
-            String type = getSign().getLine(2).trim();
-            String rider = getSign().getLine(3).trim();
-            if (EntityType.fromName(type) != null) {
-                Location loc = getSign().getBlock().getLocation();
-                int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
-                int x = loc.getBlockX();
-                int z = loc.getBlockZ();
+	@Override
+	public void trigger(ChipState chip) {
+		if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+			String type = getSign().getLine(2).trim();
+			String rider = getSign().getLine(3).trim();
+			if (EntityType.fromName(type) != null) {
+				Location loc = getSign().getBlock().getLocation();
+				int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
+				int x = loc.getBlockX();
+				int z = loc.getBlockZ();
 
-                for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
-                    if (BlockType.canPassThrough(getSign().getWorld()
-                            .getBlockTypeIdAt(x, y, z))) {
-                        // TODO: Doesn't spawn riders yet.
-                        if (rider.length() != 0
-                                && EntityType.fromName(rider) != null) {
-                            getSign().getWorld()
-                                    .spawnCreature(
-                                            new Location(getSign().getWorld(),
-                                                    x, y, z),
-                                            EntityType.fromName(type));
-                        } else {
-                            getSign().getWorld()
-                                    .spawnCreature(
-                                            new Location(getSign().getWorld(),
-                                                    x, y, z),
-                                            EntityType.fromName(type));
-                        }
-                        return;
-                    }
-                }
-            }
-        }
-    }
+				for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
+					if (BlockType.canPassThrough(getSign().getWorld()
+							.getBlockTypeIdAt(x, y, z))) {
+						if (rider.length() != 0
+						&& EntityType.fromName(rider) != null) {
+							LivingEntity ent = getSign().getWorld()
+							.spawnCreature(
+									new Location(getSign().getWorld(),
+											x, y, z),
+											EntityType.fromName(type));
+							LivingEntity ent2 = getSign().getWorld()
+									.spawnCreature(
+											new Location(getSign().getWorld(),
+													x, y, z),
+													EntityType.fromName(rider));
+							ent.setPassenger(ent2);
+						} else {
+							getSign().getWorld()
+							.spawnCreature(
+									new Location(getSign().getWorld(),
+											x, y, z),
+											EntityType.fromName(type));
+						}
+						return;
+					}
+				}
+			}
+		}
+	}
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+	public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        protected boolean risingEdge;
+		protected boolean risingEdge;
 
-        public Factory(Server server, boolean risingEdge) {
-            super(server);
-            this.risingEdge = risingEdge;
-        }
+		public Factory(Server server, boolean risingEdge) {
+			super(server);
+			this.risingEdge = risingEdge;
+		}
 
-        @Override
-        public IC create(Sign sign) {
-            return new EntitySpawner(getServer(), sign, risingEdge);
-        }
-    }
+		@Override
+		public IC create(Sign sign) {
+			return new EntitySpawner(getServer(), sign, risingEdge);
+		}
+	}
 }
