@@ -80,13 +80,13 @@ public class ChestCollector extends AbstractIC{
     					if(exid!=-1)
     					{
     						if(exid==item.getItemStack().getTypeId())
-    							return false;
+    							continue;
     					}
 
     					if(id!=-1)
     					{
     						if(id!=item.getItemStack().getTypeId())
-    							return false;
+    							continue;
     					}
 	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
 	    				item.remove();
