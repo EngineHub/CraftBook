@@ -1,10 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
+import java.util.Random;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ic.AbstractIC;
