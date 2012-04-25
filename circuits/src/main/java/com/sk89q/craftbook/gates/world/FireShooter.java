@@ -42,7 +42,9 @@ public class FireShooter extends AbstractIC{
 	
 	public void shootFire(int n) {
     	float speed = 0.6F;
-    	float spread = 12;
+    	float spread = 6;
+    	if(n==1)
+    		spread = 0;
     	float vert = 0;
     	try {
     		String[] velocity = getSign().getLine(2).trim().split(":");
@@ -69,7 +71,12 @@ public class FireShooter extends AbstractIC{
     	Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
 
     	for(int i = 0; i < n; i++)
-    	    getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class).setVelocity(velocity);
+    	{
+    		Random rand = new Random();
+    		velocity = new Vector(x+(rand.nextInt((int)spread)-(spread/2)), vert+(rand.nextInt((int)spread)-(spread/2)), z+(rand.nextInt((int)spread)-(spread/2)));
+    		SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
+    	    f.setVelocity(velocity);
+    	}
     }
 
     public static class Factory extends AbstractICFactory implements
