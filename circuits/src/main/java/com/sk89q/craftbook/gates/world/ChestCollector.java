@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.logging.Level;
-
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
