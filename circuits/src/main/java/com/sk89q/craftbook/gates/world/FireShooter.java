@@ -45,7 +45,7 @@ public class FireShooter extends AbstractIC{
 
 	public void shootFire(int n) {
 		float speed = 0.6F;
-		float spread = 6;
+		float spread = 4;
 		float vert = 0;
 		try {
 			String[] velocity = getSign().getLine(2).trim().split(":");

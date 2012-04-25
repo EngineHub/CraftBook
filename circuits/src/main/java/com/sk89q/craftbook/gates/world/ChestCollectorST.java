@@ -26,7 +26,7 @@ public class ChestCollectorST extends ChestCollector implements SelfTriggeredIC{
 
     @Override
     public void think(ChipState chip) {
-        collect();
+    	chip.setOutput(0, collect());
     }
 
 

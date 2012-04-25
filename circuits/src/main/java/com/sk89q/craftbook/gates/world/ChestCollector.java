@@ -36,7 +36,7 @@ public class ChestCollector extends AbstractIC{
     @Override
     public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
-            collect();
+            chip.setOutput(0, collect());
         }
     }
 
@@ -45,7 +45,7 @@ public class ChestCollector extends AbstractIC{
      * 
      * @return
      */
-    protected void collect() {
+    protected boolean collect() {
 
     	Block b = SignUtil.getBackBlock(getSign().getBlock());
 
@@ -79,17 +79,19 @@ public class ChestCollector extends AbstractIC{
     					catch(Exception e){}
     					if(exid!=-1)
     						if(exid==item.getItemStack().getTypeId())
-    							return;
+    							return false;
 
     					if(id!=-1)
     						if(id!=item.getItemStack().getTypeId())
-    							return;
+    							return false;
 	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
 	    				item.remove();
+	    				return true;
     				}
     			}
     		}
     	}
+    	return false;
     }
 
     public static class Factory extends AbstractICFactory {
