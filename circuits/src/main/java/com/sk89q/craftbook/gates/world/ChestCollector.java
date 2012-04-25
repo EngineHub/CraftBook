@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -61,8 +63,9 @@ public class ChestCollector extends AbstractIC{
     			int ix = item.getLocation().getBlockX();
     			int iy = item.getLocation().getBlockY();
     			int iz = item.getLocation().getBlockZ();
-    			if(ix == x && iy == y && iz == z)
+    			if(ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ())
     			{
+    				this.getServer().getLogger().log(Level.WARNING, "It worked");
     				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
     				item.remove();
     			}
