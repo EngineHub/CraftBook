@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -46,28 +47,27 @@ public class ChestCollector extends AbstractIC{
      */
     protected void collect() {
 
-        Block b = SignUtil.getBackBlock(getSign().getBlock());
+    	Block b = SignUtil.getBackBlock(getSign().getBlock());
 
-        int x = b.getX();
-        int y = b.getY()+1;
-        int z = b.getZ();
-        int blockID = getSign().getBlock().getWorld().getBlockTypeIdAt(x, y, z);
-        if(blockID == 54)
-        {
-        	Chest c = (Chest) getSign().getBlock().getWorld().getBlockAt(x, y, z);
-        	World w = getSign().getBlock().getWorld();
-        	for(Item item : w.getEntitiesByClass(Item.class))
-        	{
-        		int ix = item.getLocation().getBlockX();
-        		int iy = item.getLocation().getBlockY();
-        		int iz = item.getLocation().getBlockZ();
-        		if(ix == x && iy == y && iz == z)
-        		{
-        			c.getInventory().addItem(item.getItemStack());
-        			item.remove();
-        		}
-        	}
-        }
+    	int x = b.getX();
+    	int y = b.getY()+1;
+    	int z = b.getZ();
+    	Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+    	if (bl.getType() == Material.CHEST) 
+    	{
+    		World w = getSign().getBlock().getWorld();
+    		for(Item item : w.getEntitiesByClass(Item.class))
+    		{
+    			int ix = item.getLocation().getBlockX();
+    			int iy = item.getLocation().getBlockY();
+    			int iz = item.getLocation().getBlockZ();
+    			if(ix == x && iy == y && iz == z)
+    			{
+    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
+    				item.remove();
+    			}
+    		}
+    	}
     }
 
     public static class Factory extends AbstractICFactory {
@@ -84,5 +84,4 @@ public class ChestCollector extends AbstractIC{
             return new ChestCollector(getServer(), sign, risingEdge);
         }
     }
-	
 }
