@@ -65,9 +65,11 @@ public class ChestCollector extends AbstractIC{
     			int iz = item.getLocation().getBlockZ();
     			if(ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ())
     			{
-    				this.getServer().getLogger().log(Level.WARNING, "It worked");
-    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
-    				item.remove();
+    				if(((Chest) bl.getState()).getInventory().firstEmpty()!=-1)
+    				{
+	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
+	    				item.remove();
+    				}
     			}
     		}
     	}
