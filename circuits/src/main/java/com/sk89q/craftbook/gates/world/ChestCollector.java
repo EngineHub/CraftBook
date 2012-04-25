@@ -65,6 +65,25 @@ public class ChestCollector extends AbstractIC{
     			{
     				if(((Chest) bl.getState()).getInventory().firstEmpty()!=-1)
     				{
+    					int id = -1;
+    					int exid = -1;
+    					try
+    					{
+    						id = Integer.parseInt(getSign().getLine(3));
+    					}
+    					catch(Exception e){}
+    					try
+    					{
+    						exid = Integer.parseInt(getSign().getLine(4));
+    					}
+    					catch(Exception e){}
+    					if(exid!=-1)
+    						if(exid==item.getItemStack().getTypeId())
+    							return;
+
+    					if(id!=-1)
+    						if(id!=item.getItemStack().getTypeId())
+    							return;
 	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
 	    				item.remove();
     				}
