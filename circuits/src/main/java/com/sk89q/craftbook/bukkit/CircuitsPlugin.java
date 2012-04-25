@@ -107,7 +107,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO);             // Restricted
         icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO);             // Restricted
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
-        icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);          // Restricted
+        icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);
+        icManager.register("MC1209", new ChestCollector.Factory(server, true), familySISO);		// Restricted
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);         // Restricted
         icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // Restricted
@@ -149,6 +150,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         
         //Self triggered
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
+        icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
