@@ -46,8 +46,6 @@ public class FireShooter extends AbstractIC{
 	public void shootFire(int n) {
     	float speed = 0.6F;
     	float spread = 6;
-    	if(n==1)
-    		spread = 0;
     	float vert = 0;
     	try {
     		String[] velocity = getSign().getLine(2).trim().split(":");
@@ -73,13 +71,21 @@ public class FireShooter extends AbstractIC{
     	Vector velocity = new Vector(x, vert, z);
     	Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
 
-    	for(int i = 0; i < n; i++)
-    	{
-    		Random rand = new Random();
-    		velocity = new Vector(x+(rand.nextInt((int)spread)-(spread/2)), vert+(rand.nextInt((int)spread)-(spread/2)), z+(rand.nextInt((int)spread)-(spread/2)));
-    		SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
-    	    f.setVelocity(velocity);
-    	}
+	if(i!=1)
+	{
+	    	for(int i = 0; i < n; i++)
+	    	{
+	    		Random rand = new Random();
+	    		velocity = new Vector(x+(rand.nextInt((int)spread)-(spread/2)), vert+(rand.nextInt((int)spread)-(spread/2)), z+(rand.nextInt((int)spread)-(spread/2)));
+	    		SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
+	    	    f.setVelocity(velocity);
+	    	}
+	}
+	else
+	{
+		SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
+	    	f.setVelocity(velocity);
+	}
     }
 
     public static class Factory extends AbstractICFactory implements
