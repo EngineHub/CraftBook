@@ -104,6 +104,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);  	 // Restricted
         //Missing: 1202 (replaced by dispenser?)                                                 // Restricted
         icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);     // Restricted
+        icManager.register("MC1204", new EntityTrap.Factory(server, true), familySISO);     // Restricted
         icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO);             // Restricted
         icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO);             // Restricted
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
@@ -151,6 +152,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         
         //Self triggered
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
+        icManager.register("MC0204", new EntityTrapST.Factory(server, true), familySISO);     // Restricted
         icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
