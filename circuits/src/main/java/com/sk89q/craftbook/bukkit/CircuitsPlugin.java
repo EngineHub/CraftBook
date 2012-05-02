@@ -44,10 +44,21 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     protected ICManager icManager;
     private PermissionsResolverManager perms;
     private MechanicManager manager;
+    private static CircuitsPlugin instance;
+    
+    public static Server server;
+    
+    public static CircuitsPlugin getInst()
+    {
+    	return instance;
+    }
     
     @Override
     public void onEnable() {
         super.onEnable();
+        
+        instance = this;
+        server = getServer();
         
         createDefaultConfiguration("config.yml");
         createDefaultConfiguration("custom-ics.txt");
