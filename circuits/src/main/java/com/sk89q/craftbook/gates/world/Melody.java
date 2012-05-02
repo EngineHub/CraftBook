@@ -71,10 +71,13 @@ public class Melody extends AbstractIC{
 	                return;
 	            }
 				
-	            if(sequencer!=null)
+	            if(sequencer!=null||jNote!=null)
 	            {
 					for (Player player : getServer().getOnlinePlayers())
+					{
 						jNote.getJingleNoteManager().stop(player);
+					}
+					jNote.getJingleNoteManager().stopAll();
 	            }
 				sequencer = new MidiJingleSequencer(file);
 				for (Player player : getServer().getOnlinePlayers()) {
@@ -87,7 +90,10 @@ public class Melody extends AbstractIC{
 			{
 				sequencer.stop();
 				for (Player player : getServer().getOnlinePlayers())
+				{
 					jNote.getJingleNoteManager().stop(player);
+				}
+				jNote.getJingleNoteManager().stopAll();
 			}
 		}
 		catch(Exception e){

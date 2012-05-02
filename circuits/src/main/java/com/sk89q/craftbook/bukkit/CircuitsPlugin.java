@@ -34,6 +34,7 @@ import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
 import com.sk89q.craftbook.ic.families.*;
+import com.sk89q.jinglenote.JingleNoteComponent;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -65,7 +66,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("config.yml");
         createDefaultConfiguration("custom-ics.txt");
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
-        
+                
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();
                 
