@@ -16,6 +16,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
+import com.sk89q.minecraft.util.commands.CommandException;
 
 public class Melody extends AbstractIC{
 
@@ -40,7 +41,30 @@ public class Melody extends AbstractIC{
 			{
 				String midiName = getSign().getLine(2);
 
-				MidiJingleSequencer sequencer = new MidiJingleSequencer(new File(CircuitsPlugin.getInst().getDataFolder(), midiName));
+	            File[] trialPaths = {
+	                    new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName),
+	                    new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName + ".mid"),
+	                    new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName + ".midi"),
+	                    new File("midi", midiName),
+	                    new File("midi", midiName + ".mid"),
+	                    new File("midi", midiName + ".midi"),
+	            };
+
+	            File file = null;
+
+	            for (File f : trialPaths) {
+	                if (f.exists()) {
+	                    file = f;
+	                    break;
+	                }
+	            }
+
+	            if (file == null) {
+	            	getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
+	                return;
+	            }
+				
+				MidiJingleSequencer sequencer = new MidiJingleSequencer(file);
 				for (Player player : getServer().getOnlinePlayers()) {
 					JingleNoteComponent.getJingleNoteManager().play(player, sequencer, 0);
 					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
@@ -48,7 +72,8 @@ public class Melody extends AbstractIC{
 			}
 		}
 		catch(Exception e){
-			getServer().getLogger().log(Level.SEVERE, "Midi Failed To Play!");
+			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
+			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: " + e.getMessage());
 		}
 	}
 	

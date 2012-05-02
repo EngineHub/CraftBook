@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.io.File;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -70,6 +72,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
+        
+        File midi = new File(getDataFolder(),"midi/");
+        if(!midi.exists())
+        	midi.mkdir();
         
         registerICs();
         
