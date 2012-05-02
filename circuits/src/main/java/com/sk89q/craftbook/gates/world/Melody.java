@@ -16,10 +16,8 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
-import com.sk89q.minecraft.util.commands.CommandException;
 
 public class Melody extends AbstractIC{
 
