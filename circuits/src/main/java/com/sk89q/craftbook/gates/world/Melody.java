@@ -69,7 +69,9 @@ public class Melody extends AbstractIC{
 				
 				MidiJingleSequencer sequencer = new MidiJingleSequencer(file);
 				for (Player player : getServer().getOnlinePlayers()) {
+					if(player==null)continue;
 					JingleNoteComponent jNote = new JingleNoteComponent();
+					jNote.enable();
 					jNote.getJingleNoteManager().play(player, sequencer, 0);
 					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
 				}
