@@ -24,9 +24,11 @@ import com.sk89q.minecraft.util.commands.CommandException;
 public class Melody extends AbstractIC{
 
 	MidiJingleSequencer sequencer;
+	JingleNoteComponent jNote = new JingleNoteComponent();
 	
 	public Melody(Server server, Sign block) {
 		super(server, block);
+		jNote.enable();
 	}
 
 	@Override
@@ -69,11 +71,14 @@ public class Melody extends AbstractIC{
 	                return;
 	            }
 				
+	            if(sequencer!=null)
+	            {
+					for (Player player : getServer().getOnlinePlayers())
+						jNote.getJingleNoteManager().stop(player);
+	            }
 				sequencer = new MidiJingleSequencer(file);
 				for (Player player : getServer().getOnlinePlayers()) {
 					if(player==null)continue;
-					JingleNoteComponent jNote = new JingleNoteComponent();
-					jNote.enable();
 					jNote.getJingleNoteManager().play(player, sequencer, 0);
 					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
 				}
@@ -81,6 +86,8 @@ public class Melody extends AbstractIC{
 			else if(!chip.getInput(0) && sequencer!=null)
 			{
 				sequencer.stop();
+				for (Player player : getServer().getOnlinePlayers())
+					jNote.getJingleNoteManager().stop(player);
 			}
 		}
 		catch(Exception e){
