@@ -1,6 +1,9 @@
 package com.sk89q.craftbook.gates.world;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -66,14 +69,18 @@ public class Melody extends AbstractIC{
 				
 				MidiJingleSequencer sequencer = new MidiJingleSequencer(file);
 				for (Player player : getServer().getOnlinePlayers()) {
-					JingleNoteComponent.getJingleNoteManager().play(player, sequencer, 0);
+					JingleNoteComponent jNote = new JingleNoteComponent();
+					jNote.getJingleNoteManager().play(player, sequencer, 0);
 					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
 				}
 			}
 		}
 		catch(Exception e){
 			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
-			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: " + e.getMessage());
+			final Writer result = new StringWriter();
+		    final PrintWriter printWriter = new PrintWriter(result);
+		    e.printStackTrace(printWriter);
+			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: " + result.toString());
 		}
 	}
 	

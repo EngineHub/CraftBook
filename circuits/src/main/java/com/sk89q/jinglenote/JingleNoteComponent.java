@@ -40,7 +40,7 @@ import java.util.logging.Level;
 
 public class JingleNoteComponent implements Listener {
 
-    private static JingleNoteManager jingleNoteManager;
+    private JingleNoteManager jingleNoteManager;
 
     public void enable() {
         // Jingle note manager
@@ -56,7 +56,7 @@ public class JingleNoteComponent implements Listener {
      *
      * @return
      */
-    public static JingleNoteManager getJingleNoteManager() {
+    public JingleNoteManager getJingleNoteManager() {
         return jingleNoteManager;
     }
 
