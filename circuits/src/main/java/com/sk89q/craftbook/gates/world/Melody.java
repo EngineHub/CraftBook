@@ -9,7 +9,9 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
@@ -59,4 +61,17 @@ public class Melody extends AbstractIC implements SelfTriggeredIC{
 			e.printStackTrace();
 		}
 	}
+	
+    public static class Factory extends AbstractICFactory {
+
+        public Factory(Server server) {
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+            return new Melody(getServer(), sign);
+        }
+    }
+
 }
