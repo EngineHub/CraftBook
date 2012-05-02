@@ -131,6 +131,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         icManager.register("MC1263", new BlockSensor.Factory(server, true), familySISO);
+        icManager.register("MC1270", new Melody.Factory(server), familySISO);
         icManager.register("MC1420", new ClockDivider.Factory(server, true), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
         
@@ -170,7 +171,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
         icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
         icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
-        icManager.register("MC0270", new Melody.Factory(server), familySISO);
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
         //Missing: 0020 self-triggered RNG (may cause server load issues)

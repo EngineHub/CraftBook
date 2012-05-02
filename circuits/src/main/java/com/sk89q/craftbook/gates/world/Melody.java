@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -16,7 +17,7 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
 
-public class Melody extends AbstractIC implements SelfTriggeredIC{
+public class Melody extends AbstractIC{
 
 	public Melody(Server server, Sign block) {
 		super(server, block);
@@ -33,32 +34,21 @@ public class Melody extends AbstractIC implements SelfTriggeredIC{
 	}
 
 	@Override
-	public boolean isActive() {
-		return false;
-	}
-
-	@Override
 	public void trigger(ChipState chip) {
-
-	}
-
-	@Override
-	public void think(ChipState state) {
 		try {
-			if(state.getInput(0))
+			if(chip.getInput(0))
 			{
 				String midiName = getSign().getLine(2);
 
-				MidiJingleSequencer sequencer = new MidiJingleSequencer(
-						new File(CircuitsPlugin.getInst().getDataFolder(), midiName));
+				MidiJingleSequencer sequencer = new MidiJingleSequencer(new File(CircuitsPlugin.getInst().getDataFolder(), midiName));
 				for (Player player : getServer().getOnlinePlayers()) {
 					JingleNoteComponent.getJingleNoteManager().play(player, sequencer, 0);
-					player.sendMessage(ChatColor.YELLOW + "Playing intro.midi...");
+					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
 				}
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			getServer().getLogger().log(Level.SEVERE, "Midi Failed To Play!");
 		}
 	}
 	
