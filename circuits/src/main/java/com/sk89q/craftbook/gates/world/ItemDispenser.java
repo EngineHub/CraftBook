@@ -33,11 +33,8 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
-    protected boolean risingEdge;
-
-    public ItemDispenser(Server server, Sign sign, boolean risingEdge) {
+    public ItemDispenser(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -52,7 +49,7 @@ public class ItemDispenser extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
             String item = getSign().getLine(2);
             int amount = 1;
             try {
@@ -95,16 +92,13 @@ public class ItemDispenser extends AbstractIC {
     public static class Factory extends AbstractICFactory implements
             RestrictedIC {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new ItemDispenser(getServer(), sign, risingEdge);
+            return new ItemDispenser(getServer(), sign);
         }
     }
 }

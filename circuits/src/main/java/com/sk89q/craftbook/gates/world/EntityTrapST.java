@@ -11,8 +11,8 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class EntityTrapST extends EntityTrap implements SelfTriggeredIC{
 
-	public EntityTrapST(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign, risingEdge);
+	public EntityTrapST(Server server, Sign sign) {
+		super(server, sign);
 	}
 
     @Override
@@ -35,16 +35,13 @@ public class EntityTrapST extends EntityTrap implements SelfTriggeredIC{
 	public static class Factory extends AbstractICFactory implements
 	RestrictedIC {
 
-		protected boolean risingEdge;
-
-		public Factory(Server server, boolean risingEdge) {
+		public Factory(Server server) {
 			super(server);
-			this.risingEdge = risingEdge;
 		}
 
 		@Override
 		public IC create(Sign sign) {
-			return new EntityTrapST(getServer(), sign, risingEdge);
+			return new EntityTrapST(getServer(), sign);
 		}
 	}
 

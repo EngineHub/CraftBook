@@ -17,13 +17,10 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
-public class FireShooter extends AbstractIC{
+public class FireShooter extends AbstractIC {
 
-	protected boolean risingEdge;
-
-	public FireShooter(Server server, Sign sign, boolean risingEdge) {
+	public FireShooter(Server server, Sign sign) {
 		super(server, sign);
-		this.risingEdge = risingEdge;
 	}
 
 	@Override
@@ -38,7 +35,7 @@ public class FireShooter extends AbstractIC{
 
 	@Override
 	public void trigger(ChipState chip) {
-		if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+		if (chip.getInput(0)) {
 			shootFire(1);
 		}
 	}
@@ -91,16 +88,13 @@ public class FireShooter extends AbstractIC{
 	public static class Factory extends AbstractICFactory implements
 	RestrictedIC {
 
-		protected boolean risingEdge;
-
-		public Factory(Server server, boolean risingEdge) {
+		public Factory(Server server) {
 			super(server);
-			this.risingEdge = risingEdge;
 		}
 
 		@Override
 		public IC create(Sign sign) {
-			return new FireShooter(getServer(), sign, risingEdge);
+			return new FireShooter(getServer(), sign);
 		}
 	}
 

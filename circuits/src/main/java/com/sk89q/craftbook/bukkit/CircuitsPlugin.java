@@ -113,38 +113,38 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1001", new Inverter.Factory(server), familySISO);
         icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
         icManager.register("MC1018", new ToggleFlipFlop.Factory(server, false), familySISO);
-        icManager.register("MC1020", new RandomBit.Factory(server, true), familySISO);
-        icManager.register("MC1025", new ServerTimeModulus.Factory(server, true), familySISO);
+        icManager.register("MC1020", new RandomBit.Factory(server), familySISO);
+        icManager.register("MC1025", new ServerTimeModulus.Factory(server), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
-        icManager.register("MC1111", new WirelessReceiver.Factory(server, true), familySISO);
-        icManager.register("MC1200", new EntitySpawner.Factory(server, true), familySISO);     // Restricted
-        icManager.register("MC1201", new ItemDispenser.Factory(server, true), familySISO);  	 // Restricted
-        icManager.register("MC1202", new ChestDispenser.Factory(server, true), familySISO);                                               // Restricted
-        icManager.register("MC1203", new LightningSummon.Factory(server, true), familySISO);     // Restricted
-        icManager.register("MC1204", new EntityTrap.Factory(server, true), familySISO);     // Restricted
+        icManager.register("MC1111", new WirelessReceiver.Factory(server), familySISO);
+        icManager.register("MC1200", new EntitySpawner.Factory(server), familySISO);     // Restricted
+        icManager.register("MC1201", new ItemDispenser.Factory(server), familySISO);  	 // Restricted
+        icManager.register("MC1202", new ChestDispenser.Factory(server), familySISO);                                               // Restricted
+        icManager.register("MC1203", new LightningSummon.Factory(server), familySISO);     // Restricted
+        icManager.register("MC1204", new EntityTrap.Factory(server), familySISO);     // Restricted
         icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO);             // Restricted
         icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO);             // Restricted
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);
-        icManager.register("MC1209", new ChestCollector.Factory(server, true), familySISO);
+        icManager.register("MC1209", new ChestCollector.Factory(server), familySISO);
         icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO);             // Restricted
-        icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
-        icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);         // Restricted
-        icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // Restricted
-        icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // Restricted
-        icManager.register("MC1250", new FireShooter.Factory(server, true), familySISO);        // Restricted
-        icManager.register("MC1251", new FireBarrage.Factory(server, true), familySISO);        // Restricted
-        icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
-        icManager.register("MC1261", new LavaSensor.Factory(server, true), familySISO);
-        icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
-        icManager.register("MC1263", new BlockSensor.Factory(server, true), familySISO);
+        icManager.register("MC1230", new DaySensor.Factory(server), familySISO);
+        icManager.register("MC1231", new TimeControl.Factory(server), familySISO);         // Restricted
+        icManager.register("MC1240", new ArrowShooter.Factory(server), familySISO);        // Restricted
+        icManager.register("MC1241", new ArrowBarrage.Factory(server), familySISO);        // Restricted
+        icManager.register("MC1250", new FireShooter.Factory(server), familySISO);        // Restricted
+        icManager.register("MC1251", new FireBarrage.Factory(server), familySISO);        // Restricted
+        icManager.register("MC1260", new WaterSensor.Factory(server), familySISO);
+        icManager.register("MC1261", new LavaSensor.Factory(server), familySISO);
+        icManager.register("MC1262", new LightSensor.Factory(server), familySISO);
+        icManager.register("MC1263", new BlockSensor.Factory(server), familySISO);
         icManager.register("MC1270", new Melody.Factory(server), familySISO);
-        icManager.register("MC1420", new ClockDivider.Factory(server, true), familySISO);
-        icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
+        icManager.register("MC1420", new ClockDivider.Factory(server), familySISO);
+        icManager.register("MC1510", new MessageSender.Factory(server), familySISO);
         
         //SI3Os
-        icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O);
+        icManager.register("MC2020", new Random3Bit.Factory(server), familySI3O);
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs
@@ -172,7 +172,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         
         //Self triggered
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
-        icManager.register("MC0204", new EntityTrapST.Factory(server, true), familySISO);     // Restricted
+        icManager.register("MC0204", new EntityTrapST.Factory(server), familySISO);     // Restricted
         icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
@@ -187,14 +187,14 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	//Missing: 0420     
         //Xtra ICs
         //SISOs
-        icManager.register("MCX230", new RainSensor.Factory(server, true), familySISO);
-        icManager.register("MCX231", new TStormSensor.Factory(server, true), familySISO);
-        icManager.register("MCX233", new WeatherControl.Factory(server, true), familySISO);
+        icManager.register("MCX230", new RainSensor.Factory(server), familySISO);
+        icManager.register("MCX231", new TStormSensor.Factory(server), familySISO);
+        icManager.register("MCX233", new WeatherControl.Factory(server), familySISO);
         //3ISOs
-        icManager.register("MCT233", new WeatherControlAdvanced.Factory(server, true), family3ISO);
+        icManager.register("MCT233", new WeatherControlAdvanced.Factory(server), family3ISO);
         //Self triggered
-        icManager.register("MCZ230", new RainSensorST.Factory(server, true), familySISO);
-        icManager.register("MCZ231", new TStormSensorST.Factory(server, true), familySISO);
+        icManager.register("MCZ230", new RainSensorST.Factory(server), familySISO);
+        icManager.register("MCZ231", new TStormSensorST.Factory(server), familySISO);
 
     }
     

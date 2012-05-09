@@ -28,11 +28,8 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeControl extends AbstractIC {
 
-    protected boolean risingEdge;
-
-    public TimeControl(Server server, Sign sign, boolean risingEdge) {
+    public TimeControl(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -59,16 +56,13 @@ public class TimeControl extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new TimeControl(getServer(), sign, risingEdge);
+            return new TimeControl(getServer(), sign);
         }
     }
 }

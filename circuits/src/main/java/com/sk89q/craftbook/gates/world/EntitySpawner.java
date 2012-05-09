@@ -32,11 +32,8 @@ import org.bukkit.entity.LivingEntity;
 
 public class EntitySpawner extends AbstractIC {
 
-	protected boolean risingEdge;
-
-	public EntitySpawner(Server server, Sign sign, boolean risingEdge) {
+	public EntitySpawner(Server server, Sign sign) {
 		super(server, sign);
-		this.risingEdge = risingEdge;
 	}
 
 	@Override
@@ -51,7 +48,7 @@ public class EntitySpawner extends AbstractIC {
 
 	@Override
 	public void trigger(ChipState chip) {
-		if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+		if (chip.getInput(0)) {
 			String type = getSign().getLine(2).trim();
 			String rider = getSign().getLine(3).trim();
 			if (EntityType.fromName(type) != null) {
@@ -92,16 +89,13 @@ public class EntitySpawner extends AbstractIC {
 
 	public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-		protected boolean risingEdge;
-
-		public Factory(Server server, boolean risingEdge) {
+		public Factory(Server server) {
 			super(server);
-			this.risingEdge = risingEdge;
 		}
 
 		@Override
 		public IC create(Sign sign) {
-			return new EntitySpawner(getServer(), sign, risingEdge);
+			return new EntitySpawner(getServer(), sign);
 		}
 	}
 }

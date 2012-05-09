@@ -10,11 +10,8 @@ import com.sk89q.craftbook.ic.IC;
 
 public class WeatherControlAdvanced extends AbstractIC {
 
-    protected boolean risingEdge;
-
-    public WeatherControlAdvanced(Server server, Sign sign, boolean risingEdge) {
+    public WeatherControlAdvanced(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -59,16 +56,13 @@ public class WeatherControlAdvanced extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new WeatherControlAdvanced(getServer(), sign, risingEdge);
+            return new WeatherControlAdvanced(getServer(), sign);
         }
     }
 

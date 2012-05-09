@@ -29,11 +29,8 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class MessageSender extends AbstractIC {
 
-    protected boolean risingEdge;
-
-    public MessageSender(Server server, Sign sign, boolean risingEdge) {
+    public MessageSender(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -48,7 +45,7 @@ public class MessageSender extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
             chip.setOutput(0, sendMessage());
         }
     }
@@ -76,16 +73,13 @@ public class MessageSender extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new MessageSender(getServer(), sign, risingEdge);
+            return new MessageSender(getServer(), sign);
         }
     }
 

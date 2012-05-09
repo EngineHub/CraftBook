@@ -9,9 +9,8 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
-public class CustomClock extends AbstractIC implements SelfTriggeredIC{
+public class CustomClock extends AbstractIC implements SelfTriggeredIC {
 
-	boolean risingEdge;
 	int tickRate = 0;
 	
     public CustomClock(Server server, Sign sign) {

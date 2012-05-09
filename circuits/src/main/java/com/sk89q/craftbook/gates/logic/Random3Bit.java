@@ -25,8 +25,8 @@ import com.sk89q.craftbook.ic.IC;
 
 public class Random3Bit extends RandomBit {
         
-    public Random3Bit(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign, risingEdge);
+    public Random3Bit(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -41,17 +41,13 @@ public class Random3Bit extends RandomBit {
 
 
     public static class Factory extends AbstractICFactory {
-        
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new Random3Bit(getServer(), sign, risingEdge);
+            return new Random3Bit(getServer(), sign);
         }
     }
 
