@@ -181,7 +181,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
-        icManager.register("MC0500", new CustomClock.Factory(server), familySISO);
         //Missing: 0020 self-triggered RNG (may cause server load issues)
 	//Missing: 0262
 	//Missing: 0420     
