@@ -18,26 +18,27 @@
 
 package com.sk89q.craftbook.ic.families;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.bukkit.*;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the single input single output family.
- * 
+ *
  * @author sk89q
  */
 public class FamilySISO extends AbstractICFamily {
 
     @Override
     public ChipState detect(BlockWorldVector source, Sign sign) {
+
         return new ChipStateSISO(source, sign);
     }
 
@@ -47,6 +48,7 @@ public class FamilySISO extends AbstractICFamily {
         protected BlockWorldVector source;
 
         public ChipStateSISO(BlockWorldVector source, Sign sign) {
+
             this.sign = sign;
             this.source = source;
         }
@@ -67,6 +69,7 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public boolean get(int pin) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 return block.isBlockIndirectlyPowered();
@@ -77,6 +80,7 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public void set(int pin, boolean value) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 ICUtil.setState(block, value);
@@ -87,6 +91,7 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public boolean isTriggered(int pin) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 return BukkitUtil.toWorldVector(block).equals(source);
@@ -97,6 +102,7 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public boolean isValid(int pin) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 return block.getType() == Material.REDSTONE_WIRE;
@@ -107,26 +113,31 @@ public class FamilySISO extends AbstractICFamily {
 
         @Override
         public boolean getInput(int inputIndex) {
+
             return get(inputIndex);
         }
 
         @Override
         public boolean getOutput(int outputIndex) {
+
             return get(outputIndex + 1);
         }
 
         @Override
         public void setOutput(int outputIndex, boolean value) {
+
             set(outputIndex + 1, value);
         }
 
         @Override
         public int getInputCount() {
+
             return 1;
         }
 
         @Override
         public int getOutputCount() {
+
             return 1;
         }
 

@@ -20,29 +20,29 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * Integrated circuits are represented by this interface. For self-triggered
- * ICs, see {@link SelfTriggeredIC}.
+ * Integrated circuits are represented by this interface. For self-triggered ICs, see {@link SelfTriggeredIC}.
  *
  * @author sk89q
  */
 public interface IC {
+
     /**
      * @return the title of the IC.
      */
     public String getTitle();
-    
+
     /**
      * @return the title that is shown on the sign.
      */
     public String getSignTitle();
-    
+
     /**
      * Recieve a new state to process on.
      *
      * @param chip chip state.
      */
     public void trigger(ChipState chip);
-    
+
     /**
      * Proceed to unload the IC.
      */

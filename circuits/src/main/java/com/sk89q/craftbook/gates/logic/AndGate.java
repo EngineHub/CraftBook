@@ -28,16 +28,19 @@ import org.bukkit.block.Sign;
 public class AndGate extends AbstractIC {
 
     public AndGate(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "And Gate";
     }
 
     @Override
     public String getSignTitle() {
+
         return "AND";
     }
 
@@ -46,13 +49,12 @@ public class AndGate extends AbstractIC {
 
         int on = 0, valid = 0;
         for (int i = 0; i < chip.getInputCount(); i++) {
-        	
-        	if (chip.isValid(i))
-            {
-        		valid++;
 
-	            if (chip.getInput(i))
-	                on++;
+            if (chip.isValid(i)) {
+                valid++;
+
+                if (chip.getInput(i))
+                    on++;
             }
         }
 
@@ -63,11 +65,13 @@ public class AndGate extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new AndGate(getServer(), sign);
         }
     }

@@ -18,52 +18,63 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.*;
 
 public class DaySensorST extends DaySensor implements SelfTriggeredIC {
 
 
     public DaySensorST(Server server, Sign sign) {
+
         super(server, sign, true);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Day Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST DAY SENSOR";
     }
-    
+
 
     @Override
     public void think(ChipState chip) {
-            chip.setOutput(0, isDay());
+
+        chip.setOutput(0, isDay());
     }
 
 
-
     public static class Factory extends AbstractICFactory {
+
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new DaySensorST(getServer(), sign);
         }
     }
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
     @Override
     public void trigger(ChipState chip) {
+
     }
 }

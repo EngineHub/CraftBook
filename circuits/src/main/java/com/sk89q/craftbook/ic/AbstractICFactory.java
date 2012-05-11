@@ -23,18 +23,20 @@ import org.bukkit.block.Sign;
 
 /**
  * Abstract IC factory.
- * 
+ *
  * @author sk89q
  */
 public abstract class AbstractICFactory implements ICFactory {
-    
+
     private Server server;
-    
+
     public AbstractICFactory(Server server) {
+
         this.server = server;
     }
-    
+
     protected Server getServer() {
+
         return server;
     }
 

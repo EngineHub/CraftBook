@@ -28,16 +28,19 @@ import org.bukkit.block.Sign;
 public class Marquee extends AbstractIC {
 
     public Marquee(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Marquee";
     }
 
     @Override
     public String getSignTitle() {
+
         return "MARQUEE";
     }
 
@@ -47,39 +50,40 @@ public class Marquee extends AbstractIC {
         if (!chip.getInput(0))
             return;
 
-    	boolean reverse = false;
-    	int next = 0;
-    	try {
-    		String[] st = getSign().getLine(1).split("]");
-    		if(st.length > 1) reverse = st[1].equalsIgnoreCase("r");
-    		next = Integer.parseInt(getSign().getLine(2));
-    	} catch (Exception e) {}
-    	
-    	if(next == 0) {
-    		next = (reverse) ? 3 : 1;
-    	}
+        boolean reverse = false;
+        int next = 0;
+        try {
+            String[] st = getSign().getLine(1).split("]");
+            if (st.length > 1) reverse = st[1].equalsIgnoreCase("r");
+            next = Integer.parseInt(getSign().getLine(2));
+        } catch (Exception e) {
+        }
+
+        if (next == 0) {
+            next = (reverse) ? 3 : 1;
+        }
         for (int i = 0; i < chip.getOutputCount(); i++)
             chip.setOutput(i, false); // Clear all pins
 
-    	switch (next) {
-    		case 1:
-    			chip.setOutput(1, true);
-    			break;
-    		case 2:
-    			chip.setOutput(0, true);
-    			break;
-    		case 3:
-    			chip.setOutput(2, true);
-    			break;
-    	}	
-    	
-        
-        if(reverse) next--;
+        switch (next) {
+            case 1:
+                chip.setOutput(1, true);
+                break;
+            case 2:
+                chip.setOutput(0, true);
+                break;
+            case 3:
+                chip.setOutput(2, true);
+                break;
+        }
+
+
+        if (reverse) next--;
         else next++;
-        
-        if(next==0) next=3;
-        else if(next==4) next=1;
-        
+
+        if (next == 0) next = 3;
+        else if (next == 4) next = 1;
+
         // set the next output and update sign
         getSign().setLine(2, Integer.toString(next));
         getSign().update();
@@ -89,11 +93,13 @@ public class Marquee extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Marquee(getServer(), sign);
         }
     }

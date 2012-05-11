@@ -22,47 +22,50 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manages known registered ICs. For an IC to be detected in-world through
- * CraftBook, the IC's factory has to be registered with this manager.
- * 
+ * Manages known registered ICs. For an IC to be detected in-world through CraftBook, the IC's factory has to be
+ * registered with this manager.
+ *
  * @author sk89q
  */
 public class ICManager {
-    
+
     /**
      * Holds a map of registered IC factories with their ID.
-     * 
+     *
      * @see RegisteredICFactory
      */
     protected Map<String, RegisteredICFactory> registered
             = new HashMap<String, RegisteredICFactory>();
-    
+
     /**
-     * Register an IC with the manager. The casing of the ID can be of any
-     * case because IC IDs are case-insensitive. Re-using an already
-     * registered name will override the previous registration.
-     * 
-     * @param id case-insensitive ID (such as MC1001)
-     * @param factory factory to create ICs
+     * Register an IC with the manager. The casing of the ID can be of any case because IC IDs are case-insensitive.
+     * Re-using an already registered name will override the previous registration.
+     *
+     * @param id           case-insensitive ID (such as MC1001)
+     * @param factory      factory to create ICs
      * @param nativeFamily the native family for the IC
      */
     public void register(String id, ICFactory factory, ICFamily nativeFamily) {
+
         RegisteredICFactory registration
                 = new RegisteredICFactory(id, factory, nativeFamily);
-        
+
         // Lowercase the ID so that we can do case in-sensitive lookups
         registered.put(id.toLowerCase(), registration);
     }
-    
+
     /**
      * Get an IC registration by a provided ID.
-     * 
+     *
      * @param id case insensitive ID
+     *
      * @return registration
+     *
      * @see RegisteredICFactory
      */
     public RegisteredICFactory get(String id) {
+
         return registered.get(id.toLowerCase());
     }
-    
+
 }
