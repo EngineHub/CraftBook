@@ -20,6 +20,8 @@ package com.sk89q.craftbook.bukkit;
 
 import java.io.File;
 
+import com.sk89q.craftbook.gates.LogicICSet;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -30,9 +32,6 @@ import com.sk89q.craftbook.circuits.*;
 import com.sk89q.craftbook.gates.logic.*;
 import com.sk89q.craftbook.gates.weather.*;
 import com.sk89q.craftbook.gates.world.*;
-import com.sk89q.craftbook.ic.ICFamily;
-import com.sk89q.craftbook.ic.ICManager;
-import com.sk89q.craftbook.ic.ICMechanicFactory;
 import com.sk89q.craftbook.ic.families.*;
 
 /**
@@ -44,7 +43,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     
     protected CircuitsConfiguration config;
     protected ICManager icManager;
-    private PermissionsResolverManager perms;
     private MechanicManager manager;
     private static CircuitsPlugin instance;
     
@@ -67,7 +65,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
                 
         PermissionsResolverManager.initialize(this);
-        perms = PermissionsResolverManager.getInstance();
+        PermissionsResolverManager perms = PermissionsResolverManager.getInstance();
                 
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
@@ -75,7 +73,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         
         File midi = new File(getDataFolder(),"midi/");
         if(!midi.exists())
-        	midi.mkdir();
+        	if(!midi.mkdir())
+                logger.warning("Failed to create midi directory");
         
         registerICs();
         
@@ -107,13 +106,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily family3ISO = new Family3ISO();
         ICFamily familySI3O = new FamilySI3O();
         //ICFamily family3I3O = new Family3I3O();
+
+        registerIcSet(new LogicICSet(server));
         
         //SISOs
-        icManager.register("MC1000", new Repeater.Factory(server), familySISO);
-        icManager.register("MC1001", new Inverter.Factory(server), familySISO);
-        icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
-        icManager.register("MC1018", new ToggleFlipFlop.Factory(server, false), familySISO);
-        icManager.register("MC1020", new RandomBit.Factory(server), familySISO);
         icManager.register("MC1025", new ServerTimeModulus.Factory(server), familySISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server), familySISO);
@@ -140,25 +136,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1262", new LightSensor.Factory(server), familySISO);
         icManager.register("MC1263", new BlockSensor.Factory(server), familySISO);
         icManager.register("MC1270", new Melody.Factory(server), familySISO);
-        icManager.register("MC1420", new ClockDivider.Factory(server), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server), familySISO);
         
         //SI3Os
-        icManager.register("MC2020", new Random3Bit.Factory(server), familySI3O);
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
         
         //3ISOs
-        icManager.register("MC3002", new AndGate.Factory(server), family3ISO);
-        icManager.register("MC3003", new NandGate.Factory(server), family3ISO);
-        icManager.register("MC3020", new XorGate.Factory(server), family3ISO);
-        icManager.register("MC3021", new XnorGate.Factory(server), family3ISO);
-        icManager.register("MC3030", new RsNorFlipFlop.Factory(server), family3ISO);
-        icManager.register("MC3031", new InvertedRsNandLatch.Factory(server), family3ISO);
-        icManager.register("MC3032", new JkFlipFlop.Factory(server), family3ISO);
-        icManager.register("MC3033", new RsNandLatch.Factory(server), family3ISO);
-        icManager.register("MC3034", new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
-        icManager.register("MC3036", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
-        icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
         icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);		// Restricted
 
@@ -181,7 +164,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
-        icManager.register("MC0500", new CustomClock.Factory(server), familySISO);
         //Missing: 0020 self-triggered RNG (may cause server load issues)
 	//Missing: 0262
 	//Missing: 0420     
@@ -230,12 +212,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @Override
     protected void registerEvents() {
     }
-    
-    public CircuitsConfiguration getLocalConfiguration() {
-        return config;
-    }
-    
-    public PermissionsResolverManager getPermissionsResolver() {
-        return perms;
+
+    public void registerIcSet(ICSet icSet) {
+        for(String key:icSet.getIcList()) {
+            icManager.register(key,
+                               new AbstractICTemplate.TemplateFactory(icSet.getIcTemplate(key)),
+                               icSet.getIcFamily(key));
+        }
     }
 }
