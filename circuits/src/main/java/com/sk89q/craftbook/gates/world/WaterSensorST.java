@@ -18,31 +18,35 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
 
     public WaterSensorST(Server server, Sign sign) {
+
         super(server, sign, true);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Water Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST WATER SENSOR";
     }
 
     @Override
     public void think(ChipState chip) {
+
         chip.setOutput(0, hasWater());
     }
 
@@ -50,21 +54,26 @@ public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new WaterSensorST(getServer(), sign);
         }
     }
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
+    @Override
+    public boolean isActive() {
 
-	@Override
-	public void trigger(ChipState chip) {}
+        return true;
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+
+    }
 
 }

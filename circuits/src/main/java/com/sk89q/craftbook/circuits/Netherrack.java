@@ -1,4 +1,3 @@
-
 // $Id$
 /*
  * CraftBook
@@ -20,13 +19,15 @@
 
 package com.sk89q.craftbook.circuits;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.player.PlayerInteractEvent;
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
@@ -34,39 +35,44 @@ import com.sk89q.worldedit.bukkit.*;
  * @author sk89q
  */
 public class Netherrack extends AbstractMechanic {
-    
-	public static class Factory extends AbstractMechanicFactory<Netherrack> {
+
+    public static class Factory extends AbstractMechanicFactory<Netherrack> {
+
         public Factory() {
+
         }
-        
+
         @Override
         public Netherrack detect(BlockWorldVector pt) {
+
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
-            
+
             if (type == BlockID.NETHERRACK) {
                 return new Netherrack(pt);
             }
-            
+
             return null;
         }
     }
-	
+
     /**
      * Construct the mechanic for a location.
-     * 
+     *
      * @param pt
      */
     private Netherrack(BlockWorldVector pt) {
+
         super();
     }
-    
+
     /**
      * Raised when an input redstone current changes.
      */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
         Block above = event.getBlock().getRelative(0, 1, 0);
-        
+
         if (event.getNewCurrent() > 0) {
             if (above.getTypeId() == 0) {
                 above.setTypeId(BlockID.FIRE);
@@ -77,18 +83,19 @@ public class Netherrack extends AbstractMechanic {
             }
         }
     }
-    
+
     /**
      * Raised when clicked.
      */
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
+
         if (event.getBlockFace() != BlockFace.UP) {
             return;
         }
-        
+
         Block block = event.getClickedBlock();
-        
+
         if (block.isBlockIndirectlyPowered()) {
             event.setCancelled(true);
             return;
@@ -98,20 +105,22 @@ public class Netherrack extends AbstractMechanic {
             event.setCancelled(true);
         }
     }
-    
+
     /**
      * Unload this mechanic.
      */
     @Override
     public void unload() {
+
     }
-	
+
     /**
      * Check if this mechanic is still active.
      */
     @Override
     public boolean isActive() {
+
         return false;
     }
-	
+
 }

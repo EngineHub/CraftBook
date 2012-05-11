@@ -18,52 +18,61 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 
     public LavaSensorST(Server server, Sign sign, boolean risingEdge) {
+
         super(server, sign, risingEdge);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST LAVA SENSOR";
     }
 
     @Override
     public void think(ChipState chip) {
+
         chip.setOutput(0, hasLava());
     }
 
     public static class Factory extends AbstractICFactory {
-    	
+
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new LavaSensorST(getServer(), sign, true);
         }
     }
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
+    @Override
+    public boolean isActive() {
 
-	@Override
-	public void trigger(ChipState chip) {}
+        return true;
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+
+    }
 
 }
