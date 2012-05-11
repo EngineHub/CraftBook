@@ -16,36 +16,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.families;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import org.bukkit.*;
+import org.bukkit.block.*;
 
 /**
- * A base abstract IC that all ICs can inherit from.
+ * IC utility functions.
  * 
  * @author sk89q
  */
-public abstract class AbstractIC implements IC {
+public class ICUtil {
     
-    private Server server;
-    private Sign sign;
-    
-    public AbstractIC(Server server, Sign block) {
-        this.server = server;
-        this.sign = block;
+    private ICUtil() {
     }
     
-    protected Server getServer() {
-        return server;
+    /**
+     * Set an IC's output state at a block.
+     * 
+     * @param block
+     * @param state
+     * @return whether something was changed
+     */
+    public static boolean setState(Block block, boolean state) {
+        if (block.getType() != Material.LEVER) return false;
+        byte data = block.getData();
+        int newData = data & 0x7;
+        
+        if (!state)
+            newData = data & 0x7;
+        else
+            newData = data | 0x8;
+        
+        if (newData != data) {
+            block.setData((byte)newData, true);
+            return true;
+        }
+        return false;
     }
-    
-    protected Sign getSign() {
-        return sign;
-    }
-
-    @Override
-    public void unload() {
-    }
-
 }

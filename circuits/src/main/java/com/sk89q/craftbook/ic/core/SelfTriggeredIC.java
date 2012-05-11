@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
 
 /**
  * Represents a self-triggered IC. Self-triggered ICs can think on their own

@@ -17,8 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.set;
 
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.ICVerificationException;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
@@ -62,7 +64,7 @@ public interface ICTemplate {
      * IC.
      *
      * @param sign The sign to verify.
-     * @throws ICVerificationException
+     * @throws com.sk89q.craftbook.ic.core.ICVerificationException
      *             if the area of the world defined by the sign does not
      *             represent a valid setup for this type of IC.
      */

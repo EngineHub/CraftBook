@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
 
 /**
  * Integrated circuits are represented by this interface. For self-triggered

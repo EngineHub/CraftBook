@@ -3,13 +3,13 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.ic.core.AbstractICFactory;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.IC;
+import com.sk89q.craftbook.ic.core.RestrictedIC;
+import com.sk89q.craftbook.ic.core.SelfTriggeredIC;
 
-public class EntityTrapST extends EntityTrap implements SelfTriggeredIC{
+public class EntityTrapST extends EntityTrap implements SelfTriggeredIC {
 
 	public EntityTrapST(Server server, Sign sign) {
 		super(server, sign);
@@ -33,7 +33,7 @@ public class EntityTrapST extends EntityTrap implements SelfTriggeredIC{
 
 
 	public static class Factory extends AbstractICFactory implements
-	RestrictedIC {
+            RestrictedIC {
 
 		public Factory(Server server) {
 			super(server);

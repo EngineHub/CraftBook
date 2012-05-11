@@ -16,8 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
 
-public interface RestrictedIC {
+/**
+ * Base IC family.
+ * 
+ * @author sk89q
+ */
+public abstract class AbstractICFamily implements ICFamily {
 
 }

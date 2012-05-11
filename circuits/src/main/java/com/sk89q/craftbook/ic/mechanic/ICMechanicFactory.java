@@ -16,10 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.mechanic;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.sk89q.craftbook.ic.core.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import com.sk89q.craftbook.AbstractMechanicFactory;

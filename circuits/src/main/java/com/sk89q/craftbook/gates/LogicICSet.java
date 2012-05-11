@@ -19,8 +19,10 @@
 
 package com.sk89q.craftbook.gates;
 
+import com.sk89q.craftbook.ic.core.ChipState;
 import com.sk89q.craftbook.ic.families.*;
-import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.ic.set.ICSet;
+import com.sk89q.craftbook.ic.set.ICSetTrigger;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 

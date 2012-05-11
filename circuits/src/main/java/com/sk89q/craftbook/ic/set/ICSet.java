@@ -17,8 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.set;
 
+import com.sk89q.craftbook.ic.core.ICFamily;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.ICVerificationException;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 

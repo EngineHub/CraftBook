@@ -16,43 +16,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 /**
- * Stores a mapping for a registered IC factory with its native family. This
- * is used in {@link ICManager}.
+ * A base abstract IC that all ICs can inherit from.
  * 
  * @author sk89q
  */
-public class RegisteredICFactory {
+public abstract class AbstractIC implements IC {
     
-    protected String id;
-    protected ICFactory factory;
-    protected ICFamily family;
+    private Server server;
+    private Sign sign;
     
-    /**
-     * Construct the object.
-     * 
-     * @param id 
-     * @param factory
-     * @param family
-     */
-    public RegisteredICFactory(String id, ICFactory factory, ICFamily family) {
-        this.id = id;
-        this.factory = factory;
-        this.family = family;
+    public AbstractIC(Server server, Sign block) {
+        this.server = server;
+        this.sign = block;
     }
     
-    public String getId() {
-        return id;
+    protected Server getServer() {
+        return server;
     }
     
-    public ICFactory getFactory() {
-        return factory;
+    protected Sign getSign() {
+        return sign;
     }
-    
-    public ICFamily getFamily() {
-        return family;
+
+    @Override
+    public void unload() {
     }
-    
+
 }

@@ -16,29 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
 
+import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.worldedit.*;
-
 /**
- * IC families handle the logic required in figuring out where pins are
- * located and reading them. One ICFamily instance is created and attached
- * to the IC manager.
+ * Abstract IC factory.
  * 
  * @author sk89q
  */
-public interface ICFamily {
+public abstract class AbstractICFactory implements ICFactory {
     
-    /**
-     * Return a {@link ChipState} that provides an interface to access
-     * the I/O pins.
-     * 
-     * @param source 
-     * @param sign
-     * @return
-     */
-    public ChipState detect(BlockWorldVector source, Sign sign);
+    private Server server;
     
+    public AbstractICFactory(Server server) {
+        this.server = server;
+    }
+    
+    protected Server getServer() {
+        return server;
+    }
+
+    public void verify(Sign sign) throws ICVerificationException {
+        // No default check needed; if the sign just has the right ID string,
+        // that's good enough in most cases.
+    }
 }

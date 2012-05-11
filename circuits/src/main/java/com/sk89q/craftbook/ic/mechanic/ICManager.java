@@ -16,7 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.mechanic;
+
+import com.sk89q.craftbook.ic.core.ICFactory;
+import com.sk89q.craftbook.ic.core.ICFamily;
 
 import java.util.HashMap;
 import java.util.Map;

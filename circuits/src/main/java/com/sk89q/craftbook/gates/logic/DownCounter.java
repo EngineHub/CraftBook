@@ -1,8 +1,11 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.core.AbstractIC;
+import com.sk89q.craftbook.ic.core.AbstractICFactory;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.IC;
 import org.bukkit.*;
 import org.bukkit.block.*;
-import com.sk89q.craftbook.ic.*;
 
 /**
  * Counter counts down each time clock input toggles from low to high, it starts 

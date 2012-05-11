@@ -21,7 +21,11 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 
 import com.sk89q.craftbook.gates.LogicICSet;
-import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.ic.core.ICFamily;
+import com.sk89q.craftbook.ic.mechanic.ICManager;
+import com.sk89q.craftbook.ic.mechanic.ICMechanicFactory;
+import com.sk89q.craftbook.ic.set.AbstractICTemplate;
+import com.sk89q.craftbook.ic.set.ICSet;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;

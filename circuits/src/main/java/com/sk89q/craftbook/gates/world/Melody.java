@@ -12,14 +12,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.core.AbstractIC;
+import com.sk89q.craftbook.ic.core.AbstractICFactory;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.IC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
 
-public class Melody extends AbstractIC{
+public class Melody extends AbstractIC {
 
 	MidiJingleSequencer sequencer;
 	JingleNoteComponent jNote = new JingleNoteComponent();

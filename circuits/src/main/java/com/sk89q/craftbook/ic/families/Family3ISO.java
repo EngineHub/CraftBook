@@ -18,9 +18,8 @@
 
 package com.sk89q.craftbook.ic.families;
 
-import com.sk89q.craftbook.ic.AbstractICFamily;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.core.AbstractICFamily;
+import com.sk89q.craftbook.ic.core.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.bukkit.*;

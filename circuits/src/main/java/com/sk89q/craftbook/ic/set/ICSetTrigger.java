@@ -1,6 +1,6 @@
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.set;
 
-import com.sk89q.craftbook.ic.families.FamilySISO;
+import com.sk89q.craftbook.ic.core.ICFamily;
 
 import java.lang.annotation.*;
 

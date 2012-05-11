@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.set;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

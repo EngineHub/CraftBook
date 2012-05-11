@@ -18,9 +18,12 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.core.AbstractICFactory;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.IC;
+import com.sk89q.craftbook.ic.core.SelfTriggeredIC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.*;
 
 public class DaySensorST extends DaySensor implements SelfTriggeredIC {
 

@@ -20,14 +20,14 @@ package com.sk89q.craftbook.gates.logic;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.ic.core.AbstractIC;
+import com.sk89q.craftbook.ic.core.AbstractICFactory;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.IC;
+import com.sk89q.craftbook.ic.core.ICVerificationException;
+import com.sk89q.craftbook.ic.core.SelfTriggeredIC;
 
-public class Monostable extends AbstractIC implements SelfTriggeredIC{
+public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
 	Sign sign;
 	//"Temp docs": nn:[HL] nn - time for pulse (1 = 2t) H: trigger on high 	L: trigger on low

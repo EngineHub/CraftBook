@@ -16,30 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
 
-import com.sk89q.craftbook.*;
+public interface RestrictedIC {
 
-/**
- * Thrown when an IC verification fails.
- * 
- * @author sk89q
- */
-public class ICVerificationException extends InvalidMechanismException {
-    
-    private static final long serialVersionUID = -6417847809527566970L;
-
-    public ICVerificationException(String msg, Throwable throwable) {
-        super(msg, throwable);
-    }
-
-    public ICVerificationException(String msg) {
-        super(msg);
-    }
-
-    public ICVerificationException(Throwable throwable) {
-        super(throwable);
-    }
-    
-    
 }

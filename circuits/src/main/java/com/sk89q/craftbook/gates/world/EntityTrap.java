@@ -7,14 +7,14 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.core.AbstractIC;
+import com.sk89q.craftbook.ic.core.AbstractICFactory;
+import com.sk89q.craftbook.ic.core.ChipState;
+import com.sk89q.craftbook.ic.core.IC;
+import com.sk89q.craftbook.ic.core.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
-public class EntityTrap extends AbstractIC{
+public class EntityTrap extends AbstractIC {
 
 	public EntityTrap(Server server, Sign sign) {
 		super(server, sign);
@@ -89,7 +89,7 @@ public class EntityTrap extends AbstractIC{
     }
 
 	public static class Factory extends AbstractICFactory implements
-	RestrictedIC {
+            RestrictedIC {
 
 		public Factory(Server server) {
 			super(server);

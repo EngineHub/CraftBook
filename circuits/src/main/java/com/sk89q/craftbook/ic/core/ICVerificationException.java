@@ -16,42 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.ic;
+package com.sk89q.craftbook.ic.core;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
+import com.sk89q.craftbook.*;
 
 /**
- * IC utility functions.
+ * Thrown when an IC verification fails.
  * 
  * @author sk89q
  */
-public class ICUtil {
+public class ICVerificationException extends InvalidMechanismException {
     
-    private ICUtil() {
+    private static final long serialVersionUID = -6417847809527566970L;
+
+    public ICVerificationException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
+
+    public ICVerificationException(String msg) {
+        super(msg);
+    }
+
+    public ICVerificationException(Throwable throwable) {
+        super(throwable);
     }
     
-    /**
-     * Set an IC's output state at a block.
-     * 
-     * @param block
-     * @param state
-     * @return whether something was changed
-     */
-    public static boolean setState(Block block, boolean state) {
-        if (block.getType() != Material.LEVER) return false;
-        byte data = block.getData();
-        int newData = data & 0x7;
-        
-        if (!state)
-            newData = data & 0x7;
-        else
-            newData = data | 0x8;
-        
-        if (newData != data) {
-            block.setData((byte)newData, true);
-            return true;
-        }
-        return false;
-    }
+    
 }
