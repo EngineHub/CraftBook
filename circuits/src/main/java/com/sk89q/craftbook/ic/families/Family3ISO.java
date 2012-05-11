@@ -24,7 +24,6 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.bukkit.*;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -32,13 +31,14 @@ import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the triple-input single-output family.
- * 
+ *
  * @author robhol
  */
 public class Family3ISO extends AbstractICFamily {
 
     @Override
     public ChipState detect(BlockWorldVector source, Sign sign) {
+
         return new ChipState3ISO(source, sign);
     }
 
@@ -48,11 +48,13 @@ public class Family3ISO extends AbstractICFamily {
         protected BlockWorldVector source;
 
         public ChipState3ISO(BlockWorldVector source, Sign sign) {
+
             this.sign = sign;
             this.source = source;
         }
 
         protected Block getBlock(int pin) {
+
             switch (pin) {
                 case 0:
                     return SignUtil.getFrontBlock(sign.getBlock());
@@ -70,6 +72,7 @@ public class Family3ISO extends AbstractICFamily {
 
         @Override
         public boolean get(int pin) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 return block.isBlockIndirectlyPowered();
@@ -80,6 +83,7 @@ public class Family3ISO extends AbstractICFamily {
 
         @Override
         public void set(int pin, boolean value) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 ICUtil.setState(block, value);
@@ -90,6 +94,7 @@ public class Family3ISO extends AbstractICFamily {
 
         @Override
         public boolean isTriggered(int pin) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 return BukkitUtil.toWorldVector(block).equals(source);
@@ -100,6 +105,7 @@ public class Family3ISO extends AbstractICFamily {
 
         @Override
         public boolean isValid(int pin) {
+
             Block block = getBlock(pin);
             if (block != null) {
                 return block.getType() == Material.REDSTONE_WIRE;
@@ -110,26 +116,31 @@ public class Family3ISO extends AbstractICFamily {
 
         @Override
         public boolean getInput(int inputIndex) {
+
             return get(inputIndex);
         }
 
         @Override
         public boolean getOutput(int outputIndex) {
+
             return get(outputIndex + 3);
         }
 
         @Override
         public void setOutput(int outputIndex, boolean value) {
+
             set(outputIndex + 3, value);
         }
 
         @Override
         public int getInputCount() {
+
             return 3;
         }
 
         @Override
         public int getOutputCount() {
+
             return 1;
         }
 

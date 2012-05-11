@@ -18,27 +18,25 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.worldedit.*;
 import org.bukkit.block.Sign;
 
-import com.sk89q.worldedit.*;
-
 /**
- * IC families handle the logic required in figuring out where pins are
- * located and reading them. One ICFamily instance is created and attached
- * to the IC manager.
- * 
+ * IC families handle the logic required in figuring out where pins are located and reading them. One ICFamily instance
+ * is created and attached to the IC manager.
+ *
  * @author sk89q
  */
 public interface ICFamily {
-    
+
     /**
-     * Return a {@link ChipState} that provides an interface to access
-     * the I/O pins.
-     * 
-     * @param source 
+     * Return a {@link ChipState} that provides an interface to access the I/O pins.
+     *
+     * @param source
      * @param sign
+     *
      * @return
      */
     public ChipState detect(BlockWorldVector source, Sign sign);
-    
+
 }

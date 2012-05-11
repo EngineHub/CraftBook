@@ -20,7 +20,9 @@
 
 package com.sk89q.craftbook.circuits;
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.*;
@@ -32,12 +34,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author sk89q
  */
 public class GlowStone extends AbstractMechanic {
+
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
+
         public Factory() {
+
         }
 
         @Override
         public GlowStone detect(BlockWorldVector pt) {
+
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
             if (type == BlockID.GLASS || type == BlockID.LIGHTSTONE) {
@@ -54,6 +60,7 @@ public class GlowStone extends AbstractMechanic {
      * @param pt
      */
     private GlowStone(BlockWorldVector pt) {
+
         super();
     }
 
@@ -62,6 +69,7 @@ public class GlowStone extends AbstractMechanic {
      */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
         byte data;
 
         data = event.getBlock().getData();
@@ -72,12 +80,13 @@ public class GlowStone extends AbstractMechanic {
         }
         event.getBlock().setData(data, false);
     }
-    
+
     /**
      * Raised when clicked.
      */
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
+
         if (event.getClickedBlock().isBlockPowered() && event.getClickedBlock().getTypeId() == BlockID.LIGHTSTONE) {
             event.setCancelled(true);
             return;
@@ -89,6 +98,7 @@ public class GlowStone extends AbstractMechanic {
      */
     @Override
     public void unload() {
+
     }
 
     /**
@@ -96,6 +106,7 @@ public class GlowStone extends AbstractMechanic {
      */
     @Override
     public boolean isActive() {
+
         return false;
     }
 }

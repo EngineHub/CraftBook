@@ -19,7 +19,9 @@
 
 package com.sk89q.craftbook.circuits;
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.*;
@@ -30,38 +32,44 @@ import com.sk89q.worldedit.bukkit.*;
  * @author sk89q
  */
 public class JackOLantern extends AbstractMechanic {
+
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
+
         public Factory() {
+
         }
-        
+
         @Override
         public JackOLantern detect(BlockWorldVector pt) {
+
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
-            
+
             if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) {
                 return new JackOLantern(pt);
             }
-            
+
             return null;
         }
     }
-    
+
     /**
      * Construct the mechanic for a location.
-     * 
+     *
      * @param pt
      */
     private JackOLantern(BlockWorldVector pt) {
+
         super();
     }
-    
+
     /**
      * Raised when an input redstone current changes.
      */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
         byte data;
-        
+
         data = event.getBlock().getData();
         if (event.getNewCurrent() > 0) {
             event.getBlock().setTypeId(BlockID.JACKOLANTERN);
@@ -70,12 +78,13 @@ public class JackOLantern extends AbstractMechanic {
         }
         event.getBlock().setData(data, false);
     }
-    
+
     /**
      * Unload this mechanic.
      */
     @Override
     public void unload() {
+
     }
 
     /**
@@ -83,6 +92,7 @@ public class JackOLantern extends AbstractMechanic {
      */
     @Override
     public boolean isActive() {
+
         return false;
     }
 }

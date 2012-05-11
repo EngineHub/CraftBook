@@ -23,29 +23,33 @@ import org.bukkit.block.Sign;
 
 /**
  * A base abstract IC that all ICs can inherit from.
- * 
+ *
  * @author sk89q
  */
 public abstract class AbstractIC implements IC {
-    
+
     private Server server;
     private Sign sign;
-    
+
     public AbstractIC(Server server, Sign block) {
+
         this.server = server;
         this.sign = block;
     }
-    
+
     protected Server getServer() {
+
         return server;
     }
-    
+
     protected Sign getSign() {
+
         return sign;
     }
 
     @Override
     public void unload() {
+
     }
 
 }

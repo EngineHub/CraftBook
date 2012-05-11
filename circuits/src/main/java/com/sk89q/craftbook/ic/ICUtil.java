@@ -18,38 +18,41 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * IC utility functions.
- * 
+ *
  * @author sk89q
  */
 public class ICUtil {
-    
+
     private ICUtil() {
+
     }
-    
+
     /**
      * Set an IC's output state at a block.
-     * 
+     *
      * @param block
      * @param state
+     *
      * @return whether something was changed
      */
     public static boolean setState(Block block, boolean state) {
+
         if (block.getType() != Material.LEVER) return false;
         byte data = block.getData();
         int newData = data & 0x7;
-        
+
         if (!state)
             newData = data & 0x7;
         else
             newData = data | 0x8;
-        
+
         if (newData != data) {
-            block.setData((byte)newData, true);
+            block.setData((byte) newData, true);
             return true;
         }
         return false;

@@ -18,34 +18,38 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class DaySensor extends AbstractIC {
 
     protected boolean risingEdge;
 
     public DaySensor(Server server, Sign sign, boolean risingEdge) {
+
         super(server, sign);
         this.risingEdge = risingEdge;
     }
 
     @Override
     public String getTitle() {
+
         return "Day Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "DAY SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (risingEdge && chip.getInput(0)
                 || (!risingEdge && !chip.getInput(0))) {
             chip.setOutput(0, isDay());
@@ -54,10 +58,11 @@ public class DaySensor extends AbstractIC {
 
     /**
      * Returns true if the current time is day.
-     * 
+     *
      * @return
      */
     protected boolean isDay() {
+
         long time = getSign().getBlock().getWorld().getTime() % 24000;
         if (time < 0)
             time += 24000;
@@ -69,12 +74,14 @@ public class DaySensor extends AbstractIC {
         protected boolean risingEdge;
 
         public Factory(Server server, boolean risingEdge) {
+
             super(server);
             this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new DaySensor(getServer(), sign, risingEdge);
         }
     }

@@ -19,40 +19,43 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * Stores a mapping for a registered IC factory with its native family. This
- * is used in {@link ICManager}.
- * 
+ * Stores a mapping for a registered IC factory with its native family. This is used in {@link ICManager}.
+ *
  * @author sk89q
  */
 public class RegisteredICFactory {
-    
+
     protected String id;
     protected ICFactory factory;
     protected ICFamily family;
-    
+
     /**
      * Construct the object.
-     * 
-     * @param id 
+     *
+     * @param id
      * @param factory
      * @param family
      */
     public RegisteredICFactory(String id, ICFactory factory, ICFamily family) {
+
         this.id = id;
         this.factory = factory;
         this.family = family;
     }
-    
+
     public String getId() {
+
         return id;
     }
-    
+
     public ICFactory getFactory() {
+
         return factory;
     }
-    
+
     public ICFamily getFamily() {
+
         return family;
     }
-    
+
 }

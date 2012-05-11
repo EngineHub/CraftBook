@@ -18,54 +18,56 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeControlAdvanced extends AbstractIC {
 
     protected boolean risingEdge;
 
     public TimeControlAdvanced(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Advanced Time Control";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ADV TIME CONTROL";
     }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (chip.isTriggered(0) && chip.getInput(0)) {
-			int time;
-			boolean t = chip.get(1);
-			if (t)
-				time = (8 - 8 + 24) * 1000;
-			else
-				time = (0 - 8 + 24) * 1000;
-			getSign().getWorld().setTime(time);
-		}
-	}
+    @Override
+    public void trigger(ChipState chip) {
+
+        if (chip.isTriggered(0) && chip.getInput(0)) {
+            int time;
+            boolean t = chip.get(1);
+            if (t)
+                time = (8 - 8 + 24) * 1000;
+            else
+                time = (0 - 8 + 24) * 1000;
+            getSign().getWorld().setTime(time);
+        }
+    }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new TimeControlAdvanced(getServer(), sign);
         }
     }
