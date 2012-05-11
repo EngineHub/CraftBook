@@ -13,22 +13,30 @@ import java.util.Iterator;
 import java.util.List;
 
 public class PlayerUtil {
+
     // DO NOT INSTANTIATE ME!!!!!
-    private PlayerUtil() {}
+    private PlayerUtil() {
+
+    }
 
     /**
      * Checks to see if the sender is a player, otherwise throw an exception.
      *
      * @param sender
+     *
      * @return
+     *
      * @throws com.sk89q.minecraft.util.commands.CommandException
+     *
      */
     public static Player checkPlayer(CommandSender sender)
             throws CommandException {
+
         if (sender instanceof Player) {
             return (Player) sender;
         } else {
-            throw new CommandException("A player context is required. (Specify a world or player if the command supports it.)");
+            throw new CommandException("A player context is required. (Specify a world or player if the command " +
+                    "supports it.)");
         }
     }
 
@@ -36,9 +44,11 @@ public class PlayerUtil {
      * Match player names.
      *
      * @param filter
+     *
      * @return
      */
     public static List<Player> matchPlayerNames(String filter) {
+
         Player[] players = CircuitsPlugin.server.getOnlinePlayers();
         boolean useDisplayNames = true;
 
@@ -50,7 +60,7 @@ public class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().equalsIgnoreCase(filter)
-                    || (useDisplayNames 
+                        || (useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter))) {
                     List<Player> list = new ArrayList<Player>();
                     list.add(player);
@@ -67,7 +77,7 @@ public class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().toLowerCase().contains(filter)
-                    || (useDisplayNames 
+                        || (useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter))) {
                     list.add(player);
                 }
@@ -81,7 +91,7 @@ public class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().toLowerCase().startsWith(filter)
-                    || (useDisplayNames 
+                        || (useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter))) {
                     list.add(player);
                 }
@@ -92,11 +102,12 @@ public class PlayerUtil {
     }
 
     /**
-     * Checks if the given list of players is greater than size 0, otherwise
-     * throw an exception.
+     * Checks if the given list of players is greater than size 0, otherwise throw an exception.
      *
      * @param players
+     *
      * @return
+     *
      * @throws CommandException
      */
     protected static Iterable<Player> checkPlayerMatch(List<Player> players)
@@ -114,7 +125,9 @@ public class PlayerUtil {
      *
      * @param source
      * @param filter
+     *
      * @return iterator for players
+     *
      * @throws CommandException no matches found
      */
     public static Iterable<Player> matchPlayers(CommandSender source, String filter)
@@ -178,15 +191,18 @@ public class PlayerUtil {
      *
      * @param sender
      * @param filter
+     *
      * @return
+     *
      * @throws CommandException
      */
     public static Player matchPlayerExactly(CommandSender sender, String filter)
             throws CommandException {
+
         Player[] players = CircuitsPlugin.server.getOnlinePlayers();
         for (Player player : players) {
             if (player.getName().equalsIgnoreCase(filter)
-                || (true 
+                    || (true
                     && player.getDisplayName().equalsIgnoreCase(filter))) {
                 return player;
             }
@@ -200,7 +216,9 @@ public class PlayerUtil {
      *
      * @param sender
      * @param filter
+     *
      * @return
+     *
      * @throws CommandException
      */
     public static Player matchSinglePlayer(CommandSender sender, String filter)
@@ -226,7 +244,9 @@ public class PlayerUtil {
      *
      * @param sender
      * @param filter
+     *
      * @return
+     *
      * @throws CommandException
      */
     public static CommandSender matchPlayerOrConsole(CommandSender sender, String filter)
@@ -246,9 +266,11 @@ public class PlayerUtil {
      * Get a single player as an iterator for players.
      *
      * @param player
+     *
      * @return iterator for players
      */
     public static Iterable<Player> matchPlayers(Player player) {
+
         return Arrays.asList(player);
     }
 
@@ -256,9 +278,11 @@ public class PlayerUtil {
      * Gets the name of a command sender. This may be a display name.
      *
      * @param sender
+     *
      * @return
      */
     public static String toName(CommandSender sender) {
+
         return ChatColor.stripColor(toColoredName(sender, null));
     }
 
@@ -267,9 +291,11 @@ public class PlayerUtil {
      *
      * @param sender
      * @param endColor
+     *
      * @return
      */
     public static String toColoredName(CommandSender sender, ChatColor endColor) {
+
         if (sender instanceof Player) {
             String name = ((Player) sender).getDisplayName();
             if (endColor != null && name.contains("\u00A7")) {
@@ -284,13 +310,14 @@ public class PlayerUtil {
     }
 
     /**
-     * Gets the name of a command sender. This is a unique name and this
-     * method should never return a "display name".
+     * Gets the name of a command sender. This is a unique name and this method should never return a "display name".
      *
      * @param sender
+     *
      * @return
      */
     public static String toUniqueName(CommandSender sender) {
+
         if (sender instanceof Player) {
             return (sender).getName();
         } else {

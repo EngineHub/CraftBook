@@ -19,59 +19,60 @@
 package com.sk89q.craftbook.ic;
 
 /**
- * Represents a chip state. Chip states provide information about pin
- * inputs and outputs.
- * 
+ * Represents a chip state. Chip states provide information about pin inputs and outputs.
+ *
  * @author sk89q
  * @author sturmeh
  */
 public interface ChipState {
-    
+
     /**
      * Gets the value at a pin.
-     * 
+     *
      * @param pin
+     *
      * @return
      */
     public boolean get(int pin);
-    
+
     /*
-     * Gets the value for an input.
-     * 
-     * @param inputIndex 0-indexed number
-     * @return
-     */
+    * Gets the value for an input.
+    *
+    * @param inputIndex 0-indexed number
+    * @return
+    */
     public boolean getInput(int inputIndex);
-    
+
     /*
-     * Gets the value for an output.
-     * 
-     * @param outputIndex 0-indexed number
-     * @return
-     */
+    * Gets the value for an output.
+    *
+    * @param outputIndex 0-indexed number
+    * @return
+    */
     public boolean getOutput(int outputIndex);
-    
+
     /**
      * Set a pin's value.
-     * 
+     *
      * @param pin
      * @param value
      */
     public void set(int pin, boolean value);
-    
+
     /*
-     * Sets the value for an output.
-     * 
-     * @param outputIndex 0-indexed number
-     * @return
-     */
+    * Sets the value for an output.
+    *
+    * @param outputIndex 0-indexed number
+    * @return
+    */
     public void setOutput(int outputIndex, boolean value);
-    
+
     /**
      * Returns whether this pin was triggered.
-     * 
+     *
      * @param pin
-     * @return 
+     *
+     * @return
      */
     public boolean isTriggered(int pin);
 
@@ -79,22 +80,23 @@ public interface ChipState {
      * Returns whether this pin is connected and valid
      *
      * @param pin
+     *
      * @return
      */
     public boolean isValid(int pin);
 
     /**
      * Get the number of inputs.
-     * 
+     *
      * @return
      */
     public int getInputCount();
 
     /**
      * Get the number of outputs.
-     * 
+     *
      * @return
      */
     public int getOutputCount();
-    
+
 }

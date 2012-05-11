@@ -48,6 +48,7 @@ public class JingleNoteComponent implements Listener {
     }
 
     public void disable() {
+
         jingleNoteManager.stopAll();
     }
 
@@ -57,11 +58,13 @@ public class JingleNoteComponent implements Listener {
      * @return
      */
     public JingleNoteManager getJingleNoteManager() {
+
         return jingleNoteManager;
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+
         MidiJingleSequencer sequencer;
 
         try {
@@ -71,24 +74,26 @@ public class JingleNoteComponent implements Listener {
                 getJingleNoteManager().play(event.getPlayer(), sequencer, 2000);
             }
         } catch (MidiUnavailableException e) {
-        	CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to access MIDI: "
+            CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to access MIDI: "
                     + e.getMessage());
         } catch (InvalidMidiDataException e) {
-        	CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to read intro MIDI file: "
+            CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to read intro MIDI file: "
                     + e.getMessage());
         } catch (FileNotFoundException ignored) {
         } catch (IOException e) {
-        	CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to read intro MIDI file: "
+            CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to read intro MIDI file: "
                     + e.getMessage());
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+
         getJingleNoteManager().stop(event.getPlayer());
     }
 
     public class Commands {
+
         public void intro(CommandContext args, CommandSender sender) throws CommandException {
 
             Iterable<Player> targets;
@@ -97,10 +102,10 @@ public class JingleNoteComponent implements Listener {
             } else {
                 targets = PlayerUtil.matchPlayers(sender, args.getString(0));
             }
-            
+
             for (Player target : targets) {
                 if (target != sender) {
-                	CircuitsPlugin.getInst().hasPermission(sender, "commandbook.intro.other");
+                    CircuitsPlugin.getInst().hasPermission(sender, "commandbook.intro.other");
                     break;
                 }
             }
@@ -130,6 +135,7 @@ public class JingleNoteComponent implements Listener {
                 usage = "[-p player] [midi]", desc = "Play a MIDI file", flags = "p:",
                 min = 0, max = 1)
         public void midi(CommandContext args, CommandSender sender) throws CommandException {
+
             Iterable<Player> targets;
             if (args.hasFlag('p')) {
                 targets = PlayerUtil.matchPlayers(sender, args.getFlag('p'));

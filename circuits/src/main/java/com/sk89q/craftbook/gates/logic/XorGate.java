@@ -22,62 +22,63 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
 public class XorGate extends AbstractIC {
 
     public XorGate(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "XOR Gate";
     }
 
     @Override
     public String getSignTitle() {
+
         return "XOR";
     }
 
     @Override
-    public void trigger(ChipState chip)
-    {
+    public void trigger(ChipState chip) {
 
-    	Boolean a = null;
-    	Boolean b = null;
-    	
-    	//New input handling: any/first two valid inputs discovered. Moar flexibility!
-    	for (int i = 0; i < chip.getInputCount(); i++)
-    	{
-    		if (chip.isValid(i))
-    		{
-    			boolean pinval = chip.getInput(i);
-    			//Got pin value, assign to first free variable, break if got both.
-    			if (a == null) a = pinval;
-    			else if (b == null) b = pinval;
-    			else break;
-    		}
-    	}
-    	
-    	if (a == null || b == null)
-    		return;
-    	
-    	boolean result = (a || b) && !(a && b);
-    	chip.setOutput(0, result);
-        
+        Boolean a = null;
+        Boolean b = null;
+
+        //New input handling: any/first two valid inputs discovered. Moar flexibility!
+        for (int i = 0; i < chip.getInputCount(); i++) {
+            if (chip.isValid(i)) {
+                boolean pinval = chip.getInput(i);
+                //Got pin value, assign to first free variable, break if got both.
+                if (a == null) a = pinval;
+                else if (b == null) b = pinval;
+                else break;
+            }
+        }
+
+        if (a == null || b == null)
+            return;
+
+        boolean result = (a || b) && !(a && b);
+        chip.setOutput(0, result);
+
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new XorGate(getServer(), sign);
         }
     }

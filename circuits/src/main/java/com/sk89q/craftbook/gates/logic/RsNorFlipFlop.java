@@ -28,45 +28,48 @@ import org.bukkit.block.Sign;
 public class RsNorFlipFlop extends AbstractIC {
 
     public RsNorFlipFlop(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "RS-NOR flip-flop";
     }
 
     @Override
     public String getSignTitle() {
+
         return "RS-NOR";
     }
 
     @Override
-    public void trigger(ChipState chip)
-    {
+    public void trigger(ChipState chip) {
 
-    	boolean set = chip.get(0);
-    	boolean reset = chip.get(1) || chip.get(2);
-    	
-    	if (reset)
-    	{
-    		chip.set(3, false);
-    		return;
-    	}
-    	
-    	if (set)
-    		chip.set(3, true);
-    	
+        boolean set = chip.get(0);
+        boolean reset = chip.get(1) || chip.get(2);
+
+        if (reset) {
+            chip.set(3, false);
+            return;
+        }
+
+        if (set)
+            chip.set(3, true);
+
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new RsNorFlipFlop(getServer(), sign);
         }
     }

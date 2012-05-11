@@ -26,36 +26,44 @@ import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
 public class EdgeTriggerDFlipFlop extends AbstractIC {
+
     public EdgeTriggerDFlipFlop(Server server, Sign sign) {
+
         super(server, sign);
     }
-    
+
     @Override
     public String getTitle() {
+
         return "Edge triggered D flip-flop";
     }
-    
+
     @Override
     public String getSignTitle() {
+
         return "EDGE-D";
     }
-    
+
     @Override
     public void trigger(ChipState chip) {
-    	if (chip.get(2)) // reset
-    		chip.set(3, false);
-    	else if (chip.get(1) && chip.isTriggered(1)) // clock, rising signal only
-    		chip.set(3, chip.get(0));
-    	
+
+        if (chip.get(2)) // reset
+            chip.set(3, false);
+        else if (chip.get(1) && chip.isTriggered(1)) // clock, rising signal only
+            chip.set(3, chip.get(0));
+
     }
-    
+
     public static class Factory extends AbstractICFactory {
+
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new EdgeTriggerDFlipFlop(getServer(), sign);
         }
     }
