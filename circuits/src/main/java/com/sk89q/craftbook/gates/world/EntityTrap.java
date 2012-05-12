@@ -6,6 +6,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class EntityTrap extends AbstractIC {
@@ -52,7 +53,7 @@ public class EntityTrap extends AbstractIC {
         int z = b.getZ();
         Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         World w = getSign().getBlock().getWorld();
-        for (Player p : w.getEntitiesByClass(Player.class)) {
+        for (LivingEntity p : w.getEntitiesByClass(LivingEntity.class)) {
             int ix = p.getLocation().getBlockX();
             int iy = p.getLocation().getBlockY();
             int iz = p.getLocation().getBlockZ();
