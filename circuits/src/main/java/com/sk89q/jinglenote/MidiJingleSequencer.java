@@ -27,7 +27,7 @@ import javax.sound.midi.ShortMessage;
  */
 public class MidiJingleSequencer implements JingleSequencer {
     
-    private static final int[] instruments = {
+    private static final int[] instruments = { //Is this right? TODO check.
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
