@@ -66,27 +66,57 @@ public class ChestCollector extends AbstractIC{
     				if(((Chest) bl.getState()).getInventory().firstEmpty()!=-1)
     				{
     					int id = -1;
+    					int idmeta = -1;
     					int exid = -1;
+    					int exidmeta = -1;
     					try
     					{
-    						id = Integer.parseInt(getSign().getLine(2));
+    						if(getSign().getLine(2).contains(":"))
+    						{
+    							id = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+    							idmeta = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+    						}
+    						else
+    							id = Integer.parseInt(getSign().getLine(2));
     					}
     					catch(Exception e){}
     					try
     					{
-    						exid = Integer.parseInt(getSign().getLine(3));
+    						if(getSign().getLine(3).contains(":"))
+    						{
+    							exid = Integer.parseInt(getSign().getLine(3).split(":")[0]);
+    							exidmeta = Integer.parseInt(getSign().getLine(3).split(":")[1]);
+    						}
+    						else
+    							exid = Integer.parseInt(getSign().getLine(3));
     					}
     					catch(Exception e){}
     					if(exid!=-1)
     					{
     						if(exid==item.getItemStack().getTypeId())
-    							continue;
+    						{
+    							if(exidmeta!=-1)
+    							{
+    								if(item.getItemStack().getData().getData() == exidmeta)
+    									continue;
+    							}
+    							else
+    								continue;
+    						}
     					}
 
     					if(id!=-1)
     					{
     						if(id!=item.getItemStack().getTypeId())
-    							continue;
+    						{
+    							if(idmeta!=-1)
+    							{
+    								if(item.getItemStack().getData().getData() != idmeta)
+    									continue;
+    							}
+    							else
+    								continue;
+    						}
     					}
 	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
 	    				item.remove();
