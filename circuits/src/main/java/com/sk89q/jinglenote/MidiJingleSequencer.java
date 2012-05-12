@@ -98,7 +98,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         int n = msg.getData1();
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
-                            notePlayer.play(toMCPercussion(patches.get(chan)), toMCNote(n));
+                            //notePlayer.play(toMCPercussion(patches.get(chan)), toMCNote(n));
                         } else {
                             notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         }
