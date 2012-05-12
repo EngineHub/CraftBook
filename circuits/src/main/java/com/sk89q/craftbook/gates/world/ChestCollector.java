@@ -97,7 +97,7 @@ public class ChestCollector extends AbstractIC{
     						{
     							if(exidmeta!=-1)
     							{
-    								if(item.getItemStack().getData().getData() == exidmeta)
+    								if(item.getItemStack().getDurability() == exidmeta)
     									continue;
     							}
     							else
@@ -111,7 +111,7 @@ public class ChestCollector extends AbstractIC{
     						{
     							if(idmeta!=-1)
     							{
-    								if(item.getItemStack().getData().getData() != idmeta)
+    								if(item.getItemStack().getDurability() != idmeta)
     									continue;
     							}
     							else
