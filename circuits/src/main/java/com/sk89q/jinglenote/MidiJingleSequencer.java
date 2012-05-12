@@ -46,14 +46,14 @@ public class MidiJingleSequencer implements JingleSequencer {
         1, 1, 1, 1, 1, 2, 4, 3,
     };
     
-    /*private static int[] percussion = {
+    private static int[] percussion = {
         1, 1, 1,
         2, 3, 2, 1, 3, 1, 3, 1, 3, 1,
         1, 3, 1, 3, 3, 3, 3, 3, 0, 3,
         3, 3, 1, 1, 1, 1, 1, 1, 1, 3,
         3, 3, 3, 4, 4, 3, 3, 3, 3, 3,
         1, 1, 3, 3, 2, 4, 4, 3, 1, 1,
-    };*/
+    };
     
     protected final File midiFile;
     private Sequencer sequencer = null;
@@ -98,7 +98,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         int n = msg.getData1();
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
-                            //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
+                            notePlayer.play(toMCPercussion(patches.get(chan)), toMCNote(n));
                         } else {
                             notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         }
@@ -151,12 +151,12 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) instruments[patch];
     }
     
-    /*private static int toMCPercussion(int note) {
+    private static byte toMCPercussion(int note) {
         int i = note - 35;
         if (i < 0 || i >= percussion.length) {
             return 1;
         }
         
-        return percussion[i];
-    }*/
+        return (byte) percussion[i];
+    }
 }
