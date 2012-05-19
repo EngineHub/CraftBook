@@ -42,7 +42,7 @@ public class Melody extends AbstractIC{
 	@Override
 	public void trigger(ChipState chip) {
 		try {
-			if(chip.getInput(0))
+			if(chip.getInput(0) && sequencer == null)
 			{
 				String midiName = getSign().getLine(2);
 
@@ -84,9 +84,10 @@ public class Melody extends AbstractIC{
 					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
 				}
 			}
-			else if(!chip.getInput(0) && sequencer!=null)
+			else if(sequencer!=null && chip.getInput(0))
 			{
 				sequencer.stop();
+				sequencer = null;
 				for (Player player : getServer().getOnlinePlayers())
 				{
 					jNote.getJingleNoteManager().stop(player);
