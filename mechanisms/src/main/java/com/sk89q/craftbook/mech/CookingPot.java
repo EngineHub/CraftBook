@@ -113,10 +113,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 		lastTick++;
 		if(lastTick<50) return;
 		lastTick = 0;
-		if(debug)
-			plugin.getLogger().log(Level.SEVERE, "[CraftBook] Cooking Pot Checking");
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-		if (block.getTypeId() == BlockID.WALL_SIGN) {
+		if (block.getType() == Material.WALL_SIGN) {
 			BlockState state = block.getState();
             if (state instanceof Sign) {
                 Sign sign = (Sign) state;
@@ -124,9 +122,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 int y = sign.getBlock().getY()+2;
                 int z = sign.getBlock().getZ();
                 Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
-                if (cb.getTypeId() == BlockID.CHEST && BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z).getTypeId() == BlockID.FIRE) {
+                if (cb.getType() == Material.CHEST && BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z).getType() == Material.FIRE) {
         			BlockState s = cb.getState();
-                    if (state instanceof Chest) {
+                    if (s instanceof Chest) {
                     	Chest chest = (Chest) s;
                     	if(debug)
                     	plugin.getLogger().log(Level.SEVERE, "[CraftBook] Checking chest contents");
