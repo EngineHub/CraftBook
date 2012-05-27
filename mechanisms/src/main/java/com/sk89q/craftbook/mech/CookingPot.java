@@ -109,25 +109,22 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
 	@Override
 	public void think() {
-		boolean debug = true;
 		lastTick++;
-		if(lastTick<50) return;
+		if(lastTick<200) return;
 		lastTick = 0;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getType() == Material.WALL_SIGN) {
-			BlockState state = block.getState();
-            if (state instanceof Sign) {
-                Sign sign = (Sign) state;
+            if (block.getState() instanceof Sign) {
+            	plugin.getLogger().log(Level.SEVERE, "[FOUND SIGN]");
+                Sign sign = (Sign) block.getState();
                 int x = sign.getBlock().getX();
                 int y = sign.getBlock().getY()+2;
                 int z = sign.getBlock().getZ();
                 Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
                 if (cb.getType() == Material.CHEST && BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z).getType() == Material.FIRE) {
-        			BlockState s = cb.getState();
-                    if (s instanceof Chest) {
-                    	Chest chest = (Chest) s;
-                    	if(debug)
-                    	plugin.getLogger().log(Level.SEVERE, "[CraftBook] Checking chest contents");
+                	plugin.getLogger().log(Level.SEVERE, "[FOUND CHEST]");
+                    if (cb.getState() instanceof Chest) {
+                    	Chest chest = (Chest) cb.getState();
                     	for(ItemStack i : chest.getInventory().getContents())
                     	{
                     		if(i.getType() == Material.RAW_BEEF)
@@ -148,9 +145,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     			chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
                     			break;
                     		}
-                    		if(debug)
-                    		plugin.getLogger().log(Level.SEVERE, "[CraftBook] Found Nothing");
                     	}
+                    	plugin.getLogger().log(Level.SEVERE, "[FOUND NOTHING]");
                     }
                 }
             }
