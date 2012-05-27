@@ -38,6 +38,13 @@ public class Melody extends AbstractIC{
 	public String getSignTitle() {
 		return "MELODY";
 	}
+	
+	@Override
+	public void unload()
+	{
+		if(jNote!=null)
+			jNote.getJingleNoteManager().stopAll();
+	}
 
 	@Override
 	public void trigger(ChipState chip) {

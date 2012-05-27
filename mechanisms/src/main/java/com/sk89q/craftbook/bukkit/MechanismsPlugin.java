@@ -24,6 +24,7 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
@@ -64,6 +65,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         //manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
+        manager.register(new CookingPot.Factory(this));
         
         /*
          * Until fixed, Cauldron must be at the bottom of the registration list as 
