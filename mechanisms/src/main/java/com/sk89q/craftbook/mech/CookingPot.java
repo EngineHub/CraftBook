@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -8,11 +11,11 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -161,5 +164,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 	@Override
 	public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 		
+	}
+
+	@Override
+	public List<BlockWorldVector> getWatchedPositions() {
+		return new ArrayList<BlockWorldVector>();
 	}
 }
