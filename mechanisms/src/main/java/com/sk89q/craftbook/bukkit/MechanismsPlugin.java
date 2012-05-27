@@ -104,9 +104,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
                 + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
         
-        // Set up the clock for self-triggered ICs.
-        getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                new MechanicClock(manager), 0, 2);
+        // Set up the clock for self-triggered Mechanics.
+        getServer().getScheduler().scheduleSyncRepeatingTask(this,new MechanicClock(manager), 0, 2);
     }
 
     

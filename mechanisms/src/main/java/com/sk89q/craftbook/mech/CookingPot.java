@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -14,12 +15,13 @@ import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class CookingPot extends AbstractMechanic implements SelfTriggeringMechanic{
+public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic{
     
 	int lastTick = 0;
 	
@@ -84,8 +86,7 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
          * @throws ProcessedMechanismException 
          */
         @Override
-        public CookingPot detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
-                throws InvalidMechanismException, ProcessedMechanismException {
+        public CookingPot detect(BlockWorldVector pt, LocalPlayer player, Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) {
                     throw new InsufficientPermissionsException();
@@ -145,5 +146,20 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
                 }
             }
 		}
+	}
+
+	@Override
+	public void onRightClick(PlayerInteractEvent event) {
+		
+	}
+
+	@Override
+	public void onLeftClick(PlayerInteractEvent event) {
+		
+	}
+
+	@Override
+	public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+		
 	}
 }

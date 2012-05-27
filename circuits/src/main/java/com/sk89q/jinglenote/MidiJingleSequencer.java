@@ -124,7 +124,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     }
 
     public void stop() {
-        if (sequencer != null) {
+        if (sequencer != null && sequencer.isOpen()) {
             sequencer.close();
         }
     }
