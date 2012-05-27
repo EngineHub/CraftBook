@@ -111,27 +111,22 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 	@Override
 	public void think() {
 		lastTick++;
-		if(lastTick<200) return;
+		if(lastTick<100) return;
 		lastTick = 0;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getState() instanceof Sign) {
-			plugin.getLogger().log(Level.SEVERE, "[FOUND SIGN]");
 			Sign sign = (Sign) block.getState();
 			Block b = SignUtil.getBackBlock(sign.getBlock());
 			int x = b.getX();
 			int y = b.getY()+2;
 			int z = b.getZ();
 			Block cb = sign.getWorld().getBlockAt(x,y,z);
-			plugin.getLogger().log(Level.SEVERE, "[its a]: " + cb.getType().name());
 			if (cb.getType() == Material.CHEST) {
-				plugin.getLogger().log(Level.SEVERE, "[FOUND CHEST]");
 				Block fire = sign.getWorld().getBlockAt(x,y-1,z);
 				if(fire.getType() == Material.FIRE)
 				{
-					plugin.getLogger().log(Level.SEVERE, "[FOUND FIRE]");
 					if (cb.getState() instanceof Chest) {
 						Chest chest = (Chest) cb.getState();
-						plugin.getLogger().log(Level.SEVERE, "[SEARCHING CHEST]");
 						for(ItemStack i : chest.getInventory().getContents())
 						{
 							if(i.getType() == Material.RAW_BEEF)
@@ -152,8 +147,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 								chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
 								break;
 							}
+							if(i.getType() == Material.PORK)
+							{
+								chest.getInventory().addItem(new ItemStack(Material.GRILLED_PORK,1));
+								chest.getInventory().removeItem(new ItemStack(Material.PORK,1));
+								break;
+							}
 						}
-						plugin.getLogger().log(Level.SEVERE, "[FOUND NOTHING]");
 					}
 				}
 			}
