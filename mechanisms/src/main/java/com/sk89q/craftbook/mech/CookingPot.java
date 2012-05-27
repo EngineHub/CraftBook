@@ -111,8 +111,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 	@Override
 	public void think() {
 		lastTick++;
-		if(lastTick<100) return;
-		lastTick = 0;
+		if(lastTick<50) return;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getState() instanceof Sign) {
 			Sign sign = (Sign) block.getState();
@@ -130,31 +129,32 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 						for(ItemStack i : chest.getInventory().getContents())
 						{
 							if(i==null) continue;
-							if(i.getType() == Material.RAW_BEEF)
+							else if(i.getType() == Material.RAW_BEEF)
 							{
 								chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
 								chest.getInventory().removeItem(new ItemStack(Material.RAW_BEEF,1));
 								break;
 							}
-							if(i.getType() == Material.RAW_CHICKEN)
+							else if(i.getType() == Material.RAW_CHICKEN)
 							{
 								chest.getInventory().addItem(new ItemStack(Material.COOKED_CHICKEN,1));
 								chest.getInventory().removeItem(new ItemStack(Material.RAW_CHICKEN,1));
 								break;
 							}
-							if(i.getType() == Material.RAW_FISH)
+							else if(i.getType() == Material.RAW_FISH)
 							{
 								chest.getInventory().addItem(new ItemStack(Material.COOKED_FISH,1));
 								chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
 								break;
 							}
-							if(i.getType() == Material.PORK)
+							else if(i.getType() == Material.PORK)
 							{
 								chest.getInventory().addItem(new ItemStack(Material.GRILLED_PORK,1));
 								chest.getInventory().removeItem(new ItemStack(Material.PORK,1));
 								break;
 							}
 						}
+						lastTick = 0;
 					}
 				}
 			}
