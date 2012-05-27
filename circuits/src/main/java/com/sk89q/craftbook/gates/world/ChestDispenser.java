@@ -65,6 +65,7 @@ public class ChestDispenser extends AbstractIC{
     			{
     				int curA = is[i].getAmount();
                     ItemStack stack = is[i];
+                    stack.setAmount(1);
                     getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(), getSign().getY(), getSign().getZ()),stack);
                     is[i].setAmount(curA-amount);
                     break;
