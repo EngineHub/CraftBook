@@ -12,6 +12,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
@@ -26,7 +27,7 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic{
+public class CookingPot extends AbstractMechanic implements SelfTriggeringMechanic{
     
 	int lastTick = 0;
 	
@@ -176,8 +177,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 		
 	}
 
-	@Override
-	public List<BlockWorldVector> getWatchedPositions() {
-		return new ArrayList<BlockWorldVector>();
-	}
+	//@Override
+	//public List<BlockWorldVector> getWatchedPositions() {
+	//	return new ArrayList<BlockWorldVector>();
+	//}
 }
