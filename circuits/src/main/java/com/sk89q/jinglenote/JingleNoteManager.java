@@ -27,7 +27,7 @@ public class JingleNoteManager {
     protected final Map<String, JingleNotePlayer> instances
             = new HashMap<String, JingleNotePlayer>();
     
-    public void play(Player player, JingleSequencer sequencer, int delay) {
+    public void play(Player player, MidiJingleSequencer sequencer, int delay) {
         String name = player.getName();
         Location loc = findLocation(player);
         

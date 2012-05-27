@@ -15,13 +15,13 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 public class JingleNotePlayer implements Runnable {
     protected final Player player;
     protected final Location loc;
-    protected JingleSequencer sequencer;
+    protected MidiJingleSequencer sequencer;
     protected final int delay;
     
     protected boolean keepMusicBlock = false;
     
     public JingleNotePlayer(Player player,
-            Location loc, JingleSequencer seq,  int delay) {
+            Location loc, MidiJingleSequencer seq,  int delay) {
         this.player = player;
         this.loc = loc;
         this.sequencer = seq;
@@ -83,6 +83,15 @@ public class JingleNotePlayer implements Runnable {
         if (sequencer != null) {
             sequencer.stop();
         }
+        
+        CircuitsPlugin.server.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+            
+            public void run() {
+                int prevId = player.getWorld().getBlockTypeIdAt(loc);
+                byte prevData = player.getWorld().getBlockAt(loc).getData();
+                player.sendBlockChange(loc, prevId, prevData);
+            }
+        });
     }
     
     public void play(byte instrument, byte note) {
