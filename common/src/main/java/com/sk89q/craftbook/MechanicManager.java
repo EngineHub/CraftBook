@@ -471,7 +471,7 @@ public class MechanicManager {
         synchronized (this) {
             // Copy to array to get rid of concurrency snafus
             mechs = new SelfTriggeringMechanic[thinkingMechanics.size()];
-            thinkingMechanics.toArray(mechs);
+            mechs = thinkingMechanics.toArray(mechs);
         }
 
         for (SelfTriggeringMechanic mechanic : mechs) {
