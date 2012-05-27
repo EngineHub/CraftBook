@@ -21,6 +21,7 @@ import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -116,9 +117,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 		if (block.getState() instanceof Sign) {
 			plugin.getLogger().log(Level.SEVERE, "[FOUND SIGN]");
 			Sign sign = (Sign) block.getState();
-			int x = sign.getBlock().getX();
-			int y = sign.getBlock().getY()+2;
-			int z = sign.getBlock().getZ();
+			Block b = SignUtil.getBackBlock(sign.getBlock());
+			int x = b.getX();
+			int y = b.getY()+2;
+			int z = b.getZ();
 			Block cb = sign.getWorld().getBlockAt(x,y,z);
 			plugin.getLogger().log(Level.SEVERE, "[its a]: " + cb.getType().name());
 			if (cb.getType() == Material.CHEST) {
