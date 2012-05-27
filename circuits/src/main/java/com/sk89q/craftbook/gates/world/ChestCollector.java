@@ -99,10 +99,14 @@ public class ChestCollector extends AbstractIC{
     							{
     								if(item.getItemStack().getDurability() == exidmeta)
     									continue;
+    								else
+    									break;
     							}
     							else
     								continue;
     						}
+    						else
+								break;
     					}
 
     					if(id!=-1)
@@ -113,10 +117,14 @@ public class ChestCollector extends AbstractIC{
     							{
     								if(item.getItemStack().getDurability() != idmeta)
     									continue;
+    								else
+    									break;
     							}
     							else
     								continue;
     						}
+    						else
+								break;
     					}
 	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
 	    				item.remove();
