@@ -3,7 +3,6 @@ package com.sk89q.craftbook.mech;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +12,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
@@ -30,7 +28,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic{
     
-	int lastTick = 0;
+	protected int lastTick = 0;
 	
     /**
      * Plugin.
@@ -113,7 +111,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 	@Override
 	public void think() {
 		lastTick++;
-		if(lastTick<50) return;
+		if(lastTick<25) return;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getState() instanceof Sign) {
 			Sign sign = (Sign) block.getState();
