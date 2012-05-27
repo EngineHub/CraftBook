@@ -119,11 +119,11 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 			int x = sign.getBlock().getX();
 			int y = sign.getBlock().getY()+2;
 			int z = sign.getBlock().getZ();
-			Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
+			Block cb = sign.getWorld().getBlockAt(x,y,z);
 			plugin.getLogger().log(Level.SEVERE, "[its a]: " + cb.getType().name());
 			if (cb.getType() == Material.CHEST) {
 				plugin.getLogger().log(Level.SEVERE, "[FOUND CHEST]");
-				Block fire = BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z);
+				Block fire = sign.getWorld().getBlockAt(x,y-1,z);
 				if(fire.getType() == Material.FIRE)
 				{
 					plugin.getLogger().log(Level.SEVERE, "[FOUND FIRE]");
