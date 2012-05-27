@@ -73,6 +73,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
          */
         
         manager.register(new Cauldron.Factory(this));
+        
+        // Set up the clock for self-triggered Mechanisms.
+        getServer().getScheduler().scheduleSyncRepeatingTask(this,new MechanicClock(manager), 0, 2);
     }
     
     @Override

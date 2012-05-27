@@ -105,7 +105,7 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
 	@Override
 	public void think() {
 		lastTick++;
-		if(lastTick<200) return;
+		if(lastTick<50) return;
 		lastTick = 0;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getTypeId() == BlockID.WALL_SIGN) {
@@ -113,32 +113,28 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
             if (state instanceof Sign) {
                 Sign sign = (Sign) state;
                 int x = sign.getBlock().getX();
-                int y = sign.getBlock().getY();
+                int y = sign.getBlock().getY()+2;
                 int z = sign.getBlock().getZ();
-                y += 2;
                 Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
                 if (cb.getTypeId() == BlockID.CHEST && BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z).getTypeId() == BlockID.FIRE) {
         			BlockState s = cb.getState();
                     if (state instanceof Chest) {
                     	Chest chest = (Chest) s;
-                    	int index = -1;
                     	for(ItemStack i : chest.getInventory().getContents())
                     	{
-                    		index++;
-                    		if(!i.getType().isEdible()) continue;
-                    		if(i.getType().equals(Material.RAW_BEEF))
+                    		if(i.getType() == Material.RAW_BEEF)
                     		{
                     			chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
                     			chest.getInventory().removeItem(new ItemStack(Material.RAW_BEEF,1));
                     			break;
                     		}
-                    		if(i.getType().equals(Material.RAW_CHICKEN))
+                    		if(i.getType() == Material.RAW_CHICKEN)
                     		{
                     			chest.getInventory().addItem(new ItemStack(Material.COOKED_CHICKEN,1));
                     			chest.getInventory().removeItem(new ItemStack(Material.RAW_CHICKEN,1));
                     			break;
                     		}
-                    		if(i.getType().equals(Material.RAW_FISH))
+                    		if(i.getType() == Material.RAW_FISH)
                     		{
                     			chest.getInventory().addItem(new ItemStack(Material.COOKED_FISH,1));
                     			chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
