@@ -53,6 +53,7 @@ public class ChestDispenser extends AbstractIC{
     	int y = b.getY()+1;
     	int z = b.getZ();
     	Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+    	int amount = Integer.parseInt(getSign().getLine(2));
     	if (bl.getType() == Material.CHEST) 
     	{
     		Chest c = ((Chest) bl.getState());
@@ -60,11 +61,12 @@ public class ChestDispenser extends AbstractIC{
     		for(int i = 0; i < is.length; i++)
     		{
     			if(is[i]==null)continue;
-    			if(is[i].getAmount() > 0 && is[i].getTypeId()>0)
+    			if(is[i].getAmount() >= amount && is[i].getTypeId()>0)
     			{
+    				int curA = is[i].getAmount();
                     ItemStack stack = is[i];
-                    getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), x, y, z),stack);
-                    is[i] = new ItemStack(0,0);
+                    getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(), getSign().getY(), getSign().getZ()),stack);
+                    is[i].setAmount(curA-amount);
                     break;
     			}
     		}
