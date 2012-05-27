@@ -113,43 +113,48 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 		if(lastTick<200) return;
 		lastTick = 0;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-		if (block.getType() == Material.WALL_SIGN) {
-            if (block.getState() instanceof Sign) {
-            	plugin.getLogger().log(Level.SEVERE, "[FOUND SIGN]");
-                Sign sign = (Sign) block.getState();
-                int x = sign.getBlock().getX();
-                int y = sign.getBlock().getY()+2;
-                int z = sign.getBlock().getZ();
-                Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
-                if (cb.getType() == Material.CHEST && BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z).getType() == Material.FIRE) {
-                	plugin.getLogger().log(Level.SEVERE, "[FOUND CHEST]");
-                    if (cb.getState() instanceof Chest) {
-                    	Chest chest = (Chest) cb.getState();
-                    	for(ItemStack i : chest.getInventory().getContents())
-                    	{
-                    		if(i.getType() == Material.RAW_BEEF)
-                    		{
-                    			chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
-                    			chest.getInventory().removeItem(new ItemStack(Material.RAW_BEEF,1));
-                    			break;
-                    		}
-                    		if(i.getType() == Material.RAW_CHICKEN)
-                    		{
-                    			chest.getInventory().addItem(new ItemStack(Material.COOKED_CHICKEN,1));
-                    			chest.getInventory().removeItem(new ItemStack(Material.RAW_CHICKEN,1));
-                    			break;
-                    		}
-                    		if(i.getType() == Material.RAW_FISH)
-                    		{
-                    			chest.getInventory().addItem(new ItemStack(Material.COOKED_FISH,1));
-                    			chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
-                    			break;
-                    		}
-                    	}
-                    	plugin.getLogger().log(Level.SEVERE, "[FOUND NOTHING]");
-                    }
-                }
-            }
+		if (block.getState() instanceof Sign) {
+			plugin.getLogger().log(Level.SEVERE, "[FOUND SIGN]");
+			Sign sign = (Sign) block.getState();
+			int x = sign.getBlock().getX();
+			int y = sign.getBlock().getY()+2;
+			int z = sign.getBlock().getZ();
+			Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
+			plugin.getLogger().log(Level.SEVERE, "[its a]: " + cb.getType().name());
+			if (cb.getType() == Material.CHEST) {
+				plugin.getLogger().log(Level.SEVERE, "[FOUND CHEST]");
+				Block fire = BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z);
+				if(fire.getType() == Material.FIRE)
+				{
+					plugin.getLogger().log(Level.SEVERE, "[FOUND FIRE]");
+					if (cb.getState() instanceof Chest) {
+						Chest chest = (Chest) cb.getState();
+						plugin.getLogger().log(Level.SEVERE, "[SEARCHING CHEST]");
+						for(ItemStack i : chest.getInventory().getContents())
+						{
+							if(i.getType() == Material.RAW_BEEF)
+							{
+								chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
+								chest.getInventory().removeItem(new ItemStack(Material.RAW_BEEF,1));
+								break;
+							}
+							if(i.getType() == Material.RAW_CHICKEN)
+							{
+								chest.getInventory().addItem(new ItemStack(Material.COOKED_CHICKEN,1));
+								chest.getInventory().removeItem(new ItemStack(Material.RAW_CHICKEN,1));
+								break;
+							}
+							if(i.getType() == Material.RAW_FISH)
+							{
+								chest.getInventory().addItem(new ItemStack(Material.COOKED_FISH,1));
+								chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
+								break;
+							}
+						}
+						plugin.getLogger().log(Level.SEVERE, "[FOUND NOTHING]");
+					}
+				}
+			}
 		}
 	}
 
