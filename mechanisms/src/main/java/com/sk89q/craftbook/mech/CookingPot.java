@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -108,9 +109,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
 	@Override
 	public void think() {
+		boolean debug = true;
 		lastTick++;
 		if(lastTick<50) return;
 		lastTick = 0;
+		if(debug)
+			plugin.getLogger().log(Level.SEVERE, "[CraftBook] Cooking Pot Checking");
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getTypeId() == BlockID.WALL_SIGN) {
 			BlockState state = block.getState();
@@ -124,6 +128,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         			BlockState s = cb.getState();
                     if (state instanceof Chest) {
                     	Chest chest = (Chest) s;
+                    	if(debug)
+                    	plugin.getLogger().log(Level.SEVERE, "[CraftBook] Checking chest contents");
                     	for(ItemStack i : chest.getInventory().getContents())
                     	{
                     		if(i.getType() == Material.RAW_BEEF)
@@ -144,6 +150,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     			chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
                     			break;
                     		}
+                    		if(debug)
+                    		plugin.getLogger().log(Level.SEVERE, "[CraftBook] Found Nothing");
                     	}
                     }
                 }
