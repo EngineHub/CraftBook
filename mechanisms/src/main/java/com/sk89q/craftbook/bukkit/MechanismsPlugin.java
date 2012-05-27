@@ -18,6 +18,9 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.Chunk;
+import org.bukkit.World;
+
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.mech.Ammeter;
@@ -74,9 +77,38 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         
         manager.register(new Cauldron.Factory(this));
         
-        // Set up the clock for self-triggered Mechanisms.
-        getServer().getScheduler().scheduleSyncRepeatingTask(this,new MechanicClock(manager), 0, 2);
+        setupSelfTriggered(manager);
     }
+    
+    /**
+     * Setup the required components of self-triggered ICs.
+     */
+    private void setupSelfTriggered(MechanicManager manager) {
+        logger.info("CraftBook: Enumerating chunks for self-triggered components...");
+        
+        long start = System.currentTimeMillis();
+        int numWorlds = 0;
+        int numChunks = 0;
+        
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                manager.enumerate(chunk);
+                numChunks++;
+            }
+            
+            numWorlds++;
+        }
+        
+        long time = System.currentTimeMillis() - start;
+        
+        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
+                + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
+        
+        // Set up the clock for self-triggered ICs.
+        getServer().getScheduler().scheduleSyncRepeatingTask(this,
+                new MechanicClock(manager), 0, 2);
+    }
+
     
     @Override
     protected void registerEvents() {

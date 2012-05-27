@@ -32,5 +32,4 @@ public class MechanicClock implements Runnable {
     public void run() {
         manager.think();
     }
-
 }
