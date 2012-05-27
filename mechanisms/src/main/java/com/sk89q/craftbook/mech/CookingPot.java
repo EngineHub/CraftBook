@@ -51,7 +51,7 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
 
     @Override
     public boolean isActive() {
-        return false; // This keeps no state
+        return true; 
     }
 
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
@@ -70,10 +70,6 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
                 if (state instanceof Sign) {
                     Sign sign = (Sign) state;
                     if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                        // this is a little funky because we don't actually look for the blocks
-                        // that make up the movable parts of the gate until we're running the 
-                        // event later... so the factory can succeed even if the signpost doesn't
-                        // actually operate any gates correctly.  but it works!
                         return new CookingPot(pt, plugin);
                     }
                 }
@@ -121,8 +117,8 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
                 int z = sign.getBlock().getZ();
                 y += 2;
                 Block cb = BukkitUtil.toWorld(pt).getBlockAt(x,y,z);
-                if (block.getTypeId() == BlockID.CHEST) {
-        			BlockState s = block.getState();
+                if (cb.getTypeId() == BlockID.CHEST && BukkitUtil.toWorld(pt).getBlockAt(x,y-1,z).getTypeId() == BlockID.FIRE) {
+        			BlockState s = cb.getState();
                     if (state instanceof Chest) {
                     	Chest chest = (Chest) s;
                     	ItemStack[] is = chest.getInventory().getContents();
