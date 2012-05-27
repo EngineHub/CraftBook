@@ -105,7 +105,7 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
 	@Override
 	public void think() {
 		lastTick++;
-		if(lastTick<50) return;
+		if(lastTick<200) return;
 		lastTick = 0;
 		Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 		if (block.getTypeId() == BlockID.WALL_SIGN) {
@@ -121,23 +121,27 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
         			BlockState s = cb.getState();
                     if (state instanceof Chest) {
                     	Chest chest = (Chest) s;
-                    	ItemStack[] is = chest.getInventory().getContents();
-                    	for(ItemStack i : is)
+                    	int index = -1;
+                    	for(ItemStack i : chest.getInventory().getContents())
                     	{
+                    		index++;
                     		if(!i.getType().isEdible()) continue;
                     		if(i.getType().equals(Material.RAW_BEEF))
                     		{
-                    			i.setType(Material.COOKED_BEEF);
+                    			chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
+                    			chest.getInventory().removeItem(new ItemStack(Material.RAW_BEEF,1));
                     			break;
                     		}
                     		if(i.getType().equals(Material.RAW_CHICKEN))
                     		{
-                    			i.setType(Material.COOKED_CHICKEN);
+                    			chest.getInventory().addItem(new ItemStack(Material.COOKED_CHICKEN,1));
+                    			chest.getInventory().removeItem(new ItemStack(Material.RAW_CHICKEN,1));
                     			break;
                     		}
                     		if(i.getType().equals(Material.RAW_FISH))
                     		{
-                    			i.setType(Material.COOKED_FISH);
+                    			chest.getInventory().addItem(new ItemStack(Material.COOKED_FISH,1));
+                    			chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
                     			break;
                     		}
                     	}
