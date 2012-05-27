@@ -129,6 +129,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 						Chest chest = (Chest) cb.getState();
 						for(ItemStack i : chest.getInventory().getContents())
 						{
+							if(i==null) continue;
 							if(i.getType() == Material.RAW_BEEF)
 							{
 								chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
