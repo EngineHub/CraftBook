@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -27,7 +28,7 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class CookingPot extends AbstractMechanic implements SelfTriggeringMechanic{
+public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic{
     
 	int lastTick = 0;
 	
@@ -177,8 +178,8 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
 		
 	}
 
-	//@Override
-	//public List<BlockWorldVector> getWatchedPositions() {
-	//	return new ArrayList<BlockWorldVector>();
-	//}
+	@Override
+	public List<BlockWorldVector> getWatchedPositions() {
+		return new ArrayList<BlockWorldVector>(Arrays.asList(pt));
+	}
 }
