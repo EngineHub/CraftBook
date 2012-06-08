@@ -49,6 +49,7 @@ public class VehiclesConfiguration {
         matDeposit =    Material.getMaterial(cfg.getInt("deposit-block",        15));
         matTeleport =   Material.getMaterial(cfg.getInt("teleport-block",       89));
         matDispenser =  Material.getMaterial(54);     // this can't be configurable because we need it to be a chest!
+        matMessager =   Material.getMaterial(cfg.getInt("messager-block",       121));
         
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
         minecartRemoveOnExit = cfg.getBoolean("minecart-remove-on-exit",        false);        
@@ -61,6 +62,7 @@ public class VehiclesConfiguration {
         boatRemoveEntitiesOtherBoats = cfg.getBoolean("boat-remove-"
                 + "entities-otherboats",                                        false);
         boatBreakReturn = cfg.getBoolean("boat-break-return-boat",              false);
+        minecartTrackMessages = cfg.getBoolean("minecart-track-messages",       true);
     }
     
     public final File dataFolder;
@@ -76,12 +78,14 @@ public class VehiclesConfiguration {
     public final Material matDeposit;
     public final Material matTeleport;
     public final Material matDispenser;
+    public final Material matMessager;
     
     public final boolean minecartSlowWhenEmpty;
     public final boolean minecartRemoveOnExit;
     public final boolean minecartRemoveEntities;
     public final boolean minecartRemoveEntitiesOtherCarts;
     public final double minecartMaxSpeedModifier;
+    public final boolean minecartTrackMessages;
     
     public final boolean boatRemoveEntities;
     public final boolean boatRemoveEntitiesOtherBoats;

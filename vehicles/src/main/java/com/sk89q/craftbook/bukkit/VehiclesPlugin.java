@@ -54,7 +54,6 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     private Listener lblock;
     private MinecartManager cartman;
     
-    
     @Override
     public void onEnable() {
         super.onEnable();
