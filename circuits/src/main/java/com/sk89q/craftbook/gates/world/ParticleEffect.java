@@ -6,6 +6,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.CraftWorld;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -40,7 +41,7 @@ public class ParticleEffect extends AbstractIC {
         	int times = Integer.parseInt(getSign().getLine(3));
         	Block b = SignUtil.getBackBlock(getSign().getBlock());
         	for(int i = 0; i < times; i++)
-        		((CraftServer)getServer()).getHandle().sendAll(new Packet61WorldEvent(effectID, b.getX(), b.getY()+1,b.getZ(),4));
+        		((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), 100, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet61WorldEvent(effectID, b.getX(), b.getY()+1,b.getZ(),4));
         }
     }
     
