@@ -45,14 +45,14 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC{
 	@Override
 	public void think(ChipState state) {
         if (risingEdge && state.getInput(0) || (!risingEdge && !state.getInput(0))) {
-    		for(Player p: getServer().getOnlinePlayers())
+    		for(Player p: getSign().getWorld().getPlayers())
     		{
     	    	int effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
     	    	int effectAmount = Integer.parseInt(getSign().getLine(2).split(":")[1]);
     	    	int effectTime = Integer.parseInt(getSign().getLine(2).split(":")[2]);
     	    	int radius = Integer.parseInt(getSign().getLine(3));
     	    	if(p.getLocation().distance(getSign().getLocation())>radius) continue;
-    			p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime, effectAmount));
+    			p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime*20, effectAmount-1));
     		}
         }
 	}
