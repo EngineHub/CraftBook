@@ -176,6 +176,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
         icManager.register("MC0204", new EntityTrapST.Factory(server, true), familySISO);     // Restricted
         icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
+        icManager.register("MC0210", new ParticleEffectST.Factory(server, true), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
