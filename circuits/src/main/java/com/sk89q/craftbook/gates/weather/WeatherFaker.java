@@ -3,15 +3,17 @@ package com.sk89q.craftbook.gates.weather;
 import net.minecraft.server.Packet70Bed;
 
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.CraftWorld;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
 
@@ -59,34 +61,18 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
 
 	@Override
 	public void think(ChipState chip) {
-		try{
-	    	if(chip.getInput(1))
-	    	{
-		    	int dist = Integer.parseInt(getSign().getLine(2));
-	
-		    	for(Player player: getServer().getOnlinePlayers())
-		        {
-		    		if(!player.getWorld().equals(getSign().getWorld())) return;
-		    		if(player.getLocation().distance(getSign().getLocation())<=dist)
-		    		{
-		    			((CraftPlayer)player).getHandle().netServerHandler.sendPacket(new Packet70Bed(1,0));
-		    		}
-		        }
-	    	}
-	    	else if(!chip.getInput(1))
-	    	{
-		    	int dist = Integer.parseInt(getSign().getLine(2));
-	
-		    	for(Player player: getServer().getOnlinePlayers())
-		        {
-		    		if(!player.getWorld().equals(getSign().getWorld())) return;
-		    		if(player.getLocation().distance(getSign().getLocation())<=dist)
-		    		{
-		    			((CraftPlayer)player).getHandle().netServerHandler.sendPacket(new Packet70Bed(2,0));
-		    		}
-		        }
-	    	}
+    	Block b = SignUtil.getBackBlock(getSign().getBlock());
+		if(chip.getInput(0))
+		{
+			int dist = Integer.parseInt(getSign().getLine(2));
+			dist = dist*dist;
+    		((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1,0));
 		}
-		catch(Exception e){}
+		else if(!chip.getInput(0))
+		{
+			int dist = Integer.parseInt(getSign().getLine(2));
+			dist = dist*dist;
+    		((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
+		}
 	}
 }
