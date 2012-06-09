@@ -59,29 +59,34 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
 
 	@Override
 	public void think(ChipState chip) {
-    	if(chip.getInput(1))
-    	{
-	    	int dist = Integer.parseInt(getSign().getLine(2));
-
-	    	for(Player player: getServer().getOnlinePlayers())
-	        {
-	    		if(player.getLocation().distance(getSign().getLocation())<=dist)
-	    		{
-	    			((CraftPlayer)player).getHandle().netServerHandler.sendPacket(new Packet70Bed(1,0));
-	    		}
-	        }
-    	}
-    	else if(!chip.getInput(1))
-    	{
-	    	int dist = Integer.parseInt(getSign().getLine(2));
-
-	    	for(Player player: getServer().getOnlinePlayers())
-	        {
-	    		if(player.getLocation().distance(getSign().getLocation())<=dist)
-	    		{
-	    			((CraftPlayer)player).getHandle().netServerHandler.sendPacket(new Packet70Bed(2,0));
-	    		}
-	        }
-    	}
+		try{
+	    	if(chip.getInput(1))
+	    	{
+		    	int dist = Integer.parseInt(getSign().getLine(2));
+	
+		    	for(Player player: getServer().getOnlinePlayers())
+		        {
+		    		if(!player.getWorld().equals(getSign().getWorld())) return;
+		    		if(player.getLocation().distance(getSign().getLocation())<=dist)
+		    		{
+		    			((CraftPlayer)player).getHandle().netServerHandler.sendPacket(new Packet70Bed(1,0));
+		    		}
+		        }
+	    	}
+	    	else if(!chip.getInput(1))
+	    	{
+		    	int dist = Integer.parseInt(getSign().getLine(2));
+	
+		    	for(Player player: getServer().getOnlinePlayers())
+		        {
+		    		if(!player.getWorld().equals(getSign().getWorld())) return;
+		    		if(player.getLocation().distance(getSign().getLocation())<=dist)
+		    		{
+		    			((CraftPlayer)player).getHandle().netServerHandler.sendPacket(new Packet70Bed(2,0));
+		    		}
+		        }
+	    	}
+		}
+		catch(Exception e){}
 	}
 }

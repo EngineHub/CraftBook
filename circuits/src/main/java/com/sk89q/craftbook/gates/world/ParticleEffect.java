@@ -42,18 +42,22 @@ public class ParticleEffect extends AbstractIC {
     
     public void doEffect(ChipState chip)
     {
-    	int effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
-    	int effectData;
-    	try {
-    		effectData = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+    	try
+    	{
+	    	int effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+	    	int effectData;
+	    	try {
+	    		effectData = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+	    	}
+	    	catch(Exception e){
+	    		effectData = 0;
+	    	}
+	    	int times = Integer.parseInt(getSign().getLine(3));
+	    	Block b = SignUtil.getBackBlock(getSign().getBlock());
+	    	for(int i = 0; i < times; i++)
+	    		((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), 50, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet61WorldEvent(effectID, b.getX(), b.getY()+1,b.getZ(),effectData));
     	}
-    	catch(Exception e){
-    		effectData = 0;
-    	}
-    	int times = Integer.parseInt(getSign().getLine(3));
-    	Block b = SignUtil.getBackBlock(getSign().getBlock());
-    	for(int i = 0; i < times; i++)
-    		((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), 50, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet61WorldEvent(effectID, b.getX(), b.getY()+1,b.getZ(),effectData));
+    	catch(Exception e){}
     }
     
     public static class Factory extends AbstractICFactory {
