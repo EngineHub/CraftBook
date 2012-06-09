@@ -46,7 +46,8 @@ public class HiddenSwitch extends AbstractMechanic {
             return (s.getLine(1).equalsIgnoreCase("[x]"));
         }
 
-        private boolean isValidWallsign(Block b) {
+        @SuppressWarnings("unused")
+		private boolean isValidWallsign(Block b) {
             if(b.getType() != Material.WALL_SIGN) // instead of SIGN_POST
                 return false;
             Sign s = (Sign)b.getState();

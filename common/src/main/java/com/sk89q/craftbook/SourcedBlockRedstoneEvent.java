@@ -28,7 +28,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
  */
 public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
     
-    private static final long serialVersionUID = 1031838877588760298L;
+    @SuppressWarnings("unused")
+	private static final long serialVersionUID = 1031838877588760298L;
     
     protected Block source;
     
