@@ -38,7 +38,13 @@ public class ParticleEffect extends AbstractIC {
     public void trigger(ChipState chip) {
         if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
         	int effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
-        	int effectData = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+        	int effectData;
+        	try {
+        		effectData = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+        	}
+        	catch(Exception e){
+        		effectData = 0;
+        	}
         	int times = Integer.parseInt(getSign().getLine(3));
         	Block b = SignUtil.getBackBlock(getSign().getBlock());
         	for(int i = 0; i < times; i++)
