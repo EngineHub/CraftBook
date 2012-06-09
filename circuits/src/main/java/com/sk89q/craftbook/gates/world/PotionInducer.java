@@ -29,12 +29,12 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC{
 
 	@Override
 	public String getTitle() {
-		return "Potion Effect";
+		return "Potion Inducer";
 	}
 
 	@Override
 	public String getSignTitle() {
-		return "POTION EFFECT";
+		return "POTION INDUCER";
 	}
 
 	@Override
