@@ -61,7 +61,7 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
 	public void think(ChipState chip) {
     	if(chip.getInput(1))
     	{
-	    	int dist = Integer.parseInt(getSign().getLine(3));
+	    	int dist = Integer.parseInt(getSign().getLine(2));
 
 	    	for(Player player: getServer().getOnlinePlayers())
 	        {
@@ -73,7 +73,7 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
     	}
     	else if(!chip.getInput(1))
     	{
-	    	int dist = Integer.parseInt(getSign().getLine(3));
+	    	int dist = Integer.parseInt(getSign().getLine(2));
 
 	    	for(Player player: getServer().getOnlinePlayers())
 	        {
