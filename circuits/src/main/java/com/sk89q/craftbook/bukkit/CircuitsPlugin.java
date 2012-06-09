@@ -130,6 +130,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1210", new ParticleEffect.Factory(server, true), familySISO);
         icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO);             // Restricted
+        icManager.register("MC1217", new PotionInducer.Factory(server, true), familySISO);
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);         // Restricted
         icManager.register("MC1236", new WeatherFaker.Factory(server, true), familySISO); 
