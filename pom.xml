@@ -51,7 +51,7 @@
       <version>1.2.3-R0.3-SNAPSHOT</version>
     </dependency>
     <dependency>
-    	<groupId>net.minecraft</groupId>
+    	<groupId>org.bukkit</groupId>
     	<artifactId>craftbukkit</artifactId>
     	<version>1.2.3-R0.3-SNAPSHOT</version>
     </dependency>
