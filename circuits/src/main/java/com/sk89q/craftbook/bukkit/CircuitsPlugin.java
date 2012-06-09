@@ -127,6 +127,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);
         icManager.register("MC1209", new ChestCollector.Factory(server, true), familySISO);
+        icManager.register("MC1210", new ParticleEffect.Factory(server, true), familySISO);
         icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
