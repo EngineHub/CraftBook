@@ -45,7 +45,7 @@ public class ChestCollector extends AbstractIC{
      * 
      * @return
      */
-    protected boolean collect() { //FIXME some bits of this dont work
+    protected boolean collect() {
 
     	Block b = SignUtil.getBackBlock(getSign().getBlock());
 
@@ -91,40 +91,43 @@ public class ChestCollector extends AbstractIC{
     							exid = Integer.parseInt(getSign().getLine(3));
     					}
     					catch(Exception e){}
-    					if(exid!=-1)
+    					checks:
     					{
-    						if(exid==item.getItemStack().getTypeId())
-    						{
-    							if(exidmeta!=-1)
-    							{
-    								if(item.getItemStack().getDurability() == exidmeta)
-    									continue;
-    								else
-    									break;
-    							}
-    							else
-    								continue;
-    						}
-    						else
-								break;
-    					}
-
-    					if(id!=-1)
-    					{
-    						if(id!=item.getItemStack().getTypeId())
-    						{
-    							if(idmeta!=-1)
-    							{
-    								if(item.getItemStack().getDurability() != idmeta)
-    									continue;
-    								else
-    									break;
-    							}
-    							else
-    								continue;
-    						}
-    						else
-								break;
+	    					if(exid!=-1)
+	    					{
+	    						if(exid==item.getItemStack().getTypeId())
+	    						{
+	    							if(exidmeta!=-1)
+	    							{
+	    								if(item.getItemStack().getDurability() == exidmeta)
+	    									continue;
+	    								else
+	    									break checks;
+	    							}
+	    							else
+	    								continue;
+	    						}
+	    						else
+	    							break checks;
+	    					}
+	
+	    					if(id!=-1)
+	    					{
+	    						if(id==item.getItemStack().getTypeId())
+	    						{
+	    							if(idmeta!=-1)
+	    							{
+	    								if(item.getItemStack().getDurability() == idmeta)
+	    									break checks;
+	    								else
+	    									continue;
+	    							}
+	    							else
+	    								break checks;
+	    						}
+	    						else
+	    							continue;
+	    					}
     					}
 	    				((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
 	    				item.remove();
