@@ -45,7 +45,7 @@ public class ChestCollector extends AbstractIC{
      * 
      * @return
      */
-    protected boolean collect() {
+    protected boolean collect() { //FIXME some bits of this dont work
 
     	Block b = SignUtil.getBackBlock(getSign().getBlock());
 
