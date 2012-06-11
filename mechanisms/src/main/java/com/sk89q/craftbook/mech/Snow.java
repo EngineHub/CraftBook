@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,14 +27,17 @@ public class Snow implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		if(!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
-		if(event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL && event.getClickedBlock().getTypeId() == 78)
-		{
-			if(event.getClickedBlock().getData() < 7)
+		try{
+			if(event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL && event.getClickedBlock().getTypeId() == 78)
 			{
-				event.getClickedBlock().setData((byte) (event.getClickedBlock().getData() + 1));
-				event.setCancelled(true);
+				if(event.getClickedBlock().getData() < 7)
+				{
+					event.getClickedBlock().setData((byte) (event.getClickedBlock().getData() + 1));
+					event.setCancelled(true);
+				}
 			}
 		}
+		catch(Exception e){}
 	}
 	
 	@EventHandler
@@ -42,25 +46,29 @@ public class Snow implements Listener {
 		Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
 		if(b.getTypeId() == 78)
 		{
-			Random random = new Random();
-
-			if(random.nextInt(20) == 3)
-			{
-				if(b.getData() > 1)
-					b.setData((byte) (b.getData() - 1));
-				else
-					b.setTypeId(0);
-			}
+			if(b.getData() > 1)
+				b.setData((byte) (b.getData() - 1));
+			else
+				b.setTypeId(0);
 		}
 		else if (b.getTypeId() == 80)
 		{
-			Random random = new Random();
-
-			if(random.nextInt(20) == 3)
-			{
-				b.setTypeId(78);
-				b.setData((byte)6);
-			}
+			b.setTypeId(78);
+			b.setData((byte)6);
+		}
+		
+		b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
+		if(b.getTypeId() == 78)
+		{
+			if(b.getData() > 1)
+				b.setData((byte) (b.getData() - 1));
+			else
+				b.setTypeId(0);
+		}
+		else if (b.getTypeId() == 80)
+		{
+			b.setTypeId(78);
+			b.setData((byte)6);
 		}
 	}
 	
@@ -74,7 +82,7 @@ public class Snow implements Listener {
 				if(block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78) return;
 				Random random = new Random();
 				long delay = random.nextInt(30) + 60;
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L);
+				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 			}
 		}
 	}
@@ -98,8 +106,8 @@ public class Snow implements Listener {
 			else if(event.getBlock().getData()<(byte)7)
 			{
 				Random random = new Random();
-				long delay = random.nextInt(30) + 60;
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L);
+				long delay = random.nextInt(30) + 20;
+				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 			}
 		}
 	}
