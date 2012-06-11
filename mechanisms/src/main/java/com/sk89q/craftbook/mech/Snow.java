@@ -36,6 +36,11 @@ public class Snow implements Listener {
 					event.setCancelled(true);
 				}
 			}
+			else if(event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).getTypeId() == 0)
+			{
+				event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).setTypeId(78);
+				event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).setData((byte)1);
+			}
 		}
 		catch(Exception e){}
 	}
