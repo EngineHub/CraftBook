@@ -33,7 +33,6 @@ public class Snow implements Listener {
 				if(event.getClickedBlock().getData() < 7)
 				{
 					event.getClickedBlock().setData((byte) (event.getClickedBlock().getData() + 1));
-					event.setCancelled(true);
 				}
 			}
 			else if(event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).getTypeId() == 0)
@@ -53,6 +52,8 @@ public class Snow implements Listener {
 		{
 			if(b.getData() > 1)
 				b.setData((byte) (b.getData() - 1));
+			else
+				b.setTypeId(0);
 		}
 		
 		b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
@@ -60,6 +61,8 @@ public class Snow implements Listener {
 		{
 			if(b.getData() > 1)
 				b.setData((byte) (b.getData() - 1));
+			else
+				b.setTypeId(0);
 		}
 	}
 	
@@ -73,7 +76,7 @@ public class Snow implements Listener {
 				if(block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78) return;
 				Random random = new Random();
 				long delay = random.nextInt(30) + 60;
-				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+				if(plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 			}
 		}
 	}
@@ -97,7 +100,7 @@ public class Snow implements Listener {
 			//if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
 			Random random = new Random();
 			long delay = random.nextInt(30) + 20;
-			if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+			if(plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 		}
 	}
 }
