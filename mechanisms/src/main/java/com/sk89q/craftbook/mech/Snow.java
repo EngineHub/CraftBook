@@ -28,7 +28,7 @@ public class Snow implements Listener {
 		{
 			Random random = new Random();
 
-			if(random.nextInt(10) == 3)
+			if(random.nextInt(5) == 3)
 			{
 				if(b.getData() > 1)
 					b.setData((byte) (b.getData() - 1));
@@ -45,6 +45,7 @@ public class Snow implements Listener {
 			Block block = event.getBlock();
 
 			if ((block.getTypeId() != 80) && (block.getTypeId() != 78)) {
+				if(block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78) return;
 				Random random = new Random();
 				long delay = random.nextInt(100) + 60;
 				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L);
@@ -63,6 +64,7 @@ public class Snow implements Listener {
 		
 		@Override
 		public void run() {
+			if(event.getBlock().getWorld().getBlockAt(event.getBlock().getLocation().subtract(0, 1, 0)).getTypeId() == 0) return;
 			event.getBlock().setTypeId(78);
 			event.getBlock().setData((byte) (event.getBlock().getData() + 1));
 			if(event.getBlock().getData() >= 7) event.getBlock().setTypeId(80);
