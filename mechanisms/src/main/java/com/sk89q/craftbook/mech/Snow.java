@@ -76,7 +76,7 @@ public class Snow implements Listener {
 				if(block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78) return;
 				Random random = new Random();
 				long delay = random.nextInt(30) + 60;
-				if(plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class Snow implements Listener {
 			//if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
 			Random random = new Random();
 			long delay = random.nextInt(30) + 20;
-			if(plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+			if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 		}
 	}
 }
