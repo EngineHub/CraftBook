@@ -28,7 +28,7 @@ public class Snow implements Listener {
 		{
 			Random random = new Random();
 
-			if(random.nextInt(10) == 3)
+			if(random.nextInt(5) == 3)
 			{
 				if(b.getData() > 1)
 					b.setData((byte) (b.getData() - 1));
@@ -46,65 +46,21 @@ public class Snow implements Listener {
 
 			if ((block.getTypeId() != 80) && (block.getTypeId() != 78)) {
 				Random random = new Random();
+				
+				int i = 8;
 
-				long delay = random.nextInt(10) + 60;
+				while(block.getData()<i)
+				{
+					long delay = random.nextInt(100) + 60;
 
-				plugin.getServer().getScheduler()
-						.scheduleSyncDelayedTask(plugin, new Runnable() {
-							public void run() {
-								event.getBlock().setTypeId(78);
-								event.getBlock().setData((byte) 2);
-							}
-						}, delay * 20L);
-
-				delay = random.nextInt(10) + 60;
-
-				plugin.getServer().getScheduler()
-						.scheduleSyncDelayedTask(plugin, new Runnable() {
-							public void run() {
-								event.getBlock().setTypeId(78);
-								event.getBlock().setData((byte) 3);
-							}
-						}, delay * 20L);
-
-				delay = random.nextInt(10) + 60;
-
-				plugin.getServer().getScheduler()
-						.scheduleSyncDelayedTask(plugin, new Runnable() {
-							public void run() {
-								event.getBlock().setTypeId(78);
-								event.getBlock().setData((byte) 4);
-							}
-						}, delay * 20L);
-
-				delay = random.nextInt(10) + 60;
-
-				plugin.getServer().getScheduler()
-						.scheduleSyncDelayedTask(plugin, new Runnable() {
-							public void run() {
-								event.getBlock().setTypeId(78);
-								event.getBlock().setData((byte) 5);
-							}
-						}, delay * 20L);
-
-				delay = random.nextInt(10) + 60;
-
-				plugin.getServer().getScheduler()
-						.scheduleSyncDelayedTask(plugin, new Runnable() {
-							public void run() {
-								event.getBlock().setTypeId(78);
-								event.getBlock().setData((byte) 6);
-							}
-						}, delay * 20L);
-
-				delay = random.nextInt(10) + 60;
-
-				plugin.getServer().getScheduler()
-						.scheduleSyncDelayedTask(plugin, new Runnable() {
-							public void run() {
-								event.getBlock().setTypeId(80);
-							}
-						}, delay * 20L);
+					plugin.getServer().getScheduler()
+							.scheduleSyncDelayedTask(plugin, new Runnable() {
+								public void run() {
+									event.getBlock().setTypeId(78);
+									event.getBlock().setData((byte) (event.getBlock().getData() + 1));
+								}
+							}, delay * 20L);
+				}
 			}
 		}
 	}
