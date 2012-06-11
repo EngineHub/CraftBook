@@ -97,15 +97,24 @@ public class Snow implements Listener {
 		
 		@Override
 		public void run() {
-			if(event.getBlock().getData()>7) return;
-			if(event.subtract(0, 1, 0).getBlock().getTypeId() == 0) return;
-			event.add(0, 1, 0);
-			if(!(event.getBlock().getTypeId() == 78)) return;
-			event.getBlock().setData((byte) (event.getBlock().getData() + (byte)2));
-			//if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
-			Random random = new Random();
-			long delay = random.nextInt(100) + 60;
-			if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+			if(event.getWorld().hasStorm())
+			{
+				if(event.getBlock().getData()>7) return;
+				if(event.subtract(0, 1, 0).getBlock().getTypeId() == 0) return;
+				event.add(0, 1, 0);
+				if(!(event.getBlock().getTypeId() == 78)) return;
+				event.getBlock().setData((byte) (event.getBlock().getData() + (byte)2));
+				//if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
+				Random random = new Random();
+				long delay = random.nextInt(100) + 60;
+				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+			}
+			else
+			{
+				Random random = new Random();
+				long delay = random.nextInt(100) + 600;
+				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+			}
 		}
 	}
 }
