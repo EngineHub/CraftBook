@@ -53,13 +53,6 @@ public class Snow implements Listener {
 		{
 			if(b.getData() > 1)
 				b.setData((byte) (b.getData() - 1));
-			else
-				b.setTypeId(0);
-		}
-		else if (b.getTypeId() == 80)
-		{
-			b.setTypeId(78);
-			b.setData((byte)6);
 		}
 		
 		b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
@@ -67,13 +60,6 @@ public class Snow implements Listener {
 		{
 			if(b.getData() > 1)
 				b.setData((byte) (b.getData() - 1));
-			else
-				b.setTypeId(0);
-		}
-		else if (b.getTypeId() == 80)
-		{
-			b.setTypeId(78);
-			b.setData((byte)6);
 		}
 	}
 	
@@ -104,16 +90,14 @@ public class Snow implements Listener {
 		@Override
 		public void run() {
 			if(!event.getBlock().getWorld().hasStorm()) return;
+			if(event.getBlock().getData()>7) return;
 			if(event.getBlock().getWorld().getBlockAt(event.getBlock().getLocation().subtract(0, 1, 0)).getTypeId() == 0) return;
 			event.getBlock().setTypeId(78);
 			event.getBlock().setData((byte) (event.getBlock().getData() + 1));
-			if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
-			else if(event.getBlock().getData()<(byte)7)
-			{
-				Random random = new Random();
-				long delay = random.nextInt(30) + 20;
-				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
-			}
+			//if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
+			Random random = new Random();
+			long delay = random.nextInt(30) + 20;
+			if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 		}
 	}
 }
