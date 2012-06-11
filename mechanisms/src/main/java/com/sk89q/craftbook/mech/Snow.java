@@ -29,7 +29,10 @@ public class Snow implements Listener {
 		if(event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL && event.getClickedBlock().getTypeId() == 78)
 		{
 			if(event.getClickedBlock().getData() < 7)
+			{
 				event.getClickedBlock().setData((byte) (event.getClickedBlock().getData() + 1));
+				event.setCancelled(true);
+			}
 		}
 	}
 	
