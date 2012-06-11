@@ -76,27 +76,26 @@ public class Snow implements Listener {
 				if(block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78) return;
 				Random random = new Random();
 				long delay = random.nextInt(30) + 60;
-				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+				if(plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(block), delay * 20L)==-1) plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 			}
 		}
 	}
 	
 	public class makeSnow implements Runnable {
 
-		BlockFormEvent event;
+		Block event;
 		
-		public makeSnow(BlockFormEvent event)
+		public makeSnow(Block event)
 		{
 			this.event = event;
 		}
 		
 		@Override
 		public void run() {
-			if(!event.getBlock().getWorld().hasStorm()) return;
-			if(event.getBlock().getData()>7) return;
-			if(event.getBlock().getWorld().getBlockAt(event.getBlock().getLocation().subtract(0, 1, 0)).getTypeId() == 0) return;
-			event.getBlock().setTypeId(78);
-			event.getBlock().setData((byte) (event.getBlock().getData() + 1));
+			if(event.getData()>7) return;
+			if(event.getWorld().getBlockAt(event.getLocation().subtract(0, 1, 0)).getTypeId() == 0) return;
+			event.setTypeId(78);
+			event.setData((byte) (event.getData() + 1));
 			//if(event.getBlock().getData() >= (byte)7) event.getBlock().setTypeId(80);
 			Random random = new Random();
 			long delay = random.nextInt(30) + 20;
