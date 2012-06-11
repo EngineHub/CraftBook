@@ -124,9 +124,13 @@ public class MidiJingleSequencer implements JingleSequencer {
     }
 
     public void stop() {
-        if (sequencer != null && sequencer.isOpen()) {
-            sequencer.close();
-        }
+    	try
+    	{
+	        if (sequencer != null && sequencer.isOpen()) {
+	            sequencer.close();
+	        }
+    	}
+    	catch(Exception e){}
     }
 
     private static byte toMCNote(int n) {

@@ -33,6 +33,7 @@ import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightSwitch;
+import com.sk89q.craftbook.mech.Snow;
 
 
 /**
@@ -69,6 +70,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new CookingPot.Factory(this));
+        getServer().getPluginManager().registerEvents(new Snow(this), this);
         
         /*
          * Until fixed, Cauldron must be at the bottom of the registration list as 
