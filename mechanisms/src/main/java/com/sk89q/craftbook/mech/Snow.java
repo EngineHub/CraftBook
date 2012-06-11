@@ -28,7 +28,7 @@ public class Snow implements Listener {
 		{
 			Random random = new Random();
 
-			if(random.nextInt(5) == 3)
+			if(random.nextInt(10) == 3)
 			{
 				if(b.getData() > 1)
 					b.setData((byte) (b.getData() - 1));
@@ -46,21 +46,31 @@ public class Snow implements Listener {
 
 			if ((block.getTypeId() != 80) && (block.getTypeId() != 78)) {
 				Random random = new Random();
-				
-				int i = 8;
+				long delay = random.nextInt(100) + 60;
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L);
+			}
+		}
+	}
+	
+	public class makeSnow implements Runnable {
 
-				while(block.getData()<i)
-				{
-					long delay = random.nextInt(100) + 60;
-
-					plugin.getServer().getScheduler()
-							.scheduleSyncDelayedTask(plugin, new Runnable() {
-								public void run() {
-									event.getBlock().setTypeId(78);
-									event.getBlock().setData((byte) (event.getBlock().getData() + 1));
-								}
-							}, delay * 20L);
-				}
+		BlockFormEvent event;
+		
+		public makeSnow(BlockFormEvent event)
+		{
+			this.event = event;
+		}
+		
+		@Override
+		public void run() {
+			event.getBlock().setTypeId(78);
+			event.getBlock().setData((byte) (event.getBlock().getData() + 1));
+			if(event.getBlock().getData() >= 7) event.getBlock().setTypeId(80);
+			if(event.getBlock().getData()<7)
+			{
+				Random random = new Random();
+				long delay = random.nextInt(100) + 60;
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event), delay * 20L);
 			}
 		}
 	}
