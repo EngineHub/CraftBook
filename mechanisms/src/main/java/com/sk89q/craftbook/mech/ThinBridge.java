@@ -1,7 +1,7 @@
 // $Id$
 /*
  * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>m
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author hash
  * 
  */
-public class ThinBridge extends AbstractMechanic {
+public class ThinBridge extends AbstractMechanic { //TODO after doing previous TODO messages, delete this class and its registrarion in MechanismsPlugin.class
     
     public static class Factory extends AbstractMechanicFactory<ThinBridge> {
         public Factory(MechanismsPlugin plugin) {
