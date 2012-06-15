@@ -136,7 +136,7 @@ public class Bridge extends AbstractMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) //TODO allow ThinBridges here instead of seperately.
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -145,7 +145,7 @@ public class Bridge extends AbstractMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) //TODO allow ThinBridges here instead of seperately.
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
@@ -177,13 +177,13 @@ public class Bridge extends AbstractMechanic {
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat)
          || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat))
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) //TODO allow ThinBridges here instead of seperately.
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
         toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
-                BukkitUtil.toVector(SignUtil.getRight(trigger)));
+                BukkitUtil.toVector(SignUtil.getRight(trigger))); //TODO allow ThinBridges here instead of seperately.
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), 
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));       
     }
@@ -289,7 +289,7 @@ public class Bridge extends AbstractMechanic {
             && t != BlockID.LAVA
             && t != BlockID.STATIONARY_LAVA
             && t != BlockID.FENCE
-            && t != BlockID.SNOW
+            && t != BlockID.SNOW //TODO add long grass.
             && t != 0) {
             return false;
         } else {
