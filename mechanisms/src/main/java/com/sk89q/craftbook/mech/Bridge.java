@@ -269,6 +269,7 @@ public class Bridge extends AbstractMechanic {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId()))
                         b.setType(getBridgeMaterial());
+                        b.setData(getBridgeData());
             }
         }
     }
@@ -277,7 +278,9 @@ public class Bridge extends AbstractMechanic {
         return proximalBaseCenter.getType();
     }
     
-    
+    private byte getBridgeData() {
+        return proximalBaseCenter.getData();
+    }
 
     /**
      * @return whether the door can pass through this BlockType (and displace it
