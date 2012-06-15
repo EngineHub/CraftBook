@@ -108,5 +108,7 @@ public class GlowStone extends AbstractMechanic {
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
 		event.getBlock().setTypeId(originalId);
+		event.getBlock().breakNaturally();
+		event.setCancelled(true);
 	}
 }
