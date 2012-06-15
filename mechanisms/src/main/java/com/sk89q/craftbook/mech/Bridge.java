@@ -43,8 +43,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
- * The default bridge mechanism -- signposts on either side of a 3xN plane of
- * blocks.
+ * The default bridge mechanism -- signposts on either side of a 3xN plane of 
+ * (or 1xN plane if 1 on second line) blocks.
  * 
  * @author hash
  * 
@@ -138,7 +138,8 @@ public class Bridge extends AbstractMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) || s.getLine(2).equalsIgnoreCase("1"))
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
+                 || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -147,7 +148,8 @@ public class Bridge extends AbstractMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) || s.getLine(2).equalsIgnoreCase("1"))
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
+                 || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
@@ -177,16 +179,17 @@ public class Bridge extends AbstractMechanic {
         
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
-        if ((distalBaseCenter.getType() != mat)
-         || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) || s.getLine(2).equalsIgnoreCase("1"))
+        if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
+         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData()) 
+         || s.getLine(2).equalsIgnoreCase("1"))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
         if(!s.getLine(2).equalsIgnoreCase("1"))
-        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
-                BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        	toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
+        			BukkitUtil.toVector(SignUtil.getRight(trigger)));
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), 
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));       
     }
