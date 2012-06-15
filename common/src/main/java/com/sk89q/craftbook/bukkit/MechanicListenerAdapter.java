@@ -110,11 +110,6 @@ public class MechanicListenerAdapter {
                 manager.dispatchBlockLeftClick(event);
             }
         }
-        
-        @EventHandler
-        public void onBlockBreak(BlockBreakEvent event) {
-        	manager.dispatchBlockBreak(event);
-        }
     }
     
     /**
@@ -138,6 +133,11 @@ public class MechanicListenerAdapter {
         @EventHandler
         public void onSignChange(SignChangeEvent event) {
             manager.dispatchSignChange(event);
+        }
+        
+        @EventHandler
+        public void onBlockBreak(BlockBreakEvent event) {
+        	manager.dispatchBlockBreak(event);
         }
         
         @EventHandler
