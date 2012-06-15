@@ -140,7 +140,7 @@ public class Bridge extends AbstractMechanic {
             if (settings.canUseBlock(mat)) {
                 if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
                  && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
-                 || s.getLine(2).equalsIgnoreCase("1"))
+                 || (s.getLine(2).equalsIgnoreCase("1") && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")))
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -150,7 +150,7 @@ public class Bridge extends AbstractMechanic {
             if (settings.canUseBlock(mat)) {
                 if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
                  && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
-                 || s.getLine(2).equalsIgnoreCase("1"))
+                 || (s.getLine(2).equalsIgnoreCase("1") && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")))
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
@@ -180,10 +180,10 @@ public class Bridge extends AbstractMechanic {
         
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
-        if (((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
-         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
+        if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
+         || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
          || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())) 
-         && (s.getLine(2).equalsIgnoreCase("1")) && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1"))
+         && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
