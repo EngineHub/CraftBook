@@ -30,6 +30,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -106,4 +107,9 @@ public class LightStone extends AbstractMechanic {
             return null;
         }
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 }

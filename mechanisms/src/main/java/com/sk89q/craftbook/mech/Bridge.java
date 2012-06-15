@@ -40,6 +40,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -79,7 +80,7 @@ public class Bridge extends AbstractMechanic {
             // and if something goes wrong in here then we throw fits.
             return new Bridge(block, plugin);
         }
-        
+                
         /**
          * Detect the mechanic at a placed sign.
          * 
@@ -182,12 +183,12 @@ public class Bridge extends AbstractMechanic {
         if (((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
          || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
          || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())) 
-         && s.getLine(2).equalsIgnoreCase("1"))
+         && (s.getLine(2).equalsIgnoreCase("1")) && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1"))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        if(!s.getLine(2).equalsIgnoreCase("1"))
+        if(!s.getLine(2).equalsIgnoreCase("1") && !((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1"))
         	toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
         			BukkitUtil.toVector(SignUtil.getRight(trigger)));
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), 
@@ -346,4 +347,9 @@ public class Bridge extends AbstractMechanic {
             super(msg);
         }
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 }

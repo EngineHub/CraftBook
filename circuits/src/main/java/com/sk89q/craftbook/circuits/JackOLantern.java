@@ -19,6 +19,8 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.event.block.BlockBreakEvent;
+
 import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -30,6 +32,9 @@ import com.sk89q.worldedit.bukkit.*;
  * @author sk89q
  */
 public class JackOLantern extends AbstractMechanic {
+	
+	private int originalId;
+	
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
         public Factory() {
         }
@@ -53,6 +58,7 @@ public class JackOLantern extends AbstractMechanic {
      */
     private JackOLantern(BlockWorldVector pt) {
         super();
+        originalId = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
     }
     
     /**
@@ -85,4 +91,9 @@ public class JackOLantern extends AbstractMechanic {
     public boolean isActive() {
         return false;
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		event.getBlock().setTypeId(originalId);
+	}
 }

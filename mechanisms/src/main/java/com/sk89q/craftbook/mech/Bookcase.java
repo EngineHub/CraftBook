@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -182,4 +183,9 @@ public class Bookcase extends AbstractMechanic {
         }
 
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 }

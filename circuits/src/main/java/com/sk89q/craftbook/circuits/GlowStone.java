@@ -24,6 +24,8 @@ import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.*;
+
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -32,6 +34,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author sk89q
  */
 public class GlowStone extends AbstractMechanic {
+	
+	private int originalId;
+	
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
         public Factory() {
         }
@@ -55,6 +60,7 @@ public class GlowStone extends AbstractMechanic {
      */
     private GlowStone(BlockWorldVector pt) {
         super();
+        originalId = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
     }
 
     /**
@@ -98,4 +104,9 @@ public class GlowStone extends AbstractMechanic {
     public boolean isActive() {
         return false;
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		event.getBlock().setTypeId(originalId);
+	}
 }

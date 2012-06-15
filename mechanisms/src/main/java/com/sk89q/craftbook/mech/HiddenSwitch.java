@@ -5,6 +5,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -134,5 +136,10 @@ public class HiddenSwitch extends AbstractMechanic {
     public boolean isActive() {
         return false;
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 
 }

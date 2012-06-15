@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -179,5 +180,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 	@Override
 	public List<BlockWorldVector> getWatchedPositions() {
 		return new ArrayList<BlockWorldVector>(Arrays.asList(pt));
+	}
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
 	}
 }

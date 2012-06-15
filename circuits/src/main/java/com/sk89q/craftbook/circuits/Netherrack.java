@@ -22,6 +22,7 @@ package com.sk89q.craftbook.circuits;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.*;
 import com.sk89q.worldedit.*;
@@ -113,5 +114,10 @@ public class Netherrack extends AbstractMechanic {
     public boolean isActive() {
         return false;
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 	
 }

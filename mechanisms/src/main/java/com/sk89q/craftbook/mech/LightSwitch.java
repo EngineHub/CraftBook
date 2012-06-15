@@ -34,6 +34,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -189,4 +190,11 @@ public class LightSwitch extends AbstractMechanic {
     public boolean isActive() {
         return false; /* Keeps no state */
     }
+
+
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 }

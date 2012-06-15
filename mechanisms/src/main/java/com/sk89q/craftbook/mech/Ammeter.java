@@ -30,6 +30,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -136,4 +137,10 @@ public class Ammeter extends AbstractMechanic {
             return null;
         }
     }
+
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 }

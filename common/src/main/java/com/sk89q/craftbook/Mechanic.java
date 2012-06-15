@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook;
 
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -55,6 +56,12 @@ public interface Mechanic {
      */
     public boolean isActive();
     
+    /**
+     * Raised when a block is broken.
+     * 
+     * @param event
+     */
+    public void onBlockBreak(BlockBreakEvent event);
 
     /**
      * Raised when a block is right clicked.

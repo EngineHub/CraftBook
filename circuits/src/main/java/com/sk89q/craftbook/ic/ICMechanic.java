@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
@@ -116,5 +118,10 @@ public class ICMechanic extends PersistentMechanic {
         // so we don't have to do that for any single-block IC.
         return new ArrayList<BlockWorldVector>();
     }
+
+	@Override
+	public void onBlockBreak(BlockBreakEvent event) {
+		
+	}
 
 }

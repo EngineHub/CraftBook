@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -108,6 +109,11 @@ public class MechanicListenerAdapter {
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 manager.dispatchBlockLeftClick(event);
             }
+        }
+        
+        @EventHandler
+        public void onBlockBreak(BlockBreakEvent event) {
+        	manager.dispatchBlockBreak(event);
         }
     }
     
