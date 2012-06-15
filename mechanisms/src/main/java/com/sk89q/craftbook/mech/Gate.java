@@ -281,6 +281,7 @@ public class Gate extends AbstractMechanic {
                     && cur != BlockID.NETHER_BRICK_FENCE
                     && cur != BlockID.SNOW
                     && cur != BlockID.IRON_BARS
+                    && cur != BlockID.LONG_GRASS
                     && cur != 0) {
                     break;
             }

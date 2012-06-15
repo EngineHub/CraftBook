@@ -128,6 +128,8 @@ public class Bridge extends AbstractMechanic {
         this.plugin = plugin;
         this.settings = plugin.getLocalConfiguration().bridgeSettings; 
         
+        Sign s = (Sign)trigger.getState();
+        
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above
         Material mat;
@@ -135,8 +137,8 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) //TODO allow ThinBridges here instead of seperately.
+                if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -144,8 +146,8 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) //TODO allow ThinBridges here instead of seperately.
+                if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
@@ -176,14 +178,15 @@ public class Bridge extends AbstractMechanic {
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) //TODO allow ThinBridges here instead of seperately.
+         || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) || s.getLine(2).equalsIgnoreCase("1")) //TODO allow ThinBridges here instead of seperately.
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
+        if(!s.getLine(2).equalsIgnoreCase("1"))
         toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
-                BukkitUtil.toVector(SignUtil.getRight(trigger))); //TODO allow ThinBridges here instead of seperately.
+                BukkitUtil.toVector(SignUtil.getRight(trigger)));
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), 
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));       
     }
@@ -292,7 +295,8 @@ public class Bridge extends AbstractMechanic {
             && t != BlockID.LAVA
             && t != BlockID.STATIONARY_LAVA
             && t != BlockID.FENCE
-            && t != BlockID.SNOW //TODO add long grass.
+            && t != BlockID.SNOW
+            && t != BlockID.LONG_GRASS
             && t != 0) {
             return false;
         } else {
