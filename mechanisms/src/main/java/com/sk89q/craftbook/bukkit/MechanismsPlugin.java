@@ -34,7 +34,6 @@ import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.Snow;
-import com.sk89q.craftbook.mech.ThinBridge;
 
 
 /**
