@@ -179,7 +179,7 @@ public class Bridge extends AbstractMechanic {
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat)
          || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) || s.getLine(2).equalsIgnoreCase("1")) //TODO allow ThinBridges here instead of seperately.
+         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) || s.getLine(2).equalsIgnoreCase("1"))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
