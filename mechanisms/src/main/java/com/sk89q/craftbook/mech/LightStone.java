@@ -29,7 +29,6 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 

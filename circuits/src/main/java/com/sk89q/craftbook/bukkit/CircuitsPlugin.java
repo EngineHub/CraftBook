@@ -127,10 +127,13 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);
         icManager.register("MC1209", new ChestCollector.Factory(server, true), familySISO);
+        icManager.register("MC1210", new ParticleEffect.Factory(server, true), familySISO);
         icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO);             // Restricted
+        icManager.register("MC1217", new PotionInducer.Factory(server, true), familySISO);
         icManager.register("MC1230", new DaySensor.Factory(server, true), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server, true), familySISO);         // Restricted
+        icManager.register("MC1236", new WeatherFaker.Factory(server, true), familySISO); 
         icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // Restricted
         icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // Restricted
         icManager.register("MC1250", new FireShooter.Factory(server, true), familySISO);        // Restricted
@@ -174,6 +177,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
         icManager.register("MC0204", new EntityTrapST.Factory(server, true), familySISO);     // Restricted
         icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
+        icManager.register("MC0210", new ParticleEffectST.Factory(server, true), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);

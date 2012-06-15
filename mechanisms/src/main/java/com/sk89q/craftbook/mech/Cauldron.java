@@ -286,8 +286,6 @@ public class Cauldron extends AbstractMechanic {
                         world.dropItem(player.getLocation(), i.getValue());
                     }
                 }
-                //FIXME: deprecated call
-                player.updateInventory();
                 // Didn't find a recipe
             } else {
                 player.sendMessage(ChatColor.RED

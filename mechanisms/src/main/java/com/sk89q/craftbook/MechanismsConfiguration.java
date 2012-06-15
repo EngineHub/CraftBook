@@ -52,6 +52,7 @@ public class MechanismsConfiguration {
         lightStoneSettings = new LightStoneSettings(cfg);
         lightSwitchSettings = new LightSwitchSettings(cfg);
         hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
+        snowSettings = new SnowSettings(cfg);
     }
     
     public final File dataFolder;
@@ -65,7 +66,7 @@ public class MechanismsConfiguration {
     public final LightStoneSettings lightStoneSettings;
     public final LightSwitchSettings lightSwitchSettings;
     public final HiddenSwitchSettings hiddenSwitchSettings;
-    
+    public final SnowSettings snowSettings;
     
     
     public class BookcaseSettings {
@@ -197,6 +198,17 @@ public class MechanismsConfiguration {
 
         private HiddenSwitchSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("hidden-switches-enable",  true);
+        }
+    }
+    public class SnowSettings {
+        public final boolean enable;
+        public final boolean trample;
+        public final boolean placeSnow;
+
+        private SnowSettings(FileConfiguration cfg) {
+            enable             = cfg.getBoolean("snow-piling-enable",  true);
+            trample             = cfg.getBoolean("snow-trample-enable",  true);
+            placeSnow			= cfg.getBoolean("placable-snow", true);
         }
     }
 }

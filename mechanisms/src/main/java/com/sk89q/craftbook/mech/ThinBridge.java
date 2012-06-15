@@ -1,7 +1,7 @@
 // $Id$
 /*
  * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>m
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,15 +43,15 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
- * The default bridge mechanism -- signposts on either side of a 3xN plane of
+ * The thin bridge mechanism -- signposts on either side of a 1xN plane of
  * blocks.
  * 
  * @author hash
  * 
  */
-public class Bridge extends AbstractMechanic {
+public class ThinBridge extends AbstractMechanic { //TODO after doing previous TODO messages, delete this class and its registrarion in MechanismsPlugin.class
     
-    public static class Factory extends AbstractMechanicFactory<Bridge> {
+    public static class Factory extends AbstractMechanicFactory<ThinBridge> {
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
         }
@@ -69,15 +69,15 @@ public class Bridge extends AbstractMechanic {
          *             it failed.
          */
         @Override
-        public Bridge detect(BlockWorldVector pt) throws InvalidMechanismException {
+        public ThinBridge detect(BlockWorldVector pt) throws InvalidMechanismException {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
-            if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
+            if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[ThinBridge]")) return null;
             
             // okay, now we can start doing exploration of surrounding blocks
             // and if something goes wrong in here then we throw fits.
-            return new Bridge(block, plugin);
+            return new ThinBridge(block, plugin);
         }
         
         /**
@@ -86,22 +86,22 @@ public class Bridge extends AbstractMechanic {
          * @throws ProcessedMechanismException 
          */
         @Override
-        public Bridge detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public ThinBridge detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
-            if (sign.getLine(1).equalsIgnoreCase("[Bridge]")) {
-                if (!player.hasPermission("craftbook.mech.bridge")) {
+            if (sign.getLine(1).equalsIgnoreCase("[ThinBridge]")) {
+                if (!player.hasPermission("craftbook.mech.thinbridge")) {
                     throw new InsufficientPermissionsException();
                 }
                 
-                sign.setLine(1, "[Bridge]");
-                player.print("Bridge created.");
-            } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
-                if (!player.hasPermission("craftbook.mech.bridge")) {
+                sign.setLine(1, "[ThinBridge]");
+                player.print("ThinBridge created.");
+            } else if (sign.getLine(1).equalsIgnoreCase("[ThinBridge End]")) {
+                if (!player.hasPermission("craftbook.mech.thinbridge")) {
                     throw new InsufficientPermissionsException();
                 }
                 
-                sign.setLine(1, "[Bridge End]");
-                player.print("Bridge endpoint created.");
+                sign.setLine(1, "[ThinBridge End]");
+                player.print("ThinBridge endpoint created.");
             } else {
                 return null;
             }
@@ -118,7 +118,7 @@ public class Bridge extends AbstractMechanic {
      * @param plugin
      * @throws InvalidMechanismException
      */
-    private Bridge(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private ThinBridge(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
         super();
         
         if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
@@ -135,8 +135,6 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) //TODO allow ThinBridges here instead of seperately.
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -144,10 +142,7 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) //TODO allow ThinBridges here instead of seperately.
                     break findBase;     // it's below
-                throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
                 throw new UnacceptableMaterialException();
             }
@@ -164,26 +159,22 @@ public class Bridge extends AbstractMechanic {
             
             if (farside.getType() == Material.SIGN_POST) {
                 String otherSignText = ((Sign)farside.getState()).getLines()[1];
-                if ("[Bridge]".equalsIgnoreCase(otherSignText)) break;
-                if ("[Bridge End]".equalsIgnoreCase(otherSignText)) break;
+                if ("[ThinBridge]".equalsIgnoreCase(otherSignText)) break;
+                if ("[ThinBridge End]".equalsIgnoreCase(otherSignText)) break;
             }
             
             farside = farside.getRelative(dir);
         }
         if (farside.getType() != Material.SIGN_POST)
-            throw new InvalidConstructionException("[Bridge] sign required on other side (or it was too far away).");
+            throw new InvalidConstructionException("[ThinBridge] sign required on other side (or it was too far away).");
         
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
-        if ((distalBaseCenter.getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat)) //TODO allow ThinBridges here instead of seperately.
+        if ((distalBaseCenter.getType() != mat))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
-                BukkitUtil.toVector(SignUtil.getRight(trigger))); //TODO allow ThinBridges here instead of seperately.
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), 
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));       
     }
@@ -213,8 +204,8 @@ public class Bridge extends AbstractMechanic {
             return; //wth? our manager is insane
         
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
-        if ( !player.hasPermission("craftbook.mech.bridge.use")) {
-            player.printError("You don't have permission to use bridges.");
+        if ( !player.hasPermission("craftbook.mech.thinbridge.use")) {
+            player.printError("You don't have permission to use thinbridges.");
             return;
         }
         
@@ -269,7 +260,6 @@ public class Bridge extends AbstractMechanic {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId()))
                         b.setType(getBridgeMaterial());
-                        b.setData(getBridgeData());
             }
         }
     }
@@ -278,9 +268,7 @@ public class Bridge extends AbstractMechanic {
         return proximalBaseCenter.getType();
     }
     
-    private byte getBridgeData() {
-        return proximalBaseCenter.getData();
-    }
+    
 
     /**
      * @return whether the door can pass through this BlockType (and displace it
@@ -292,7 +280,7 @@ public class Bridge extends AbstractMechanic {
             && t != BlockID.LAVA
             && t != BlockID.STATIONARY_LAVA
             && t != BlockID.FENCE
-            && t != BlockID.SNOW //TODO add long grass.
+            && t != BlockID.SNOW
             && t != 0) {
             return false;
         } else {

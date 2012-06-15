@@ -43,12 +43,17 @@
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
-      <version>5.3-SNAPSHOT</version>
+      <version>5.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.2.3-R0.3-SNAPSHOT</version>
+      <version>1.2.5-R3.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.bukkit</groupId>
+    	<artifactId>craftbukkit</artifactId>
+    	<version>1.2.5-R3.0</version>
     </dependency>
   </dependencies>
   

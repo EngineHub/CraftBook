@@ -19,11 +19,11 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
 
-public class Melody extends AbstractIC{
+public class Melody extends AbstractIC {
 
 	MidiJingleSequencer sequencer;
 	JingleNoteComponent jNote = new JingleNoteComponent();
-	
+
 	public Melody(Server server, Sign block) {
 		super(server, block);
 		jNote.enable();
@@ -38,89 +38,88 @@ public class Melody extends AbstractIC{
 	public String getSignTitle() {
 		return "MELODY";
 	}
-	
+
 	@Override
-	public void unload()
-	{
-		if(jNote!=null)
+	public void unload() {
+		if (jNote != null)
 			jNote.getJingleNoteManager().stopAll();
 	}
 
 	@Override
 	public void trigger(ChipState chip) {
 		try {
-			if(chip.getInput(0) && sequencer == null)
-			{
+			if (chip.getInput(0) && sequencer == null) {
 				String midiName = getSign().getLine(2);
 
-	            File[] trialPaths = {
-	                    new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName),
-	                    new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName + ".mid"),
-	                    new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName + ".midi"),
-	                    new File("midi", midiName),
-	                    new File("midi", midiName + ".mid"),
-	                    new File("midi", midiName + ".midi"),
-	            };
+				File[] trialPaths = {
+						new File(CircuitsPlugin.getInst().getDataFolder(),
+								"midi/" + midiName),
+						new File(CircuitsPlugin.getInst().getDataFolder(),
+								"midi/" + midiName + ".mid"),
+						new File(CircuitsPlugin.getInst().getDataFolder(),
+								"midi/" + midiName + ".midi"),
+						new File("midi", midiName),
+						new File("midi", midiName + ".mid"),
+						new File("midi", midiName + ".midi"), };
 
-	            File file = null;
+				File file = null;
 
-	            for (File f : trialPaths) {
-	                if (f.exists()) {
-	                    file = f;
-	                    break;
-	                }
-	            }
+				for (File f : trialPaths) {
+					if (f.exists()) {
+						file = f;
+						break;
+					}
+				}
 
-	            if (file == null) {
-	            	getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
-	                return;
-	            }
-				
-	            if(sequencer!=null||jNote!=null)
-	            {
-					for (Player player : getServer().getOnlinePlayers())
-					{
+				if (file == null) {
+					getServer().getLogger().log(Level.SEVERE,
+							"Midi file not found!");
+					return;
+				}
+
+				if (sequencer != null || jNote != null) {
+					for (Player player : getServer().getOnlinePlayers()) {
 						jNote.getJingleNoteManager().stop(player);
 					}
 					jNote.getJingleNoteManager().stopAll();
-	            }
+				}
 				sequencer = new MidiJingleSequencer(file);
 				for (Player player : getServer().getOnlinePlayers()) {
-					if(player==null)continue;
+					if (player == null)
+						continue;
 					jNote.getJingleNoteManager().play(player, sequencer, 0);
-					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
+					player.sendMessage(ChatColor.YELLOW + "Playing " + midiName
+							+ "...");
 				}
-			}
-			else if(sequencer!=null && chip.getInput(0))
-			{
+			} else if (sequencer != null && chip.getInput(0)) {
 				sequencer.stop();
 				sequencer = null;
-				for (Player player : getServer().getOnlinePlayers())
-				{
+				for (Player player : getServer().getOnlinePlayers()) {
 					jNote.getJingleNoteManager().stop(player);
 				}
 				jNote.getJingleNoteManager().stopAll();
 			}
-		}
-		catch(Exception e){
-			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
+		} catch (Exception e) {
+			getServer().getLogger().log(Level.SEVERE,
+					"[CraftBookCircuits]: Midi Failed To Play!");
 			final Writer result = new StringWriter();
-		    final PrintWriter printWriter = new PrintWriter(result);
-		    e.printStackTrace(printWriter);
-			getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: " + result.toString());
+			final PrintWriter printWriter = new PrintWriter(result);
+			e.printStackTrace(printWriter);
+			getServer().getLogger().log(Level.SEVERE,
+					"[CraftBookCircuits]: " + result.toString());
 		}
 	}
-	
-    public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
-            super(server);
-        }
+	public static class Factory extends AbstractICFactory {
 
-        @Override
-        public IC create(Sign sign) {
-            return new Melody(getServer(), sign);
-        }
-    }
+		public Factory(Server server) {
+			super(server);
+		}
+
+		@Override
+		public IC create(Sign sign) {
+			return new Melody(getServer(), sign);
+		}
+	}
 
 }
