@@ -133,6 +133,8 @@ public class Door extends AbstractMechanic {
         this.plugin = plugin;
         this.settings = plugin.getLocalConfiguration().doorSettings; 
         
+        Sign s = (Sign)trigger.getState();
+        
         Material mat;
         findBase: {
             if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
@@ -142,8 +144,9 @@ public class Door extends AbstractMechanic {
             }    
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat)
+            	if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
+                        && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
+                        || (s.getLine(2).equalsIgnoreCase("1")))
                     break findBase;
                 throw new InvalidConstructionException("Blocks adjacent to the door block must be of the same type.");
             } else {
@@ -188,15 +191,18 @@ public class Door extends AbstractMechanic {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
         
-        if ((distalBaseCenter.getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat))
+        if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
+                || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
+                || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())) 
+                && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) otherSide.getState()).getLine(2).equalsIgnoreCase("1")))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
+        
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
-                BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        if(!s.getLine(2).equalsIgnoreCase("1") && !((Sign) otherSide.getState()).getLine(2).equalsIgnoreCase("1"))
+        	toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), 
+        			BukkitUtil.toVector(SignUtil.getRight(trigger)));
         toggle.contract(BukkitUtil.toVector(BlockFace.UP), BukkitUtil.toVector(BlockFace.DOWN));
     }
     
@@ -267,8 +273,10 @@ public class Door extends AbstractMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getTypeId()))
+                if (canPassThrough(b.getTypeId())) {
                         b.setType(getDoorMaterial());
+                        b.setData(getDoorData());
+                }
             }
         }
     }
@@ -287,6 +295,11 @@ public class Door extends AbstractMechanic {
     private Material getDoorMaterial() {
         return proximalBaseCenter.getType();
     }
+    
+    private byte getDoorData() {
+        return proximalBaseCenter.getData();
+    }
+
     
     private MechanismsPlugin plugin;
     private MechanismsConfiguration.DoorSettings settings;
