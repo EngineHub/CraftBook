@@ -185,6 +185,7 @@ public class Elevator extends AbstractMechanic {
         
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
             localPlayer.printError("You don't have permission to use elevators.");
+            return;
         }
         
         makeItSo(event.getPlayer());
