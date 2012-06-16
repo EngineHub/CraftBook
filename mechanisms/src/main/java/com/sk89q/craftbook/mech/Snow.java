@@ -15,6 +15,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 
+/**
+ * Snow fall mechanism.
+ * Builds up/tramples snow
+ * 
+ * @author Me4502
+ * 
+ */
 public class Snow implements Listener {
 
 	MechanismsPlugin plugin;

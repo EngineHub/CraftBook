@@ -392,4 +392,3 @@ public class Door extends PersistentMechanic {
 		return bwv;
 	}
 }
-

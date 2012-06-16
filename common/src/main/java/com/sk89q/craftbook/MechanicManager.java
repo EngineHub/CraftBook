@@ -127,7 +127,7 @@ public class MechanicManager {
         
         // Announce the event to anyone who considers it to be on one of their defining blocks
         //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
-        watchBlockManager.notify(event);
+        //watchBlockManager.notify(event);
         
         // See if this event could be occurring on any mechanism's triggering blocks
         Block block = event.getBlock();
