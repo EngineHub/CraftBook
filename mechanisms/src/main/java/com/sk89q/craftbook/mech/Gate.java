@@ -19,9 +19,12 @@
 
 package com.sk89q.craftbook.mech;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -33,7 +36,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -55,7 +58,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  *
  * @author sk89q
  */
-public class Gate extends AbstractMechanic {
+public class Gate extends PersistentMechanic {
     
     /**
      * Plugin.
@@ -419,6 +422,11 @@ public class Gate extends AbstractMechanic {
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
-		
+		if(!(event.getBlock().getType() == Material.SIGN)) event.setCancelled(true);
+	}
+
+	@Override
+	public List<BlockWorldVector> getWatchedPositions() {
+		return Arrays.asList(pt);
 	}
 }

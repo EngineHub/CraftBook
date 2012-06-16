@@ -19,18 +19,23 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.AbstractMechanic;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -48,7 +53,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  *
  * @author turtle9598
  */
-public class Door extends AbstractMechanic {
+public class Door extends PersistentMechanic {
     
     public static class Factory extends AbstractMechanicFactory<Door> {
         public Factory(MechanismsPlugin plugin) {
@@ -370,7 +375,19 @@ public class Door extends AbstractMechanic {
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
-		
+		if(!(event.getBlock().getType() == Material.SIGN)) event.setCancelled(true);
+	}
+
+	@Override
+	public List<BlockWorldVector> getWatchedPositions() {
+		List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
+		for(int i = 0; toggle.iterator().hasNext(); i++)
+		{
+			BlockVector vec = toggle.iterator().next();
+			
+			bwv.add(BukkitUtil.toWorldVector(trigger.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ())));
+		}
+		return bwv;
 	}
 }
 
