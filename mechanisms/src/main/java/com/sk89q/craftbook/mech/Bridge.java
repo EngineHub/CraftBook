@@ -138,9 +138,9 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
-                 || (s.getLine(2).equalsIgnoreCase("1")))
+            	if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat
+            			&& proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
+                        || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -148,9 +148,9 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if (((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat)
-                 && (proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType()) == mat) 
-                 || (s.getLine(2).equalsIgnoreCase("1")))
+            	if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat
+            			&& proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
+                        || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // it's below
                 throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
             } else {
