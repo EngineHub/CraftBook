@@ -46,6 +46,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -375,4 +376,11 @@ public class Bridge extends PersistentMechanic {
 		}
 		return bwv;
 	}
+	
+	@Override
+    public void onWatchBlockNotification(BlockEvent evt) {
+		if(evt instanceof BlockBreakEvent)
+			if(!(evt.getBlock().getState() instanceof Sign))
+				((BlockBreakEvent) evt).setCancelled(true);
+    }
 }
