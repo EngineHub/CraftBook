@@ -205,6 +205,7 @@ public class Gate extends AbstractMechanic {
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
         if (world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.FENCE
                 && world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.IRON_BARS
+                && world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.GLASS_PANE
                 && world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.NETHER_BRICK_FENCE) {
             return false;
         }
@@ -219,6 +220,7 @@ public class Gate extends AbstractMechanic {
         for (int y1 = y + 1; y1 <= y + 12; y1++) {
             if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
                     || world.getBlockTypeIdAt(x, y1, z) == BlockID.IRON_BARS
+                    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
                     || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
                 y = y1;
             } else {
@@ -238,6 +240,7 @@ public class Gate extends AbstractMechanic {
 
             close = world.getBlockTypeIdAt(x, y - 1, z) != BlockID.FENCE
                     && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.IRON_BARS
+                    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.GLASS_PANE
                     && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.NETHER_BRICK_FENCE;
         }
 
@@ -282,6 +285,7 @@ public class Gate extends AbstractMechanic {
                     && cur != BlockID.NETHER_BRICK_FENCE
                     && cur != BlockID.SNOW
                     && cur != BlockID.IRON_BARS
+                    && cur != BlockID.GLASS_PANE
                     && cur != BlockID.LONG_GRASS
                     && cur != 0) {
                     break;
