@@ -20,7 +20,6 @@ package com.sk89q.craftbook.mech;
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -376,7 +375,10 @@ public class Door extends PersistentMechanic {
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
-		if(!(event.getBlock().getType() == Material.SIGN)) event.setCancelled(true);
+		if(event.getBlock().getState() instanceof Sign) 
+			return;
+		else
+			event.setCancelled(true);
 	}
 
 	@Override
@@ -386,7 +388,7 @@ public class Door extends PersistentMechanic {
 		while(it.hasNext())
 		{
 			BlockVector vec = it.next();
-			if(vec == null) break;
+			if(vec == null) continue;
 			bwv.add(BukkitUtil.toWorldVector(trigger.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ())));
 		}
 		return bwv;

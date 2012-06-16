@@ -331,6 +331,7 @@ public class MechanicManager {
      * 
      * @param pos
      * @param player
+     * @param sign
      * @return a {@link Mechanic} if a mechanism could be found at the location;
      *         null otherwise
      * @throws InvalidMechanismException
