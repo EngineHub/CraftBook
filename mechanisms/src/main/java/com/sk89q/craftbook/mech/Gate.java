@@ -19,17 +19,18 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -74,6 +75,11 @@ public class Gate extends PersistentMechanic {
      * Indicates a DGate.
      */
     protected boolean smallSearchSize;
+    
+    /**
+     * Indicates a DGate.
+     */
+    protected List<BlockWorldVector> gates = new ArrayList<BlockWorldVector>();
     
     /**
      * Construct a gate for a location.
@@ -133,6 +139,17 @@ public class Gate extends PersistentMechanic {
                 }
             }
         }
+        
+        //Stop breaking of gates.
+        gates.clear();
+        Iterator<BlockVector> it = visitedColumns.iterator();
+        while(it.hasNext())
+        {
+        	BlockVector bv = it.next();
+        	gates.add(BukkitUtil.toWorldVector(BukkitUtil.toWorld(pt.getWorld()).getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ())));
+        }
+        
+        gates.add(pt.toWorldBlockVector());
 
         //bag.flushChanges();
 
@@ -422,11 +439,21 @@ public class Gate extends PersistentMechanic {
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
-		if(!(event.getBlock().getType() == Material.SIGN)) event.setCancelled(true);
+		if(event.getBlock().getState() instanceof Sign) 
+			return;
+		else
+			event.setCancelled(true);
 	}
 
 	@Override
 	public List<BlockWorldVector> getWatchedPositions() {
-		return Arrays.asList(pt);
+		return gates;
 	}
+	
+	@Override
+    public void onWatchBlockNotification(BlockEvent evt) {
+		if(evt instanceof BlockBreakEvent)
+			if(!(evt.getBlock().getState() instanceof Sign))
+				((BlockBreakEvent) evt).setCancelled(true);
+    }
 }
