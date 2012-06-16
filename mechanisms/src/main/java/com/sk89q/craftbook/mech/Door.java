@@ -329,6 +329,7 @@ public class Door extends AbstractMechanic {
             && t != BlockID.FENCE
             && t != BlockID.SNOW
             && t != BlockID.LONG_GRASS
+            && t != BlockID.VINE
             && t != 0) {
             return false;
         } else {
