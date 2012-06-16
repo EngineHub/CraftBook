@@ -21,6 +21,7 @@ package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -381,10 +382,11 @@ public class Door extends PersistentMechanic {
 	@Override
 	public List<BlockWorldVector> getWatchedPositions() {
 		List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
-		for(int i = 0; toggle.iterator().hasNext(); i++)
+		Iterator<BlockVector> it = toggle.iterator();
+		while(it.hasNext())
 		{
-			BlockVector vec = toggle.iterator().next();
-			
+			BlockVector vec = it.next();
+			if(vec == null) break;
 			bwv.add(BukkitUtil.toWorldVector(trigger.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ())));
 		}
 		return bwv;
