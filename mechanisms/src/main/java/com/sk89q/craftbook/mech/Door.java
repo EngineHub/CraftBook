@@ -191,10 +191,10 @@ public class Door extends AbstractMechanic {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
         
-		if ((distalBaseCenter.getType() != mat)
-				|| ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat)
-				|| (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat))
-				|| (s.getLine(2).equalsIgnoreCase("1")))
+        if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
+                || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
+                || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())) 
+                && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) otherSide.getState()).getLine(2).equalsIgnoreCase("1")))
             throw new InvalidConstructionException("The other side must be made with the same blocks.");
         
         // Select the togglable region
