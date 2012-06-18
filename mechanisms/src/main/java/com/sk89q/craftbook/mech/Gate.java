@@ -202,6 +202,18 @@ public class Gate extends PersistentMechanic {
                 }
             }
         }
+        
+        //Stop breaking of gates.
+        gates.clear();
+        Iterator<BlockVector> it = visitedColumns.iterator();
+        while(it.hasNext())
+        {
+        	BlockVector bv = it.next();
+        	gates.add(BukkitUtil.toWorldVector(BukkitUtil.toWorld(pt.getWorld()).getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ())));
+        }
+        
+        gates.add(pt.toWorldBlockVector());
+
 
         //bag.flushChanges();
 
