@@ -342,6 +342,12 @@ public class Gate extends PersistentMechanic {
         if (!plugin.getLocalConfiguration().gateSettings.enable) return;
         
         LocalPlayer player = plugin.wrap(event.getPlayer());
+        
+        if ( !player.hasPermission("craftbook.mech.gate.use")) {
+            player.printError("You don't have permission to use gates.");
+            return;
+        }
+        
         if (toggleGates(pt, smallSearchSize)) {
             player.print("Gate toggled!");
         } else {
