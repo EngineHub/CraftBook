@@ -206,7 +206,7 @@ public class Gate extends PersistentMechanic {
      * @return true if a gate column was found and blocks were changed; false
      *         otherwise.
      */
-    private boolean columnExists(WorldVector pt,
+    private boolean getColumn(WorldVector pt,
 	    Set<BlockVector> visitedColumns, Boolean close) {
 
 	World world = ((BukkitWorld) pt.getWorld()).getWorld();
@@ -226,6 +226,7 @@ public class Gate extends PersistentMechanic {
 	int x = pt.getBlockX();
 	int y = pt.getBlockY();
 	int z = pt.getBlockZ();
+	int oy = y;
 
 	visitedColumns.add(pt.setY(0).toBlockVector());
 
@@ -236,6 +237,20 @@ public class Gate extends PersistentMechanic {
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
 		y = y1;
+		visitedColumns.add(BukkitUtil.toVector(world.getBlockAt(x, y1, z)));
+	    } else {
+		break;
+	    }
+	}
+	
+	// Make sure to add all fences.
+	for (int y1 = oy - 1; y1 >= oy - 12; y1--) {
+	    if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
+		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.IRON_BARS
+		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
+		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
+		oy = y1;
+		visitedColumns.add(BukkitUtil.toVector(world.getBlockAt(x, y1, z)));
 	    } else {
 		break;
 	    }
@@ -537,7 +552,7 @@ public class Gate extends PersistentMechanic {
 	    for (int x1 = x - 1; x1 <= x + 1; x1++) {
 		for (int y1 = y - 2; y1 <= y + 1; y1++) {
 		    for (int z1 = z - 1; z1 <= z + 1; z1++) {
-			if (columnExists(new WorldVector(world, x1, y1, z1),
+			if (getColumn(new WorldVector(world, x1, y1, z1),
 				visitedColumns, null)) {
 			}
 		    }
@@ -548,7 +563,7 @@ public class Gate extends PersistentMechanic {
 	    for (int x1 = x - 3; x1 <= x + 3; x1++) {
 		for (int y1 = y - 3; y1 <= y + 6; y1++) {
 		    for (int z1 = z - 3; z1 <= z + 3; z1++) {
-			if (columnExists(new WorldVector(world, x1, y1, z1),
+			if (getColumn(new WorldVector(world, x1, y1, z1),
 				visitedColumns, null)) {
 			}
 		    }
