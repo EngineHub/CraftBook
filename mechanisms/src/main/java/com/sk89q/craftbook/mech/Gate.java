@@ -204,10 +204,7 @@ public class Gate extends PersistentMechanic {
 	    ArrayList<BlockWorldVector> visitedColumns, Boolean close) {
 
 	World world = ((BukkitWorld) pt.getWorld()).getWorld();
-	if (world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.FENCE
-		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.IRON_BARS
-		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.GLASS_PANE
-		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.NETHER_BRICK_FENCE) {
+	if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
 	    return false;
 	}
 
@@ -221,10 +218,7 @@ public class Gate extends PersistentMechanic {
 
 	// Find the top most fence
 	for (int y1 = y + 1; y1 <= y + 12; y1++) {
-	    if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.IRON_BARS
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
+	    if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
 		y = y1;
 		if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z))))
 			visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z)));
@@ -234,17 +228,19 @@ public class Gate extends PersistentMechanic {
 	}
 	
 	// Make sure to add all fences.
-	for (int y1 = oy; y1 > oy - 12; y1--) {
-	    if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.IRON_BARS
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
+	for (int y1 = y; y1 > y - 12; y1--) {
+	    if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
 		oy = y1;
 		if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z))))
 		    visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z)));
 	    } else {
 		break;
 	    }
+	}
+	
+	if (isValidGateBlock(world.getBlockAt(x, oy-1, z))) {
+	    if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, oy - 1, z))))
+		    visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, oy - 1, z)));
 	}
 
 	// The block above the gate cannot be air -- it has to be some
@@ -257,10 +253,7 @@ public class Gate extends PersistentMechanic {
 	    // Close the gate if the block below does not exist as a fence
 	    // block, otherwise open the gate
 
-	    close = world.getBlockTypeIdAt(x, y - 1, z) != BlockID.FENCE
-		    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.IRON_BARS
-		    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.GLASS_PANE
-		    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.NETHER_BRICK_FENCE;
+	    close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
 	}
 
 	return true;
@@ -285,10 +278,7 @@ public class Gate extends PersistentMechanic {
 	if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
 	    return false;
 	}
-	if (world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.FENCE
-		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.IRON_BARS
-		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.GLASS_PANE
-		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.NETHER_BRICK_FENCE) {
+	if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
 	    return false;
 	}
 
@@ -300,10 +290,7 @@ public class Gate extends PersistentMechanic {
 
 	// Find the top most fence
 	for (int y1 = y + 1; y1 <= y + 12; y1++) {
-	    if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.IRON_BARS
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
-		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
+	    if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
 		y = y1;
 	    } else {
 		break;
@@ -320,10 +307,7 @@ public class Gate extends PersistentMechanic {
 	    // Close the gate if the block below does not exist as a fence
 	    // block, otherwise open the gate
 
-	    close = world.getBlockTypeIdAt(x, y - 1, z) != BlockID.FENCE
-		    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.IRON_BARS
-		    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.GLASS_PANE
-		    && world.getBlockTypeIdAt(x, y - 1, z) != BlockID.NETHER_BRICK_FENCE;
+	    close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
 	}
 
 	// Recursively go to connected fence blocks of the same level
@@ -519,6 +503,17 @@ public class Gate extends PersistentMechanic {
 	    throw new ProcessedMechanismException();
 	}
 
+    }
+    
+    public boolean isValidGateBlock(Block block)
+    {
+	if(block.getTypeId() == BlockID.FENCE
+		    || block.getTypeId() == BlockID.IRON_BARS
+		    || block.getTypeId() == BlockID.GLASS_PANE
+		    || block.getTypeId() == BlockID.NETHER_BRICK_FENCE)
+	    return true;
+	else
+	    return false;
     }
 
     @Override
