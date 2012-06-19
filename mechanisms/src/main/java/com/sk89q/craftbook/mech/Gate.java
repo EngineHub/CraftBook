@@ -21,7 +21,6 @@ package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -75,11 +74,6 @@ public class Gate extends PersistentMechanic {
      * Indicates a DGate.
      */
     protected boolean smallSearchSize;
-
-    /**
-     * Indicates a DGate.
-     */
-    protected List<BlockWorldVector> gates = new ArrayList<BlockWorldVector>();
 
     /**
      * Construct a gate for a location.
@@ -207,15 +201,9 @@ public class Gate extends PersistentMechanic {
      *         otherwise.
      */
     private boolean getColumn(WorldVector pt,
-	    Set<BlockVector> visitedColumns, Boolean close) {
+	    ArrayList<BlockWorldVector> visitedColumns, Boolean close) {
 
 	World world = ((BukkitWorld) pt.getWorld()).getWorld();
-	if (visitedColumns.size() > 14) {
-	    return false;
-	}
-	if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
-	    return false;
-	}
 	if (world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.FENCE
 		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.IRON_BARS
 		&& world.getBlockTypeIdAt(BukkitUtil.toLocation(pt)) != BlockID.GLASS_PANE
@@ -228,7 +216,8 @@ public class Gate extends PersistentMechanic {
 	int z = pt.getBlockZ();
 	int oy = y;
 
-	visitedColumns.add(pt.setY(0).toBlockVector());
+	if (!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(pt.setY(0).getBlockX(),pt.setY(0).getBlockY(),pt.setY(0).getBlockZ()))))
+	    visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(pt.setY(0).getBlockX(),pt.setY(0).getBlockY(),pt.setY(0).getBlockZ())));
 
 	// Find the top most fence
 	for (int y1 = y + 1; y1 <= y + 12; y1++) {
@@ -237,20 +226,22 @@ public class Gate extends PersistentMechanic {
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
 		y = y1;
-		visitedColumns.add(BukkitUtil.toVector(world.getBlockAt(x, y1, z)));
+		if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z))))
+			visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z)));
 	    } else {
 		break;
 	    }
 	}
 	
 	// Make sure to add all fences.
-	for (int y1 = oy - 1; y1 >= oy - 12; y1--) {
+	for (int y1 = oy; y1 > oy - 12; y1--) {
 	    if (world.getBlockTypeIdAt(x, y1, z) == BlockID.FENCE
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.IRON_BARS
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.GLASS_PANE
 		    || world.getBlockTypeIdAt(x, y1, z) == BlockID.NETHER_BRICK_FENCE) {
 		oy = y1;
-		visitedColumns.add(BukkitUtil.toVector(world.getBlockAt(x, y1, z)));
+		if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z))))
+		    visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z)));
 	    } else {
 		break;
 	    }
@@ -544,8 +535,8 @@ public class Gate extends PersistentMechanic {
 	int x = pt.getBlockX();
 	int y = pt.getBlockY();
 	int z = pt.getBlockZ();
-
-	Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
+	
+	ArrayList<BlockWorldVector> gates = new ArrayList<BlockWorldVector>();
 
 	if (smallSearchSize) {
 	    // Toggle nearby gates
@@ -553,7 +544,7 @@ public class Gate extends PersistentMechanic {
 		for (int y1 = y - 2; y1 <= y + 1; y1++) {
 		    for (int z1 = z - 1; z1 <= z + 1; z1++) {
 			if (getColumn(new WorldVector(world, x1, y1, z1),
-				visitedColumns, null)) {
+				gates, null)) {
 			}
 		    }
 		}
@@ -564,21 +555,11 @@ public class Gate extends PersistentMechanic {
 		for (int y1 = y - 3; y1 <= y + 6; y1++) {
 		    for (int z1 = z - 3; z1 <= z + 3; z1++) {
 			if (getColumn(new WorldVector(world, x1, y1, z1),
-				visitedColumns, null)) {
+				gates, null)) {
 			}
 		    }
 		}
 	    }
-	}
-
-	// Stop breaking of gates.
-	gates.clear();
-	Iterator<BlockVector> it = visitedColumns.iterator();
-	while (it.hasNext()) {
-	    BlockVector bv = it.next();
-	    gates.add(BukkitUtil.toWorldVector(BukkitUtil
-		    .toWorld(pt.getWorld()).getBlockAt(bv.getBlockX(),
-			    bv.getBlockY(), bv.getBlockZ())));
 	}
 
 	gates.add(pt.toWorldBlockVector());
