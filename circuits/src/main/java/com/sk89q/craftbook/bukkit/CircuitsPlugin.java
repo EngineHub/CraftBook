@@ -143,9 +143,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1262", new LightSensor.Factory(server, true), familySISO);
         icManager.register("MC1263", new BlockSensor.Factory(server, true), familySISO);
         icManager.register("MC1270", new Melody.Factory(server), familySISO);
-        icManager.register("MC1420", new ClockDivider.Factory(server, true), familySISO);
-        icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
-        
+	    icManager.register("MC1271", new Detection.Factory(server, true), familySISO);          // Restricted
+	    icManager.register("MC1420", new ClockDivider.Factory(server, true), familySISO);
+	    icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
+
         //SI3Os
         icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O);
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
@@ -164,7 +165,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
         icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);		// Restricted
-
         //Missing: 3231                                                                         // Restricted        
         //3I3Os
         //Missing: 4000
@@ -182,13 +182,14 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
         icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
-        icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
-        icManager.register("MC0420", new Clock.Factory(server), familySISO);
-        icManager.register("MC0421", new Monostable.Factory(server), familySISO);
-        icManager.register("MC0500", new RangedOutput.Factory(server, true), familySISO);
+	    icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
+	    icManager.register("MC0271", new DetectionST.Factory(server, true), familySISO);      // Restricted
+	    icManager.register("MC0420", new Clock.Factory(server), familySISO);
+	    icManager.register("MC0421", new Monostable.Factory(server), familySISO);
+	    icManager.register("MC0500", new RangedOutput.Factory(server, true), familySISO);
         //Missing: 0020 self-triggered RNG (may cause server load issues)
-	//Missing: 0262
-	//Missing: 0420     
+		//Missing: 0262
+		//Missing: 0420
         //Xtra ICs
         //SISOs
         icManager.register("MCX230", new RainSensor.Factory(server, true), familySISO);
