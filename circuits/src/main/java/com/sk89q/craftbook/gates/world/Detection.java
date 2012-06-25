@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.Enums;
+import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -11,7 +11,6 @@ import org.bukkit.entity.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * @author Silthus
@@ -52,7 +51,7 @@ public class Detection extends AbstractIC {
 		}
 
 		public static Type fromString(String name) {
-			return Enums.getEnumFromString(Detection.Type.class, name);
+			return EnumUtil.getEnumFromString(Detection.Type.class, name);
 		}
 	}
 

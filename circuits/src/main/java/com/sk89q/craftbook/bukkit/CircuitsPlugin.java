@@ -165,7 +165,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
         icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);		// Restricted
-
         //Missing: 3231                                                                         // Restricted        
         //3I3Os
         //Missing: 4000
@@ -189,8 +188,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	    icManager.register("MC0421", new Monostable.Factory(server), familySISO);
 	    icManager.register("MC0500", new RangedOutput.Factory(server, true), familySISO);
         //Missing: 0020 self-triggered RNG (may cause server load issues)
-	//Missing: 0262
-	//Missing: 0420     
+		//Missing: 0262
+		//Missing: 0420
         //Xtra ICs
         //SISOs
         icManager.register("MCX230", new RainSensor.Factory(server, true), familySISO);

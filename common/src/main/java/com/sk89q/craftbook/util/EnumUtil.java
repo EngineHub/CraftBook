@@ -3,10 +3,10 @@ package com.sk89q.craftbook.util;
 /**
  * @author Silthus
  */
-public final class Enums {
+public final class EnumUtil {
 
 	// util class
-	private Enums() {}
+	private EnumUtil() {}
 
 	/**
 	 * Get the enum value of a string, null if it doesn't exist.
