@@ -172,11 +172,11 @@ public class Detection extends AbstractIC {
 		int x = Math.abs(l1.getBlockX() - l2.getBlockX());
 		int y = Math.abs(l1.getBlockY() - l2.getBlockY());
 		int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-		if (x > y && x > z) {
+		if (x >= y && x >= z) {
 			return x;
-		} else if (y > x && y > z) {
+		} else if (y >= x && y >= z) {
 			return y;
-		} else if (z > x && z > y) {
+		} else if (z >= x && z >= y) {
 			return z;
 		} else {
 			return x;
