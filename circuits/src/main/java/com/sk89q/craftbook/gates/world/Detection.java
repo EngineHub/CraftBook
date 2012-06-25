@@ -18,8 +18,6 @@ import java.util.logging.Logger;
  */
 public class Detection extends AbstractIC {
 
-	private final static Logger logger = Logger.getLogger("Minecraft.Test");
-
 	private enum Type {
 		PLAYER,
 		MOBHOSTILE,
@@ -34,31 +32,22 @@ public class Detection extends AbstractIC {
 
 			switch (this) {
 				case PLAYER:
-					logger.info("... is Player");
 					return entity instanceof Player;
 				case MOBHOSTILE:
-					logger.info("... is HOSTILE");
 					return entity instanceof Monster;
 				case MOBPEACEFUL:
-					logger.info("... is PEACEFUL");
 					return entity instanceof Animals;
 				case ANYMOB:
-					logger.info("... is ANYMOB");
 					return entity instanceof Creature;
 				case CART:
-					logger.info("... is CART");
 					return entity instanceof Minecart;
 				case STORAGECART:
-					logger.info("... is STORAGE");
 					return entity instanceof StorageMinecart;
 				case POWEREDCART:
-					logger.info("... is POWEREDCART");
 					return entity instanceof PoweredMinecart;
 				case ANY:
-					logger.info("... is ANY");
 					return true;
 			}
-			logger.info("... is NONE");
 			return false;
 		}
 
@@ -145,12 +134,9 @@ public class Detection extends AbstractIC {
 				// get all entites from the chunks in the defined radius
 				for (Entity entity : chunk.getEntities()) {
 					if (!entity.isDead()) {
-						logger.info("Checking Entity...");
 						if (type.is(entity)) {
 							// at last check if the entity is within the radius
-							logger.info("Checking distance...");
 							if (getGreatestDistance(entity.getLocation(), location) <= radius) {
-								logger.info("...success!");
 								return true;
 							}
 						}
