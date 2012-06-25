@@ -188,8 +188,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	    icManager.register("MC0421", new Monostable.Factory(server), familySISO);
 	    icManager.register("MC0500", new RangedOutput.Factory(server, true), familySISO);
         //Missing: 0020 self-triggered RNG (may cause server load issues)
-		//Missing: 0262
-		//Missing: 0420
         //Xtra ICs
         //SISOs
         icManager.register("MCX230", new RainSensor.Factory(server, true), familySISO);
