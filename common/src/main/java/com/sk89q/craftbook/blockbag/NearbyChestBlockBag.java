@@ -27,6 +27,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.util.DistanceComparator;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
@@ -52,9 +53,9 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param origin
      */
     public NearbyChestBlockBag(Vector origin) {
-        //FIXME DistanceComparator<Chest> comparator =
-                //FIXME new DistanceComparator<Chest>(origin);
-        chests = new TreeSet<Chest>(/*FIXME comparator*/);
+        DistanceComparator<Chest> comparator =
+                new DistanceComparator<Chest>(origin);
+        chests = new TreeSet<Chest>(comparator);
     }
 
     /**
@@ -223,9 +224,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * Flush changes.
      */
     public void flushChanges() {
-       // for (Chest c : chests) {
-            //FIXME c.flushChanges();
-      //  }
+        //TODO - Remove because... Superfluous
     }
     
     /**
