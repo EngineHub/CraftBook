@@ -147,7 +147,8 @@ public class Bookcase extends AbstractMechanic {
         if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
         
         Player player = event.getPlayer();
-        read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseSettings.readLine);
+        if(!player.getItemInHand().getType().isBlock())
+            read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseSettings.readLine);
     }
 
     /**
