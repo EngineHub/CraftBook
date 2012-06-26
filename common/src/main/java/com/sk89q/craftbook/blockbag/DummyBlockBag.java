@@ -22,6 +22,11 @@ package com.sk89q.craftbook.blockbag;
 import org.bukkit.World;
 
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.bags.BlockBag;
+import com.sk89q.worldedit.bags.BlockBagException;
+import com.sk89q.worldedit.bags.OutOfBlocksException;
+import com.sk89q.worldedit.bags.OutOfSpaceException;
 
 /**
  * For the uninitiated.
@@ -46,7 +51,7 @@ public class DummyBlockBag extends BlockBag {
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockBagException {
-        if(!fetch) throw new OutOfBlocksException(id);
+        if(!fetch) throw new OutOfBlocksException();
     }
 
     /**
@@ -67,7 +72,7 @@ public class DummyBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSourcePosition(World w, Vector pos) {
+    public void addSourcePosition(WorldVector arg0) {
     }
     
     /**
@@ -76,7 +81,7 @@ public class DummyBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSingleSourcePosition(World w, Vector pos) {
+    public void addSingleSourcePosition(WorldVector arg0) {
     }
 
     /**

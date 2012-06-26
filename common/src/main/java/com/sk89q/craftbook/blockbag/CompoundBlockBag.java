@@ -23,6 +23,12 @@ import java.util.List;
 import org.bukkit.World;
 
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.bags.BlockBag;
+import com.sk89q.worldedit.bags.BlockBagException;
+import com.sk89q.worldedit.bags.OutOfBlocksException;
+import com.sk89q.worldedit.bags.OutOfSpaceException;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * A collection of block bags.
@@ -68,29 +74,7 @@ public class CompoundBlockBag extends BlockBag {
                 return;
             } catch (OutOfBlocksException e) {
             }
-        throw new OutOfBlocksException(id);
-    }
-
-    /**
-     * Adds a position to be used a source.
-     *
-     * @param pos
-     * @return
-     */
-    public void addSingleSourcePosition(World w, Vector pos) {
-        for (BlockBag b : sources)
-            b.addSingleSourcePosition(w, pos);
-    }
-
-    /**
-     * Adds a position to be used a source.
-     *
-     * @param pos
-     * @return
-     */
-    public void addSourcePosition(World w, Vector pos) {
-        for (BlockBag b : sources)
-            b.addSourcePosition(w, pos);
+        throw new OutOfBlocksException();
     }
 
     /**
@@ -101,5 +85,17 @@ public class CompoundBlockBag extends BlockBag {
     public void flushChanges() {
         for (BlockBag b : sources)
             b.flushChanges();
+    }
+
+    @Override
+    public void addSingleSourcePosition(WorldVector arg0) {
+	for (BlockBag b : sources)
+            b.addSingleSourcePosition(arg0);
+    }
+
+    @Override
+    public void addSourcePosition(WorldVector arg0) {
+        for (BlockBag b : sources)
+            b.addSourcePosition(arg0);
     }
 }

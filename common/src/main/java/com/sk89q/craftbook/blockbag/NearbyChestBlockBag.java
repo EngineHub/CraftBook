@@ -28,6 +28,11 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.bags.BlockBag;
+import com.sk89q.worldedit.bags.BlockBagException;
+import com.sk89q.worldedit.bags.OutOfBlocksException;
+import com.sk89q.worldedit.bags.OutOfSpaceException;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
@@ -87,7 +92,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 }
             }
     
-            throw new OutOfBlocksException(id);
+            throw new OutOfBlocksException();
         } finally {
             flushChanges();
         }
@@ -157,7 +162,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSourcePosition(World w, Vector pos) {
+    public void addSourcePosition(WorldVector arg0) {
         //int ox = pos.getBlockX();
         //int oy = pos.getBlockY();
         //int oz = pos.getBlockZ();
@@ -165,8 +170,8 @@ public class NearbyChestBlockBag extends BlockBag {
         for (int x = -3; x <= 3; x++) {
             for (int y = -3; y <= 3; y++) {
                 for (int z = -3; z <= 3; z++) {
-                    Vector cur = pos.add(x, y, z);
-                    addSingleSourcePosition(w,cur);
+                    Vector cur = arg0.add(x, y, z);
+                    addSingleSourcePosition(new WorldVector(arg0.getWorld(),cur));
                 }
             }
         }
@@ -178,14 +183,14 @@ public class NearbyChestBlockBag extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSingleSourcePosition(World w, Vector pos) {
-        int x = pos.getBlockX();
-        int y = pos.getBlockY();
-        int z = pos.getBlockZ();
+    public void addSingleSourcePosition(WorldVector arg0) {
+        int x = arg0.getBlockX();
+        int y = arg0.getBlockY();
+        int z = arg0.getBlockZ();
         
-        if (w.getBlockAt(BukkitUtil.toLocation(w,pos)).getTypeId() == BlockType.CHEST.getID()) {
+        if (BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(BukkitUtil.toLocation(arg0)).getTypeId() == BlockType.CHEST.getID()) {
             BlockState complexBlock =
-                    w.getBlockAt(x, y, z).getState();
+        	    BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(x, y, z).getState();
 
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest)complexBlock;
@@ -218,9 +223,9 @@ public class NearbyChestBlockBag extends BlockBag {
      * Flush changes.
      */
     public void flushChanges() {
-        for (Chest c : chests) {
+       // for (Chest c : chests) {
             //FIXME c.flushChanges();
-        }
+      //  }
     }
     
     /**

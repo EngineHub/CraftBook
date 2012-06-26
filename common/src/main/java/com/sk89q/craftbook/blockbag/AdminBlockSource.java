@@ -24,6 +24,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.bags.BlockBag;
+import com.sk89q.worldedit.bags.BlockBagException;
+import com.sk89q.worldedit.bags.OutOfBlocksException;
+import com.sk89q.worldedit.bags.OutOfSpaceException;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Sign based block source system.
@@ -63,7 +69,7 @@ public class AdminBlockSource extends BlockBag {
      */
     public void fetchBlock(int id) throws BlockBagException {
         if (!canFetch) {
-            throw new OutOfBlocksException(id);
+            throw new OutOfBlocksException();
         }
     }
 
@@ -87,11 +93,11 @@ public class AdminBlockSource extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSourcePosition(World w, Vector pos) {
+    public void addSourcePosition(WorldVector arg0) {
         for (int x = -3; x <= 3; x++) {
             for (int y = -3; y <= 3; y++) {
                 for (int z = -3; z <= 3; z++) { 
-                    addSingleSourcePosition(w, pos.add(x, y, z));
+                    addSingleSourcePosition(new WorldVector(arg0.getWorld(),arg0.add(x, y, z)));
                 }
             }
         }
@@ -103,8 +109,8 @@ public class AdminBlockSource extends BlockBag {
      * @param pos
      * @return
      */
-    public void addSingleSourcePosition(World w, Vector pos) {
-        Block e = w.getBlockAt(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()); 
+    public void addSingleSourcePosition(WorldVector arg0) {
+        Block e = BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(arg0.getBlockX(), arg0.getBlockY(), arg0.getBlockZ()); 
         if(e.getState() instanceof Sign) {
             Sign s = (Sign) e.getState();
             
