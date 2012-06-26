@@ -37,25 +37,26 @@ public class Snow implements Listener {
 	    if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
 		    && event.getClickedBlock().getTypeId() == 78) {
 		if (event.getClickedBlock().getData() < 7) {
-		    event.getClickedBlock().setData(
+		    setBlockDataWithNotify(event.getClickedBlock(),
 			    (byte) (event.getClickedBlock().getData() + 1));
 		}
 	    } else if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
 		    && event.getPlayer()
-			    .getWorld()
-			    .getBlockAt(
-				    event.getClickedBlock().getLocation()
-					    .add(0, 1, 0)).getTypeId() == 0) {
+		    .getWorld()
+		    .getBlockAt(
+			    event.getClickedBlock().getLocation()
+			    .add(0, 1, 0)).getTypeId() == 0) {
 		event.getPlayer()
+		.getWorld()
+		.getBlockAt(
+			event.getClickedBlock().getLocation()
+			.add(0, 1, 0)).setTypeId(78);
+		setBlockDataWithNotify(
+			event.getPlayer()
 			.getWorld()
 			.getBlockAt(
 				event.getClickedBlock().getLocation()
-					.add(0, 1, 0)).setTypeId(78);
-		event.getPlayer()
-			.getWorld()
-			.getBlockAt(
-				event.getClickedBlock().getLocation()
-					.add(0, 1, 0)).setData((byte) 1);
+				.add(0, 1, 0)), (byte) 1);
 	    }
 	} catch (Exception e) {
 	}
@@ -71,7 +72,7 @@ public class Snow implements Listener {
 		    .getBlockAt(event.getPlayer().getLocation());
 	    if (b.getTypeId() == 78) {
 		if (b.getData() > 1)
-		    b.setData((byte) (b.getData() - 1));
+		    setBlockDataWithNotify(b,(byte) (b.getData() - 1));
 		else
 		    b.setTypeId(0);
 	    }
@@ -83,7 +84,7 @@ public class Snow implements Listener {
 			    event.getPlayer().getLocation().subtract(0, 1, 0));
 	    if (b.getTypeId() == 78) {
 		if (b.getData() > 1)
-		    b.setData((byte) (b.getData() - 1));
+		    setBlockDataWithNotify(b,(byte) (b.getData() - 1));
 		else
 		    b.setTypeId(0);
 	    }
@@ -102,8 +103,8 @@ public class Snow implements Listener {
 			.getBlockAt(block.getLocation().subtract(0, 1, 0))
 			.getTypeId() == 80
 			|| block.getWorld()
-				.getBlockAt(
-					block.getLocation().subtract(0, 1, 0))
+			.getBlockAt(
+				block.getLocation().subtract(0, 1, 0))
 				.getTypeId() == 78)
 		    return;
 		Random random = new Random();
@@ -114,8 +115,8 @@ public class Snow implements Listener {
 			.scheduleSyncDelayedTask(plugin,
 				new makeSnow(block.getLocation()), delay * 20L) == -1)
 		    plugin.getLogger()
-			    .log(Level.SEVERE,
-				    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+		    .log(Level.SEVERE,
+			    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 	    }
 	}
     }
@@ -138,8 +139,8 @@ public class Snow implements Listener {
 		event.add(0, 1, 0);
 		if (!(event.getBlock().getTypeId() == 78))
 		    return;
-		event.getBlock().setData(
-			(byte) (event.getBlock().getData() + (byte) 2));
+		setBlockDataWithNotify(event.getBlock(), (byte) (event
+			.getBlock().getData() + 2));
 		// if(event.getBlock().getData() >= (byte)7)
 		// event.getBlock().setTypeId(80);
 		Random random = new Random();
@@ -150,8 +151,8 @@ public class Snow implements Listener {
 			.scheduleSyncDelayedTask(plugin, new makeSnow(event),
 				delay * 20L) == -1)
 		    plugin.getLogger()
-			    .log(Level.SEVERE,
-				    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+		    .log(Level.SEVERE,
+			    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 	    } else {
 		Random random = new Random();
 		long delay = random.nextInt(100) + 600;
@@ -161,9 +162,17 @@ public class Snow implements Listener {
 			.scheduleSyncDelayedTask(plugin, new makeSnow(event),
 				delay * 20L) == -1)
 		    plugin.getLogger()
-			    .log(Level.SEVERE,
-				    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+		    .log(Level.SEVERE,
+			    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 	    }
 	}
+    }
+
+    public void setBlockDataWithNotify(Block block, byte data) {
+	block.setData(data);
+	block.setType(block.getType()); // This notifies a block update, there
+	// is a bug in bukkit that doesn't
+	// notify the client when Snow's data
+	// gets changed
     }
 }
