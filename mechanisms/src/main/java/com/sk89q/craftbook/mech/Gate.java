@@ -508,9 +508,9 @@ public class Gate extends PersistentMechanic {
     public boolean isValidGateBlock(Block block)
     {
 	if(block.getTypeId() == BlockID.FENCE
-		    || block.getTypeId() == BlockID.IRON_BARS
-		    || block.getTypeId() == BlockID.GLASS_PANE
-		    || block.getTypeId() == BlockID.NETHER_BRICK_FENCE)
+		|| block.getTypeId() == BlockID.IRON_BARS
+		|| block.getTypeId() == BlockID.GLASS_PANE
+		|| block.getTypeId() == BlockID.NETHER_BRICK_FENCE)
 	    return true;
 	else
 	    return false;
