@@ -3,6 +3,8 @@ package com.sk89q.craftbook;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.material.Redstone;
+import org.bukkit.material.RedstoneWire;
 
 
 
@@ -59,8 +61,10 @@ public abstract class RedstoneUtil {
      * @return true if a mechanism in the mech block is able to receive power from the pow block (i.e. if it's a power conductor and if it has a sense of directionality it is also pointing at mech).
      */
     public static boolean isPotentialPowerSource(Block mech, Block pow) {
-        //FIXME this method doesn't actually take direction into account which is its stated purpose
-        return (pow.getType() == Material.REDSTONE_WIRE);
+        if (pow.getType() == Material.REDSTONE_WIRE) {
+            return mech.isBlockFacePowered(mech.getFace(pow));
+        }
+        return false;
     }
     
     
