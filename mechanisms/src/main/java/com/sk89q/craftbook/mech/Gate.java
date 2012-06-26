@@ -407,6 +407,8 @@ public class Gate extends PersistentMechanic {
 	} else {
 	    player.printError("Failed to find a gate!");
 	}
+	
+	event.setCancelled(true);
     }
 
     /**

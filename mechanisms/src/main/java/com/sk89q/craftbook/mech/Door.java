@@ -226,6 +226,8 @@ public class Door extends PersistentMechanic {
         }
         
         flipState();
+        
+        event.setCancelled(true);
     }
     
     @Override

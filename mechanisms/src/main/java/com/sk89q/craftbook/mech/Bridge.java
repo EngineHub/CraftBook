@@ -233,6 +233,8 @@ public class Bridge extends PersistentMechanic {
         
         flipState();
         
+        event.setCancelled(true);
+        
         //notify event.getPlayer();
     }
     
