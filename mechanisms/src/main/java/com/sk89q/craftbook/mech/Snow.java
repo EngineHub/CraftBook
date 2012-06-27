@@ -170,9 +170,8 @@ public class Snow implements Listener {
 
     public void setBlockDataWithNotify(Block block, byte data) {
 	block.setData(data);
-	block.setType(block.getType()); // This notifies a block update, there
-	// is a bug in bukkit that doesn't
-	// notify the client when Snow's data
-	// gets changed
+	block.setType(block.getType()); 
+	// This notifies a block update, there is a bug in bukkit that doesn't
+	// notify the client when Snow's data gets changed
     }
 }
