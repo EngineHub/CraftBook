@@ -44,29 +44,6 @@ public class JingleNoteComponent implements Listener {
         return jingleNoteManager;
     }
 
-    /*@EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MidiJingleSequencer sequencer;
-
-        try {
-            File file = new File(CircuitsPlugin.getInst().getDataFolder(), "intro.mid");
-            if (file.exists()) {
-                sequencer = new MidiJingleSequencer(file);
-                getJingleNoteManager().play(event.getPlayer(), sequencer, 2000);
-            }
-        } catch (MidiUnavailableException e) {
-        	CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to access MIDI: "
-                    + e.getMessage());
-        } catch (InvalidMidiDataException e) {
-        	CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to read intro MIDI file: "
-                    + e.getMessage());
-        } catch (FileNotFoundException ignored) {
-        } catch (IOException e) {
-        	CircuitsPlugin.getInst().getLogger().log(Level.WARNING, "Failed to read intro MIDI file: "
-                    + e.getMessage());
-        }
-    }*/
-
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         getJingleNoteManager().stop(event.getPlayer());
