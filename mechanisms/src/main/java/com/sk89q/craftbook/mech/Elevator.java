@@ -236,6 +236,8 @@ public class Elevator extends AbstractMechanic {
 	// Teleport!
 	Location subspaceRift = player.getLocation().clone();
 	subspaceRift.setY(floor.getY() + 1);
+	if(player.isInsideVehicle())
+	    player.getVehicle().teleport(subspaceRift);
 	player.teleport(subspaceRift);
 
 	// Now, we want to read the sign so we can tell the player

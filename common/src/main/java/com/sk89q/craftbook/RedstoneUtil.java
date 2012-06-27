@@ -3,10 +3,6 @@ package com.sk89q.craftbook;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.material.Redstone;
-import org.bukkit.material.RedstoneWire;
-
-
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic
