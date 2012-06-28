@@ -28,6 +28,7 @@ import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.CookingPot;
+import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
@@ -112,6 +113,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     
     @Override
     protected void registerEvents() {
+	getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
 	getServer().getPluginManager().registerEvents(new Snow(this), this);
     }
     
