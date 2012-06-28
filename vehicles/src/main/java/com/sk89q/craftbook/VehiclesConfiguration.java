@@ -52,6 +52,7 @@ public class VehiclesConfiguration {
         matMessager =   Material.getMaterial(cfg.getInt("messager-block",       121));
         
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
+        minecartDecayWhenEmpty = cfg.getBoolean("minecart-decay-when-empty",      false);
         minecartRemoveOnExit = cfg.getBoolean("minecart-remove-on-exit",        false);        
         minecartRemoveEntities = cfg.getBoolean("minecart-remove-entities",     false);
         minecartRemoveEntitiesOtherCarts = cfg.getBoolean("minecart-remove-"
@@ -86,6 +87,7 @@ public class VehiclesConfiguration {
     public final boolean minecartRemoveEntitiesOtherCarts;
     public final double minecartMaxSpeedModifier;
     public final boolean minecartTrackMessages;
+    public final boolean minecartDecayWhenEmpty;
     
     public final boolean boatRemoveEntities;
     public final boolean boatRemoveEntitiesOtherBoats;
