@@ -186,7 +186,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-
+	
     }
 
     @Override
@@ -196,6 +196,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-
+	
     }
 }

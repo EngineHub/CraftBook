@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -33,6 +34,7 @@ public class Snow implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 	if (!plugin.getLocalConfiguration().snowSettings.placeSnow)
 	    return;
+	if(!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
 	try {
 	    if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
 		    && event.getClickedBlock().getTypeId() == 78) {
