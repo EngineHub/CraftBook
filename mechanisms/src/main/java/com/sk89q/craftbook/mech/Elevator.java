@@ -190,7 +190,7 @@ public class Elevator extends AbstractMechanic {
 
 	makeItSo(event.getPlayer());
 
-	event.setCancelled(true);
+	//FIXME event.setCancelled(true);
     }
 
     @Override
