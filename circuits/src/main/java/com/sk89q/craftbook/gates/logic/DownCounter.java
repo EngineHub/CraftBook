@@ -41,18 +41,18 @@ public class DownCounter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 	// Get IC configuration data from line 3 of sign
-	String line3 = getSign().getLines()[2];
-	String[] config = line3.split(":");
+	String line2 = getSign().getLine(2);
+	String[] config = line2.split(":");
 
 	int resetVal = Integer.parseInt(config[0]);
 	boolean inf = config[1].equals("INF");
 
 	// Get current counter value from line 4 of sign
-	String line4 = getSign().getLines()[3];
+	String line3 = getSign().getLine(3);
 	int curVal = 0;
 
 	try {
-	    curVal = Integer.parseInt(line4);
+	    curVal = Integer.parseInt(line3);
 	} catch (Exception e) {
 	    curVal = resetVal;
 	}
@@ -77,7 +77,7 @@ public class DownCounter extends AbstractIC {
 
 	// Update counter value stored on sign if it's changed
 	if (curVal != oldVal)
-	    getSign().setLine(3,Integer.toString(curVal));
+	    getSign().setLine(3, curVal + "");
     }
 
     public static class Factory extends AbstractICFactory {
