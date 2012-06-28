@@ -41,8 +41,16 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
 		int dropCount = 1;
 		if(dropInfo.length>1)
 		    dropData = Byte.parseByte(dropInfo[1]);
-		if(dropInfo.length>2)
-		    dropCount = Integer.parseInt(dropInfo[2]);
+		if(dropInfo.length>2) {
+		    if(dropInfo[2].contains("-")) {
+			String[] ranges = dropInfo[2].split("-");
+			int min = Integer.parseInt(ranges[0]);
+			int max = Integer.parseInt(ranges[1]);
+			dropCount = min + (int)(Math.random() * ((max - min) + 1));
+		    }
+		    else
+			dropCount = Integer.parseInt(dropInfo[2]);
+		}
 		
 		//Add the new drops :)
 		event.getBlock().getDrops().add(new ItemStack(dropID,dropCount,dropData));
