@@ -32,7 +32,6 @@ import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
-import com.sk89q.craftbook.mech.LightMeter;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.Snow;
 

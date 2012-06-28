@@ -24,6 +24,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -78,7 +79,11 @@ public class LightMeter extends AbstractMechanic {
 	}
 
 	public LightMeter detect(BlockWorldVector pt) {
-	    return new LightMeter(plugin);
+	    Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+	    if(block.getTypeId() != 0 && block.getLightLevel() < 15 && block.getLightLevel() > 0)
+		return new LightMeter(plugin);
+	    else
+		return null;
 	}
     }
 
