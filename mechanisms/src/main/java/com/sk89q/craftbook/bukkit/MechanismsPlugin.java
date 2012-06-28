@@ -85,7 +85,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     }
     
     /**
-     * Setup the required components of self-triggered ICs.
+     * Setup the required components of self-triggered Mechanics..
      */
     private void setupSelfTriggered(MechanicManager manager) {
         logger.info("CraftBook: Enumerating chunks for self-triggered components...");
