@@ -32,6 +32,7 @@ import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
+import com.sk89q.craftbook.mech.LightMeter;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.Snow;
 
@@ -61,6 +62,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         // Let's register mechanics!
         manager.register(new Ammeter.Factory(this));
+        manager.register(new LightMeter.Factory(this));
         manager.register(new Bookcase.Factory(this));
         manager.register(new Gate.Factory(this));
         manager.register(new Bridge.Factory(this));
