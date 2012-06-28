@@ -341,17 +341,36 @@ public class Gate extends PersistentMechanic {
 	    ID = world.getBlockAt(x, y, z).getTypeId();
 	for (int y1 = y - 1; y1 >= minY; y1--) {
 	    int cur = world.getBlockTypeIdAt(x, y1, z);
-
-	    // Allowing water allows the use of gates as flood gates
-	    if (cur != BlockID.WATER && cur != BlockID.STATIONARY_WATER
-		    && cur != BlockID.LAVA && cur != BlockID.STATIONARY_LAVA
-		    && cur != BlockID.FENCE
-		    && cur != BlockID.NETHER_BRICK_FENCE && cur != BlockID.SNOW
-		    && cur != BlockID.IRON_BARS && cur != BlockID.GLASS_PANE
-		    && cur != BlockID.LONG_GRASS && cur != 0) {
-		break;
+    
+	    Block block = BukkitUtil.toWorld(pt).getBlockAt(
+		    BukkitUtil.toLocation(pt));
+	    
+	    Sign sign = null;
+	    
+	    if (block.getTypeId() == BlockID.WALL_SIGN) {
+		BlockState state = block.getState();
+		if (state instanceof Sign)
+		    sign = (Sign) state;
 	    }
-
+	    
+	    if(sign!=null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
+		// If NoReplace is on line 3 of sign, do not replace blocks.
+		if (cur != 0) {
+		    break;
+		}
+	    }
+	    else {
+		// Allowing water allows the use of gates as flood gates
+		if (cur != BlockID.WATER && cur != BlockID.STATIONARY_WATER
+			&& cur != BlockID.LAVA && cur != BlockID.STATIONARY_LAVA
+			&& cur != BlockID.FENCE
+			&& cur != BlockID.NETHER_BRICK_FENCE && cur != BlockID.SNOW
+			&& cur != BlockID.IRON_BARS && cur != BlockID.GLASS_PANE
+			&& cur != BlockID.LONG_GRASS && cur != 0) {
+		    break;
+		}
+	    }
+	    
 	    // bag.setBlockID(w, x, y1, z, ID);
 	    world.getBlockAt(x, y1, z).setTypeId(ID);
 
