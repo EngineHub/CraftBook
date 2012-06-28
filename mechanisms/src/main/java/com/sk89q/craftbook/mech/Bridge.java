@@ -233,7 +233,7 @@ public class Bridge extends PersistentMechanic {
 
 	flipState();
 
-	//FIXME event.setCancelled(true);
+	event.setCancelled(true);
 
 	//notify event.getPlayer();
     }
@@ -361,7 +361,7 @@ public class Bridge extends PersistentMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 	if(event.getBlock().getState() instanceof Sign) 
-	    return;//new ToggleRegionOpen().run();
+	    new ToggleRegionOpen().run();
 	else
 	    event.setCancelled(true);
     }
@@ -385,6 +385,6 @@ public class Bridge extends PersistentMechanic {
 	    if(!(evt.getBlock().getState() instanceof Sign))
 		((BlockBreakEvent) evt).setCancelled(true);
 	    else
-		return;//new ToggleRegionOpen().run();
+		new ToggleRegionOpen().run();
     }
 }

@@ -24,7 +24,6 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,7 +32,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
- * This allows users to Right-click to check the power level of redstone.
+ * This allows users to Right-click to check the light levels.
  */
 public class LightMeter extends AbstractMechanic {
 
@@ -51,19 +50,14 @@ public class LightMeter extends AbstractMechanic {
 	}
 
 	Block block = event.getClickedBlock();
-	if (event.getPlayer().getItemInHand().getType() == Material.GLOWSTONE_DUST
-		&& (BlockType.canTransferRedstone(block.getTypeId()) ||
-			BlockType.isRedstoneSource(block.getTypeId()))) {
-	    int data = getSpecialData(block);
-	    int current = Integer.valueOf(data);
-	    event.getPlayer().sendMessage(
-		    ChatColor.YELLOW + "LightMeter: " + ChatColor.WHITE + " " + current + " L");
+	if (event.getPlayer().getItemInHand().getType() == Material.GLOWSTONE_DUST) {
+	    byte data = getSpecialData(block);
+	    event.getPlayer().sendMessage(ChatColor.YELLOW + "LightMeter: " + ChatColor.WHITE + data + " L");
 	}
     }
 
     private byte getSpecialData(Block block) {
-	byte current = block.getLightLevel();
-	return current;
+	return block.getLightLevel();
     }
 
     public void unload() {

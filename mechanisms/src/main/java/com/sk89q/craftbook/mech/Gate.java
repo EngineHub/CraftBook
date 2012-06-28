@@ -427,7 +427,7 @@ public class Gate extends PersistentMechanic {
 	    player.printError("Failed to find a gate!");
 	}
 	
-	//FIXME event.setCancelled(true);
+	event.setCancelled(true);
     }
 
     /**
@@ -540,7 +540,7 @@ public class Gate extends PersistentMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 	if (event.getBlock().getState() instanceof Sign)
-	    return;//setGateState(pt, false, smallSearchSize);
+	    setGateState(pt, false, smallSearchSize);
 	else
 	    event.setCancelled(true);
     }
@@ -589,6 +589,6 @@ public class Gate extends PersistentMechanic {
 	    if (!(evt.getBlock().getState() instanceof Sign))
 		((BlockBreakEvent) evt).setCancelled(true);
 	    else
-		return;//setGateState(pt, false, smallSearchSize);
+		setGateState(pt, false, smallSearchSize);
     }
 }

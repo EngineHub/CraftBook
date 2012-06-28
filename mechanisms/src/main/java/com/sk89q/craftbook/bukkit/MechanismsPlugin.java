@@ -72,7 +72,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new CookingPot.Factory(this));
-        getServer().getPluginManager().registerEvents(new Snow(this), this);
         
         /*
          * Until fixed, Cauldron must be at the bottom of the registration list as 
@@ -111,10 +110,10 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         // Set up the clock for self-triggered Mechanics.
         getServer().getScheduler().scheduleSyncRepeatingTask(this,new MechanicClock(manager), 0, 2);
     }
-
     
     @Override
     protected void registerEvents() {
+	getServer().getPluginManager().registerEvents(new Snow(this), this);
     }
     
     public MechanismsConfiguration getLocalConfiguration() {
