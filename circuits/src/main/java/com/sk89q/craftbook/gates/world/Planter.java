@@ -15,6 +15,16 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
+/**
+* Sapling planter
+* 
+* Hybrid variant of MCX206 and MCX203 chest collector
+* 	
+* When there is a sapling or seed item drop in range it will auto plant it above the IC.
+* 
+* @author Drathus	
+*
+*/
 public class Planter extends AbstractIC{
 
     public Planter(Server server, Sign block) {
