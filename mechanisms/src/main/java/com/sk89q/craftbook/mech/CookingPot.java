@@ -165,13 +165,23 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
-	event.getPlayer().setFireTicks(5);
-	event.getPlayer().sendMessage(ChatColor.RED + "Ouch! That was hot!");
+	if(event.getClickedBlock().getState() instanceof Sign)
+	{
+	    Sign sign = (Sign) event.getClickedBlock().getState();
+	    Block b = SignUtil.getBackBlock(sign.getBlock());
+	    int x = b.getX();
+	    int y = b.getY()+2;
+	    int z = b.getZ();
+	    Block cb = sign.getWorld().getBlockAt(x,y,z);
+	    if (cb.getType() == Material.CHEST)
+		event.getPlayer().openInventory(((Chest)cb.getState()).getBlockInventory());
+	}
     }
 
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
-
+	event.getPlayer().setFireTicks(5);
+	event.getPlayer().sendMessage(ChatColor.RED + "Ouch! That was hot!");
     }
 
     @Override
