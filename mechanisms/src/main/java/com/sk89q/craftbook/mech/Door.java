@@ -379,7 +379,7 @@ public class Door extends PersistentMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 	if(event.getBlock().getState() instanceof Sign) 
-	    new ToggleRegionOpen().run();
+	    return;//new ToggleRegionOpen().run();
 	else
 	    event.setCancelled(true);
     }
@@ -403,6 +403,6 @@ public class Door extends PersistentMechanic {
 	    if(!(evt.getBlock().getState() instanceof Sign))
 		((BlockBreakEvent) evt).setCancelled(true);
 	    else
-		new ToggleRegionOpen().run();
+		return;//new ToggleRegionOpen().run();
     }
 }
