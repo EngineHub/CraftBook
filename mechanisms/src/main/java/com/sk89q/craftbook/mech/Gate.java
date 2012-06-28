@@ -353,7 +353,7 @@ public class Gate extends PersistentMechanic {
 		    sign = (Sign) state;
 	    }
 	    
-	    if(sign!=null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
+	    if(sign!= null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
 		// If NoReplace is on line 3 of sign, do not replace blocks.
 		if (cur != 0) {
 		    break;
@@ -540,7 +540,7 @@ public class Gate extends PersistentMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 	if (event.getBlock().getState() instanceof Sign)
-	    setGateState(pt, false, smallSearchSize);
+	    return;
 	else
 	    event.setCancelled(true);
     }
@@ -589,6 +589,6 @@ public class Gate extends PersistentMechanic {
 	    if (!(evt.getBlock().getState() instanceof Sign))
 		((BlockBreakEvent) evt).setCancelled(true);
 	    else
-		setGateState(pt, false, smallSearchSize);
+		return;
     }
 }
