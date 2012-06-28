@@ -80,7 +80,7 @@ public class ICMechanic extends PersistentMechanic {
     @Override
     public void unload() {
         ic.unload();
-        plugin.getServer().getScheduler().cancelTasks(plugin);
+        //FIXME plugin.getServer().getScheduler().cancelTasks(plugin);
     }
     
     @Override
