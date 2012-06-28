@@ -58,7 +58,8 @@ public abstract class RedstoneUtil {
      */
     public static boolean isPotentialPowerSource(Block mech, Block pow) {
         if (pow.getType() == Material.REDSTONE_WIRE) {
-            return mech.isBlockFacePowered(mech.getFace(pow));
+            return true;
+            //return mech.isBlockFacePowered(mech.getFace(pow));
         }
         return false;
     }
