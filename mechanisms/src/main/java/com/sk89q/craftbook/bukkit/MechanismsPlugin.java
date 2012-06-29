@@ -35,6 +35,8 @@ import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.Snow;
+import com.sk89q.craftbook.mech.area.Area;
+import com.sk89q.craftbook.mech.area.CopyManager;
 
 
 /**
@@ -45,6 +47,10 @@ import com.sk89q.craftbook.mech.Snow;
 public class MechanismsPlugin extends BaseBukkitPlugin {
     
     protected MechanismsConfiguration config;
+    
+    public CommandParser commandExecutor;
+    
+    public CopyManager copyManager = new CopyManager();
     
     @Override
     public void onEnable() {
@@ -68,6 +74,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Bridge.Factory(this));
         manager.register(new Door.Factory(this));
         manager.register(new Elevator.Factory(this));
+        manager.register(new Area.Factory(this));
         //manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
@@ -113,8 +120,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     
     @Override
     protected void registerEvents() {
-	getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
 	getServer().getPluginManager().registerEvents(new Snow(this), this);
+	getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
+	
+	commandExecutor = new CommandParser(this);
+	getCommand("savensarea").setExecutor(commandExecutor);
     }
     
     public MechanismsConfiguration getLocalConfiguration() {

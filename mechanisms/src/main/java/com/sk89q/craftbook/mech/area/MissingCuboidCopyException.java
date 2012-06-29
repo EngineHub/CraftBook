@@ -1,6 +1,10 @@
+package com.sk89q.craftbook.mech.area;
+
+
 // $Id$
 /*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ * CraftBook
+ * Copyright (C) 2010 sk89q <http://www.sk89q.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +20,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.sk89q.craftbook.bukkit;
-
 /**
- * Plugin for CraftBook's core.
- * 
+ *
  * @author sk89q
  */
-public class CraftBookPlugin extends BaseBukkitPlugin {
-        
-    @Override
-    protected void registerEvents() {
+public class MissingCuboidCopyException extends CuboidCopyException {
+    /**
+     * Serialization version ID.
+     */
+    private static final long serialVersionUID = -4569606338210856027L;
+    /**
+     * Missing copy name.
+     */
+    private String name;
+
+    /**
+     * Construct an instance.
+     * 
+     * @param name
+     */
+    public MissingCuboidCopyException(String name) {
+        super();
+        this.name = name;
+    }
+    
+    /**
+     * Get the missing copy's name.
+     * @return
+     */
+    public String getCopyName() {
+        return name;
     }
 }
