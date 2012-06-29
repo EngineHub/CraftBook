@@ -20,6 +20,7 @@ package com.sk89q.craftbook.ic;
 
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.material.Lever;
 
 /**
  * IC utility functions.
@@ -40,18 +41,7 @@ public class ICUtil {
      */
     public static boolean setState(Block block, boolean state) {
         if (block.getType() != Material.LEVER) return false;
-        byte data = block.getData();
-        int newData = data & 0x7;
-        
-        if (!state)
-            newData = data & 0x7;
-        else
-            newData = data | 0x8;
-        
-        if (newData != data) {
-            block.setData((byte)newData, true);
-            return true;
-        }
-        return false;
+		((Lever) block).setPowered(state);
+	    return true;
     }
 }
