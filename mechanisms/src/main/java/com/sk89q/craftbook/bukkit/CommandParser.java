@@ -60,21 +60,21 @@ public class CommandParser implements CommandExecutor{
                 Vector size = max.subtract(min).add(1, 1, 1);
 
                 // Check maximum size
-                if (size.getBlockX() * size.getBlockY() * size.getBlockZ() > 5000) {
+                if (size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration().areaSettings.maxSizePerArea) {
                     player.sendMessage(ChatColor.RED + "Area is larger than allowed "
-                            + 5000 + " blocks.");
+                            + plugin.getLocalConfiguration().areaSettings.maxSizePerArea + " blocks.");
                     return true;
                 }
                 
                 // Check to make sure that a user doesn't have too many toggle
                 // areas (to prevent flooding the server with files)
-                if (30 >= 0 && !namespace.equals("global")) {
+                if (plugin.getLocalConfiguration().areaSettings.maxAreasPerUser >= 0 && !namespace.equals("global")) {
                     int count = plugin.copyManager.meetsQuota(player.getWorld(),
-                            namespace, id, 30, plugin);
+                            namespace, id, plugin.getLocalConfiguration().areaSettings.maxAreasPerUser, plugin);
 
                     if (count > -1) {
                         player.sendMessage(ChatColor.RED + "You are limited to "
-                                + 30 + " toggle area(s). You have "
+                                + plugin.getLocalConfiguration().areaSettings.maxAreasPerUser + " toggle area(s). You have "
                                 + count + " areas.");
                         return true;
                     }

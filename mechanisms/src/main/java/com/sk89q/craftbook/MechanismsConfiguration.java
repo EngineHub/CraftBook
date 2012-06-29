@@ -59,6 +59,7 @@ public class MechanismsConfiguration {
         hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
         snowSettings = new SnowSettings(cfg);
         customDropSettings = new CustomDropSettings(dataFolder);
+        areaSettings = new AreaSettings(cfg);
     }
     
     public final File dataFolder;
@@ -74,6 +75,7 @@ public class MechanismsConfiguration {
     public final HiddenSwitchSettings hiddenSwitchSettings;
     public final SnowSettings snowSettings;
     public final CustomDropSettings customDropSettings;
+    public final AreaSettings areaSettings;
     
     
     public class BookcaseSettings {
@@ -216,6 +218,20 @@ public class MechanismsConfiguration {
             enable             = cfg.getBoolean("snow-piling-enable",  true);
             trample             = cfg.getBoolean("snow-trample-enable",  true);
             placeSnow			= cfg.getBoolean("placable-snow", true);
+        }
+    }
+    
+    public class AreaSettings {
+        public final boolean enable;
+        public final boolean enableRedstone;
+        public final int maxAreasPerUser;
+        public final int maxSizePerArea;
+
+        private AreaSettings(FileConfiguration cfg) {
+            enable             = cfg.getBoolean("area-enable",             true);
+            enableRedstone     = cfg.getBoolean("area-redstone",           true);
+            maxAreasPerUser     = cfg.getInt("max-areas-per-user",           30);
+            maxSizePerArea     = cfg.getInt("max-size-per-area",           5000);
         }
     }
     

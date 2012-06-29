@@ -47,6 +47,8 @@ public class Area extends AbstractMechanic{
 	@Override
 	public Area detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
 		throws InvalidMechanismException, ProcessedMechanismException {
+	    if (!plugin.getLocalConfiguration().areaSettings.enable)
+		return null;
 	    if (sign.getLine(1).equalsIgnoreCase("[Area]")) {
 		if (!player.hasPermission("craftbook.mech.area")) {
 		    throw new InsufficientPermissionsException();
@@ -74,6 +76,9 @@ public class Area extends AbstractMechanic{
 	 */
 	@Override
 	public Area detect(BlockWorldVector pt) throws InvalidMechanismException {
+	    if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
+		return null;
+
 	    Block block = BukkitUtil.toWorld(pt).getBlockAt(
 		    BukkitUtil.toLocation(pt));
 	    if (block.getTypeId() == BlockID.SIGN_POST) {
@@ -137,9 +142,8 @@ public class Area extends AbstractMechanic{
 	    plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + result.toString());
 	}
 
-	//TODO event.setCancelled(true);
+	event.setCancelled(true);
     }
-
     /**
      * Raised when an input redstone current changes.
      * 
@@ -147,7 +151,37 @@ public class Area extends AbstractMechanic{
      */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-	//TODO 
+	if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
+	    return;
+	try {
+	    Sign s = null;
+	    if(BukkitUtil.toBlock(pt).getState() instanceof Sign)
+		s = ((Sign)BukkitUtil.toBlock(pt).getState());
+	    if(s==null) return;
+	    String namespace = s.getLine(0);
+	    String id = s.getLine(2);
+
+	    CuboidCopy copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
+
+	    if (!copy.shouldClear(BukkitUtil.toWorld(pt.getWorld()))) {
+		copy.paste(BukkitUtil.toWorld(pt.getWorld()));
+	    } else {
+		String inactiveID = s.getLine(3);
+
+		if (inactiveID.length() == 0) {
+		    copy.clear(BukkitUtil.toWorld(pt.getWorld()));
+		} else {
+		    copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, inactiveID, plugin);
+		    copy.paste(BukkitUtil.toWorld(pt.getWorld()));
+		}
+	    }
+	}
+	catch(Exception e){
+	    final Writer result = new StringWriter();
+	    final PrintWriter printWriter = new PrintWriter(result);
+	    e.printStackTrace(printWriter);
+	    plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + result.toString());
+	}
     }
 
     /**
