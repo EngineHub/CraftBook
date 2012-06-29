@@ -25,6 +25,11 @@ public class CommandParser implements CommandExecutor{
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	if(command.getName().equalsIgnoreCase("cbmech") && sender.hasPermission("craftbook.mech.cbmech")) {
+	    if(args.length>0)
+		if(args[0].equalsIgnoreCase("reload")) plugin.reloadLocalConfiguration();
+            return true;
+	}
 	if(command.getName().equalsIgnoreCase("savearea") && sender.hasPermission("craftbook.mech.savearea")) {
             
 	    if(!(sender instanceof Player)) return false;

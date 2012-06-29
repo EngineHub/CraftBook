@@ -127,6 +127,10 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	getCommand("savensarea").setExecutor(commandExecutor);
     }
     
+    public void reloadLocalConfiguration() {
+        config = new MechanismsConfiguration(getConfig(), getDataFolder());
+    }
+    
     public MechanismsConfiguration getLocalConfiguration() {
         return config;
     }

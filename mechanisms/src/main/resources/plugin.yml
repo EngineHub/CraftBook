@@ -12,3 +12,7 @@ commands:
     area:
         description: Toggle area commands
         usage: /<command>
+    cbmech_reload:
+        alias: cbmech
+        description: Reload configuration
+        usage: /<command> relaod
