@@ -18,8 +18,10 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 	if(!event.getPlayer().hasPermission("craftbook.mech.drops")) return;
+	if(event.isCancelled()) return;
 	int oldId = event.getBlock().getTypeId();
 	byte oldData = event.getBlock().getData();
+	boolean didDropCustom = false;
 	for(String s : plugin.getLocalConfiguration().customDropSettings.blockData) {
 	    int newId = Integer.parseInt(s.split("->")[0].split(":")[0]);
 	    if(oldId!=newId) continue; //Wrong ID
@@ -28,9 +30,6 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
 		newData = Byte.parseByte(s.split("->")[0].split(":")[1]);
 		if(newData!=oldData) continue; //Wrong data
 	    }
-	    
-	    //Clear normal drops
-	    event.getBlock().getDrops().clear();
 	    
 	    //We have the correct block, now we just need to work out what it should drop.
 	    String[] drops = s.split("->")[1].split(",");
@@ -51,10 +50,15 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
 		    else
 			dropCount = Integer.parseInt(dropInfo[2]);
 		}
-		
+				
 		//Add the new drops :)
-		event.getBlock().getDrops().add(new ItemStack(dropID,dropCount,dropData));
+		didDropCustom = true;
+		event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(dropID,dropCount,dropData));
 	    }
+	}
+	if(didDropCustom) {
+            event.getBlock().setTypeId(0);
+            event.setCancelled(true);
 	}
     }
 }

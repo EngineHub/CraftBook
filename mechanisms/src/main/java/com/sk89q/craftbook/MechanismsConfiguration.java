@@ -253,7 +253,6 @@ public class MechanismsConfiguration {
                     }
                 }
                 br.close();
-                Bukkit.getLogger().log(Level.SEVERE, "Loaded DROPS!!");
             }
             catch(Exception e){
         	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom drops!");
