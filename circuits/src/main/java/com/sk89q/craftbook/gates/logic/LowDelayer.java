@@ -41,7 +41,7 @@ public class LowDelayer extends AbstractIC {
 						chip.setOutput(0, false);
 					}
 				}
-			}, delay * 1000);
+			}, delay * 20);
 		}
 	}
 

@@ -39,7 +39,7 @@ public class Delayer extends AbstractIC {
 						chip.setOutput(0, true);
 					}
 				}
-			}, delay * 1000);
+			}, delay * 20);
 		} else {
 			chip.setOutput(0, false);
 		}

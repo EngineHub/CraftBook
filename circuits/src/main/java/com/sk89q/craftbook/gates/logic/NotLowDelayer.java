@@ -20,12 +20,12 @@ public class NotLowDelayer extends AbstractIC {
 
 	@Override
 	public String getTitle() {
-		return "Low Delayer";
+		return "Not Low Delayer";
 	}
 
 	@Override
 	public String getSignTitle() {
-		return "LOW_DELAYER";
+		return "NOT_LOW_DELAYER";
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class NotLowDelayer extends AbstractIC {
 						chip.setOutput(0, true);
 					}
 				}
-			}, delay * 1000);
+			}, delay * 20);
 		}
 	}
 
