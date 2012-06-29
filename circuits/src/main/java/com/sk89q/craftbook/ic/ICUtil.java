@@ -18,9 +18,12 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.material.Lever;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.material.Attachable;
 
 /**
  * IC utility functions.
@@ -39,9 +42,36 @@ public class ICUtil {
      * @param state
      * @return whether something was changed
      */
-    public static boolean setState(Block block, boolean state) {
+    public static boolean setState(BlockWorldVector source, Block block, boolean state) {
         if (block.getType() != Material.LEVER) return false;
-		((Lever) block).setPowered(state);
-	    return true;
+		return updateLever(source, block, state);
     }
+
+	private static boolean updateLever(BlockWorldVector source, Block outputBlock, boolean state) {
+		if (updateBlockData(outputBlock, state)) {
+			outputBlock.getState().update();
+			Block b = Bukkit.getWorld(source.getWorld().getName()).getBlockAt(source.getBlockX(), source.getBlockY(), source.getBlockZ());
+			byte oldData = b.getData();
+			byte notData;
+			if (oldData>1) notData = (byte)(oldData-1);
+			else if (oldData<15) notData = (byte)(oldData+1);
+			else notData = 0;
+			b.setData(notData, true);
+			b.setData(oldData, true);
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean updateBlockData(Block b, boolean state) {
+		byte data = b.getData();
+		boolean oldLevel = ((data&0x08) > 0);
+		if (oldLevel==state) return false;
+
+		byte newData = (byte)(state? data | 0x8 : data & 0x7);
+
+		b.setData(newData, true);
+
+		return true;
+	}
 }
