@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
