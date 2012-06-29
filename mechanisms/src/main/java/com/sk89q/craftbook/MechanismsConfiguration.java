@@ -238,6 +238,7 @@ public class MechanismsConfiguration {
     public class CustomDropSettings {
 	
 	public final ArrayList<String> blockData;
+	public final ArrayList<String> mobData;
 	
         private CustomDropSettings(File location) {
             blockData = new ArrayList<String>();
@@ -256,6 +257,23 @@ public class MechanismsConfiguration {
             }
             catch(Exception e){
         	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom drops!");
+            }
+            mobData = new ArrayList<String>();
+            try {
+                File drops = new File(location, "CustomMobDrops.txt");
+                if(!drops.exists()) drops.createNewFile();
+                BufferedReader br = new BufferedReader(new FileReader(drops));
+                String line = "";
+                while((line = br.readLine())!=null) {
+                    if(line!=null && line.trim().length() > 1) {
+                	if(!mobData.contains(line.trim()))
+                	    mobData.add(line.trim());
+                    }
+                }
+                br.close();
+            }
+            catch(Exception e){
+        	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom mob drops!");
             }
         }
     }
