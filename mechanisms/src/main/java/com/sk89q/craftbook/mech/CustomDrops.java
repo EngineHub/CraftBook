@@ -51,6 +51,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
 			dropCount = Integer.parseInt(dropInfo[2]);
 		}
 				
+		if(dropCount < 1) continue;
 		//Add the new drops :)
 		didDropCustom = true;
 		event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(dropID,dropCount,dropData));
