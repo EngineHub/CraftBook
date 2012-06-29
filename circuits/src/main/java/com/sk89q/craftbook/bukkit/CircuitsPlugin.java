@@ -146,6 +146,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	    icManager.register("MC1271", new Detection.Factory(server, true), familySISO);          // Restricted
 	    icManager.register("MC1420", new ClockDivider.Factory(server, true), familySISO);
 	    icManager.register("MC1510", new MessageSender.Factory(server, true), familySISO);
+	    icManager.register("MC2100", new Delayer.Factory(server), familySISO);
+	    icManager.register("MC2101", new NotDelayer.Factory(server), familySISO);
+	    icManager.register("MC2110", new LowDelayer.Factory(server), familySISO);
+	    icManager.register("MC2111", new NotLowDelayer.Factory(server), familySISO);
 
         //SI3Os
         icManager.register("MC2020", new Random3Bit.Factory(server, true), familySI3O);
