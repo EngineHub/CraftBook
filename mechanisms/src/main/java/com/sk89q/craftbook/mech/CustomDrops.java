@@ -20,7 +20,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
 	if(!event.getPlayer().hasPermission("craftbook.mech.drops")) return;
 	int oldId = event.getBlock().getTypeId();
 	byte oldData = event.getBlock().getData();
-	for(String s : config.customDropSettings.blockData) {
+	for(String s : plugin.getLocalConfiguration().customDropSettings.blockData) {
 	    int newId = Integer.parseInt(s.split("->")[0].split(":")[0]);
 	    if(oldId!=newId) continue; //Wrong ID
 	    byte newData = 0;

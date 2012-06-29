@@ -53,4 +53,9 @@ public class BukkitPlayer implements LocalPlayer {
         return plugin.hasPermission(player, perm);
     }
 
+    @Override
+    public String getName() {
+	return player.getName();
+    }
+
 }
