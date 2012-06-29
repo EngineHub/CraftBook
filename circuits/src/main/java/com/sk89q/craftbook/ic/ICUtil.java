@@ -20,8 +20,7 @@ package com.sk89q.craftbook.ic;
 
 
 import com.sk89q.worldedit.BlockWorldVector;
-import net.minecraft.server.BlockLever;
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
 
@@ -43,8 +42,10 @@ public class ICUtil {
      * @return whether something was changed
      */
     public static boolean setState(BlockWorldVector source, Block block, boolean state) {
-        if (block instanceof BlockLever) return false;
-	    ((BlockLever) block).interact(((CraftWorld) block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), null);
+        if (block.getType() == Material.LEVER) return false;
+	    net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
+	    net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+	    nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null);
 	    return true;
     }
 }
