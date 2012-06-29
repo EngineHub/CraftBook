@@ -27,11 +27,8 @@ import org.bukkit.block.Sign;
 
 public class AndGate extends AbstractIC {
 
-	private final int count;
-
-    public AndGate(Server server, Sign sign, int count) {
+    public AndGate(Server server, Sign sign) {
         super(server, sign);
-	    this.count = count;
     }
 
     @Override
@@ -64,16 +61,13 @@ public class AndGate extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-	    private final int count;
-
-        public Factory(Server server, int count) {
+        public Factory(Server server) {
             super(server);
-	        this.count = count;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new AndGate(getServer(), sign, count);
+            return new AndGate(getServer(), sign);
         }
     }
 
