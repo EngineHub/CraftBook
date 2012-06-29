@@ -153,6 +153,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
             
+            if(config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty()) 
+        	((Minecart)event.getVehicle()).setDamage(((Minecart)event.getVehicle()).getDamage()+3);
+            
             cartman.impact(event);
         }
         /**

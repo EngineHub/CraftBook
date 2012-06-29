@@ -34,76 +34,76 @@ import com.sk89q.worldedit.blocks.BlockType;
 public class SetBlockAbove extends AbstractIC {
 
     public SetBlockAbove(Server server, Sign sign) {
-        super(server, sign);
+	super(server, sign);
     }
 
     @Override
     public String getTitle() {
-        return "Set Block Above";
+	return "Set Block Above";
     }
 
     @Override
     public String getSignTitle() {
-        return "SET BLOCK ABOVE";
+	return "SET BLOCK ABOVE";
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-        String sblockdat = getSign().getLine(2).toUpperCase().trim();
-        String sblock = sblockdat.split(":")[0];
-        String smeta = "";
-        if(sblockdat.split(":").length>1)
-        	smeta = sblockdat.split(":")[1];
-        String force = getSign().getLine(3).toUpperCase().trim();
+	String sblockdat = getSign().getLine(2).toUpperCase().trim();
+	String sblock = sblockdat.split(":")[0];
+	String smeta = "";
+	if(sblockdat.split(":").length>1)
+	    smeta = sblockdat.split(":")[1];
+	String force = getSign().getLine(3).toUpperCase().trim();
 
-        chip.setOutput(0, chip.getInput(0));
+	chip.setOutput(0, chip.getInput(0));
 
-        int block = -1;
-        BlockType bt = BlockType.lookup(sblock, true);
-        if(bt != null) block = bt.getID();
+	int block = -1;
+	BlockType bt = BlockType.lookup(sblock, true);
+	if(bt != null) block = bt.getID();
 
-        //FIXME hack for broken WorldEdit <=5.1
-        if(block == -1)
-        	try {
-        		block = Integer.parseInt(sblock);
-        	} catch (Exception e) {
-        		return;
-        	}
-        
-        byte meta = -1;
-        try {
-        	if(!smeta.equalsIgnoreCase(""))
-        		meta = Byte.parseByte(smeta);
-        } catch (Exception e) {
-        	return;
-        }
+	//FIXME hack for broken WorldEdit <=5.1
+	if(block == -1)
+	    try {
+		block = Integer.parseInt(sblock);
+	    } catch (Exception e) {
+		return;
+	    }
 
-        
-        Block body = SignUtil.getBackBlock(getSign().getBlock());
+	byte meta = -1;
+	try {
+	    if(!smeta.equalsIgnoreCase(""))
+		meta = Byte.parseByte(smeta);
+	} catch (Exception e) {
+	    return;
+	}
 
-        int x = body.getX();
-        int y = body.getY();
-        int z = body.getZ();
-        
-        if(force.equals("FORCE") || body.getWorld().getBlockAt(x, y+1, z).getType() == Material.AIR) {
-        	body.getWorld().getBlockAt(x, y+1, z).setTypeId(block);
-        	if(!(meta==-1))
-        		body.getWorld().getBlockAt(x, y+1, z).setData(meta);
-        }
+
+	Block body = SignUtil.getBackBlock(getSign().getBlock());
+
+	int x = body.getX();
+	int y = body.getY();
+	int z = body.getZ();
+
+	if(force.equals("FORCE") || body.getWorld().getBlockAt(x, y+1, z).getType() == Material.AIR) {
+	    body.getWorld().getBlockAt(x, y+1, z).setTypeId(block);
+	    if(!(meta==-1))
+		body.getWorld().getBlockAt(x, y+1, z).setData(meta);
+	}
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
-        public Factory(Server server) {
-            super(server);
-        }
+	public Factory(Server server) {
+	    super(server);
+	}
 
-        @Override
-        public IC create(Sign sign) {
-            return new SetBlockAbove(getServer(), sign);
-        }
+	@Override
+	public IC create(Sign sign) {
+	    return new SetBlockAbove(getServer(), sign);
+	}
     }
 
 }

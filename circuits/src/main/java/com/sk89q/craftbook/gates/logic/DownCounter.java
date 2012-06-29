@@ -25,80 +25,69 @@ import com.sk89q.craftbook.ic.*;
  */
 public class DownCounter extends AbstractIC {
     public DownCounter(Server server, Sign sign) {
-        super(server, sign);
+	super(server, sign);
     }
-    
+
     @Override
     public String getTitle() {
-        return "Counter";
+	return "Down Counter";
     }
-    
+
     @Override
     public String getSignTitle() {
-        return "DOWN COUNTER";
+	return "DOWN COUNTER";
     }
-    
-    
-    public String validateEnvironment(Sign sign) {
-        String id = getSign().getLines()[2];
-        if (id == null || !id.matches("^[0-9]+:(INF|ONCE)$"))
-            return "Specify counter configuration on line 3.";
-        
-        getSign().getLines()[3] = "0";  //... do we really do this? and when exactly?!
-        
-        return null;
-    }
-    
+
     @Override
     public void trigger(ChipState chip) {
-        // Get IC configuration data from line 3 of sign
-        String line3 = getSign().getLines()[2];
-        String[] config = line3.split(":");
-        
-        int resetVal = Integer.parseInt(config[0]);
-        boolean inf = config[1].equals("INF");
+	// Get IC configuration data from line 3 of sign
+	String line2 = getSign().getLine(2);
+	String[] config = line2.split(":");
 
-        // Get current counter value from line 4 of sign
-        String line4 = getSign().getLines()[3];
-        int curVal = 0;
-        
-        try {
-			curVal = Integer.parseInt(line4);
-		} catch (Exception e) {
-			curVal = resetVal;
-		}
-        
-        int oldVal = curVal;
+	int resetVal = Integer.parseInt(config[0]);
+	boolean inf = config[1].equals("INF");
 
-        // If clock input triggered
-        if (chip.isTriggered(0) && chip.get(0)) {
-            if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
-                if (inf)
-                    curVal = resetVal;
-            } else { // Decrement counter
-                curVal--;
-            }
+	// Get current counter value from line 4 of sign
+	String line3 = getSign().getLine(3);
+	int curVal = 0;
 
-            // Set output to high if we're at 0, otherwise low
-            chip.set(3, (curVal == 0));
-        // If reset input triggered, reset counter value
-        } else if (chip.isTriggered(1) && chip.get(1)) {
-            curVal = resetVal;
-        }
+	try {
+	    curVal = Integer.parseInt(line3);
+	} catch (Exception e) {
+	    curVal = resetVal;
+	}
 
-        // Update counter value stored on sign if it's changed
-        if (curVal != oldVal)
-            getSign().setLine(3,Integer.toString(curVal));
+	int oldVal = curVal;
+
+	// If clock input triggered
+	if (chip.isTriggered(0) && chip.get(0)) {
+	    if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
+		if (inf)
+		    curVal = resetVal;
+	    } else { // Decrement counter
+		curVal--;
+	    }
+
+	    // Set output to high if we're at 0, otherwise low
+	    chip.set(3, (curVal == 0));
+	    // If reset input triggered, reset counter value
+	} else if (chip.isTriggered(1) && chip.get(1)) {
+	    curVal = resetVal;
+	}
+
+	// Update counter value stored on sign if it's changed
+	if (curVal != oldVal)
+	    getSign().setLine(3, curVal + "");
     }
-    
+
     public static class Factory extends AbstractICFactory {
-        public Factory(Server server) {
-            super(server);
-        }
-        
-        @Override
-        public IC create(Sign sign) {
-            return new DownCounter(getServer(), sign);
-        }
+	public Factory(Server server) {
+	    super(server);
+	}
+
+	@Override
+	public IC create(Sign sign) {
+	    return new DownCounter(getServer(), sign);
+	}
     }
 }

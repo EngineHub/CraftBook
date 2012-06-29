@@ -86,7 +86,10 @@ public class Ammeter extends AbstractMechanic {
             current = 0;
         } else if (type == Material.REDSTONE_WIRE) {
             current = data;
+        } else if (type == Material.DIODE_BLOCK_ON) {
+            current = 15;
         }
+        
         return current;
     }
 

@@ -100,7 +100,7 @@ public class MechanicListenerAdapter {
             this.manager = manager;
         }
         
-        @EventHandler
+        @EventHandler(ignoreCancelled = false)
         public void onPlayerInteract(PlayerInteractEvent event) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
