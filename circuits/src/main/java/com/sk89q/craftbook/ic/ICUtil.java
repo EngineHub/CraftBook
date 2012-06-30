@@ -41,15 +41,14 @@ public class ICUtil {
      * @return whether something was changed
      */
     public static boolean setState(Block block, boolean state) {
-        if (block.getType() == Material.LEVER) return false;
-
+	    if (block.getType() != Material.LEVER) return false;
 	    byte data = block.getData();
 	    int newData;
 
-	    if (state)
-		    newData = data | 0x8;
+	    if (!state)
+		    newData = data & 0x7;
 	    else
-		    newData = data & ~0x8;
+		    newData = data | 0x8;
 
 	    if (newData != data) {
 		    block.setData((byte)newData, true);
