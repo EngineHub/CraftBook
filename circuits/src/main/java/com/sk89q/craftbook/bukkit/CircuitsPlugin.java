@@ -136,7 +136,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	icManager.register("MC1236", new WeatherFaker.Factory(server, true), familySISO); 
 	icManager.register("MC1240", new ArrowShooter.Factory(server, true), familySISO);        // Restricted
 	icManager.register("MC1241", new ArrowBarrage.Factory(server, true), familySISO);        // Restricted
-	icManager.register("MC1242", new SentryGun.Factory(server), familySISO);
+	//FIXME icManager.register("MC1242", new SentryGun.Factory(server), familySISO);
 	icManager.register("MC1250", new FireShooter.Factory(server, true), familySISO);        // Restricted
 	icManager.register("MC1251", new FireBarrage.Factory(server, true), familySISO);        // Restricted
 	icManager.register("MC1260", new WaterSensor.Factory(server, true), familySISO);
@@ -181,7 +181,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
 	icManager.register("MC0210", new ParticleEffectST.Factory(server, true), familySISO);
 	icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
-	icManager.register("MC0242", new SentryGunST.Factory(server), familySISO);
+	//FIXME icManager.register("MC0242", new SentryGunST.Factory(server), familySISO);
 	icManager.register("MC0260", new WaterSensorST.Factory(server), familySISO);
 	icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
 	icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
