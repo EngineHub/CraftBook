@@ -43,5 +43,21 @@
       <unpack>false</unpack>
       <outputFileNameMapping>CraftBookVehicles.jar</outputFileNameMapping>
     </dependencySet>
+    <files>
+      <file>
+          <source>${basedir}/../README.html</source>
+          <outputDirectory>/</outputDirectory>
+          <filtered>true</filtered>
+      </file>
+    </files>
+    <fileSets>
+      <fileSet>
+          <directory>${basedir}/../</directory>
+          <includes>
+              <include>LICENSE.txt</include>
+              <include>CHANGELOG.txt</include>
+          </includes>
+      </fileSet>
+    </fileSets>
   </dependencySets>
 </assembly>

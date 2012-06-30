@@ -37,68 +37,67 @@ import com.sk89q.craftbook.ic.families.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
- * 
+ *
  * @author sk89q
  */
 public class CircuitsPlugin extends BaseBukkitPlugin {
-    
-    protected CircuitsConfiguration config;
-    protected ICManager icManager;
-    private PermissionsResolverManager perms;
-    private MechanicManager manager;
-    private static CircuitsPlugin instance;
-    
-    public static Server server;
-    
-    public static CircuitsPlugin getInst()
-    {
-    	return instance;
-    }
-    
-    @Override
-    public void onEnable() {
-        super.onEnable();
-        
-        instance = this;
-        server = getServer();
-        
-        createDefaultConfiguration("config.yml");
-        createDefaultConfiguration("custom-ics.txt");
-        config = new CircuitsConfiguration(getConfig(), getDataFolder());
-                
-        PermissionsResolverManager.initialize(this);
-        perms = PermissionsResolverManager.getInstance();
-                
-        manager = new MechanicManager(this);
-        MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
-        adapter.register(manager);
-        
-        File midi = new File(getDataFolder(),"midi/");
-        if(!midi.exists())
-        	midi.mkdir();
-        
-        registerICs();
-        
-        // Let's register mechanics!
-        if (config.enableNetherstone) {
-            manager.register(new Netherrack.Factory());
-        }
-        if (config.enablePumpkins) {
-            manager.register(new JackOLantern.Factory());
-        }
-        if (config.enableGlowStone) {
-            manager.register(new GlowStone.Factory());
-        }
-        if (config.enableICs) {
-            manager.register(new ICMechanicFactory(this, icManager));
-            setupSelfTriggered();
-        }
-    }
-    
-    /**
-     * Register ICs.
-     */
-    private void registerICs() {
+
+	protected CircuitsConfiguration config;
+	protected ICManager icManager;
+	private PermissionsResolverManager perms;
+	private MechanicManager manager;
+	private static CircuitsPlugin instance;
+
+	public static Server server;
+
+	public static CircuitsPlugin getInst() {
+		return instance;
+	}
+
+	@Override
+	public void onEnable() {
+		super.onEnable();
+
+		instance = this;
+		server = getServer();
+
+		createDefaultConfiguration("config.yml");
+		createDefaultConfiguration("custom-ics.txt");
+		config = new CircuitsConfiguration(getConfig(), getDataFolder());
+
+		PermissionsResolverManager.initialize(this);
+		perms = PermissionsResolverManager.getInstance();
+
+		manager = new MechanicManager(this);
+		MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
+		adapter.register(manager);
+
+		File midi = new File(getDataFolder(), "midi/");
+		if (!midi.exists())
+			midi.mkdir();
+
+		registerICs();
+
+		// Let's register mechanics!
+		if (config.enableNetherstone) {
+			manager.register(new Netherrack.Factory());
+		}
+		if (config.enablePumpkins) {
+			manager.register(new JackOLantern.Factory());
+		}
+		if (config.enableGlowStone) {
+			manager.register(new GlowStone.Factory());
+		}
+		if (config.enableICs) {
+			manager.register(new ICMechanicFactory(this, icManager));
+			setupSelfTriggered();
+		}
+	}
+
+	/**
+	 * Register ICs.
+	 */
+	private void registerICs() {
 		Server server = getServer();
 
 		// Let's register ICs!
@@ -118,7 +117,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 		icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO);
 		icManager.register("MC1111", new WirelessReceiver.Factory(server), familySISO);
 		icManager.register("MC1200", new EntitySpawner.Factory(server), familySISO);     // Restricted
-		icManager.register("MC1201", new ItemDispenser.Factory(server), familySISO);  	 // Restricted
+		icManager.register("MC1201", new ItemDispenser.Factory(server), familySISO);       // Restricted
 		icManager.register("MC1202", new ChestDispenser.Factory(server), familySISO);      // Restricted
 		icManager.register("MC1203", new LightningSummon.Factory(server), familySISO);     // Restricted
 		icManager.register("MC1204", new EntityTrap.Factory(server), familySISO);     // Restricted
@@ -168,7 +167,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 		icManager.register("MC3036", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
 		icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
 		icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
-		icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);		// Restricted
+		icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);        // Restricted
 		//Missing: 3231                                                                         // Restricted
 		//3I3Os
 		//Missing: 4000
@@ -203,46 +202,46 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 		icManager.register("MCZ230", new RainSensorST.Factory(server), familySISO);
 		icManager.register("MCZ231", new TStormSensorST.Factory(server), familySISO);
 
-    }
-    
-    /**
-     * Setup the required components of self-triggered ICs.
-     */
-    private void setupSelfTriggered() {
-        logger.info("CraftBook: Enumerating chunks for self-triggered components...");
-        
-        long start = System.currentTimeMillis();
-        int numWorlds = 0;
-        int numChunks = 0;
-        
-        for (World world : getServer().getWorlds()) {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                manager.enumerate(chunk);
-                numChunks++;
-            }
-            
-            numWorlds++;
-        }
-        
-        long time = System.currentTimeMillis() - start;
-        
-        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
-                + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
-        
-        // Set up the clock for self-triggered ICs.
-        getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                new MechanicClock(manager), 0, 2);
-    }
-    
-    @Override
-    protected void registerEvents() {
-    }
-    
-    public CircuitsConfiguration getLocalConfiguration() {
-        return config;
-    }
-    
-    public PermissionsResolverManager getPermissionsResolver() {
-        return perms;
-    }
+	}
+
+	/**
+	 * Setup the required components of self-triggered ICs.
+	 */
+	private void setupSelfTriggered() {
+		logger.info("CraftBook: Enumerating chunks for self-triggered components...");
+
+		long start = System.currentTimeMillis();
+		int numWorlds = 0;
+		int numChunks = 0;
+
+		for (World world : getServer().getWorlds()) {
+			for (Chunk chunk : world.getLoadedChunks()) {
+				manager.enumerate(chunk);
+				numChunks++;
+			}
+
+			numWorlds++;
+		}
+
+		long time = System.currentTimeMillis() - start;
+
+		logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
+				+ "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
+
+		// Set up the clock for self-triggered ICs.
+		getServer().getScheduler().scheduleSyncRepeatingTask(this,
+				new MechanicClock(manager), 0, 2);
+	}
+
+	@Override
+	protected void registerEvents() {
+	}
+
+	public CircuitsConfiguration getLocalConfiguration() {
+		return config;
+	}
+
+	public PermissionsResolverManager getPermissionsResolver() {
+		return perms;
+	}
 }
