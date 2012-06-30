@@ -19,10 +19,14 @@
 package com.sk89q.craftbook.ic;
 
 
+import net.minecraft.server.BlockLever;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.material.Lever;
+import org.bukkit.material.MaterialData;
 
 /**
  * IC utility functions.
@@ -46,6 +50,8 @@ public class ICUtil {
 	    byte data = block.getData();
 	    int newData;
 
+	    Block sourceBlock = block.getRelative(((Lever) block.getState().getData()).getAttachedFace());
+
 	    if (!state)
 		    newData = data & 0x7;
 	    else
@@ -53,13 +59,9 @@ public class ICUtil {
 
 	    if (newData != data) {
 		    block.setData((byte)newData, true);
-		    net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
-		    net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
-
-		    // Note: The player argument isn't actually used by the method in BlockLever, but I pass it anyway, use null if you don't have a player.
-		    // This method takes care of all the necessary block updates and redstone events.
-		    nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null);
-
+		    sourceBlock.setData((byte)newData, true);
+		    BlockRedstoneEvent event = new BlockRedstoneEvent(sourceBlock, data, newData);
+		    Bukkit.getPluginManager().callEvent(event);
 		    return true;
 	    }
 	    return false;
