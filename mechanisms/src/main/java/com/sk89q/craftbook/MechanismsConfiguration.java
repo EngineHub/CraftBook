@@ -61,6 +61,7 @@ public class MechanismsConfiguration {
         snowSettings = new SnowSettings(cfg);
         areaSettings = new AreaSettings(cfg);
         customDrops = new CustomDropManager(dataFolder);
+        customDropSettings = new CustomDropSettings(cfg);
     }
     
     public final File dataFolder;
@@ -77,6 +78,7 @@ public class MechanismsConfiguration {
     public final SnowSettings snowSettings;
     public final AreaSettings areaSettings;
     public final CustomDropManager customDrops;
+    public final CustomDropSettings customDropSettings;
     
     public class BookcaseSettings {
         public final boolean enable;
@@ -236,45 +238,10 @@ public class MechanismsConfiguration {
     }
 
     public class CustomDropSettings {
+        public final boolean requirePermissions;
 
-	public final ArrayList<String> blockData;
-	public final ArrayList<String> mobData;
-
-        private CustomDropSettings(File location) {
-            blockData = new ArrayList<String>();
-            try {
-                File drops = new File(location, "CustomDrops.txt");
-                if(!drops.exists()) drops.createNewFile();
-                BufferedReader br = new BufferedReader(new FileReader(drops));
-                String line = "";
-                while((line = br.readLine())!=null) {
-                    if(line!=null && line.trim().length() > 1) {
-                	if(!blockData.contains(line.trim()))
-                	    blockData.add(line.trim());
-                    }
-                }
-                br.close();
-            }
-            catch(Exception e){
-        	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom drops!");
-            }
-            mobData = new ArrayList<String>();
-            try {
-                File drops = new File(location, "CustomMobDrops.txt");
-                if(!drops.exists()) drops.createNewFile();
-                BufferedReader br = new BufferedReader(new FileReader(drops));
-                String line = "";
-                while((line = br.readLine())!=null) {
-                    if(line!=null && line.trim().length() > 1) {
-                	if(!mobData.contains(line.trim()))
-                	    mobData.add(line.trim());
-                    }
-                }
-                br.close();
-            }
-            catch(Exception e){
-        	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom mob drops!");
-            }
+        private CustomDropSettings(FileConfiguration cfg) {
+            requirePermissions = cfg.getBoolean("custom-drops-require-permissions", false);
         }
     }
 }

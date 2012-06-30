@@ -15,3 +15,4 @@ elevators-enable: true
 cauldron-enable: true
 light-switch-enable: true
 light-stone-enable: true
+custom-drops-require-permissions: false

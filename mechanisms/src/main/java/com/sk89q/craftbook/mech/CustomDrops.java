@@ -20,8 +20,9 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
     }
 
     @EventHandler
-    public void handleCustomDrops(BlockBreakEvent event) {
-        if(!event.getPlayer().hasPermission("craftbook.mech.drops")) return;
+    public void handleCustomBlockDrops(BlockBreakEvent event) {
+        if(plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
+           !event.getPlayer().hasPermission("craftbook.mech.drops")) return;
         if(event.isCancelled()) return;
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
@@ -48,7 +49,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
+    public void handleCustomMobDrops(EntityDeathEvent event) {
         CustomDropManager.DropDefinition[] drops =
             plugin.getLocalConfiguration().customDrops.getMobDrop(event.getEntityType().getName());
         if(drops!=null) {
