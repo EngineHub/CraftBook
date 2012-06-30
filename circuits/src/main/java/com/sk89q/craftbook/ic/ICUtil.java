@@ -42,7 +42,18 @@ public class ICUtil {
      */
     public static boolean setState(Block block, boolean state) {
         if (block.getType() == Material.LEVER) return false;
-	    net.minecraft.server.Block.byId[block.getType().getId()].interact(((CraftWorld)block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(), null);
+
+	    boolean wasOn = (block.getData() & 0x8) > 0;
+	    // make sure we actually change state
+	    if(wasOn != state) {
+
+		    net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
+		    net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+
+		    // Note: The player argument isn't actually used by the method in BlockLever, but I pass it anyway, use null if you don't have a player.
+		    // This method takes care of all the necessary block updates and redstone events.
+		    nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null);
+	    }
 	    return true;
     }
 }
