@@ -11,17 +11,14 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
 
-    protected boolean risingEdge;
-	
 	int ticks = 0;
 	int maxTicks = 0;
 	boolean hasStarted = false;
 	int amountDone = 0;
 	int maxAmount = 0;
 
-    public RangedOutput(Server server, Sign sign, boolean risingEdge) {
+    public RangedOutput(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -41,7 +38,7 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     }
 
     protected boolean shouldOutput(ChipState chip) {
-        if ((risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) && !hasStarted) {
+        if (chip.getInput(0)) {
             int min = Integer.parseInt(getSign().getLine(2).split("-")[0]);
             int max = Integer.parseInt(getSign().getLine(2).split("-")[1]);
             maxAmount = min + (int)(Math.random() * ((max - min) + 1));
@@ -79,16 +76,13 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     }
 
     public static class Factory extends AbstractICFactory {
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new RangedOutput(getServer(), sign, risingEdge);
+            return new RangedOutput(getServer(), sign);
         }
     }
 

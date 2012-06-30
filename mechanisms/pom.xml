@@ -50,6 +50,8 @@
         <includes>
           <include>cauldron-recipes.txt</include>
           <include>books.txt</include>
+          <include>custom-block-drops.txt</include>
+          <include>custom-mob-drops.txt</include>
         </includes>
       </resource>
     </resources>

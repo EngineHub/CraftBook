@@ -1,0 +1,12 @@
+#This is the file for custom block drops.
+#Currently, the format is as follows:
+
+#id : data -> id : data x min - max, id : data x min - max
+
+#For example, to make rocks drop two to three diamond, and four to five iron:
+
+#1->264x2-3,265x4-5
+
+#And, to make lapis lazuli drop pink dye:
+
+#21->351:9x2-5

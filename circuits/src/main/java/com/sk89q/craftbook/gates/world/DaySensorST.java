@@ -26,7 +26,7 @@ public class DaySensorST extends DaySensor implements SelfTriggeredIC {
 
 
     public DaySensorST(Server server, Sign sign) {
-        super(server, sign, true);
+        super(server, sign);
     }
 
     @Override

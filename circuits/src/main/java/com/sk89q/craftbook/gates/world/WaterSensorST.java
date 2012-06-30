@@ -28,7 +28,7 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
 
     public WaterSensorST(Server server, Sign sign) {
-        super(server, sign, true);
+        super(server, sign);
     }
 
     @Override

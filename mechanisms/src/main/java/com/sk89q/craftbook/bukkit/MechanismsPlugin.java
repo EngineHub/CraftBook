@@ -59,6 +59,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("books.txt");
         createDefaultConfiguration("cauldron-recipes.txt");
         createDefaultConfiguration("config.yml");
+        createDefaultConfiguration("custom-mob-drops.txt");
+        createDefaultConfiguration("custom-block-drops.txt");
         
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         
@@ -125,6 +127,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	
 	commandExecutor = new CommandParser(this);
 	getCommand("savensarea").setExecutor(commandExecutor);
+	getCommand("savearea").setExecutor(commandExecutor);
+	getCommand("cbmech").setExecutor(commandExecutor);
     }
     
     public void reloadLocalConfiguration() {

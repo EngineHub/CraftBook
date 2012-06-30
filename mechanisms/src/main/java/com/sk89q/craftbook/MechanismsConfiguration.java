@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.mech.CustomDropManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -58,8 +59,9 @@ public class MechanismsConfiguration {
         lightSwitchSettings = new LightSwitchSettings(cfg);
         hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
         snowSettings = new SnowSettings(cfg);
-        customDropSettings = new CustomDropSettings(dataFolder);
         areaSettings = new AreaSettings(cfg);
+        customDrops = new CustomDropManager(dataFolder);
+        customDropSettings = new CustomDropSettings(cfg);
     }
     
     public final File dataFolder;
@@ -74,9 +76,9 @@ public class MechanismsConfiguration {
     public final LightSwitchSettings lightSwitchSettings;
     public final HiddenSwitchSettings hiddenSwitchSettings;
     public final SnowSettings snowSettings;
-    public final CustomDropSettings customDropSettings;
     public final AreaSettings areaSettings;
-    
+    public final CustomDropManager customDrops;
+    public final CustomDropSettings customDropSettings;
     
     public class BookcaseSettings {
         public final boolean enable;
@@ -234,47 +236,12 @@ public class MechanismsConfiguration {
             maxSizePerArea     = cfg.getInt("max-size-per-area",           5000);
         }
     }
-    
+
     public class CustomDropSettings {
-	
-	public final ArrayList<String> blockData;
-	public final ArrayList<String> mobData;
-	
-        private CustomDropSettings(File location) {
-            blockData = new ArrayList<String>();
-            try {
-                File drops = new File(location, "CustomDrops.txt");
-                if(!drops.exists()) drops.createNewFile();
-                BufferedReader br = new BufferedReader(new FileReader(drops));
-                String line = "";
-                while((line = br.readLine())!=null) {
-                    if(line!=null && line.trim().length() > 1) {
-                	if(!blockData.contains(line.trim()))
-                	    blockData.add(line.trim());
-                    }
-                }
-                br.close();
-            }
-            catch(Exception e){
-        	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom drops!");
-            }
-            mobData = new ArrayList<String>();
-            try {
-                File drops = new File(location, "CustomMobDrops.txt");
-                if(!drops.exists()) drops.createNewFile();
-                BufferedReader br = new BufferedReader(new FileReader(drops));
-                String line = "";
-                while((line = br.readLine())!=null) {
-                    if(line!=null && line.trim().length() > 1) {
-                	if(!mobData.contains(line.trim()))
-                	    mobData.add(line.trim());
-                    }
-                }
-                br.close();
-            }
-            catch(Exception e){
-        	Bukkit.getLogger().log(Level.SEVERE, "Failed to load custom mob drops!");
-            }
+        public final boolean requirePermissions;
+
+        private CustomDropSettings(FileConfiguration cfg) {
+            requirePermissions = cfg.getBoolean("custom-drops-require-permissions", false);
         }
     }
 }

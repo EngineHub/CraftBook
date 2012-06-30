@@ -12,11 +12,8 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockSensor extends AbstractIC{
 
-	protected boolean risingEdge;
-
-    public BlockSensor(Server server, Sign sign, boolean risingEdge) {
+    public BlockSensor(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -31,7 +28,7 @@ public class BlockSensor extends AbstractIC{
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
             chip.setOutput(0, hasBlock());
         }
     }
@@ -50,6 +47,7 @@ public class BlockSensor extends AbstractIC{
         int z = b.getZ();
         String ids = "";
         int id = 0;
+        byte data = (byte)-1;
         try {
             String yOffsetLine = getSign().getLine(2);
             ids = getSign().getLine(3);
@@ -58,28 +56,34 @@ public class BlockSensor extends AbstractIC{
             } else {
                 yOffset -= 1;
             }
-            id = Integer.parseInt(ids);
+            if(ids.contains(":")) {
+        	id = Integer.parseInt(ids.split(":")[0]);
+        	data = Byte.parseByte(ids.split(":")[1]);
+            }
+            else
+        	id = Integer.parseInt(ids);
         } catch (NumberFormatException e) {
             yOffset -= 1;
         }
         int blockID = getSign().getBlock().getWorld()
                 .getBlockTypeIdAt(x, yOffset, z);
 
+        if(data!=(byte)-1) {
+            if(blockID == id)
+        	return data == getSign().getBlock().getWorld().getBlockAt(x,yOffset,z).getData();
+        }
         return blockID == id;
     }
 
     public static class Factory extends AbstractICFactory {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new BlockSensor(getServer(), sign, risingEdge);
+            return new BlockSensor(getServer(), sign);
         }
     }
 

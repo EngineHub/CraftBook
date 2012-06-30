@@ -1,0 +1,8 @@
+#This is the file for custom mob drops.
+#Currently, the format is as follows:
+
+#mob name -> id : data x min - max, id : data x min - max
+
+#For example, to make creepers drop 10 to 20 tnt:
+
+#creeper->46x10-20

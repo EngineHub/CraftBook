@@ -10,8 +10,8 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC{
 
-	public ParticleEffectST(Server server, Sign sign, boolean risingEdge) {
-		super(server, sign, risingEdge);
+	public ParticleEffectST(Server server, Sign sign) {
+		super(server, sign);
 	}
 	
     @Override
@@ -31,23 +31,20 @@ public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC{
 
 	@Override
 	public void think(ChipState state) {
-		if (risingEdge && state.getInput(0) || (!risingEdge && !state.getInput(0))) {
+		if (state.getInput(0)) {
 			doEffect(state);
 		}
 	}
 	
 	public static class Factory extends AbstractICFactory {
 
-		protected boolean risingEdge;
-
-		public Factory(Server server, boolean risingEdge) {
+		public Factory(Server server) {
 			super(server);
-			this.risingEdge = risingEdge;
 		}
 
 		@Override
 		public IC create(Sign sign) {
-			return new ParticleEffectST(getServer(), sign, risingEdge);
+			return new ParticleEffectST(getServer(), sign);
 		}
 	}
 }

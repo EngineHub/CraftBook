@@ -11,7 +11,7 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
 
     public BlockSensorST(Server server, Sign sign) {
-        super(server, sign, true);
+        super(server, sign);
     }
 
     @Override

@@ -29,12 +29,9 @@ import com.sk89q.craftbook.ic.IC;
 public class ClockDivider extends AbstractIC {
     
     protected Random random = new Random();
-    
-    protected boolean risingEdge;
 
-    public ClockDivider(Server server, Sign sign, boolean risingEdge) {
+    public ClockDivider(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -77,17 +74,14 @@ public class ClockDivider extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory {
-        
-        protected boolean risingEdge;
 
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new ClockDivider(getServer(), sign, risingEdge);
+            return new ClockDivider(getServer(), sign);
         }
     }
 

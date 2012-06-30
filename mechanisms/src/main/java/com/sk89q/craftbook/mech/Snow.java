@@ -38,9 +38,8 @@ public class Snow implements Listener {
 	try {
 	    if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
 		    && event.getClickedBlock().getTypeId() == 78) {
-		if (event.getClickedBlock().getData() < 7) {
-		    setBlockDataWithNotify(event.getClickedBlock(),
-			    (byte) (event.getClickedBlock().getData() + 1));
+		if (event.getClickedBlock().getData() < (byte)7) {
+		    incrementData(event.getClickedBlock());
 		}
 	    } else if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
 		    && event.getPlayer()
@@ -48,17 +47,8 @@ public class Snow implements Listener {
 		    .getBlockAt(
 			    event.getClickedBlock().getLocation()
 			    .add(0, 1, 0)).getTypeId() == 0) {
-		event.getPlayer()
-		.getWorld()
-		.getBlockAt(
-			event.getClickedBlock().getLocation()
-			.add(0, 1, 0)).setTypeId(78);
-		setBlockDataWithNotify(
-			event.getPlayer()
-			.getWorld()
-			.getBlockAt(
-				event.getClickedBlock().getLocation()
-				.add(0, 1, 0)), (byte) 1);
+		event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).setTypeId(78);
+		incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)));
 	    }
 	} catch (Exception e) {
 	}
@@ -73,8 +63,8 @@ public class Snow implements Listener {
 	    Block b = event.getPlayer().getWorld()
 		    .getBlockAt(event.getPlayer().getLocation());
 	    if (b.getTypeId() == 78) {
-		if (b.getData() > 1)
-		    setBlockDataWithNotify(b,(byte) (b.getData() - 1));
+		if (b.getData() > (byte)1)
+		    lowerData(b);
 		else
 		    b.setTypeId(0);
 	    }
@@ -85,8 +75,8 @@ public class Snow implements Listener {
 		    .getBlockAt(
 			    event.getPlayer().getLocation().subtract(0, 1, 0));
 	    if (b.getTypeId() == 78) {
-		if (b.getData() > 1)
-		    setBlockDataWithNotify(b,(byte) (b.getData() - 1));
+		if (b.getData() > (byte)1)
+		    lowerData(b);
 		else
 		    b.setTypeId(0);
 	    }
@@ -134,15 +124,14 @@ public class Snow implements Listener {
 	@Override
 	public void run() {
 	    if (event.getWorld().hasStorm()) {
-		if (event.getBlock().getData() > 7)
+		if (event.getBlock().getData() > (byte)7)
 		    return;
 		if (event.subtract(0, 1, 0).getBlock().getTypeId() == 0)
 		    return;
 		event.add(0, 1, 0);
 		if (!(event.getBlock().getTypeId() == 78))
 		    return;
-		setBlockDataWithNotify(event.getBlock(), (byte) (event
-			.getBlock().getData() + 2));
+		incrementData(event.getBlock());
 		// if(event.getBlock().getData() >= (byte)7)
 		// event.getBlock().setTypeId(80);
 		Random random = new Random();
@@ -168,6 +157,16 @@ public class Snow implements Listener {
 			    "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
 	    }
 	}
+    }
+
+    public void lowerData(Block block) {
+	byte newData = (byte) (block.getData() - 1);
+	setBlockDataWithNotify(block,newData);
+    }
+
+    public void incrementData(Block block) {
+	byte newData = (byte) (block.getData() + 1);
+	setBlockDataWithNotify(block,newData);
     }
 
     public void setBlockDataWithNotify(Block block, byte data) {
