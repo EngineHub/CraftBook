@@ -30,21 +30,15 @@ public class CommandParser implements CommandExecutor{
 		if(args[0].equalsIgnoreCase("reload")) plugin.reloadLocalConfiguration();
 	    return true;
 	}
-	if(command.getName().equalsIgnoreCase("savearea") && sender.hasPermission("craftbook.mech.savearea")) {
+	else if(command.getName().equalsIgnoreCase("savearea") && sender.hasPermission("craftbook.mech.savearea")) {
 
 	    if(!(sender instanceof Player)) return false;
 	    Player player = (Player)sender;
 
 	    String id;
-	    String namespace = player.getName();
+	    String namespace =  "~" + player.getName();
 
 	    id = args[0];
-
-	    if (!CopyManager.isValidNamespace(namespace)) {
-		player.sendMessage(ChatColor.RED + "Invalid namespace name. For the global namespace, use @");
-		return true;
-	    }
-	    namespace = "~" + namespace;
 
 	    if (!CopyManager.isValidName(id)) {
 		player.sendMessage(ChatColor.RED + "Invalid area name.");

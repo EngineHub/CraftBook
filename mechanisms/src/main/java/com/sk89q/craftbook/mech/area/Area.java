@@ -120,13 +120,14 @@ public class Area extends AbstractMechanic{
 	    String namespace = s.getLine(0);
 	    String id = s.getLine(2);
 
+	    if(id.length() < 1) return;
+	    
 	    CuboidCopy copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
 
 	    if (!copy.shouldClear(event.getPlayer().getWorld())) {
 		copy.paste(event.getPlayer().getWorld());
 	    } else {
 		String inactiveID = s.getLine(3);
-
 		if (inactiveID.length() == 0) {
 		    copy.clear(event.getPlayer().getWorld());
 		} else {

@@ -50,6 +50,7 @@ public class BlockSensor extends AbstractIC{
         int z = b.getZ();
         String ids = "";
         int id = 0;
+        byte data = (byte)-1;
         try {
             String yOffsetLine = getSign().getLine(2);
             ids = getSign().getLine(3);
@@ -58,13 +59,22 @@ public class BlockSensor extends AbstractIC{
             } else {
                 yOffset -= 1;
             }
-            id = Integer.parseInt(ids);
+            if(ids.contains(":")) {
+        	id = Integer.parseInt(ids.split(":")[0]);
+        	data = Byte.parseByte(ids.split(":")[1]);
+            }
+            else
+        	id = Integer.parseInt(ids);
         } catch (NumberFormatException e) {
             yOffset -= 1;
         }
         int blockID = getSign().getBlock().getWorld()
                 .getBlockTypeIdAt(x, yOffset, z);
 
+        if(data!=(byte)-1) {
+            if(blockID == id)
+        	return data == getSign().getBlock().getWorld().getBlockAt(x,yOffset,z).getData();
+        }
         return blockID == id;
     }
 

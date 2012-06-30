@@ -23,6 +23,7 @@ import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -130,31 +131,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 			Chest chest = (Chest) cb.getState();
 			for(ItemStack i : chest.getInventory().getContents())
 			{
-			    if(i==null) continue;
-			    else if(i.getType() == Material.RAW_BEEF)
-			    {
-				chest.getInventory().addItem(new ItemStack(Material.COOKED_BEEF,1));
-				chest.getInventory().removeItem(new ItemStack(Material.RAW_BEEF,1));
-				break;
-			    }
-			    else if(i.getType() == Material.RAW_CHICKEN)
-			    {
-				chest.getInventory().addItem(new ItemStack(Material.COOKED_CHICKEN,1));
-				chest.getInventory().removeItem(new ItemStack(Material.RAW_CHICKEN,1));
-				break;
-			    }
-			    else if(i.getType() == Material.RAW_FISH)
-			    {
-				chest.getInventory().addItem(new ItemStack(Material.COOKED_FISH,1));
-				chest.getInventory().removeItem(new ItemStack(Material.RAW_FISH,1));
-				break;
-			    }
-			    else if(i.getType() == Material.PORK)
-			    {
-				chest.getInventory().addItem(new ItemStack(Material.GRILLED_PORK,1));
-				chest.getInventory().removeItem(new ItemStack(Material.PORK,1));
-				break;
-			    }
+			    if(i==null || ItemUtil.isItemCookable(i) == false) continue;
+			    ItemStack cooked = ItemUtil.getCookedState(i);
+			    if(cooked == null) continue;
+			    chest.getInventory().addItem(new ItemStack(cooked.getType(),1));
+			    chest.getInventory().removeItem(new ItemStack(i.getType(),1));
+			    break;
 			}
 			lastTick = 0;
 		    }
@@ -186,7 +168,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-	
+
     }
 
     @Override
@@ -196,6 +178,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-	
+
     }
 }

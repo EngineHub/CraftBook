@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -50,8 +51,10 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
 
     @EventHandler
     public void handleCustomMobDrops(EntityDeathEvent event) {
+        EntityType entityType = event.getEntityType();
+        if(entityType==null) return;
         CustomDropManager.DropDefinition[] drops =
-            plugin.getLocalConfiguration().customDrops.getMobDrop(event.getEntityType().getName());
+            plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
         if(drops!=null) {
             event.getDrops().clear();
             for(CustomDropManager.DropDefinition d : drops) {
