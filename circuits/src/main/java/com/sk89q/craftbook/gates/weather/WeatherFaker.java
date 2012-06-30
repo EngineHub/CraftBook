@@ -17,11 +17,8 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
 
-    protected boolean risingEdge;
-
-    public WeatherFaker(Server server, Sign sign, boolean risingEdge) {
+    public WeatherFaker(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
 	@Override
@@ -36,16 +33,13 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
 
     public static class Factory extends AbstractICFactory {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new WeatherFaker(getServer(), sign, risingEdge);
+            return new WeatherFaker(getServer(), sign);
         }
     }
 
