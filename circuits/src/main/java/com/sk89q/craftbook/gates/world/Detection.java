@@ -124,7 +124,7 @@ public class Detection extends AbstractIC {
 	protected boolean isDetected() {
 		Location location = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
 		// add the offset to the location of the block connected to the sign
-		location.add(offsetX, offsetY, offsetZ);
+		// location.add(offsetX, offsetY, offsetZ);
 		for (Chunk chunk : getSurroundingChunks(location, radius)) {
 			if (chunk.isLoaded()) {
 				// get all entites from the chunks in the defined radius
