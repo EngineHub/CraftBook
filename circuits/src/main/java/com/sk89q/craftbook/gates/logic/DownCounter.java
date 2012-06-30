@@ -40,44 +40,50 @@ public class DownCounter extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-	// Get IC configuration data from line 3 of sign
-	String line2 = getSign().getLine(2);
-	String[] config = line2.split(":");
+		// Get IC configuration data from line 3 of sign
+		String line2 = getSign().getLine(2);
+		String[] config = line2.split(":");
 
-	int resetVal = Integer.parseInt(config[0]);
-	boolean inf = config[1].equals("INF");
-
-	// Get current counter value from line 4 of sign
-	String line3 = getSign().getLine(3);
-	int curVal = 0;
-
-	try {
-	    curVal = Integer.parseInt(line3);
-	} catch (Exception e) {
-	    curVal = resetVal;
-	}
-
-	int oldVal = curVal;
-
-	// If clock input triggered
-	if (chip.isTriggered(0) && chip.get(0)) {
-	    if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
-		if (inf)
-		    curVal = resetVal;
-	    } else { // Decrement counter
-		curVal--;
+	    int resetVal = 0;
+	    boolean inf = false;
+	    try {
+		    resetVal = Integer.parseInt(config[0]);
+		    inf = config[1].equals("INF");
+	    } catch (NumberFormatException e) {
+	    } catch (ArrayIndexOutOfBoundsException e) {
 	    }
+	    // Get current counter value from line 4 of sign
+		String line3 = getSign().getLine(3);
+		int curVal = 0;
 
-	    // Set output to high if we're at 0, otherwise low
-	    chip.set(3, (curVal == 0));
-	    // If reset input triggered, reset counter value
-	} else if (chip.isTriggered(1) && chip.get(1)) {
-	    curVal = resetVal;
-	}
+		try {
+		    curVal = Integer.parseInt(line3);
+		} catch (Exception e) {
+		    curVal = resetVal;
+		}
 
-	// Update counter value stored on sign if it's changed
-	if (curVal != oldVal)
-	    getSign().setLine(3, curVal + "");
+		int oldVal = curVal;
+
+		// If clock input triggered
+		if (chip.isTriggered(0) && chip.get(0)) {
+		    if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
+			if (inf)
+			    curVal = resetVal;
+		    } else { // Decrement counter
+			curVal--;
+		    }
+
+		    // Set output to high if we're at 0, otherwise low
+		    chip.set(3, (curVal == 0));
+		    // If reset input triggered, reset counter value
+		} else if (chip.isTriggered(1) && chip.get(1)) {
+		    curVal = resetVal;
+		}
+
+		// Update counter value stored on sign if it's changed
+		if (curVal != oldVal) {
+		    getSign().setLine(3, curVal + "");
+        }
     }
 
     public static class Factory extends AbstractICFactory {
