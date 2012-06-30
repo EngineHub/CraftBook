@@ -40,7 +40,6 @@ public class AndGate extends AbstractIC {
     public String getSignTitle() {
         return "AND";
     }
-
     @Override
     public void trigger(ChipState chip) {
 
