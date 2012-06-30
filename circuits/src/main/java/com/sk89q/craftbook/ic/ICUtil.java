@@ -59,7 +59,6 @@ public class ICUtil {
 
 	    if (newData != data) {
 		    block.setData((byte)newData, true);
-		    sourceBlock.setData((byte)newData, true);
 		    BlockRedstoneEvent event = new BlockRedstoneEvent(sourceBlock, data, newData);
 		    Bukkit.getPluginManager().callEvent(event);
 		    return true;
