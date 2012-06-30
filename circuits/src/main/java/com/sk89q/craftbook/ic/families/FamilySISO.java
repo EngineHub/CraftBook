@@ -79,7 +79,7 @@ public class FamilySISO extends AbstractICFamily {
         public void set(int pin, boolean value) {
             Block block = getBlock(pin);
             if (block != null) {
-                ICUtil.setState(source, block, value);
+	            ICUtil.setState(block, value);
             } else {
                 return;
             }
