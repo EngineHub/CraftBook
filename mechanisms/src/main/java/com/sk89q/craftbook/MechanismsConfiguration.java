@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.mech.CustomDropManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -58,8 +59,8 @@ public class MechanismsConfiguration {
         lightSwitchSettings = new LightSwitchSettings(cfg);
         hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
         snowSettings = new SnowSettings(cfg);
-        customDropSettings = new CustomDropSettings(dataFolder);
         areaSettings = new AreaSettings(cfg);
+        customDrops = new CustomDropManager(dataFolder);
     }
     
     public final File dataFolder;
@@ -74,9 +75,8 @@ public class MechanismsConfiguration {
     public final LightSwitchSettings lightSwitchSettings;
     public final HiddenSwitchSettings hiddenSwitchSettings;
     public final SnowSettings snowSettings;
-    public final CustomDropSettings customDropSettings;
     public final AreaSettings areaSettings;
-    
+    public final CustomDropManager customDrops;
     
     public class BookcaseSettings {
         public final boolean enable;
@@ -234,12 +234,12 @@ public class MechanismsConfiguration {
             maxSizePerArea     = cfg.getInt("max-size-per-area",           5000);
         }
     }
-    
+
     public class CustomDropSettings {
-	
+
 	public final ArrayList<String> blockData;
 	public final ArrayList<String> mobData;
-	
+
         private CustomDropSettings(File location) {
             blockData = new ArrayList<String>();
             try {
