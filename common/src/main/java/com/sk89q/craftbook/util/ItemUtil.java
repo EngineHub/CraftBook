@@ -37,4 +37,10 @@ public class ItemUtil {
 	item.setTypeId(type);
 	item.setData(new MaterialData(type,data));
     }
+    
+    public static boolean isStackValid(ItemStack item) {
+	if(item == null) return false;
+	if(item.getAmount() > 0 && item.getTypeId() > 0) return true;
+	return false;
+    }
 }
