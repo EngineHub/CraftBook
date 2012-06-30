@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
+import org.bukkit.material.MaterialData;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -122,7 +123,8 @@ public class Detection extends AbstractIC {
 	}
 
 	protected boolean isDetected() {
-		Location location = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
+		org.bukkit.material.Sign sign = (org.bukkit.material.Sign) getSign().getBlock().getState().getData();
+		Location location = getSign().getBlock().getRelative(sign.getAttachedFace()).getLocation();
 		// add the offset to the location of the block connected to the sign
 		location.add(offsetX, offsetY, offsetZ);
 		for (Chunk chunk : getSurroundingChunks(location, radius)) {
