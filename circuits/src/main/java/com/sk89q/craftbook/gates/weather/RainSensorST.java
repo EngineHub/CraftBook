@@ -11,11 +11,8 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class RainSensorST extends AbstractIC implements SelfTriggeredIC {
 
-    protected boolean risingEdge;
-
-    public RainSensorST(Server server, Sign sign, boolean risingEdge) {
+    public RainSensorST(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -45,16 +42,13 @@ public class RainSensorST extends AbstractIC implements SelfTriggeredIC {
 
     public static class Factory extends AbstractICFactory {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new RainSensorST(getServer(), sign, risingEdge);
+            return new RainSensorST(getServer(), sign);
         }
     }
 

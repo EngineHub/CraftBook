@@ -11,7 +11,7 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 public class ChestCollectorST extends ChestCollector implements SelfTriggeredIC{
 
     public ChestCollectorST(Server server, Sign sign) {
-        super(server, sign, true);
+        super(server, sign);
     }
 
     @Override

@@ -27,8 +27,8 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 
-    public LavaSensorST(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign, risingEdge);
+    public LavaSensorST(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 
         @Override
         public IC create(Sign sign) {
-            return new LavaSensorST(getServer(), sign, true);
+            return new LavaSensorST(getServer(), sign);
         }
     }
 

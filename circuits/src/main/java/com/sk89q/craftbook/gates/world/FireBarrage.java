@@ -10,10 +10,8 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class FireBarrage extends FireShooter{
 
-    protected boolean risingEdge;
-
-    public FireBarrage(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign, risingEdge);
+    public FireBarrage(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -28,7 +26,7 @@ public class FireBarrage extends FireShooter{
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
         	shootFire(5);
         }
     }
@@ -36,16 +34,13 @@ public class FireBarrage extends FireShooter{
     public static class Factory extends AbstractICFactory implements
             RestrictedIC {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new FireBarrage(getServer(), sign, risingEdge);
+            return new FireBarrage(getServer(), sign);
         }
     }
 

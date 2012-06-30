@@ -29,10 +29,8 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class ArrowBarrage extends ArrowShooter {
 
-    protected boolean risingEdge;
-
-    public ArrowBarrage(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign, risingEdge);
+    public ArrowBarrage(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -47,7 +45,7 @@ public class ArrowBarrage extends ArrowShooter {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
         	shootArrows(5);
         }
     }
@@ -55,16 +53,13 @@ public class ArrowBarrage extends ArrowShooter {
     public static class Factory extends AbstractICFactory implements
             RestrictedIC {
 
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new ArrowBarrage(getServer(), sign, risingEdge);
+            return new ArrowBarrage(getServer(), sign);
         }
     }
 }

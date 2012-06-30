@@ -27,10 +27,8 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class LightSensorST extends LightSensor implements SelfTriggeredIC {
 
-    protected boolean risingEdge;
-
-    public LightSensorST(Server server, Sign sign, boolean risingEdge) {
-        super(server, sign, risingEdge);
+    public LightSensorST(Server server, Sign sign) {
+        super(server, sign);
     }
 
     @Override
@@ -71,7 +69,7 @@ public class LightSensorST extends LightSensor implements SelfTriggeredIC {
 
         @Override
         public IC create(Sign sign) {
-            return new LightSensorST(getServer(), sign, true);
+            return new LightSensorST(getServer(), sign);
         }
     }
 

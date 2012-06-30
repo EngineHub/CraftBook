@@ -28,8 +28,6 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeControlAdvanced extends AbstractIC {
 
-    protected boolean risingEdge;
-
     public TimeControlAdvanced(Server server, Sign sign) {
         super(server, sign);
     }

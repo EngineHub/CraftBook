@@ -29,12 +29,9 @@ import com.sk89q.craftbook.ic.IC;
 public class RandomBit extends AbstractIC {
     
     protected Random random = new Random();
-    
-    protected boolean risingEdge;
 
-    public RandomBit(Server server, Sign sign, boolean risingEdge) {
+    public RandomBit(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -49,8 +46,7 @@ public class RandomBit extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if ((risingEdge && chip.getInput(0))
-                || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
         	int k = chip.getOutputCount();
             for (int i = 0; i < k; i++)
                 chip.setOutput(i, random.nextBoolean());
@@ -58,17 +54,13 @@ public class RandomBit extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory {
-        
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new RandomBit(getServer(), sign, risingEdge);
+            return new RandomBit(getServer(), sign);
         }
     }
 

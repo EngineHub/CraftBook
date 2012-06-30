@@ -10,11 +10,8 @@ import com.sk89q.craftbook.ic.IC;
 
 public class TStormSensor extends AbstractIC {
 
-    protected boolean risingEdge;
-
-    public TStormSensor(Server server, Sign sign, boolean risingEdge) {
+    public TStormSensor(Server server, Sign sign) {
         super(server, sign);
-        this.risingEdge = risingEdge;
     }
 
     @Override
@@ -29,24 +26,20 @@ public class TStormSensor extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if (risingEdge && chip.getInput(0) || (!risingEdge && !chip.getInput(0))) {
+        if (chip.getInput(0)) {
         	chip.setOutput(0, getSign().getWorld().isThundering());
         }
     }
 
 
     public static class Factory extends AbstractICFactory {
-
-        protected boolean risingEdge;
-
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new TStormSensor(getServer(), sign, risingEdge);
+            return new TStormSensor(getServer(), sign);
         }
     }
 

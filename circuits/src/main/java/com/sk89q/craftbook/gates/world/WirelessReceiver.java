@@ -26,14 +26,12 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 
 public class WirelessReceiver extends AbstractIC {
-    
-    protected boolean risingEdge;
+
     protected String band;
 
-    public WirelessReceiver(Server server, Sign sign, boolean risingEdge) {
+    public WirelessReceiver(Server server, Sign sign) {
         super(server, sign);
         
-        this.risingEdge = risingEdge;
         band = sign.getLine(2);
     }
 
@@ -59,17 +57,14 @@ public class WirelessReceiver extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory {
-        
-        protected boolean risingEdge;
 
-        public Factory(Server server, boolean risingEdge) {
+        public Factory(Server server) {
             super(server);
-            this.risingEdge = risingEdge;
         }
 
         @Override
         public IC create(Sign sign) {
-            return new WirelessReceiver(getServer(), sign, risingEdge);
+            return new WirelessReceiver(getServer(), sign);
         }
     }
 
