@@ -96,7 +96,7 @@ public class Family3I3O extends AbstractICFamily {
         public void set(int pin, boolean value) {
             Block block = getBlock(pin);
             if (block != null) {
-                ICUtil.setState(block, value);
+				ICUtil.setState(block, value);
             } else {
                 return;
             }

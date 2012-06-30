@@ -82,7 +82,7 @@ public class Family3ISO extends AbstractICFamily {
         public void set(int pin, boolean value) {
             Block block = getBlock(pin);
             if (block != null) {
-	            ICUtil.setState(block, value);
+				ICUtil.setState(block, value);
             } else {
                 return;
             }
