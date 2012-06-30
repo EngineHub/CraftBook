@@ -68,6 +68,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
     public void onEntityDeath(EntityDeathEvent event) {
 	for(String s : plugin.getLocalConfiguration().customDropSettings.mobData) {
 	    String newEntity = s.split("->")[0];
+	    if(event.getEntityType() == null) return;
 	    if(!event.getEntityType().getName().equalsIgnoreCase(newEntity)) continue; //Wrong ID
 	    
             event.getDrops().clear();
