@@ -46,10 +46,10 @@ public class ICUtil {
 	    byte data = block.getData();
 	    int newData;
 
-	    if (!state)
-		    newData = data & 0x7;
-	    else
+	    if (state)
 		    newData = data | 0x8;
+	    else
+		    newData = data & ~0x8;
 
 	    if (newData != data) {
 		    block.setData((byte)newData, true);
