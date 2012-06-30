@@ -158,12 +158,12 @@ public class Snow implements Listener {
 	    }
 	}
     }
-    
+
     public void lowerData(Block block) {
 	byte newData = (byte) (block.getData() - 1);
 	setBlockDataWithNotify(block,newData);
     }
-    
+
     public void incrementData(Block block) {
 	byte newData = (byte) (block.getData() + 1);
 	setBlockDataWithNotify(block,newData);

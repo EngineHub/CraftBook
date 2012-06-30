@@ -125,6 +125,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	
 	commandExecutor = new CommandParser(this);
 	getCommand("savensarea").setExecutor(commandExecutor);
+	getCommand("savearea").setExecutor(commandExecutor);
+	getCommand("cbmech").setExecutor(commandExecutor);
     }
     
     public void reloadLocalConfiguration() {
