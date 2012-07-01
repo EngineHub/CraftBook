@@ -92,7 +92,6 @@ public class Payment extends AbstractMechanic{
                 MechanismsPlugin.economy.depositPlayer(event.getPlayer().getName(), money);
         }
 
-
         event.setCancelled(true);
     }
 

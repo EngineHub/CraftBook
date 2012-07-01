@@ -35,7 +35,6 @@
       <unpack>false</unpack>
       <outputFileNameMapping>CraftBookCircuits.jar</outputFileNameMapping>
     </dependencySet>
-    <!--
     <dependencySet>
       <includes>
         <include>com.sk89q.craftbook:vehicles</include>
@@ -60,6 +59,5 @@
           </includes>
       </fileSet>
     </fileSets>
-  -->
   </dependencySets>
 </assembly>
