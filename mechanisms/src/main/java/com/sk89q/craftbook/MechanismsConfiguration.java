@@ -44,6 +44,8 @@ import com.sk89q.craftbook.mech.CustomDropManager;
 public class MechanismsConfiguration {
     public MechanismsConfiguration(FileConfiguration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
+
+        mechSettings = new MechanismSettings(cfg);
         ammeterSettings = new AmmeterSettings(cfg);
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
@@ -61,6 +63,7 @@ public class MechanismsConfiguration {
     }
 
     public final File dataFolder;
+    public final MechanismSettings mechSettings;
     public final AmmeterSettings ammeterSettings;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
@@ -75,6 +78,15 @@ public class MechanismsConfiguration {
     public final AreaSettings areaSettings;
     public final CustomDropManager customDrops;
     public final CustomDropSettings customDropSettings;
+
+    //General settings
+    public class MechanismSettings {
+        public final boolean stopDestruction;
+
+        private MechanismSettings(FileConfiguration cfg) {
+            stopDestruction      = cfg.getBoolean("stop-mechanism-dupe",          true);
+        }
+    }
 
     public class BookcaseSettings {
         public final boolean enable;
@@ -213,9 +225,9 @@ public class MechanismsConfiguration {
         public final boolean placeSnow;
 
         private SnowSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("snow-piling-enable",  true);
+            enable              = cfg.getBoolean("snow-piling-enable",  true);
             trample             = cfg.getBoolean("snow-trample-enable",  true);
-            placeSnow			= cfg.getBoolean("placable-snow", true);
+            placeSnow		= cfg.getBoolean("placable-snow", true);
         }
     }
 

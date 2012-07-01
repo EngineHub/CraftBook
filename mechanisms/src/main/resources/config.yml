@@ -16,3 +16,11 @@ cauldron-enable: true
 light-switch-enable: true
 light-stone-enable: true
 custom-drops-require-permissions: false
+snow-piling-enable: true
+snow-trample-enable: true
+placable-snow: true
+area-enable: true
+area-redstone: true
+max-areas-per-user: 30
+max-size-per-area: 5000
+stop-mechanism-dupe: true
