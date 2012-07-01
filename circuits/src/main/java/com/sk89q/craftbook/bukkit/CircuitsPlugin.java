@@ -20,12 +20,9 @@ package com.sk89q.craftbook.bukkit;
 
 import java.io.File;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.MechanicManager;
@@ -92,7 +89,6 @@ import com.sk89q.craftbook.gates.world.MessageSender;
 import com.sk89q.craftbook.gates.world.MultipleSetBlock;
 import com.sk89q.craftbook.gates.world.ParticleEffect;
 import com.sk89q.craftbook.gates.world.ParticleEffectST;
-import com.sk89q.craftbook.gates.world.Payment;
 import com.sk89q.craftbook.gates.world.PotionInducer;
 import com.sk89q.craftbook.gates.world.RangedOutput;
 import com.sk89q.craftbook.gates.world.ServerTimeModulus;
@@ -131,8 +127,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     public static Server server;
 
-    public static Economy economy = null;
-
     public static CircuitsPlugin getInst() {
         return instance;
     }
@@ -150,9 +144,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();
-
-        if(getServer().getPluginManager().isPluginEnabled("Vault"))
-            setupEconomy();
 
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
@@ -288,9 +279,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MCZ230", new RainSensorST.Factory(server), familySISO);
         icManager.register("MCZ231", new TStormSensorST.Factory(server), familySISO);
 
-        //Special IC's
-        if(economy!=null)
-            icManager.register("MCEC10", new Payment.Factory(server), familySISO);
     }
 
     /**
@@ -332,16 +320,5 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     public PermissionsResolverManager getPermissionsResolver() {
         return perms;
-    }
-
-
-    private boolean setupEconomy()
-    {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
-
-        return (economy != null);
     }
 }

@@ -26,7 +26,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -58,31 +57,6 @@ public class ICMechanic extends PersistentMechanic {
     }
 
     @Override
-    public void onRightClick(final PlayerInteractEvent event) {
-        BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-
-        if (block.getTypeId() == BlockID.WALL_SIGN) {
-            final BlockState state = block.getState();
-
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    // Assuming that the plugin host isn't going wonky here
-                    ChipState chipState = family.detect(
-                            BukkitUtil.toWorldVector(event.getPlayer().getLocation().getBlock()), (Sign) state);
-                    if(ic instanceof ManualIC)
-                        ((ManualIC)ic).click(chipState,event.getPlayer());
-                }
-            };
-            //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually running per set of inputs in a given time window.
-            if(ic instanceof ManualIC)
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(
-                        plugin, runnable, 2);
-        }
-    }
-
-    @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
@@ -100,9 +74,8 @@ public class ICMechanic extends PersistentMechanic {
                 }
             };
             //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually running per set of inputs in a given time window.
-            if(!(ic instanceof ManualIC))
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(
-                        plugin, runnable, 2);
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(
+                    plugin, runnable, 2);
         }
     }
 
