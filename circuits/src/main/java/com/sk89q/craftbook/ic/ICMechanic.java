@@ -100,8 +100,9 @@ public class ICMechanic extends PersistentMechanic {
                 }
             };
             //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually running per set of inputs in a given time window.
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(
-                    plugin, runnable, 2);
+            if(!(ic instanceof ManualIC))
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask(
+                        plugin, runnable, 2);
         }
     }
 
