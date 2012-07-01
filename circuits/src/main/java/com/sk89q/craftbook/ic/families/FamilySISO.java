@@ -31,105 +31,105 @@ import com.sk89q.worldedit.bukkit.*;
 
 /**
  * Handles detection for the single input single output family.
- * 
+ *
  * @author sk89q
  */
 public class FamilySISO extends AbstractICFamily {
 
-    @Override
-    public ChipState detect(BlockWorldVector source, Sign sign) {
-        return new ChipStateSISO(source, sign);
-    }
+	@Override
+	public ChipState detect(BlockWorldVector source, Sign sign) {
+		return new ChipStateSISO(source, sign);
+	}
 
-    public static class ChipStateSISO implements ChipState {
+	public static class ChipStateSISO implements ChipState {
 
-        protected Sign sign;
-        protected BlockWorldVector source;
+		protected Sign sign;
+		protected BlockWorldVector source;
 
-        public ChipStateSISO(BlockWorldVector source, Sign sign) {
-            this.sign = sign;
-            this.source = source;
-        }
+		public ChipStateSISO(BlockWorldVector source, Sign sign) {
+			this.sign = sign;
+			this.source = source;
+		}
 
-        protected Block getBlock(int pin) {
+		protected Block getBlock(int pin) {
 
-            switch (pin) {
-                case 0:
-                    return SignUtil.getFrontBlock(sign.getBlock());
-                case 1:
-                    BlockFace face = SignUtil.getBack(sign.getBlock());
-                    return sign.getBlock().getRelative(face).getRelative(face);
-                default:
-                    return null;
-            }
+			switch (pin) {
+				case 0:
+					return SignUtil.getFrontBlock(sign.getBlock());
+				case 1:
+					BlockFace face = SignUtil.getBack(sign.getBlock());
+					return sign.getBlock().getRelative(face).getRelative(face);
+				default:
+					return null;
+			}
 
-        }
+		}
 
-        @Override
-        public boolean get(int pin) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                return block.isBlockIndirectlyPowered();
-            } else {
-                return false;
-            }
-        }
+		@Override
+		public boolean get(int pin) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				return block.isBlockIndirectlyPowered();
+			} else {
+				return false;
+			}
+		}
 
-        @Override
-        public void set(int pin, boolean value) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                ICUtil.setState(block, value);
-            } else {
-                return;
-            }
-        }
+		@Override
+		public void set(int pin, boolean value) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				ICUtil.setState(block, value);
+			} else {
+				return;
+			}
+		}
 
-        @Override
-        public boolean isTriggered(int pin) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                return BukkitUtil.toWorldVector(block).equals(source);
-            } else {
-                return false;
-            }
-        }
+		@Override
+		public boolean isTriggered(int pin) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				return BukkitUtil.toWorldVector(block).equals(source);
+			} else {
+				return false;
+			}
+		}
 
-        @Override
-        public boolean isValid(int pin) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                return block.getType() == Material.REDSTONE_WIRE;
-            } else {
-                return false;
-            }
-        }
+		@Override
+		public boolean isValid(int pin) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				return block.getType() == Material.REDSTONE_WIRE;
+			} else {
+				return false;
+			}
+		}
 
-        @Override
-        public boolean getInput(int inputIndex) {
-            return get(inputIndex);
-        }
+		@Override
+		public boolean getInput(int inputIndex) {
+			return get(inputIndex);
+		}
 
-        @Override
-        public boolean getOutput(int outputIndex) {
-            return get(outputIndex + 1);
-        }
+		@Override
+		public boolean getOutput(int outputIndex) {
+			return get(outputIndex + 1);
+		}
 
-        @Override
-        public void setOutput(int outputIndex, boolean value) {
-            set(outputIndex + 1, value);
-        }
+		@Override
+		public void setOutput(int outputIndex, boolean value) {
+			set(outputIndex + 1, value);
+		}
 
-        @Override
-        public int getInputCount() {
-            return 1;
-        }
+		@Override
+		public int getInputCount() {
+			return 1;
+		}
 
-        @Override
-        public int getOutputCount() {
-            return 1;
-        }
+		@Override
+		public int getOutputCount() {
+			return 1;
+		}
 
-    }
+	}
 
 }

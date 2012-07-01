@@ -32,113 +32,113 @@ import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the single input single output family.
- * 
+ *
  * @author robhol
  */
 public class FamilySI3O extends AbstractICFamily {
 
-    @Override
-    public ChipState detect(BlockWorldVector source, Sign sign) {
-        return new ChipStateSI3O(source, sign);
-    }
+	@Override
+	public ChipState detect(BlockWorldVector source, Sign sign) {
+		return new ChipStateSI3O(source, sign);
+	}
 
-    public static class ChipStateSI3O implements ChipState {
+	public static class ChipStateSI3O implements ChipState {
 
-        protected Sign sign;
-        protected BlockWorldVector source;
+		protected Sign sign;
+		protected BlockWorldVector source;
 
-        public ChipStateSI3O(BlockWorldVector source, Sign sign) {
-            this.sign = sign;
-            this.source = source;
-        }
+		public ChipStateSI3O(BlockWorldVector source, Sign sign) {
+			this.sign = sign;
+			this.source = source;
+		}
 
-        protected Block getBlock(int pin) {
+		protected Block getBlock(int pin) {
 
-            Block bsign = sign.getBlock();
-            BlockFace fback = SignUtil.getBack(bsign);
+			Block bsign = sign.getBlock();
+			BlockFace fback = SignUtil.getBack(bsign);
 
-            switch (pin) {
-                case 0:
-                    return SignUtil.getFrontBlock(bsign);
-                case 1:
-                    return bsign.getRelative(fback).getRelative(fback);
-                case 2:
-                    return bsign.getRelative(fback).getRelative(
-                            SignUtil.getCounterClockWise(fback));
-                case 3:
-                    return bsign.getRelative(fback).getRelative(
-                            SignUtil.getClockWise(fback));
-                default:
-                    return null;
-            }
+			switch (pin) {
+				case 0:
+					return SignUtil.getFrontBlock(bsign);
+				case 1:
+					return bsign.getRelative(fback).getRelative(fback);
+				case 2:
+					return bsign.getRelative(fback).getRelative(
+							SignUtil.getCounterClockWise(fback));
+				case 3:
+					return bsign.getRelative(fback).getRelative(
+							SignUtil.getClockWise(fback));
+				default:
+					return null;
+			}
 
-        }
+		}
 
-        @Override
-        public boolean get(int pin) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                return block.isBlockIndirectlyPowered();
-            } else {
-                return false;
-            }
-        }
+		@Override
+		public boolean get(int pin) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				return block.isBlockIndirectlyPowered();
+			} else {
+				return false;
+			}
+		}
 
-        @Override
-        public void set(int pin, boolean value) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                ICUtil.setState(block, value);
-            } else {
-                return;
-            }
-        }
+		@Override
+		public void set(int pin, boolean value) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				ICUtil.setState(block, value);
+			} else {
+				return;
+			}
+		}
 
-        @Override
-        public boolean isTriggered(int pin) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                return BukkitUtil.toWorldVector(block).equals(source);
-            } else {
-                return false;
-            }
-        }
+		@Override
+		public boolean isTriggered(int pin) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				return BukkitUtil.toWorldVector(block).equals(source);
+			} else {
+				return false;
+			}
+		}
 
-        @Override
-        public boolean isValid(int pin) {
-            Block block = getBlock(pin);
-            if (block != null) {
-                return block.getType() == Material.REDSTONE_WIRE;
-            } else {
-                return false;
-            }
-        }
+		@Override
+		public boolean isValid(int pin) {
+			Block block = getBlock(pin);
+			if (block != null) {
+				return block.getType() == Material.REDSTONE_WIRE;
+			} else {
+				return false;
+			}
+		}
 
-        @Override
-        public boolean getInput(int inputIndex) {
-            return get(inputIndex);
-        }
+		@Override
+		public boolean getInput(int inputIndex) {
+			return get(inputIndex);
+		}
 
-        @Override
-        public boolean getOutput(int outputIndex) {
-            return get(outputIndex + 1);
-        }
+		@Override
+		public boolean getOutput(int outputIndex) {
+			return get(outputIndex + 1);
+		}
 
-        @Override
-        public void setOutput(int outputIndex, boolean value) {
-            set(outputIndex + 1, value);
-        }
+		@Override
+		public void setOutput(int outputIndex, boolean value) {
+			set(outputIndex + 1, value);
+		}
 
-        @Override
-        public int getInputCount() {
-            return 1;
-        }
+		@Override
+		public int getInputCount() {
+			return 1;
+		}
 
-        @Override
-        public int getOutputCount() {
-            return 3;
-        }
+		@Override
+		public int getOutputCount() {
+			return 3;
+		}
 
-    }
+	}
 
 }
