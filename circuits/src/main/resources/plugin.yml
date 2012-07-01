@@ -2,7 +2,6 @@ name: CraftBookCircuits
 main: com.sk89q.craftbook.bukkit.CircuitsPlugin
 version: "${project.version}"
 depend: [CraftBookCommon]
-softdepend: [Vault]
 commands:
     ic:
         description: IC-related commands

@@ -2,6 +2,7 @@ name: CraftBookMechanisms
 main: com.sk89q.craftbook.bukkit.MechanismsPlugin
 version: "${project.version}"
 depend: [CraftBookCommon]
+softdepend: [Vault]
 commands:
     savearea:
         description: Save an area

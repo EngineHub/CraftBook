@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.event.block.BlockEvent;
 
@@ -42,7 +42,7 @@ class WatchBlockManager {
      * Stores the list of watch blocks.
      */
     private final Map<BlockWorldVector, Set<PersistentMechanic>> watchBlocks;
-    
+
     /**
      * Construct the object.
      */
@@ -74,12 +74,12 @@ class WatchBlockManager {
      */
     public void update(PersistentMechanic m,
             List<BlockWorldVector> oldWatchBlocks) {
-        
+
         // This could be more efficient.
         for (BlockWorldVector p : oldWatchBlocks) {
             watchBlocks.get(p).remove(m);
         }
-        
+
         register(m);
     }
 
@@ -90,7 +90,8 @@ class WatchBlockManager {
      */
     public void deregister(PersistentMechanic m) {
         for (BlockWorldVector p : m.getWatchedPositions()) {
-            watchBlocks.get(p).remove(m);
+            if(p!=null && watchBlocks.get(p)!=null && m!=null)
+                watchBlocks.get(p).remove(m);
         }
     }
 
@@ -102,11 +103,11 @@ class WatchBlockManager {
     public void notify(BlockEvent event) {
         Set<PersistentMechanic> pms =
                 watchBlocks.get(BukkitUtil.toWorldVector(event.getBlock()));
-        
+
         if (pms == null) {
             return;
         }
-        
+
         for (PersistentMechanic m : pms) {
             m.onWatchBlockNotification(event);
         }
