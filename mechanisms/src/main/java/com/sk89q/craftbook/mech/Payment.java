@@ -85,7 +85,7 @@ public class Payment extends AbstractMechanic{
                 Block back = SignUtil.getBackBlock(sign.getBlock());
                 BlockFace bface = sign.getBlock().getFace(back);
                 Block redstoneItem = back.getRelative(bface);
-                if(setState(redstoneItem, true))
+                if(setState(sign.getBlock(), true))
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new turnOff(redstoneItem), 20L);
             }
             else
