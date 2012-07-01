@@ -14,25 +14,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import com.sk89q.craftbook.mech.CustomDropManager;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -51,7 +47,7 @@ public class MechanismsConfiguration {
         ammeterSettings = new AmmeterSettings(cfg);
         bookcaseSettings = new BookcaseSettings(cfg);
         bridgeSettings = new BridgeSettings(cfg);
-        doorSettings = new DoorSettings(cfg);        
+        doorSettings = new DoorSettings(cfg);
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
@@ -63,12 +59,12 @@ public class MechanismsConfiguration {
         customDrops = new CustomDropManager(dataFolder);
         customDropSettings = new CustomDropSettings(cfg);
     }
-    
+
     public final File dataFolder;
     public final AmmeterSettings ammeterSettings;
     public final BookcaseSettings bookcaseSettings;
     public final BridgeSettings bridgeSettings;
-    public final DoorSettings doorSettings;    
+    public final DoorSettings doorSettings;
     public final GateSettings gateSettings;
     public final ElevatorSettings elevatorSettings;
     public final CauldronSettings cauldronSettings;
@@ -79,7 +75,7 @@ public class MechanismsConfiguration {
     public final AreaSettings areaSettings;
     public final CustomDropManager customDrops;
     public final CustomDropSettings customDropSettings;
-    
+
     public class BookcaseSettings {
         public final boolean enable;
         public final String readLine;
@@ -90,15 +86,15 @@ public class MechanismsConfiguration {
         }
         //FIXME the books file should probably be cached here too
     }
-    
-    
-    
+
+
+
     public class BridgeSettings {
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
         public final Set<Material> allowedBlocks;
-        
+
         private BridgeSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("bridge-enable",             true);
             enableRedstone     = cfg.getBoolean("bridge-redstone",           true);
@@ -109,7 +105,7 @@ public class MechanismsConfiguration {
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
         }
-        
+
         /**
          * @param b
          * @return true if the given block type can be used for a bridge; false
@@ -119,13 +115,13 @@ public class MechanismsConfiguration {
             return allowedBlocks.contains(b);
         }
     }
-    
+
     public class DoorSettings {
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
         public final Set<Material> allowedBlocks;
-        
+
         private DoorSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("door-enable",             true);
             enableRedstone     = cfg.getBoolean("door-redstone",           true);
@@ -136,7 +132,7 @@ public class MechanismsConfiguration {
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
         }
-        
+
         /**
          * @param b
          * @return true if the given block type can be used for a bridge; false
@@ -147,8 +143,8 @@ public class MechanismsConfiguration {
         }
     }
 
-    
-    
+
+
     public class GateSettings {
         public final boolean enable;
         public final boolean enableRedstone;
@@ -158,9 +154,9 @@ public class MechanismsConfiguration {
             enableRedstone     = cfg.getBoolean("gate-redstone",           true);
         }
     }
-    
-    
-    
+
+
+
     public class ElevatorSettings {
         public final boolean enable;
 
@@ -168,9 +164,9 @@ public class MechanismsConfiguration {
             enable             = cfg.getBoolean("elevators-enable",        true);
         }
     }
-    
-    
-    
+
+
+
     public class CauldronSettings {
         public final boolean enable;
 
@@ -179,9 +175,9 @@ public class MechanismsConfiguration {
         }
         //FIXME the recipes should probably go here
     }
-    
-    
-    
+
+
+
     public class LightSwitchSettings {
         public final boolean enable;
 
@@ -189,14 +185,14 @@ public class MechanismsConfiguration {
             enable             = cfg.getBoolean("light-switch-enable",     true);
         }
     }
-    
+
     public class LightStoneSettings {
         public final boolean enable;
 
         private LightStoneSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("light-stone-enable",      true);
         }
-    }    
+    }
     public class AmmeterSettings {
         public final boolean enable;
 
@@ -222,7 +218,7 @@ public class MechanismsConfiguration {
             placeSnow			= cfg.getBoolean("placable-snow", true);
         }
     }
-    
+
     public class AreaSettings {
         public final boolean enable;
         public final boolean enableRedstone;

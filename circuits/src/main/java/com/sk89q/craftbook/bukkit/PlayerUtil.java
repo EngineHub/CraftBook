@@ -50,8 +50,8 @@ public class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().equalsIgnoreCase(filter)
-                    || (useDisplayNames 
-                        && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter))) {
+                        || (useDisplayNames 
+                                && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter))) {
                     List<Player> list = new ArrayList<Player>();
                     list.add(player);
                     return list;
@@ -67,8 +67,8 @@ public class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().toLowerCase().contains(filter)
-                    || (useDisplayNames 
-                        && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter))) {
+                        || (useDisplayNames 
+                                && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter))) {
                     list.add(player);
                 }
             }
@@ -81,8 +81,8 @@ public class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().toLowerCase().startsWith(filter)
-                    || (useDisplayNames 
-                        && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter))) {
+                        || (useDisplayNames 
+                                && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter))) {
                     list.add(player);
                 }
             }
@@ -151,12 +151,12 @@ public class PlayerUtil {
                 Player sourcePlayer = checkPlayer(source);
                 World sourceWorld = sourcePlayer.getWorld();
                 org.bukkit.util.Vector sourceVector
-                        = sourcePlayer.getLocation().toVector();
+                = sourcePlayer.getLocation().toVector();
 
                 for (Player player : CircuitsPlugin.server.getOnlinePlayers()) {
                     if (player.getWorld().equals(sourceWorld)
                             && player.getLocation().toVector().distanceSquared(
-                            sourceVector) < 900) { // 30 * 30
+                                    sourceVector) < 900) { // 30 * 30
                         players.add(player);
                     }
                 }
@@ -186,8 +186,8 @@ public class PlayerUtil {
         Player[] players = CircuitsPlugin.server.getOnlinePlayers();
         for (Player player : players) {
             if (player.getName().equalsIgnoreCase(filter)
-                || (true 
-                    && player.getDisplayName().equalsIgnoreCase(filter))) {
+                    || (true 
+                            && player.getDisplayName().equalsIgnoreCase(filter))) {
                 return player;
             }
         }

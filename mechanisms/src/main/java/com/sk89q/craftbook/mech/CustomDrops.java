@@ -7,10 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 public class CustomDrops extends MechanismsPlugin implements Listener{
 
@@ -23,7 +22,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
     @EventHandler
     public void handleCustomBlockDrops(BlockBreakEvent event) {
         if(plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
-           !event.getPlayer().hasPermission("craftbook.mech.drops")) return;
+                !event.getPlayer().hasPermission("craftbook.mech.drops")) return;
         if(event.isCancelled()) return;
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
@@ -54,7 +53,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
         EntityType entityType = event.getEntityType();
         if(entityType==null) return;
         CustomDropManager.DropDefinition[] drops =
-            plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
+                plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
         if(drops!=null) {
             event.getDrops().clear();
             for(CustomDropManager.DropDefinition d : drops) {
