@@ -51,7 +51,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
     @EventHandler
     public void handleCustomMobDrops(EntityDeathEvent event) {
         EntityType entityType = event.getEntityType();
-        if(entityType==null) return;
+        if(entityType==null || entityType == EntityType.PLAYER) return;
         CustomDropManager.DropDefinition[] drops =
                 plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
         if(drops!=null) {
