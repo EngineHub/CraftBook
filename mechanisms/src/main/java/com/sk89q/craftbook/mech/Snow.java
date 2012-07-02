@@ -173,7 +173,8 @@ public class Snow implements Listener {
     public void setBlockDataWithNotify(Block block, byte data) {
         block.setData(data);
         for(Player p : block.getWorld().getPlayers()) {
-            p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
+            if(p.getLocation().distance(block.getLocation()) < plugin.getServer().getViewDistance() * 16)
+                p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
         }
         // This notifies a block update, there is a bug in bukkit that doesn't
         // notify the client when Snow's data gets changed
