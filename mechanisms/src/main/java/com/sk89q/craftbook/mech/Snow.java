@@ -60,7 +60,7 @@ public class Snow implements Listener {
         if (!plugin.getLocalConfiguration().snowSettings.trample)
             return;
         Random random = new Random();
-        if(event.getPlayer().getVelocity().getY() == 0D) return;
+        if(plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() == 0D) return;
         if (random.nextInt(10) == 6) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
             if (b.getTypeId() == 78) {

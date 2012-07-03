@@ -223,11 +223,13 @@ public class MechanismsConfiguration {
         public final boolean enable;
         public final boolean trample;
         public final boolean placeSnow;
+        public final boolean jumpTrample;
 
         private SnowSettings(FileConfiguration cfg) {
             enable              = cfg.getBoolean("snow-piling-enable",  true);
             trample             = cfg.getBoolean("snow-trample-enable",  true);
             placeSnow		= cfg.getBoolean("placable-snow", true);
+            jumpTrample           = cfg.getBoolean("jump-trample-only", true);
         }
     }
 

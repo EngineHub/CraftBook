@@ -18,6 +18,7 @@ light-stone-enable: true
 custom-drops-require-permissions: false
 snow-piling-enable: true
 snow-trample-enable: true
+jump-trample-only: true
 placable-snow: true
 area-enable: true
 area-redstone: true
