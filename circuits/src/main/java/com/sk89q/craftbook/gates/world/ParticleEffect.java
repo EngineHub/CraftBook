@@ -13,7 +13,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class ParticleEffect extends AbstractIC {
@@ -60,7 +60,7 @@ public class ParticleEffect extends AbstractIC {
         catch(Exception e){}
     }
 
-    public static class Factory extends AbstractICFactory implements SelfTriggeredIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
             super(server);
