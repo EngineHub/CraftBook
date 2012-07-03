@@ -47,7 +47,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
      * Construct a gate for a location.
      * 
      * @param pt
-     * @param plugin 
+     * @param plugin
      */
     public CookingPot(BlockWorldVector pt, MechanismsPlugin plugin) {
         super();
@@ -61,7 +61,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public boolean isActive() {
-        return true; 
+        return true;
     }
 
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
@@ -91,7 +91,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         /**
          * Detect the mechanic at a placed sign.
          * 
-         * @throws ProcessedMechanismException 
+         * @throws ProcessedMechanismException
          */
         @Override
         public CookingPot detect(BlockWorldVector pt, LocalPlayer player, Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
@@ -157,6 +157,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             Block cb = sign.getWorld().getBlockAt(x,y,z);
             if (cb.getType() == Material.CHEST)
                 event.getPlayer().openInventory(((Chest)cb.getState()).getBlockInventory());
+            lastTick++;
+            think();
         }
     }
 
