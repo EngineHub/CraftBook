@@ -12,6 +12,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -21,17 +22,17 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
         super(server, sign);
     }
 
-	@Override
-	public String getTitle() {
-		return "Weather Faker";
-	}
+    @Override
+    public String getTitle() {
+        return "Weather Faker";
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "WEATHER FAKER";
-	}
+    @Override
+    public String getSignTitle() {
+        return "WEATHER FAKER";
+    }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements RestrictedIC{
 
         public Factory(Server server) {
             super(server);
@@ -43,36 +44,36 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC{
         }
     }
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
+    @Override
+    public boolean isActive() {
+        return true;
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		
-	}
+    @Override
+    public void trigger(ChipState chip) {
 
-	@Override
-	public void think(ChipState chip) {
-    	Block b = SignUtil.getBackBlock(getSign().getBlock());
-		if(chip.getInput(0))
-		{
-			int dist = Integer.parseInt(getSign().getLine(2));
-			if(!getSign().getWorld().hasStorm())
-				((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist+2, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
-    		((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1,0));
-		}
-		else if(!chip.getInput(0))
-		{
-			int dist = Integer.parseInt(getSign().getLine(2));
-			if(!getSign().getWorld().hasStorm())
-				((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
-			else
-			{
-				((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist+2, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1,0));
-				((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
-			}
-		}
-	}
+    }
+
+    @Override
+    public void think(ChipState chip) {
+        Block b = SignUtil.getBackBlock(getSign().getBlock());
+        if(chip.getInput(0))
+        {
+            int dist = Integer.parseInt(getSign().getLine(2));
+            if(!getSign().getWorld().hasStorm())
+                ((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist+2, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
+            ((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1,0));
+        }
+        else if(!chip.getInput(0))
+        {
+            int dist = Integer.parseInt(getSign().getLine(2));
+            if(!getSign().getWorld().hasStorm())
+                ((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
+            else
+            {
+                ((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist+2, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1,0));
+                ((CraftServer)getServer()).getHandle().sendPacketNearby(b.getX(), b.getY()+1,b.getZ(), dist, ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2,0));
+            }
+        }
+    }
 }

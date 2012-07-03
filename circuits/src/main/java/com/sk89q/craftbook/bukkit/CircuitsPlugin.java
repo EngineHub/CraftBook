@@ -98,6 +98,7 @@ import com.sk89q.craftbook.gates.world.SetBlockBelow;
 import com.sk89q.craftbook.gates.world.SetBlockBelowChest;
 import com.sk89q.craftbook.gates.world.TimeControl;
 import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
+import com.sk89q.craftbook.gates.world.TimeFaker;
 import com.sk89q.craftbook.gates.world.WaterSensor;
 import com.sk89q.craftbook.gates.world.WaterSensorST;
 import com.sk89q.craftbook.gates.world.WirelessReceiver;
@@ -209,11 +210,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1217", new PotionInducer.Factory(server), familySISO);
         icManager.register("MC1230", new DaySensor.Factory(server), familySISO);
         icManager.register("MC1231", new TimeControl.Factory(server), familySISO);         // Restricted
-        icManager.register("MC1236", new WeatherFaker.Factory(server), familySISO);
+        icManager.register("MC1236", new WeatherFaker.Factory(server), familySISO);        // Restricted
+        icManager.register("MC1237", new TimeFaker.Factory(server), familySISO);           // Restricted
         icManager.register("MC1240", new ArrowShooter.Factory(server), familySISO);        // Restricted
         icManager.register("MC1241", new ArrowBarrage.Factory(server), familySISO);        // Restricted
-        icManager.register("MC1250", new FireShooter.Factory(server), familySISO);        // Restricted
-        icManager.register("MC1251", new FireBarrage.Factory(server), familySISO);        // Restricted
+        icManager.register("MC1250", new FireShooter.Factory(server), familySISO);         // Restricted
+        icManager.register("MC1251", new FireBarrage.Factory(server), familySISO);         // Restricted
         icManager.register("MC1260", new WaterSensor.Factory(server), familySISO);
         icManager.register("MC1261", new LavaSensor.Factory(server), familySISO);
         icManager.register("MC1262", new LightSensor.Factory(server), familySISO);
