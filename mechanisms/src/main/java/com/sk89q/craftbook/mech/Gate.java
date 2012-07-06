@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -592,7 +591,7 @@ public class Gate extends PersistentMechanic {
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
         if (evt instanceof BlockBreakEvent)
-            if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()) && evt.getBlock().getWorld().getBlockAt(BukkitUtil.toLocation(pt)).getType() == Material.SIGN)
+            if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()))
                 ((BlockBreakEvent) evt).setCancelled(true);
             else
                 setGateState(pt, false, smallSearchSize);
