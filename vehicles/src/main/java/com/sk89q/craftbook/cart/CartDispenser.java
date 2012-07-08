@@ -1,15 +1,15 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.worldedit.blocks.ItemType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.worldedit.blocks.ItemType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * <p>
@@ -40,27 +40,30 @@ import org.bukkit.inventory.ItemStack;
  * 
  */
 public class CartDispenser extends CartMechanism {
+    @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // care?
         if (minor) return;
-        
+
         // validate
         if (!blocks.matches("dispenser")) return;
-        
+
         // detect intentions
         Power pow = isActive(blocks.rail, blocks.base, blocks.sign);
-        boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLines()[2]);
+        boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
         Inventory inv = inf ? null : ((Chest)blocks.base.getState()).getInventory();
-        
+
+        CartType type = CartType.fromString(blocks.getSign().getLine(3));
+
         // go
         if (cart == null)
             switch (pow) {
-                case ON: 
-                    dispense(blocks, inv);
-                    return;
-                case OFF:       // power going off doesn't eat a cart unless the cart moves.
-                case NA:
-                    return;
+            case ON:
+                dispense(blocks, inv, type);
+                return;
+            case OFF:       // power going off doesn't eat a cart unless the cart moves.
+            case NA:
+                return;
             }
         else
             switch (pow) {
@@ -72,7 +75,7 @@ public class CartDispenser extends CartMechanism {
                 return;
             }
     }
-    
+
     /**
      * @param cart the cart to be destroyed/collected
      * @param inv the inventory to place a cart item in, or null if we don't care.
@@ -93,11 +96,48 @@ public class CartDispenser extends CartMechanism {
      * @param blocks nuff said
      * @param inv the inventory to place a cart item in, or null if we don't care.
      */
-    private void dispense(CartMechanismBlocks blocks, Inventory inv) {
+    @SuppressWarnings("unchecked")
+    private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
         if (inv != null) {
-            if (!inv.contains(ItemType.MINECART.getID())) return;
-            inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
+            if(type.equals(CartType.Minecart)) {
+                if (!inv.contains(ItemType.MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
+            }
+            else if(type.equals(CartType.StorageMinecart)) {
+                if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
+            }
+            else if(type.equals(CartType.PoweredMinecart)) {
+                if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
+            }
         }
-        blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), Minecart.class);
+        blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
+    }
+
+    public enum CartType {
+        Minecart(org.bukkit.entity.Minecart.class),
+        StorageMinecart(org.bukkit.entity.StorageMinecart.class),
+        PoweredMinecart(org.bukkit.entity.PoweredMinecart.class);
+
+        private Class<?> cl;
+
+        private CartType(Class<?> cl) {
+            this.cl = cl;
+        }
+
+        public static CartType fromString(String s) {
+            for(CartType ct : values())
+            {
+                if(ct.name().equalsIgnoreCase(s))
+                    return ct;
+            }
+            return Minecart; //Default to minecarts
+        }
+        @SuppressWarnings("rawtypes")
+        public Class toClass() {
+            return cl;
+        }
+
     }
 }
