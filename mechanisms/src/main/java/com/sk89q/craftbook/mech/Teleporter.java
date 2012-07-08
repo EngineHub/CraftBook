@@ -20,6 +20,14 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
+/**
+ * Teleporter Mechanism.
+ * 
+ * @author sk89q
+ * @author hash
+ * @author Me4502
+ * 
+ */
 public class Teleporter extends AbstractMechanic{
 
     public static class Factory extends AbstractMechanicFactory<Teleporter> {
