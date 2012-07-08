@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -60,7 +59,7 @@ public class Snow implements Listener {
         if (!plugin.getLocalConfiguration().snowSettings.trample)
             return;
         Random random = new Random();
-        if(plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() == 0D) return;
+        if(plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() > 0D) return;
         if (random.nextInt(10) == 6) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
             if (b.getTypeId() == 78) {
@@ -84,28 +83,16 @@ public class Snow implements Listener {
     public void onBlockForm(final BlockFormEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.enable)
             return;
-        if (event.getNewState().getTypeId() == BlockID.SNOW) {
+        if (event.getNewState().getTypeId() == 78) {
             Block block = event.getBlock();
 
             if ((block.getTypeId() != 80) && (block.getTypeId() != 78)) {
-                if (block.getWorld()
-                        .getBlockAt(block.getLocation().subtract(0, 1, 0))
-                        .getTypeId() == 80
-                        || block.getWorld()
-                        .getBlockAt(
-                                block.getLocation().subtract(0, 1, 0))
-                                .getTypeId() == 78)
+                if (block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78)
                     return;
                 Random random = new Random();
                 long delay = random.nextInt(100) + 60;
-                if (plugin
-                        .getServer()
-                        .getScheduler()
-                        .scheduleSyncDelayedTask(plugin,
-                                new makeSnow(block.getLocation()), delay * 20L) == -1)
-                    plugin.getLogger()
-                    .log(Level.SEVERE,
-                            "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+                if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(block.getLocation()), delay * 20L) == -1)
+                    plugin.getLogger().log(Level.SEVERE,"[CraftBookMechanisms] Snow Mechanic failed to schedule!");
             }
         }
     }
@@ -129,12 +116,11 @@ public class Snow implements Listener {
                 if (!(event.getBlock().getTypeId() == 78))
                     return;
                 incrementData(event.getBlock());
-                // if(event.getBlock().getData() >= (byte)7)
-                // event.getBlock().setTypeId(80);
+                //if(event.getBlock().getData() >= (byte)7)
+                //    event.getBlock().setTypeId(80);
                 Random random = new Random();
                 long delay = random.nextInt(100) + 60;
-                if (plugin
-                        .getServer()
+                if (plugin.getServer()
                         .getScheduler()
                         .scheduleSyncDelayedTask(plugin, new makeSnow(event),
                                 delay * 20L) == -1)
