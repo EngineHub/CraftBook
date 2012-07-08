@@ -52,6 +52,7 @@ public class MechanismsConfiguration {
         doorSettings = new DoorSettings(cfg);
         gateSettings = new GateSettings(cfg);
         elevatorSettings = new ElevatorSettings(cfg);
+        teleporterSettings = new TeleporterSettings(cfg);
         cauldronSettings = new CauldronSettings(cfg);
         lightStoneSettings = new LightStoneSettings(cfg);
         lightSwitchSettings = new LightSwitchSettings(cfg);
