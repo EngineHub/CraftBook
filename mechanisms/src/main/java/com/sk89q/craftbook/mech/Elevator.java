@@ -237,7 +237,7 @@ public class Elevator extends AbstractMechanic {
         subspaceRift.setY(floor.getY() + 1);
         if(player.isInsideVehicle()) {
             subspaceRift = player.getVehicle().getLocation().clone();
-            subspaceRift.setY(floor.getY() + 1);
+            subspaceRift.setY(floor.getY() + 2);
             player.getVehicle().teleport(subspaceRift);
         }
         player.teleport(subspaceRift);
