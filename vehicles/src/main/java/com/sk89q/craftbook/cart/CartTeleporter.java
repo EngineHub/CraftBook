@@ -45,7 +45,8 @@ public class CartTeleporter extends CartMechanism {
         }
 
         Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0) {});
-        loc.getChunk().load(true);
+        if(!loc.getChunk().isLoaded())
+            loc.getChunk().load(true);
         if (cart.getWorld() == world) {
             cart.teleport(loc);
         } else {
