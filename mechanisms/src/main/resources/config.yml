@@ -26,3 +26,4 @@ area-redstone: true
 max-areas-per-user: 30
 max-size-per-area: 5000
 stop-mechanism-dupe: true
+teleporter-enable: true

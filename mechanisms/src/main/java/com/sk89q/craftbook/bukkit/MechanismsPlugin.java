@@ -39,6 +39,7 @@ import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.Snow;
+import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 
@@ -85,6 +86,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Bridge.Factory(this));
         manager.register(new Door.Factory(this));
         manager.register(new Elevator.Factory(this));
+        manager.register(new Teleporter.Factory(this));
         manager.register(new Area.Factory(this));
         //manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));

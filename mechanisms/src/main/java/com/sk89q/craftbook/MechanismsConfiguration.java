@@ -70,6 +70,7 @@ public class MechanismsConfiguration {
     public final DoorSettings doorSettings;
     public final GateSettings gateSettings;
     public final ElevatorSettings elevatorSettings;
+    public final TeleporterSettings teleporterSettings;
     public final CauldronSettings cauldronSettings;
     public final LightStoneSettings lightStoneSettings;
     public final LightSwitchSettings lightSwitchSettings;
@@ -177,6 +178,15 @@ public class MechanismsConfiguration {
         }
     }
 
+
+
+    public class TeleporterSettings {
+        public final boolean enable;
+
+        private TeleporterSettings(FileConfiguration cfg) {
+            enable             = cfg.getBoolean("teleporter-enable",        true);
+        }
+    }
 
 
     public class CauldronSettings {
