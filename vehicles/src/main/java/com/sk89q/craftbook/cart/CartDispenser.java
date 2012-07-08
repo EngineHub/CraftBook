@@ -116,20 +116,21 @@ public class CartDispenser extends CartMechanism {
     }
 
     public enum CartType {
-        Minecart(org.bukkit.entity.Minecart.class),
-        StorageMinecart(org.bukkit.entity.StorageMinecart.class),
-        PoweredMinecart(org.bukkit.entity.PoweredMinecart.class);
+        Minecart("Minecart", org.bukkit.entity.Minecart.class),
+        StorageMinecart("Storage", org.bukkit.entity.StorageMinecart.class),
+        PoweredMinecart("Powered", org.bukkit.entity.PoweredMinecart.class);
 
         private Class<?> cl;
+        private String name;
 
-        private CartType(Class<?> cl) {
+        private CartType(String name, Class<?> cl) {
             this.cl = cl;
         }
 
         public static CartType fromString(String s) {
             for(CartType ct : values())
             {
-                if(ct.name().equalsIgnoreCase(s))
+                if(ct.name.equalsIgnoreCase(s))
                     return ct;
             }
             return Minecart; //Default to minecarts
@@ -138,6 +139,5 @@ public class CartDispenser extends CartMechanism {
         public Class toClass() {
             return cl;
         }
-
     }
 }
