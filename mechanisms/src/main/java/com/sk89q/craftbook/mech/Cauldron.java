@@ -35,9 +35,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -95,14 +95,14 @@ public class Cauldron extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
-        
+
         if (!plugin.getLocalConfiguration().cauldronSettings.enable)
             return;
-        
+
         if (!localPlayer.hasPermission("craftbook.mech.cauldron")) {
             return;
         }
-        
+
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt))
             return; // wth? our manager is insane
         if (event.getPlayer().getItemInHand().getTypeId() >= 255
@@ -155,6 +155,9 @@ public class Cauldron extends AbstractMechanic {
         int s3 = world.getBlockTypeIdAt(ix - 1, iy, iz);
         int s2 = world.getBlockTypeIdAt(ix, iy, iz + 1);
         int s4 = world.getBlockTypeIdAt(ix, iy, iz - 1);
+
+        int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
+
         // stop strange lava ids
         if (below == 11)
             below = 10;
@@ -162,8 +165,8 @@ public class Cauldron extends AbstractMechanic {
             below2 = 10;
         // Preliminary check so we don't waste CPU cycles
         if ((below == BlockID.LAVA || below2 == BlockID.LAVA)
-                && (s1 == BlockID.STONE || s2 == BlockID.STONE
-                        || s3 == BlockID.STONE || s4 == BlockID.STONE)) {
+                && (s1 == blockID || s2 == blockID
+                || s3 == blockID || s4 == blockID)) {
             // Cauldron is 2 units deep
             if (below == BlockID.LAVA) {
                 rootY++;
@@ -186,6 +189,8 @@ public class Cauldron extends AbstractMechanic {
         // Gotta start at a root Y then find our orientation
         int rootY = pt.getBlockY();
 
+        int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
+
         // Used to store cauldron blocks -- walls are counted
         Map<BlockWorldVector, Integer> visited = new HashMap<BlockWorldVector, Integer>();
 
@@ -204,11 +209,11 @@ public class Cauldron extends AbstractMechanic {
             // Key is the block ID and the value is the amount
             Map<Integer, Integer> contents = new HashMap<Integer, Integer>();
 
-            // Now we have to ignore stone blocks so that we get the real
+            // Now we have to ignore cauldron blocks so that we get the real
             // contents of the cauldron
             for (Map.Entry<BlockWorldVector, Integer> entry : visited
                     .entrySet()) {
-                if (entry.getValue() != BlockID.STONE) {
+                if (entry.getValue() != blockID) {
                     if (!contents.containsKey(entry.getValue())) {
                         contents.put(entry.getValue(), 1);
                     } else {
@@ -268,7 +273,7 @@ public class Cauldron extends AbstractMechanic {
                         world.getBlockAt(entry.getKey().getBlockX(),
                                 entry.getKey().getBlockY(),
                                 entry.getKey().getBlockZ()).setType(
-                                Material.AIR);
+                                        Material.AIR);
                         // }
                         ingredients.remove(entry.getValue());
                     }
@@ -304,7 +309,7 @@ public class Cauldron extends AbstractMechanic {
      * non-wall blocks, we also make sure that there is standing lava
      * underneath.
      * 
-     * @param world 
+     * @param world
      * @param pt
      * @param minY
      * @param maxY
@@ -313,7 +318,9 @@ public class Cauldron extends AbstractMechanic {
      */
     public void findCauldronContents(World world, BlockWorldVector pt,
             int minY, int maxY, Map<BlockWorldVector, Integer> visited)
-            throws NotACauldronException {
+                    throws NotACauldronException {
+
+        int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 
         // Don't want to go too low or high
         if (pt.getBlockY() < minY) {
@@ -350,7 +357,7 @@ public class Cauldron extends AbstractMechanic {
 
         // It's a wall -- we only needed to remember that we visited it but
         // we don't need to recurse
-        if (type == BlockID.STONE) {
+        if (type == blockID) {
             return;
         }
 
@@ -394,8 +401,8 @@ public class Cauldron extends AbstractMechanic {
         return false;
     }
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		
-	}
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+
+    }
 }

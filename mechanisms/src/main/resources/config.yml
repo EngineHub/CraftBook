@@ -13,6 +13,7 @@ gate-enable: true
 gate-redstone: true
 elevators-enable: true
 cauldron-enable: true
+cauldron-block: 1
 light-switch-enable: true
 light-stone-enable: true
 custom-drops-require-permissions: false

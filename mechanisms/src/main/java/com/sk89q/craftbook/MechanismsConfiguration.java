@@ -181,9 +181,11 @@ public class MechanismsConfiguration {
 
     public class CauldronSettings {
         public final boolean enable;
+        public final int cauldronBlock;
 
         private CauldronSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("cauldron-enable",         true);
+            cauldronBlock      = cfg.getInt("cauldron-block",         1);
         }
         //FIXME the recipes should probably go here
     }
