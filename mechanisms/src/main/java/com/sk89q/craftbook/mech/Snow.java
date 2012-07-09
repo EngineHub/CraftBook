@@ -59,11 +59,13 @@ public class Snow implements Listener {
         if (!plugin.getLocalConfiguration().snowSettings.trample)
             return;
         Random random = new Random();
-        if(plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() > 0D) return;
+        if(plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() >= 0D) return;
         if (random.nextInt(10) == 6) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
             if (b.getTypeId() == 78) {
-                if (b.getData() > (byte)1)
+                if(b.getData() > (byte)7)
+                    setBlockDataWithNotify(b,(byte)7);
+                else if (b.getData() > (byte)1)
                     lowerData(b);
                 else
                     b.setTypeId(0);
@@ -71,7 +73,9 @@ public class Snow implements Listener {
 
             b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
             if (b.getTypeId() == 78) {
-                if (b.getData() > (byte)1)
+                if(b.getData() > (byte)7)
+                    setBlockDataWithNotify(b,(byte)7);
+                else if (b.getData() > (byte)1)
                     lowerData(b);
                 else
                     b.setTypeId(0);
@@ -144,11 +148,17 @@ public class Snow implements Listener {
 
     public void lowerData(Block block) {
         byte newData = (byte) (block.getData() - 1);
+        if(newData > (byte)7)
+            newData = (byte)7;
         setBlockDataWithNotify(block,newData);
     }
 
     public void incrementData(Block block) {
         byte newData = (byte) (block.getData() + 1);
+        if(newData > (byte)7) {
+            block.setTypeId(80);
+            newData = (byte)0;
+        }
         setBlockDataWithNotify(block,newData);
     }
 
