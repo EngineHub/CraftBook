@@ -47,7 +47,7 @@ public interface Mechanic {
      * in the world.
      */
     public void unload();
-    
+
 
     /**
      * @return true if this mechanic is still active in the world; false
@@ -55,7 +55,7 @@ public interface Mechanic {
      *         [Gate] sign still exists at the trigger points.
      */
     public boolean isActive();
-    
+
     /**
      * Raised when a block is broken.
      * 
@@ -69,7 +69,7 @@ public interface Mechanic {
      * @param event
      */
     public void onRightClick(PlayerInteractEvent event);
-    
+
 
     /**
      * Raised when block is left clicked.
@@ -77,7 +77,7 @@ public interface Mechanic {
      * @param event
      */
     public void onLeftClick(PlayerInteractEvent event);
-    
+
 
     /**
      * Raised when an input redstone current changes.

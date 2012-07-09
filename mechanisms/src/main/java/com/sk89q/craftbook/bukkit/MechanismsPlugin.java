@@ -20,8 +20,10 @@ package com.sk89q.craftbook.bukkit;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.craftbook.MechanicManager;
@@ -145,8 +147,10 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         getCommand("cbmech").setExecutor(commandExecutor);
     }
 
-    public void reloadLocalConfiguration() {
+    public boolean reloadLocalConfiguration(CommandSender sender) {
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
+        sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
+        return true;
     }
 
     public MechanismsConfiguration getLocalConfiguration() {
