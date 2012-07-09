@@ -74,6 +74,9 @@ public class Gate extends PersistentMechanic {
      */
     protected boolean smallSearchSize;
 
+
+    protected ArrayList<BlockWorldVector> gates = new ArrayList<BlockWorldVector>();
+
     /**
      * Construct a gate for a location.
      * 
@@ -454,11 +457,12 @@ public class Gate extends PersistentMechanic {
 
     @Override
     public void unload() {
+        gates.clear();
     }
 
     @Override
     public boolean isActive() {
-        return false; // This keeps no state
+        return true; // This keeps no state
     }
 
     public static class Factory extends AbstractMechanicFactory<Gate> {
@@ -526,8 +530,7 @@ public class Gate extends PersistentMechanic {
 
     }
 
-    public boolean isValidGateBlock(Block block)
-    {
+    public boolean isValidGateBlock(Block block) {
         if(block.getTypeId() == BlockID.FENCE
                 || block.getTypeId() == BlockID.IRON_BARS
                 || block.getTypeId() == BlockID.GLASS_PANE
@@ -538,21 +541,11 @@ public class Gate extends PersistentMechanic {
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getBlock().getState() instanceof Sign)
-            setGateState(pt, false, smallSearchSize);
-        else if (isValidGateBlock(event.getBlock()))
-            event.setCancelled(true);
-    }
-
-    @Override
     public List<BlockWorldVector> getWatchedPositions() {
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
-
-        ArrayList<BlockWorldVector> gates = new ArrayList<BlockWorldVector>();
 
         gates.clear();
 
@@ -599,5 +592,10 @@ public class Gate extends PersistentMechanic {
             else
                 setGateState(pt, false, smallSearchSize);
         }
+    }
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+
     }
 }
