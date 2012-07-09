@@ -590,10 +590,14 @@ public class Gate extends PersistentMechanic {
 
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
-        if (evt instanceof BlockBreakEvent)
-            if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()))
+        if (evt instanceof BlockBreakEvent) {
+            if(!plugin.getLocalConfiguration().mechSettings.stopDestruction && !((BlockBreakEvent)evt).isCancelled()) {
+                setGateState(pt, false, smallSearchSize);
+            }
+            else if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()))
                 ((BlockBreakEvent) evt).setCancelled(true);
             else
                 setGateState(pt, false, smallSearchSize);
+        }
     }
 }
