@@ -82,7 +82,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         // Let's register mechanics!
         manager.register(new Ammeter.Factory(this));
-        //FIXME!!!! GAH!!!!!!!!!!!!!!!!!!!!!!!!! manager.register(new LightMeter.Factory(this));
         manager.register(new Bookcase.Factory(this));
         manager.register(new Gate.Factory(this));
         manager.register(new Bridge.Factory(this));
