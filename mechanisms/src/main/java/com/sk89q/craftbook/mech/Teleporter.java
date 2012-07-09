@@ -56,6 +56,7 @@ public class Teleporter extends AbstractMechanic{
 
             if(block.getState() instanceof Sign) {
                 Sign s = (Sign)block.getState();
+                if(!s.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
                 String[] pos = s.getLine(2).split(":");
                 if(pos.length > 2)
                     return new Teleporter(block, plugin);
@@ -71,6 +72,8 @@ public class Teleporter extends AbstractMechanic{
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player, Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+
+            if(!sign.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
 
             if (!player.hasPermission("craftbook.mech.teleporter")) {
                 throw new InsufficientPermissionsException();
