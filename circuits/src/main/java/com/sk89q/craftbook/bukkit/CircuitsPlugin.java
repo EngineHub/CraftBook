@@ -32,6 +32,7 @@ import com.sk89q.craftbook.circuits.Netherrack;
 import com.sk89q.craftbook.gates.logic.AndGate;
 import com.sk89q.craftbook.gates.logic.Clock;
 import com.sk89q.craftbook.gates.logic.ClockDivider;
+import com.sk89q.craftbook.gates.logic.Counter;
 import com.sk89q.craftbook.gates.logic.Delayer;
 import com.sk89q.craftbook.gates.logic.DownCounter;
 import com.sk89q.craftbook.gates.logic.EdgeTriggerDFlipFlop;
@@ -246,6 +247,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3036", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
+        icManager.register("MC3102", new Counter.Factory(server), family3ISO);
         icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);        // Restricted
         //Missing: 3231                                                                         // Restricted
         //3I3Os
