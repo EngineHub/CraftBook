@@ -22,6 +22,7 @@ public class DispenserRecipes implements Listener{
         recipes.add(new XPShooter());
         recipes.add(new SnowShooter());
         recipes.add(new FireArrows());
+        recipes.add(new Fan());
     }
 
     @EventHandler
