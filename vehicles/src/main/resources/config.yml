@@ -18,6 +18,7 @@ minecart-slow-when-empty: false
 minecart-max-speed-modifier: 1
 in-cart-control: true
 hinder-pressure-plate-slow: true
+minecart-enter-on-impact: true
 
 boat-break-return-boat: false
 boat-remove-entities: false

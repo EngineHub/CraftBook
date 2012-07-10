@@ -97,13 +97,22 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             Entity entity = event.getEntity();
 
             if (entity instanceof Player) return;
-            if (!config.boatRemoveEntities && !config.minecartRemoveEntities) return;
+            if (!config.boatRemoveEntities && !config.minecartRemoveEntities && !config.minecartEnterOnImpact) return;
+
+            if(config.minecartEnterOnImpact == true && (vehicle instanceof Minecart)) {
+                if(!vehicle.isEmpty()) return;
+                vehicle.setPassenger(event.getEntity());
+
+                return;
+            }
 
             if (config.boatRemoveEntities ==  true && (vehicle instanceof Boat)) {
                 if (config.boatRemoveEntitiesOtherBoats != true &&
                         (entity instanceof Boat)) return;
 
                 entity.remove();
+
+                return;
             }
 
             if (config.minecartRemoveEntities ==  true && (vehicle instanceof Minecart)) {
@@ -111,6 +120,8 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                         (entity instanceof Minecart)) return;
 
                 entity.remove();
+
+                return;
             }
         }
 

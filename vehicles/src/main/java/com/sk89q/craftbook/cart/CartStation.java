@@ -82,6 +82,5 @@ public class CartStation extends CartMechanism {
             // recentering and parking almost completely prevents more than one cart from getting onto the same station.
             break;
         }
-
     }
 }

@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
@@ -37,7 +37,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class VehiclesConfiguration {
     public VehiclesConfiguration(FileConfiguration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
-        
+
         matBoostMax =   Material.getMaterial(cfg.getInt("max-boost-block",      41));
         matBoost25x =   Material.getMaterial(cfg.getInt("25x-boost-block",      14));
         matSlow50x =    Material.getMaterial(cfg.getInt("50x-slow-block",       88));
@@ -50,24 +50,25 @@ public class VehiclesConfiguration {
         matTeleport =   Material.getMaterial(cfg.getInt("teleport-block",       89));
         matDispenser =  Material.getMaterial(54);     // this can't be configurable because we need it to be a chest!
         matMessager =   Material.getMaterial(cfg.getInt("messager-block",       121));
-        
+
+        minecartEnterOnImpact = cfg.getBoolean("minecart-enter-on-impact",      true);
         minecartSlowWhenEmpty = cfg.getBoolean("minecart-slow-when-empty",      true);
         minecartDecayWhenEmpty = cfg.getBoolean("minecart-decay-when-empty",      false);
-        minecartRemoveOnExit = cfg.getBoolean("minecart-remove-on-exit",        false);        
+        minecartRemoveOnExit = cfg.getBoolean("minecart-remove-on-exit",        false);
         minecartRemoveEntities = cfg.getBoolean("minecart-remove-entities",     false);
         minecartRemoveEntitiesOtherCarts = cfg.getBoolean("minecart-remove-"
                 + "entities-othercarts",                                        false);
         minecartMaxSpeedModifier = cfg.getDouble("minecart-max-speed-modifier", 1);
-        
+
         boatRemoveEntities = cfg.getBoolean("boat-remove-entities",             false);
         boatRemoveEntitiesOtherBoats = cfg.getBoolean("boat-remove-"
                 + "entities-otherboats",                                        false);
         boatBreakReturn = cfg.getBoolean("boat-break-return-boat",              false);
         minecartTrackMessages = cfg.getBoolean("minecart-track-messages",       true);
     }
-    
+
     public final File dataFolder;
-    
+
     public final Material matBoostMax;
     public final Material matBoost25x;
     public final Material matSlow50x;
@@ -80,7 +81,7 @@ public class VehiclesConfiguration {
     public final Material matTeleport;
     public final Material matDispenser;
     public final Material matMessager;
-    
+
     public final boolean minecartSlowWhenEmpty;
     public final boolean minecartRemoveOnExit;
     public final boolean minecartRemoveEntities;
@@ -88,7 +89,8 @@ public class VehiclesConfiguration {
     public final double minecartMaxSpeedModifier;
     public final boolean minecartTrackMessages;
     public final boolean minecartDecayWhenEmpty;
-    
+    public final boolean minecartEnterOnImpact;
+
     public final boolean boatRemoveEntities;
     public final boolean boatRemoveEntitiesOtherBoats;
     public final boolean boatBreakReturn;
