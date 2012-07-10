@@ -59,6 +59,7 @@ public class MechanismsConfiguration {
         hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
         snowSettings = new SnowSettings(cfg);
         areaSettings = new AreaSettings(cfg);
+        commandSettings = new CommandSettings(cfg);
         customDrops = new CustomDropManager(dataFolder);
         customDropSettings = new CustomDropSettings(cfg);
     }
@@ -78,6 +79,7 @@ public class MechanismsConfiguration {
     public final HiddenSwitchSettings hiddenSwitchSettings;
     public final SnowSettings snowSettings;
     public final AreaSettings areaSettings;
+    public final CommandSettings commandSettings;
     public final CustomDropManager customDrops;
     public final CustomDropSettings customDropSettings;
 
@@ -169,6 +171,14 @@ public class MechanismsConfiguration {
         }
     }
 
+
+    public class CommandSettings {
+        public final boolean enable;
+
+        private CommandSettings(FileConfiguration cfg) {
+            enable             = cfg.getBoolean("command-sign-enable",             true);
+        }
+    }
 
 
     public class ElevatorSettings {

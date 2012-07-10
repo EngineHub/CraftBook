@@ -32,6 +32,7 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
@@ -89,6 +90,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Elevator.Factory(this));
         manager.register(new Teleporter.Factory(this));
         manager.register(new Area.Factory(this));
+        manager.register(new Command.Factory(this));
         //manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
