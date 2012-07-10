@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,21 +12,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.util.SignUtil;
 
 /*
  * @contributor LordEnki
  */
 
 public class CartSorter extends CartMechanism {
+    @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // care?
         if (minor) return;
-        
+
         // validate
         if (cart == null) return;
         if (!blocks.matches("sort")) return;
         Sign sign = (Sign)blocks.sign.getState();
-        
+
         // pick which sort conditions apply
         //  (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
@@ -36,8 +39,8 @@ public class CartSorter extends CartMechanism {
         } else if (isSortApplicable((sign).getLine(3), cart)) {
             dir = Hand.RIGHT;
         }
-        
-        // pick the track block to modify and the curve to give it. 
+
+        // pick the track block to modify and the curve to give it.
         //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
         //    this is required since there's not a north track and a south track; just a north-south track type.
         byte trackData;
@@ -88,17 +91,17 @@ public class CartSorter extends CartMechanism {
             return;
         }
         Block targetTrack = blocks.rail.getRelative(next);
-        
+
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.
         if (targetTrack.getType() == Material.RAILS)
             targetTrack.setData(trackData);
     }
-    
+
     private enum Hand {
         STRAIGHT, LEFT, RIGHT;
     }
-    
+
     public static boolean isSortApplicable(String line, Minecart minecart) {
         if (line.equalsIgnoreCase("All")) {
             return true;
@@ -168,13 +171,25 @@ public class CartSorter extends CartMechanism {
             } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
                 StorageMinecart storageCart = (StorageMinecart) minecart;
                 Inventory storageInventory = storageCart.getInventory();
-                
-                try {
-                    int item = Integer.parseInt(parts[1]);
-                    if (storageInventory.contains(item)) {
-                        return true;
+
+                if(parts.length == 3) {
+                    try {
+                        int item = Integer.parseInt(parts[1]);
+                        short durability = Short.parseShort(parts[2]);
+                        if (storageInventory.contains(new ItemStack(item,1,durability))) {
+                            return true;
+                        }
+                    } catch (NumberFormatException e) {
                     }
-                } catch (NumberFormatException e) {
+                }
+                else {
+                    try {
+                        int item = Integer.parseInt(parts[1]);
+                        if (storageInventory.contains(item)) {
+                            return true;
+                        }
+                    } catch (NumberFormatException e) {
+                    }
                 }
             }
         }
