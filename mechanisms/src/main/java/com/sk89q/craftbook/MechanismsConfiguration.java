@@ -62,6 +62,7 @@ public class MechanismsConfiguration {
         commandSettings = new CommandSettings(cfg);
         customDrops = new CustomDropManager(dataFolder);
         customDropSettings = new CustomDropSettings(cfg);
+        dispenserSettings = new DispenserSettings(cfg);
     }
 
     public final File dataFolder;
@@ -82,6 +83,7 @@ public class MechanismsConfiguration {
     public final CommandSettings commandSettings;
     public final CustomDropManager customDrops;
     public final CustomDropSettings customDropSettings;
+    public final DispenserSettings dispenserSettings;
 
     //General settings
     public class MechanismSettings {
@@ -89,6 +91,14 @@ public class MechanismsConfiguration {
 
         private MechanismSettings(FileConfiguration cfg) {
             stopDestruction      = cfg.getBoolean("stop-mechanism-dupe",          true);
+        }
+    }
+
+    public class DispenserSettings {
+        public final boolean enable;
+
+        private DispenserSettings(FileConfiguration cfg) {
+            enable      = cfg.getBoolean("dispenser-recipes-enable",          true);
         }
     }
 

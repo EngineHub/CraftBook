@@ -28,3 +28,4 @@ max-size-per-area: 5000
 stop-mechanism-dupe: true
 teleporter-enable: true
 command-sign-enable: true
+dispenser-recipes-enable: true
