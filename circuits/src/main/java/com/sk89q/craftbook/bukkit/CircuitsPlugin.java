@@ -69,6 +69,7 @@ import com.sk89q.craftbook.gates.world.BlockSensorST;
 import com.sk89q.craftbook.gates.world.ChestCollector;
 import com.sk89q.craftbook.gates.world.ChestCollectorST;
 import com.sk89q.craftbook.gates.world.ChestDispenser;
+import com.sk89q.craftbook.gates.world.CombinationLock;
 import com.sk89q.craftbook.gates.world.DaySensor;
 import com.sk89q.craftbook.gates.world.DaySensorST;
 import com.sk89q.craftbook.gates.world.Detection;
@@ -246,6 +247,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3034", new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
         icManager.register("MC3036", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         icManager.register("MC3040", new Multiplexer.Factory(server), family3ISO);
+        icManager.register("MC3050", new CombinationLock.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
         icManager.register("MC3102", new Counter.Factory(server), family3ISO);
         icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);        // Restricted

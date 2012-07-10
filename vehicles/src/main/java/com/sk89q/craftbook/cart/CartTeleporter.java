@@ -61,4 +61,10 @@ public class CartTeleporter extends CartMechanism {
             cart.remove();
         }
     }
+
+    @Override
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
+            boolean minor) {
+
+    }
 }
