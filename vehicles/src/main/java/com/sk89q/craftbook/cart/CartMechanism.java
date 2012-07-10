@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+
+import com.sk89q.craftbook.RedstoneUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their
@@ -37,12 +37,12 @@ public abstract class CartMechanism {
      *            brake-locking functionality.
      */
     public abstract void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor);
-    
-     
-    
+
+    public abstract void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor);
+
     protected Material material; void setMaterial(Material mat) { material = mat; }
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
-    
+
     /**
      * Determins if a cart mechanism should be enabled.
      * 
@@ -56,25 +56,25 @@ public abstract class CartMechanism {
         if (sign != null) {
             //System.out.println("\tsign:");
             switch (isActive(sign)) {
-                case ON: return Power.ON; 
-                case NA: break;
-                case OFF: isWired = true;
+            case ON: return Power.ON;
+            case NA: break;
+            case OFF: isWired = true;
             }
         }
         if (base != null) {
             //System.out.println("\tbase:");
             switch (isActive(base)) {
-                case ON: return Power.ON; 
-                case NA: break;
-                case OFF: isWired = true;
+            case ON: return Power.ON;
+            case NA: break;
+            case OFF: isWired = true;
             }
         }
         if (rail != null) {
             //System.out.println("\trail:");
             switch (isActive(rail)) {
-                case ON: return Power.ON; 
-                case NA: break;
-                case OFF: isWired = true;
+            case ON: return Power.ON;
+            case NA: break;
+            case OFF: isWired = true;
             }
         }
         return (isWired ? Power.OFF : Power.NA);
@@ -95,9 +95,9 @@ public abstract class CartMechanism {
             //    case OFF: System.out.println("\t\t\tpower:OFF"); break;
             //}
             switch (p) {
-                case ON: return Power.ON;
-                case NA: break;
-                case OFF: isWired = true;
+            case ON: return Power.ON;
+            case NA: break;
+            case OFF: isWired = true;
             }
         }
         return (isWired ? Power.OFF : Power.NA);

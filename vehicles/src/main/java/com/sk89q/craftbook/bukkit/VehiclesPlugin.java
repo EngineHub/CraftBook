@@ -14,14 +14,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.bukkit;
-
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.cart.CartMechanism;
-import com.sk89q.craftbook.cart.MinecartManager;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,10 +31,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.cart.CartMechanism;
+import com.sk89q.craftbook.cart.MinecartManager;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -47,99 +48,112 @@ import org.bukkit.inventory.ItemStack;
  * @author sk89q
  */
 public class VehiclesPlugin extends BaseBukkitPlugin {
-    
+
     private VehiclesConfiguration config;
     private Listener lvehicle;
     private Listener lblock;
     private MinecartManager cartman;
-    
+
     @Override
     public void onEnable() {
         super.onEnable();
-        
+
         cartman = new MinecartManager(this);
     }
-    
+
     @Override
     protected void registerEvents() {
         createDefaultConfiguration("config.yml");
-        
+
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfig(), getDataFolder());
-        
+
         lvehicle = new CraftBookVehicleListener();
         lblock = new CraftBookVehicleBlockListener();
         getServer().getPluginManager().registerEvents(lvehicle, this);
         getServer().getPluginManager().registerEvents(lblock, this);
     }
-    
+
     public VehiclesConfiguration getLocalConfiguration() {
         return config;
     }
-    
-    
-    
+
+
+
     /**
      * Preprocesses event data coming directly from bukkit and passes it off to
      * appropriate logic in MinecartManager.
      */
     class CraftBookVehicleListener implements Listener {
         public CraftBookVehicleListener() {}
-        
+
         /**
-         * Called when a vehicle hits an entity 
+         * Called when a vehicle hits an entity
          */
         @EventHandler
         public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
             VehiclesConfiguration config = getLocalConfiguration();
             Vehicle vehicle = event.getVehicle();
             Entity entity = event.getEntity();
-            
+
             if (entity instanceof Player) return;
             if (!config.boatRemoveEntities && !config.minecartRemoveEntities) return;
-            
+
             if (config.boatRemoveEntities ==  true && (vehicle instanceof Boat)) {
-                if (config.boatRemoveEntitiesOtherBoats != true && 
+                if (config.boatRemoveEntitiesOtherBoats != true &&
                         (entity instanceof Boat)) return;
-                
+
                 entity.remove();
             }
-            
+
             if (config.minecartRemoveEntities ==  true && (vehicle instanceof Minecart)) {
-                if (config.minecartRemoveEntitiesOtherCarts != true && 
+                if (config.minecartRemoveEntitiesOtherCarts != true &&
                         (entity instanceof Minecart)) return;
-                
+
                 entity.remove();
             }
         }
-            
+
         /**
          * Called when a vehicle is created.
          */
         @EventHandler
         public void onVehicleCreate(VehicleCreateEvent event) {
             Vehicle vehicle = event.getVehicle();
-            
+
             // Ignore events not relating to minecrarts.
             if (!(vehicle instanceof Minecart)) return;
-            
+
             // Modify the vehicle properties according to config.
             VehiclesConfiguration config = getLocalConfiguration();
             Minecart minecart = (Minecart) vehicle;
             minecart.setSlowWhenEmpty(config.minecartSlowWhenEmpty);
             minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
         }
-        
+
         /**
          * Called when a vehicle is exited
          */
-        
+
+        @EventHandler
+        public void onVehicleEnter(VehicleEnterEvent event) {
+            Vehicle vehicle = event.getVehicle();
+
+            if (!(vehicle instanceof Minecart)) return;
+
+            cartman.enter(event);
+        }
+
+        /**
+         * Called when a vehicle is exited
+         */
+
         @EventHandler
         public void onVehicleExit(VehicleExitEvent event) {
             Vehicle vehicle = event.getVehicle();
-            
+
             if (!(vehicle instanceof Minecart)) return;
-            
+
             VehiclesConfiguration config = getLocalConfiguration();
             if (config.minecartRemoveOnExit) {
                 vehicle.remove();
@@ -152,10 +166,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
-            
-            if(config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty()) 
-        	((Minecart)event.getVehicle()).setDamage(((Minecart)event.getVehicle()).getDamage()+3);
-            
+
+            if(config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty())
+                ((Minecart)event.getVehicle()).setDamage(((Minecart)event.getVehicle()).getDamage()+3);
+
             cartman.impact(event);
         }
         /**
@@ -164,7 +178,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         @EventHandler
         public void onVehicleDestroy(VehicleDestroyEvent event) {
             if (!(event.getVehicle() instanceof Boat)) return;
-            
+
             VehiclesConfiguration config = getLocalConfiguration();
             if (config.boatBreakReturn == true) {
                 ItemStack boatStack = new ItemStack(Material.BOAT, 1);
@@ -178,17 +192,17 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             }
         }
     }
-    
-    
-    
+
+
+
     class CraftBookVehicleBlockListener implements Listener {
         public CraftBookVehicleBlockListener() {}
-        
+
         @EventHandler
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             // ignore events that are only changes in current strength
             if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
-            
+
             // remember that bukkit only gives us redstone events for wires and things that already respond to redstone, which is entirely unhelpful.
             // So: issue four actual events per bukkit event.
             for (BlockFace bf : CartMechanism.powerSupplyOptions)
