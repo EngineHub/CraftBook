@@ -84,7 +84,4 @@ public class CartStation extends CartMechanism {
         }
 
     }
-
-    // someday: stations with an additional flag on the third line could autolaunch when players enter a parked cart.
-
 }
