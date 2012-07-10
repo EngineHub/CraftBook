@@ -41,7 +41,7 @@ public class DispenserRecipes implements Listener{
             if((r.recipe[0] == 0 && stacks[0] == null) || (r.recipe[0] == stacks[0].getTypeId())) {
                 for(int i = 1; i < stacks.length; i++)
                 {
-                    if(r.recipe[i] == stacks[i].getTypeId())
+                    if((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId()))
                         continue;
                     else
                         break current; //This recipe is invalid.
@@ -49,8 +49,11 @@ public class DispenserRecipes implements Listener{
                 toReturn = r.doAction(dis, item, velocity, event);
                 for(int i = 1; i < stacks.length; i++)
                 {
-                    if(r.recipe[i] == stacks[i].getTypeId()) {
-                        if(stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i].getTypeId() == 335)
+                    if((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())) {
+                        if(stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0) {
+
+                        }
+                        else if(stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i].getTypeId() == 335)
                             stacks[i].setTypeId(325); //Get your bucket back
                         else if(stacks[i].getAmount() == 1)
                             stacks[i].setTypeId(0);
