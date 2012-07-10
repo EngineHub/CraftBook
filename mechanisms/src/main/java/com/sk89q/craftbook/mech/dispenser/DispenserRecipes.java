@@ -41,7 +41,7 @@ public class DispenserRecipes implements Listener{
             if((r.recipe[0] == 0 && stacks[0] == null) || (r.recipe[0] == stacks[0].getTypeId())) {
                 for(int i = 1; i < stacks.length; i++)
                 {
-                    if((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId()))
+                    if(!(r.recipe[i]!=0 && stacks[i] == null) && ((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())))
                         continue;
                     else
                         break current; //This recipe is invalid.
