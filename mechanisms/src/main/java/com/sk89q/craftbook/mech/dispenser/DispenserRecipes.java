@@ -20,6 +20,7 @@ public class DispenserRecipes implements Listener{
     public DispenserRecipes(MechanismsPlugin plugin) {
         this.plugin = plugin;
         recipes.add(new XPShooter());
+        recipes.add(new SnowShooter());
     }
 
     @EventHandler
@@ -49,7 +50,9 @@ public class DispenserRecipes implements Listener{
                 for(int i = 1; i < stacks.length; i++)
                 {
                     if(r.recipe[i] == stacks[i].getTypeId()) {
-                        if(stacks[i].getAmount() == 1)
+                        if(stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i].getTypeId() == 335)
+                            stacks[i].setTypeId(325); //Get your bucket back
+                        else if(stacks[i].getAmount() == 1)
                             stacks[i].setTypeId(0);
                         else
                             stacks[i].setAmount(stacks[i].getAmount() - 1);
