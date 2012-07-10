@@ -1,28 +1,30 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-
-import org.bukkit.util.Vector;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
 public class CartBooster extends CartMechanism {
     public CartBooster(double multiplier) {
         super();
         this.multiplier = multiplier;
     }
-    
+
     private final double multiplier;
-    
+
+    @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
-        
+
         // care?
         if (minor) return;
-        
+
         // enabled?
         if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
-        
+
 
         // speed up or down
         Vector newVelocity;
@@ -35,5 +37,11 @@ public class CartBooster extends CartMechanism {
         }
         // go
         cart.setVelocity(newVelocity);
+    }
+
+    @Override
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
+            boolean minor) {
+
     }
 }

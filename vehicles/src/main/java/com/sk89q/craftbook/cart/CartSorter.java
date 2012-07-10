@@ -196,4 +196,10 @@ public class CartSorter extends CartMechanism {
 
         return false;
     }
+
+    @Override
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
+            boolean minor) {
+
+    }
 }
