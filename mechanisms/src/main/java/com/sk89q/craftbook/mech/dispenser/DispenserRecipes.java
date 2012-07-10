@@ -21,6 +21,7 @@ public class DispenserRecipes implements Listener{
         this.plugin = plugin;
         recipes.add(new XPShooter());
         recipes.add(new SnowShooter());
+        recipes.add(new FireArrows());
     }
 
     @EventHandler
@@ -53,6 +54,10 @@ public class DispenserRecipes implements Listener{
                         if(stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0) {
 
                         }
+                        else if(stacks[i].getTypeId() == 282)
+                            stacks[i].setTypeId(281); //Get your bowl back
+                        else if(stacks[i].getTypeId() == 373)
+                            stacks[i].setTypeId(374); //Get your bottle back
                         else if(stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i].getTypeId() == 335)
                             stacks[i].setTypeId(325); //Get your bucket back
                         else if(stacks[i].getAmount() == 1)
