@@ -32,7 +32,7 @@ public class DispenserRecipes implements Listener{
     public boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
         ItemStack[] stacks = dis.getInventory().getContents();
         XPShoot: {
-            if(XPShooter[0] == stacks[0].getTypeId()) {
+            if((XPShooter[0] == 0 && stacks[0] == null) || (XPShooter[0] == stacks[0].getTypeId())) {
                 for(int i = 1; i < stacks.length; i++)
                 {
                     if(XPShooter[i] == stacks[i].getTypeId())
