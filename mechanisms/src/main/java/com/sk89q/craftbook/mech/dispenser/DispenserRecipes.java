@@ -1,4 +1,6 @@
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook.mech.dispenser;
+
+import java.util.ArrayList;
 
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
@@ -13,10 +15,11 @@ public class DispenserRecipes implements Listener{
 
     MechanismsPlugin plugin;
 
-    int[] XPShooter = new int[]{0, 331, 0, 331, 374, 331, 0, 331, 0};
+    ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
     public DispenserRecipes(MechanismsPlugin plugin) {
         this.plugin = plugin;
+        recipes.add(new XPShooter());
     }
 
     @EventHandler
@@ -31,19 +34,21 @@ public class DispenserRecipes implements Listener{
 
     public boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
         ItemStack[] stacks = dis.getInventory().getContents();
-        XPShoot: {
-            if((XPShooter[0] == 0 && stacks[0] == null) || (XPShooter[0] == stacks[0].getTypeId())) {
+        boolean toReturn = false;
+        for(Recipe r : recipes) {
+            current: {
+            if((r.recipe[0] == 0 && stacks[0] == null) || (r.recipe[0] == stacks[0].getTypeId())) {
                 for(int i = 1; i < stacks.length; i++)
                 {
-                    if(XPShooter[i] == stacks[i].getTypeId())
+                    if(r.recipe[i] == stacks[i].getTypeId())
                         continue;
                     else
-                        break XPShoot; //This recipe is invalid.
+                        break current; //This recipe is invalid.
                 }
-                event.setItem(new ItemStack(384,1));
+                toReturn = r.doAction(dis, item, velocity, event);
                 for(int i = 1; i < stacks.length; i++)
                 {
-                    if(XPShooter[i] == stacks[i].getTypeId()) {
+                    if(r.recipe[i] == stacks[i].getTypeId()) {
                         if(stacks[i].getAmount() == 1)
                             stacks[i].setTypeId(0);
                         else
@@ -53,8 +58,9 @@ public class DispenserRecipes implements Listener{
                 }
                 dis.getInventory().setContents(stacks);
             }
-            break XPShoot;
+            break current;
         }
-        return false; //Leave it be.
+        }
+        return toReturn; //Leave it be.
     }
 }

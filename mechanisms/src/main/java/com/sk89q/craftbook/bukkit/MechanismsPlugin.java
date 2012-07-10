@@ -35,7 +35,6 @@ import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.DispenserRecipes;
 import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
@@ -46,6 +45,7 @@ import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 
 
 /**
