@@ -116,6 +116,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             int lastTick = Integer.parseInt(sign.getLine(2));
+            lastTick++;
             if(lastTick<25) return;
             Block b = SignUtil.getBackBlock(sign.getBlock());
             int x = b.getX();
