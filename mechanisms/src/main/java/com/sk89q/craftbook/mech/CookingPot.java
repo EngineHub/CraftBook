@@ -115,7 +115,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            int lastTick = Integer.parseInt(sign.getLine(2));
+            int lastTick = 0;
+            try {
+                lastTick = Integer.parseInt(sign.getLine(2));
+            }
+            catch(Exception e){
+                sign.setLine(2, lastTick + "");
+            }
             lastTick++;
             if(lastTick<25) return;
             Block b = SignUtil.getBackBlock(sign.getBlock());
