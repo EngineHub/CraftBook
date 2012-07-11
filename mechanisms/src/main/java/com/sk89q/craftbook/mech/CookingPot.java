@@ -1,9 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -59,7 +55,7 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
 
     @Override
     public boolean isActive() {
-        return true;
+        return false; //Isnt peristant
     }
 
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
@@ -180,11 +176,6 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-        return new ArrayList<BlockWorldVector>(Arrays.asList(pt));
     }
 
     @Override
