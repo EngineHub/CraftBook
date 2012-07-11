@@ -58,7 +58,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public boolean isActive() {
-        return false; //Isnt peristant
+        return true; //is now.
     }
 
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
