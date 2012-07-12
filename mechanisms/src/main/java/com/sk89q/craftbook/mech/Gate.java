@@ -545,6 +545,8 @@ public class Gate extends PersistentMechanic {
 
         if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
 
+            setGateState(pt, true, smallSearchSize);
+
             if (smallSearchSize) {
                 // Toggle nearby gates
                 for (int x1 = x - 1; x1 <= x + 1; x1++) {
@@ -568,6 +570,8 @@ public class Gate extends PersistentMechanic {
                     }
                 }
             }
+
+            setGateState(pt, false, smallSearchSize);
         }
 
         gates.add(pt.toWorldBlockVector());
