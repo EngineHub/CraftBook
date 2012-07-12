@@ -31,6 +31,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.craftbook.CommonConfiguration;
+import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.wepif.PermissionsResolverManager;
 
@@ -47,6 +48,11 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * The permissions resolver in use.
      */
     private PermissionsResolverManager perms;
+
+    /**
+     * The Language Manager
+     */
+    protected LanguageManager languageManager;
 
     /**
      * Logger for messages.
@@ -70,6 +76,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         createDefaultConfiguration("config.yml");
 
         config = new CommonConfiguration(getConfig(), getDataFolder());
+
+        languageManager = new LanguageManager(this);
 
         logger.info(getDescription().getName() + " "
                 + getDescription().getVersion() + " enabled.");
@@ -186,5 +194,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public CommonConfiguration getLocalCommonConfiguration() {
         return config;
+    }
+
+    public LanguageManager getLanguageManager() {
+        return languageManager;
     }
 }
