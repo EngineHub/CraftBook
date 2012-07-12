@@ -41,6 +41,8 @@ import com.sk89q.wepif.PermissionsResolverManager;
  */
 public abstract class BaseBukkitPlugin extends JavaPlugin {
 
+    public BaseConfiguration config;
+
     /**
      * The permissions resolver in use.
      */
@@ -71,6 +73,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
         createDefaultConfiguration("en_US.txt");
         createDefaultConfiguration("config.yml");
+
+        config = new BaseConfiguration(getConfig(), getDataFolder());
 
         languageManager = new LanguageManager(this);
 
@@ -185,5 +189,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return languageManager;
     }
 
-    public abstract BaseConfiguration getLocalConfiguration();
+    public BaseConfiguration getLocalConfiguration() {
+        return config;
+    }
 }
