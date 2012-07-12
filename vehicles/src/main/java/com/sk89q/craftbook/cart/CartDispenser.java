@@ -125,6 +125,7 @@ public class CartDispenser extends CartMechanism {
         private String name;
 
         private CartType(String name, Class<?> cl) {
+            this.name = name;
             this.cl = cl;
         }
 
