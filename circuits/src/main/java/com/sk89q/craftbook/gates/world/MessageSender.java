@@ -21,6 +21,7 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -68,6 +69,8 @@ public class MessageSender extends AbstractIC {
             player.sendMessage(message.replace("&", "\u00A7"));
             sent = true;
         }
+        else if(name.equalsIgnoreCase("BROADCAST"))
+            getServer().broadcastMessage(message);
         return sent;
     }
 
