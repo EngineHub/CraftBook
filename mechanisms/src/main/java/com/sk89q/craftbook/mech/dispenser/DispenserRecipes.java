@@ -36,43 +36,53 @@ public class DispenserRecipes implements Listener{
     }
 
     public boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+        if(dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
         ItemStack[] stacks = dis.getInventory().getContents();
         boolean toReturn = false;
-        for(Recipe r : recipes) {
-            current: {
-            if((r.recipe[0] == 0 && stacks[0] == null) || (r.recipe[0] == stacks[0].getTypeId())) {
-                for(int i = 1; i < stacks.length; i++)
-                {
-                    if(!(r.recipe[i]!=0 && stacks[i] == null) && ((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())))
-                        continue;
-                    else
-                        break current; //This recipe is invalid.
+        try {
+            for(Recipe r : recipes) {
+                if(r == null) {
+                    recipes.remove(r); //Invalid recipe (save CPU cycles a little)
+                    continue;
                 }
-                toReturn = r.doAction(dis, item, velocity, event);
-                for(int i = 1; i < stacks.length; i++)
-                {
-                    if((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())) {
-                        if(stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0) {
-
+                current: {
+                    if((r.recipe[0] == 0 && stacks[0] == null) || (r.recipe[0] == stacks[0].getTypeId())) {
+                        for(int i = 1; i < stacks.length; i++)
+                        {
+                            if(!(r.recipe[i]!=0 && stacks[i] == null) && ((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())))
+                                continue;
+                            else
+                                break current; //This recipe is invalid.
                         }
-                        else if(stacks[i].getTypeId() == 282)
-                            stacks[i].setTypeId(281); //Get your bowl back
-                        else if(stacks[i].getTypeId() == 373)
-                            stacks[i].setTypeId(374); //Get your bottle back
-                        else if(stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i].getTypeId() == 335)
-                            stacks[i].setTypeId(325); //Get your bucket back
-                        else if(stacks[i].getAmount() == 1)
-                            stacks[i].setTypeId(0);
-                        else
-                            stacks[i].setAmount(stacks[i].getAmount() - 1);
-                    } else
-                        return true; //Cancel the event, as obviously something went wrong.
+                        toReturn = r.doAction(dis, item, velocity, event);
+                        for(int i = 1; i < stacks.length; i++)
+                        {
+                            if((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())) {
+                                if(stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0) {
+
+                                }
+                                else if(stacks[i].getTypeId() == 282)
+                                    stacks[i].setTypeId(281); //Get your bowl back
+                                else if(stacks[i].getTypeId() == 373)
+                                    stacks[i].setTypeId(374); //Get your bottle back
+                                else if(stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i].getTypeId() == 335)
+                                    stacks[i].setTypeId(325); //Get your bucket back
+                                else if(stacks[i].getAmount() == 1)
+                                    stacks[i].setTypeId(0);
+                                else
+                                    stacks[i].setAmount(stacks[i].getAmount() - 1);
+                            } else
+                                return true; //Cancel the event, as obviously something went wrong.
+                        }
+                        dis.getInventory().setContents(stacks);
+                    }
+                    break current;
                 }
-                dis.getInventory().setContents(stacks);
             }
-            break current;
+            return toReturn; //Leave it be.
         }
+        catch(Exception e){
+            return false;
         }
-        return toReturn; //Leave it be.
     }
 }
