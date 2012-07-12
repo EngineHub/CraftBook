@@ -35,6 +35,14 @@
           <include>config.yml</include>
         </includes>
       </resource>
+      <resource>
+        <targetPath>defaults/</targetPath>
+        <filtering>false</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+        <includes>
+          <include>en_US.txt</include>
+        </includes>
+      </resource>
     </resources>
 
     <!-- Plugins -->
