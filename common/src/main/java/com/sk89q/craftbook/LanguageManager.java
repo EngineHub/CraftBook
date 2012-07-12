@@ -34,7 +34,7 @@ public class LanguageManager {
         }
     }
 
-    public String translateString(String s) {
+    public String toString(String s) {
         if(languageData.get(s) == null) return s;
         return languageData.get(s);
     }

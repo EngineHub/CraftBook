@@ -203,7 +203,7 @@ public class Cauldron extends AbstractMechanic {
             // the right number of blocks that the cauldron we want takes up --
             // nice and cheap check
             if (visited.size() != 24) {
-                throw new NotACauldronException("Cauldron is too small");
+                throw new NotACauldronException("mech.cauldron.too-small");
             }
 
             // Key is the block ID and the value is the amount
@@ -332,7 +332,7 @@ public class Cauldron extends AbstractMechanic {
 
         // There is likely a leak in the cauldron (or this isn't a cauldron)
         if (visited.size() > 24) {
-            throw new NotACauldronException("Cauldron has a leak");
+            throw new NotACauldronException("mech.cauldron.leaky");
         }
 
         // Prevent infinite looping
@@ -365,7 +365,7 @@ public class Cauldron extends AbstractMechanic {
         BlockWorldVector lavaPos = recurse(0, pt.getBlockY() - minY + 1, 0, pt);
         if ((world.getBlockTypeIdAt(lavaPos.getBlockX(), lavaPos.getBlockY(),
                 lavaPos.getBlockZ())) == BlockID.LAVA) {
-            throw new NotACauldronException("Cauldron lacks lava below");
+            throw new NotACauldronException("mech.cauldron.no-lava");
         }
 
         // Now we recurse!

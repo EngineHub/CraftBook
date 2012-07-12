@@ -419,14 +419,14 @@ public class Gate extends PersistentMechanic {
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.gate.use")) {
-            player.printError("You don't have permission to use gates.");
+            player.printError("mech.use-permission");
             return;
         }
 
         if (toggleGates(pt, smallSearchSize)) {
-            player.print("Gate toggled!");
+            player.print("mech.gate.toggle");
         } else {
-            player.printError("Failed to find a gate!");
+            player.printError("mech.gate.not-found");
         }
 
         event.setCancelled(true);
@@ -513,14 +513,14 @@ public class Gate extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Gate]");
-                player.print("Gate created.");
+                player.print("mech.gate.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
                 if (!player.hasPermission("craftbook.mech.gate")) {
                     throw new InsufficientPermissionsException();
                 }
 
                 sign.setLine(1, "[DGate]");
-                player.print("Small gate created.");
+                player.print("mech.dgate.create");
             } else {
                 return null;
             }

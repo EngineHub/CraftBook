@@ -100,14 +100,14 @@ public class Bridge extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Bridge]");
-                player.print("Bridge created.");
+                player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
                 if (!player.hasPermission("craftbook.mech.bridge")) {
                     throw new InsufficientPermissionsException();
                 }
 
                 sign.setLine(1, "[Bridge End]");
-                player.print("Bridge endpoint created.");
+                player.print("mech.bridge.end-create");
             } else {
                 return null;
             }
@@ -157,7 +157,7 @@ public class Bridge extends PersistentMechanic {
                         && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
                         || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;     // it's below
-                throw new InvalidConstructionException("Blocks adjacent to the bridge block must be of the same type.");
+                throw new InvalidConstructionException("mech.bridge.material");
             } else {
                 throw new UnacceptableMaterialException();
             }
@@ -181,7 +181,7 @@ public class Bridge extends PersistentMechanic {
             farside = farside.getRelative(dir);
         }
         if (farside.getType() != Material.SIGN_POST)
-            throw new InvalidConstructionException("[Bridge] sign required on other side (or it was too far away).");
+            throw new InvalidConstructionException("mech.bridge.other-sign");
 
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
@@ -189,7 +189,7 @@ public class Bridge extends PersistentMechanic {
                 || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
                         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData()))
                         && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")))
-            throw new InvalidConstructionException("The other side must be made with the same blocks.");
+            throw new InvalidConstructionException("mech.bridge.material");
 
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
@@ -226,7 +226,7 @@ public class Bridge extends PersistentMechanic {
 
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if ( !player.hasPermission("craftbook.mech.bridge.use")) {
-            player.printError("You don't have permission to use bridges.");
+            player.printError("mech.use-permission");
             return;
         }
 

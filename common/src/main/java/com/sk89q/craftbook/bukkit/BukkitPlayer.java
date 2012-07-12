@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.bukkit;
 
@@ -24,10 +24,10 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.LocalPlayer;
 
 public class BukkitPlayer implements LocalPlayer {
-    
+
     protected BaseBukkitPlugin plugin;
     protected Player player;
-    
+
     public BukkitPlayer(BaseBukkitPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
@@ -35,17 +35,17 @@ public class BukkitPlayer implements LocalPlayer {
 
     @Override
     public void print(String message) {
-        player.sendMessage(ChatColor.GOLD + message);
+        player.sendMessage(ChatColor.GOLD + plugin.getLManager().toString(message));
     }
 
     @Override
     public void printError(String message) {
-        player.sendMessage(ChatColor.RED + message);
+        player.sendMessage(ChatColor.RED + plugin.getLManager().toString(message));
     }
 
     @Override
     public void printRaw(String message) {
-        player.sendMessage(message);
+        player.sendMessage(plugin.getLManager().toString(message));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class BukkitPlayer implements LocalPlayer {
 
     @Override
     public String getName() {
-	return player.getName();
+        return player.getName();
     }
 
 }

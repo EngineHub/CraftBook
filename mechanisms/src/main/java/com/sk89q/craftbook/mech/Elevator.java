@@ -100,7 +100,7 @@ public class Elevator extends AbstractMechanic {
                     throw new InsufficientPermissionsException();
                 }
 
-                player.print("Elevator up sign created.");
+                player.print("mech.lift.up-sign-created");
                 sign.setLine(1, "[Lift Up]");
                 break;
             case DOWN:
@@ -108,7 +108,7 @@ public class Elevator extends AbstractMechanic {
                     throw new InsufficientPermissionsException();
                 }
 
-                player.print("Elevator down sign created.");
+                player.print("mech.lift.down-sign-created");
                 sign.setLine(1, "[Lift Down]");
                 break;
             case RECV:
@@ -116,7 +116,7 @@ public class Elevator extends AbstractMechanic {
                     throw new InsufficientPermissionsException();
                 }
 
-                player.print("Elevator target sign created.");
+                player.print("mech.lift.target-sign-created");
                 sign.setLine(1, "[Lift]");
                 break;
             default:    // there are no uncovered cases, i don't know why eclipse insists this be here
@@ -183,7 +183,7 @@ public class Elevator extends AbstractMechanic {
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
-            localPlayer.printError("You don't have permission to use elevators.");
+            localPlayer.printError("mech.use-permission");
             return;
         }
 
@@ -224,11 +224,11 @@ public class Elevator extends AbstractMechanic {
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (!foundGround) {
-            player.sendMessage("There is no floor at the destination!");
+            player.sendMessage("mech.lift.no-floor");
             return;
         }
         if (foundFree < 2) {
-            player.sendMessage("Your destination is obstructed.");
+            player.sendMessage("mech.lift.obstruct");
             return;
         }
 

@@ -79,7 +79,7 @@ public class Teleporter extends AbstractMechanic{
                 throw new InsufficientPermissionsException();
             }
 
-            player.print("Teleporter up sign created.");
+            player.print("mech.teleport.create");
             sign.setLine(1, "[Teleport]");
 
             String[] pos = sign.getLine(2).split(":");
@@ -116,7 +116,7 @@ public class Teleporter extends AbstractMechanic{
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
-            localPlayer.printError("You don't have permission to use teleporters.");
+            localPlayer.printError("mech.use-permission");
             return;
         }
 
@@ -176,12 +176,8 @@ public class Teleporter extends AbstractMechanic{
                 break;
             floor = floor.getRelative(BlockFace.DOWN);
         }
-        if (!foundGround) {
-            player.sendMessage("There is no floor at the destination!");
-            return;
-        }
         if (foundFree < 2) {
-            player.sendMessage("Your destination is obstructed.");
+            player.sendMessage("mech.lift.obstruct");
             return;
         }
 
@@ -199,7 +195,7 @@ public class Teleporter extends AbstractMechanic{
         }
         player.teleport(subspaceRift);
 
-        player.sendMessage("You teleported!");
+        player.sendMessage("mech.teleport.alert");
     }
 
     private static boolean occupiable(Block block) {

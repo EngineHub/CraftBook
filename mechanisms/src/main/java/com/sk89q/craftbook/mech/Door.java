@@ -76,21 +76,21 @@ public class Door extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Door Down]");
-                player.print("Door created.");
+                player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 if (!player.hasPermission("craftbook.mech.door")) {
                     throw new InsufficientPermissionsException();
                 }
 
                 sign.setLine(1, "[Door Up]");
-                player.print("Door created.");
+                player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door]")) {
                 if (!player.hasPermission("craftbook.mech.door")) {
                     throw new InsufficientPermissionsException();
                 }
 
                 sign.setLine(1, "[Door]");
-                player.print("Door created.");
+                player.print("mech.door.create");
             } else {
                 return null;
             }
@@ -155,7 +155,7 @@ public class Door extends PersistentMechanic {
                         && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
                         || s.getLine(2).equalsIgnoreCase("1"))
                     break findBase;
-                throw new InvalidConstructionException("Blocks adjacent to the door block must be of the same type.");
+                throw new InvalidConstructionException("mech.door.material");
             } else {
                 throw new UnacceptableMaterialException();
             }
@@ -188,7 +188,7 @@ public class Door extends PersistentMechanic {
         }
 
         if (otherSide.getType() != Material.SIGN_POST)
-            throw new InvalidConstructionException("Door sign required on other side (or it was too far away).");
+            throw new InvalidConstructionException("mech.door.other-sign");
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
 
@@ -202,7 +202,7 @@ public class Door extends PersistentMechanic {
                 || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
                         || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData()))
                         && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) otherSide.getState()).getLine(2).equalsIgnoreCase("1")))
-            throw new InvalidConstructionException("The other side must be made with the same blocks.");
+            throw new InvalidConstructionException("mech.door.material");
 
         // Select the togglable region
 
@@ -222,7 +222,7 @@ public class Door extends PersistentMechanic {
 
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if ( !player.hasPermission("craftbook.mech.door.use")) {
-            player.printError("You don't have permission to use doors.");
+            player.printError("mech.use-permission");
             return;
         }
 

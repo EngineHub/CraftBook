@@ -60,7 +60,7 @@ public class Payment extends AbstractMechanic{
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.pay.use")) {
-            player.printError("You don't have permission to pay.");
+            player.printError("mech.use-permission");
             return;
         }
 
@@ -172,7 +172,7 @@ public class Payment extends AbstractMechanic{
                 }
 
                 sign.setLine(1, "[Pay]");
-                player.print("Pay created.");
+                player.print("mech.pay.create");
             } else {
                 return null;
             }

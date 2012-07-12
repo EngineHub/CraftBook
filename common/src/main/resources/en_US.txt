@@ -1,0 +1,23 @@
+mech.use-permission:You don't have permission to use this mechanic.
+mech.lift.target-sign-created:Elevator target sign created.
+mech.lift.down-sign-created:Elevator down sign created.
+mech.lift.up-sign-created:Elevator up sign created.
+mech.lift.obstruct:Your destination is obstructed!
+mech.lift.no-floor:There is no floor at your destination!
+mech.gate.create:Gate Created!
+mech.dgate.create:Small Gate Created!
+mech.gate.toggle:Gate Toggled!
+mech.gate.not-found:Failed to find a gate!
+mech.door.create:Door Created!
+mech.door.other-sign:Door sign required on other side (or it was too far away).
+mech.door.material:Door must be made entirely out of the same material!
+mech.bridge.create:Bridge Created!
+mech.bridge.end-create:Bridge End Created!
+mech.bridge.material:Bridge must be made entirely out of the same material!
+mech.bridge.other-sign:Bridge sign required on other side (or it was too far away).
+mech.pay.create:Pay Created!
+mech.teleport.create:Teleporter Created!
+mech.teleport.alert:You Teleported!
+mech.cauldron.too-small:Cauldron is too small!
+mech.cauldron.leaky:Cauldron has a leak!
+mech.cauldron.no-lava:Cauldron lacks lava!
