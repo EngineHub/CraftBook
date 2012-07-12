@@ -571,7 +571,7 @@ public class Gate extends PersistentMechanic {
                 }
             }
 
-            setGateState(pt, false, smallSearchSize);
+            setGateState(pt, true, smallSearchSize); //Just makin' sure
         }
 
         gates.add(pt.toWorldBlockVector());

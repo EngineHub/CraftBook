@@ -38,6 +38,8 @@ public class VehiclesConfiguration {
     public VehiclesConfiguration(FileConfiguration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
 
+        commonSettings = new CommonSettings(cfg);
+
         matBoostMax =   Material.getMaterial(cfg.getInt("max-boost-block",      41));
         matBoost25x =   Material.getMaterial(cfg.getInt("25x-boost-block",      14));
         matSlow50x =    Material.getMaterial(cfg.getInt("50x-slow-block",       88));
@@ -65,6 +67,17 @@ public class VehiclesConfiguration {
                 + "entities-otherboats",                                        false);
         boatBreakReturn = cfg.getBoolean("boat-break-return-boat",              false);
         minecartTrackMessages = cfg.getBoolean("minecart-track-messages",       true);
+    }
+
+    public final CommonSettings commonSettings;
+
+    //General settings
+    public class CommonSettings {
+        public final String language;
+
+        private CommonSettings(FileConfiguration cfg) {
+            language      = cfg.getString("language",          "en_US");
+        }
     }
 
     public final File dataFolder;

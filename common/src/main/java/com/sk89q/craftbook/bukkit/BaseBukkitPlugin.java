@@ -24,15 +24,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.craftbook.CommonConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
@@ -41,8 +40,6 @@ import com.sk89q.wepif.PermissionsResolverManager;
  * @author sk89q
  */
 public abstract class BaseBukkitPlugin extends JavaPlugin {
-
-    protected CommonConfiguration config;
 
     /**
      * The permissions resolver in use.
@@ -74,8 +71,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
         createDefaultConfiguration("en_US.txt");
         createDefaultConfiguration("config.yml");
-
-        config = new CommonConfiguration(getConfig(), getDataFolder());
 
         languageManager = new LanguageManager(this);
 
@@ -186,17 +181,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return false;
     }
 
-    public boolean reloadLocalConfiguration(CommandSender sender) {
-        config = new CommonConfiguration(getConfig(), getDataFolder());
-        sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
-        return true;
-    }
-
-    public CommonConfiguration getLocalCommonConfiguration() {
-        return config;
-    }
-
     public LanguageManager getLanguageManager() {
         return languageManager;
     }
+
+    public abstract MechanismsConfiguration getLocalConfiguration();
 }

@@ -22,7 +22,7 @@ public class LanguageManager {
     }
 
     public void checkForLanguages() {
-        String language = plugin.getLocalCommonConfiguration().commonSettings.language;
+        String language = plugin.getLocalConfiguration().commonSettings.language;
         File f = new File(plugin.getDataFolder(), language + ".txt");
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));

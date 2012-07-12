@@ -1,3 +1,4 @@
+language: en_US
 ammeter-enable: true
 bookshelf-enable: true
 bookshelf-read-text: You pick up a book...

@@ -14,11 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
-import java.io.*;
+import java.io.File;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -30,16 +30,34 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class CircuitsConfiguration {
     public CircuitsConfiguration(FileConfiguration cfg, File dataFolder) {
         this.dataFolder = dataFolder;
-        
+
+        commonSettings = new CommonSettings(cfg);
         enableNetherstone = cfg.getBoolean("redstone-netherstone", false);
         enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
         enableICs         = cfg.getBoolean("redstone-ics", true);
         enableGlowStone   = cfg.getBoolean("redstone-glowstone", false);
+
+        cfg.set("redstone-glowstone", enableGlowStone);
+        cfg.set("redstone-ics", enableICs);
+        cfg.set("redstone-pumpkins", enablePumpkins);
+        cfg.set("redstone-netherstone", enableNetherstone);
     }
-    
+
+    public final CommonSettings commonSettings;
+
+    //General settings
+    public class CommonSettings {
+        public final String language;
+
+        private CommonSettings(FileConfiguration cfg) {
+            language      = cfg.getString("language",          "en_US");
+            cfg.set("language", language);
+        }
+    }
+
     public final File dataFolder;
-    
-   // public 
+
+    // public
 
     public final boolean enableNetherstone;
     public final boolean enablePumpkins;
