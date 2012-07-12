@@ -129,8 +129,9 @@ public class CartDispenser extends CartMechanism {
         }
 
         public static CartType fromString(String s) {
-            for(CartType ct : values())
+            for(CartType ct : CartType.values())
             {
+                if(ct == null) continue;
                 if(ct.name.equalsIgnoreCase(s))
                     return ct;
             }

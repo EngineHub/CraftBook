@@ -147,6 +147,8 @@ public class Door extends PersistentMechanic {
             } else if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             }
+            else
+                throw new InvalidConstructionException("Sign is incorrectly made.");
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat

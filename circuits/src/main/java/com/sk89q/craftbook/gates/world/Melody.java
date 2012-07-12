@@ -26,6 +26,7 @@ public class Melody extends AbstractIC {
 
     public Melody(Server server, Sign block) {
         super(server, block);
+        jNote = new JingleNoteComponent();
         jNote.enable();
     }
 
