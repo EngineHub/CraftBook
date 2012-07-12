@@ -27,11 +27,11 @@ import org.bukkit.configuration.file.FileConfiguration;
  * 
  * @author sk89q
  */
-public class CircuitsConfiguration {
+public class CircuitsConfiguration extends BaseConfiguration{
     public CircuitsConfiguration(FileConfiguration cfg, File dataFolder) {
+        super(cfg,dataFolder);
         this.dataFolder = dataFolder;
 
-        commonSettings = new CommonSettings(cfg);
         enableNetherstone = cfg.getBoolean("redstone-netherstone", false);
         enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
         enableICs         = cfg.getBoolean("redstone-ics", true);
@@ -41,18 +41,6 @@ public class CircuitsConfiguration {
         cfg.set("redstone-ics", enableICs);
         cfg.set("redstone-pumpkins", enablePumpkins);
         cfg.set("redstone-netherstone", enableNetherstone);
-    }
-
-    public final CommonSettings commonSettings;
-
-    //General settings
-    public class CommonSettings {
-        public final String language;
-
-        private CommonSettings(FileConfiguration cfg) {
-            language      = cfg.getString("language",          "en_US");
-            cfg.set("language", language);
-        }
     }
 
     public final File dataFolder;

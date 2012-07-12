@@ -29,9 +29,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
@@ -185,5 +185,5 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return languageManager;
     }
 
-    public abstract MechanismsConfiguration getLocalConfiguration();
+    public abstract BaseConfiguration getLocalConfiguration();
 }

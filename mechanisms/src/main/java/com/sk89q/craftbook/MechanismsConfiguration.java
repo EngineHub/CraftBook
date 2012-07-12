@@ -41,11 +41,11 @@ import com.sk89q.craftbook.mech.CustomDropManager;
  * @author sk89q
  * @author hash
  */
-public class MechanismsConfiguration {
+public class MechanismsConfiguration extends BaseConfiguration{
     public MechanismsConfiguration(FileConfiguration cfg, File dataFolder) {
+        super(cfg,dataFolder);
         this.dataFolder = dataFolder;
 
-        commonSettings = new CommonSettings(cfg);
         mechSettings = new MechanismSettings(cfg);
         ammeterSettings = new AmmeterSettings(cfg);
         bookcaseSettings = new BookcaseSettings(cfg);
@@ -85,17 +85,6 @@ public class MechanismsConfiguration {
     public final CustomDropManager customDrops;
     public final CustomDropSettings customDropSettings;
     public final DispenserSettings dispenserSettings;
-    public final CommonSettings commonSettings;
-
-    //General settings
-    public class CommonSettings {
-        public final String language;
-
-        private CommonSettings(FileConfiguration cfg) {
-            language      = cfg.getString("language",          "en_US");
-            cfg.set("language", language);
-        }
-    }
 
     //General settings
     public class MechanismSettings {
