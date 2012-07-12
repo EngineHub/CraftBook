@@ -100,8 +100,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
 
         private DispenserSettings(FileConfiguration cfg) {
-            enable      = cfg.getBoolean("dispenser-recipes-enable",          true);
-            cfg.set("dispenser-recipes-enable", enable);
+            enable = getBoolean(cfg,"dispenser-recipes-enable",true);
         }
     }
 
@@ -110,10 +109,8 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final String readLine;
 
         private BookcaseSettings(FileConfiguration cfg) {
-            enable      = cfg.getBoolean("bookshelf-enable",             true);
-            readLine    = cfg.getString( "bookshelf-read-text",          "You pick up a book...");
-            cfg.set("bookshelf-enable", enable);
-            cfg.set("bookshelf-read-text", readLine);
+            enable = getBoolean(cfg,"bookshelf-enable",true);
+            readLine = getString(cfg,"bookshelf-read-text","You pick up a book...");
         }
         //FIXME the books file should probably be cached here too
     }

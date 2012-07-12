@@ -17,8 +17,25 @@ public class BaseConfiguration {
         public final String language;
 
         private CommonSettings(FileConfiguration cfg) {
-            language      = cfg.getString("language",          "en_US");
-            cfg.set("language", language);
+            language = getString(cfg,"language","en_US");
         }
+    }
+
+    public int getInt(FileConfiguration cfg, String name, int def) {
+        int it = cfg.getInt(name);
+        cfg.set(name, it);
+        return it;
+    }
+
+    public boolean getBoolean(FileConfiguration cfg, String name, boolean def) {
+        boolean it = cfg.getBoolean(name);
+        cfg.set(name, it);
+        return it;
+    }
+
+    public String getString(FileConfiguration cfg, String name, String def) {
+        String it = cfg.getString(name,def);
+        cfg.set(name, it);
+        return it;
     }
 }
