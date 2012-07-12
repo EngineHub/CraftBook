@@ -174,10 +174,26 @@ public class MechanismsConfiguration {
     public class GateSettings {
         public final boolean enable;
         public final boolean enableRedstone;
+        public final Set<Material> allowedBlocks;
 
         private GateSettings(FileConfiguration cfg) {
             enable             = cfg.getBoolean("gate-enable",             true);
             enableRedstone     = cfg.getBoolean("gate-redstone",           true);
+            List<Integer> tids = cfg.getIntegerList("gate-blocks");
+            if (tids == null) tids = Arrays.asList(85,101,102,113);
+            Set<Material> allowedBlocks = new HashSet<Material>();
+            for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
+            this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
+
+        }
+
+        /**
+         * @param b
+         * @return true if the given block type can be used for a bridge; false
+         *         otherwise.
+         */
+        public boolean canUseBlock(Material b) {
+            return allowedBlocks.contains(b);
         }
     }
 

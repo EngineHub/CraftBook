@@ -11,6 +11,7 @@ door-max-length: 30
 door-blocks: [4,5,20,43]
 gate-enable: true
 gate-redstone: true
+gate-blocks: [85,101,102,113]
 elevators-enable: true
 cauldron-enable: true
 cauldron-block: 1
