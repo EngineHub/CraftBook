@@ -15,6 +15,7 @@ public class LanguageManager {
 
     public LanguageManager(BaseBukkitPlugin plugin) {
         this.plugin = plugin;
+        checkForLanguages();
     }
 
     public void checkForLanguages() {
