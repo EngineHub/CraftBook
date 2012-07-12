@@ -180,11 +180,11 @@ public class MechanismsConfiguration {
             enable             = cfg.getBoolean("gate-enable",             true);
             enableRedstone     = cfg.getBoolean("gate-redstone",           true);
             List<Integer> tids = cfg.getIntegerList("gate-blocks");
-            if (tids == null) tids = Arrays.asList(85,101,102,113);
+            if (tids == null || tids.isEmpty()) tids = Arrays.asList(85,101,102,113);
             Set<Material> allowedBlocks = new HashSet<Material>();
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
-
+            cfg.set("gate-blocks", tids);
         }
 
         /**
