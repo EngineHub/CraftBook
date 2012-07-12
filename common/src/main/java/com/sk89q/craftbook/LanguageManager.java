@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
@@ -31,11 +34,12 @@ public class LanguageManager {
             br.close();
         }
         catch(Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + plugin.getDataFolder().getName() + File.pathSeparator + language + ".txt");
         }
     }
 
-    public String toString(String s) {
-        if(languageData.get(s) == null) return s;
-        return languageData.get(s);
+    public String getString(String s) {
+        if(languageData.get(ChatColor.stripColor(s)) == null) return s;
+        return languageData.get(ChatColor.stripColor(s));
     }
 }

@@ -196,7 +196,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return config;
     }
 
-    public LanguageManager getLManager() {
+    public LanguageManager getLanguageManager() {
         return languageManager;
     }
 }

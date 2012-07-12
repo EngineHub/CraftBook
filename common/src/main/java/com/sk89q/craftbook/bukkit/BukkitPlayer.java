@@ -35,17 +35,17 @@ public class BukkitPlayer implements LocalPlayer {
 
     @Override
     public void print(String message) {
-        player.sendMessage(ChatColor.GOLD + plugin.getLManager().toString(message));
+        player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message));
     }
 
     @Override
     public void printError(String message) {
-        player.sendMessage(ChatColor.RED + plugin.getLManager().toString(message));
+        player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString(message));
     }
 
     @Override
     public void printRaw(String message) {
-        player.sendMessage(plugin.getLManager().toString(message));
+        player.sendMessage(plugin.getLanguageManager().getString(message));
     }
 
     @Override
