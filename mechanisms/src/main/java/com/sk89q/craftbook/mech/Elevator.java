@@ -208,6 +208,8 @@ public class Elevator extends AbstractMechanic {
         // well, unless that's already a ceiling.
         if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
 
+        LocalPlayer local = plugin.wrap(player);
+
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
@@ -224,11 +226,11 @@ public class Elevator extends AbstractMechanic {
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (!foundGround) {
-            player.sendMessage("mech.lift.no-floor");
+            local.printError("mech.lift.no-floor");
             return;
         }
         if (foundFree < 2) {
-            player.sendMessage("mech.lift.obstruct");
+            local.printError("mech.lift.obstruct");
             return;
         }
 
