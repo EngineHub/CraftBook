@@ -74,6 +74,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("custom-block-drops.txt");
 
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
         if(getServer().getPluginManager().isPluginEnabled("Vault"))
             setupEconomy();

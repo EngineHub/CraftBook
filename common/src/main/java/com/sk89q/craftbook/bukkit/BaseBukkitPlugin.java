@@ -75,6 +75,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         createDefaultConfiguration("config.yml");
 
         config = new BaseConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
         languageManager = new LanguageManager(this);
 

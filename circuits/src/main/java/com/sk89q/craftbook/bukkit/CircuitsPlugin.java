@@ -144,6 +144,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("config.yml");
         createDefaultConfiguration("custom-ics.txt");
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();

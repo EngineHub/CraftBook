@@ -67,6 +67,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
         lvehicle = new CraftBookVehicleListener();
         lblock = new CraftBookVehicleBlockListener();
