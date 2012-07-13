@@ -91,8 +91,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean stopDestruction;
 
         private MechanismSettings(FileConfiguration cfg) {
-            stopDestruction      = cfg.getBoolean("stop-mechanism-dupe",          true);
-            cfg.set("stop-mechanism-dupe", stopDestruction);
+            stopDestruction = getBoolean(cfg, "stop-mechanism-dupe", true);
         }
     }
 
@@ -124,17 +123,14 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final Set<Material> allowedBlocks;
 
         private BridgeSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("bridge-enable",             true);
-            enableRedstone     = cfg.getBoolean("bridge-redstone",           true);
-            maxLength          = cfg.getInt(    "bridge-max-length",         30);
+            enable = getBoolean(cfg, "bridge-enable", true);
+            enableRedstone = getBoolean(cfg, "bridge-redstone", true);
+            maxLength = getInt(cfg, "bridge-max-length", 30);
             List<Integer> tids = cfg.getIntegerList("bridge-blocks");
             if (tids == null) tids = Arrays.asList(4,5,20,43);
             Set<Material> allowedBlocks = new HashSet<Material>();
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
-            cfg.set("bridge-enable", enable);
-            cfg.set("bridge-redstone", enableRedstone);
-            cfg.set("bridge-max-length", maxLength);
             cfg.set("bridge-blocks", tids);
         }
 
@@ -155,17 +151,14 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final Set<Material> allowedBlocks;
 
         private DoorSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("door-enable",             true);
-            enableRedstone     = cfg.getBoolean("door-redstone",           true);
-            maxLength          = cfg.getInt(    "door-max-length",         30);
+            enable = getBoolean(cfg, "door-enable", true);
+            enableRedstone = getBoolean(cfg, "door-redstone", true);
+            maxLength = getInt(cfg, "door-max-length", 30);
             List<Integer> tids = cfg.getIntegerList("door-blocks");
             if(tids == null) Arrays.asList(4,5,20,43);
             Set<Material> allowedBlocks = new HashSet<Material>();
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
-            cfg.set("door-enable", enable);
-            cfg.set("door-redstone", enableRedstone);
-            cfg.set("door-max-length", maxLength);
             cfg.set("door-blocks", tids);
 
         }
@@ -188,15 +181,13 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final Set<Material> allowedBlocks;
 
         private GateSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("gate-enable",             true);
-            enableRedstone     = cfg.getBoolean("gate-redstone",           true);
+            enable = getBoolean(cfg, "gate-enable", true);
+            enableRedstone = getBoolean(cfg, "gate-redstone", true);
             List<Integer> tids = cfg.getIntegerList("gate-blocks");
             if (tids == null || tids.isEmpty()) tids = Arrays.asList(85,101,102,113);
             Set<Material> allowedBlocks = new HashSet<Material>();
             for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
-            cfg.set("gate-enable", enable);
-            cfg.set("gate-redstone", enableRedstone);
             cfg.set("gate-blocks", tids);
         }
 
@@ -215,8 +206,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
 
         private CommandSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("command-sign-enable",             true);
-            cfg.set("command-sign-enable", enable);
+            enable = getBoolean(cfg,"command-sign-enable",true);
         }
     }
 
@@ -225,8 +215,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
 
         private ElevatorSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("elevators-enable",        true);
-            cfg.set("elevators-enable", enable);
+            enable = getBoolean(cfg,"elevators-enable",true);
         }
     }
 
@@ -236,8 +225,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
 
         private TeleporterSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("teleporter-enable",        true);
-            cfg.set("teleporter-enable", enable);
+            enable = getBoolean(cfg,"teleporter-enable",true);
         }
     }
 
@@ -247,10 +235,8 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final int cauldronBlock;
 
         private CauldronSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("cauldron-enable",         true);
-            cauldronBlock      = cfg.getInt("cauldron-block",         1);
-            cfg.set("cauldron-enable", enable);
-            cfg.set("cauldron-block", cauldronBlock);
+            enable = getBoolean(cfg, "cauldron-enable", true);
+            cauldronBlock = getInt(cfg, "cauldron-block", 1);
         }
         //FIXME the recipes should probably go here
     }
@@ -261,8 +247,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
 
         private LightSwitchSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("light-switch-enable",     true);
-            cfg.set("light-switch-enable", enable);
+            enable = getBoolean(cfg, "light-switch-enable", true);
         }
     }
 
@@ -270,24 +255,21 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
 
         private LightStoneSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("light-stone-enable",      true);
-            cfg.set("light-stone-enable", enable);
+            enable = getBoolean(cfg, "light-stone-enable", true);
         }
     }
     public class AmmeterSettings {
         public final boolean enable;
 
         private AmmeterSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("ammeter-enable",          true);
-            cfg.set("ammeter-enable", enable);
+            enable = getBoolean(cfg, "ammeter-enable", true);
         }
     }
     public class HiddenSwitchSettings {
         public final boolean enable;
 
         private HiddenSwitchSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("hidden-switches-enable",  true);
-            cfg.set("hidden-switches-enable", enable);
+            enable = getBoolean(cfg, "hidden-switches-enable",  true);
         }
     }
     public class SnowSettings {
@@ -297,14 +279,10 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean jumpTrample;
 
         private SnowSettings(FileConfiguration cfg) {
-            enable              = cfg.getBoolean("snow-piling-enable",  true);
-            trample             = cfg.getBoolean("snow-trample-enable",  true);
-            placeSnow		= cfg.getBoolean("placable-snow", true);
-            jumpTrample           = cfg.getBoolean("jump-trample-only", true);
-            cfg.set("snow-piling-enable", enable);
-            cfg.set("snow-trample-enable", trample);
-            cfg.set("placable-snow", jumpTrample);
-            cfg.set("jump-trample-only", jumpTrample);
+            enable = getBoolean(cfg, "snow-piling-enable", true);
+            trample = getBoolean(cfg, "snow-trample-enable", true);
+            placeSnow = getBoolean(cfg, "placable-snow", true);
+            jumpTrample = getBoolean(cfg, "jump-trample-only", true);
         }
     }
 
@@ -315,14 +293,10 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final int maxSizePerArea;
 
         private AreaSettings(FileConfiguration cfg) {
-            enable             = cfg.getBoolean("area-enable",             true);
-            enableRedstone     = cfg.getBoolean("area-redstone",           true);
-            maxAreasPerUser     = cfg.getInt("max-areas-per-user",           30);
-            maxSizePerArea     = cfg.getInt("max-size-per-area",           5000);
-            cfg.set("area-enable", enable);
-            cfg.set("area-redstone", enableRedstone);
-            cfg.set("max-areas-per-user", maxAreasPerUser);
-            cfg.set("max-size-per-area", maxSizePerArea);
+            enable = getBoolean(cfg, "area-enable", true);
+            enableRedstone = getBoolean(cfg, "area-redstone", true);
+            maxAreasPerUser = getInt(cfg, "max-areas-per-user", 30);
+            maxSizePerArea = getInt(cfg, "max-size-per-area", 5000);
         }
     }
 
@@ -330,8 +304,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean requirePermissions;
 
         private CustomDropSettings(FileConfiguration cfg) {
-            requirePermissions = cfg.getBoolean("custom-drops-require-permissions", false);
-            cfg.set("custom-drops-require-permissions", requirePermissions);
+            requirePermissions = getBoolean(cfg,"custom-drops-require-permissions", false);
         }
     }
 }
