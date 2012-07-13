@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 /**
@@ -34,6 +35,11 @@ public class Snow implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow)
             return;
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+        if(!player.hasPermission("craftbook.mech.snow.place")) {
+            player.printError("mech.use-permission");
+            return;
+        }
         if(!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
         try {
             if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
@@ -58,6 +64,11 @@ public class Snow implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.trample)
             return;
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+        if(!player.hasPermission("craftbook.mech.snow.trample")) {
+            player.printError("mech.use-permission");
+            return;
+        }
         Random random = new Random();
         if(plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() >= 0D) return;
         if (random.nextInt(10) == 6) {
