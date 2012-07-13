@@ -27,6 +27,12 @@ public class BaseConfiguration {
         return it;
     }
 
+    public double getDouble(FileConfiguration cfg, String name, double def) {
+        double it = cfg.getDouble(name);
+        cfg.set(name, it);
+        return it;
+    }
+
     public boolean getBoolean(FileConfiguration cfg, String name, boolean def) {
         boolean it = cfg.getBoolean(name);
         cfg.set(name, it);

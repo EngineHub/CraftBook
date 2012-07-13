@@ -32,15 +32,10 @@ public class CircuitsConfiguration extends BaseConfiguration{
         super(cfg,dataFolder);
         this.dataFolder = dataFolder;
 
-        enableNetherstone = cfg.getBoolean("redstone-netherstone", false);
-        enablePumpkins    = cfg.getBoolean("redstone-pumpkins", true);
-        enableICs         = cfg.getBoolean("redstone-ics", true);
-        enableGlowStone   = cfg.getBoolean("redstone-glowstone", false);
-
-        cfg.set("redstone-glowstone", enableGlowStone);
-        cfg.set("redstone-ics", enableICs);
-        cfg.set("redstone-pumpkins", enablePumpkins);
-        cfg.set("redstone-netherstone", enableNetherstone);
+        enableNetherstone = getBoolean(cfg, "redstone-netherstone", false);
+        enablePumpkins    = getBoolean(cfg, "redstone-pumpkins", true);
+        enableICs         = getBoolean(cfg, "redstone-ics", true);
+        enableGlowStone   = getBoolean(cfg, "redstone-glowstone", false);
     }
 
     public final File dataFolder;
