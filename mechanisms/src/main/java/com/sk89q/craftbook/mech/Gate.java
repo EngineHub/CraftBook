@@ -203,7 +203,7 @@ public class Gate extends PersistentMechanic {
      *         otherwise.
      */
     private boolean getColumn(WorldVector pt,
-            ArrayList<BlockWorldVector> visitedColumns, Boolean close) {
+            ArrayList<BlockWorldVector> visitedColumns) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
         if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
@@ -249,13 +249,6 @@ public class Gate extends PersistentMechanic {
         // non-fence block
         if (world.getBlockTypeIdAt(x, y + 1, z) == 0) {
             return false;
-        }
-
-        if (close == null) {
-            // Close the gate if the block below does not exist as a fence
-            // block, otherwise open the gate
-
-            close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
         }
 
         return true;
@@ -545,33 +538,25 @@ public class Gate extends PersistentMechanic {
 
         if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
 
-            setGateState(pt, true, smallSearchSize);
-
             if (smallSearchSize) {
-                // Toggle nearby gates
                 for (int x1 = x - 1; x1 <= x + 1; x1++) {
                     for (int y1 = y - 2; y1 <= y + 1; y1++) {
                         for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                            if (getColumn(new WorldVector(world, x1, y1, z1),
-                                    gates, null)) {
+                            if (getColumn(new WorldVector(world, x1, y1, z1), gates)) {
                             }
                         }
                     }
                 }
             } else {
-                // Toggle nearby gates
                 for (int x1 = x - 3; x1 <= x + 3; x1++) {
                     for (int y1 = y - 3; y1 <= y + 6; y1++) {
                         for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                            if (getColumn(new WorldVector(world, x1, y1, z1),
-                                    gates, null)) {
+                            if (getColumn(new WorldVector(world, x1, y1, z1), gates)) {
                             }
                         }
                     }
                 }
             }
-
-            setGateState(pt, true, smallSearchSize); //Just makin' sure
         }
 
         gates.add(pt.toWorldBlockVector());
@@ -583,7 +568,7 @@ public class Gate extends PersistentMechanic {
     public void onWatchBlockNotification(BlockEvent evt) {
         if (evt instanceof BlockBreakEvent && ((BlockBreakEvent) evt).getPlayer() != null) {
             if(!plugin.getLocalConfiguration().mechSettings.stopDestruction && !((BlockBreakEvent)evt).isCancelled()) {
-                setGateState(pt, false, smallSearchSize);
+                //FIXME setGateState(pt, false, smallSearchSize);
             }
             else if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()))
                 ((BlockBreakEvent) evt).setCancelled(true);
