@@ -587,8 +587,6 @@ public class Gate extends PersistentMechanic {
             }
             else if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()))
                 ((BlockBreakEvent) evt).setCancelled(true);
-            else
-                setGateState(pt, false, smallSearchSize);
         }
     }
 
