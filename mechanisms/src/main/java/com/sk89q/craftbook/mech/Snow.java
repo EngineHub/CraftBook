@@ -37,7 +37,6 @@ public class Snow implements Listener {
             return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if(!player.hasPermission("craftbook.mech.snow.place")) {
-            player.printError("mech.use-permission");
             return;
         }
         if(!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
@@ -66,7 +65,6 @@ public class Snow implements Listener {
             return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if(!player.hasPermission("craftbook.mech.snow.trample")) {
-            player.printError("mech.use-permission");
             return;
         }
         Random random = new Random();
