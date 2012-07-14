@@ -19,9 +19,7 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.World;
@@ -29,14 +27,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -57,7 +54,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  * 
  * @author sk89q
  */
-public class Gate extends PersistentMechanic {
+public class Gate extends AbstractMechanic {
 
     /**
      * Plugin.
@@ -73,9 +70,6 @@ public class Gate extends PersistentMechanic {
      * Indicates a DGate.
      */
     protected boolean smallSearchSize;
-
-
-    protected ArrayList<BlockWorldVector> gates = new ArrayList<BlockWorldVector>();
 
     /**
      * Construct a gate for a location.
@@ -191,67 +185,6 @@ public class Gate extends PersistentMechanic {
         // bag.flushChanges();
 
         return foundGate;
-    }
-
-    /**
-     * Toggles one column of gate.
-     * 
-     * @param pt
-     * @param visitedColumns
-     * @param close
-     * @return true if a gate column was found and blocks were changed; false
-     *         otherwise.
-     */
-    private boolean getColumn(WorldVector pt,
-            ArrayList<BlockWorldVector> visitedColumns) {
-
-        World world = ((BukkitWorld) pt.getWorld()).getWorld();
-        if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
-            return false;
-        }
-
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
-        int oy = y;
-
-        if (!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(pt.setY(0).getBlockX(),pt.setY(0).getBlockY(),pt.setY(0).getBlockZ()))))
-            visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(pt.setY(0).getBlockX(),pt.setY(0).getBlockY(),pt.setY(0).getBlockZ())));
-
-        // Find the top most fence
-        for (int y1 = y + 1; y1 <= y + 12; y1++) {
-            if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
-                y = y1;
-                if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z))))
-                    visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z)));
-            } else {
-                break;
-            }
-        }
-
-        // Make sure to add all fences.
-        for (int y1 = y; y1 > y - 12; y1--) {
-            if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
-                oy = y1;
-                if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z))))
-                    visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, y1, z)));
-            } else {
-                break;
-            }
-        }
-
-        if (isValidGateBlock(world.getBlockAt(x, oy-1, z))) {
-            if(!visitedColumns.contains(BukkitUtil.toWorldVector(world.getBlockAt(x, oy - 1, z))))
-                visitedColumns.add(BukkitUtil.toWorldVector(world.getBlockAt(x, oy - 1, z)));
-        }
-
-        // The block above the gate cannot be air -- it has to be some
-        // non-fence block
-        if (world.getBlockTypeIdAt(x, y + 1, z) == 0) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -450,12 +383,11 @@ public class Gate extends PersistentMechanic {
 
     @Override
     public void unload() {
-        gates.clear();
     }
 
     @Override
     public boolean isActive() {
-        return true; // This keeps no state
+        return true;
     }
 
     public static class Factory extends AbstractMechanicFactory<Gate> {
@@ -525,54 +457,6 @@ public class Gate extends PersistentMechanic {
 
     public boolean isValidGateBlock(Block block) {
         return plugin.getLocalConfiguration().gateSettings.canUseBlock(block.getType());
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-        //LocalWorld world = pt.getWorld();
-        //int x = pt.getBlockX();
-        //int y = pt.getBlockY();
-        //int z = pt.getBlockZ();
-
-        gates.clear();
-
-        /*if(plugin.getLocalConfiguration().mechSettings.stopDestruction) { //FIXME
-
-            if (smallSearchSize) {
-                for (int x1 = x - 1; x1 <= x + 1; x1++) {
-                    for (int y1 = y - 2; y1 <= y + 1; y1++) {
-                        for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                            if (getColumn(new WorldVector(world, x1, y1, z1), gates)) {
-                            }
-                        }
-                    }
-                }
-            } else {
-                for (int x1 = x - 3; x1 <= x + 3; x1++) {
-                    for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                        for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                            if (getColumn(new WorldVector(world, x1, y1, z1), gates)) {
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-
-        gates.add(pt.toWorldBlockVector());
-
-        return gates;
-    }
-
-    @Override
-    public void onWatchBlockNotification(BlockEvent evt) {
-        if (evt instanceof BlockBreakEvent && ((BlockBreakEvent) evt).getPlayer() != null) {
-            if(!plugin.getLocalConfiguration().mechSettings.stopDestruction && !((BlockBreakEvent)evt).isCancelled()) {
-                //FIXME setGateState(pt, false, smallSearchSize);
-            }
-            else if (!(evt.getBlock().getState() instanceof Sign) && isValidGateBlock(evt.getBlock()))
-                ((BlockBreakEvent) evt).setCancelled(true);
-        }
     }
 
     @Override
