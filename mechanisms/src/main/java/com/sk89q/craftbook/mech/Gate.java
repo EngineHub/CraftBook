@@ -581,7 +581,7 @@ public class Gate extends PersistentMechanic {
 
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
-        if (evt instanceof BlockBreakEvent) {
+        if (evt instanceof BlockBreakEvent && ((BlockBreakEvent) evt).getPlayer() != null) {
             if(!plugin.getLocalConfiguration().mechSettings.stopDestruction && !((BlockBreakEvent)evt).isCancelled()) {
                 setGateState(pt, false, smallSearchSize);
             }
