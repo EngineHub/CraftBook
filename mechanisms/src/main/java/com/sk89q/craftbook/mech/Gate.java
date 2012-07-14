@@ -307,13 +307,14 @@ public class Gate extends AbstractMechanic {
             // bag.setBlockID(w, x, y1, z, ID);
             if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                 if(ID == 0 || curBlocks > 0) {
-                    world.getBlockAt(x, y1, z).setTypeId(ID);
-                    if(ID == 0)
+                    if(ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
                         curBlocks ++;
-                    else
+                    else if(world.getBlockAt(x, y1, z).getTypeId() == 0)
                         curBlocks --;
+                    world.getBlockAt(x, y1, z).setTypeId(ID);
 
                     sign.setLine(3, curBlocks + "");
+                    sign.update();
                 }
             }
             else
