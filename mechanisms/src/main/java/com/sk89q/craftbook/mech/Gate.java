@@ -305,15 +305,19 @@ public class Gate extends AbstractMechanic {
             }
 
             // bag.setBlockID(w, x, y1, z, ID);
-            if(ID == 0 || curBlocks > 0) {
-                world.getBlockAt(x, y1, z).setTypeId(ID);
-                if(ID == 0)
-                    curBlocks ++;
-                else
-                    curBlocks --;
+            if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                if(ID == 0 || curBlocks > 0) {
+                    world.getBlockAt(x, y1, z).setTypeId(ID);
+                    if(ID == 0)
+                        curBlocks ++;
+                    else
+                        curBlocks --;
 
-                sign.setLine(3, curBlocks + "");
+                    sign.setLine(3, curBlocks + "");
+                }
             }
+            else
+                world.getBlockAt(x, y1, z).setTypeId(ID);
 
             WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
             recurseColumn(new BlockWorldVector(topPoint, pt.add(1, 0, 0)),
