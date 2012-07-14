@@ -77,8 +77,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         config = new BaseConfiguration(getConfig(), getDataFolder());
         saveConfig();
 
-        languageManager = new LanguageManager(this);
-
         logger.info(getDescription().getName() + " "
                 + getDescription().getVersion() + " enabled.");
 

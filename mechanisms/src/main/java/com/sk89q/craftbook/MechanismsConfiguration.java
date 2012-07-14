@@ -114,8 +114,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
         //FIXME the books file should probably be cached here too
     }
 
-
-
     public class BridgeSettings {
         public final boolean enable;
         public final boolean enableRedstone;
@@ -173,8 +171,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
         }
     }
 
-
-
     public class GateSettings {
         public final boolean enable;
         public final boolean enableRedstone;
@@ -201,7 +197,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
         }
     }
 
-
     public class CommandSettings {
         public final boolean enable;
 
@@ -209,7 +204,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
             enable = getBoolean(cfg,"command-sign-enable",true);
         }
     }
-
 
     public class ElevatorSettings {
         public final boolean enable;
@@ -219,8 +213,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
         }
     }
 
-
-
     public class TeleporterSettings {
         public final boolean enable;
 
@@ -228,7 +220,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
             enable = getBoolean(cfg,"teleporter-enable",true);
         }
     }
-
 
     public class CauldronSettings {
         public final boolean enable;
@@ -240,8 +231,6 @@ public class MechanismsConfiguration extends BaseConfiguration{
         }
         //FIXME the recipes should probably go here
     }
-
-
 
     public class LightSwitchSettings {
         public final boolean enable;
@@ -258,6 +247,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
             enable = getBoolean(cfg, "light-stone-enable", true);
         }
     }
+
     public class AmmeterSettings {
         public final boolean enable;
 
@@ -265,6 +255,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
             enable = getBoolean(cfg, "ammeter-enable", true);
         }
     }
+
     public class HiddenSwitchSettings {
         public final boolean enable;
 
@@ -272,6 +263,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
             enable = getBoolean(cfg, "hidden-switches-enable",  true);
         }
     }
+
     public class SnowSettings {
         public final boolean enable;
         public final boolean trample;

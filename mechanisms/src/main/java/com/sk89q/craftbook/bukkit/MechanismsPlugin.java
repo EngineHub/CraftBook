@@ -26,6 +26,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.mech.Ammeter;
@@ -75,6 +76,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+        languageManager = new LanguageManager(this);
 
         if(getServer().getPluginManager().isPluginEnabled("Vault"))
             setupEconomy();

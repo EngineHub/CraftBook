@@ -25,6 +25,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
+import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
@@ -145,6 +146,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("custom-ics.txt");
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+        languageManager = new LanguageManager(this);
 
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();

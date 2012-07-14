@@ -37,6 +37,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
@@ -68,6 +69,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+
+        languageManager = new LanguageManager(this);
 
         lvehicle = new CraftBookVehicleListener();
         lblock = new CraftBookVehicleBlockListener();
