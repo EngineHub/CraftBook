@@ -529,14 +529,14 @@ public class Gate extends PersistentMechanic {
 
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
-        LocalWorld world = pt.getWorld();
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
+        //LocalWorld world = pt.getWorld();
+        //int x = pt.getBlockX();
+        //int y = pt.getBlockY();
+        //int z = pt.getBlockZ();
 
         gates.clear();
 
-        if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+        /*if(plugin.getLocalConfiguration().mechSettings.stopDestruction) { //FIXME
 
             if (smallSearchSize) {
                 for (int x1 = x - 1; x1 <= x + 1; x1++) {
@@ -557,7 +557,7 @@ public class Gate extends PersistentMechanic {
                     }
                 }
             }
-        }
+        }*/
 
         gates.add(pt.toWorldBlockVector());
 
