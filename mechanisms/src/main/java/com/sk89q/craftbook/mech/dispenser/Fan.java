@@ -28,6 +28,6 @@ public class Fan extends Recipe{
                 e.setVelocity(e.getVelocity().add(velocity));
             }
         }
-        return true;
+        return false;
     }
 }

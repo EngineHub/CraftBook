@@ -23,8 +23,8 @@ public class FireArrows extends Recipe {
         MaterialData d = dis.getBlock().getState().getData();
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) d;
         BlockFace face = disp.getFacing();
-        Arrow a = dis.getWorld().spawnArrow(dis.getBlock().getRelative(face).getLocation(), velocity, 4.0f, 0.0f);
+        Arrow a = dis.getWorld().spawnArrow(dis.getBlock().getRelative(face).getLocation(), velocity, 1.0f, 0.0f);
         a.setFireTicks(5000);
-        return true;
+        return false;
     }
 }
