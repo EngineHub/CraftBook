@@ -277,12 +277,14 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean trample;
         public final boolean placeSnow;
         public final boolean jumpTrample;
+        public final boolean piling;
 
         private SnowSettings(FileConfiguration cfg) {
             enable = getBoolean(cfg, "snow-piling-enable", true);
             trample = getBoolean(cfg, "snow-trample-enable", true);
             placeSnow = getBoolean(cfg, "placable-snow", true);
             jumpTrample = getBoolean(cfg, "jump-trample-only", true);
+            piling = getBoolean(cfg, "snow-piles-high", true);
         }
     }
 

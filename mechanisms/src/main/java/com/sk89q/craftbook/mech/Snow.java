@@ -102,7 +102,8 @@ public class Snow implements Listener {
             Block block = event.getBlock();
 
             if ((block.getTypeId() != 80) && (block.getTypeId() != 78)) {
-                if (block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 80 || block.getWorld().getBlockAt(block.getLocation().subtract(0, 1, 0)).getTypeId() == 78)
+                Location blockLoc = block.getLocation().subtract(0, 1, 0);
+                if ((block.getWorld().getBlockAt(blockLoc).getTypeId() == 80 && !plugin.getLocalConfiguration().snowSettings.piling) || block.getWorld().getBlockAt(blockLoc).getTypeId() == 78)
                     return;
                 Random random = new Random();
                 long delay = random.nextInt(100) + 60;
@@ -128,37 +129,30 @@ public class Snow implements Listener {
                 if (event.subtract(0, 1, 0).getBlock().getTypeId() == 0)
                     return;
                 event.add(0, 1, 0);
-                if (!(event.getBlock().getTypeId() == 78))
+                if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80))
                     return;
                 incrementData(event.getBlock());
-                //if(event.getBlock().getData() >= (byte)7)
-                //    event.getBlock().setTypeId(80);
                 Random random = new Random();
                 long delay = random.nextInt(100) + 60;
-                if (plugin.getServer()
-                        .getScheduler()
-                        .scheduleSyncDelayedTask(plugin, new makeSnow(event),
-                                delay * 20L) == -1)
-                    plugin.getLogger()
-                    .log(Level.SEVERE,
-                            "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+                if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event),
+                        delay * 20L) == -1)
+                    plugin.getLogger().log(Level.SEVERE,"[CraftBookMechanisms] Snow Mechanic failed to schedule!");
             } else {
                 Random random = new Random();
                 long delay = random.nextInt(100) + 600;
-                if (plugin
-                        .getServer()
-                        .getScheduler()
-                        .scheduleSyncDelayedTask(plugin, new makeSnow(event),
-                                delay * 20L) == -1)
-                    plugin.getLogger()
-                    .log(Level.SEVERE,
-                            "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+                if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new makeSnow(event),
+                        delay * 20L) == -1)
+                    plugin.getLogger().log(Level.SEVERE,"[CraftBookMechanisms] Snow Mechanic failed to schedule!");
             }
         }
     }
 
     public void lowerData(Block block) {
         byte newData = (byte) (block.getData() - 1);
+        if(block.getTypeId() == 80) {
+            block.setTypeId(78);
+            newData = (byte)7;
+        }
         if(newData > (byte)7)
             newData = (byte)7;
         setBlockDataWithNotify(block,newData);
