@@ -3,10 +3,6 @@ package com.sk89q.craftbook.gates.world;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.SignUtil;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -20,6 +16,14 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class EntityTrap extends AbstractIC {
 
@@ -36,22 +40,22 @@ public class EntityTrap extends AbstractIC {
         public boolean is(Entity entity) {
 
             switch (this) {
-                case PLAYER:
-                    return entity instanceof Player;
-                case MOBHOSTILE:
-                    return entity instanceof Monster;
-                case MOBPEACEFUL:
-                    return entity instanceof Animals;
-                case ANYMOB:
-                    return entity instanceof Creature;
-                case CART:
-                    return entity instanceof Minecart;
-                case STORAGECART:
-                    return entity instanceof StorageMinecart;
-                case POWEREDCART:
-                    return entity instanceof PoweredMinecart;
-                case ANY:
-                    return true;
+            case PLAYER:
+                return entity instanceof Player;
+            case MOBHOSTILE:
+                return entity instanceof Monster;
+            case MOBPEACEFUL:
+                return entity instanceof Animals;
+            case ANYMOB:
+                return entity instanceof Creature;
+            case CART:
+                return entity instanceof Minecart;
+            case STORAGECART:
+                return entity instanceof StorageMinecart;
+            case POWEREDCART:
+                return entity instanceof PoweredMinecart;
+            case ANY:
+                return true;
             }
             return false;
         }
@@ -136,6 +140,7 @@ public class EntityTrap extends AbstractIC {
         if (type == null) type = Type.ANY;
         // update the sign with correct upper case name
         sign.setLine(3, type.name());
+        sign.update();
         // now check the third line for the radius and offset
         String line = sign.getLine(2).trim();
         // if the line contains a = the offset is given
@@ -191,7 +196,7 @@ public class EntityTrap extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 

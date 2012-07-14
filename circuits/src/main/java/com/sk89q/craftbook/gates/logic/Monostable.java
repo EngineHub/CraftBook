@@ -60,7 +60,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC{
 
             chip.setOutput(0, true);
             sign.setLine(3, setting.substring(0, index) );
-
+            sign.update();
         }
 
     }
@@ -83,7 +83,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC{
             tick --;
 
         sign.setLine(3, Integer.toString(tick));
-
+        sign.update();
     }
 
     @Override
@@ -140,6 +140,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC{
 
             sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : "")  );
             sign.setLine(3, "0");
+            sign.update();
         }
     }
 

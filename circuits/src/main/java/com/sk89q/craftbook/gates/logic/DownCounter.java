@@ -94,6 +94,8 @@ public class DownCounter extends AbstractIC {
         // Update counter value stored on sign if it's changed
         if (curVal != oldVal) {
             getSign().setLine(3, curVal + "");
+            getSign().update();
+
         }
     }
 

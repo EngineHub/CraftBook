@@ -78,6 +78,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     Sign sign = (Sign) state;
                     if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                         sign.setLine(2, "0");
+                        sign.update();
                         return new CookingPot(pt, plugin);
                     }
                 }
@@ -100,6 +101,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
                 sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
+                sign.update();
                 player.print("Cooking pot created.");
             } else {
                 return null;
@@ -121,6 +123,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             }
             catch(Exception e){
                 sign.setLine(2, lastTick + "");
+                sign.update();
             }
             lastTick++;
             if(lastTick<25) return;
@@ -149,6 +152,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 }
             }
             sign.setLine(2, lastTick + "");
+            sign.update();
         }
     }
 

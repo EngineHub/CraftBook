@@ -92,6 +92,7 @@ public class Detection extends AbstractIC {
         if (type == null) this.type = Type.ANY;
         // update the sign with correct upper case name
         sign.setLine(3, type.name());
+        sign.update();
         // now check the third line for the radius and offset
         String line = sign.getLine(2).trim();
         // if the line contains a = the offset is given
