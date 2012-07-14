@@ -260,6 +260,8 @@ public class Gate extends AbstractMechanic {
         int y = topPoint.getBlockY();
         int z = topPoint.getBlockZ();
 
+        int curBlocks = 0;
+
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
@@ -281,6 +283,9 @@ public class Gate extends AbstractMechanic {
                     sign = (Sign) state;
             }
 
+            if(sign!=null && sign.getLine(3).length() > 0)
+                curBlocks = Integer.parseInt(sign.getLine(3));
+
             if(sign!= null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
                 if (cur != 0) {
@@ -300,7 +305,15 @@ public class Gate extends AbstractMechanic {
             }
 
             // bag.setBlockID(w, x, y1, z, ID);
-            world.getBlockAt(x, y1, z).setTypeId(ID);
+            if(ID == 0 || curBlocks > 0) {
+                world.getBlockAt(x, y1, z).setTypeId(ID);
+                if(ID == 0)
+                    curBlocks ++;
+                else
+                    curBlocks --;
+
+                sign.setLine(3, curBlocks + "");
+            }
 
             WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
             recurseColumn(new BlockWorldVector(topPoint, pt.add(1, 0, 0)),
