@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.StorageMinecart;
@@ -66,8 +67,20 @@ public class CartDeposit extends CartMechanism {
 
         if (collecting) {
             // collecting
-            ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>(Arrays.asList(cartinventory.getContents()));
-            cartinventory.clear();
+            ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
+            if(((Sign)blocks.sign.getState()).getLine(2).length() > 0) {
+                for(ItemStack item : cartinventory.getContents()) {
+                    if(Integer.parseInt(((Sign)blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
+                        cartinventory.remove(item);
+                        transferitems.add(item);
+                    }
+                }
+            }
+            else {
+                transferitems.addAll(Arrays.asList(cartinventory.getContents()));
+                cartinventory.clear();
+            }
+
             while (transferitems.remove(null)) continue;
 
             // is cart non-empty?
@@ -102,8 +115,18 @@ public class CartDeposit extends CartMechanism {
 
             for (Chest container: containers) {
                 Inventory containerinventory = container.getInventory();
-                transferitems.addAll(Arrays.asList(containerinventory.getContents()));
-                containerinventory.clear();
+                if(((Sign)blocks.sign.getState()).getLine(2).length() > 0) {
+                    for(ItemStack item : containerinventory.getContents()) {
+                        if(Integer.parseInt(((Sign)blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
+                            containerinventory.remove(item);
+                            transferitems.add(item);
+                        }
+                    }
+                }
+                else {
+                    transferitems.addAll(Arrays.asList(containerinventory.getContents()));
+                    containerinventory.clear();
+                }
                 container.update();
             }
 
