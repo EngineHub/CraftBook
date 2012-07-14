@@ -126,28 +126,29 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign.update();
             }
             lastTick++;
-            if(lastTick<25) return;
-            Block b = SignUtil.getBackBlock(sign.getBlock());
-            int x = b.getX();
-            int y = b.getY()+2;
-            int z = b.getZ();
-            Block cb = sign.getWorld().getBlockAt(x,y,z);
-            if (cb.getType() == Material.CHEST) {
-                Block fire = sign.getWorld().getBlockAt(x,y-1,z);
-                if(fire.getType() == Material.FIRE)
-                {
-                    if (cb.getState() instanceof Chest) {
-                        Chest chest = (Chest) cb.getState();
-                        for(ItemStack i : chest.getInventory().getContents())
-                        {
-                            if(i==null || ItemUtil.isItemCookable(i) == false) continue;
-                            ItemStack cooked = ItemUtil.getCookedState(i);
-                            if(cooked == null) continue;
-                            chest.getInventory().addItem(new ItemStack(cooked.getType(),1));
-                            chest.getInventory().removeItem(new ItemStack(i.getType(),1));
-                            break;
+            if(lastTick>=25) {
+                Block b = SignUtil.getBackBlock(sign.getBlock());
+                int x = b.getX();
+                int y = b.getY()+2;
+                int z = b.getZ();
+                Block cb = sign.getWorld().getBlockAt(x,y,z);
+                if (cb.getType() == Material.CHEST) {
+                    Block fire = sign.getWorld().getBlockAt(x,y-1,z);
+                    if(fire.getType() == Material.FIRE)
+                    {
+                        if (cb.getState() instanceof Chest) {
+                            Chest chest = (Chest) cb.getState();
+                            for(ItemStack i : chest.getInventory().getContents())
+                            {
+                                if(i==null || ItemUtil.isItemCookable(i) == false) continue;
+                                ItemStack cooked = ItemUtil.getCookedState(i);
+                                if(cooked == null) continue;
+                                chest.getInventory().addItem(new ItemStack(cooked.getType(),1));
+                                chest.getInventory().removeItem(new ItemStack(i.getType(),1));
+                                break;
+                            }
+                            lastTick = 0;
                         }
-                        lastTick = 0;
                     }
                 }
             }
@@ -171,6 +172,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int lastTick = Integer.parseInt(sign.getLine(2));
             lastTick++;
             sign.setLine(2, lastTick + "");
+            sign.update();
             think();
         }
     }
