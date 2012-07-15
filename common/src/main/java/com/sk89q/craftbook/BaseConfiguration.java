@@ -4,6 +4,11 @@ import java.io.File;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class BaseConfiguration {
 
     public BaseConfiguration(FileConfiguration cfg, File dataFolder) {
