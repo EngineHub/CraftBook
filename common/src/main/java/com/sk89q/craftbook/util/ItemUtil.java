@@ -56,7 +56,7 @@ public class ItemUtil {
 
     public static boolean containsRawFood(Inventory inv) {
         for(ItemStack it : inv.getContents())
-            if(isItemCookable(it)) return true;
+            if(it!=null && isItemCookable(it)) return true;
         return false;
     }
 
