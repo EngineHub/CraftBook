@@ -206,9 +206,14 @@ public class Bridge extends PersistentMechanic {
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
         if(!s.getLine(2).equalsIgnoreCase("1") && !((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")) {
-            for(int i = 0; i < Integer.parseInt(s.getLine(3)); i++)
+            if(s.getLine(3).length() == 0) {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
                         BukkitUtil.toVector(SignUtil.getRight(trigger)));
+            } else {
+                for(int i = 0; i < Integer.parseInt(s.getLine(3)); i++)
+                    toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
+                            BukkitUtil.toVector(SignUtil.getRight(trigger)));
+            }
         }
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));
