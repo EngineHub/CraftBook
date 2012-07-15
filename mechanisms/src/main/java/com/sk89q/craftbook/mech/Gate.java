@@ -381,7 +381,7 @@ public class Gate extends AbstractMechanic {
 
                 Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
                     BlockState state = event.getClickedBlock().getState();
                     if (state instanceof Sign)
                         sign = (Sign) state;
@@ -403,6 +403,8 @@ public class Gate extends AbstractMechanic {
                     event.getPlayer().getItemInHand().setTypeId(0);
 
                 player.print("Gate Restocked!");
+                event.setCancelled(true);
+                return;
             }
         }
 

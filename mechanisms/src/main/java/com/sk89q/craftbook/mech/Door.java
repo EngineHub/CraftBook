@@ -270,7 +270,7 @@ public class Door extends AbstractMechanic {
             if(getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
                 Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
                     BlockState state = event.getClickedBlock().getState();
                     if (state instanceof Sign)
                         sign = (Sign) state;
@@ -292,6 +292,8 @@ public class Door extends AbstractMechanic {
                     event.getPlayer().getItemInHand().setTypeId(0);
 
                 player.print("Door Restocked!");
+                event.setCancelled(true);
+                return;
             }
         }
 
@@ -344,6 +346,9 @@ public class Door extends AbstractMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+                int oldType = 0;
+                if(b != null)
+                    oldType = b.getTypeId();
                 if (b.getType() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
                     b.setType(Material.AIR);
                     if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
@@ -355,7 +360,8 @@ public class Door extends AbstractMechanic {
                         catch(NumberFormatException e) {
                             curBlocks = 0;
                         }
-                        curBlocks++;
+                        if(oldType != 0)
+                            curBlocks++;
                         s.setLine(0, curBlocks + "");
                         s.update();
                     }
