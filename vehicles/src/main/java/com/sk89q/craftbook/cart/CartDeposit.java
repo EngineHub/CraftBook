@@ -71,7 +71,7 @@ public class CartDeposit extends CartMechanism {
             if(((Sign)blocks.sign.getState()).getLine(2).length() > 0) {
                 for(ItemStack item : cartinventory.getContents()) {
                     if(Integer.parseInt(((Sign)blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
-                        transferitems.add(new ItemStack(item));
+                        transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                         cartinventory.remove(item);
                     }
                 }
@@ -118,7 +118,7 @@ public class CartDeposit extends CartMechanism {
                 if(((Sign)blocks.sign.getState()).getLine(2).length() > 0) {
                     for(ItemStack item : containerinventory.getContents()) {
                         if(Integer.parseInt(((Sign)blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
-                            transferitems.add(new ItemStack(item));
+                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             containerinventory.remove(item);
                         }
                     }
