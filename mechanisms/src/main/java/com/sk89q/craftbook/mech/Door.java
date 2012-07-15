@@ -220,8 +220,8 @@ public class Door extends PersistentMechanic {
         catch(Exception e){
             right = 1;
         }
-        if(left > plugin.getLocalConfiguration().doorSettings.maxWidth) left = plugin.getLocalConfiguration().doorSettings.maxWidth;
-        if(right > plugin.getLocalConfiguration().doorSettings.maxWidth) right = plugin.getLocalConfiguration().doorSettings.maxWidth;
+        //if(left > plugin.getLocalConfiguration().doorSettings.maxWidth) left = plugin.getLocalConfiguration().doorSettings.maxWidth;
+        //if(right > plugin.getLocalConfiguration().doorSettings.maxWidth) right = plugin.getLocalConfiguration().doorSettings.maxWidth;
 
         if(left == 1)
             try {

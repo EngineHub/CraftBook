@@ -205,8 +205,8 @@ public class Bridge extends PersistentMechanic {
         catch(Exception e){
             right = 1;
         }
-        if(left > plugin.getLocalConfiguration().bridgeSettings.maxWidth) left = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
-        if(right > plugin.getLocalConfiguration().bridgeSettings.maxWidth) right = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
+        //if(left > plugin.getLocalConfiguration().bridgeSettings.maxWidth) left = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
+        //if(right > plugin.getLocalConfiguration().bridgeSettings.maxWidth) right = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
 
         if(left == 1)
             try {
