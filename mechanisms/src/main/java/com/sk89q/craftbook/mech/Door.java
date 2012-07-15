@@ -47,6 +47,7 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.RegionOperationException;
 
 /**
  * Door.
@@ -128,6 +129,7 @@ public class Door extends PersistentMechanic {
      * @param plugin
      * @throws InvalidMechanismException
      */
+    @SuppressWarnings("deprecation")
     private Door(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
         super();
 
@@ -152,8 +154,7 @@ public class Door extends PersistentMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat
-                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
-                        || s.getLine(2).equalsIgnoreCase("1"))
+                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat))
                     break findBase;
                 throw new InvalidConstructionException("mech.door.material");
             } else {
@@ -200,16 +201,60 @@ public class Door extends PersistentMechanic {
 
         if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
                 || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
-                        || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData()))
-                        && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) otherSide.getState()).getLine(2).equalsIgnoreCase("1")))
+                        || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())))
             throw new InvalidConstructionException("mech.door.material");
 
         // Select the togglable region
 
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        if(!s.getLine(2).equalsIgnoreCase("1"))
-            toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
-                    BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        int left, right;
+        try {
+            left = Integer.parseInt(s.getLine(2));
+        }
+        catch(Exception e){
+            left = 1;
+        }
+        try {
+            right = Integer.parseInt(s.getLine(3));
+        }
+        catch(Exception e){
+            right = 1;
+        }
+        if(left > plugin.getLocalConfiguration().doorSettings.maxWidth) left = plugin.getLocalConfiguration().doorSettings.maxWidth;
+        if(right > plugin.getLocalConfiguration().doorSettings.maxWidth) right = plugin.getLocalConfiguration().doorSettings.maxWidth;
+
+        if(left == 1)
+            try {
+                toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
+            } catch (RegionOperationException e) {
+                e.printStackTrace();
+            }
+        else if(left>1) {
+            for(int i = 0; i < left; i++)
+            {
+                try {
+                    toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
+                } catch (RegionOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(right == 1)
+            try {
+                toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
+            } catch (RegionOperationException e) {
+                e.printStackTrace();
+            }
+        else if(right>1) {
+            for(int i = 0; i < right; i++)
+            {
+                try {
+                    toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
+                } catch (RegionOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         toggle.contract(BukkitUtil.toVector(BlockFace.UP), BukkitUtil.toVector(BlockFace.DOWN));
     }
 

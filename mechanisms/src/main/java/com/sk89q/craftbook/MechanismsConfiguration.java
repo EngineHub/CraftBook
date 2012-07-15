@@ -118,12 +118,14 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
+        public final int maxWidth;
         public final Set<Material> allowedBlocks;
 
         private BridgeSettings(FileConfiguration cfg) {
             enable = getBoolean(cfg, "bridge-enable", true);
             enableRedstone = getBoolean(cfg, "bridge-redstone", true);
             maxLength = getInt(cfg, "bridge-max-length", 30);
+            maxWidth = getInt(cfg, "bridge-max-width", 5);
             List<Integer> tids = cfg.getIntegerList("bridge-blocks");
             if (tids == null) tids = Arrays.asList(4,5,20,43);
             Set<Material> allowedBlocks = new HashSet<Material>();
@@ -146,12 +148,14 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
+        public final int maxWidth;
         public final Set<Material> allowedBlocks;
 
         private DoorSettings(FileConfiguration cfg) {
             enable = getBoolean(cfg, "door-enable", true);
             enableRedstone = getBoolean(cfg, "door-redstone", true);
             maxLength = getInt(cfg, "door-max-length", 30);
+            maxWidth = getInt(cfg, "door-max-width", 5);
             List<Integer> tids = cfg.getIntegerList("door-blocks");
             if(tids == null) Arrays.asList(4,5,20,43);
             Set<Material> allowedBlocks = new HashSet<Material>();

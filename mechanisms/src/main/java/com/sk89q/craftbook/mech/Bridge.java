@@ -47,6 +47,7 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.RegionOperationException;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
@@ -80,10 +81,6 @@ public class Bridge extends PersistentMechanic {
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
             if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
-            if(((Sign)block.getState()).getLine(3) == null || ((Sign)block.getState()).getLine(3).length() == 0) {
-                ((Sign)block.getState()).setLine(3, "1");
-                ((Sign)block.getState()).update();
-            }
 
             // okay, now we can start doing exploration of surrounding blocks
             // and if something goes wrong in here then we throw fits.
@@ -104,10 +101,6 @@ public class Bridge extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Bridge]");
-                if(sign.getLine(3) == null || sign.getLine(3).length() == 0) {
-                    sign.setLine(3, "1");
-                    sign.update();
-                }
                 player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
                 if (!player.hasPermission("craftbook.mech.bridge")) {
@@ -115,10 +108,6 @@ public class Bridge extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Bridge End]");
-                if(sign.getLine(3) == null || sign.getLine(3).length() == 0) {
-                    sign.setLine(3, "1");
-                    sign.update();
-                }
                 player.print("mech.bridge.end-create");
             } else {
                 return null;
@@ -136,6 +125,7 @@ public class Bridge extends PersistentMechanic {
      * @param plugin
      * @throws InvalidMechanismException
      */
+    @SuppressWarnings("deprecation")
     private Bridge(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
         super();
 
@@ -156,8 +146,7 @@ public class Bridge extends PersistentMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat
-                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
-                        || s.getLine(2).equalsIgnoreCase("1"))
+                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat))
                     break findBase;     // yup, it's above
                 // cant throw the invalid construction exception here
                 // because there still might be a valid one below
@@ -166,8 +155,7 @@ public class Bridge extends PersistentMechanic {
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
                 if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat
-                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat)
-                        || s.getLine(2).equalsIgnoreCase("1"))
+                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat))
                     break findBase;     // it's below
                 throw new InvalidConstructionException("mech.bridge.material");
             } else {
@@ -199,22 +187,60 @@ public class Bridge extends PersistentMechanic {
         Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
                 || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
-                        || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData()))
-                        && (s.getLine(2).equalsIgnoreCase("1") && ((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")))
+                        || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())))
             throw new InvalidConstructionException("mech.bridge.material");
 
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        if(!s.getLine(2).equalsIgnoreCase("1") && !((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")) {
-            if(s.getLine(3).length() == 0) {
-                toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
-                        BukkitUtil.toVector(SignUtil.getRight(trigger)));
-            } else {
-                for(int i = 0; i < Integer.parseInt(s.getLine(3)); i++)
-                    toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
-                            BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        int left, right;
+        try {
+            left = Integer.parseInt(s.getLine(2));
+        }
+        catch(Exception e){
+            left = 1;
+        }
+        try {
+            right = Integer.parseInt(s.getLine(3));
+        }
+        catch(Exception e){
+            right = 1;
+        }
+        if(left > plugin.getLocalConfiguration().bridgeSettings.maxWidth) left = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
+        if(right > plugin.getLocalConfiguration().bridgeSettings.maxWidth) right = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
+
+        if(left == 1)
+            try {
+                toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
+            } catch (RegionOperationException e) {
+                e.printStackTrace();
+            }
+        else if(left>1) {
+            for(int i = 0; i < left; i++)
+            {
+                try {
+                    toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
+                } catch (RegionOperationException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        if(right == 1)
+            try {
+                toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
+            } catch (RegionOperationException e) {
+                e.printStackTrace();
+            }
+        else if(right>1) {
+            for(int i = 0; i < right; i++)
+            {
+                try {
+                    toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
+                } catch (RegionOperationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));
     }
