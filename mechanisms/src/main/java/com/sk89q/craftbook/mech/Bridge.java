@@ -80,6 +80,10 @@ public class Bridge extends PersistentMechanic {
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
             if (!((Sign)block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
+            if(((Sign)block.getState()).getLine(3) == null || ((Sign)block.getState()).getLine(3).length() == 0) {
+                ((Sign)block.getState()).setLine(3, "1");
+                ((Sign)block.getState()).update();
+            }
 
             // okay, now we can start doing exploration of surrounding blocks
             // and if something goes wrong in here then we throw fits.
@@ -100,6 +104,10 @@ public class Bridge extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Bridge]");
+                if(sign.getLine(3) == null || sign.getLine(3).length() == 0) {
+                    sign.setLine(3, "1");
+                    sign.update();
+                }
                 player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
                 if (!player.hasPermission("craftbook.mech.bridge")) {
@@ -107,6 +115,10 @@ public class Bridge extends PersistentMechanic {
                 }
 
                 sign.setLine(1, "[Bridge End]");
+                if(sign.getLine(3) == null || sign.getLine(3).length() == 0) {
+                    sign.setLine(3, "1");
+                    sign.update();
+                }
                 player.print("mech.bridge.end-create");
             } else {
                 return null;
@@ -193,9 +205,11 @@ public class Bridge extends PersistentMechanic {
 
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter),BukkitUtil.toVector(distalBaseCenter));
-        if(!s.getLine(2).equalsIgnoreCase("1") && !((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1"))
-            toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
-                    BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        if(!s.getLine(2).equalsIgnoreCase("1") && !((Sign) farside.getState()).getLine(2).equalsIgnoreCase("1")) {
+            for(int i = 0; i < Integer.parseInt(s.getLine(3)); i++)
+                toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)),
+                        BukkitUtil.toVector(SignUtil.getRight(trigger)));
+        }
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));
     }
