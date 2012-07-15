@@ -283,8 +283,16 @@ public class Gate extends AbstractMechanic {
                     sign = (Sign) state;
             }
 
-            if(sign!=null && sign.getLine(3).length() > 0)
-                curBlocks = Integer.parseInt(sign.getLine(3));
+            if(sign!=null && sign.getLine(3).length() > 0) {
+                try {
+                    curBlocks = Integer.parseInt(sign.getLine(3));
+                }
+                catch(Exception e){
+                    curBlocks = 0;
+                    sign.setLine(3, "0");
+                    sign.update();
+                }
+            }
 
             if(sign!= null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
