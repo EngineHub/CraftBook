@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.blockbag;
 
@@ -70,29 +70,29 @@ public class NearbyChestBlockBag extends BlockBag {
         try {
             for (Chest chest : chests) {
                 ItemStack[] itemArray = chest.getInventory().getContents();
-                
+
                 // Find the item
                 for (int i = 0; itemArray.length > i; i++) {
                     if (itemArray[i] != null) {
                         // Found an item
                         if (itemArray[i].getTypeId() == id &&
-                            itemArray[i].getAmount() >= 1) {
+                                itemArray[i].getAmount() >= 1) {
                             int newAmount = itemArray[i].getAmount() - 1;
-    
+
                             if (newAmount > 0) {
                                 itemArray[i] = new ItemStack(itemArray[i].getTypeId(),newAmount);
                             } else {
                                 itemArray[i] = null;
                             }
-                            
+
                             chest.getInventory().setContents(itemArray);
-    
+
                             return;
                         }
                     }
                 }
             }
-    
+
             throw new OutOfBlocksException();
         } finally {
             flushChanges();
@@ -112,15 +112,15 @@ public class NearbyChestBlockBag extends BlockBag {
             for (Chest chest : chests) {
                 ItemStack[] itemArray = chest.getInventory().getContents();
                 int emptySlot = -1;
-    
+
                 // Find an existing slot to put it into
                 for (int i = 0; itemArray.length > i; i++) {
                     // Found an item
                     if (itemArray[i].getTypeId() == id &&
-                        itemArray[i].getAmount() < 64) {
+                            itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
                         itemArray[i] = new ItemStack(itemArray[i].getTypeId(),newAmount);
-                        
+
                         chest.getInventory().setContents(itemArray);
 
                         return;
@@ -128,20 +128,20 @@ public class NearbyChestBlockBag extends BlockBag {
                         emptySlot = i;
                     }
                 }
-    
+
                 // Didn't find an existing stack, so let's create a new one
                 if (emptySlot != -1) {
                     itemArray[emptySlot] = new ItemStack(id, 1);
-                    
+
                     chest.getInventory().setContents(itemArray);
-                    
+
                     return;
                 }
             }
-    
+
             throw new OutOfSpaceException(id);
         } finally {
-            flushChanges(); 
+            flushChanges();
         }
     }
 
@@ -154,7 +154,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id, int amount) throws BlockBagException {
-        
+
     }
 
     /**
@@ -188,19 +188,19 @@ public class NearbyChestBlockBag extends BlockBag {
         int x = arg0.getBlockX();
         int y = arg0.getBlockY();
         int z = arg0.getBlockZ();
-        
+
         if (BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(BukkitUtil.toLocation(arg0)).getTypeId() == BlockType.CHEST.getID()) {
             BlockState complexBlock =
-        	    BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(x, y, z).getState();
+                    BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(x, y, z).getState();
 
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest)complexBlock;
-                
+
                 if(!chests.contains(chest)) chests.add((Chest)complexBlock);
             }
         }
     }
-    
+
     /**
      * Get the number of chest blocks. A double-width chest will count has
      * two chest blocks.
@@ -210,7 +210,7 @@ public class NearbyChestBlockBag extends BlockBag {
     public int getChestBlockCount() {
         return chests.size();
     }
-    
+
     /**
      * Fetch related chest inventories.
      * 
@@ -221,13 +221,6 @@ public class NearbyChestBlockBag extends BlockBag {
     }
 
     /**
-     * Flush changes.
-     */
-    public void flushChanges() {
-        //TODO - Remove because... Superfluous
-    }
-    
-    /**
      * Factory.
      * 
      * @author sk89q
@@ -236,5 +229,9 @@ public class NearbyChestBlockBag extends BlockBag {
         public BlockBag createBlockSource(World world, Vector v) {
             return new NearbyChestBlockBag(v);
         }
+    }
+
+    @Override
+    public void flushChanges() {
     }
 }

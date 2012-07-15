@@ -41,7 +41,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     protected BlockWorldVector pt;
 
     /**
-     * Construct a gate for a location.
+     * Construct a cooking pot for a location.
      * 
      * @param pt
      * @param plugin
@@ -142,8 +142,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                             Chest chest = (Chest) cb.getState();
                             for(ItemStack i : chest.getInventory().getContents())
                             {
-                                if(i==null || !ItemUtil.isItemCookable(i)) continue;
-                                ItemStack cooked = ItemUtil.getCookedState(i);
+                                if(i==null || !ItemUtil.isItemSmeltable(i)) continue;
+                                ItemStack cooked = ItemUtil.getSmeltedState(i,true);
                                 if(cooked == null) continue;
                                 chest.getInventory().addItem(new ItemStack(cooked.getType(),1));
                                 chest.getInventory().removeItem(new ItemStack(i.getType(),1));
@@ -174,17 +174,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             Block cb = sign.getWorld().getBlockAt(x,y,z);
             if (cb.getType() == Material.CHEST)
                 event.getPlayer().openInventory(((Chest)cb.getState()).getBlockInventory());
-            int lastTick = Integer.parseInt(sign.getLine(2));
-            lastTick++;
-            sign.setLine(2, lastTick + "");
-            sign.update();
             think();
         }
     }
 
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
-        event.getPlayer().setFireTicks(5);
+        event.getPlayer().setFireTicks(20);
         event.getPlayer().sendMessage(ChatColor.RED + "Ouch! That was hot!");
     }
 
