@@ -10,6 +10,11 @@ import org.bukkit.ChatColor;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class LanguageManager {
 
     BaseBukkitPlugin plugin;
