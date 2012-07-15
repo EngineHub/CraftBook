@@ -92,7 +92,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean stopDestruction;
 
         private MechanismSettings(FileConfiguration cfg) {
-            stopDestruction = getBoolean(cfg, "stop-mechanism-dupe", true);
+            stopDestruction = getBoolean(cfg, "stop-mechanism-dupe", false);
         }
     }
 
