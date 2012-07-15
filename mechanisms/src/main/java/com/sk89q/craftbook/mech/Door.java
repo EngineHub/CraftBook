@@ -19,30 +19,24 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -54,7 +48,7 @@ import com.sk89q.worldedit.regions.RegionOperationException;
  *
  * @author turtle9598
  */
-public class Door extends PersistentMechanic {
+public class Door extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Door> {
         public Factory(MechanismsPlugin plugin) {
@@ -319,8 +313,22 @@ public class Door extends PersistentMechanic {
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (b.getType() == getDoorMaterial() || canPassThrough(b.getTypeId()))
+                if (b.getType() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
                     b.setType(Material.AIR);
+                    if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                        Sign s = (Sign)trigger.getState();
+                        int curBlocks = 0;
+                        try {
+                            curBlocks = Integer.parseInt(s.getLine(0));
+                        }
+                        catch(NumberFormatException e) {
+                            curBlocks = 0;
+                        }
+                        curBlocks++;
+                        s.setLine(0, curBlocks + "");
+                        s.update();
+                    }
+                }
             }
         }
     }
@@ -330,8 +338,27 @@ public class Door extends PersistentMechanic {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId())) {
-                    b.setType(getDoorMaterial());
-                    b.setData(getDoorData());
+                    if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                        Sign s = (Sign)trigger.getState();
+                        int curBlocks = 0;
+                        try {
+                            curBlocks = Integer.parseInt(s.getLine(0));
+                        }
+                        catch(NumberFormatException e) {
+                            curBlocks = 0;
+                        }
+                        if(curBlocks > 0) {
+                            b.setType(getDoorMaterial());
+                            b.setData(getDoorData());
+                            curBlocks--;
+                            s.setLine(0, curBlocks + "");
+                            s.update();
+                        }
+                    }
+                    else {
+                        b.setType(getDoorMaterial());
+                        b.setData(getDoorData());
+                    }
                 }
             }
         }
@@ -426,33 +453,5 @@ public class Door extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.getBlock().getState() instanceof Sign)
-            new ToggleRegionOpen().run();
-        else
-            event.setCancelled(true);
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-        List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
-        if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-            Iterator<BlockVector> it = toggle.iterator();
-            while(it.hasNext())
-            {
-                BlockVector vec = it.next();
-                if(vec == null) continue;
-                bwv.add(BukkitUtil.toWorldVector(trigger.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ())));
-            }
-        }
-        return bwv;
-    }
-
-    @Override
-    public void onWatchBlockNotification(BlockEvent evt) {
-        if(evt instanceof BlockBreakEvent)
-            if(!(evt.getBlock().getState() instanceof Sign))
-                ((BlockBreakEvent) evt).setCancelled(true);
-            else
-                new ToggleRegionOpen().run();
     }
 }

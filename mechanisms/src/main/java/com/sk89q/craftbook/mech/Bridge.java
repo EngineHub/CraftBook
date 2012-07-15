@@ -19,24 +19,19 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
@@ -56,7 +51,7 @@ import com.sk89q.worldedit.regions.RegionOperationException;
  * @author hash
  * 
  */
-public class Bridge extends PersistentMechanic {
+public class Bridge extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Bridge> {
         public Factory(MechanismsPlugin plugin) {
@@ -318,8 +313,22 @@ public class Bridge extends PersistentMechanic {
         public void run() {
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId()))
+                if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId())) {
                     b.setType(Material.AIR);
+                    if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                        Sign s = (Sign)trigger.getState();
+                        int curBlocks = 0;
+                        try {
+                            curBlocks = Integer.parseInt(s.getLine(0));
+                        }
+                        catch(NumberFormatException e) {
+                            curBlocks = 0;
+                        }
+                        curBlocks++;
+                        s.setLine(0, curBlocks + "");
+                        s.update();
+                    }
+                }
             }
         }
     }
@@ -328,9 +337,29 @@ public class Bridge extends PersistentMechanic {
         public void run() {
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getTypeId()))
-                    b.setType(getBridgeMaterial());
-                b.setData(getBridgeData());
+                if (canPassThrough(b.getTypeId())) {
+                    if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                        Sign s = (Sign)trigger.getState();
+                        int curBlocks = 0;
+                        try {
+                            curBlocks = Integer.parseInt(s.getLine(0));
+                        }
+                        catch(NumberFormatException e) {
+                            curBlocks = 0;
+                        }
+                        if(curBlocks > 0) {
+                            b.setType(getBridgeMaterial());
+                            b.setData(getBridgeData());
+                            curBlocks--;
+                            s.setLine(0, curBlocks + "");
+                            s.update();
+                        }
+                    }
+                    else {
+                        b.setType(getBridgeMaterial());
+                        b.setData(getBridgeData());
+                    }
+                }
             }
         }
     }
@@ -406,33 +435,5 @@ public class Bridge extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.getBlock().getState() instanceof Sign)
-            new ToggleRegionOpen().run();
-        else
-            event.setCancelled(true);
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-        List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
-        if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-            Iterator<BlockVector> it = toggle.iterator();
-            while(it.hasNext())
-            {
-                BlockVector vec = it.next();
-                if(vec == null) continue;
-                bwv.add(BukkitUtil.toWorldVector(trigger.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ())));
-            }
-        }
-        return bwv;
-    }
-
-    @Override
-    public void onWatchBlockNotification(BlockEvent evt) {
-        if(evt instanceof BlockBreakEvent)
-            if(!(evt.getBlock().getState() instanceof Sign))
-                ((BlockBreakEvent) evt).setCancelled(true);
-            else
-                new ToggleRegionOpen().run();
     }
 }
