@@ -47,13 +47,13 @@ public class ItemUtil {
     }
 
     public static boolean isItemSmeltable(ItemStack item, Boolean foodOnly) {
-        if(!foodOnly == false) {
+        if(foodOnly == null || foodOnly == true) {
             if(item.getType() == Material.RAW_BEEF) return true;
             if(item.getType() == Material.RAW_CHICKEN) return true;
             if(item.getType() == Material.RAW_FISH) return true;
             if(item.getType() == Material.PORK) return true;
         }
-        if(!foodOnly == true) {
+        if(foodOnly == null || foodOnly == false) {
             if(item.getType() == Material.IRON_ORE) return true;
             if(item.getType() == Material.GOLD_ORE) return true;
             if(item.getType() == Material.DIAMOND_ORE) return true;
@@ -77,13 +77,13 @@ public class ItemUtil {
 
     public static ItemStack getSmeltedState(ItemStack item, Boolean foodOnly) { //foodOnly, null = anything, false = mineral, true = food
         if(isItemSmeltable(item, null)) {
-            if(!foodOnly == false) {
+            if(foodOnly == null || foodOnly == true) {
                 if(item.getType() == Material.RAW_BEEF) return new ItemStack(Material.COOKED_BEEF, 1);
                 if(item.getType() == Material.RAW_CHICKEN) return new ItemStack(Material.COOKED_CHICKEN, 1);
                 if(item.getType() == Material.RAW_FISH) return new ItemStack(Material.COOKED_FISH, 1);
                 if(item.getType() == Material.PORK) return new ItemStack(Material.GRILLED_PORK, 1);
             }
-            if(!foodOnly == true) {
+            if(foodOnly == null || foodOnly == false) {
                 if(item.getType() == Material.IRON_ORE) return new ItemStack(Material.IRON_INGOT, 1);
                 if(item.getType() == Material.GOLD_ORE) return new ItemStack(Material.GOLD_INGOT, 1);
                 if(item.getType() == Material.DIAMOND_ORE) return new ItemStack(Material.DIAMOND, 1);
