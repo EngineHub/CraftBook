@@ -70,6 +70,7 @@ public class CartDeposit extends CartMechanism {
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
             if(((Sign)blocks.sign.getState()).getLine(2).length() > 0) {
                 for(ItemStack item : cartinventory.getContents()) {
+                    if(item == null) continue;
                     if(Integer.parseInt(((Sign)blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
                         transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                         cartinventory.remove(item);
@@ -117,6 +118,7 @@ public class CartDeposit extends CartMechanism {
                 Inventory containerinventory = container.getInventory();
                 if(((Sign)blocks.sign.getState()).getLine(2).length() > 0) {
                     for(ItemStack item : containerinventory.getContents()) {
+                        if(item == null) continue;
                         if(Integer.parseInt(((Sign)blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
                             transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             containerinventory.remove(item);

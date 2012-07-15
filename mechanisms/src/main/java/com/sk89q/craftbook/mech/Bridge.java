@@ -316,7 +316,7 @@ public class Bridge extends PersistentMechanic {
     private class ToggleRegionOpen implements Runnable {
         @Override
         public void run() {
-            for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
+            for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId()))
                     b.setType(Material.AIR);
@@ -326,7 +326,7 @@ public class Bridge extends PersistentMechanic {
     private class ToggleRegionClosed implements Runnable {
         @Override
         public void run() {
-            for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
+            for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId()))
                     b.setType(getBridgeMaterial());
