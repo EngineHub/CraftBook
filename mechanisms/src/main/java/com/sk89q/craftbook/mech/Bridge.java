@@ -283,11 +283,11 @@ public class Bridge extends AbstractMechanic {
 
                 if(sign!=null) {
                     try {
-                        sign.setLine(2, (Integer.parseInt(sign.getLine(2)) + 1) + "");
+                        sign.setLine(0, (Integer.parseInt(sign.getLine(0)) + 1) + "");
                         sign.update();
                     }
                     catch(Exception e) {
-                        sign.setLine(2, "1");
+                        sign.setLine(0, "1");
                         sign.update();
                     }
                 }
