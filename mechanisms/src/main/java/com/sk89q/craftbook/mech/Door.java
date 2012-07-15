@@ -22,6 +22,7 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -265,7 +266,36 @@ public class Door extends AbstractMechanic {
             return;
         }
 
-        flipState();
+        if(event.getPlayer().getItemInHand() != null) {
+            if(getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
+                Sign sign = null;
+
+                if (event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+                    BlockState state = event.getClickedBlock().getState();
+                    if (state instanceof Sign)
+                        sign = (Sign) state;
+                }
+
+                if(sign!=null) {
+                    try {
+                        sign.setLine(2, (Integer.parseInt(sign.getLine(2)) + 1) + "");
+                        sign.update();
+                    }
+                    catch(Exception e) {
+                        sign.setLine(2, "1");
+                        sign.update();
+                    }
+                }
+
+                event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                if(event.getPlayer().getItemInHand().getAmount() == 0)
+                    event.getPlayer().getItemInHand().setTypeId(0);
+
+                player.print("Door Restocked!");
+            }
+        }
+
+        flipState(player);
 
         event.setCancelled(true);
     }
@@ -280,11 +310,11 @@ public class Door extends AbstractMechanic {
         if (event.getNewCurrent() == 0) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
         } else {
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(), 2);
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(null), 2);
         }
     }
 
-    private void flipState() {
+    private void flipState(LocalPlayer player) {
         // this is kinda funky, but we only check one position
         // to see if the door is open and/or closable.
         // efficiency choice :/
@@ -302,13 +332,14 @@ public class Door extends AbstractMechanic {
         // obsidian in the middle of a wooden door, just weird
         // results.
         if (canPassThrough(hinge.getTypeId())) {
-            new ToggleRegionClosed().run();
+            new ToggleRegionClosed(player).run();
         } else {
             new ToggleRegionOpen().run();
         }
     }
 
     private class ToggleRegionOpen implements Runnable {
+
         @Override
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
@@ -333,6 +364,13 @@ public class Door extends AbstractMechanic {
         }
     }
     private class ToggleRegionClosed implements Runnable {
+
+        LocalPlayer player;
+
+        public ToggleRegionClosed(LocalPlayer player) {
+            this.player = player;
+        }
+
         @Override
         public void run() {
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that needs to be fixed in the overall scheme
@@ -354,6 +392,12 @@ public class Door extends AbstractMechanic {
                             s.setLine(0, curBlocks + "");
                             s.update();
                         }
+                        else {
+                            if(player!=null)
+                                player.printError("Not enough blocks for mechanic to function!");
+                            return;
+                        }
+
                     }
                     else {
                         b.setType(getDoorMaterial());

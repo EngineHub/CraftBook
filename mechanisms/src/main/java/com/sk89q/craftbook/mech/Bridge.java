@@ -315,7 +315,7 @@ public class Bridge extends AbstractMechanic {
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         if (event.getNewCurrent() == 0) {
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(null), 2);
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
         } else {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(null), 2);
         }
@@ -335,16 +335,10 @@ public class Bridge extends AbstractMechanic {
         if (canPassThrough(hinge.getTypeId())) {
             new ToggleRegionClosed(player).run();
         } else {
-            new ToggleRegionOpen(player).run();
+            new ToggleRegionOpen().run();
         }
     }
     private class ToggleRegionOpen implements Runnable {
-
-        LocalPlayer player;
-
-        public ToggleRegionOpen(LocalPlayer player) {
-            this.player = player;
-        }
 
         @Override
         public void run() {
@@ -399,7 +393,8 @@ public class Bridge extends AbstractMechanic {
                             s.update();
                         }
                         else {
-                            player.printError("Not enough blocks for mechanic to function!");
+                            if(player!=null)
+                                player.printError("Not enough blocks for mechanic to function!");
                             return;
                         }
                     }
