@@ -25,6 +25,11 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class EntityTrap extends AbstractIC {
 
     private enum Type {

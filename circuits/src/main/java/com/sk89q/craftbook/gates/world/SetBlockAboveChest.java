@@ -16,6 +16,11 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class SetBlockAboveChest extends AbstractIC{
 
     public SetBlockAboveChest(Server server, Sign sign) {
@@ -39,7 +44,7 @@ public class SetBlockAboveChest extends AbstractIC{
         String sblock = sblockdat.split(":")[0];
         String smeta = "";
         if(sblockdat.split(":").length>1)
-        	smeta = sblockdat.split(":")[1];
+            smeta = sblockdat.split(":")[1];
         String force = getSign().getLine(3).toUpperCase().trim();
 
         chip.setOutput(0, chip.getInput(0));
@@ -50,21 +55,21 @@ public class SetBlockAboveChest extends AbstractIC{
 
         //FIXME hack for broken WorldEdit <=5.1
         if(block == -1)
-        	try {
-        		block = Integer.parseInt(sblock);
-        	} catch (Exception e) {
-        		return;
-        	}
-        
+            try {
+                block = Integer.parseInt(sblock);
+            } catch (Exception e) {
+                return;
+            }
+
         byte meta = -1;
         try {
-        	if(!smeta.equalsIgnoreCase(""))
-        		meta = Byte.parseByte(smeta);
+            if(!smeta.equalsIgnoreCase(""))
+                meta = Byte.parseByte(smeta);
         } catch (Exception e) {
-        	return;
+            return;
         }
 
-        
+
         Block body = SignUtil.getBackBlock(getSign().getBlock());
 
         int x = body.getX();
@@ -72,47 +77,47 @@ public class SetBlockAboveChest extends AbstractIC{
         int z = body.getZ();
 
         if(force.equals("FORCE") || body.getWorld().getBlockAt(x, y+1, z).getType() == Material.AIR) {
-        	if(takeFromChest(x,y-1,z,block,meta))
-        	{
-        		body.getWorld().getBlockAt(x, y+1, z).setTypeId(block);
-        		if(!(meta==-1))
-        			body.getWorld().getBlockAt(x, y+1, z).setData(meta);
-        	}
+            if(takeFromChest(x,y-1,z,block,meta))
+            {
+                body.getWorld().getBlockAt(x, y+1, z).setTypeId(block);
+                if(!(meta==-1))
+                    body.getWorld().getBlockAt(x, y+1, z).setData(meta);
+            }
         }
     }
-    
+
     public boolean takeFromChest(int x,int y,int z,int id, byte data)
     {
-    	boolean ret = false;
-    	Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
-    	if (bl.getType() == Material.CHEST) 
-    	{
-    		Chest c = ((Chest) bl.getState());
-    		ItemStack[] is = c.getInventory().getContents();
-    		for(int i = 0; i < is.length; i++)
-    		{
-    			if(is[i]==null)continue;
-    			if(is[i].getAmount() > 0 && is[i].getTypeId()==id)
-    			{
-    				if(data!=-1)
-    					if(!(is[i].getData().getData()==data)) continue;
+        boolean ret = false;
+        Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+        if (bl.getType() == Material.CHEST)
+        {
+            Chest c = ((Chest) bl.getState());
+            ItemStack[] is = c.getInventory().getContents();
+            for(int i = 0; i < is.length; i++)
+            {
+                if(is[i]==null)continue;
+                if(is[i].getAmount() > 0 && is[i].getTypeId()==id)
+                {
+                    if(data!=-1)
+                        if(!(is[i].getData().getData()==data)) continue;
                     ItemStack stack = is[i];
                     getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), x, y, z),stack);
                     if(is[i].getAmount()==1)
-                    	is[i] = new ItemStack(0,0);
+                        is[i] = new ItemStack(0,0);
                     else
-                    	is[i].setAmount(is[i].getAmount()-1);
+                        is[i].setAmount(is[i].getAmount()-1);
                     ret = true;
                     break;
-    			}
-    		}
-    		c.getInventory().setContents(is);
-    	}
-    	return ret;
+                }
+            }
+            c.getInventory().setContents(is);
+        }
+        return ret;
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
             super(server);

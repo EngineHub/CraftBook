@@ -11,6 +11,11 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class DispenserRecipes implements Listener{
 
     MechanismsPlugin plugin;

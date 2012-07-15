@@ -8,6 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class Fan extends Recipe{
 
     public Fan(int[] recipe) {

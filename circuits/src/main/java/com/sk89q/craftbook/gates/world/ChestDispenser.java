@@ -15,6 +15,11 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class ChestDispenser extends AbstractIC{
     public ChestDispenser(Server server, Sign sign) {
         super(server, sign);
@@ -22,12 +27,12 @@ public class ChestDispenser extends AbstractIC{
 
     @Override
     public String getTitle() {
-	return "Chest Dispenser";
+        return "Chest Dispenser";
     }
 
     @Override
     public String getSignTitle() {
-	return "CHEST DISPENSER";
+        return "CHEST DISPENSER";
     }
 
     @Override
@@ -44,32 +49,32 @@ public class ChestDispenser extends AbstractIC{
      */
     protected boolean dispense() {
 
-	Block b = SignUtil.getBackBlock(getSign().getBlock());
+        Block b = SignUtil.getBackBlock(getSign().getBlock());
 
-	int x = b.getX();
-	int y = b.getY()+1;
-	int z = b.getZ();
-	Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
-	int amount = Integer.parseInt(getSign().getLine(2));
-	if (bl.getType() == Material.CHEST) 
-	{
-	    Chest c = ((Chest) bl.getState());
-	    ItemStack[] is = c.getInventory().getContents();
-	    for(int i = 0; i < is.length; i++)
-	    {
-		if(ItemUtil.isStackValid(is[i]))
-		{
-		    int curA = is[i].getAmount();
-		    ItemStack stack = new ItemStack(is[i].getTypeId(),is[i].getAmount(),is[i].getData().getData());
-		    stack.setAmount(1);
-		    getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(), getSign().getY(), getSign().getZ()),stack);
-		    is[i].setAmount(curA-amount);
-		    break;
-		}
-	    }
-	    c.getInventory().setContents(is);
-	}
-	return false;
+        int x = b.getX();
+        int y = b.getY()+1;
+        int z = b.getZ();
+        Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+        int amount = Integer.parseInt(getSign().getLine(2));
+        if (bl.getType() == Material.CHEST)
+        {
+            Chest c = ((Chest) bl.getState());
+            ItemStack[] is = c.getInventory().getContents();
+            for(int i = 0; i < is.length; i++)
+            {
+                if(ItemUtil.isStackValid(is[i]))
+                {
+                    int curA = is[i].getAmount();
+                    ItemStack stack = new ItemStack(is[i].getTypeId(),is[i].getAmount(),is[i].getData().getData());
+                    stack.setAmount(1);
+                    getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(), getSign().getY(), getSign().getZ()),stack);
+                    is[i].setAmount(curA-amount);
+                    break;
+                }
+            }
+            c.getInventory().setContents(is);
+        }
+        return false;
     }
 
     public static class Factory extends AbstractICFactory {

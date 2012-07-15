@@ -23,6 +23,11 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class SentryGun extends AbstractIC{
 
     public SentryGun(Server server, Sign block) {

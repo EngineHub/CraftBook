@@ -23,6 +23,12 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
+/**
+ * Payment Mech, takes payment. (Requires Vault.)
+ * 
+ * @author Me4502
+ *
+ */
 public class Payment extends AbstractMechanic{
 
     MechanismsPlugin plugin;

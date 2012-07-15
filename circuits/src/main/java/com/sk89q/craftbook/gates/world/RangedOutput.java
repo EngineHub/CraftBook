@@ -9,13 +9,18 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
 
-	int ticks = 0;
-	int maxTicks = 0;
-	boolean hasStarted = false;
-	int amountDone = 0;
-	int maxAmount = 0;
+    int ticks = 0;
+    int maxTicks = 0;
+    boolean hasStarted = false;
+    int amountDone = 0;
+    int maxAmount = 0;
 
     public RangedOutput(Server server, Sign sign) {
         super(server, sign);
@@ -30,11 +35,11 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     public String getSignTitle() {
         return "RANGE OUTPUT";
     }
-    
+
 
     @Override
     public void think(ChipState chip) {
-    	chip.setOutput(0, shouldOutput(chip));
+        chip.setOutput(0, shouldOutput(chip));
     }
 
     protected boolean shouldOutput(ChipState chip) {
@@ -45,32 +50,32 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
             amountDone = 0;
             ticks = 0;
             if(getSign().getLine(3)!=null || getSign().getLine(3).equals(""))
-            	maxTicks = Integer.parseInt(getSign().getLine(3));
+                maxTicks = Integer.parseInt(getSign().getLine(3));
             else
-            	maxTicks = 10;
+                maxTicks = 10;
             hasStarted = true;
             return false;
         }
         else if(hasStarted)
         {
-        	if(ticks>=maxTicks)
-        	{
-        		ticks = 0;
-        		amountDone++;
-        		if(amountDone>=maxAmount)
-        		{
-        			hasStarted = false;
-        			amountDone = 0;
+            if(ticks>=maxTicks)
+            {
+                ticks = 0;
+                amountDone++;
+                if(amountDone>=maxAmount)
+                {
+                    hasStarted = false;
+                    amountDone = 0;
                     ticks = 0;
                     maxAmount = 0;
-        		}
-        		return true;
-        	}
-        	else
-        	{
-        		ticks++;
-        		return false;
-        	}
+                }
+                return true;
+            }
+            else
+            {
+                ticks++;
+                return false;
+            }
         }
         return false;
     }

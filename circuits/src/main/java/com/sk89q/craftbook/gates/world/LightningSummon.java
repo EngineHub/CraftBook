@@ -29,8 +29,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
-
-
 public class LightningSummon extends AbstractIC {
 
     public LightningSummon(Server server, Sign sign) {
@@ -76,5 +74,3 @@ public class LightningSummon extends AbstractIC {
         }
     }
 }
-
-

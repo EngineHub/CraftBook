@@ -16,6 +16,11 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class ParticleEffect extends AbstractIC {
 
     public ParticleEffect(Server server, Sign sign) {

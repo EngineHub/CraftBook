@@ -9,42 +9,47 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class SentryGunST extends SentryGun implements SelfTriggeredIC{
 
     public SentryGunST(Server server, Sign block) {
-	super(server, block);
+        super(server, block);
     }
-    
+
     @Override
     public String getTitle() {
-	return "Self Triggered Sentry Gun";
+        return "Self Triggered Sentry Gun";
     }
 
     @Override
     public String getSignTitle() {
-	return "SENTRY GUN ST";
+        return "SENTRY GUN ST";
     }
 
     @Override
     public boolean isActive() {
-	return false;
+        return false;
     }
 
     @Override
     public void think(ChipState state) {
-	shoot();
+        shoot();
     }
 
     public static class Factory extends AbstractICFactory implements
     RestrictedIC {
 
-	public Factory(Server server) {
-	    super(server);
-	}
+        public Factory(Server server) {
+            super(server);
+        }
 
-	@Override
-	public IC create(Sign sign) {
-	    return new SentryGunST(getServer(), sign);
-	}
+        @Override
+        public IC create(Sign sign) {
+            return new SentryGunST(getServer(), sign);
+        }
     }
 }

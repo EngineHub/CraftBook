@@ -5,6 +5,11 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class Recipe {
 
     int[] recipe;

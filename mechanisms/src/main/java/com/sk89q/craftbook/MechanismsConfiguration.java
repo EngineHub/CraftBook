@@ -40,6 +40,7 @@ import com.sk89q.craftbook.mech.CustomDropManager;
  * 
  * @author sk89q
  * @author hash
+ * @author Me4502
  */
 public class MechanismsConfiguration extends BaseConfiguration{
     public MechanismsConfiguration(FileConfiguration cfg, File dataFolder) {

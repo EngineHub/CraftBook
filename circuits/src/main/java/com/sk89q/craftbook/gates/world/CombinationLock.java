@@ -10,6 +10,11 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class CombinationLock extends AbstractIC implements SelfTriggeredIC{
 
     public CombinationLock(Server server, Sign block) {

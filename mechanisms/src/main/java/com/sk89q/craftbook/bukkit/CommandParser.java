@@ -15,6 +15,11 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class CommandParser implements CommandExecutor{
 
     MechanismsPlugin plugin;

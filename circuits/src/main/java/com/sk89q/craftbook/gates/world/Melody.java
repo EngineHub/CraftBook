@@ -19,6 +19,11 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class Melody extends AbstractIC {
 
     MidiJingleSequencer sequencer;

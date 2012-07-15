@@ -8,6 +8,11 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class FireBarrage extends FireShooter{
 
     public FireBarrage(Server server, Sign sign) {
@@ -27,12 +32,12 @@ public class FireBarrage extends FireShooter{
     @Override
     public void trigger(ChipState chip) {
         if (chip.getInput(0)) {
-        	shootFire(5);
+            shootFire(5);
         }
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
             super(server);
@@ -44,5 +49,5 @@ public class FireBarrage extends FireShooter{
         }
     }
 
-	
+
 }

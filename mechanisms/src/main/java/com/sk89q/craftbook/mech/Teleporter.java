@@ -21,7 +21,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
- * Teleporter Mechanism.
+ * Teleporter Mechanism. Based off Elevator
  * 
  * @author sk89q
  * @author hash

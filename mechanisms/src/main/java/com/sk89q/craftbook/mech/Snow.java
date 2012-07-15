@@ -47,11 +47,7 @@ public class Snow implements Listener {
                     incrementData(event.getClickedBlock());
                 }
             } else if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
-                    && event.getPlayer()
-                    .getWorld()
-                    .getBlockAt(
-                            event.getClickedBlock().getLocation()
-                            .add(0, 1, 0)).getTypeId() == 0) {
+                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).getTypeId() == 0) {
                 event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).setTypeId(78);
                 incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)));
             }
@@ -172,6 +168,6 @@ public class Snow implements Listener {
                 p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
         }
         // This notifies a block update, there is a bug in bukkit that doesn't
-        // notify the client when Snow's data gets changed
+        // notify the client when Snow's data gets changed. Maybe i should submit a thingy
     }
 }

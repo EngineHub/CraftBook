@@ -8,6 +8,11 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class ChestCollectorST extends ChestCollector implements SelfTriggeredIC{
 
     public ChestCollectorST(Server server, Sign sign) {
@@ -26,7 +31,7 @@ public class ChestCollectorST extends ChestCollector implements SelfTriggeredIC{
 
     @Override
     public void think(ChipState chip) {
-    	chip.setOutput(0, collect());
+        chip.setOutput(0, collect());
     }
 
 
@@ -42,18 +47,18 @@ public class ChestCollectorST extends ChestCollector implements SelfTriggeredIC{
         }
     }
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
+    @Override
+    public boolean isActive() {
+        return true;
+    }
 
-	@Override
-	public void trigger(ChipState chip) {}
+    @Override
+    public void trigger(ChipState chip) {}
 
-	@Override
-	public void unload() {
-		
-	}
+    @Override
+    public void unload() {
 
-	
+    }
+
+
 }

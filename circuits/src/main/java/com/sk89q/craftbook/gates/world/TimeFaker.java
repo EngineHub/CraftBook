@@ -16,6 +16,11 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class TimeFaker extends AbstractIC implements SelfTriggeredIC{
 
     public TimeFaker(Server server, Sign sign) {
