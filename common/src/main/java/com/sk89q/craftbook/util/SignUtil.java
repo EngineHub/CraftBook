@@ -15,13 +15,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.util;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -64,7 +65,7 @@ public class SignUtil {
     public static boolean isSign(int typeid) {
         return (typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN);
     }
-    
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -76,7 +77,7 @@ public class SignUtil {
     public static BlockFace getFacing(Block sign) {
         return getBack(sign);
     }
-    
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -90,43 +91,43 @@ public class SignUtil {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0x1:case 0x2:case 0x3:
-                    return BlockFace.NORTH_WEST;
+                return BlockFace.NORTH_WEST;
             case 0x4:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0x5:case 0x6:case 0x7:
-                    return BlockFace.NORTH_EAST;
+                return BlockFace.NORTH_EAST;
             case 0x8:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0x9:case 0xA:case 0xB:
-                    return BlockFace.SOUTH_EAST;
+                return BlockFace.SOUTH_EAST;
             case 0xC:
-                 return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0xD:case 0xE:case 0xF:
-                    return BlockFace.SOUTH_WEST;
+                return BlockFace.SOUTH_WEST;
             default:
-                    return BlockFace.SELF;
+                return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
             case 0x2:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0x3:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0x4:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0x5:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             default:
-                    return BlockFace.SELF;
+                return BlockFace.SELF;
             }
     }
-    
+
     public static Block getFrontBlock(Block sign) {
         return sign.getRelative(getFront(sign));
     }
-    
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -142,43 +143,43 @@ public class SignUtil {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0x1:case 0x2:case 0x3:
-                    return BlockFace.SOUTH_EAST;
+                return BlockFace.SOUTH_EAST;
             case 0x4:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0x5:case 0x6:case 0x7:
-                    return BlockFace.SOUTH_WEST;
+                return BlockFace.SOUTH_WEST;
             case 0x8:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0x9:case 0xA:case 0xB:
-                    return BlockFace.NORTH_WEST;
+                return BlockFace.NORTH_WEST;
             case 0xC:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0xD:case 0xE:case 0xF:
-                    return BlockFace.NORTH_EAST;
+                return BlockFace.NORTH_EAST;
             default:
                 return BlockFace.SELF;
-        }
+            }
         else
             switch (sign.getData()) {
             case 0x2:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0x3:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0x4:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0x5:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             default:
                 return BlockFace.SELF;
             }
     }
-    
+
     public static Block getBackBlock(Block sign) {
         return sign.getRelative(getBack(sign));
     }
-    
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -193,43 +194,43 @@ public class SignUtil {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0x1:case 0x2:case 0x3:
-                    return BlockFace.SOUTH_WEST;
+                return BlockFace.SOUTH_WEST;
             case 0x4:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0x5:case 0x6:case 0x7:
-                    return BlockFace.NORTH_WEST;
+                return BlockFace.NORTH_WEST;
             case 0x8:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0x9:case 0xA:case 0xB:
-                    return BlockFace.NORTH_EAST;
+                return BlockFace.NORTH_EAST;
             case 0xC:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0xD:case 0xE:case 0xF:
-                    return BlockFace.SOUTH_EAST;
+                return BlockFace.SOUTH_EAST;
             default:
-                    return BlockFace.SELF;
+                return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
             case 0x2:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0x3:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0x4:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0x5:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             default:
-                    return BlockFace.SELF;
+                return BlockFace.SELF;
             }
     }
-    
+
     public static Block getLeftBlock(Block sign) {
         return sign.getRelative(getLeft(sign));
     }
-    
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -244,43 +245,43 @@ public class SignUtil {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0x1:case 0x2:case 0x3:
-                    return BlockFace.NORTH_EAST;
+                return BlockFace.NORTH_EAST;
             case 0x4:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             case 0x5:case 0x6:case 0x7:
-                    return BlockFace.SOUTH_EAST;
+                return BlockFace.SOUTH_EAST;
             case 0x8:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0x9:case 0xA:case 0xB:
-                    return BlockFace.SOUTH_WEST;
+                return BlockFace.SOUTH_WEST;
             case 0xC:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0xD:case 0xE:case 0xF:
-                    return BlockFace.NORTH_WEST;
+                return BlockFace.NORTH_WEST;
             default:
-                    return BlockFace.SELF;
+                return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
             case 0x2:
-                    return BlockFace.SOUTH;
+                return BlockFace.SOUTH;
             case 0x3:
-                    return BlockFace.NORTH;
+                return BlockFace.NORTH;
             case 0x4:
-                    return BlockFace.WEST;
+                return BlockFace.WEST;
             case 0x5:
-                    return BlockFace.EAST;
+                return BlockFace.EAST;
             default:
-                    return BlockFace.SELF;
+                return BlockFace.SELF;
             }
     }
-    
+
     public static Block getRightBlock(Block sign) {
         return sign.getRelative(getRight(sign));
     }
-    
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a
@@ -294,48 +295,50 @@ public class SignUtil {
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
             case 0x0:case 0x4:case 0x8:case 0xC:
-                    return true;
+                return true;
             default:
-                    return false;
+                return false;
             }
         else
             return true;
     }
-    
+
     /**
      * @param face Start from direction
      * @return clockwise direction
      */
-    public static BlockFace getClockWise(BlockFace face) 
+    public static BlockFace getClockWise(BlockFace face)
     {
-        switch (face) 
+        switch (face)
         {
-	        case NORTH: return BlockFace.EAST;
-	        case EAST: return BlockFace.SOUTH;
-	        case SOUTH: return BlockFace.WEST;
-	        case WEST: return BlockFace.NORTH;
-	
-			default: return BlockFace.SELF;
-		}
+        case NORTH: return BlockFace.EAST;
+        case EAST: return BlockFace.SOUTH;
+        case SOUTH: return BlockFace.WEST;
+        case WEST: return BlockFace.NORTH;
+
+        default: return BlockFace.SELF;
+        }
     }
-    
+
     /**
      * @param face Start from direction
      * @return clockwise direction
      */
-    public static BlockFace getCounterClockWise(BlockFace face) 
+    public static BlockFace getCounterClockWise(BlockFace face)
     {
-        switch (face) 
+        switch (face)
         {
-	        case NORTH: return BlockFace.WEST;
-	        case EAST: return BlockFace.NORTH;
-	        case SOUTH: return BlockFace.EAST;
-	        case WEST: return BlockFace.SOUTH;
-	
-			default: return BlockFace.SELF;
-		}
+        case NORTH: return BlockFace.WEST;
+        case EAST: return BlockFace.NORTH;
+        case SOUTH: return BlockFace.EAST;
+        case WEST: return BlockFace.SOUTH;
+
+        default: return BlockFace.SELF;
+        }
     }
-    
-    
-    
+
+    public void setLine(Sign sign, int line, String content) {
+        sign.setLine(line,content);
+        sign.update();
+    }
 }
