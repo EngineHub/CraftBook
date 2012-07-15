@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
@@ -50,6 +51,12 @@ public class ItemUtil {
         if(item.getType() == Material.RAW_CHICKEN) return true;
         if(item.getType() == Material.RAW_FISH) return true;
         if(item.getType() == Material.PORK) return true;
+        return false;
+    }
+
+    public static boolean containsRawFood(Inventory inv) {
+        for(ItemStack it : inv.getContents())
+            if(isItemCookable(it)) return true;
         return false;
     }
 

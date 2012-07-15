@@ -117,7 +117,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            int lastTick = 0;
+            int lastTick = 0, oldTick = 0;
             try {
                 lastTick = Integer.parseInt(sign.getLine(2));
             }
@@ -125,14 +125,16 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign.setLine(2, lastTick + "");
                 sign.update();
             }
-            lastTick++;
-            if(lastTick>=25) {
-                Block b = SignUtil.getBackBlock(sign.getBlock());
-                int x = b.getX();
-                int y = b.getY()+2;
-                int z = b.getZ();
-                Block cb = sign.getWorld().getBlockAt(x,y,z);
-                if (cb.getType() == Material.CHEST) {
+            oldTick = lastTick;
+            Block b = SignUtil.getBackBlock(sign.getBlock());
+            int x = b.getX();
+            int y = b.getY()+2;
+            int z = b.getZ();
+            Block cb = sign.getWorld().getBlockAt(x,y,z);
+            if (cb.getType() == Material.CHEST) {
+                if(ItemUtil.containsRawFood(((Chest)cb.getState()).getInventory()))
+                    lastTick++;
+                if(lastTick>=50) {
                     Block fire = sign.getWorld().getBlockAt(x,y-1,z);
                     if(fire.getType() == Material.FIRE)
                     {
@@ -153,8 +155,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     }
                 }
             }
-            sign.setLine(2, lastTick + "");
-            sign.update();
+            if(lastTick != oldTick) {
+                sign.setLine(2, lastTick + "");
+                sign.update();
+            }
         }
     }
 
