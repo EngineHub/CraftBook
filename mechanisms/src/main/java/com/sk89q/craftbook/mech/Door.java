@@ -293,9 +293,12 @@ public class Door extends AbstractMechanic {
                         sign.update();
                     }
 
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
-                    if(event.getPlayer().getItemInHand().getAmount() == 0)
+                    if(event.getPlayer().getItemInHand().getAmount() <= 1) {
                         event.getPlayer().getItemInHand().setTypeId(0);
+                        event.getPlayer().getItemInHand().setAmount(0);
+                    }
+                    else
+                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
 
                     player.print("Door Restocked!");
                     event.setCancelled(true);

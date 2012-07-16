@@ -111,7 +111,8 @@ public class MechanicManager {
      * @param factory
      */
     public void register(MechanicFactory<? extends Mechanic> factory) {
-        factories.add(factory);
+        if(!factories.contains(factory))
+            factories.add(factory);
     }
 
     /**
@@ -147,7 +148,7 @@ public class MechanicManager {
                     new ChangedSign((Sign) sign, event.getLines()));
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                localPlayer.printError(e.getMessage().trim());
+                localPlayer.printError(e.getMessage());
             }
 
             event.setCancelled(true);
