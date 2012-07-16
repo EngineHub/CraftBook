@@ -19,29 +19,29 @@
 
 package com.sk89q.craftbook;
 
-import java.util.Set;
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.ChangedSign;
-
-import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.BlockWorldVector;
-import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
+import com.sk89q.worldedit.BlockWorldVector2D;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
@@ -54,13 +54,13 @@ import static com.sk89q.worldedit.bukkit.BukkitUtil.*;
  */
 public class MechanicManager {
     public static final boolean DEBUG = false;
-    
+
     /**
      * Logger for errors. The Minecraft namespace is required so that messages
      * are part of Minecraft's root logger.
      */
     protected final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    
+
     /**
      * Plugin.
      */
@@ -86,7 +86,7 @@ public class MechanicManager {
      * utilized yet.
      */
     private final WatchBlockManager watchBlockManager;
-    
+
     /**
      * List of mechanics that think on a routine basis.
      */
@@ -95,7 +95,7 @@ public class MechanicManager {
     /**
      * Construct the manager.
      * 
-     * @param plugin 
+     * @param plugin
      */
     public MechanicManager(BaseBukkitPlugin plugin) {
         this.plugin = plugin;
@@ -124,40 +124,40 @@ public class MechanicManager {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
-        
+
         // Announce the event to anyone who considers it to be on one of their defining blocks
         //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
         //watchBlockManager.notify(event);
-        
+
         // See if this event could be occurring on any mechanism's triggering blocks
         Block block = event.getBlock();
         BlockWorldVector pos = toWorldVector(block);
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
-        
+
         BlockState state = event.getBlock().getState();
-        
+
         if (!(state instanceof Sign)) {
             return false;
         }
-        
+
         Sign sign = (Sign) state;
-        
+
         try {
             load(pos, localPlayer,
                     new ChangedSign((Sign) sign, event.getLines()));
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                localPlayer.printError(e.getMessage());
+                localPlayer.printError(e.getMessage().trim());
             }
-            
+
             event.setCancelled(true);
             block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
             block.setTypeId(0);
         }
-        
+
         return false;
     }
-    
+
     /**
      * Handle a block break event.
      * 
@@ -168,11 +168,11 @@ public class MechanicManager {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
-        
+
         // Announce the event to anyone who considers it to be on one of their defining blocks
         //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
         watchBlockManager.notify(event);
-        
+
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getBlock());
 
@@ -184,7 +184,8 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                event.getPlayer().sendMessage(e.getMessage());
+                LocalPlayer player = plugin.wrap(event.getPlayer());
+                player.printError(e.getMessage());
             }
         }
         return false;
@@ -200,11 +201,11 @@ public class MechanicManager {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
-        
+
         // Announce the event to anyone who considers it to be on one of their defining blocks
         //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
         //watchBlockManager.notify(event);
-        
+
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
 
@@ -216,12 +217,13 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                event.getPlayer().sendMessage(e.getMessage());
+                LocalPlayer player = plugin.wrap(event.getPlayer());
+                player.printError(e.getMessage());
             }
         }
         return false;
     }
-    
+
     /**
      * Handle a block left click event.
      * 
@@ -232,11 +234,11 @@ public class MechanicManager {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event))
             return false;
-        
+
         // Announce the event to anyone who considers it to be on one of their defining blocks
         //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
         //watchBlockManager.notify(event);
-        
+
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
@@ -247,13 +249,14 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                event.getPlayer().sendMessage(e.getMessage());
+                LocalPlayer player = plugin.wrap(event.getPlayer());
+                player.printError(e.getMessage());
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Handle the redstone block change event.
      * 
@@ -275,7 +278,7 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
         }
-        
+
         return false;
     }
 
@@ -315,7 +318,7 @@ public class MechanicManager {
             PersistentMechanic pm = (PersistentMechanic) mechanic;
             triggersManager.register(pm);
             watchBlockManager.register(pm);
-            
+
             if (mechanic instanceof SelfTriggeringMechanic) {
                 synchronized (this) {
                     thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
@@ -361,7 +364,7 @@ public class MechanicManager {
             PersistentMechanic pm = (PersistentMechanic) mechanic;
             triggersManager.register(pm);
             watchBlockManager.register(pm);
-            
+
             if (mechanic instanceof SelfTriggeringMechanic) {
                 synchronized (this) {
                     thinkingMechanics.add((SelfTriggeringMechanic) mechanic);
@@ -459,7 +462,7 @@ public class MechanicManager {
         // Find mechanics that we need to unload
         Set<PersistentMechanic> applicable = triggersManager.getByChunk(chunk);
         applicable.addAll(watchBlockManager.getByChunk(chunk));
-        
+
         for (Mechanic m : applicable) {
             unload(m);
         }
@@ -472,18 +475,18 @@ public class MechanicManager {
      * @param mechanic
      */
     protected void unload(Mechanic mechanic) {
-            
+
         if (mechanic == null) {
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
-            return;   
+            return;
         }
-        
+
         try {
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName(), t);
         }
-        
+
         synchronized (this) {
             thinkingMechanics.remove(mechanic);
         }
@@ -494,7 +497,7 @@ public class MechanicManager {
             watchBlockManager.deregister(pm);
         }
     }
-    
+
     /**
      * Causes all thinking mechanics to think.
      */
