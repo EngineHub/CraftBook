@@ -24,6 +24,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -76,7 +77,7 @@ public class ItemDispenser extends AbstractIC {
                     if (BlockType.canPassThrough(getSign().getWorld()
                             .getBlockTypeIdAt(x, y, z))) {
 
-                        ItemStack stack = new ItemStack(id, amount);
+                        ItemStack stack = new ItemStack(id, amount, data);
                         stack.setData(new MaterialData(id, data));
 
                         getSign().getWorld().dropItemNaturally(
@@ -90,7 +91,7 @@ public class ItemDispenser extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
             super(server);
