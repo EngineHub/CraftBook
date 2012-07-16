@@ -503,6 +503,8 @@ public class Gate extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[Gate]");
+                sign.setLine(3, "0");
+                sign.update();
                 player.print("mech.gate.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
                 if (!player.hasPermission("craftbook.mech.gate")) {
@@ -510,6 +512,8 @@ public class Gate extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[DGate]");
+                sign.setLine(3, "0");
+                sign.update();
                 player.print("mech.dgate.create");
             } else {
                 return null;

@@ -97,6 +97,8 @@ public class Bridge extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[Bridge]");
+                sign.setLine(0, "0");
+                sign.update();
                 player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
                 if (!player.hasPermission("craftbook.mech.bridge")) {
@@ -104,6 +106,8 @@ public class Bridge extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[Bridge End]");
+                sign.setLine(0, "0");
+                sign.update();
                 player.print("mech.bridge.end-create");
             } else {
                 return null;

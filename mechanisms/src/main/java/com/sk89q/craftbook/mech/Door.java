@@ -72,6 +72,8 @@ public class Door extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[Door Down]");
+                sign.setLine(0, "0");
+                sign.update();
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 if (!player.hasPermission("craftbook.mech.door")) {
@@ -79,6 +81,8 @@ public class Door extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[Door Up]");
+                sign.setLine(0, "0");
+                sign.update();
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door]")) {
                 if (!player.hasPermission("craftbook.mech.door")) {
@@ -86,6 +90,8 @@ public class Door extends AbstractMechanic {
                 }
 
                 sign.setLine(1, "[Door]");
+                sign.setLine(0, "0");
+                sign.update();
                 player.print("mech.door.create");
             } else {
                 return null;
