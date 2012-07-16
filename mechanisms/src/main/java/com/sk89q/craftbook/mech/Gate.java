@@ -389,12 +389,12 @@ public class Gate extends AbstractMechanic {
 
                 if(sign!=null) {
                     try {
-                        int newBlocks = Integer.parseInt(sign.getLine(2)) + 1;
-                        sign.setLine(2, newBlocks + "");
+                        int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
+                        sign.setLine(3, newBlocks + "");
                         sign.update();
                     }
                     catch(Exception e) {
-                        sign.setLine(2, "1");
+                        sign.setLine(3, "1");
                         sign.update();
                     }
 
