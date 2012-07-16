@@ -278,22 +278,23 @@ public class Door extends AbstractMechanic {
 
                 if(sign!=null) {
                     try {
-                        sign.setLine(0, (Integer.parseInt(sign.getLine(0)) + 1) + "");
+                        int newBlocks = Integer.parseInt(sign.getLine(0)) + 1;
+                        sign.setLine(0, newBlocks + "");
                         sign.update();
                     }
                     catch(Exception e) {
                         sign.setLine(0, "1");
                         sign.update();
                     }
+
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                    if(event.getPlayer().getItemInHand().getAmount() == 0)
+                        event.getPlayer().getItemInHand().setTypeId(0);
+
+                    player.print("Door Restocked!");
+                    event.setCancelled(true);
+                    return;
                 }
-
-                event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
-                if(event.getPlayer().getItemInHand().getAmount() == 0)
-                    event.getPlayer().getItemInHand().setTypeId(0);
-
-                player.print("Door Restocked!");
-                event.setCancelled(true);
-                return;
             }
         }
 

@@ -389,22 +389,23 @@ public class Gate extends AbstractMechanic {
 
                 if(sign!=null) {
                     try {
-                        sign.setLine(2, (Integer.parseInt(sign.getLine(2)) + 1) + "");
+                        int newBlocks = Integer.parseInt(sign.getLine(2)) + 1;
+                        sign.setLine(2, newBlocks + "");
                         sign.update();
                     }
                     catch(Exception e) {
                         sign.setLine(2, "1");
                         sign.update();
                     }
+
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                    if(event.getPlayer().getItemInHand().getAmount() == 0)
+                        event.getPlayer().getItemInHand().setTypeId(0);
+
+                    player.print("Gate Restocked!");
+                    event.setCancelled(true);
+                    return;
                 }
-
-                event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
-                if(event.getPlayer().getItemInHand().getAmount() == 0)
-                    event.getPlayer().getItemInHand().setTypeId(0);
-
-                player.print("Gate Restocked!");
-                event.setCancelled(true);
-                return;
             }
         }
 
