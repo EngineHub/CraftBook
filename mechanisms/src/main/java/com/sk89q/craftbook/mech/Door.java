@@ -26,6 +26,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -221,8 +222,8 @@ public class Door extends AbstractMechanic {
         catch(Exception e){
             right = 1;
         }
-        //if(left > plugin.getLocalConfiguration().doorSettings.maxWidth) left = plugin.getLocalConfiguration().doorSettings.maxWidth;
-        //if(right > plugin.getLocalConfiguration().doorSettings.maxWidth) right = plugin.getLocalConfiguration().doorSettings.maxWidth;
+        if(left > plugin.getLocalConfiguration().doorSettings.maxWidth) left = plugin.getLocalConfiguration().doorSettings.maxWidth;
+        if(right > plugin.getLocalConfiguration().doorSettings.maxWidth) right = plugin.getLocalConfiguration().doorSettings.maxWidth;
 
         if(left == 1)
             try {
@@ -294,8 +295,7 @@ public class Door extends AbstractMechanic {
                     }
 
                     if(event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().getItemInHand().setTypeId(0);
-                        event.getPlayer().getItemInHand().setAmount(0);
+                        event.getPlayer().setItemInHand(new ItemStack(0,0));
                     }
                     else
                         event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);

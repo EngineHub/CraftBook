@@ -399,8 +399,7 @@ public class Gate extends AbstractMechanic {
                     }
 
                     if(event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().getItemInHand().setTypeId(0);
-                        event.getPlayer().getItemInHand().setAmount(0);
+                        event.getPlayer().setItemInHand(new ItemStack(0,0));
                     }
                     else
                         event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
