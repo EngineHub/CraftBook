@@ -27,6 +27,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -307,5 +308,9 @@ public class Elevator extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
+    }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
     }
 }

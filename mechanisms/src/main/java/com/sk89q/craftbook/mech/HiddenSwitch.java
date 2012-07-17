@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -144,4 +145,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
     }
 
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
 }

@@ -20,6 +20,7 @@ package com.sk89q.craftbook;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * A Mechanic is a an object that manages a set of BlockVectors to enhance those
@@ -48,6 +49,12 @@ public interface Mechanic {
      */
     public void unload();
 
+    /**
+     * Unload this mechanic. This should free any allocated resources and
+     * de-initialize. This may be called once the mechanic no longer exists
+     * in the world.
+     */
+    public void unloadWithEvent(ChunkUnloadEvent event);
 
     /**
      * @return true if this mechanic is still active in the world; false

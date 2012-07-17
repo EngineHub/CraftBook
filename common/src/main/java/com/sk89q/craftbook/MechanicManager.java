@@ -36,6 +36,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
@@ -459,13 +460,13 @@ public class MechanicManager {
      * 
      * @param chunk
      */
-    public void unload(BlockWorldVector2D chunk) {
+    public void unload(BlockWorldVector2D chunk, ChunkUnloadEvent event) {
         // Find mechanics that we need to unload
         Set<PersistentMechanic> applicable = triggersManager.getByChunk(chunk);
         applicable.addAll(watchBlockManager.getByChunk(chunk));
 
         for (Mechanic m : applicable) {
-            unload(m);
+            unloadWithEvent(m, event);
         }
     }
 
@@ -484,6 +485,36 @@ public class MechanicManager {
 
         try {
             mechanic.unload();
+        } catch (Throwable t) { // Mechanic failed to unload for some reason
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName(), t);
+        }
+
+        synchronized (this) {
+            thinkingMechanics.remove(mechanic);
+        }
+
+        if (mechanic instanceof PersistentMechanic) {
+            PersistentMechanic pm = (PersistentMechanic) mechanic;
+            triggersManager.deregister(pm);
+            watchBlockManager.deregister(pm);
+        }
+    }
+
+    /**
+     * Unload a mechanic. This will also remove the trigger points from this
+     * mechanic manager.
+     * 
+     * @param mechanic
+     */
+    protected void unloadWithEvent(Mechanic mechanic, ChunkUnloadEvent event) {
+
+        if (mechanic == null) {
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
+            return;
+        }
+
+        try {
+            mechanic.unloadWithEvent(event);
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName(), t);
         }

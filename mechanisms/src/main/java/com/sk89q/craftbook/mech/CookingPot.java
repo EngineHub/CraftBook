@@ -11,6 +11,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -217,4 +218,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         return bwv;
     }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
+
 }

@@ -19,19 +19,19 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
@@ -89,7 +89,7 @@ public class Ammeter extends AbstractMechanic {
         } else if (type == Material.DIODE_BLOCK_ON) {
             current = 15;
         }
-        
+
         return current;
     }
 
@@ -141,9 +141,12 @@ public class Ammeter extends AbstractMechanic {
         }
     }
 
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		
-	}
+    }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
 }

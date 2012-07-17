@@ -7,6 +7,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -164,12 +165,10 @@ public class Teleporter extends AbstractMechanic{
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
-        boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
             if (occupiable(floor)) {
                 foundFree++;
             } else {
-                foundGround = true;
                 break;
             }
             if (floor.getY() == 0x0)        // hit the bottom of the world
@@ -216,4 +215,9 @@ public class Teleporter extends AbstractMechanic{
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-    }}
+    }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
+}

@@ -15,25 +15,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.mech;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line
@@ -47,23 +48,23 @@ public class Bookcase extends AbstractMechanic {
      * Used for picking random lines.
      */
     protected static Random rand = new Random();
-    
+
     /**
      * Configuration.
      */
     protected MechanismsPlugin plugin;
-    
+
     /**
      * Construct a bookcase for a location.
      * 
      * @param pt
-     * @param plugin 
+     * @param plugin
      */
     public Bookcase(BlockWorldVector pt, MechanismsPlugin plugin) {
         super();
         this.plugin = plugin;
     }
-    
+
     /**
      * Reads a book.
      * 
@@ -74,7 +75,7 @@ public class Bookcase extends AbstractMechanic {
         if (!player.hasPermission("craftbook.mech.bookshelf.use")) {
             return;
         }
-        
+
         try {
             String text = getBookLine();
 
@@ -136,7 +137,7 @@ public class Bookcase extends AbstractMechanic {
         file.close();
         return null;
     }
-    
+
     /**
      * Raised when a block is right clicked.
      * 
@@ -145,7 +146,7 @@ public class Bookcase extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
-        
+
         Player player = event.getPlayer();
         if(!player.getItemInHand().getType().isBlock())
             read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseSettings.readLine);
@@ -167,9 +168,9 @@ public class Bookcase extends AbstractMechanic {
     }
 
     public static class Factory extends AbstractMechanicFactory<Bookcase> {
-        
+
         protected MechanismsPlugin plugin;
-        
+
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
         }
@@ -179,14 +180,18 @@ public class Bookcase extends AbstractMechanic {
             if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE) {
                 return new Bookcase(pt, plugin);
             }
-            
+
             return null;
         }
 
     }
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		
-	}
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+
+    }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
 }

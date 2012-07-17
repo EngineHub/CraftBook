@@ -1,24 +1,28 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class Command extends AbstractMechanic {
-    public static class Factory extends AbstractMechanicFactory<Command> {
+public class ChunkAnchor extends PersistentMechanic {
+
+    public static class Factory extends AbstractMechanicFactory<ChunkAnchor> {
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
         }
@@ -38,13 +42,13 @@ public class Command extends AbstractMechanic {
          *             elevator, but it failed.
          */
         @Override
-        public Command detect(BlockWorldVector pt) throws InvalidMechanismException {
+        public ChunkAnchor detect(BlockWorldVector pt) throws InvalidMechanismException {
             Block block = BukkitUtil.toBlock(pt);
 
             if(block.getState() instanceof Sign) {
                 Sign s = (Sign)block.getState();
-                if(s.getLine(1).equalsIgnoreCase("[Command]")) {
-                    return new Command(block, plugin);
+                if(s.getLine(1).equalsIgnoreCase("[Chunk]")) {
+                    return new ChunkAnchor(block, plugin);
                 }
             }
             return null;
@@ -56,16 +60,16 @@ public class Command extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Command detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public ChunkAnchor detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
-            if(!sign.getLine(1).equalsIgnoreCase("[Command]")) return null;
+            if(!sign.getLine(1).equalsIgnoreCase("[Chunk]")) return null;
 
-            if (!player.hasPermission("craftbook.mech.command")) {
+            if (!player.hasPermission("craftbook.mech.chunk")) {
                 throw new InsufficientPermissionsException();
             }
 
-            player.print("Command sign created.");
-            sign.setLine(1, "[Command]");
+            player.print("Chunk Anchor created.");
+            sign.setLine(1, "[Chunk]");
 
             throw new ProcessedMechanismException();
         }
@@ -79,61 +83,42 @@ public class Command extends AbstractMechanic {
      *            the direction (UP or DOWN) in which we're looking for a destination
      * @throws InvalidMechanismException
      */
-    private Command(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private ChunkAnchor(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
         super();
         this.trigger = trigger;
-        this.plugin = plugin;
     }
-
-    private MechanismsPlugin plugin;
 
     private Block trigger;
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
-        if (!plugin.getLocalConfiguration().commandSettings.enable) return;
-
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; //wth? our manager is insane
-
-        LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
-
-        if (!localPlayer.hasPermission("craftbook.mech.command.use")) {
-            localPlayer.printError("You don't have permission to use command signs.");
-            return;
-        }
-
-        Sign s = ((Sign)event.getClickedBlock().getState());
-
-        if(s.getLine(2).startsWith("/"))
-            event.getPlayer().chat(s.getLine(2) + s.getLine(3));
-        else
-            event.getPlayer().chat("/" + s.getLine(2) + s.getLine(3));
-
-        event.setCancelled(true);
     }
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-        /* we only affect players, so we don't care about redstone events */
     }
 
     @Override
     public void unload() {
-        /* we're not persistent */
     }
 
     @Override
     public boolean isActive() {
-        /* we're not persistent */
-        return false;
+        return true;
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+    }
 
+    @Override
+    public List<BlockWorldVector> getWatchedPositions() {
+        return Arrays.asList(BukkitUtil.toWorldVector(trigger));
     }
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+        if(event.getChunk().equals(trigger.getWorld().getChunkAt(trigger)))
+            event.setCancelled(true);
     }
 }

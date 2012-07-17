@@ -15,8 +15,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package com.sk89q.craftbook.mech;
+
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -26,20 +33,13 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
-
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone
- * to normal torches. This is done every time a sign with [|] or [I] is right 
+ * to normal torches. This is done every time a sign with [|] or [I] is right
  * clicked by a player.
  *
  * @author fullwall
@@ -67,32 +67,32 @@ public class LightSwitch extends AbstractMechanic {
             // and if something goes wrong in here then we throw fits.
             return new LightSwitch(pt, plugin);
         }
-        
+
         /**
          * Detect the mechanic at a placed sign.
          * 
-         * @throws ProcessedMechanismException 
+         * @throws ProcessedMechanismException
          */
         @Override
         public LightSwitch detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
             String line = sign.getLine(1);
-            
+
             if (line.equalsIgnoreCase("[|]") || line.equalsIgnoreCase("[I]")) {
                 if (!player.hasPermission("craftbook.mech.light-switch")) {
                     throw new InsufficientPermissionsException();
                 }
-                
+
                 sign.setLine(1, "[I]");
                 player.print("Light switch created.");
             } else {
                 return null;
             }
-            
+
             throw new ProcessedMechanismException();
         }
     }
-    
+
     /**
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
@@ -103,22 +103,22 @@ public class LightSwitch extends AbstractMechanic {
      * Configuration.
      */
     protected MechanismsPlugin plugin;
-    
+
     private BlockWorldVector pt;
-    
+
     /**
      * Construct a LightSwitch for a location.
      * 
      * @param pt
-     * @param plugin 
+     * @param plugin
      */
     private LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
         super();
         this.pt = pt;
         this.plugin = plugin;
     }
-    
-    
+
+
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
@@ -126,7 +126,7 @@ public class LightSwitch extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
         toggleLights(pt);
     }
-    
+
     /**
      * Toggle lights in the immediate area.
      * 
@@ -180,21 +180,23 @@ public class LightSwitch extends AbstractMechanic {
         }
         return false;
     }
-    
+
     @Override
     public void unload() {
         /* No persistence. */
     }
-    
+
     @Override
     public boolean isActive() {
         return false; /* Keeps no state */
     }
 
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
 
+    }
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		
-	}
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
 }

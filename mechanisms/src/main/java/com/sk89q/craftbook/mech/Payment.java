@@ -9,6 +9,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -187,4 +188,9 @@ public class Payment extends AbstractMechanic{
         }
 
     }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
+
 }

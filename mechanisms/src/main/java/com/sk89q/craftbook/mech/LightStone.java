@@ -19,19 +19,19 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.worldedit.BlockWorldVector;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This allows users to Right-click to check the light level.
@@ -55,16 +55,16 @@ public class LightStone extends AbstractMechanic {
             int lightLevel = getLightLevel(block);
             String lightLevelLine = getLightLine(lightLevel);
             event.getPlayer().sendMessage(
-                    ChatColor.YELLOW + "LightStone: " + ChatColor.YELLOW + "[" + lightLevelLine 
+                    ChatColor.YELLOW + "LightStone: " + ChatColor.YELLOW + "[" + lightLevelLine
                     + ChatColor.YELLOW + "] " + lightLevel + " L");
         }
     }
-    
+
     private int getLightLevel(Block block) {
         int light = block.getLightLevel();
-        return light;                
+        return light;
     }
-    
+
     private String getLightLine(int data) {
         String line = "";
         if (data >= 9) {
@@ -77,7 +77,7 @@ public class LightStone extends AbstractMechanic {
         }
         line = line + ChatColor.BLACK;
         for (int i = data; i < 15; i++) {
-            line = line + "|"; 
+            line = line + "|";
         }
         return line;
     }
@@ -89,14 +89,14 @@ public class LightStone extends AbstractMechanic {
         return false; // this isn't a persistent mechanic, so the manager will
         // never keep it around long enough to even check this.
     }
-    
+
     public static class Factory extends AbstractMechanicFactory<LightStone> {
 
         protected MechanismsPlugin plugin;
 
         public Factory(MechanismsPlugin plugin) {
             this.plugin = plugin;
-         }
+        }
 
         public LightStone detect(BlockWorldVector pt){
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
@@ -108,8 +108,12 @@ public class LightStone extends AbstractMechanic {
         }
     }
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		
-	}
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+
+    }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
 }

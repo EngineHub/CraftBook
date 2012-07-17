@@ -33,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -405,4 +406,9 @@ public class Cauldron extends AbstractMechanic {
     public void onBlockBreak(BlockBreakEvent event) {
 
     }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+    }
+
 }
