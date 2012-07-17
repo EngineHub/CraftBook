@@ -71,8 +71,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public void onEnable() {
 
-        createDefaultConfiguration("en_US.txt");
-        createDefaultConfiguration("config.yml");
+        createDefaultConfiguration("en_US.txt", true);
+        createDefaultConfiguration("config.yml", false);
 
         config = new BaseConfiguration(getConfig(), getDataFolder());
         saveConfig();
@@ -118,9 +118,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * 
      * @param name
      */
-    protected void createDefaultConfiguration(String name) {
+    protected void createDefaultConfiguration(String name, boolean force) {
         File actual = new File(getDataFolder(), name);
-        if (!actual.exists()) {
+        if (!actual.exists() || force) {
 
             InputStream input =
                     this.getClass().getResourceAsStream("/defaults/" + name);

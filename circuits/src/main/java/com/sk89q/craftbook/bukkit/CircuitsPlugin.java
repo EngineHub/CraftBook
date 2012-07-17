@@ -142,8 +142,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         instance = this;
         server = getServer();
 
-        createDefaultConfiguration("config.yml");
-        createDefaultConfiguration("custom-ics.txt");
+        createDefaultConfiguration("config.yml", false);
+        createDefaultConfiguration("custom-ics.txt", false);
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
         saveConfig();
 

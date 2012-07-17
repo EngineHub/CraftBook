@@ -64,7 +64,7 @@ public class Command extends AbstractMechanic {
                 throw new InsufficientPermissionsException();
             }
 
-            player.print("Command sign created.");
+            player.print("mech.command.create");
             sign.setLine(1, "[Command]");
 
             throw new ProcessedMechanismException();
@@ -98,7 +98,7 @@ public class Command extends AbstractMechanic {
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.command.use")) {
-            localPlayer.printError("You don't have permission to use command signs.");
+            localPlayer.printError("mech.use-permission");
             return;
         }
 

@@ -64,7 +64,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
     @Override
     protected void registerEvents() {
-        createDefaultConfiguration("config.yml");
+        createDefaultConfiguration("config.yml", false);
 
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfig(), getDataFolder());

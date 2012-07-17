@@ -69,11 +69,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     public void onEnable() {
         super.onEnable();
 
-        createDefaultConfiguration("books.txt");
-        createDefaultConfiguration("cauldron-recipes.txt");
-        createDefaultConfiguration("config.yml");
-        createDefaultConfiguration("custom-mob-drops.txt");
-        createDefaultConfiguration("custom-block-drops.txt");
+        createDefaultConfiguration("books.txt", false);
+        createDefaultConfiguration("cauldron-recipes.txt", false);
+        createDefaultConfiguration("config.yml", false);
+        createDefaultConfiguration("custom-mob-drops.txt", false);
+        createDefaultConfiguration("custom-block-drops.txt", false);
 
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();

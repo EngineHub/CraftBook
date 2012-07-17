@@ -3,7 +3,6 @@ package com.sk89q.craftbook.mech;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -103,7 +102,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
                 sign.update();
-                player.print("Cooking pot created.");
+                player.print("mech.cook.create");
             } else {
                 return null;
             }
@@ -182,7 +181,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
         event.getPlayer().setFireTicks(20);
-        event.getPlayer().sendMessage(ChatColor.RED + "Ouch! That was hot!");
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+        player.printError("mech.cook.ouch");
     }
 
     @Override
@@ -222,5 +222,4 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
     }
-
 }
