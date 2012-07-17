@@ -27,25 +27,25 @@ public class BaseConfiguration {
     }
 
     public int getInt(FileConfiguration cfg, String name, int def) {
-        int it = cfg.getInt(name);
+        int it = cfg.getInt(name, def);
         cfg.set(name, it);
         return it;
     }
 
     public double getDouble(FileConfiguration cfg, String name, double def) {
-        double it = cfg.getDouble(name);
+        double it = cfg.getDouble(name, def);
         cfg.set(name, it);
         return it;
     }
 
     public boolean getBoolean(FileConfiguration cfg, String name, boolean def) {
-        boolean it = cfg.getBoolean(name);
+        boolean it = cfg.getBoolean(name, def);
         cfg.set(name, it);
         return it;
     }
 
     public String getString(FileConfiguration cfg, String name, String def) {
-        String it = cfg.getString(name,def);
+        String it = cfg.getString(name, def);
         cfg.set(name, it);
         return it;
     }
