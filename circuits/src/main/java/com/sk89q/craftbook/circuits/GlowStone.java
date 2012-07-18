@@ -20,13 +20,16 @@
 
 package com.sk89q.craftbook.circuits;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.*;
-
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -34,9 +37,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author sk89q
  */
 public class GlowStone extends AbstractMechanic {
-	
-	private int originalId;
-	
+
+    private int originalId;
+
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
         public Factory() {
         }
@@ -78,7 +81,7 @@ public class GlowStone extends AbstractMechanic {
         }
         event.getBlock().setData(data, false);
     }
-    
+
     /**
      * Raised when clicked.
      */
@@ -105,10 +108,15 @@ public class GlowStone extends AbstractMechanic {
         return false;
     }
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
-		event.getBlock().setTypeId(originalId);
-		event.getBlock().breakNaturally();
-		event.setCancelled(true);
-	}
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+        event.getBlock().setTypeId(originalId);
+        event.getBlock().breakNaturally();
+        event.setCancelled(true);
+    }
+
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+
+    }
 }

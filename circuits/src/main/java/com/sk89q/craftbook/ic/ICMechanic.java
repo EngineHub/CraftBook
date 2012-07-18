@@ -26,6 +26,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -126,4 +127,8 @@ public class ICMechanic extends PersistentMechanic {
 
     }
 
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+
+    }
 }
