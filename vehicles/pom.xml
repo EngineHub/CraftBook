@@ -41,6 +41,7 @@
         <directory>${basedir}/src/main/resources/</directory>
         <includes>
           <include>config.yml</include>
+          <include>en_US.txt</include>
         </includes>
       </resource>
     </resources>
