@@ -112,6 +112,7 @@ public class Bookcase extends AbstractMechanic {
             passes++;
             if(passes >= toRead) break;
         }
+        br.close();
         return line;
     }
 
