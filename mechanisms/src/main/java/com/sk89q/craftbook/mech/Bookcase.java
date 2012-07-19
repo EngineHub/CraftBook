@@ -19,6 +19,7 @@
 
 package com.sk89q.craftbook.mech;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -102,11 +103,16 @@ public class Bookcase extends AbstractMechanic {
         LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
         lnr.skip(Long.MAX_VALUE);
         int lines = lnr.getLineNumber();
-        int toRead = new Random().nextInt(lines);
-        lnr.setLineNumber(toRead);
-        String out =  lnr.readLine();
         lnr.close();
-        return out;
+        int toRead = new Random().nextInt(lines);
+        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
+        String line = "";
+        int passes = 0;
+        while((line = br.readLine())!=null) {
+            passes++;
+            if(passes >= toRead) break;
+        }
+        return line;
     }
 
     /**
