@@ -319,7 +319,7 @@ public class Gate extends AbstractMechanic {
                 if(ID == 0 || curBlocks > 0) {
                     if(ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
                         curBlocks ++;
-                    else if(world.getBlockAt(x, y1, z).getTypeId() == 0)
+                    else if(world.getBlockAt(x, y1, z).getTypeId() == 0 && ID != 0)
                         curBlocks --;
                     world.getBlockAt(x, y1, z).setTypeId(ID);
 
