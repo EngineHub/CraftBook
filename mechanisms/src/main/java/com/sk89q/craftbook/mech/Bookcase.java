@@ -20,8 +20,9 @@
 package com.sk89q.craftbook.mech;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.LineNumberReader;
 import java.util.Random;
 
 import org.bukkit.entity.Player;
@@ -98,44 +99,14 @@ public class Bookcase extends AbstractMechanic {
      *             if we have trouble with the "books.txt" configuration file.
      */
     protected String getBookLine() throws IOException {
-        RandomAccessFile file = new RandomAccessFile(
-                new File(plugin.getLocalConfiguration().dataFolder, "books.txt"), "r");
-
-        long len = file.length();
-        byte[] data = new byte[500];
-
-        for (int tries = 0; tries < 3; tries++) {
-            int j = rand.nextInt((int)len);
-            if (tries == 2) { // File is too small
-                j = 0;
-            }
-            file.seek(j);
-            file.read(data);
-
-            StringBuilder buffer = new StringBuilder();
-            boolean found = j == 0;
-            byte last = 0;
-
-            for (int i = 0; i < data.length; i++) {
-                if (found) {
-                    if (data[i] == 10 || data[i] == 13 || i >= len) {
-                        if (last != 10 && last != 13) {
-                            file.close();
-                            return buffer.toString();
-                        }
-                    } else {
-                        buffer.appendCodePoint(data[i]);
-                    }
-                } else if (data[i] == 10 || data[i] == 13) { // Line feeds
-                    found = true;
-                }
-
-                last = data[i];
-            }
-        }
-
-        file.close();
-        return null;
+        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
+        lnr.skip(Long.MAX_VALUE);
+        int lines = lnr.getLineNumber();
+        int toRead = new Random().nextInt(lines);
+        lnr.setLineNumber(toRead);
+        String out =  lnr.readLine();
+        lnr.close();
+        return out;
     }
 
     /**
