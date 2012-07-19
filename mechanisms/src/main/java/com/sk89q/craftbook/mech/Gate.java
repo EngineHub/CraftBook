@@ -319,13 +319,13 @@ public class Gate extends AbstractMechanic {
                 if(ID == 0 || curBlocks > 0) {
                     if(ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
                         curBlocks ++;
-                    else if(world.getBlockAt(x, y1, z).getTypeId() == 0 && ID != 0)
+                    else if(world.getBlockAt(x, y1, z).getTypeId() == 0 && isValidGateItem(new ItemStack(ID,1)))
                         curBlocks --;
                     world.getBlockAt(x, y1, z).setTypeId(ID);
 
                     sign.setLine(3, curBlocks + "");
                     sign.update();
-                } else if(curBlocks == 0 && ID != 0) {
+                } else if(curBlocks == 0 && isValidGateItem(new ItemStack(ID,1))) {
                     if(player!=null) {
                         player.printError("Not enough blocks to trigger mechanic!");
                         break;
