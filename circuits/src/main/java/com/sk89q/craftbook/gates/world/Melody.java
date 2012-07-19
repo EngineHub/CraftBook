@@ -58,6 +58,12 @@ public class Melody extends AbstractIC {
             if (chip.getInput(0) && (sequencer == null || getSign().getLine(3).equalsIgnoreCase("START"))) {
                 String midiName = getSign().getLine(2);
 
+                int radius = 0;
+                try {
+                    radius = Integer.parseInt(getSign().getLine(3));
+                }
+                catch(Exception e){}
+
                 File[] trialPaths = {
                         new File(CircuitsPlugin.getInst().getDataFolder(),
                                 "midi/" + midiName),
@@ -96,6 +102,7 @@ public class Melody extends AbstractIC {
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (player == null)
                         continue;
+                    if(radius > 0 && player.getLocation().distance(getSign().getLocation()) > radius) continue;
                     jNote.getJingleNoteManager().play(player, sequencer, 0);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName
                             + "...");
