@@ -50,13 +50,16 @@ public class Area extends AbstractMechanic{
                 throws InvalidMechanismException, ProcessedMechanismException {
             if (!plugin.getLocalConfiguration().areaSettings.enable)
                 return null;
-            if (sign.getLine(1).equalsIgnoreCase("[Area]")) {
+            if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
                 if (!player.hasPermission("craftbook.mech.area")) {
                     throw new InsufficientPermissionsException();
                 }
                 if(sign.getLine(0).trim().equalsIgnoreCase(""))
                     sign.setLine(0, "~" + player.getName());
-                sign.setLine(1, "[Area]");
+                if(sign.getLine(1).equalsIgnoreCase("[Area]"))
+                    sign.setLine(1, "[Area]");
+                else
+                    sign.setLine(1, "[SaveArea]");
                 player.print("Toggle area created.");
             } else {
                 return null;
@@ -86,7 +89,7 @@ public class Area extends AbstractMechanic{
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
                     Sign sign = (Sign) state;
-                    if (sign.getLine(1).equalsIgnoreCase("[Area]")) {
+                    if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
                         if(!sign.getLine(0).equalsIgnoreCase(""))
                             sign.setLine(0, "global");
                         return new Area(pt, plugin);
@@ -118,22 +121,28 @@ public class Area extends AbstractMechanic{
             if(BukkitUtil.toBlock(pt).getState() instanceof Sign)
                 s = ((Sign)BukkitUtil.toBlock(pt).getState());
             if(s==null) return;
+            boolean save = s.getLine(1).equalsIgnoreCase("[SaveArea]");
             String namespace = s.getLine(0);
             String id = s.getLine(2);
+            String inactiveID = s.getLine(3);
 
             if(id == null || id.equalsIgnoreCase("") || id.length() < 1) return;
             if(namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return;
             if(event.getPlayer().getWorld()==null) return;
 
             CuboidCopy copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
-
             if (!copy.shouldClear(event.getPlayer().getWorld())) {
+                if(save)
+                    plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copy, plugin);
                 copy.paste(event.getPlayer().getWorld());
             } else {
-                String inactiveID = s.getLine(3);
                 if (inactiveID.length() == 0) {
+                    if(save)
+                        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
                     copy.clear(event.getPlayer().getWorld());
                 } else {
+                    if(save)
+                        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
                     copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
                     copy.paste(event.getPlayer().getWorld());
                 }
