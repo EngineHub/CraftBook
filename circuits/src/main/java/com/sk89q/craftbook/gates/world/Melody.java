@@ -31,6 +31,7 @@ public class Melody extends AbstractIC {
 
     public Melody(Server server, Sign block) {
         super(server, block);
+        jNote = new JingleNoteComponent();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class Melody extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         try {
-            jNote = new JingleNoteComponent();
+            if(jNote == null) jNote = new JingleNoteComponent();
             jNote.enable();
 
             if (chip.getInput(0) && (sequencer == null || getSign().getLine(3).equalsIgnoreCase("START"))) {
