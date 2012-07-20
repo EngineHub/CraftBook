@@ -1,5 +1,5 @@
 /*
- * CommandBook
+ * CraftBook
  * Copyright (C) 2011 sk89q <http://www.sk89q.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,7 @@
 
 package com.sk89q.jinglenote;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
-
-public class JingleNoteComponent implements Listener {
+public class JingleNoteComponent {
 
     private JingleNoteManager jingleNoteManager;
 
@@ -42,10 +38,5 @@ public class JingleNoteComponent implements Listener {
      */
     public JingleNoteManager getJingleNoteManager() {
         return jingleNoteManager;
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        getJingleNoteManager().stop(event.getPlayer());
     }
 }
