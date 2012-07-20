@@ -36,6 +36,7 @@ import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
+import com.sk89q.craftbook.mech.CustomCrafting;
 import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
@@ -112,6 +113,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
          */
 
         manager.register(new Cauldron.Factory(this));
+
+        CustomCrafting.addRecipes(this);
 
         setupSelfTriggered(manager);
     }
