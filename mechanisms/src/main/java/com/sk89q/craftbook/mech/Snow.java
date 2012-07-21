@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFormEvent;
@@ -31,7 +32,7 @@ public class Snow implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow)
             return;
@@ -57,7 +58,7 @@ public class Snow implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.trample)
             return;
@@ -92,7 +93,7 @@ public class Snow implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockForm(final BlockFormEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.enable)
             return;

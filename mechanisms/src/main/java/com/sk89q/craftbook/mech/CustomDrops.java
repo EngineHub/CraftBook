@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -19,7 +20,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
         if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
             return;
@@ -50,7 +51,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener{
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void handleCustomMobDrops(EntityDeathEvent event) {
         EntityType entityType = event.getEntityType();
         if(entityType==null || entityType == EntityType.PLAYER) return;
