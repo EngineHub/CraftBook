@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintStream;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -48,7 +49,10 @@ public class CustomCrafting {
 
                         r.addIngredient(Material.getMaterial(iid), iidata);
                     }
-                    plugin.getServer().addRecipe(r);
+                    if(plugin.getServer().addRecipe(r))
+                        plugin.getLogger().info("Recipe Added!");
+                    else
+                        plugin.getLogger().warning("Failed to add recipe!");
                 }
                 /*TODOelse if(lastLine.startsWith("*[")) { //2x2 Shaped Recipe
                     String output = lastLine.split("*[")[1].replace("]", "");
@@ -98,7 +102,10 @@ public class CustomCrafting {
 
                         r.setInput(Material.getMaterial(iid), iidata);
                     }
-                    plugin.getServer().addRecipe(r);
+                    if(plugin.getServer().addRecipe(r))
+                        plugin.getLogger().info("Recipe Added!");
+                    else
+                        plugin.getLogger().warning("Failed to add recipe!");
                 }
                 else if(lastLine.startsWith("[")) { //Shaped Recipe
                     String output = lastLine.split("[")[1].replace("]", "");
@@ -124,7 +131,10 @@ public class CustomCrafting {
 
                         r.setIngredient(new String(iid + "").charAt(0), Material.getMaterial(iid), iidata);
                     }
-                    plugin.getServer().addRecipe(r);
+                    if(plugin.getServer().addRecipe(r))
+                        plugin.getLogger().info("Recipe Added!");
+                    else
+                        plugin.getLogger().warning("Failed to add recipe!");
                 }
                 else
                     continue;
@@ -132,7 +142,13 @@ public class CustomCrafting {
             br.close();
         }
         catch(Exception e) {
-            plugin.getLogger().severe("Failed to add Custom Recipes!");
+            try {
+                plugin.getLogger().severe("Failed to add Custom Recipes!");
+                String error = "";
+                e.printStackTrace(new PrintStream(error));
+                plugin.getLogger().severe(error);
+            }
+            catch(Exception ee){}
         }
     }
 }
