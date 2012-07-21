@@ -35,6 +35,8 @@ public class Snow implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow)
             return;
+        if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+            return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if(!player.hasPermission("craftbook.mech.snow.place")) {
             return;
@@ -58,6 +60,8 @@ public class Snow implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.trample)
+            return;
+        if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
             return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if(!player.hasPermission("craftbook.mech.snow.trample")) {
@@ -91,6 +95,8 @@ public class Snow implements Listener {
     @EventHandler
     public void onBlockForm(final BlockFormEvent event) {
         if (!plugin.getLocalConfiguration().snowSettings.enable)
+            return;
+        if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
             return;
         if (event.getNewState().getTypeId() == 78) {
             Block block = event.getBlock();

@@ -22,6 +22,7 @@ package com.sk89q.craftbook.bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -31,7 +32,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -54,14 +54,14 @@ public class MechanicListenerAdapter {
     /**
      * Holds the plugin that events are registered through.
      */
-    protected JavaPlugin plugin;
+    protected BaseBukkitPlugin plugin;
 
     /**
      * Constructs the adapter.
      * 
      * @param plugin
      */
-    public MechanicListenerAdapter(JavaPlugin plugin) {
+    public MechanicListenerAdapter(BaseBukkitPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -72,9 +72,9 @@ public class MechanicListenerAdapter {
      */
     public void register(MechanicManager manager) {
         PluginManager pluginManager = plugin.getServer().getPluginManager();
-        Listener playerListener = new MechanicPlayerListener(manager);
-        Listener blockListener = new MechanicBlockListener(manager);
-        Listener worldListener = new MechanicWorldListener(manager);
+        Listener playerListener = new MechanicPlayerListener(manager, plugin);
+        Listener blockListener = new MechanicBlockListener(manager, plugin);
+        Listener worldListener = new MechanicWorldListener(manager, plugin);
 
         pluginManager.registerEvents(playerListener, plugin);
         pluginManager.registerEvents(blockListener, plugin);
@@ -89,18 +89,23 @@ public class MechanicListenerAdapter {
      */
     protected static class MechanicPlayerListener implements Listener {
         protected MechanicManager manager;
+        protected BaseBukkitPlugin plugin;
 
         /**
          * Construct the listener.
          * 
          * @param manager
+         * @param plugin
          */
-        public MechanicPlayerListener(MechanicManager manager) {
+        public MechanicPlayerListener(MechanicManager manager, BaseBukkitPlugin plugin) {
             this.manager = manager;
+            this.plugin = plugin;
         }
 
-        @EventHandler(ignoreCancelled = false)
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onPlayerInteract(PlayerInteractEvent event) {
+            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+                return;
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
             }
@@ -119,27 +124,34 @@ public class MechanicListenerAdapter {
     protected static class MechanicBlockListener implements Listener {
 
         protected MechanicManager manager;
+        protected BaseBukkitPlugin plugin;
 
         /**
          * Construct the listener.
          * 
          * @param manager
+         * @param plugin
          */
-        public MechanicBlockListener(MechanicManager manager) {
+        public MechanicBlockListener(MechanicManager manager, BaseBukkitPlugin plugin) {
             this.manager = manager;
+            this.plugin = plugin;
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onSignChange(SignChangeEvent event) {
+            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+                return;
             manager.dispatchSignChange(event);
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockBreak(BlockBreakEvent event) {
+            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+                return;
             manager.dispatchBlockBreak(event);
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             int oldLevel = event.getOldCurrent();
             int newLevel = event.getNewCurrent();
@@ -295,20 +307,22 @@ public class MechanicListenerAdapter {
     protected class MechanicWorldListener implements Listener {
 
         protected MechanicManager manager;
+        protected BaseBukkitPlugin plugin;
 
         /**
          * Construct the listener.
          * 
          * @param manager
          */
-        public MechanicWorldListener(MechanicManager manager) {
+        public MechanicWorldListener(MechanicManager manager, BaseBukkitPlugin plugin) {
             this.manager = manager;
+            this.plugin = plugin;
         }
 
         /**
          * Called when a chunk is loaded.
          */
-        @EventHandler
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onChunkLoad(final ChunkLoadEvent event) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                 @Override
@@ -321,8 +335,10 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is unloaded.
          */
-        @EventHandler
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onChunkUnload(ChunkUnloadEvent event) {
+            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+                return;
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
 

@@ -20,9 +20,11 @@ public class BaseConfiguration {
     //General settings
     public class CommonSettings {
         public final String language;
+        public final boolean obeyCancelled;
 
         private CommonSettings(FileConfiguration cfg) {
             language = getString(cfg,"language","en_US");
+            obeyCancelled = getBoolean(cfg,"obey-cancelled", true);
         }
     }
 
