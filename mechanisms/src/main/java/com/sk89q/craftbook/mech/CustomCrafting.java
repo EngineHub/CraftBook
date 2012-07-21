@@ -3,7 +3,8 @@ package com.sk89q.craftbook.mech;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -144,9 +145,10 @@ public class CustomCrafting {
         catch(Exception e) {
             try {
                 plugin.getLogger().severe("Failed to add Custom Recipes!");
-                String error = "";
-                e.printStackTrace(new PrintStream(error));
-                plugin.getLogger().severe(error);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                plugin.getLogger().severe(sw.toString());
             }
             catch(Exception ee){}
         }
