@@ -1,15 +1,11 @@
 package com.sk89q.craftbook.cart;
 
-import java.lang.reflect.Field;
-
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 
 public class CartMessager extends CartMechanism{
 
@@ -20,12 +16,12 @@ public class CartMessager extends CartMechanism{
             // validate
             if (cart == null) return;
 
-            Field f = VehiclesPlugin.class.getDeclaredField("config");
-            f.setAccessible(true);
-            VehiclesConfiguration cfg = (VehiclesConfiguration) f.get(null);
+            // Field f = VehiclesPlugin.class.getDeclaredField("config");
+            //f.setAccessible(true);
+            //VehiclesConfiguration cfg = (VehiclesConfiguration) f.get(null);
 
             // care?
-            if (cart.getPassenger() == null || !cfg.minecartTrackMessages) return;
+            if (cart.getPassenger() == null) return;
 
             // enabled?
             if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
