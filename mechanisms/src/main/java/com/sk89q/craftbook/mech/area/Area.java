@@ -85,7 +85,7 @@ public class Area extends AbstractMechanic{
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(
                     BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.SIGN_POST) {
+            if (block.getTypeId() == BlockID.SIGN_POST || block.getTypeId() == BlockID.WALL_SIGN) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
                     Sign sign = (Sign) state;
