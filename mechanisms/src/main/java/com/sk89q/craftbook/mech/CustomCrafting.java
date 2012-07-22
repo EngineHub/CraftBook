@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -15,9 +18,25 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
-public class CustomCrafting {
+public class CustomCrafting implements Listener {
+    MechanismsPlugin plugin;
 
-    public static void addRecipes(MechanismsPlugin plugin) {
+    public CustomCrafting(MechanismsPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
+
+    public void onFurnaceBurn(FurnaceBurnEvent event) {
+        if(event.getFuel() == null) return;
+        if(fuels.get(event.getFuel().getTypeId()) > 0) {
+            short burnTime = (short) fuels.get(event.getFuel().getTypeId()).intValue();
+            event.setBurnTime(burnTime);
+            event.setBurning(true);
+        }
+    }
+
+    public void addRecipes(MechanismsPlugin plugin) {
         try {
             File recipeFile = new File(plugin.getDataFolder(), "recipes.txt");
             if(!recipeFile.exists()) recipeFile.createNewFile();
@@ -109,6 +128,17 @@ public class CustomCrafting {
                     else
                         plugin.getLogger().warning("Failed to add recipe!");
                 }
+                else if(lastLine.startsWith("#[")) { //Furnace Fuel
+                    String output = lastLine.split(Pattern.quote("#["))[1].replace("]", "");
+                    int id = Integer.parseInt(output.split(":")[0]);
+                    String contents = br.readLine();
+                    if(contents == null) continue;
+                    contents = contents.split("#")[0];
+                    contents = contents.trim();
+                    if(contents.length() == 0) continue;
+                    int burnTime = Integer.parseInt(contents);
+                    fuels.put(id, burnTime);
+                }
                 else if(lastLine.startsWith("*[")) { //2x2 Shaped Recipe
                     String output = lastLine.split(Pattern.quote("*["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
@@ -188,7 +218,7 @@ public class CustomCrafting {
         }
     }
 
-    public static String getShapeData(String s) {
+    public String getShapeData(String s) {
         s = String.valueOf(s.charAt(0));
         return s;
     }

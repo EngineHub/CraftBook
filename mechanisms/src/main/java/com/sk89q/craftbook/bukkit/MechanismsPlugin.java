@@ -114,8 +114,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         manager.register(new Cauldron.Factory(this));
 
-        CustomCrafting.addRecipes(this);
-
         setupSelfTriggered(manager);
     }
 
@@ -149,9 +147,12 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     @Override
     protected void registerEvents() {
+        CustomCrafting cc = new CustomCrafting(this);
+        cc.addRecipes(this);
         getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
         getServer().getPluginManager().registerEvents(new Snow(this), this);
         getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
+        getServer().getPluginManager().registerEvents(cc, this);
 
         commandExecutor = new CommandParser(this);
         getCommand("savensarea").setExecutor(commandExecutor);
