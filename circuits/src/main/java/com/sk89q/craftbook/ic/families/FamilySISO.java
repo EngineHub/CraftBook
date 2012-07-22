@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.ic.families;
 
+import com.sk89q.craftbook.ic.AbstractChipState;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -41,14 +42,10 @@ public class FamilySISO extends AbstractICFamily {
 		return new ChipStateSISO(source, sign);
 	}
 
-	public static class ChipStateSISO implements ChipState {
-
-		protected Sign sign;
-		protected BlockWorldVector source;
+	public static class ChipStateSISO extends AbstractChipState {
 
 		public ChipStateSISO(BlockWorldVector source, Sign sign) {
-			this.sign = sign;
-			this.source = source;
+			super(source, sign);
 		}
 
 		protected Block getBlock(int pin) {
@@ -82,26 +79,6 @@ public class FamilySISO extends AbstractICFamily {
 				ICUtil.setState(block, value);
 			} else {
 				return;
-			}
-		}
-
-		@Override
-		public boolean isTriggered(int pin) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				return BukkitUtil.toWorldVector(block).equals(source);
-			} else {
-				return false;
-			}
-		}
-
-		@Override
-		public boolean isValid(int pin) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				return block.getType() == Material.REDSTONE_WIRE;
-			} else {
-				return false;
 			}
 		}
 
