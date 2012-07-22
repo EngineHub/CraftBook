@@ -38,15 +38,15 @@ public class FamilyAISO extends AbstractICFamily {
 
 	@Override
 	public ChipState detect(BlockWorldVector source, Sign sign) {
-		return new ChipStateSISO(source, sign);
+		return new ChipStateAISO(source, sign);
 	}
 
-	public static class ChipStateSISO implements ChipState {
+	public static class ChipStateAISO implements ChipState {
 
 		protected Sign sign;
 		protected BlockWorldVector source;
 
-		public ChipStateSISO(BlockWorldVector source, Sign sign) {
+		public ChipStateAISO(BlockWorldVector source, Sign sign) {
 			this.sign = sign;
 			this.source = source;
 		}
@@ -111,9 +111,13 @@ public class FamilyAISO extends AbstractICFamily {
 
 		@Override
 		public boolean getInput(int inputIndex) {
+			System.out.println("Checking all inputs:");
 			for (int i = 0; i < getInputCount(); i++) {
+				System.out.println("Checking input " + i);
 				if (isValid(i)) {
+					System.out.println("...is valid!");
 					if (get(i)) {
+						System.out.println("...is powered!");
 						return true;
 					}
 				}
