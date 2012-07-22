@@ -63,8 +63,12 @@ public class ICMechanic extends PersistentMechanic {
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-
+		// abort if the current did not change
 	    if (event.getNewCurrent() == event.getOldCurrent()) {
+		    return;
+	    }
+		// abort if the sign is the source
+	    if (event.getSource().equals(block)) {
 		    return;
 	    }
 
