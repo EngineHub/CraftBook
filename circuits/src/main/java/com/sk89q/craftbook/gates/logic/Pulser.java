@@ -62,8 +62,8 @@ public class Pulser extends AbstractIC {
 
 	@Override
 	public final void trigger(ChipState chip) {
-		System.out.println("Pulser trigger called!");
 		if (getInput(chip)) {
+			System.out.println("Pulser was triggered!");
 			startThread(chip);
 		}
 	}
