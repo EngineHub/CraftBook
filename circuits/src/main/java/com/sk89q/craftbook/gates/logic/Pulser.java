@@ -67,11 +67,6 @@ public class Pulser extends AbstractIC {
 		}
 	}
 
-	@Override
-	public void unload() {
-		stopThread();
-	}
-
 	private final void startThread(ChipState chip) {
 		if (running) return;
 		// start a pulse task and run it every tick after the given delay
