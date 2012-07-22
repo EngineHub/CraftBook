@@ -148,7 +148,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @Override
     protected void registerEvents() {
         CustomCrafting cc = new CustomCrafting(this);
-        cc.addRecipes(this);
+        cc.addRecipes();
         getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
         getServer().getPluginManager().registerEvents(new Snow(this), this);
         getServer().getPluginManager().registerEvents(new CustomDrops(this), this);

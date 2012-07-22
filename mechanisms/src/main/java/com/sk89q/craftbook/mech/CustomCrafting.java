@@ -38,7 +38,7 @@ public class CustomCrafting implements Listener {
         }
     }
 
-    public void addRecipes(MechanismsPlugin plugin) {
+    public void addRecipes() {
         try {
             File recipeFile = new File(plugin.getDataFolder(), "recipes.txt");
             if(!recipeFile.exists()) recipeFile.createNewFile();
