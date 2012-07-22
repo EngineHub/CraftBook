@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -27,6 +28,7 @@ public class CustomCrafting implements Listener {
 
     public HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
 
+    @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
         if(event.getFuel() == null) return;
         if(fuels.get(event.getFuel().getTypeId()) > 0) {
