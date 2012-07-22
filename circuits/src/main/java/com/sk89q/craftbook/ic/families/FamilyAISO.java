@@ -111,13 +111,9 @@ public class FamilyAISO extends AbstractICFamily {
 
 		@Override
 		public boolean getInput(int inputIndex) {
-			System.out.println("Checking all inputs:");
 			for (int i = 0; i < getInputCount(); i++) {
-				System.out.println("Checking input " + i);
 				if (isValid(i)) {
-					System.out.println("...is valid!");
 					if (get(i)) {
-						System.out.println("...is powered!");
 						return true;
 					}
 				}
