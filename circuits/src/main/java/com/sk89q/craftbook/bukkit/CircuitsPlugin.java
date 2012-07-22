@@ -20,6 +20,7 @@ package com.sk89q.craftbook.bukkit;
 
 import java.io.File;
 
+import com.sk89q.craftbook.gates.logic.*;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -30,32 +31,6 @@ import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
 import com.sk89q.craftbook.circuits.Netherrack;
-import com.sk89q.craftbook.gates.logic.AndGate;
-import com.sk89q.craftbook.gates.logic.Clock;
-import com.sk89q.craftbook.gates.logic.ClockDivider;
-import com.sk89q.craftbook.gates.logic.Counter;
-import com.sk89q.craftbook.gates.logic.Delayer;
-import com.sk89q.craftbook.gates.logic.DownCounter;
-import com.sk89q.craftbook.gates.logic.EdgeTriggerDFlipFlop;
-import com.sk89q.craftbook.gates.logic.InvertedRsNandLatch;
-import com.sk89q.craftbook.gates.logic.Inverter;
-import com.sk89q.craftbook.gates.logic.JkFlipFlop;
-import com.sk89q.craftbook.gates.logic.LevelTriggeredDFlipFlop;
-import com.sk89q.craftbook.gates.logic.LowDelayer;
-import com.sk89q.craftbook.gates.logic.Marquee;
-import com.sk89q.craftbook.gates.logic.Monostable;
-import com.sk89q.craftbook.gates.logic.Multiplexer;
-import com.sk89q.craftbook.gates.logic.NandGate;
-import com.sk89q.craftbook.gates.logic.NotDelayer;
-import com.sk89q.craftbook.gates.logic.NotLowDelayer;
-import com.sk89q.craftbook.gates.logic.Random3Bit;
-import com.sk89q.craftbook.gates.logic.RandomBit;
-import com.sk89q.craftbook.gates.logic.Repeater;
-import com.sk89q.craftbook.gates.logic.RsNandLatch;
-import com.sk89q.craftbook.gates.logic.RsNorFlipFlop;
-import com.sk89q.craftbook.gates.logic.ToggleFlipFlop;
-import com.sk89q.craftbook.gates.logic.XnorGate;
-import com.sk89q.craftbook.gates.logic.XorGate;
 import com.sk89q.craftbook.gates.weather.RainSensor;
 import com.sk89q.craftbook.gates.weather.RainSensorST;
 import com.sk89q.craftbook.gates.weather.TStormSensor;
@@ -234,6 +209,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC2101", new NotDelayer.Factory(server), familySISO);
         icManager.register("MC2110", new LowDelayer.Factory(server), familySISO);
         icManager.register("MC2111", new NotLowDelayer.Factory(server), familySISO);
+	    icManager.register("MC2500", new Pulser.Factory(server), familySISO);
+	    icManager.register("MC2501", new NotPulser.Factory(server), familySISO);
+	    icManager.register("MC2510", new LowPulser.Factory(server), familySISO);
+	    icManager.register("MC2511", new LowNotPulser.Factory(server), familySISO);
 
         //SI3Os
         icManager.register("MC2020", new Random3Bit.Factory(server), familySI3O);
