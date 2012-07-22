@@ -180,6 +180,23 @@ public class SignUtil {
         return sign.getRelative(getBack(sign));
     }
 
+    public static Sign getNextSign(Sign sign, String criterea, int searchRadius) {
+        Sign otherSign = sign;
+        Block otherBlock = otherSign.getBlock();
+        BlockFace way = sign.getBlock().getFace(getBackBlock(sign.getBlock()));
+        for(int i = 0; i < searchRadius; i++) {
+            if(otherBlock.getRelative(way).getState() instanceof Sign) {
+                otherSign = (Sign)otherBlock.getRelative(way).getState();
+                if(otherSign.getLine(1).equalsIgnoreCase(criterea))
+                    break;
+            }
+            otherBlock = otherBlock.getRelative(way);
+        }
+        if(otherSign.equals(sign))
+            return null;
+        return otherSign;
+    }
+
     /**
      * @param sign
      *            treated as sign post if it is such, or else assumed to be a

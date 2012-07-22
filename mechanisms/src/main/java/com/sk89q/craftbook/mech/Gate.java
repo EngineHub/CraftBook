@@ -25,7 +25,6 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -283,16 +282,14 @@ public class Gate extends AbstractMechanic {
             Sign sign = null;
             Sign otherSign = null;
 
-            if (block.getTypeId() == BlockID.WALL_SIGN) {
+            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
                 BlockState state = block.getState();
                 if (state instanceof Sign)
                     sign = (Sign) state;
             }
 
             if(sign!=null) {
-                BlockFace way = sign.getBlock().getFace(SignUtil.getBackBlock(sign.getBlock()));
-                if(SignUtil.getBackBlock(sign.getBlock()).getRelative(way).getState() instanceof Sign)
-                    otherSign = (Sign)SignUtil.getBackBlock(sign.getBlock()).getRelative(way).getState();
+                otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
             }
 
             if(sign!=null && sign.getLine(3).length() > 0) {
@@ -490,7 +487,7 @@ public class Gate extends AbstractMechanic {
         public Gate detect(BlockWorldVector pt) {
             Block block = BukkitUtil.toWorld(pt).getBlockAt(
                     BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.WALL_SIGN) {
+            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
                     Sign sign = (Sign) state;
@@ -560,7 +557,7 @@ public class Gate extends AbstractMechanic {
         if(event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
         Sign sign = null;
 
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
+        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
             BlockState state = event.getBlock().getState();
             if (state instanceof Sign)
                 sign = (Sign) state;
