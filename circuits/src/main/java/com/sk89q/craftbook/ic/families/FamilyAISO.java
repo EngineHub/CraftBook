@@ -127,12 +127,12 @@ public class FamilyAISO extends AbstractICFamily {
 
 		@Override
 		public boolean getOutput(int outputIndex) {
-			return get(outputIndex + 1);
+			return get(outputIndex + 3);
 		}
 
 		@Override
 		public void setOutput(int outputIndex, boolean value) {
-			set(outputIndex + 1, value);
+			set(outputIndex + 3, value);
 		}
 
 		@Override
