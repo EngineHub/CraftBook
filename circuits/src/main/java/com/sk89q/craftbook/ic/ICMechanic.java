@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -67,20 +68,21 @@ public class ICMechanic extends PersistentMechanic {
 	    if (event.getNewCurrent() == event.getOldCurrent()) {
 		    return;
 	    }
-		// abort if the sign is the source
-	    if (event.getSource().equals(block)) {
-		    return;
-	    }
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
-            final BlockState state = block.getState();
+	        final Block source = event.getSource();
+	        final BlockState state = block.getState();
+			// abort if the sign is the source or the block the sign is attached to
+	        if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) {
+		        return;
+	        }
 
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
                     ChipState chipState = family.detect(
-                            BukkitUtil.toWorldVector(event.getSource()), (Sign) state);
+                            BukkitUtil.toWorldVector(source), (Sign) state);
                     ic.trigger(chipState);
                 }
             };
