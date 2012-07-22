@@ -47,6 +47,7 @@ public class ICMechanic extends PersistentMechanic {
     protected String id;
     protected ICFamily family;
     protected IC ic;
+	protected BlockWorldVector pos;
 
     public ICMechanic(CircuitsPlugin plugin, String id, IC ic,
             ICFamily family, BlockWorldVector pos) {
@@ -55,6 +56,7 @@ public class ICMechanic extends PersistentMechanic {
         this.id = id;
         this.ic = ic;
         this.family = family;
+	    this.pos = pos;
     }
 
     @Override
@@ -128,7 +130,8 @@ public class ICMechanic extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-
+	    // remove the ic from cache
+	    ICManager.removeCachedIC(pos);
     }
 
     @Override
