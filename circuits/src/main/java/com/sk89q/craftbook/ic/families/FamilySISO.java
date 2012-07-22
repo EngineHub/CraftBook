@@ -69,7 +69,7 @@ public class FamilySISO extends AbstractICFamily {
 		public boolean get(int pin) {
 			Block block = getBlock(pin);
 			if (block != null) {
-				return block.isBlockIndirectlyPowered() || block.isBlockPowered();
+				return block.isBlockIndirectlyPowered();
 			} else {
 				return false;
 			}

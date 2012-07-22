@@ -21,6 +21,7 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 
 import com.sk89q.craftbook.gates.logic.*;
+import com.sk89q.craftbook.ic.families.FamilyAISO;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -164,11 +165,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familySISO = new FamilySISO();
         ICFamily family3ISO = new Family3ISO();
         ICFamily familySI3O = new FamilySI3O();
+	    ICFamily familyAISO = new FamilyAISO();
         //ICFamily family3I3O = new Family3I3O();
 
         //SISOs
-        icManager.register("MC1000", new Repeater.Factory(server), familySISO);
-        icManager.register("MC1001", new Inverter.Factory(server), familySISO);
+        icManager.register("MC1000", new Repeater.Factory(server), familyAISO);
+        icManager.register("MC1001", new Inverter.Factory(server), familyAISO);
         icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
         icManager.register("MC1018", new ToggleFlipFlop.Factory(server, false), familySISO);
         icManager.register("MC1020", new RandomBit.Factory(server), familySISO);
