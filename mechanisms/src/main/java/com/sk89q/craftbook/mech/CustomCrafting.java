@@ -31,6 +31,7 @@ public class CustomCrafting implements Listener {
     @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
         if(event.getFuel() == null) return;
+        if(fuels.get(event.getFuel().getTypeId()) == null) return;
         if(fuels.get(event.getFuel().getTypeId()) > 0) {
             short burnTime = (short) fuels.get(event.getFuel().getTypeId()).intValue();
             event.setBurnTime(burnTime);
