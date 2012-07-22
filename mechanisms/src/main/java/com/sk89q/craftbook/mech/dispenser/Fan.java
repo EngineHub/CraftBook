@@ -30,7 +30,7 @@ public class Fan extends Recipe{
         BlockFace face = disp.getFacing();
         for(Entity e : dis.getWorld().getChunkAt(dis.getBlock().getRelative(face).getLocation()).getEntities()) {
             if(e.getLocation().getBlock().getLocation().equals(dis.getBlock().getRelative(face).getLocation()) || e.getLocation().getBlock().getLocation().equals(dis.getBlock().getRelative(face).getLocation().subtract(0,1,0))) {
-                e.setVelocity(e.getVelocity().add(velocity));
+                e.setVelocity(e.getVelocity().add(velocity).multiply(10));
             }
         }
         return true;
