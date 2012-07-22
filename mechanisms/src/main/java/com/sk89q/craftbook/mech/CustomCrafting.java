@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.bukkit.Material;
+import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
@@ -31,6 +32,10 @@ public class CustomCrafting implements Listener {
     @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
         if(event.getFuel() == null) return;
+        if(event.getBurnTime() != 0) return;
+        Furnace f = (Furnace)event.getBlock().getState();
+        if(f.getInventory().getSmelting() != null) return;
+        if(f.getInventory().getItem(0) != null) return;
         if(fuels.get(event.getFuel().getTypeId()) == null) return;
         if(fuels.get(event.getFuel().getTypeId()) > 0) {
             short burnTime = (short) fuels.get(event.getFuel().getTypeId()).intValue();
