@@ -30,6 +30,6 @@ public class FireArrows extends Recipe {
         BlockFace face = disp.getFacing();
         Arrow a = dis.getWorld().spawnArrow(dis.getBlock().getRelative(face).getLocation(), velocity, 1.0f, 0.0f);
         a.setFireTicks(5000);
-        return false;
+        return true;
     }
 }
