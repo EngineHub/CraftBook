@@ -62,6 +62,10 @@ public class ICMechanic extends PersistentMechanic {
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
+	    if (event.getNewCurrent() == event.getOldCurrent()) {
+		    return;
+	    }
+
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final BlockState state = block.getState();
 

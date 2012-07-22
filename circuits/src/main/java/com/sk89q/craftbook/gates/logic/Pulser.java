@@ -67,12 +67,16 @@ public class Pulser extends AbstractIC {
 		}
 	}
 
+	@Override
+	public void unload() {
+		stopThread();
+	}
+
 	private final void startThread(ChipState chip) {
-		BukkitScheduler scheduler = Bukkit.getScheduler();
 		if (running) return;
 		// start a pulse task and run it every tick after the given delay
 		// save the given task id
-		taskId = scheduler.scheduleSyncRepeatingTask(
+		taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(
 				CircuitsPlugin.getInst(),
 				new PulseTask(chip, pulseLength, pulseCount, pauseLength),
 				startDelay, 1L);
