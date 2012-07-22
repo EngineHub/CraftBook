@@ -23,33 +23,34 @@ import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.bukkit.*;
-
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.material.Diode;
 
 /**
- * Handles detection for the triple-input single-output family.
+ * Handles detection for the single input single output family.
  *
- * @author robhol
+ * @author sk89q
  */
-public class Family3ISO extends AbstractICFamily {
+public class FamilyAISO extends AbstractICFamily {
 
 	@Override
 	public ChipState detect(BlockWorldVector source, Sign sign) {
-		return new ChipState3ISO(source, sign);
+		return new ChipStateAISO(source, sign);
 	}
 
-	public static class ChipState3ISO extends AbstractChipState {
+	public static class ChipStateAISO extends AbstractChipState {
 
-		public ChipState3ISO(BlockWorldVector source, Sign sign) {
+		public ChipStateAISO(BlockWorldVector source, Sign sign) {
 			super(source, sign);
 		}
 
 		protected Block getBlock(int pin) {
+
 			switch (pin) {
 				case 0:
 					return SignUtil.getFrontBlock(sign.getBlock());
@@ -63,6 +64,7 @@ public class Family3ISO extends AbstractICFamily {
 				default:
 					return null;
 			}
+
 		}
 
 		@Override
@@ -87,7 +89,14 @@ public class Family3ISO extends AbstractICFamily {
 
 		@Override
 		public boolean getInput(int inputIndex) {
-			return get(inputIndex);
+			for (int i = 0; i < getInputCount(); i++) {
+				if (isValid(i)) {
+					if (get(i)) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		@Override
