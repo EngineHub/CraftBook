@@ -25,6 +25,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -40,6 +41,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
@@ -279,6 +281,7 @@ public class Gate extends AbstractMechanic {
                     BukkitUtil.toLocation(pt));
 
             Sign sign = null;
+            Sign otherSign = null;
 
             if (block.getTypeId() == BlockID.WALL_SIGN) {
                 BlockState state = block.getState();
@@ -286,14 +289,26 @@ public class Gate extends AbstractMechanic {
                     sign = (Sign) state;
             }
 
+            if(sign!=null) {
+                BlockFace way = sign.getBlock().getFace(SignUtil.getBackBlock(sign.getBlock()));
+                if(SignUtil.getBackBlock(sign.getBlock()).getRelative(way).getState() instanceof Sign)
+                    otherSign = (Sign)SignUtil.getBackBlock(sign.getBlock()).getRelative(way).getState();
+            }
+
             if(sign!=null && sign.getLine(3).length() > 0) {
                 try {
                     curBlocks = Integer.parseInt(sign.getLine(3));
+                    if(otherSign != null)
+                        curBlocks += Integer.parseInt(otherSign.getLine(3));
                 }
                 catch(Exception e){
                     curBlocks = 0;
                     sign.setLine(3, "0");
                     sign.update();
+                    if(otherSign != null) {
+                        otherSign.setLine(3, "0");
+                        otherSign.update();
+                    }
                 }
             }
 
@@ -326,6 +341,10 @@ public class Gate extends AbstractMechanic {
 
                     sign.setLine(3, curBlocks + "");
                     sign.update();
+                    if(otherSign!=null) {
+                        otherSign.setLine(3, "0");
+                        otherSign.update();
+                    }
                 } else if(curBlocks == 0 && isValidGateItem(new ItemStack(ID,1))) {
                     if(player!=null) {
                         player.printError("Not enough blocks to trigger mechanic!");
