@@ -540,8 +540,10 @@ public class Door extends AbstractMechanic {
             }
         }
 
-        ItemStack toDrop = new ItemStack(getDoorMaterial(), curBlocks, getDoorData());
-        sign.getWorld().dropItem(sign.getLocation(), toDrop);
+        if(curBlocks > 0) {
+            ItemStack toDrop = new ItemStack(getDoorMaterial(), curBlocks, getDoorData());
+            sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+        }
     }
 
     @Override

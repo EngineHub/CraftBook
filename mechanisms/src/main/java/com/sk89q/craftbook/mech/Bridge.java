@@ -515,8 +515,10 @@ public class Bridge extends AbstractMechanic {
             }
         }
 
-        ItemStack toDrop = new ItemStack(getBridgeMaterial(), curBlocks, getBridgeData());
-        sign.getWorld().dropItem(sign.getLocation(), toDrop);
+        if(curBlocks > 0) {
+            ItemStack toDrop = new ItemStack(getBridgeMaterial(), curBlocks, getBridgeData());
+            sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+        }
     }
 
     @Override

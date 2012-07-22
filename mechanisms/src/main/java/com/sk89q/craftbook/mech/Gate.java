@@ -576,8 +576,10 @@ public class Gate extends AbstractMechanic {
             }
         }
 
-        ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
-        sign.getWorld().dropItem(sign.getLocation(), toDrop);
+        if(curBlocks > 0) {
+            ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
+            sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+        }
     }
 
     @Override
