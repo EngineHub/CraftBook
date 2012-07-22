@@ -40,7 +40,7 @@ public abstract class AbstractChipState implements ChipState {
 				return true;
 			} else if (block.getType() == Material.DIODE_BLOCK_OFF
 					|| block.getType() == Material.DIODE_BLOCK_ON) {
-				if (block.getRelative(((Diode) block.getState()).getFacing()).equals(sign.getBlock())) {
+				if (block.getRelative(((Diode) block.getState().getData()).getFacing()).equals(sign.getBlock())) {
 					return true;
 				}
 			}
