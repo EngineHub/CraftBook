@@ -30,7 +30,7 @@
     <!-- Repository for other dependencies of SK's -->
     <repository>
       <id>sk89q-mvn2</id>
-      <url>http://mvn2.sk89q.com/repo/</url>
+      <url>http://mvn2.sk89q.com/repo</url>
     </repository>
     <!-- Repository for Bukkit -->
     <repository>
