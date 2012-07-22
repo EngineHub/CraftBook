@@ -143,13 +143,17 @@ public class Door extends AbstractMechanic {
         this.plugin = plugin;
         this.settings = plugin.getLocalConfiguration().doorSettings;
 
+        if(trigger == null) return;
+
         Sign s = (Sign)trigger.getState();
+
+        if(s == null || s.getLine(1) == null);
 
         Material mat;
         findBase: {
-            if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+            if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-            } else if (((Sign)trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+            } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             }
             else
