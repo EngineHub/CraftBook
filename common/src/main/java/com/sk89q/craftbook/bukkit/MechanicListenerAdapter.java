@@ -19,7 +19,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -208,9 +207,7 @@ public class MechanicListenerAdapter {
                         newLevel > 0
                             ? w.getData(x, y, z) | 0x8
                             : w.getData(x, y, z) & 0x7);*/
-                } else if (type == BlockID.REDSTONE_WIRE
-		                || block.getType() == Material.DIODE_BLOCK_ON
-		                || block.getType() == Material.DIODE_BLOCK_OFF) {
+                } else if (type == BlockID.REDSTONE_WIRE) {
                     // Fake data
                     //w.fakeData(x, y, z, newLevel);
 
