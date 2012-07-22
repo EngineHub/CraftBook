@@ -167,8 +167,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //ICFamily family3I3O = new Family3I3O();
 
         //SISOs
-        icManager.register("MC1000", new Repeater.Factory(server), family3ISO);
-        icManager.register("MC1001", new Inverter.Factory(server), family3ISO);
+        icManager.register("MC1000", new Repeater.Factory(server), familySISO);
+        icManager.register("MC1001", new Inverter.Factory(server), familySISO);
         icManager.register("MC1017", new ToggleFlipFlop.Factory(server, true), familySISO);
         icManager.register("MC1018", new ToggleFlipFlop.Factory(server, false), familySISO);
         icManager.register("MC1020", new RandomBit.Factory(server), familySISO);
@@ -209,10 +209,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC2101", new NotDelayer.Factory(server), familySISO);
         icManager.register("MC2110", new LowDelayer.Factory(server), familySISO);
         icManager.register("MC2111", new NotLowDelayer.Factory(server), familySISO);
-	    icManager.register("MC2500", new Pulser.Factory(server), family3ISO);
-	    icManager.register("MC2501", new NotPulser.Factory(server), family3ISO);
-	    icManager.register("MC2510", new LowPulser.Factory(server), family3ISO);
-	    icManager.register("MC2511", new LowNotPulser.Factory(server), family3ISO);
+	    icManager.register("MC2500", new Pulser.Factory(server), familySISO);
+	    icManager.register("MC2501", new NotPulser.Factory(server), familySISO);
+	    icManager.register("MC2510", new LowPulser.Factory(server), familySISO);
+	    icManager.register("MC2511", new LowNotPulser.Factory(server), familySISO);
 
         //SI3Os
         icManager.register("MC2020", new Random3Bit.Factory(server), familySI3O);
