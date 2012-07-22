@@ -22,6 +22,7 @@ package com.sk89q.craftbook.mech;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -537,7 +538,30 @@ public class Gate extends AbstractMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+        if(event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
+        Sign sign = null;
 
+        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = event.getBlock().getState();
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        }
+
+        int curBlocks = 0;
+
+        if(sign!=null && sign.getLine(3).length() > 0) {
+            try {
+                curBlocks = Integer.parseInt(sign.getLine(3));
+            }
+            catch(Exception e){
+                curBlocks = 0;
+                sign.setLine(3, "0");
+                sign.update();
+            }
+        }
+
+        ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
+        sign.getWorld().dropItem(sign.getLocation(), toDrop);
     }
 
     @Override

@@ -493,6 +493,30 @@ public class Bridge extends AbstractMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+        if(event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
+        Sign sign = null;
+
+        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = event.getBlock().getState();
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        }
+
+        int curBlocks = 0;
+
+        if(sign!=null && sign.getLine(0).length() > 0) {
+            try {
+                curBlocks = Integer.parseInt(sign.getLine(0));
+            }
+            catch(Exception e){
+                curBlocks = 0;
+                sign.setLine(0, "0");
+                sign.update();
+            }
+        }
+
+        ItemStack toDrop = new ItemStack(getBridgeMaterial(), curBlocks, getBridgeData());
+        sign.getWorld().dropItem(sign.getLocation(), toDrop);
     }
 
     @Override
