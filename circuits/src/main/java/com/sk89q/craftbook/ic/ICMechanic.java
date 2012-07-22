@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -47,6 +48,7 @@ public class ICMechanic extends PersistentMechanic {
     protected String id;
     protected ICFamily family;
     protected IC ic;
+	protected BlockWorldVector pos;
 
     public ICMechanic(CircuitsPlugin plugin, String id, IC ic,
             ICFamily family, BlockWorldVector pos) {
@@ -55,22 +57,32 @@ public class ICMechanic extends PersistentMechanic {
         this.id = id;
         this.ic = ic;
         this.family = family;
+	    this.pos = pos;
     }
 
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+		// abort if the current did not change
+	    if (event.getNewCurrent() == event.getOldCurrent()) {
+		    return;
+	    }
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
-            final BlockState state = block.getState();
+	        final Block source = event.getSource();
+	        final BlockState state = block.getState();
+			// abort if the sign is the source or the block the sign is attached to
+	        if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) {
+		        return;
+	        }
 
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
                     ChipState chipState = family.detect(
-                            BukkitUtil.toWorldVector(event.getSource()), (Sign) state);
+                            BukkitUtil.toWorldVector(source), (Sign) state);
                     ic.trigger(chipState);
                 }
             };
@@ -124,7 +136,8 @@ public class ICMechanic extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-
+	    // remove the ic from cache
+	    ICManager.removeCachedIC(pos);
     }
 
     @Override
