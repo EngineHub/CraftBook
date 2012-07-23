@@ -419,9 +419,9 @@ public class SignUtil {
 		}
 		// apply front and back offset
 		if (offsetZ > 0) {
-			block = getRelativeBlock(block, front, offsetX);
+			block = getRelativeBlock(block, front, offsetZ);
 		} else if (offsetZ < 0) {
-			block = getRelativeBlock(block, back, offsetX);
+			block = getRelativeBlock(block, back, offsetZ);
 		}
 		// apply up and down offset
 		if (offsetY > 0) {
