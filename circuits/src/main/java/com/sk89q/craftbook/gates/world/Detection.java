@@ -72,8 +72,7 @@ public class Detection extends AbstractIC {
     private Type type;
 
 	private Location center;
-	private Chunk centerChunk;
-	private int chunkRadius;
+	private Set<Chunk> chunks;
     private int radius;
 
     public Detection(Server server, Sign block) {
@@ -117,8 +116,7 @@ public class Detection extends AbstractIC {
             this.radius = Integer.parseInt(line);
         }
 	    this.center = block.getLocation();
-	    this.centerChunk = block.getChunk();
-	    this.chunkRadius = (int) Math.ceil(radius / 16);
+	    this.chunks = getSurroundingChunks(block.getChunk(), ((radius / 16) + 1));
     }
 
     @Override
@@ -139,7 +137,7 @@ public class Detection extends AbstractIC {
     }
 
     protected boolean isDetected() {
-        for (Chunk chunk : getSurroundingChunks()) {
+        for (Chunk chunk : this.chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
@@ -157,13 +155,13 @@ public class Detection extends AbstractIC {
         return false;
     }
 
-	private Set<Chunk> getSurroundingChunks() {
+	private Set<Chunk> getSurroundingChunks(Chunk chunk, int radius) {
 		Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-		World world = centerChunk.getWorld();
-		int cX = centerChunk.getX();
-		int cZ = centerChunk.getZ();
-		for (int x = chunkRadius; x >= 0; x--) {
-			for (int z = chunkRadius; z >= 0; z--) {
+		World world = chunk.getWorld();
+		int cX = chunk.getX();
+		int cZ = chunk.getZ();
+		for (int x = radius; x >= 0; x--) {
+			for (int z = radius; z >= 0; z--) {
 				chunks.add(world.getChunkAt(cX + x, cZ + z));
 				chunks.add(world.getChunkAt(cX - x, cZ - z));
 			}
