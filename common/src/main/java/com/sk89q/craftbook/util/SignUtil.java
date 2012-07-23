@@ -388,23 +388,23 @@ public class SignUtil {
 
 			case NORTH:
 				front = BlockFace.SOUTH;
-				right = BlockFace.EAST;
-				left = BlockFace.WEST;
+				left = BlockFace.EAST;
+				right = BlockFace.WEST;
 				break;
 			case EAST:
 				front = BlockFace.WEST;
-				right = BlockFace.SOUTH;
-				left = BlockFace.NORTH;
+				left = BlockFace.SOUTH;
+				right = BlockFace.NORTH;
 				break;
 			case SOUTH:
 				front = BlockFace.NORTH;
-				right = BlockFace.WEST;
-				left = BlockFace.EAST;
+				left = BlockFace.WEST;
+				right = BlockFace.EAST;
 				break;
 			case WEST:
 				front = BlockFace.EAST;
-				left = BlockFace.SOUTH;
-				right = BlockFace.NORTH;
+				left = BlockFace.NORTH;
+				right = BlockFace.SOUTH;
 				break;
 			default:
 				front = BlockFace.SOUTH;
@@ -414,19 +414,19 @@ public class SignUtil {
 		// apply left and right offset
 		if (offsetX > 0) {
 			block = getRelativeBlock(block, right, offsetX);
-		} else {
+		} else if (offsetX < 0) {
 			block = getRelativeBlock(block, left, offsetX);
 		}
 		// apply front and back offset
 		if (offsetZ > 0) {
 			block = getRelativeBlock(block, front, offsetX);
-		} else {
+		} else if (offsetZ < 0) {
 			block = getRelativeBlock(block, back, offsetX);
 		}
 		// apply up and down offset
 		if (offsetY > 0) {
 			block = getRelativeBlock(block, BlockFace.UP, offsetY);
-		} else {
+		} else if (offsetY < 0) {
 			block = getRelativeBlock(block, BlockFace.DOWN, offsetY);
 		}
 		return block;
