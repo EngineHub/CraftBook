@@ -141,7 +141,6 @@ public class Detection extends AbstractIC {
                 for (Entity entity : chunk.getEntities()) {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
-	                        System.out.println("Trying to detect at: x:" + center.getBlockX() + " y:" + center.getBlockY() + " z:" + center.getBlockZ() + " with radius: " + radius);
                             // at last check if the entity is within the radius
                             if (getGreatestDistance(entity.getLocation(), center) <= radius) {
                                 return true;
@@ -161,20 +160,27 @@ public class Detection extends AbstractIC {
         // get the block the furthest away
         loc.add(radius, 0, radius);
         // add the chunk
-        Chunk chunk2 = loc.getChunk();
         chunks.add(loc.getChunk());
-        // get the x, z difference between the two chunks then...
-        int z = 0;
-        // ...iterate over all chunks in between
-        for (int x = chunk.getX() - chunk2.getX(); x > 0; x--) {
-            // add all surrounding chunks one by one
-            chunks.add(chunk.getWorld().getChunkAt(chunk.getX() + x, chunk.getZ() + z));
-            for (z = chunk.getZ() - chunk2.getZ(); z > 0; z--) {
-                chunks.add(chunk.getWorld().getChunkAt(chunk.getX() + x, chunk.getZ() + z));
-            }
-        }
+	    chunks.addAll(getChunksBetween(chunk, loc.getChunk()));
+	    loc.subtract(radius * 2, 0, radius * 2);
+	    chunks.addAll(getChunksBetween(chunk, loc.getChunk()));
         return chunks;
     }
+
+	private Set<Chunk> getChunksBetween(Chunk chunk1, Chunk chunk2) {
+		Set<Chunk> chunks = new LinkedHashSet<Chunk>();
+		// get the x, z difference between the two chunks then...
+		int z = 0;
+		// ...iterate over all chunks in between
+		for (int x = chunk1.getX() - chunk2.getX(); x > 0; x--) {
+			// add all surrounding chunks one by one
+			chunks.add(chunk1.getWorld().getChunkAt(chunk1.getX() + x, chunk1.getZ() + z));
+			for (z = chunk1.getZ() - chunk2.getZ(); z > 0; z--) {
+				chunks.add(chunk1.getWorld().getChunkAt(chunk1.getX() + x, chunk1.getZ() + z));
+			}
+		}
+		return chunks;
+	}
 
     public static int getGreatestDistance(Location l1, Location l2) {
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
