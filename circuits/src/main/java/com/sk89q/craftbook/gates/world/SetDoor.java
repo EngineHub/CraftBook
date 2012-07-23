@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
@@ -108,6 +107,18 @@ public class SetDoor extends AbstractIC {
 					block.setTypeIdAndData(offMaterial, (byte) offData, true);
 				}
 			}
+		}
+	}
+
+	public static class Factory extends AbstractICFactory implements RestrictedIC {
+
+		public Factory(Server server) {
+			super(server);
+		}
+
+		@Override
+		public IC create(Sign sign) {
+			return new SetDoor(getServer(), sign);
 		}
 	}
 }
