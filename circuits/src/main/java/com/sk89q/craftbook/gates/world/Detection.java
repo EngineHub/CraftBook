@@ -3,6 +3,7 @@ package com.sk89q.craftbook.gates.world;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -109,9 +110,9 @@ public class Detection extends AbstractIC {
                 int offsetY = Integer.parseInt(offsetSplit[1]);
                 int offsetZ = Integer.parseInt(offsetSplit[2]);
 		        if (relativeOffset) {
-			        block = SignUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
+			        block = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
 		        } else {
-			        block = SignUtil.getOffset(sign, offsetX, offsetY, offsetZ);
+			        block = LocationUtil.getOffset(block, offsetX, offsetY, offsetZ);
 		        }
             } catch (NumberFormatException e) {
                 // do nothing and use the defaults
@@ -122,7 +123,7 @@ public class Detection extends AbstractIC {
             this.radius = Integer.parseInt(line);
         }
 	    this.center = block.getLocation();
-	    this.chunks = getSurroundingChunks(block.getChunk(), ((radius / 16) + 1));
+	    this.chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class Detection extends AbstractIC {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
                             // at last check if the entity is within the radius
-                            if (getGreatestDistance(entity.getLocation(), center) <= radius) {
+                            if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
                                 return true;
                             }
                         }
@@ -159,35 +160,6 @@ public class Detection extends AbstractIC {
             }
         }
         return false;
-    }
-
-	private Set<Chunk> getSurroundingChunks(Chunk chunk, int radius) {
-		Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-		World world = chunk.getWorld();
-		int cX = chunk.getX();
-		int cZ = chunk.getZ();
-		for (int x = radius; x >= 0; x--) {
-			for (int z = radius; z >= 0; z--) {
-				chunks.add(world.getChunkAt(cX + x, cZ + z));
-				chunks.add(world.getChunkAt(cX - x, cZ - z));
-			}
-		}
-		return chunks;
-	}
-
-    public static int getGreatestDistance(Location l1, Location l2) {
-        int x = Math.abs(l1.getBlockX() - l2.getBlockX());
-        int y = Math.abs(l1.getBlockY() - l2.getBlockY());
-        int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-        if (x >= y && x >= z) {
-            return x;
-        } else if (y >= x && y >= z) {
-            return y;
-        } else if (z >= x && z >= y) {
-            return z;
-        } else {
-            return x;
-        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

@@ -3,6 +3,7 @@ package com.sk89q.craftbook.gates.world;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -94,43 +95,6 @@ public class EntityTrap extends AbstractIC {
         }
     }
 
-    private Set<Chunk> getSurroundingChunks(Location loc, int radius) {
-        Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-        Chunk chunk = loc.getChunk();
-        chunks.add(chunk);
-        // get the block the furthest away
-        loc.add(radius, 0, radius);
-        // add the chunk
-        Chunk chunk2 = loc.getChunk();
-        chunks.add(loc.getChunk());
-        // get the x, z difference between the two chunks then...
-        int z = 0;
-        // ...iterate over all chunks in between
-        for (int x = chunk.getX() - chunk2.getX(); x > 0; x--) {
-            // add all surrounding chunks one by one
-            chunks.add(chunk.getWorld().getChunkAt(chunk.getX() + x, chunk.getZ() + z));
-            for (z = chunk.getZ() - chunk2.getZ(); z > 0; z--) {
-                chunks.add(chunk.getWorld().getChunkAt(chunk.getX() + x, chunk.getZ() + z));
-            }
-        }
-        return chunks;
-    }
-
-    public static int getGreatestDistance(Location l1, Location l2) {
-        int x = Math.abs(l1.getBlockX() - l2.getBlockX());
-        int y = Math.abs(l1.getBlockY() - l2.getBlockY());
-        int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-        if (x > y && x > z) {
-            return x;
-        } else if (y > x && y > z) {
-            return y;
-        } else if (z > x && z > y) {
-            return z;
-        } else {
-            return x;
-        }
-    }
-
     /**
      * Returns true if the entity was damaged.
      *
@@ -176,14 +140,14 @@ public class EntityTrap extends AbstractIC {
         Location location = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
         // add the offset to the location of the block connected to the sign
         location.add(offsetX, offsetY, offsetZ);
-        for (Chunk chunk : getSurroundingChunks(location, radius)) {
+        for (Chunk chunk : LocationUtil.getSurroundingChunks(location.getBlock(), radius)) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
                             // at last check if the entity is within the radius
-                            if (getGreatestDistance(entity.getLocation(), location) <= radius) {
+                            if (LocationUtil.getGreatestDistance(entity.getLocation(), location) <= radius) {
                                 if (entity instanceof LivingEntity)
                                     ((LivingEntity) entity).damage(damage);
                                 else if (entity instanceof Minecart)
