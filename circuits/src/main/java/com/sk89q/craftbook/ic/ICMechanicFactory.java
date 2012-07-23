@@ -78,8 +78,16 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         RegisteredICFactory registration = manager.get(id);
         if (registration == null) throw new InvalidMechanismException(
                 "\""+sign.getLine(1)+"\" should be an IC ID, but no IC registered under that ID could be found.");
-        
-        IC ic = registration.getFactory().create(sign);
+
+	    IC ic;
+		// check if the ic is cached and get that single instance instead of creating a new one
+	    if (ICManager.isCachedIC(pt)) {
+		    ic = ICManager.getCachedIC(pt);
+	    } else {
+		    ic = registration.getFactory().create(sign);
+		    // add the created ic to the cache
+		    ICManager.addCachedIC(pt, ic);
+	    }
         
         // okay, everything checked out.  we can finally make it.
         if (ic instanceof SelfTriggeredIC) {
