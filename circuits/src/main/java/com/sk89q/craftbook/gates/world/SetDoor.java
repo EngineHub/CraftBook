@@ -39,19 +39,18 @@ public class SetDoor extends AbstractIC {
 				String[] split = line.split("-");
 				// parse the material data
 				if (split.length > 0) {
-					String[] strings = split[0].split(":");
-					offMaterial = Integer.parseInt(strings[0]);
-					if (strings.length > 0) offData = Integer.parseInt(strings[1]);
-					// parse the data that gets set when the block is toggled on
-					strings = split[1].split(":");
-					onMaterial = Integer.parseInt(strings[0]);
-					if (strings.length > 0) onData = Integer.parseInt(strings[1]);
-				} else {
 					// parse the data that gets set when the block is toggled on
 					String[] strings = split[0].split(":");
 					onMaterial = Integer.parseInt(strings[0]);
 					if (strings.length > 0) onData = Integer.parseInt(strings[1]);
 				}
+				String[] strings = split[0].split(":");
+				offMaterial = Integer.parseInt(strings[0]);
+				if (strings.length > 0) offData = Integer.parseInt(strings[1]);
+				// parse the data that gets set when the block is toggled on
+				strings = split[1].split(":");
+				onMaterial = Integer.parseInt(strings[0]);
+				if (strings.length > 0) onData = Integer.parseInt(strings[1]);
 			} catch (NumberFormatException e) {
 				// do nothing and use the defaults
 			} catch (ArrayIndexOutOfBoundsException e) {
