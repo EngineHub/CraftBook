@@ -77,22 +77,22 @@ public final class LocationUtil {
 
 		switch (back) {
 
-			case NORTH:
+			case SOUTH:
 				front = BlockFace.SOUTH;
 				left = BlockFace.EAST;
 				right = BlockFace.WEST;
 				break;
-			case EAST:
+			case WEST:
 				front = BlockFace.WEST;
 				left = BlockFace.SOUTH;
 				right = BlockFace.NORTH;
 				break;
-			case SOUTH:
+			case NORTH:
 				front = BlockFace.NORTH;
 				left = BlockFace.WEST;
 				right = BlockFace.EAST;
 				break;
-			case WEST:
+			case EAST:
 				front = BlockFace.EAST;
 				left = BlockFace.NORTH;
 				right = BlockFace.SOUTH;
