@@ -1,0 +1,113 @@
+package com.sk89q.craftbook.gates.world;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+
+/**
+ * @author Silthus
+ */
+public class SetDoor extends AbstractIC {
+
+	private int onMaterial = 1;
+	private int onData = 0;
+
+	private int offMaterial = 0;
+	private int offData = 0;
+
+	private int width = 1;
+	private int height = 1;
+
+	private Block center;
+	private BlockFace faceing;
+
+	public SetDoor(Server server, Sign block) {
+		super(server, block);
+		load();
+	}
+
+	private void load() {
+		this.center = SignUtil.getBackBlock(getSign().getBlock());
+		this.faceing = SignUtil.getFacing(getSign().getBlock());
+		String line = getSign().getLine(2);
+		String[] split = line.split("-");
+		// parse the material data
+		if (split.length > 0) {
+			String[] strings = split[0].split(":");
+			offMaterial = Integer.parseInt(strings[0]);
+			if (strings.length > 0) offData = Integer.parseInt(strings[1]);
+			// parse the data that gets set when the block is toggled on
+			strings = split[1].split(":");
+			onMaterial = Integer.parseInt(strings[0]);
+			if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+		} else {
+			// parse the data that gets set when the block is toggled on
+			String[] strings = split[0].split(":");
+			onMaterial = Integer.parseInt(strings[0]);
+			if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+		}
+		// parse the coordinates
+		line = getSign().getLine(3);
+		boolean relativeOffset = line.contains("!") ? false : true;
+		if (!relativeOffset) line.replace("!", "");
+		try {
+			split = line.split(":");
+			// parse the offset
+			String[] offsetSplit = split[0].split(",");
+			int offsetX = Integer.parseInt(offsetSplit[0]);
+			int offsetY = Integer.parseInt(offsetSplit[1]);
+			int offsetZ = Integer.parseInt(offsetSplit[2]);
+			if (relativeOffset) {
+				this.center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
+			} else {
+				this.center = LocationUtil.getOffset(this.center, offsetX, offsetY, offsetZ);
+			}
+			// parse the size of the door
+			String[] sizeSplit = split[1].split(",");
+			width = Integer.parseInt(sizeSplit[0]);
+			height = Integer.parseInt(sizeSplit[1]);
+		} catch (NumberFormatException e) {
+			// do nothing and use the defaults
+		} catch (IndexOutOfBoundsException e) {
+			// do nothing and use the defaults
+		}
+
+	}
+
+	@Override
+	public String getTitle() {
+		return "Set P-Door";
+	}
+
+	@Override
+	public String getSignTitle() {
+		return "SET P-DOOR";
+	}
+
+	@Override
+	public void trigger(ChipState chip) {
+		if (chip.getInput(0)) {
+			setDoor(true);
+		} else {
+			setDoor(false);
+		}
+	}
+
+	private void setDoor(boolean open) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				Block block = LocationUtil.getRelativeOffset(center, faceing, x, y, 0);
+				if (open) {
+					block.setTypeIdAndData(onMaterial, (byte) onData, true);
+				} else {
+					block.setTypeIdAndData(offMaterial, (byte) offData, true);
+				}
+			}
+		}
+	}
+}

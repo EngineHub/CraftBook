@@ -51,22 +51,26 @@ public final class LocationUtil {
 		return block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
 	}
 
+	public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
+		return getRelativeOffset(sign.getBlock(), SignUtil.getFacing(sign.getBlock()), offsetX, offsetY, offsetZ);
+	}
+
 	/**
 	 * Gets the block located relative to the signs facing. That
 	 * means that when the sign is attached to a block and the player
 	 * is looking at it it will add the offsetX to left or right,
 	 * offsetY is added up or down and offsetZ is added front or back.
 	 *
-	 * @param sign to get relative position from
+	 * @param block to get relative position from
+	 * @param facing to work with
 	 * @param offsetX amount to move left(negative) or right(positive)
 	 * @param offsetY amount to move up(positive) or down(negative)
 	 * @param offsetZ amount to move back(negative) or front(positive)
 	 * @return block located at the relative offset position
 	 */
-	public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
+	public static Block getRelativeOffset(Block block, BlockFace facing, int offsetX, int offsetY, int offsetZ) {
 
-		Block block = SignUtil.getBackBlock(sign.getBlock());
-		BlockFace back = ((org.bukkit.material.Sign) sign.getData()).getFacing();
+		BlockFace back = facing;
 		BlockFace front;
 		BlockFace right;
 		BlockFace left;
