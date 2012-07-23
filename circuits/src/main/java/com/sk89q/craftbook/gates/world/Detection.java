@@ -76,13 +76,13 @@ public class Detection extends AbstractIC {
     public Detection(Server server, Sign block) {
         super(server, block);
         // lets set some defaults
-	    this.center = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
         radius = 0;
         load();
     }
 
     private void load() {
         Sign sign = getSign();
+	    Block block = SignUtil.getBackBlock(sign.getBlock());
 	    // lets get the type to detect first
 	    this.type = Type.fromString(sign.getLine(3).trim());
 	    // set the type to any if wrong format
@@ -104,7 +104,7 @@ public class Detection extends AbstractIC {
                 int offsetX = Integer.parseInt(offsetSplit[0]);
                 int offsetY = Integer.parseInt(offsetSplit[1]);
                 int offsetZ = Integer.parseInt(offsetSplit[2]);
-		        this.center = center.add(offsetX, offsetY, offsetZ);
+		        block = block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
             } catch (NumberFormatException e) {
                 // do nothing and use the defaults
             } catch (IndexOutOfBoundsException e) {
@@ -113,6 +113,7 @@ public class Detection extends AbstractIC {
         } else {
             this.radius = Integer.parseInt(line);
         }
+	    this.center = block.getLocation();
     }
 
     @Override
@@ -133,7 +134,8 @@ public class Detection extends AbstractIC {
     }
 
     protected boolean isDetected() {
-        for (Chunk chunk : getSurroundingChunks(center, radius)) {
+        for (Chunk chunk : getSurroundingChunks(
+		        new Location(center.getWorld(), center.getBlockX(), center.getBlockY(), center.getBlockZ()), radius)) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
