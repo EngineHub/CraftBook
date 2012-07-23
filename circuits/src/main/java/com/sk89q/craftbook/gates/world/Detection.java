@@ -169,35 +169,6 @@ public class Detection extends AbstractIC {
 		return chunks;
 	}
 
-    private Set<Chunk> getSurroundingChunks(Location loc, int radius) {
-        Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-        Chunk chunk = loc.getChunk();
-        chunks.add(chunk);
-        // get the block the furthest away
-        loc.add(radius, 0, radius);
-        // add the chunk
-        chunks.add(loc.getChunk());
-	    chunks.addAll(getChunksBetween(chunk, loc.getChunk()));
-	    loc.subtract(radius * 2, 0, radius * 2);
-	    chunks.addAll(getChunksBetween(chunk, loc.getChunk()));
-        return chunks;
-    }
-
-	private Set<Chunk> getChunksBetween(Chunk chunk1, Chunk chunk2) {
-		Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-		// get the x, z difference between the two chunks then...
-		int z = 0;
-		// ...iterate over all chunks in between
-		for (int x = chunk1.getX() - chunk2.getX(); x > 0; x--) {
-			// add all surrounding chunks one by one
-			chunks.add(chunk1.getWorld().getChunkAt(chunk1.getX() + x, chunk1.getZ() + z));
-			for (z = chunk1.getZ() - chunk2.getZ(); z > 0; z--) {
-				chunks.add(chunk1.getWorld().getChunkAt(chunk1.getX() + x, chunk1.getZ() + z));
-			}
-		}
-		return chunks;
-	}
-
     public static int getGreatestDistance(Location l1, Location l2) {
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
