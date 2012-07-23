@@ -94,6 +94,8 @@ public class Detection extends AbstractIC {
 	    sign.update();
 	    // now check the third line for the radius and offset
 	    String line = sign.getLine(2).trim();
+	    boolean relativeOffset = line.contains("!") ? false : true;
+	    if (!relativeOffset) line.replace("!", "");
 	    // if the line contains a = the offset is given
 	    // the given string should look something like that:
 	    // radius=x:y:z or radius, e.g. 1=-2:5:11
@@ -106,7 +108,11 @@ public class Detection extends AbstractIC {
                 int offsetX = Integer.parseInt(offsetSplit[0]);
                 int offsetY = Integer.parseInt(offsetSplit[1]);
                 int offsetZ = Integer.parseInt(offsetSplit[2]);
-		        block = SignUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
+		        if (relativeOffset) {
+			        block = SignUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
+		        } else {
+			        block = SignUtil.getOffset(sign, offsetX, offsetY, offsetZ);
+		        }
             } catch (NumberFormatException e) {
                 // do nothing and use the defaults
             } catch (IndexOutOfBoundsException e) {

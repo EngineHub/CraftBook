@@ -364,6 +364,11 @@ public class SignUtil {
         sign.update();
     }
 
+	public static Block getOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
+		Block block = SignUtil.getBackBlock(sign.getBlock());
+		return block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
+	}
+
 	/**
 	 * Gets the block located relative to the signs facing. That
 	 * means that when the sign is attached to a block and the player
@@ -378,7 +383,7 @@ public class SignUtil {
 	 */
 	public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
 
-		Block block = sign.getBlock();
+		Block block = SignUtil.getBackBlock(sign.getBlock());
 		BlockFace back = ((org.bukkit.material.Sign) sign.getData()).getFacing();
 		BlockFace front;
 		BlockFace right;
