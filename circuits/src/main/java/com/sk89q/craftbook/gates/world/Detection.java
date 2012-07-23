@@ -6,6 +6,7 @@ import java.util.Set;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Animals;
@@ -71,6 +72,8 @@ public class Detection extends AbstractIC {
     private Type type;
 
 	private Location center;
+	private Chunk centerChunk;
+	private int chunkRadius;
     private int radius;
 
     public Detection(Server server, Sign block) {
@@ -114,6 +117,8 @@ public class Detection extends AbstractIC {
             this.radius = Integer.parseInt(line);
         }
 	    this.center = block.getLocation();
+	    this.centerChunk = block.getChunk();
+	    this.chunkRadius = (int) Math.ceil(radius / 16);
     }
 
     @Override
@@ -134,8 +139,7 @@ public class Detection extends AbstractIC {
     }
 
     protected boolean isDetected() {
-        for (Chunk chunk : getSurroundingChunks(
-		        new Location(center.getWorld(), center.getBlockX(), center.getBlockY(), center.getBlockZ()), radius)) {
+        for (Chunk chunk : getSurroundingChunks()) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
@@ -152,6 +156,20 @@ public class Detection extends AbstractIC {
         }
         return false;
     }
+
+	private Set<Chunk> getSurroundingChunks() {
+		Set<Chunk> chunks = new LinkedHashSet<Chunk>();
+		World world = centerChunk.getWorld();
+		int cX = centerChunk.getX();
+		int cZ = centerChunk.getZ();
+		for (int x = chunkRadius; x >= 0; x--) {
+			for (int z = chunkRadius; z >= 0; z--) {
+				chunks.add(world.getChunkAt(x + cX, z + cZ));
+				chunks.add(world.getChunkAt(x - cX, z - cZ));
+			}
+		}
+		return chunks;
+	}
 
     private Set<Chunk> getSurroundingChunks(Location loc, int radius) {
         Set<Chunk> chunks = new LinkedHashSet<Chunk>();
