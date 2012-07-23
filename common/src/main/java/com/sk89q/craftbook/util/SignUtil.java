@@ -379,37 +379,37 @@ public class SignUtil {
 	public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
 
 		Block block = sign.getBlock();
-		BlockFace front = ((org.bukkit.material.Sign) sign.getData()).getFacing();
-		BlockFace back;
+		BlockFace back = ((org.bukkit.material.Sign) sign.getData()).getFacing();
+		BlockFace front;
 		BlockFace right;
 		BlockFace left;
 
-		switch (front) {
+		switch (back) {
 
 			case NORTH:
-				back = BlockFace.SOUTH;
-				right = BlockFace.EAST;
-				left = BlockFace.WEST;
-				break;
-			case EAST:
-				back = BlockFace.WEST;
-				right = BlockFace.SOUTH;
-				left = BlockFace.NORTH;
-				break;
-			case SOUTH:
-				back = BlockFace.NORTH;
+				front = BlockFace.SOUTH;
 				left = BlockFace.EAST;
 				right = BlockFace.WEST;
 				break;
-			case WEST:
-				back = BlockFace.EAST;
-				right = BlockFace.SOUTH;
-				left = BlockFace.NORTH;
+			case EAST:
+				front = BlockFace.WEST;
+				left = BlockFace.SOUTH;
+				right = BlockFace.NORTH;
 				break;
-			default:
-				back = BlockFace.SOUTH;
+			case SOUTH:
+				front = BlockFace.NORTH;
 				left = BlockFace.WEST;
 				right = BlockFace.EAST;
+				break;
+			case WEST:
+				front = BlockFace.EAST;
+				left = BlockFace.SOUTH;
+				right = BlockFace.NORTH;
+				break;
+			default:
+				front = BlockFace.SOUTH;
+				left = BlockFace.EAST;
+				right = BlockFace.WEST;
 		}
 		// apply left and right offset
 		if (offsetX > 0) {
