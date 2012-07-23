@@ -34,48 +34,53 @@ public class SetDoor extends AbstractIC {
 		this.center = SignUtil.getBackBlock(getSign().getBlock());
 		this.faceing = SignUtil.getFacing(getSign().getBlock());
 		String line = getSign().getLine(2);
-		String[] split = line.split("-");
-		// parse the material data
-		if (split.length > 0) {
-			String[] strings = split[0].split(":");
-			offMaterial = Integer.parseInt(strings[0]);
-			if (strings.length > 0) offData = Integer.parseInt(strings[1]);
-			// parse the data that gets set when the block is toggled on
-			strings = split[1].split(":");
-			onMaterial = Integer.parseInt(strings[0]);
-			if (strings.length > 0) onData = Integer.parseInt(strings[1]);
-		} else {
-			// parse the data that gets set when the block is toggled on
-			String[] strings = split[0].split(":");
-			onMaterial = Integer.parseInt(strings[0]);
-			if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+		if (!line.equals("")) {
+			String[] split = line.split("-");
+			// parse the material data
+			if (split.length > 0) {
+				String[] strings = split[0].split(":");
+				offMaterial = Integer.parseInt(strings[0]);
+				if (strings.length > 0) offData = Integer.parseInt(strings[1]);
+				// parse the data that gets set when the block is toggled on
+				strings = split[1].split(":");
+				onMaterial = Integer.parseInt(strings[0]);
+				if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+			} else {
+				// parse the data that gets set when the block is toggled on
+				String[] strings = split[0].split(":");
+				onMaterial = Integer.parseInt(strings[0]);
+				if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+			}
 		}
 		// parse the coordinates
 		line = getSign().getLine(3);
-		boolean relativeOffset = line.contains("!") ? false : true;
-		if (!relativeOffset) line.replace("!", "");
-		try {
-			split = line.split(":");
-			// parse the offset
-			String[] offsetSplit = split[0].split(",");
-			int offsetX = Integer.parseInt(offsetSplit[0]);
-			int offsetY = Integer.parseInt(offsetSplit[1]);
-			int offsetZ = Integer.parseInt(offsetSplit[2]);
-			if (relativeOffset) {
-				this.center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
-			} else {
-				this.center = LocationUtil.getOffset(this.center, offsetX, offsetY, offsetZ);
+		if (!line.equals("")) {
+			boolean relativeOffset = line.contains("!") ? false : true;
+			if (!relativeOffset) line.replace("!", "");
+			try {
+				String[] split = line.split(":");
+				// parse the offset
+				String[] offsetSplit = split[0].split(",");
+				int offsetX = Integer.parseInt(offsetSplit[0]);
+				int offsetY = Integer.parseInt(offsetSplit[1]);
+				int offsetZ = Integer.parseInt(offsetSplit[2]);
+				if (relativeOffset) {
+					this.center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
+				} else {
+					this.center = LocationUtil.getOffset(this.center, offsetX, offsetY, offsetZ);
+				}
+				// parse the size of the door
+				String[] sizeSplit = split[1].split(",");
+				width = Integer.parseInt(sizeSplit[0]);
+				height = Integer.parseInt(sizeSplit[1]);
+			} catch (NumberFormatException e) {
+				// do nothing and use the defaults
+			} catch (IndexOutOfBoundsException e) {
+				// do nothing and use the defaults
 			}
-			// parse the size of the door
-			String[] sizeSplit = split[1].split(",");
-			width = Integer.parseInt(sizeSplit[0]);
-			height = Integer.parseInt(sizeSplit[1]);
-		} catch (NumberFormatException e) {
-			// do nothing and use the defaults
-		} catch (IndexOutOfBoundsException e) {
-			// do nothing and use the defaults
+		} else {
+			center = center.getRelative(BlockFace.UP);
 		}
-
 	}
 
 	@Override
