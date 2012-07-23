@@ -106,7 +106,7 @@ public class Detection extends AbstractIC {
                 int offsetX = Integer.parseInt(offsetSplit[0]);
                 int offsetY = Integer.parseInt(offsetSplit[1]);
                 int offsetZ = Integer.parseInt(offsetSplit[2]);
-		        block = block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
+		        block = SignUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
             } catch (NumberFormatException e) {
                 // do nothing and use the defaults
             } catch (IndexOutOfBoundsException e) {

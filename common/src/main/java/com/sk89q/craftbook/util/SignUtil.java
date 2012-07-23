@@ -355,12 +355,88 @@ public class SignUtil {
     }
 
     /**
-     * @param Sign to change
-     * @param Line to change
-     * @param Content to change line to
+     * @param sign to change
+     * @param line to change
+     * @param content to change line to
      */
     public void setLine(Sign sign, int line, String content) {
         sign.setLine(line,content);
         sign.update();
     }
+
+	/**
+	 * Gets the block located relative to the signs facing. That
+	 * means that when the sign is attached to a block and the player
+	 * is looking at it it will add the offsetX to left or right,
+	 * offsetY is added up or down and offsetZ is added front or back.
+	 *
+	 * @param sign to get relative position from
+	 * @param offsetX amount to move left(negative) or right(positive)
+	 * @param offsetY amount to move up(positive) or down(negative)
+	 * @param offsetZ amount to move back(negative) or front(positive)
+	 * @return block located at the relative offset position
+	 */
+	public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
+
+		Block block = sign.getBlock();
+		BlockFace front = ((org.bukkit.material.Sign) sign.getData()).getFacing();
+		BlockFace back;
+		BlockFace right;
+		BlockFace left;
+
+		switch (front) {
+
+			case NORTH:
+				back = BlockFace.SOUTH;
+				right = BlockFace.EAST;
+				left = BlockFace.WEST;
+				break;
+			case EAST:
+				back = BlockFace.WEST;
+				right = BlockFace.SOUTH;
+				left = BlockFace.NORTH;
+				break;
+			case SOUTH:
+				back = BlockFace.NORTH;
+				left = BlockFace.EAST;
+				right = BlockFace.WEST;
+				break;
+			case WEST:
+				back = BlockFace.EAST;
+				right = BlockFace.SOUTH;
+				left = BlockFace.NORTH;
+				break;
+			default:
+				back = BlockFace.SOUTH;
+				left = BlockFace.WEST;
+				right = BlockFace.EAST;
+		}
+		// apply left and right offset
+		if (offsetX > 0) {
+			block = getRelativeBlock(block, right, offsetX);
+		} else {
+			block = getRelativeBlock(block, left, offsetX);
+		}
+		// apply front and back offset
+		if (offsetZ > 0) {
+			block = getRelativeBlock(block, front, offsetX);
+		} else {
+			block = getRelativeBlock(block, back, offsetX);
+		}
+		// apply up and down offset
+		if (offsetY > 0) {
+			block = getRelativeBlock(block, BlockFace.UP, offsetY);
+		} else {
+			block = getRelativeBlock(block, BlockFace.DOWN, offsetY);
+		}
+		return block;
+	}
+
+	private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
+		amount = Math.abs(amount);
+		for (int i = 0; i < amount; i++) {
+			block = block.getRelative(facing);
+		}
+		return block;
+	}
 }
