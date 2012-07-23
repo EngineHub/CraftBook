@@ -3,9 +3,12 @@ package com.sk89q.craftbook.gates.world;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creature;
@@ -69,44 +72,48 @@ public class Detection extends AbstractIC {
 
     private Type type;
 
-    public int offsetX;
-    public int offsetY;
-    public int offsetZ;
+	private Location center;
+	private Set<Chunk> chunks;
     private int radius;
 
     public Detection(Server server, Sign block) {
         super(server, block);
         // lets set some defaults
-        offsetX = 0;
-        offsetY = 0;
-        offsetZ = 0;
         radius = 0;
         load();
     }
 
     private void load() {
         Sign sign = getSign();
-        // lets get the type to detect first
-        this.type = Type.fromString(sign.getLine(3).trim());
-        // set the type to any if wrong format
-        if (type == null) this.type = Type.ANY;
-        // update the sign with correct upper case name
-        sign.setLine(3, type.name());
-        sign.update();
-        // now check the third line for the radius and offset
-        String line = sign.getLine(2).trim();
-        // if the line contains a = the offset is given
-        // the given string should look something like that:
-        // radius=x:y:z or radius, e.g. 1=-2:5:11
-        if (line.contains("=")) {
-            try {
-                String[] split = line.split("=");
-                this.radius = Integer.parseInt(split[0]);
-                // parse the offset
-                String[] offsetSplit = split[1].split(":");
-                offsetX = Integer.parseInt(offsetSplit[0]);
-                offsetY = Integer.parseInt(offsetSplit[1]);
-                offsetZ = Integer.parseInt(offsetSplit[2]);
+	    Block block = SignUtil.getBackBlock(sign.getBlock());
+	    // lets get the type to detect first
+	    this.type = Type.fromString(sign.getLine(3).trim());
+	    // set the type to any if wrong format
+	    if (type == null) this.type = Type.ANY;
+	    // update the sign with correct upper case name
+	    sign.setLine(3, type.name());
+	    sign.update();
+	    // now check the third line for the radius and offset
+	    String line = sign.getLine(2).trim();
+	    boolean relativeOffset = line.contains("!") ? false : true;
+	    if (!relativeOffset) line.replace("!", "");
+	    // if the line contains a = the offset is given
+	    // the given string should look something like that:
+	    // radius=x:y:z or radius, e.g. 1=-2:5:11
+	    if (line.contains("=")) {
+	        try {
+	            String[] split = line.split("=");
+	            this.radius = Integer.parseInt(split[0]);
+	            // parse the offset
+	            String[] offsetSplit = split[1].split(":");
+                int offsetX = Integer.parseInt(offsetSplit[0]);
+                int offsetY = Integer.parseInt(offsetSplit[1]);
+                int offsetZ = Integer.parseInt(offsetSplit[2]);
+		        if (relativeOffset) {
+			        block = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
+		        } else {
+			        block = LocationUtil.getOffset(block, offsetX, offsetY, offsetZ);
+		        }
             } catch (NumberFormatException e) {
                 // do nothing and use the defaults
             } catch (IndexOutOfBoundsException e) {
@@ -115,6 +122,8 @@ public class Detection extends AbstractIC {
         } else {
             this.radius = Integer.parseInt(line);
         }
+	    this.center = block.getLocation();
+	    this.chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
     @Override
@@ -135,17 +144,14 @@ public class Detection extends AbstractIC {
     }
 
     protected boolean isDetected() {
-        Location location = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
-        // add the offset to the location of the block connected to the sign
-        // location.add(offsetX, offsetY, offsetZ);
-        for (Chunk chunk : getSurroundingChunks(location, radius)) {
+        for (Chunk chunk : this.chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
                             // at last check if the entity is within the radius
-                            if (getGreatestDistance(entity.getLocation(), location) <= radius) {
+                            if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
                                 return true;
                             }
                         }
@@ -154,43 +160,6 @@ public class Detection extends AbstractIC {
             }
         }
         return false;
-    }
-
-    private Set<Chunk> getSurroundingChunks(Location loc, int radius) {
-        Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-        Chunk chunk = loc.getChunk();
-        chunks.add(chunk);
-        // get the block the furthest away
-        loc.add(radius, 0, radius);
-        // add the chunk
-        Chunk chunk2 = loc.getChunk();
-        chunks.add(loc.getChunk());
-        // get the x, z difference between the two chunks then...
-        int z = 0;
-        // ...iterate over all chunks in between
-        for (int x = chunk.getX() - chunk2.getX(); x > 0; x--) {
-            // add all surrounding chunks one by one
-            chunks.add(chunk.getWorld().getChunkAt(chunk.getX() + x, chunk.getZ() + z));
-            for (z = chunk.getZ() - chunk2.getZ(); z > 0; z--) {
-                chunks.add(chunk.getWorld().getChunkAt(chunk.getX() + x, chunk.getZ() + z));
-            }
-        }
-        return chunks;
-    }
-
-    public static int getGreatestDistance(Location l1, Location l2) {
-        int x = Math.abs(l1.getBlockX() - l2.getBlockX());
-        int y = Math.abs(l1.getBlockY() - l2.getBlockY());
-        int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-        if (x >= y && x >= z) {
-            return x;
-        } else if (y >= x && y >= z) {
-            return y;
-        } else if (z >= x && z >= y) {
-            return z;
-        } else {
-            return x;
-        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
