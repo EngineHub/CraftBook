@@ -139,6 +139,7 @@ public class Detection extends AbstractIC {
                 for (Entity entity : chunk.getEntities()) {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
+	                        System.out.println("Trying to detect at: x:" + center.getBlockX() + " y:" + center.getBlockY() + " z:" + center.getBlockZ() + " with radius: " + radius);
                             // at last check if the entity is within the radius
                             if (getGreatestDistance(entity.getLocation(), center) <= radius) {
                                 return true;
