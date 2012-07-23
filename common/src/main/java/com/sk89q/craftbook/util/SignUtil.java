@@ -388,18 +388,18 @@ public class SignUtil {
 
 			case NORTH:
 				front = BlockFace.SOUTH;
-				left = BlockFace.EAST;
-				right = BlockFace.WEST;
+				right = BlockFace.EAST;
+				left = BlockFace.WEST;
 				break;
 			case EAST:
 				front = BlockFace.WEST;
-				left = BlockFace.SOUTH;
-				right = BlockFace.NORTH;
+				right = BlockFace.SOUTH;
+				left = BlockFace.NORTH;
 				break;
 			case SOUTH:
 				front = BlockFace.NORTH;
-				left = BlockFace.WEST;
-				right = BlockFace.EAST;
+				right = BlockFace.WEST;
+				left = BlockFace.EAST;
 				break;
 			case WEST:
 				front = BlockFace.EAST;
