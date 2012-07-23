@@ -164,8 +164,8 @@ public class Detection extends AbstractIC {
 		int cZ = centerChunk.getZ();
 		for (int x = chunkRadius; x >= 0; x--) {
 			for (int z = chunkRadius; z >= 0; z--) {
-				chunks.add(world.getChunkAt(x + cX, z + cZ));
-				chunks.add(world.getChunkAt(x - cX, z - cZ));
+				chunks.add(world.getChunkAt(cX + x, cZ + z));
+				chunks.add(world.getChunkAt(cX - x, cZ - z));
 			}
 		}
 		return chunks;
