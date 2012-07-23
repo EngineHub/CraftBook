@@ -52,7 +52,12 @@ public final class LocationUtil {
 	}
 
 	public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
-		return getRelativeOffset(sign.getBlock(), SignUtil.getFacing(sign.getBlock()), offsetX, offsetY, offsetZ);
+		return getRelativeOffset(
+				SignUtil.getBackBlock(sign.getBlock()),
+				SignUtil.getFacing(sign.getBlock()),
+				offsetX,
+				offsetY,
+				offsetZ);
 	}
 
 	/**
