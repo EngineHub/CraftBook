@@ -75,35 +75,35 @@ public final class LocationUtil {
 	 */
 	public static Block getRelativeOffset(Block block, BlockFace facing, int offsetX, int offsetY, int offsetZ) {
 
-		BlockFace back = facing;
-		BlockFace front;
+		BlockFace front = facing;
+		BlockFace back;
 		BlockFace right;
 		BlockFace left;
 
-		switch (back) {
+		switch (front) {
 
 			case SOUTH:
-				front = BlockFace.SOUTH;
+				back = BlockFace.NORTH;
 				left = BlockFace.EAST;
 				right = BlockFace.WEST;
 				break;
 			case WEST:
-				front = BlockFace.WEST;
+				back = BlockFace.EAST;
 				left = BlockFace.SOUTH;
 				right = BlockFace.NORTH;
 				break;
 			case NORTH:
-				front = BlockFace.NORTH;
+				back = BlockFace.SOUTH;
 				left = BlockFace.WEST;
 				right = BlockFace.EAST;
 				break;
 			case EAST:
-				front = BlockFace.EAST;
+				back = BlockFace.WEST;
 				left = BlockFace.NORTH;
 				right = BlockFace.SOUTH;
 				break;
 			default:
-				front = BlockFace.SOUTH;
+				back = BlockFace.SOUTH;
 				left = BlockFace.EAST;
 				right = BlockFace.WEST;
 		}

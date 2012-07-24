@@ -11,7 +11,7 @@ import org.bukkit.block.Sign;
 /**
  * @author Silthus
  */
-public class SetDoor extends AbstractIC {
+public class SetBridge extends AbstractIC {
 
 	private int onMaterial = 1;
 	private int onData = 0;
@@ -20,7 +20,7 @@ public class SetDoor extends AbstractIC {
 	private int offData = 0;
 
 	private int width = 1;
-	private int height = 1;
+	private int depth = 1;
 
 	private int offsetX = 0;
 	private int offsetY = 0;
@@ -29,7 +29,7 @@ public class SetDoor extends AbstractIC {
 	private Block center;
 	private BlockFace faceing;
 
-	public SetDoor(Server server, Sign block) {
+	public SetBridge(Server server, Sign block) {
 		super(server, block);
 		load();
 	}
@@ -85,7 +85,7 @@ public class SetDoor extends AbstractIC {
 				// parse the size of the door
 				String[] sizeSplit = split[1].split(",");
 				width = Integer.parseInt(sizeSplit[0]);
-				height = Integer.parseInt(sizeSplit[1]);
+				depth = Integer.parseInt(sizeSplit[1]);
 			} catch (NumberFormatException e) {
 				// do nothing and use the defaults
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -103,12 +103,12 @@ public class SetDoor extends AbstractIC {
 
 	@Override
 	public String getTitle() {
-		return "Set P-Door";
+		return "Set P-Bridge";
 	}
 
 	@Override
 	public String getSignTitle() {
-		return "SET P-DOOR";
+		return "SET P-Bridge";
 	}
 
 	@Override
@@ -122,8 +122,8 @@ public class SetDoor extends AbstractIC {
 
 	private void setDoor(boolean open) {
 		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				Block block = LocationUtil.getRelativeOffset(center, faceing, x, y, 0);
+			for (int z = 0; z < depth; z++) {
+				Block block = LocationUtil.getRelativeOffset(center, faceing, x, 0, z);
 				if (open) {
 					block.setTypeIdAndData(onMaterial, (byte) onData, true);
 				} else {
@@ -141,7 +141,7 @@ public class SetDoor extends AbstractIC {
 
 		@Override
 		public IC create(Sign sign) {
-			return new SetDoor(getServer(), sign);
+			return new SetBridge(getServer(), sign);
 		}
 	}
 }
