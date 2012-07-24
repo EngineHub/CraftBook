@@ -52,8 +52,10 @@ public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC 
 
         @Override
         public IC create(Sign sign) {
-
-            return new ParticleEffectST(getServer(), sign);
+	        if (sign.getLine(1).equalsIgnoreCase("[MC0210]")) {
+		        sign.setLine(1, "MC0299");
+	        }
+	        return new ParticleEffectST(getServer(), sign);
         }
     }
 }

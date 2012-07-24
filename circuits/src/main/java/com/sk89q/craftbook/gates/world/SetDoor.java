@@ -125,7 +125,12 @@ public class SetDoor extends AbstractIC {
 
 		@Override
 		public IC create(Sign sign) {
-			return new SetDoor(getServer(), sign);
+			if (sign.getLine(0).equalsIgnoreCase("PARTICLE EFFECT")) {
+				sign.setLine(1, "[MC1299]");
+				return new ParticleEffect(getServer(), sign);
+			} else {
+				return new SetDoor(getServer(), sign);
+			}
 		}
 	}
 }

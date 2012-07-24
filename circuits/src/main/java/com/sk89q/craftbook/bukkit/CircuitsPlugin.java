@@ -139,7 +139,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO);          // Restricted
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);
         icManager.register("MC1209", new ChestCollector.Factory(server), familySISO);
-        icManager.register("MC1210", new ParticleEffect.Factory(server), familySISO);                  // Restricted
+        icManager.register("MC1210", new SetDoor.Factory(server), familySISO);                  // Restricted
         icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1217", new PotionInducer.Factory(server), familySISO);
@@ -157,6 +157,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1263", new BlockSensor.Factory(server), familySISO);
         icManager.register("MC1270", new Melody.Factory(server), familySISO);
         icManager.register("MC1271", new Detection.Factory(server), familySISO);          // Restricted
+	    icManager.register("MC1299", new ParticleEffect.Factory(server), familySISO);       // Restricted
         icManager.register("MC1420", new ClockDivider.Factory(server), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server), familySISO);
         icManager.register("MC2100", new Delayer.Factory(server), familySISO);
@@ -207,6 +208,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
         icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
         icManager.register("MC0271", new DetectionST.Factory(server), familySISO);      // Restricted
+	    icManager.register("MC0299", new ParticleEffectST.Factory(server), familySISO);
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
         icManager.register("MC0500", new RangedOutput.Factory(server), familySISO);
@@ -241,7 +243,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MCA1207", new FlexibleSetBlock.Factory(server), familyAISO);          // Restricted
         icManager.register("MCA1208", new MultipleSetBlock.Factory(server), familyAISO);
         icManager.register("MCA1209", new ChestCollector.Factory(server), familyAISO);
-        icManager.register("MCA1210", new ParticleEffect.Factory(server), familyAISO);                  // Restricted
+        icManager.register("MCA1210", new SetDoor.Factory(server), familyAISO);                  // Restricted
         icManager.register("MCA1215", new SetBlockAboveChest.Factory(server), familyAISO);             // Restricted
         icManager.register("MCA1216", new SetBlockBelowChest.Factory(server), familyAISO);             // Restricted
         icManager.register("MCA1217", new PotionInducer.Factory(server), familyAISO);
@@ -259,6 +261,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MCA1263", new BlockSensor.Factory(server), familyAISO);
         icManager.register("MCA1270", new Melody.Factory(server), familyAISO);
         icManager.register("MCA1271", new Detection.Factory(server), familyAISO);          // Restricted
+	    icManager.register("MCA1299", new ParticleEffect.Factory(server), familyAISO);      // Restricted
         icManager.register("MCA1420", new ClockDivider.Factory(server), familyAISO);
         icManager.register("MCA1510", new MessageSender.Factory(server), familyAISO);
         icManager.register("MCA2100", new Delayer.Factory(server), familyAISO);
