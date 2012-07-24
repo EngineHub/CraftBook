@@ -30,6 +30,7 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public abstract class BaseIC implements IC {
+
     /**
      * Get the title of the IC.
      *
@@ -43,21 +44,24 @@ public abstract class BaseIC implements IC {
      * @return
      */
     public boolean requiresPermission() {
+
         return false;
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface i, WorldInterface world, Vector pos, SignText sign) {
+
         return null;
     }
-    
+
     /**
      * Get a new state to use.
      *

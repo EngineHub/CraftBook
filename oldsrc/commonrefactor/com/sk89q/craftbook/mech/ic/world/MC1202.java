@@ -35,12 +35,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1202 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "CHEST DISPENSER";
     }
 
@@ -50,6 +52,7 @@ public class MC1202 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
 
@@ -59,14 +62,16 @@ public class MC1202 extends BaseIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface i, WorldInterface w, Vector pos, SignText sign) {
+
         String id = sign.getLine3();
 
         if (id.length() == 0) {
             return "Specify a item type on the third line.";
-        } else if (CraftBookUtil.getItem(i.getConfiguration(),id) < 1) {
+        } else if (CraftBookUtil.getItem(i.getConfiguration(), id) < 1) {
             return "Not a valid item type: " + sign.getLine3() + ".";
         }
 
@@ -87,13 +92,14 @@ public class MC1202 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (!chip.getIn(1).is()) {
             return;
         }
-        
+
         NearbyChestBlockBag source = new NearbyChestBlockBag(chip.getPosition());
-        source.addSourcePosition(chip.getWorld(),chip.getPosition());
-        
+        source.addSourcePosition(chip.getWorld(), chip.getPosition());
+
         String id = chip.getText().getLine3();
         int quantity = 1;
 
@@ -114,13 +120,13 @@ public class MC1202 extends BaseIC {
             for (int y = pos.getBlockY() + 1; y <= maxY; y++) {
                 if (BlockType.canPassThrough(chip.getWorld().getId(x, y, z))) {
                     int n = 0;
-                    for(n=0;n<quantity;n++)
+                    for (n = 0; n < quantity; n++)
                         try {
                             source.fetchBlock(item);
                         } catch (BlockBagException e) {
                             break;
                         }
-                    if(n!=0) chip.getWorld().dropItem(x, y, z, item, quantity);
+                    if (n != 0) chip.getWorld().dropItem(x, y, z, item, quantity);
                     return;
                 }
             }

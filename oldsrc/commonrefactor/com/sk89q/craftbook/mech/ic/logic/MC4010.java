@@ -19,26 +19,29 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 
 /**
  * Half adder.
- * 
+ *
  * @author Lymia
  */
 public class MC4010 extends LogicIC {
+
     public String getTitle() {
+
         return "HALF ADDER";
     }
 
     public void think(LogicChipState chip) {
+
         boolean B = chip.getIn(2).is();
         boolean C = chip.getIn(3).is();
-        
-        boolean S = B^C;
-        boolean Ca = B&C;
-        
+
+        boolean S = B ^ C;
+        boolean Ca = B & C;
+
         chip.getOut(1).set(S);
         chip.getOut(2).set(Ca);
         chip.getOut(3).set(Ca);

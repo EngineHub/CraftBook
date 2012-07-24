@@ -25,6 +25,7 @@ package com.sk89q.craftbook;
  * @author sk89q
  */
 public final class ItemType {
+
     public static final int IRON_AXE = 258;
     public static final int APPLE = 260;
     public static final int STONE_AXE = 275;

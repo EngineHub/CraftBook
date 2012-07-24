@@ -19,27 +19,30 @@
 
 package com.sk89q.craftbook.util;
 
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
+ * @param <K>
+ * @param <V>
  *
  * @author sk89q
- * @param <K> 
- * @param <V> 
  */
-public class HistoryHashMap<K,V> extends LinkedHashMap<K,V> {
+public class HistoryHashMap<K, V> extends LinkedHashMap<K, V> {
+
     private static final long serialVersionUID = -3275917656900940011L;
 
-    private int maxEntries;
-    
+    private final int maxEntries;
+
     public HistoryHashMap(int maxEntries) {
+
         super();
         this.maxEntries = maxEntries;
     }
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+
         return size() > maxEntries;
     }
 }

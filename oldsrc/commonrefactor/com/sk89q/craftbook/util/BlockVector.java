@@ -25,12 +25,14 @@ package com.sk89q.craftbook.util;
  * @author sk89q
  */
 public class BlockVector extends Vector {
+
     /**
      * Construct the Vector object.
      *
      * @param pt
      */
     public BlockVector(Vector pt) {
+
         super(pt);
     }
 
@@ -40,6 +42,7 @@ public class BlockVector extends Vector {
      * @param pt
      */
     public BlockVector(int x, int y, int z) {
+
         super(x, y, z);
     }
 
@@ -49,6 +52,7 @@ public class BlockVector extends Vector {
      * @param pt
      */
     public BlockVector(float x, float y, float z) {
+
         super(x, y, z);
     }
 
@@ -58,6 +62,7 @@ public class BlockVector extends Vector {
      * @param pt
      */
     public BlockVector(double x, double y, double z) {
+
         super(x, y, z);
     }
 
@@ -65,17 +70,19 @@ public class BlockVector extends Vector {
      * Checks if another object is equivalent.
      *
      * @param obj
+     *
      * @return whether the other object is equivalent
      */
     @Override
     public boolean equals(Object obj) {
+
         if (!(obj instanceof Vector)) {
             return false;
         }
-        Vector other = (Vector)obj;
-        return (int)Math.floor(other.x) == (int)Math.floor(this.x)
-                && (int)Math.floor(other.y) == (int)Math.floor(this.y)
-                && (int)Math.floor(other.z) == (int)Math.floor(this.z);
+        Vector other = (Vector) obj;
+        return (int) Math.floor(other.x) == (int) Math.floor(this.x)
+                && (int) Math.floor(other.y) == (int) Math.floor(this.y)
+                && (int) Math.floor(other.z) == (int) Math.floor(this.z);
 
     }
 
@@ -86,8 +93,9 @@ public class BlockVector extends Vector {
      */
     @Override
     public int hashCode() {
-        return (Integer.valueOf((int)x).hashCode() >> 13) ^
-               (Integer.valueOf((int)y).hashCode() >> 7) ^
-                Integer.valueOf((int)z).hashCode();
+
+        return (Integer.valueOf((int) x).hashCode() >> 13) ^
+                (Integer.valueOf((int) y).hashCode() >> 7) ^
+                Integer.valueOf((int) z).hashCode();
     }
 }

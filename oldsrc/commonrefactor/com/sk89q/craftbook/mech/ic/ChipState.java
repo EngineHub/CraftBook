@@ -35,6 +35,7 @@ import com.sk89q.craftbook.util.Vector;
  * @author Lymia
  */
 public class ChipState {
+
     private Signal[] in;
     private Signal[] out;
     private boolean[] mem;
@@ -48,7 +49,7 @@ public class ChipState {
 
     /**
      * Construct the state.
-     * 
+     *
      * @param pos
      * @param blockPos
      * @param in
@@ -56,7 +57,8 @@ public class ChipState {
      * @param text
      */
     public ChipState(CraftBookCore core, ServerInterface server, WorldInterface world, Vector pos,
-            BlockVector blockPos, Signal[] in, Signal[] out, SignInterface text) {
+                     BlockVector blockPos, Signal[] in, Signal[] out, SignInterface text) {
+
         this.craftBook = core;
         this.server = server;
         this.world = world;
@@ -75,49 +77,59 @@ public class ChipState {
 
     /**
      * Get an input state.
-     * 
+     *
      * @param n
+     *
      * @return
      */
     public Signal getIn(int n) {
+
         if (n > in.length) {
             return null;
         }
         return in[n - 1];
     }
+
     /**
      * Gets all input states.
      */
     public Signal[] getInputs() {
+
         return in.clone();
     }
 
     /**
      * Get an output state.
-     * 
+     *
      * @param n
+     *
      * @return
      */
     public Signal getOut(int n) {
+
         if (n > out.length) {
             return null;
         }
         return out[n - 1];
     }
+
     /**
      * Gets all output states.
      */
     public Signal[] getOutputs() {
+
         return out.clone();
     }
 
     /**
      * Returns the last state.
-     * 
+     *
      * @param n
+     *
      * @return
      */
     public boolean getLast(int n) {
+
         if (n > mem.length) {
             return false;
         }
@@ -126,10 +138,11 @@ public class ChipState {
 
     /**
      * Returns whether any outputs have been updated.
-     * 
+     *
      * @return
      */
     public boolean isModified() {
+
         int i = 0;
 
         for (Signal bit : out) {
@@ -147,6 +160,7 @@ public class ChipState {
      * @return
      */
     public Vector getPosition() {
+
         return pos;
     }
 
@@ -156,42 +170,50 @@ public class ChipState {
      * @return
      */
     public BlockVector getBlockPosition() {
+
         return blockPos;
     }
 
     /**
      * Get the sign text.
-     * 
+     *
      * @return
      */
     public SignInterface getText() {
+
         return text;
     }
-    
+
     /**
      * Triggers an IC error, disabling the IC from further processing.
      */
     public void triggerError() {
+
         hasErrored = true;
     }
-    
+
     /**
      * Returns true if the IC has encountered an error state.
-     * 
+     *
      * @return
      */
     public boolean hasErrored() {
+
         return hasErrored;
     }
 
     public ServerInterface getServer() {
+
         return server;
     }
+
     public WorldInterface getWorld() {
+
         return world;
     }
-    
+
     public CraftBookCore getCore() {
+
         return craftBook;
     }
 }

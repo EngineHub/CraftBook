@@ -29,7 +29,8 @@ import java.util.Comparator;
  * @author sk89q
  */
 public class DistanceComparator<T extends BlockEntity>
-    implements Comparator<BlockEntity> {
+        implements Comparator<BlockEntity> {
+
     /**
      * Origin to compare from.
      */
@@ -37,23 +38,26 @@ public class DistanceComparator<T extends BlockEntity>
 
     /**
      * Construct the object.
-     * 
+     *
      * @param origin
      */
     public DistanceComparator(Vector origin) {
+
         this.origin = origin;
     }
 
     /**
      * Compares two objects.
-     * 
+     *
      * @param o1
      * @param o2
+     *
      * @return
      */
     public int compare(BlockEntity o1, BlockEntity o2) {
-        BlockEntity b1 = (BlockEntity)o1;
-        BlockEntity b2 = (BlockEntity)o2;
+
+        BlockEntity b1 = (BlockEntity) o1;
+        BlockEntity b2 = (BlockEntity) o2;
 
         double dist1 = b1.getPosition().distance(origin);
         double dist2 = b2.getPosition().distance(origin);

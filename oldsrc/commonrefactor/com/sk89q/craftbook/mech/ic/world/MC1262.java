@@ -29,38 +29,43 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1262 extends BaseIC {
+
     /**
      * Trigger only on rising edge.
      */
     private boolean triggerOnRising = false;
-    
+
     /**
      * Construct the object.
-     * 
+     *
      * @param triggerOnRising
      */
     public MC1262(boolean triggerOnRising) {
+
         this.triggerOnRising = triggerOnRising;
     }
-    
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "LIGHT SENSOR";
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String minLightLine = sign.getLine3();
 
         try {
@@ -68,7 +73,7 @@ public class MC1262 extends BaseIC {
         } catch (NumberFormatException e) {
             return "The third line must indicate the minimum light level.";
         }
-        
+
         if (sign.getLine4().length() != 0) {
             return "The fourth line must be blank.";
         }
@@ -81,27 +86,28 @@ public class MC1262 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip){
+    public void think(ChipState chip) {
+
         if (triggerOnRising && !chip.getIn(1).is()) {
             return;
         }
-        
+
         Vector blockPos = chip.getBlockPosition();
-        
+
         int x = blockPos.getBlockX();
         int y = blockPos.getBlockY();
         int z = blockPos.getBlockZ();
         int minLight;
-        
-        try{
+
+        try {
             String minLightLine = chip.getText().getLine3();
             minLight = Integer.parseInt(minLightLine);
         } catch (NumberFormatException e) {
             return;
         }
-        
+
         int light = chip.getWorld().getLightLevel(x, y + 1, z);
-        
+
         chip.getOut(1).set(light >= minLight);
     }
 }

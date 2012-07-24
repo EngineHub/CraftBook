@@ -18,33 +18,30 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
-public class Monostable extends AbstractIC implements SelfTriggeredIC{
-
-    Sign sign;
+    final Sign sign;
     //"Temp docs": nn:[HL] nn - time for pulse (1 = 2t) H: trigger on high 	L: trigger on low
 
     public Monostable(Server server, Sign psign) {
+
         super(server, psign);
         sign = psign;
     }
 
     @Override
     public String getTitle() {
+
         return "Monostable";
     }
 
     @Override
     public String getSignTitle() {
+
         return "MONOSTABLE";
     }
 
@@ -52,14 +49,12 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC{
     public void trigger(ChipState chip) {
 
         String setting = sign.getLine(2).toUpperCase();
-        if ( (chip.getInput(0) && setting.contains("H")) || (!chip.getInput(0) && setting.contains("L")) )
-        {
+        if ((chip.getInput(0) && setting.contains("H")) || (!chip.getInput(0) && setting.contains("L"))) {
             //Trigger condition!
-            int index = setting.indexOf(":");
-            if (index <= 0) return;
+            if (setting.indexOf(":") <= 0) return;
 
             chip.setOutput(0, true);
-            sign.setLine(3, setting.substring(0, index) );
+            sign.setLine(3, setting.substring(0, setting.indexOf(":")));
             sign.update();
         }
 
@@ -70,17 +65,14 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC{
 
         int tick;
 
-        try
-        {
+        try {
             tick = Integer.parseInt(sign.getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
         }
 
-        if (tick == 0)
-            chip.setOutput(0, false);
-        else
-            tick --;
+        if (tick == 0) chip.setOutput(0, false);
+        else tick--;
 
         sign.setLine(3, Integer.toString(tick));
         sign.update();
@@ -88,57 +80,54 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC{
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Monostable(getServer(), sign);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException
-        {
-            int ticks = -1;
-            boolean hi = false;
-            boolean lo = false;
+        public void verify(Sign sign) throws ICVerificationException {
 
-            try
-            {
+            int ticks;
+            boolean hi;
+            boolean lo;
+
+            try {
                 String set = sign.getLine(2).toUpperCase();
 
-                if (set.indexOf(":") == -1)
-                    throw new ICVerificationException("Invalid syntax");
+                if (!set.contains(":")) throw new ICVerificationException("Invalid syntax");
 
                 String[] settings = sign.getLine(2).split(":");
 
-                if (settings.length != 2)
-                    throw new ICVerificationException("Invalid syntax");
+                if (settings.length != 2) throw new ICVerificationException("Invalid syntax");
 
                 ticks = Integer.parseInt(settings[0]);
 
                 hi = settings[1].contains("H");
                 lo = settings[1].contains("L");
-                if ( !(hi || lo) )
-                    throw new ICVerificationException("Missing trigger levels");
+                if (!(hi || lo)) throw new ICVerificationException("Missing trigger levels");
 
 
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("Invalid number format");
-            } catch (ICVerificationException e) {
-                throw e;
             }
 
             ticks = Math.max(ticks, 10);
             ticks = Math.min(ticks, 50);
 
-            sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : "")  );
+            sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
             sign.setLine(3, "0");
             sign.update();
         }

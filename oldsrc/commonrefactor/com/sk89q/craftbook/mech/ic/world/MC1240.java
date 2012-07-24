@@ -29,12 +29,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1240 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "ARROW SHOOTER";
     }
 
@@ -44,30 +46,33 @@ public class MC1240 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String speedSpreadLine = sign.getLine3();
         String vertVelLine = sign.getLine4();
 
         try {
             if (speedSpreadLine.length() > 0) {
                 String[] parts = speedSpreadLine.split(":");
-                
+
                 float speed = Float.parseFloat(parts[0]);
                 if (speed < 0.3 || speed > 2) {
                     return "Speed must be >= 0.3 and <= 2.";
                 }
-                
+
                 if (parts.length > 1) {
                     float spread = Float.parseFloat(parts[1]);
                     if (spread < 0 || spread > 50) {
@@ -91,10 +96,11 @@ public class MC1240 extends BaseIC {
 
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (chip.getIn(1).is()) {
             String speedSpreadLine = chip.getText().getLine3();
             String vertVelLine = chip.getText().getLine4();
@@ -105,9 +111,9 @@ public class MC1240 extends BaseIC {
             try {
                 if (speedSpreadLine.length() > 0) {
                     String[] parts = speedSpreadLine.split(":");
-                    
+
                     speed = Float.parseFloat(parts[0]);
-                    
+
                     if (parts.length > 1) {
                         spread = Float.parseFloat(parts[1]);
                     }
@@ -118,25 +124,26 @@ public class MC1240 extends BaseIC {
                 }
             } catch (NumberFormatException e) {
             }
-            
+
             shoot(chip, speed, spread, vertVel);
         }
-    }    
-    
+    }
+
     /**
      * Shoot the arrow.
-     * 
+     *
      * @param chip
      * @param speed
      * @param spread
      * @param vertVel
      */
     protected void shoot(ChipState chip, float speed, float spread, float vertVel) {
+
         Vector backDir = chip.getBlockPosition().subtract(
                 chip.getPosition());
         Vector firePos = chip.getBlockPosition().add(backDir);
-        chip.getWorld().shootArrow(firePos.getBlockX() + 0.5, firePos.getBlockY() + 0.5, firePos.getBlockZ() + 0.5, 
-                                   backDir.getBlockX(), vertVel, backDir.getBlockZ(), 
-                                   speed, spread);
+        chip.getWorld().shootArrow(firePos.getBlockX() + 0.5, firePos.getBlockY() + 0.5, firePos.getBlockZ() + 0.5,
+                backDir.getBlockX(), vertVel, backDir.getBlockZ(),
+                speed, spread);
     }
 }

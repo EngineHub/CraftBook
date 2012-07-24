@@ -9,10 +9,12 @@ package com.sk89q.jinglenote;
 
 /**
  * Interface for a sequencer.
- * 
+ *
  * @author sk89q
  */
 public interface JingleSequencer {
+
     public void run(JingleNotePlayer player) throws InterruptedException;
+
     public void stop();
 }

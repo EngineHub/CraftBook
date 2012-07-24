@@ -28,21 +28,25 @@ public class PerlstoneException extends PlcException {
     private static final long serialVersionUID = 5746849412618094800L;
 
     public PerlstoneException() {
+
         super();
         // TODO Auto-generated constructor stub
     }
 
     public PerlstoneException(String message, Throwable cause) {
+
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
     public PerlstoneException(String message) {
+
         super(message);
         // TODO Auto-generated constructor stub
     }
 
     public PerlstoneException(Throwable cause) {
+
         super(cause);
         // TODO Auto-generated constructor stub
     }

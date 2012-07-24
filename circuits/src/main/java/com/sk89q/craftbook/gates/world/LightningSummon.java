@@ -18,43 +18,41 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-
 public class LightningSummon extends AbstractIC {
 
     public LightningSummon(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Zeus Bolt";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ZEUS BOLT";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             Location loc = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
             if (getSign().getLine(2).length() != 0) {
                 try {
                     double y = Integer.parseInt(getSign().getLine(2)) + loc.getY();
                     loc.setY(y);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     return;
                 }
             }
@@ -65,11 +63,13 @@ public class LightningSummon extends AbstractIC {
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new LightningSummon(getServer(), sign);
         }
     }

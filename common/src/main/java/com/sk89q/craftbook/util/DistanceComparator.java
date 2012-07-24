@@ -19,13 +19,12 @@
 
 package com.sk89q.craftbook.util;
 
-import java.util.Comparator;
-
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Comparator;
 
 /**
  * Used to compare ComplexBlocks based on distance to a point.
@@ -33,34 +32,38 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  * @author sk89q
  */
 public class DistanceComparator<T extends BlockState>
-    implements Comparator<BlockState> {
+        implements Comparator<BlockState> {
+
     /**
      * Origin to compare from.
      */
-    private Vector origin;
+    private final Vector origin;
 
     /**
      * Construct the object.
-     * 
+     *
      * @param origin
      */
     public DistanceComparator(Vector origin) {
+
         this.origin = origin;
     }
 
     /**
      * Compares two objects.
-     * 
+     *
      * @param o1
      * @param o2
+     *
      * @return
      */
     public int compare(BlockState o1, BlockState o2) {
-	Block b1 = (Block)o1.getBlock();
-	Block b2 = (Block)o2.getBlock();
-	
-        double dist1 = b1.getLocation().distance(BukkitUtil.toLocation(b1.getWorld(),origin));
-        double dist2 = b2.getLocation().distance(BukkitUtil.toLocation(b2.getWorld(),origin));
+
+        Block b1 = o1.getBlock();
+        Block b2 = o2.getBlock();
+
+        double dist1 = b1.getLocation().distance(BukkitUtil.toLocation(b1.getWorld(), origin));
+        double dist2 = b2.getLocation().distance(BukkitUtil.toLocation(b2.getWorld(), origin));
 
         if (dist1 < dist2) {
             return -1;

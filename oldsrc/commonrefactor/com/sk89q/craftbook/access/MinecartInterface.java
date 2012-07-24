@@ -19,20 +19,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.access;
 
 public interface MinecartInterface extends BaseEntityInterface {
+
     public static enum Type {
         REGULAR,
         POWERED,
         STORAGE
     }
-    
+
     Type getType();
-    
+
     boolean hasPassenger();
+
     boolean hasPlayer();
+
     boolean hasAnimal();
+
     boolean hasMob();
-    
+
     PlayerInterface getPlayer();
-    
+
     boolean isMobType(String mobType);
 }

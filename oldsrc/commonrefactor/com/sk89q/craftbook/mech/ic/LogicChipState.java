@@ -31,6 +31,7 @@ import com.sk89q.craftbook.util.BlockVector;
  * @author Lymia
  */
 public class LogicChipState {
+
     private Signal[] in;
     private Signal[] out;
     private boolean[] mem;
@@ -40,7 +41,7 @@ public class LogicChipState {
 
     /**
      * Construct the state.
-     * 
+     *
      * @param pos
      * @param blockPos
      * @param in
@@ -48,6 +49,7 @@ public class LogicChipState {
      * @param text
      */
     public LogicChipState(Signal[] in, Signal[] out, SignInterface text, BlockVector blockPos) {
+
         this.in = in;
         this.out = out;
         this.text = text;
@@ -62,49 +64,59 @@ public class LogicChipState {
 
     /**
      * Get an input state.
-     * 
+     *
      * @param n
+     *
      * @return
      */
     public Signal getIn(int n) {
+
         if (n > in.length) {
             return null;
         }
         return in[n - 1];
     }
+
     /**
      * Gets all input states.
      */
     public Signal[] getInputs() {
+
         return in.clone();
     }
 
     /**
      * Get an output state.
-     * 
+     *
      * @param n
+     *
      * @return
      */
     public Signal getOut(int n) {
+
         if (n > out.length) {
             return null;
         }
         return out[n - 1];
     }
+
     /**
      * Gets all output states.
      */
     public Signal[] getOutputs() {
+
         return out.clone();
     }
 
     /**
      * Returns the last state.
-     * 
+     *
      * @param n
+     *
      * @return
      */
     public boolean getLast(int n) {
+
         if (n > mem.length) {
             return false;
         }
@@ -113,10 +125,11 @@ public class LogicChipState {
 
     /**
      * Returns whether any outputs have been updated.
-     * 
+     *
      * @return
      */
     public boolean isModified() {
+
         int i = 0;
 
         for (Signal bit : out) {
@@ -130,26 +143,29 @@ public class LogicChipState {
 
     /**
      * Get the sign text.
-     * 
+     *
      * @return
      */
     public SignInterface getText() {
+
         return text;
     }
-    
+
     /**
      * Triggers an IC error, disabling the IC from further processing.
      */
     public void triggerError() {
+
         hasErrored = true;
     }
-    
+
     /**
      * Returns true if the IC has encountered an error state.
-     * 
+     *
      * @return
      */
     public boolean hasErrored() {
+
         return hasErrored;
     }
 
@@ -159,6 +175,7 @@ public class LogicChipState {
      * @return
      */
     public BlockVector getBlockPosition() {
+
         return blockPos;
     }
 }

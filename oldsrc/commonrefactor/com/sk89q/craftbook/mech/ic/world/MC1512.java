@@ -30,30 +30,34 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 public class MC1512 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "MESSAGE NEARBY";
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
-    
+
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String id = sign.getLine3();
         if (sign.getLine4().equals("")) {
             return "Please put a distance on the third line.";
         }
-        if (id.length()==0) {
+        if (id.length() == 0) {
             return "Please put a message on the 3rd line to be broadcast to nearby players.";
         }
         try {
@@ -64,24 +68,26 @@ public class MC1512 extends BaseIC {
 
         return null;
     }
-    
+
     public boolean requiresPermission() {
+
         return true; //Could be used for über-spam (with a large value on the 4th line, its practically like MC1511)
     }
 
-    
+
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (chip.getIn(1).is()) { //Only on the rising edge
             String distance = chip.getText().getLine4();
             String theMessage = chip.getText().getLine3();
             Vector pos = chip.getBlockPosition();
-            for(PlayerInterface p: chip.getWorld().getPlayerList()) 
-                if (p.getPosition().distance(pos)<=(double)Float.parseFloat(distance))
+            for (PlayerInterface p : chip.getWorld().getPlayerList())
+                if (p.getPosition().distance(pos) <= (double) Float.parseFloat(distance))
                     p.sendMessage(theMessage);
         }
     }

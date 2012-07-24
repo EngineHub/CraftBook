@@ -18,11 +18,13 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.util.Random;
-import java.io.*;
-
 import com.sk89q.craftbook.Colors;
 import com.sk89q.craftbook.access.PlayerInterface;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Random;
 
 /**
  * Handler for book reading.
@@ -30,18 +32,20 @@ import com.sk89q.craftbook.access.PlayerInterface;
  * @author sk89q
  */
 public class BookReader {
+
     /**
      * Used for picking random lines.
      */
     private static Random rand = new Random();
-    
+
     /**
      * Reads a book.
-     * 
+     *
      * @param player
      * @param bookReadLine
      */
     public static void readBook(PlayerInterface player, String bookReadLine) {
+
         try {
             String text = getBookLine();
 
@@ -58,11 +62,13 @@ public class BookReader {
 
     /**
      * Get a line from the book lines file.
-     * 
+     *
      * @return
+     *
      * @throws IOException
      */
     private static String getBookLine() throws IOException {
+
         RandomAccessFile file = new RandomAccessFile(
                 new File("craftbook-books.txt"), "r");
 
@@ -70,7 +76,7 @@ public class BookReader {
         byte[] data = new byte[500];
 
         for (int tries = 0; tries < 3; tries++) {
-            int j = rand.nextInt((int)len);
+            int j = rand.nextInt((int) len);
             if (tries == 2) { // File is too small
                 j = 0;
             }

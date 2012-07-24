@@ -19,14 +19,10 @@
 
 package com.sk89q.craftbook;
 
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
-
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.ChangedSign;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -39,21 +35,25 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.ChangedSign;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
  * registered triggerability, and dispatches incoming events by checking for
  * Mechanic instance that might be triggered by the event and by considering
  * instantiation of a new Mechanic instance for unregistered BlockVector.
- * 
+ *
  * @author sk89q
  * @author hash
  */
 public class MechanicManager {
+
     public static final boolean DEBUG = false;
 
     /**
@@ -91,14 +91,15 @@ public class MechanicManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    private Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
+    private final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
 
     /**
      * Construct the manager.
-     * 
+     *
      * @param plugin
      */
     public MechanicManager(BaseBukkitPlugin plugin) {
+
         this.plugin = plugin;
         factories = new LinkedList<MechanicFactory<? extends Mechanic>>();
         triggersManager = new TriggerBlockManager();
@@ -108,18 +109,20 @@ public class MechanicManager {
     /**
      * Register a mechanic factory. Make sure that the same factory isn't
      * registered twice -- that condition isn't ever checked.
-     * 
+     *
      * @param factory
      */
     public void register(MechanicFactory<? extends Mechanic> factory) {
-        if(!factories.contains(factory))
+
+        if (!factories.contains(factory))
             factories.add(factory);
     }
 
     /**
      * Handle a block right click event.
-     * 
+     *
      * @param event
+     *
      * @return true if there was a mechanic to process the event
      */
     public boolean dispatchSignChange(SignChangeEvent event) {
@@ -128,7 +131,9 @@ public class MechanicManager {
             return false;
 
         // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
+        //TODO: separate the processing of events which could destroy blocks vs just interact,
+        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
+        // illegal block damages and for invalidating the mechanism proactively.
         //watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
@@ -146,7 +151,7 @@ public class MechanicManager {
 
         try {
             load(pos, localPlayer,
-                    new ChangedSign((Sign) sign, event.getLines()));
+                    new ChangedSign(sign, event.getLines()));
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 localPlayer.printError(e.getMessage());
@@ -162,8 +167,9 @@ public class MechanicManager {
 
     /**
      * Handle a block break event.
-     * 
+     *
      * @param event
+     *
      * @return true if there was a mechanic to process the event
      */
     public boolean dispatchBlockBreak(BlockBreakEvent event) {
@@ -172,7 +178,9 @@ public class MechanicManager {
             return false;
 
         // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
+        //TODO: separate the processing of events which could destroy blocks vs just interact,
+        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
+        // illegal block damages and for invalidating the mechanism proactively.
         watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
@@ -195,8 +203,9 @@ public class MechanicManager {
 
     /**
      * Handle a block right click event.
-     * 
+     *
      * @param event
+     *
      * @return true if there was a mechanic to process the event
      */
     public boolean dispatchBlockRightClick(PlayerInteractEvent event) {
@@ -205,7 +214,9 @@ public class MechanicManager {
             return false;
 
         // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
+        //TODO: separate the processing of events which could destroy blocks vs just interact,
+        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
+        // illegal block damages and for invalidating the mechanism proactively.
         //watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
@@ -228,8 +239,9 @@ public class MechanicManager {
 
     /**
      * Handle a block left click event.
-     * 
+     *
      * @param event
+     *
      * @return true if there was a mechanic to process the event
      */
     public boolean dispatchBlockLeftClick(PlayerInteractEvent event) {
@@ -238,7 +250,9 @@ public class MechanicManager {
             return false;
 
         // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact, because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling illegal block damages and for invalidating the mechanism proactively.
+        //TODO: separate the processing of events which could destroy blocks vs just interact,
+        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
+        // illegal block damages and for invalidating the mechanism proactively.
         //watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
@@ -261,8 +275,9 @@ public class MechanicManager {
 
     /**
      * Handle the redstone block change event.
-     * 
+     *
      * @param event
+     *
      * @return true if there was a mechanic to process the event
      */
     public boolean dispatchBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
@@ -278,7 +293,7 @@ public class MechanicManager {
                 mechanic.onBlockRedstoneChange(event);
                 return true;
             }
-        } catch (InvalidMechanismException e) {
+        } catch (InvalidMechanismException ignored) {
         }
 
         return false;
@@ -289,16 +304,18 @@ public class MechanicManager {
      * PersistentMechanic if one is triggered at that position, or return a new
      * Mechanic (persistent or otherwise; if the new mechanic is persistent, it
      * will have already been registered with this manager).
-     * 
+     *
      * @param pos
+     *
      * @return a {@link Mechanic} if a mechanism could be found at the location;
      *         null otherwise
-     * @throws InvalidMechanismException
-     *             if it appears that the position is intended to me a
-     *             mechanism, but the mechanism is misconfigured and inoperable.
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a
+     *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
     protected Mechanic load(BlockWorldVector pos)
             throws InvalidMechanismException {
+
         Mechanic mechanic = triggersManager.get(pos);
 
         if (mechanic != null) {
@@ -333,18 +350,20 @@ public class MechanicManager {
 
     /**
      * Load a Mechanic at a position.
-     * 
+     *
      * @param pos
      * @param player
      * @param sign
+     *
      * @return a {@link Mechanic} if a mechanism could be found at the location;
      *         null otherwise
-     * @throws InvalidMechanismException
-     *             if it appears that the position is intended to me a
-     *             mechanism, but the mechanism is misconfigured and inoperable.
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a
+     *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
     protected Mechanic load(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
+
         Mechanic mechanic = triggersManager.get(pos);
 
         if (mechanic != null) {
@@ -381,15 +400,17 @@ public class MechanicManager {
      * Attempt to detect a mechanic at a location. This is only called in
      * response to events for which a trigger block for an existing
      * PersistentMechanic cannot be found.
-     * 
+     *
      * @param pos
+     *
      * @return a {@link Mechanic} if a mechanism could be found at the location;
      *         null otherwise
-     * @throws InvalidMechanismException
-     *             if it appears that the position is intended to me a
-     *             mechanism, but the mechanism is misconfigured and inoperable.
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a
+     *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
     protected Mechanic detect(BlockWorldVector pos) throws InvalidMechanismException {
+
         Mechanic mechanic = null;
         for (MechanicFactory<? extends Mechanic> factory : factories)
             if ((mechanic = factory.detect(pos)) != null)
@@ -400,17 +421,19 @@ public class MechanicManager {
     /**
      * Attempt to detect a mechanic at a location, with player information
      * available.
-     * 
+     *
      * @param pos
      * @param player
+     *
      * @return a {@link Mechanic} if a mechanism could be found at the location;
      *         null otherwise
-     * @throws InvalidMechanismException
-     *             if it appears that the position is intended to me a
-     *             mechanism, but the mechanism is misconfigured and inoperable.
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a
+     *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
     protected Mechanic detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
+
         Mechanic mechanic = null;
         for (MechanicFactory<? extends Mechanic> factory : factories) {
             try {
@@ -426,21 +449,24 @@ public class MechanicManager {
     /**
      * Used to filter events for processing. This allows for short circuiting
      * code so that code isn't checked unnecessarily.
-     * 
+     *
      * @param event
+     *
      * @return true if the event should be processed by this manager; false
      *         otherwise.
      */
     protected boolean passesFilter(Event event) {
+
         return true;
     }
 
     /**
      * Handles chunk load.
-     * 
+     *
      * @param chunk
      */
     public void enumerate(Chunk chunk) {
+
         for (BlockState state : chunk.getTileEntities()) {
             if (state instanceof Sign) {
                 try {
@@ -449,7 +475,7 @@ public class MechanicManager {
                     } catch (NullPointerException t) {
                         t.printStackTrace();
                     }
-                } catch (InvalidMechanismException e) {
+                } catch (InvalidMechanismException ignored) {
                 }
             }
         }
@@ -457,7 +483,7 @@ public class MechanicManager {
 
     /**
      * Unload all mechanics inside the given chunk.
-     * 
+     *
      * @param chunk
      */
     public void unload(BlockWorldVector2D chunk, ChunkUnloadEvent event) {
@@ -473,7 +499,7 @@ public class MechanicManager {
     /**
      * Unload a mechanic. This will also remove the trigger points from this
      * mechanic manager.
-     * 
+     *
      * @param mechanic
      */
     protected void unload(Mechanic mechanic) {
@@ -486,7 +512,8 @@ public class MechanicManager {
         try {
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName(), t);
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
+                    (), t);
         }
 
         synchronized (this) {
@@ -503,7 +530,7 @@ public class MechanicManager {
     /**
      * Unload a mechanic. This will also remove the trigger points from this
      * mechanic manager.
-     * 
+     *
      * @param mechanic
      */
     protected void unloadWithEvent(Mechanic mechanic, ChunkUnloadEvent event) {
@@ -516,7 +543,8 @@ public class MechanicManager {
         try {
             mechanic.unloadWithEvent(event);
         } catch (Throwable t) { // Mechanic failed to unload for some reason
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName(), t);
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
+                    (), t);
         }
 
         synchronized (this) {

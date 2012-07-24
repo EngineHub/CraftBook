@@ -18,10 +18,6 @@ package com.sk89q.craftbook.mech.area;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.blockbag.BlockBag;
@@ -30,12 +26,17 @@ import com.sk89q.craftbook.blockbag.OutOfBlocksException;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.Vector;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Stores a copy of a cuboid.
  *
  * @author sk89q
  */
 public class CuboidCopy {
+
     private Vector origin;
     private int width;
     private int height;
@@ -47,11 +48,12 @@ public class CuboidCopy {
     /**
      * Construct the object. This is to create a new copy at a certain
      * location.
-     * 
+     *
      * @param origin
      * @param size
      */
     public CuboidCopy(Vector origin, Vector size) {
+
         this.origin = origin;
         width = size.getBlockX();
         height = size.getBlockY();
@@ -64,16 +66,18 @@ public class CuboidCopy {
      * Used to create a copy when loaded from file.
      */
     private CuboidCopy() {
-        
+
     }
 
     /**
      * Save the copy to file.
-     * 
+     *
      * @param dest
+     *
      * @throws IOException
      */
     public void save(File dest) throws IOException {
+
         FileOutputStream out = new FileOutputStream(dest);
         DataOutputStream writer = new DataOutputStream(out);
         writer.writeByte(1);
@@ -91,11 +95,13 @@ public class CuboidCopy {
 
     /**
      * Save the copy to a file.
-     * 
+     *
      * @param path
+     *
      * @throws IOException
      */
     public void save(String path) throws IOException {
+
         save(new File(path));
     }
 
@@ -103,11 +109,14 @@ public class CuboidCopy {
      * Load a copy.
      *
      * @param file
+     *
      * @return
+     *
      * @throws IOException
      * @throws CuboidCopyException
      */
     public static CuboidCopy load(File file) throws IOException, CuboidCopyException {
+
         FileInputStream in = new FileInputStream(file);
         DataInputStream reader = new DataInputStream(in);
 
@@ -141,7 +150,7 @@ public class CuboidCopy {
             } catch (IOException e) {
             }
         }
-        
+
         CuboidCopy copy = new CuboidCopy();
         copy.origin = new Vector(x, y, z);
         copy.width = width;
@@ -150,19 +159,22 @@ public class CuboidCopy {
         copy.blocks = blocks;
         copy.data = data;
         copy.findTestOffset();
-        
+
         return copy;
     }
 
     /**
      * Load a copy from a file.
-     * 
+     *
      * @param path
+     *
      * @return
+     *
      * @throws IOException
      * @throws CuboidCopyException
      */
     public static CuboidCopy load(String path) throws IOException, CuboidCopyException {
+
         return load(new File(path));
     }
 
@@ -170,16 +182,17 @@ public class CuboidCopy {
      * Make the copy from world.
      */
     public void copy(WorldInterface w) {
+
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     int index = y * width * length + z * width + x;
-                    blocks[index] = (byte)w.getId(origin.add(x, y, z));
-                    data[index] = (byte)w.getData(origin.add(x, y, z));
+                    blocks[index] = (byte) w.getId(origin.add(x, y, z));
+                    data[index] = (byte) w.getData(origin.add(x, y, z));
                 }
             }
         }
-        
+
         findTestOffset();
     }
 
@@ -187,31 +200,32 @@ public class CuboidCopy {
      * Paste to world.
      */
     public void paste(WorldInterface w, BlockBag bag) throws BlockBagException {
-        ArrayList<Tuple2<Vector,byte[]>> queueAfter =
-            new ArrayList<Tuple2<Vector,byte[]>>();
-        ArrayList<Tuple2<Vector,byte[]>> queueLast =
-            new ArrayList<Tuple2<Vector,byte[]>>();
+
+        ArrayList<Tuple2<Vector, byte[]>> queueAfter =
+                new ArrayList<Tuple2<Vector, byte[]>>();
+        ArrayList<Tuple2<Vector, byte[]>> queueLast =
+                new ArrayList<Tuple2<Vector, byte[]>>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     int index = y * width * length + z * width + x;
                     Vector pt = origin.add(x, y, z);
-                    
+
                     if (BlockType.shouldPlaceLast(w.getId(pt))) {
                         w.setId(pt, 0);
                     }
-                    
+
                     if (BlockType.shouldPlaceLast(blocks[index])) {
-                        queueLast.add(new Tuple2<Vector,byte[]>(pt, new byte[] {blocks[index], data[index]}));
+                        queueLast.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
                     } else {
-                        queueAfter.add(new Tuple2<Vector,byte[]>(pt, new byte[] {blocks[index], data[index]}));
+                        queueAfter.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
                     }
                 }
             }
         }
 
-        for (Tuple2<Vector,byte[]> entry : queueAfter) {
+        for (Tuple2<Vector, byte[]> entry : queueAfter) {
             byte[] v = entry.b;
             try {
                 bag.setBlockID(w, entry.a, v[0]);
@@ -223,7 +237,7 @@ public class CuboidCopy {
             }
         }
 
-        for (Tuple2<Vector,byte[]> entry : queueLast) {
+        for (Tuple2<Vector, byte[]> entry : queueLast) {
             byte[] v = entry.b;
             try {
                 bag.setBlockID(w, entry.a, v[0]);
@@ -242,8 +256,9 @@ public class CuboidCopy {
      * Clear the area.
      */
     public void clear(WorldInterface w, BlockBag bag) throws BlockBagException {
+
         List<Vector> queued = new ArrayList<Vector>();
-        
+
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
@@ -271,19 +286,21 @@ public class CuboidCopy {
      * @return
      */
     public void toggle(WorldInterface w, BlockBag bag) throws BlockBagException {
+
         if (shouldClear(w)) {
-            clear(w,bag);
+            clear(w, bag);
         } else {
-            paste(w,bag);
+            paste(w, bag);
         }
     }
 
     /**
      * Returns true if the bridge should be turned 'off'.
-     * 
+     *
      * @return
      */
     public boolean shouldClear(WorldInterface w) {
+
         Vector v = origin.add(testOffset);
         return w.getId(v) != 0;
     }
@@ -292,6 +309,7 @@ public class CuboidCopy {
      * Find a good position to test if an area is active.
      */
     private void findTestOffset() {
+
         for (int y = height - 1; y >= 0; y--) {
             for (int x = 0; x < width; x++) {
                 for (int z = 0; z < length; z++) {
@@ -306,11 +324,13 @@ public class CuboidCopy {
 
     /**
      * Get the distance between a point and this cuboid.
-     * 
+     *
      * @param pos
+     *
      * @return
      */
     public double distance(Vector pos) {
+
         Vector max = origin.add(new Vector(width, height, length));
         int closestX = Math.max(origin.getBlockX(),
                 Math.min(max.getBlockX(), pos.getBlockX()));

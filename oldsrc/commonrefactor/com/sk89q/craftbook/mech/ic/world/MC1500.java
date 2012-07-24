@@ -30,25 +30,29 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 public class MC1500 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "IS PLAYER ONLINE";
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
-    
+
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String id = sign.getLine3();
 
         if (id.length() == 0 || id.contains(" ")) {
@@ -57,22 +61,24 @@ public class MC1500 extends BaseIC {
 
         return null;
     }
-    
-    
+
+
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         String thePlayer = chip.getText().getLine3();
-        if (isPlayerOnline(chip.getServer(),thePlayer))
+        if (isPlayerOnline(chip.getServer(), thePlayer))
             chip.getOut(1).set(true);
-        else 
+        else
             chip.getOut(1).set(false);
     }
 
     private boolean isPlayerOnline(ServerInterface s, String playerName) {
-        return s.matchPlayer(playerName)!=null;
+
+        return s.matchPlayer(playerName) != null;
     }
 }

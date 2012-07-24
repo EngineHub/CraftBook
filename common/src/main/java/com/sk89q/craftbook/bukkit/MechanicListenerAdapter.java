@@ -19,6 +19,16 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -33,20 +43,9 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.PluginManager;
 
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
- * 
+ *
  * @author sk89q
  */
 public class MechanicListenerAdapter {
@@ -54,23 +53,25 @@ public class MechanicListenerAdapter {
     /**
      * Holds the plugin that events are registered through.
      */
-    protected BaseBukkitPlugin plugin;
+    protected final BaseBukkitPlugin plugin;
 
     /**
      * Constructs the adapter.
-     * 
+     *
      * @param plugin
      */
     public MechanicListenerAdapter(BaseBukkitPlugin plugin) {
+
         this.plugin = plugin;
     }
 
     /**
      * Register events.
-     * 
+     *
      * @param manager
      */
     public void register(MechanicManager manager) {
+
         PluginManager pluginManager = plugin.getServer().getPluginManager();
         Listener playerListener = new MechanicPlayerListener(manager, plugin);
         Listener blockListener = new MechanicBlockListener(manager, plugin);
@@ -83,28 +84,30 @@ public class MechanicListenerAdapter {
 
     /**
      * Player listener for detecting interactions with mechanic triggers.
-     * 
+     *
      * @author hash
-     * 
      */
     protected static class MechanicPlayerListener implements Listener {
-        protected MechanicManager manager;
-        protected BaseBukkitPlugin plugin;
+
+        protected final MechanicManager manager;
+        protected final BaseBukkitPlugin plugin;
 
         /**
          * Construct the listener.
-         * 
+         *
          * @param manager
          * @param plugin
          */
         public MechanicPlayerListener(MechanicManager manager, BaseBukkitPlugin plugin) {
+
             this.manager = manager;
             this.plugin = plugin;
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onPlayerInteract(PlayerInteractEvent event) {
-            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+
+            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
                 return;
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
@@ -118,41 +121,45 @@ public class MechanicListenerAdapter {
 
     /**
      * Block listener for processing block events.
-     * 
+     *
      * @author sk89q
      */
     protected static class MechanicBlockListener implements Listener {
 
-        protected MechanicManager manager;
-        protected BaseBukkitPlugin plugin;
+        protected final MechanicManager manager;
+        protected final BaseBukkitPlugin plugin;
 
         /**
          * Construct the listener.
-         * 
+         *
          * @param manager
          * @param plugin
          */
         public MechanicBlockListener(MechanicManager manager, BaseBukkitPlugin plugin) {
+
             this.manager = manager;
             this.plugin = plugin;
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onSignChange(SignChangeEvent event) {
-            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+
+            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
                 return;
             manager.dispatchSignChange(event);
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockBreak(BlockBreakEvent event) {
-            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+
+            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
                 return;
             manager.dispatchBlockBreak(event);
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+
             int oldLevel = event.getOldCurrent();
             int newLevel = event.getNewCurrent();
             Block block = event.getBlock();
@@ -211,19 +218,19 @@ public class MechanicListenerAdapter {
                     // Fake data
                     //w.fakeData(x, y, z, newLevel);
 
-                    int above =          world.getBlockTypeIdAt(x,     y + 1, z);
+                    int above = world.getBlockTypeIdAt(x, y + 1, z);
 
-                    int westSide =       world.getBlockTypeIdAt(x,     y,     z + 1);
-                    int westSideAbove =  world.getBlockTypeIdAt(x,     y + 1, z + 1);
-                    int westSideBelow =  world.getBlockTypeIdAt(x,     y - 1, z + 1);
-                    int eastSide =       world.getBlockTypeIdAt(x,     y,     z - 1);
-                    int eastSideAbove =  world.getBlockTypeIdAt(x,     y + 1, z - 1);
-                    int eastSideBelow =  world.getBlockTypeIdAt(x,     y - 1, z - 1);
+                    int westSide = world.getBlockTypeIdAt(x, y, z + 1);
+                    int westSideAbove = world.getBlockTypeIdAt(x, y + 1, z + 1);
+                    int westSideBelow = world.getBlockTypeIdAt(x, y - 1, z + 1);
+                    int eastSide = world.getBlockTypeIdAt(x, y, z - 1);
+                    int eastSideAbove = world.getBlockTypeIdAt(x, y + 1, z - 1);
+                    int eastSideBelow = world.getBlockTypeIdAt(x, y - 1, z - 1);
 
-                    int northSide =      world.getBlockTypeIdAt(x - 1, y,     z);
+                    int northSide = world.getBlockTypeIdAt(x - 1, y, z);
                     int northSideAbove = world.getBlockTypeIdAt(x - 1, y + 1, z);
                     int northSideBelow = world.getBlockTypeIdAt(x - 1, y - 1, z);
-                    int southSide =      world.getBlockTypeIdAt(x + 1, y,     z);
+                    int southSide = world.getBlockTypeIdAt(x + 1, y, z);
                     int southSideAbove = world.getBlockTypeIdAt(x + 1, y + 1, z);
                     int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
 
@@ -275,8 +282,6 @@ public class MechanicListenerAdapter {
 
                 // Can be triggered from below
                 handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
-
-                return;
             } finally {
                 //w.destroyFake();
             }
@@ -284,7 +289,7 @@ public class MechanicListenerAdapter {
 
         /**
          * Handle the direct wire input.
-         * 
+         *
          * @param pt
          * @param isOn
          * @param sourceBlock
@@ -292,8 +297,10 @@ public class MechanicListenerAdapter {
          * @param newLevel
          */
         protected void handleDirectWireInput(WorldVector pt,
-                boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
-            Block block = ((BukkitWorld)pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+                                             boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
+
+            Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
+                    pt.getBlockZ());
             manager.dispatchBlockRedstoneChange(
                     new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
         }
@@ -301,20 +308,21 @@ public class MechanicListenerAdapter {
 
     /**
      * Block listener for processing block events.
-     * 
+     *
      * @author sk89q
      */
     protected class MechanicWorldListener implements Listener {
 
-        protected MechanicManager manager;
-        protected BaseBukkitPlugin plugin;
+        protected final MechanicManager manager;
+        protected final BaseBukkitPlugin plugin;
 
         /**
          * Construct the listener.
-         * 
+         *
          * @param manager
          */
         public MechanicWorldListener(MechanicManager manager, BaseBukkitPlugin plugin) {
+
             this.manager = manager;
             this.plugin = plugin;
         }
@@ -324,9 +332,12 @@ public class MechanicListenerAdapter {
          */
         @EventHandler(priority = EventPriority.MONITOR)
         public void onChunkLoad(final ChunkLoadEvent event) {
+
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
                 @Override
                 public void run() {
+
                     manager.enumerate(event.getChunk());
                 }
             }, 2);
@@ -337,7 +348,8 @@ public class MechanicListenerAdapter {
          */
         @EventHandler(priority = EventPriority.MONITOR)
         public void onChunkUnload(ChunkUnloadEvent event) {
-            if(plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
+
+            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
                 return;
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();

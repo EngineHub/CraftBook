@@ -19,12 +19,13 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -36,37 +37,37 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Handler for cauldrons.
- * 
+ *
  * @author sk89q
  */
 public class Cauldron extends AbstractMechanic {
+
     public static class Factory extends AbstractMechanicFactory<Cauldron> {
 
-        protected MechanismsPlugin plugin;
-        protected CauldronCookbook recipes;
+        protected final MechanismsPlugin plugin;
+        protected final CauldronCookbook recipes;
 
         public Factory(MechanismsPlugin plugin) {
+
             this.plugin = plugin;
             this.recipes = new CauldronCookbook();
         }
 
         @Override
         public Cauldron detect(BlockWorldVector pt) {
+
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in
             // first
-            if (block.getTypeId() == BlockID.AIR)
-                return null;
+            if (block.getTypeId() == BlockID.AIR) return null;
             return new Cauldron(this.recipes, pt, plugin);
         }
     }
@@ -74,19 +75,20 @@ public class Cauldron extends AbstractMechanic {
     /**
      * Stores the recipes.
      */
-    private CauldronCookbook recipes;
-    private BlockWorldVector pt;
-    private MechanismsPlugin plugin;
+    private final CauldronCookbook recipes;
+    private final BlockWorldVector pt;
+    private final MechanismsPlugin plugin;
 
     /**
      * Construct the handler.
-     * 
+     *
      * @param recipes
      * @param pt
      * @param plugin
      */
     public Cauldron(CauldronCookbook recipes, BlockWorldVector pt,
-            MechanismsPlugin plugin) {
+                    MechanismsPlugin plugin) {
+
         super();
         this.recipes = recipes;
         this.pt = pt;
@@ -95,24 +97,20 @@ public class Cauldron extends AbstractMechanic {
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
-        if (!plugin.getLocalConfiguration().cauldronSettings.enable)
-            return;
+        if (!plugin.getLocalConfiguration().cauldronSettings.enable) return;
 
-        if (!localPlayer.hasPermission("craftbook.mech.cauldron")) {
-            return;
-        }
+        if (!localPlayer.hasPermission("craftbook.mech.cauldron")) return;
 
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt))
-            return; // wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return;
         if (event.getPlayer().getItemInHand().getTypeId() >= 255
                 || event.getPlayer().getItemInHand().getType() == Material.AIR) {
             if (preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt)) {
                 event.setUseInteractedBlock(Result.DENY);
                 event.setUseItemInHand(Result.DENY);
                 event.setCancelled(true);
-                return;
             }
         }
     }
@@ -121,26 +119,29 @@ public class Cauldron extends AbstractMechanic {
      * Thrown when a suspected formation is not actually a valid cauldron.
      */
     private class NotACauldronException extends Exception {
+
         private static final long serialVersionUID = 3091428924893050849L;
 
         /**
          * Construct the exception with a message.
-         * 
+         *
          * @param msg
          */
         public NotACauldronException(String msg) {
+
             super(msg);
         }
     }
 
     /**
      * Do cauldron.
-     * 
+     *
      * @param pt
      * @param player
      * @param world
      */
     public boolean preCauldron(Player player, World world, BlockWorldVector pt) {
+
         double x = pt.getX();
         double y = pt.getY();
         double z = pt.getZ();
@@ -181,7 +182,7 @@ public class Cauldron extends AbstractMechanic {
 
     /**
      * Attempt to perform a cauldron recipe.
-     * 
+     *
      * @param player
      * @param world
      * @param pt
@@ -274,7 +275,7 @@ public class Cauldron extends AbstractMechanic {
                         world.getBlockAt(entry.getKey().getBlockX(),
                                 entry.getKey().getBlockY(),
                                 entry.getKey().getBlockZ()).setType(
-                                        Material.AIR);
+                                Material.AIR);
                         // }
                         ingredients.remove(entry.getValue());
                     }
@@ -298,7 +299,7 @@ public class Cauldron extends AbstractMechanic {
                 player.sendMessage(ChatColor.RED
                         + "Hmm, this doesn't make anything...");
             }
-        } catch (NotACauldronException e) {
+        } catch (NotACauldronException ignored) {
         }
     }
 
@@ -309,17 +310,18 @@ public class Cauldron extends AbstractMechanic {
      * we don't ever search the lava or anything above, although in the case of
      * non-wall blocks, we also make sure that there is standing lava
      * underneath.
-     * 
+     *
      * @param world
      * @param pt
      * @param minY
      * @param maxY
      * @param visited
+     *
      * @throws Cauldron.NotACauldronException
      */
     public void findCauldronContents(World world, BlockWorldVector pt,
-            int minY, int maxY, Map<BlockWorldVector, Integer> visited)
-                    throws NotACauldronException {
+                                     int minY, int maxY, Map<BlockWorldVector, Integer> visited)
+            throws NotACauldronException {
 
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 
@@ -380,14 +382,14 @@ public class Cauldron extends AbstractMechanic {
 
     /**
      * Returns a new BlockWorldVector with i, j, and k added to pt's x, y and z.
-     * 
+     *
      * @param i
      * @param j
      * @param k
      * @param pt
-     * 
      */
     private BlockWorldVector recurse(int i, int j, int k, BlockWorldVector pt) {
+
         return new BlockWorldVector(pt.getWorld(), pt.getX() + i,
                 pt.getY() + j, pt.getZ() + k);
     }
@@ -399,6 +401,7 @@ public class Cauldron extends AbstractMechanic {
 
     @Override
     public boolean isActive() {
+
         return false;
     }
 
@@ -409,6 +412,7 @@ public class Cauldron extends AbstractMechanic {
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+
     }
 
 }

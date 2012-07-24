@@ -27,16 +27,18 @@ import com.sk89q.craftbook.util.Vector;
 
 /**
  * A PLC that gets code from code block signs.
- * 
+ *
  * @author Lymia
  */
 public class DefaultPLC extends PlcBase {
+
     /**
      * Construct the instance.
-     * 
+     *
      * @param language
      */
     public DefaultPLC(PlcLang language) {
+
         super(language);
     }
 
@@ -46,6 +48,7 @@ public class DefaultPLC extends PlcBase {
      * @return
      */
     public String getTitle() {
+
         return getLanguage().getName() + " PLC";
     }
 
@@ -55,9 +58,11 @@ public class DefaultPLC extends PlcBase {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     protected String validateEnviromentEx(ServerInterface i, WorldInterface w, Vector v, SignText t) {
+
         try {
             return getLanguage().validateEnvironment(w, v, t, getCode(w, v));
         } catch (PlcException e) {
@@ -67,10 +72,11 @@ public class DefaultPLC extends PlcBase {
 
     /**
      * Get the code.
-     * 
+     *
      * @param v
      */
     protected String getCode(WorldInterface w, Vector v) throws PlcException {
+
         StringBuilder b = new StringBuilder();
         int x = v.getBlockX();
         int z = v.getBlockZ();

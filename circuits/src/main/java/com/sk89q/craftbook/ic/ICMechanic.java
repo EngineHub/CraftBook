@@ -18,66 +18,68 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.PersistentMechanic;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this
  * mechanic, and then it is processed and passed onto the associated IC.
- * 
+ *
  * @author sk89q
  */
 public class ICMechanic extends PersistentMechanic {
 
-    protected CircuitsPlugin plugin;
-    protected String id;
-    protected ICFamily family;
-    protected IC ic;
-	protected BlockWorldVector pos;
+    protected final CircuitsPlugin plugin;
+    protected final String id;
+    protected final ICFamily family;
+    protected final IC ic;
+    protected final BlockWorldVector pos;
 
     public ICMechanic(CircuitsPlugin plugin, String id, IC ic,
-            ICFamily family, BlockWorldVector pos) {
+                      ICFamily family, BlockWorldVector pos) {
+
         super(pos);
         this.plugin = plugin;
         this.id = id;
         this.ic = ic;
         this.family = family;
-	    this.pos = pos;
+        this.pos = pos;
     }
 
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
+
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-		// abort if the current did not change
-	    if (event.getNewCurrent() == event.getOldCurrent()) {
-		    return;
-	    }
+        // abort if the current did not change
+        if (event.getNewCurrent() == event.getOldCurrent()) {
+            return;
+        }
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
-	        final Block source = event.getSource();
-	        final BlockState state = block.getState();
-			// abort if the sign is the source or the block the sign is attached to
-	        if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) {
-		        return;
-	        }
+            final Block source = event.getSource();
+            final BlockState state = block.getState();
+            // abort if the sign is the source or the block the sign is attached to
+            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) {
+                return;
+            }
 
             Runnable runnable = new Runnable() {
+
                 @Override
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
@@ -86,7 +88,8 @@ public class ICMechanic extends PersistentMechanic {
                     ic.trigger(chipState);
                 }
             };
-            //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually running per set of inputs in a given time window.
+            //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually
+            // running per set of inputs in a given time window.
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(
                     plugin, runnable, 2);
         }
@@ -94,12 +97,14 @@ public class ICMechanic extends PersistentMechanic {
 
     @Override
     public void unload() {
+
         ic.unload();
         //FIXME plugin.getServer().getScheduler().cancelTasks(plugin);
     }
 
     @Override
     public boolean isActive() {
+
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
@@ -115,11 +120,7 @@ public class ICMechanic extends PersistentMechanic {
                     return false;
                 } else if (!matcher.group(1).equalsIgnoreCase(id)) {
                     return false;
-                } else if (ic instanceof PersistentIC) {
-                    return ((PersistentIC) ic).isActive();
-                } else {
-                    return false;
-                }
+                } else return ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
             }
         }
 
@@ -136,8 +137,8 @@ public class ICMechanic extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-	    // remove the ic from cache
-	    ICManager.removeCachedIC(pos);
+        // remove the ic from cache
+        ICManager.removeCachedIC(pos);
     }
 
     @Override

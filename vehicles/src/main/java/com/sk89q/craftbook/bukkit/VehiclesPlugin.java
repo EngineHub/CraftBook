@@ -18,48 +18,37 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.vehicle.*;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Plugin for CraftBook's redstone additions.
- * 
+ *
  * @author sk89q
  */
 public class VehiclesPlugin extends BaseBukkitPlugin {
 
     private VehiclesConfiguration config;
-    private Listener lvehicle;
-    private Listener lblock;
     private MinecartManager cartman;
 
     @Override
     public void onEnable() {
+
         super.onEnable();
 
         cartman = new MinecartManager(this);
@@ -67,6 +56,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
     @Override
     protected void registerEvents() {
+
         createDefaultConfiguration("config.yml", false);
 
         // config has to be loaded before the listeners are built because they cache stuff
@@ -76,16 +66,14 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-        lvehicle = new CraftBookVehicleListener();
-        lblock = new CraftBookVehicleBlockListener();
-        getServer().getPluginManager().registerEvents(lvehicle, this);
-        getServer().getPluginManager().registerEvents(lblock, this);
+        getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(), this);
+        getServer().getPluginManager().registerEvents(new CraftBookVehicleBlockListener(), this);
     }
 
     public VehiclesConfiguration getLocalConfiguration() {
+
         return config;
     }
-
 
 
     /**
@@ -93,13 +81,17 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      * appropriate logic in MinecartManager.
      */
     class CraftBookVehicleListener implements Listener {
-        public CraftBookVehicleListener() {}
+
+        public CraftBookVehicleListener() {
+
+        }
 
         /**
          * Called when a vehicle hits an entity
          */
         @EventHandler
         public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
+
             VehiclesConfiguration config = getLocalConfiguration();
             Vehicle vehicle = event.getVehicle();
             Entity entity = event.getEntity();
@@ -107,15 +99,15 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (entity instanceof Player) return;
             if (!config.boatRemoveEntities && !config.minecartRemoveEntities && !config.minecartEnterOnImpact) return;
 
-            if(config.minecartEnterOnImpact == true && (vehicle instanceof Minecart)) {
-                if(!vehicle.isEmpty()) return;
+            if (config.minecartEnterOnImpact && (vehicle instanceof Minecart)) {
+                if (!vehicle.isEmpty()) return;
                 vehicle.setPassenger(event.getEntity());
 
                 return;
             }
 
-            if (config.boatRemoveEntities ==  true && (vehicle instanceof Boat)) {
-                if (config.boatRemoveEntitiesOtherBoats != true &&
+            if (config.boatRemoveEntities && (vehicle instanceof Boat)) {
+                if (!config.boatRemoveEntitiesOtherBoats &&
                         (entity instanceof Boat)) return;
 
                 entity.remove();
@@ -123,13 +115,11 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 return;
             }
 
-            if (config.minecartRemoveEntities ==  true && (vehicle instanceof Minecart)) {
-                if (config.minecartRemoveEntitiesOtherCarts != true &&
+            if (config.minecartRemoveEntities && (vehicle instanceof Minecart)) {
+                if (!config.minecartRemoveEntitiesOtherCarts &&
                         (entity instanceof Minecart)) return;
 
                 entity.remove();
-
-                return;
             }
         }
 
@@ -138,6 +128,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
          */
         @EventHandler
         public void onVehicleCreate(VehicleCreateEvent event) {
+
             Vehicle vehicle = event.getVehicle();
 
             // Ignore events not relating to minecrarts.
@@ -156,6 +147,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         @EventHandler
         public void onVehicleEnter(VehicleEnterEvent event) {
+
             Vehicle vehicle = event.getVehicle();
 
             if (!(vehicle instanceof Minecart)) return;
@@ -169,6 +161,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         @EventHandler
         public void onVehicleExit(VehicleExitEvent event) {
+
             Vehicle vehicle = event.getVehicle();
 
             if (!(vehicle instanceof Minecart)) return;
@@ -178,6 +171,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 vehicle.remove();
             }
         }
+
         /**
          * Called when an vehicle moves.
          */
@@ -186,43 +180,46 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
 
-            if(config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty())
-                ((Minecart)event.getVehicle()).setDamage(((Minecart)event.getVehicle()).getDamage()+3);
+            if (config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty())
+                ((Minecart) event.getVehicle()).setDamage(((Minecart) event.getVehicle()).getDamage() + 3);
 
             cartman.impact(event);
         }
+
         /**
          * Called when a vehicle is destroied.
          */
         @EventHandler
         public void onVehicleDestroy(VehicleDestroyEvent event) {
+
             if (!(event.getVehicle() instanceof Boat)) return;
 
             VehiclesConfiguration config = getLocalConfiguration();
-            if (config.boatBreakReturn == true) {
+            if (config.boatBreakReturn) {
                 ItemStack boatStack = new ItemStack(Material.BOAT, 1);
-                Boat boat =  (Boat) event.getVehicle();
+                Boat boat = (Boat) event.getVehicle();
                 Location loc = boat.getLocation();
                 loc.getWorld().dropItemNaturally(loc, boatStack);
                 boat.remove();
                 event.setCancelled(true);
-            } else {
-                return;
             }
         }
     }
 
 
-
     class CraftBookVehicleBlockListener implements Listener {
-        public CraftBookVehicleBlockListener() {}
+
+        public CraftBookVehicleBlockListener() {
+
+        }
 
         @EventHandler
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             // ignore events that are only changes in current strength
             if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
 
-            // remember that bukkit only gives us redstone events for wires and things that already respond to redstone, which is entirely unhelpful.
+            // remember that bukkit only gives us redstone events for wires and things that already respond to
+            // redstone, which is entirely unhelpful.
             // So: issue four actual events per bukkit event.
             for (BlockFace bf : CartMechanism.powerSupplyOptions)
                 cartman.impact(new SourcedBlockRedstoneEvent(event, event.getBlock().getRelative(bf)));
@@ -231,70 +228,69 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         @EventHandler
         public void onSignChange(SignChangeEvent event) {
             //TODO make this method simpler :|
-            Sign s = (Sign)event.getBlock().getState();
+            Sign s = (Sign) event.getBlock().getState();
             LocalPlayer player = wrap(event.getPlayer());
-            if(s.getLine(1).equalsIgnoreCase("[deposit]") || s.getLine(1).equalsIgnoreCase("[collect]")) {
-                if(!player.hasPermission("craftbook.vehicles.deposit")) {
+            if (s.getLine(1).equalsIgnoreCase("[deposit]") || s.getLine(1).equalsIgnoreCase("[collect]")) {
+                if (!player.hasPermission("craftbook.vehicles.deposit")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[dispenser]")) {
-                if(!player.hasPermission("craftbook.vehicles.dispenser")) {
+            if (s.getLine(1).equalsIgnoreCase("[dispenser]")) {
+                if (!player.hasPermission("craftbook.vehicles.dispenser")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[eject]")) {
-                if(!player.hasPermission("craftbook.vehicles.eject")) {
+            if (s.getLine(1).equalsIgnoreCase("[eject]")) {
+                if (!player.hasPermission("craftbook.vehicles.eject")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[print]")) {
-                if(!player.hasPermission("craftbook.vehicles.print")) {
+            if (s.getLine(1).equalsIgnoreCase("[print]")) {
+                if (!player.hasPermission("craftbook.vehicles.print")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[reverse]")) {
-                if(!player.hasPermission("craftbook.vehicles.reverse")) {
+            if (s.getLine(1).equalsIgnoreCase("[reverse]")) {
+                if (!player.hasPermission("craftbook.vehicles.reverse")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[sort]")) {
-                if(!player.hasPermission("craftbook.vehicles.sort")) {
+            if (s.getLine(1).equalsIgnoreCase("[sort]")) {
+                if (!player.hasPermission("craftbook.vehicles.sort")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[station]")) {
-                if(!player.hasPermission("craftbook.vehicles.station")) {
+            if (s.getLine(1).equalsIgnoreCase("[station]")) {
+                if (!player.hasPermission("craftbook.vehicles.station")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if(s.getLine(1).equalsIgnoreCase("[teleport]")) {
-                if(!player.hasPermission("craftbook.vehicles.teleport")) {
+            if (s.getLine(1).equalsIgnoreCase("[teleport]")) {
+                if (!player.hasPermission("craftbook.vehicles.teleport")) {
                     player.printError("vehicles.create-permission");
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
-                    return;
                 }
             }
         }

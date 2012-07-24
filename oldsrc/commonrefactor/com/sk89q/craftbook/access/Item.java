@@ -19,16 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.access;
 
 public final class Item {
+
     public final int id, count;
+
     public Item(int id, int count) {
+
         this.id = id;
         this.count = count;
     }
-    
+
     public Item addItems(int count) {
-        return new Item(id,this.count+count);
+
+        return new Item(id, this.count + count);
     }
+
     public Item removeItems(int count) {
-        return new Item(id,this.count-count);
+
+        return new Item(id, this.count - count);
     }
 }

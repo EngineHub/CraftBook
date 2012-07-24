@@ -19,27 +19,30 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 
 /**
  * Full subtractor.
- * 
+ *
  * @author Lymia
  */
 public class MC4100 extends LogicIC {
+
     public String getTitle() {
+
         return "FULL SUBTRACTOR";
     }
 
     public void think(LogicChipState chip) {
+
         boolean A = chip.getIn(1).is();
         boolean B = chip.getIn(2).is();
         boolean C = chip.getIn(3).is();
-        
-        boolean S = A^B^C;
-        boolean Bo = C&!(A^B)|(!A&B);
-        
+
+        boolean S = A ^ B ^ C;
+        boolean Bo = C & !(A ^ B) | (!A & B);
+
         chip.getOut(1).set(S);
         chip.getOut(2).set(Bo);
         chip.getOut(3).set(Bo);

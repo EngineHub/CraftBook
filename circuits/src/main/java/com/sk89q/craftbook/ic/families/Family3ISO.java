@@ -23,10 +23,7 @@ import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.bukkit.*;
-
-import org.bukkit.Material;
+import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -38,78 +35,80 @@ import org.bukkit.block.Sign;
  */
 public class Family3ISO extends AbstractICFamily {
 
-	@Override
-	public ChipState detect(BlockWorldVector source, Sign sign) {
-		return new ChipState3ISO(source, sign);
-	}
+    @Override
+    public ChipState detect(BlockWorldVector source, Sign sign) {
 
-	public static class ChipState3ISO extends AbstractChipState {
+        return new ChipState3ISO(source, sign);
+    }
 
-		public ChipState3ISO(BlockWorldVector source, Sign sign) {
-			super(source, sign);
-		}
+    public static class ChipState3ISO extends AbstractChipState {
 
-		protected Block getBlock(int pin) {
-			switch (pin) {
-				case 0:
-					return SignUtil.getFrontBlock(sign.getBlock());
-				case 1:
-					return SignUtil.getLeftBlock(sign.getBlock());
-				case 2:
-					return SignUtil.getRightBlock(sign.getBlock());
-				case 3:
-					BlockFace face = SignUtil.getBack(sign.getBlock());
-					return sign.getBlock().getRelative(face).getRelative(face);
-				default:
-					return null;
-			}
-		}
+        public ChipState3ISO(BlockWorldVector source, Sign sign) {
 
-		@Override
-		public boolean get(int pin) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				return block.isBlockIndirectlyPowered();
-			} else {
-				return false;
-			}
-		}
+            super(source, sign);
+        }
 
-		@Override
-		public void set(int pin, boolean value) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				ICUtil.setState(block, value);
-			} else {
-				return;
-			}
-		}
+        protected Block getBlock(int pin) {
 
-		@Override
-		public boolean getInput(int inputIndex) {
-			return get(inputIndex);
-		}
+            switch (pin) {
+                case 0:
+                    return SignUtil.getFrontBlock(sign.getBlock());
+                case 1:
+                    return SignUtil.getLeftBlock(sign.getBlock());
+                case 2:
+                    return SignUtil.getRightBlock(sign.getBlock());
+                case 3:
+                    BlockFace face = SignUtil.getBack(sign.getBlock());
+                    return sign.getBlock().getRelative(face).getRelative(face);
+                default:
+                    return null;
+            }
+        }
 
-		@Override
-		public boolean getOutput(int outputIndex) {
-			return get(outputIndex + 3);
-		}
+        @Override
+        public boolean get(int pin) {
 
-		@Override
-		public void setOutput(int outputIndex, boolean value) {
-			set(outputIndex + 3, value);
-		}
+            Block block = getBlock(pin);
+            return block != null && block.isBlockIndirectlyPowered();
+        }
 
-		@Override
-		public int getInputCount() {
-			return 3;
-		}
+        @Override
+        public void set(int pin, boolean value) {
 
-		@Override
-		public int getOutputCount() {
-			return 1;
-		}
+            Block block = getBlock(pin);
+            if (block != null) ICUtil.setState(block, value);
+        }
 
-	}
+        @Override
+        public boolean getInput(int inputIndex) {
+
+            return get(inputIndex);
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+
+            return get(outputIndex + 3);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+
+            set(outputIndex + 3, value);
+        }
+
+        @Override
+        public int getInputCount() {
+
+            return 3;
+        }
+
+        @Override
+        public int getOutputCount() {
+
+            return 1;
+        }
+
+    }
 
 }

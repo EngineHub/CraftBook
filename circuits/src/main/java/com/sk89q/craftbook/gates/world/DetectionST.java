@@ -9,39 +9,46 @@ import org.bukkit.block.Sign;
  */
 public class DetectionST extends Detection implements SelfTriggeredIC {
 
-	public DetectionST(Server server, Sign block) {
-		super(server, block);
-	}
+    public DetectionST(Server server, Sign block) {
 
-	@Override
-	public String getTitle() {
-		return "Self Triggered Detection";
-	}
+        super(server, block);
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "ST DETECTION";
-	}
+    @Override
+    public String getTitle() {
 
-	@Override
-	public void think(ChipState state) {
-		state.setOutput(0, isDetected());
-	}
+        return "Self Triggered Detection";
+    }
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
+    @Override
+    public String getSignTitle() {
 
-	public static class Factory extends AbstractICFactory implements RestrictedIC {
+        return "ST DETECTION";
+    }
 
-		public Factory(Server server) {
-			super(server);
-		}
+    @Override
+    public void think(ChipState state) {
 
-		@Override
-		public IC create(Sign sign) {
-			return new DetectionST(getServer(), sign);
-		}
-	}
+        state.setOutput(0, isDetected());
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
+
+        public Factory(Server server) {
+
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+
+            return new DetectionST(getServer(), sign);
+        }
+    }
 }

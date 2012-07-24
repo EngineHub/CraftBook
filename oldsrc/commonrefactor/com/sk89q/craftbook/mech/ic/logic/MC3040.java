@@ -19,8 +19,8 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 
 /**
  * Multiplexer
@@ -28,12 +28,14 @@ import com.sk89q.craftbook.mech.ic.LogicChipState;
  * @author Lymia
  */
 public class MC3040 extends LogicIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "MULTIPLEXER";
     }
 
@@ -43,7 +45,8 @@ public class MC3040 extends LogicIC {
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         boolean swapper = chip.getIn(3).is();
-        chip.getOut(1).set(swapper?chip.getIn(1).is():chip.getIn(2).is());
+        chip.getOut(1).set(swapper ? chip.getIn(1).is() : chip.getIn(2).is());
     }
 }

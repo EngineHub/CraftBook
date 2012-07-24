@@ -19,27 +19,29 @@ package com.sk89q.craftbook.mech.area;
 */
 
 /**
- *
  * @author sk89q
  */
 public class CuboidCopyException extends Exception {
+
     private static final long serialVersionUID = 1610836109309177856L;
 
     /**
      * Construct an instance.
-     * 
+     *
      * @param msg
      */
     public CuboidCopyException() {
+
         super();
     }
 
     /**
      * Construct an instance.
-     * 
+     *
      * @param msg
      */
     public CuboidCopyException(String msg) {
+
         super(msg);
     }
 }

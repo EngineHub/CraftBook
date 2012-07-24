@@ -21,6 +21,8 @@ package com.sk89q.craftbook.access;
 import com.sk89q.craftbook.util.Vector;
 
 public interface WorldEditInterface {
+
     Vector getRegionMinimumPoint(PlayerInterface player) throws LocalWorldEditBridgeException;
+
     Vector getRegionMaximumPoint(PlayerInterface player) throws LocalWorldEditBridgeException;
 }

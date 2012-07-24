@@ -22,13 +22,15 @@ package com.sk89q.craftbook;
 /**
  * Thrown when a mechanism has been processed but no mechanism needed to
  * be instantiated.
- * 
+ *
  * @author sk89q
  */
 public class ProcessedMechanismException extends CraftbookException {
+
     private static final long serialVersionUID = -6917162805444409894L;
 
     public ProcessedMechanismException() {
+
         super();
     }
 }

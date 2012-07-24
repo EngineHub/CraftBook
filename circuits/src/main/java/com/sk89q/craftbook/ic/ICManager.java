@@ -26,102 +26,116 @@ import java.util.Map;
 /**
  * Manages known registered ICs. For an IC to be detected in-world through
  * CraftBook, the IC's factory has to be registered with this manager.
- * 
+ *
  * @author sk89q
  */
 public class ICManager {
-    
+
     /**
      * Holds a map of registered IC factories with their ID.
-     * 
+     *
      * @see RegisteredICFactory
      */
-    protected Map<String, RegisteredICFactory> registered
+    protected final Map<String, RegisteredICFactory> registered
             = new HashMap<String, RegisteredICFactory>();
 
-	private static Map<BlockWorldVector, IC> cachedICs
-			= new HashMap<BlockWorldVector, IC>();
-    
+    private static final Map<BlockWorldVector, IC> cachedICs
+            = new HashMap<BlockWorldVector, IC>();
+
     /**
      * Register an IC with the manager. The casing of the ID can be of any
      * case because IC IDs are case-insensitive. Re-using an already
      * registered name will override the previous registration.
-     * 
-     * @param id case-insensitive ID (such as MC1001)
-     * @param factory factory to create ICs
+     *
+     * @param id           case-insensitive ID (such as MC1001)
+     * @param factory      factory to create ICs
      * @param nativeFamily the native family for the IC
      */
     public void register(String id, ICFactory factory, ICFamily nativeFamily) {
+
         RegisteredICFactory registration
                 = new RegisteredICFactory(id, factory, nativeFamily);
-        
+
         // Lowercase the ID so that we can do case in-sensitive lookups
         registered.put(id.toLowerCase(), registration);
     }
-    
+
     /**
      * Get an IC registration by a provided ID.
-     * 
+     *
      * @param id case insensitive ID
+     *
      * @return registration
+     *
      * @see RegisteredICFactory
      */
     public RegisteredICFactory get(String id) {
+
         return registered.get(id.toLowerCase());
     }
 
-	/**
-	 * Checks if the IC Mechanic at the given point is
-	 * cached. If not it will return false.
-	 *
-	 * @param pt of the ic
-	 * @return true if ic is cached
-	 */
-	public static boolean isCachedIC(BlockWorldVector pt) {
-		return cachedICs.containsKey(pt);
-	}
+    /**
+     * Checks if the IC Mechanic at the given point is
+     * cached. If not it will return false.
+     *
+     * @param pt of the ic
+     *
+     * @return true if ic is cached
+     */
+    public static boolean isCachedIC(BlockWorldVector pt) {
 
-	/**
-	 * Gets the cached IC based on its location in the world.
-	 * isCached should be checked before calling this method.
-	 *
-	 * @param pt of the ic
-	 * @return cached ic.
-	 */
-	public static IC getCachedIC(BlockWorldVector pt) {
-		return cachedICs.get(pt);
-	}
+        return cachedICs.containsKey(pt);
+    }
 
-	/**
-	 * Adds the given IC to the cached IC list.
-	 * @param pt of the ic
-	 * @param ic to add
-	 */
-	public static void addCachedIC(BlockWorldVector pt, IC ic) {
-		cachedICs.put(pt, ic);
-	}
+    /**
+     * Gets the cached IC based on its location in the world.
+     * isCached should be checked before calling this method.
+     *
+     * @param pt of the ic
+     *
+     * @return cached ic.
+     */
+    public static IC getCachedIC(BlockWorldVector pt) {
 
-	/**
-	 * Removes the given IC from the cache list based
-	 * on its location.
-	 * @param pt of the ic
-	 * @return the removed ic
-	 */
-	public static IC removeCachedIC(BlockWorldVector pt) {
-		if (cachedICs.containsKey(pt)) {
-			return cachedICs.remove(pt);
-		}
-		return null;
-	}
+        return cachedICs.get(pt);
+    }
 
-	/**
-	 * Gets called when the IC gets unloaded.
-	 * This method then takes care of clearing the IC
-	 * from the cache.
-	 *
-	 * @param pt of the block break
-	 */
-	public static void unloadIC(BlockWorldVector pt) {
-		removeCachedIC(pt);
-	}
+    /**
+     * Adds the given IC to the cached IC list.
+     *
+     * @param pt of the ic
+     * @param ic to add
+     */
+    public static void addCachedIC(BlockWorldVector pt, IC ic) {
+
+        cachedICs.put(pt, ic);
+    }
+
+    /**
+     * Removes the given IC from the cache list based
+     * on its location.
+     *
+     * @param pt of the ic
+     *
+     * @return the removed ic
+     */
+    public static IC removeCachedIC(BlockWorldVector pt) {
+
+        if (cachedICs.containsKey(pt)) {
+            return cachedICs.remove(pt);
+        }
+        return null;
+    }
+
+    /**
+     * Gets called when the IC gets unloaded.
+     * This method then takes care of clearing the IC
+     * from the cache.
+     *
+     * @param pt of the block break
+     */
+    public static void unloadIC(BlockWorldVector pt) {
+
+        removeCachedIC(pt);
+    }
 }

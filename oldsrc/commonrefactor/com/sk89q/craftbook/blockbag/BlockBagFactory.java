@@ -28,6 +28,7 @@ import com.sk89q.craftbook.util.Vector;
  * @author Lymia
  */
 public interface BlockBagFactory {
+
     /**
      * Creates a BlockSource instance for the passed vector, or null if no
      * block bag is valid for that position.

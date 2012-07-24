@@ -20,13 +20,14 @@
 package com.sk89q.craftbook.access;
 
 /**
- *
  * @author sk89q
  */
 public class LocalWorldEditBridgeException extends Exception {
+
     private static final long serialVersionUID = 1272046053798611177L;
 
     public LocalWorldEditBridgeException(Throwable t) {
+
         super(t);
     }
 }
