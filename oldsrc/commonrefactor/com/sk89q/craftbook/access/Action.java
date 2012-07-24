@@ -23,10 +23,11 @@ import com.sk89q.craftbook.util.BlockVector;
 
 /**
  * Action to delay.
- * 
+ *
  * @author sk89q
  */
 public abstract class Action {
+
     /**
      * Stores the point associated with this delayed action.
      */
@@ -35,14 +36,15 @@ public abstract class Action {
      * Tick to perform the action at.
      */
     private long runAt = 0;
-    
+
     /**
      * Construct the object.
-     * 
+     *
      * @param pt
      * @param tickDelay
      */
     public Action(WorldInterface w, BlockVector pt, long tickDelay) {
+
         this.pt = pt;
         runAt = w.getTime() + tickDelay;
     }
@@ -51,36 +53,40 @@ public abstract class Action {
      * Run the action.
      */
     public abstract void run();
-    
+
     /**
      * Get the tick to run at.
-     * 
+     *
      * @return
      */
     public long getRunAt() {
+
         return runAt;
     }
-    
+
     /**
      * Return the hash code.
-     * 
+     *
      * @return hash code
      */
     public int hashCode() {
+
         return pt.hashCode();
     }
-    
+
     /**
      * Returns whether the other object is equal.
-     * 
+     *
      * @param other
+     *
      * @return
      */
     public boolean equals(Object obj) {
+
         if (!(obj instanceof Action)) {
             return false;
         }
-        Action other = (Action)obj;
+        Action other = (Action) obj;
         return other.pt.equals(pt);
     }
 }

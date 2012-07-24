@@ -19,8 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.access;
 
 public interface LivingEntityInterface extends BaseEntityInterface {
+
     int getHealth();
+
     void setHealth(int health);
-    
+
     void kill();
 }

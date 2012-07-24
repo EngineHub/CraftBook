@@ -33,12 +33,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1200 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "MOB SPAWNER";
     }
 
@@ -48,20 +50,23 @@ public class MC1200 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface i, WorldInterface world, Vector pos, SignText sign) {
+
         Configuration c = i.getConfiguration();
-        
+
         String id = sign.getLine3();
         String rider = sign.getLine4();
 
@@ -82,13 +87,14 @@ public class MC1200 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         Configuration c = chip.getServer().getConfiguration();
         WorldInterface world = chip.getWorld();
-        
+
         if (chip.getIn(1).is()) {
             String id = chip.getText().getLine3();
             String rider = chip.getText().getLine4();
-            
+
             if (c.isValidMob(id)) {
                 Vector pos = chip.getBlockPosition();
                 int maxY = Math.min(128, pos.getBlockY() + 10);

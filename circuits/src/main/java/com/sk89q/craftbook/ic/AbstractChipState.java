@@ -12,39 +12,38 @@ import org.bukkit.material.Diode;
  */
 public abstract class AbstractChipState implements ChipState {
 
-	protected Sign sign;
-	protected BlockWorldVector source;
+    protected final Sign sign;
+    protected final BlockWorldVector source;
 
-	public AbstractChipState(BlockWorldVector source, Sign sign) {
-		this.sign = sign;
-		this.source = source;
-	}
+    public AbstractChipState(BlockWorldVector source, Sign sign) {
 
-	protected abstract Block getBlock(int pin);
+        this.sign = sign;
+        this.source = source;
+    }
 
-	@Override
-	public boolean isTriggered(int pin) {
-		Block block = getBlock(pin);
-		if (block != null) {
-			return BukkitUtil.toWorldVector(block).equals(source);
-		} else {
-			return false;
-		}
-	}
+    protected abstract Block getBlock(int pin);
 
-	@Override
-	public boolean isValid(int pin) {
-		Block block = getBlock(pin);
-		if (block != null) {
-			if (block.getType() == Material.REDSTONE_WIRE) {
-				return true;
-			} else if (block.getType() == Material.DIODE_BLOCK_OFF
-					|| block.getType() == Material.DIODE_BLOCK_ON) {
-				if (block.getRelative(((Diode) block.getState().getData()).getFacing()).equals(sign.getBlock())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean isTriggered(int pin) {
+
+        Block block = getBlock(pin);
+        return block != null && BukkitUtil.toWorldVector(block).equals(source);
+    }
+
+    @Override
+    public boolean isValid(int pin) {
+
+        Block block = getBlock(pin);
+        if (block != null) {
+            if (block.getType() == Material.REDSTONE_WIRE) {
+                return true;
+            } else if (block.getType() == Material.DIODE_BLOCK_OFF
+                    || block.getType() == Material.DIODE_BLOCK_ON) {
+                if (block.getRelative(((Diode) block.getState().getData()).getFacing()).equals(sign.getBlock())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

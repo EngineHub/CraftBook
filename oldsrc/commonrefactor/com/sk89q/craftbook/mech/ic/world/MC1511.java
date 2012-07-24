@@ -29,28 +29,32 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 public class MC1511 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "MESSAGE ALL";
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
-    
+
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String id = sign.getLine3();
 
-        if (id.length()==0) {
+        if (id.length() == 0) {
             return "Please put a message on the 3rd line to be broadcast to all players.";
         }
 
@@ -59,18 +63,20 @@ public class MC1511 extends BaseIC {
         }
         return null;
     }
-    
+
     public boolean requiresPermission() {
+
         return true; //Could be used for über-spam
     }
 
-    
+
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (chip.getIn(1).is()) {
             String theMessage = chip.getText().getLine3();
             chip.getServer().sendMessage(theMessage);

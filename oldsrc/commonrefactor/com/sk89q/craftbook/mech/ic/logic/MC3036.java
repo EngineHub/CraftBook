@@ -19,8 +19,8 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 
 /**
  * D level-triggered flip flop.
@@ -28,12 +28,14 @@ import com.sk89q.craftbook.mech.ic.LogicChipState;
  * @author sk89q
  */
 public class MC3036 extends LogicIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "D LEVL FLIPFLOP";
     }
 
@@ -43,6 +45,7 @@ public class MC3036 extends LogicIC {
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         if (chip.getIn(1).is()) {
             chip.getOut(1).set(chip.getIn(2).is());
         }

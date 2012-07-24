@@ -19,14 +19,6 @@
 
 package com.sk89q.craftbook.blockbag;
 
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.bukkit.World;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.util.DistanceComparator;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
@@ -36,23 +28,31 @@ import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.World;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
- *
  * @author sk89q
  */
 public class NearbyChestBlockBag extends BlockBag {
+
     /**
      * List of chests.
      */
-    private Set<Chest> chests;
+    private final Set<Chest> chests;
 
     /**
      * Construct the object.
-     * 
+     *
      * @param origin
      */
     public NearbyChestBlockBag(Vector origin) {
+
         DistanceComparator<Chest> comparator =
                 new DistanceComparator<Chest>(origin);
         chests = new TreeSet<Chest>(comparator);
@@ -63,10 +63,13 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockBagException {
+
         try {
             for (Chest chest : chests) {
                 ItemStack[] itemArray = chest.getInventory().getContents();
@@ -80,7 +83,7 @@ public class NearbyChestBlockBag extends BlockBag {
                             int newAmount = itemArray[i].getAmount() - 1;
 
                             if (newAmount > 0) {
-                                itemArray[i] = new ItemStack(itemArray[i].getTypeId(),newAmount);
+                                itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
                             } else {
                                 itemArray[i] = null;
                             }
@@ -104,10 +107,13 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id) throws BlockBagException {
+
         try {
             for (Chest chest : chests) {
                 ItemStack[] itemArray = chest.getInventory().getContents();
@@ -119,7 +125,7 @@ public class NearbyChestBlockBag extends BlockBag {
                     if (itemArray[i].getTypeId() == id &&
                             itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
-                        itemArray[i] = new ItemStack(itemArray[i].getTypeId(),newAmount);
+                        itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
 
                         chest.getInventory().setContents(itemArray);
 
@@ -150,7 +156,9 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id, int amount) throws BlockBagException {
@@ -161,6 +169,7 @@ public class NearbyChestBlockBag extends BlockBag {
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSourcePosition(WorldVector arg0) {
@@ -172,7 +181,7 @@ public class NearbyChestBlockBag extends BlockBag {
             for (int y = -3; y <= 3; y++) {
                 for (int z = -3; z <= 3; z++) {
                     Vector cur = arg0.add(x, y, z);
-                    addSingleSourcePosition(new WorldVector(arg0.getWorld(),cur));
+                    addSingleSourcePosition(new WorldVector(arg0.getWorld(), cur));
                 }
             }
         }
@@ -182,21 +191,24 @@ public class NearbyChestBlockBag extends BlockBag {
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSingleSourcePosition(WorldVector arg0) {
+
         int x = arg0.getBlockX();
         int y = arg0.getBlockY();
         int z = arg0.getBlockZ();
 
-        if (BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(BukkitUtil.toLocation(arg0)).getTypeId() == BlockType.CHEST.getID()) {
+        if (BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(BukkitUtil.toLocation(arg0)).getTypeId() == BlockType
+                .CHEST.getID()) {
             BlockState complexBlock =
                     BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(x, y, z).getState();
 
             if (complexBlock instanceof Chest) {
-                Chest chest = (Chest)complexBlock;
+                Chest chest = (Chest) complexBlock;
 
-                if(!chests.contains(chest)) chests.add((Chest)complexBlock);
+                if (!chests.contains(chest)) chests.add((Chest) complexBlock);
             }
         }
     }
@@ -204,34 +216,39 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Get the number of chest blocks. A double-width chest will count has
      * two chest blocks.
-     * 
+     *
      * @return
      */
     public int getChestBlockCount() {
+
         return chests.size();
     }
 
     /**
      * Fetch related chest inventories.
-     * 
+     *
      * @return
      */
     public Chest[] getInventories() {
-        return chests.toArray(new Chest[0]);
+
+        return chests.toArray(new Chest[chests.size()]);
     }
 
     /**
      * Factory.
-     * 
+     *
      * @author sk89q
      */
     public static class Factory implements BlockBagFactory {
+
         public BlockBag createBlockSource(World world, Vector v) {
+
             return new NearbyChestBlockBag(v);
         }
     }
 
     @Override
     public void flushChanges() {
+
     }
 }

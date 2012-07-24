@@ -31,12 +31,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1206 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "SET BLOCK BELOW";
     }
 
@@ -46,6 +48,7 @@ public class MC1206 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
 
@@ -55,17 +58,19 @@ public class MC1206 extends BaseIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface s, WorldInterface w, Vector pos, SignText sign) {
+
         String id = sign.getLine3();
         String force = sign.getLine4();
 
         if (id.length() == 0) {
             return "Specify a block type on the third line.";
-        } else if (CraftBookUtil.getItem(s.getConfiguration(),id) == 0) {
+        } else if (CraftBookUtil.getItem(s.getConfiguration(), id) == 0) {
             sign.setLine4("Force");
-        } else if (CraftBookUtil.getItem(s.getConfiguration(),id) < 1 && !force.equalsIgnoreCase("Force")) {
+        } else if (CraftBookUtil.getItem(s.getConfiguration(), id) < 1 && !force.equalsIgnoreCase("Force")) {
             return "Not a valid block type: " + sign.getLine3() + ".";
         }
 
@@ -82,6 +87,7 @@ public class MC1206 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (!chip.getIn(1).is()) {
             return;
         }
@@ -90,7 +96,7 @@ public class MC1206 extends BaseIC {
         String force = chip.getText().getLine4();
         boolean isForced = force.equalsIgnoreCase("Force");
 
-        int item = CraftBookUtil.getItem(chip.getServer().getConfiguration(),id);
+        int item = CraftBookUtil.getItem(chip.getServer().getConfiguration(), id);
 
         if ((item > 0 || isForced) && !(item >= 21 && item <= 34)
                 && item != 36) {

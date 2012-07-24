@@ -27,12 +27,14 @@ import com.sk89q.craftbook.mech.ic.ChipState;
  * @author Shaun (sturmeh)
  */
 public class MC1231 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "TIME CONTROL";
     }
 
@@ -42,20 +44,22 @@ public class MC1231 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
 
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         Long specific;
 
         if (chip.getIn(1).is())
             specific = 0l;
-        else 
+        else
             specific = 13000l;
 
         chip.getWorld().setTime(specific);

@@ -18,59 +18,67 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.HistoryHashMap;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class WirelessTransmitter extends AbstractIC {
-    
-    protected static HistoryHashMap<String, Boolean> memory
+
+    protected static final HistoryHashMap<String, Boolean> memory
             = new HistoryHashMap<String, Boolean>(100);
-    
-    protected String band;
+
+    protected final String band;
 
     public WirelessTransmitter(Server server, Sign sign) {
+
         super(server, sign);
-        
+
         band = sign.getLine(2);
     }
 
     @Override
     public String getTitle() {
+
         return "Wireless Transmitter";
     }
 
     @Override
     public String getSignTitle() {
+
         return "TRANSMITTER";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         setValue(band, chip.getInput(0));
         chip.setOutput(0, chip.getInput(0));
     }
-    
+
     public static Boolean getValue(String band) {
+
         return memory.get(band);
     }
-    
+
     public static void setValue(String band, boolean val) {
+
         memory.put(band, val);
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new WirelessTransmitter(getServer(), sign);
         }
     }

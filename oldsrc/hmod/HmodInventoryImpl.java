@@ -19,51 +19,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import com.sk89q.craftbook.access.InventoryInterface;
 
 public class HmodInventoryImpl implements InventoryInterface {
+
     private final Inventory inventory;
     private final int length;
     private final com.sk89q.craftbook.access.Item[] items;
     private final boolean[] changed;
-    
+
     public HmodInventoryImpl(Inventory i) {
+
         inventory = i;
         length = i.getContentsSize();
         items = new com.sk89q.craftbook.access.Item[length];
         changed = new boolean[length];
         Item[] items = i.getContents();
-        for(int j=0;j<length;j++) {
+        for (int j = 0; j < length; j++) {
             Item item = items[j];
             com.sk89q.craftbook.access.Item cbItem;
-            if(item!=null) cbItem = new com.sk89q.craftbook.access.Item(item.getItemId(),
+            if (item != null) cbItem = new com.sk89q.craftbook.access.Item(item.getItemId(),
                     item.getAmount());
-            else cbItem = new com.sk89q.craftbook.access.Item(0,0);
-            
+            else cbItem = new com.sk89q.craftbook.access.Item(0, 0);
+
             this.items[j] = cbItem;
         }
     }
 
     public int getLength() {
+
         return length;
     }
-    
+
     public com.sk89q.craftbook.access.Item getItem(int slot) {
+
         return items[slot];
     }
+
     public void setItem(int slot, com.sk89q.craftbook.access.Item item) {
+
         items[slot] = item;
         changed[slot] = true;
     }
-    
+
     public com.sk89q.craftbook.access.Item[] getItems() {
+
         return items.clone();
     }
-    
+
     public void flushChanges() {
-        for(int i=0;i<length;i++) if(changed[i]) {
-            com.sk89q.craftbook.access.Item item = items[i];
-            if(item.id==0||item.count==0) continue;
-            inventory.setSlot(new Item(item.id,item.count), i);
-            changed[i] = false;
-        }
+
+        for (int i = 0; i < length; i++)
+            if (changed[i]) {
+                com.sk89q.craftbook.access.Item item = items[i];
+                if (item.id == 0 || item.count == 0) continue;
+                inventory.setSlot(new Item(item.id, item.count), i);
+                changed[i] = false;
+            }
         inventory.update();
     }
 }

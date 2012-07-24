@@ -18,9 +18,6 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.util.Set;
-import java.util.HashSet;
-
 import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.ServerInterface;
@@ -31,12 +28,16 @@ import com.sk89q.craftbook.blockbag.BlockBagException;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Door.
  *
  * @author sk89q
  */
 public class Door extends SignOrientedMechanism {
+
     /**
      * Direction to extend the bridge.
      */
@@ -54,48 +55,55 @@ public class Door extends SignOrientedMechanism {
      * Max door length.
      */
     private int maxLength = 30;
-    
+
     /**
      * Returns whether a block can be used for the door.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     private boolean canUseBlock(int id) {
+
         return allowedBlocks.contains(id);
     }
-    
+
     /**
      * Returns whether the door should pass through this block (and displace
      * it if needed).
-     * 
+     *
      * @param t
+     *
      * @return
      */
     private static boolean canPassThrough(int t) {
+
         return t == 0 || t == BlockType.WATER || t == BlockType.STATIONARY_WATER
                 || t == BlockType.LAVA || t == BlockType.STATIONARY_LAVA
                 || t == BlockType.SNOW;
     }
-    
+
     /**
      * Construct the instance.
-     * 
+     *
      * @param pt
      */
     public Door(ServerInterface s, WorldInterface w, Vector pt, DoorSettings settings) {
-        super(s,w,pt);
+
+        super(s, w, pt);
         allowedBlocks = settings.allowedBlocks;
         maxLength = settings.maxLength;
     }
-    
+
     /**
      * Returns the direction of the bridge to open towards.
-     * 
+     *
      * @return
+     *
      * @throws InvalidDirection
      */
     private Direction getDirection() throws InvalidDirectionException {
+
         int data = world.getData(pt);
 
         if (data == 0x0 || data == 0x8) { // East-west
@@ -106,14 +114,15 @@ public class Door extends SignOrientedMechanism {
             throw new InvalidDirectionException();
         }
     }
-    
+
     /**
      * Returns whether the door needs to be opened upwards. This is indicated
      * by [Door Up] on the sign as opposed to [Door Down].
-     * 
+     *
      * @return
      */
     private boolean isUpwards() {
+
         return getSignIdentifier().equalsIgnoreCase("[Door Up]");
     }
 
@@ -122,10 +131,12 @@ public class Door extends SignOrientedMechanism {
      *
      * @param player
      * @param bag
+     *
      * @return
      */
     public void playerToggleDoor(PlayerInterface player, BlockBag bag)
             throws BlockBagException {
+
         try {
             setState(bag, null);
         } catch (InvalidDirectionException e) {
@@ -136,13 +147,14 @@ public class Door extends SignOrientedMechanism {
             player.printError(e.getMessage());
         }
     }
-    
+
     /**
      * Sets the door to be active.
-     * 
+     *
      * @param bag
      */
     public void setActive(BlockBag bag) {
+
         try {
             setState(bag, false);
         } catch (InvalidDirectionException e) {
@@ -151,13 +163,14 @@ public class Door extends SignOrientedMechanism {
         } catch (BlockBagException e) {
         }
     }
-    
+
     /**
      * Sets the door to be active.
-     * 
+     *
      * @param bag
      */
     public void setInactive(BlockBag bag) {
+
         try {
             setState(bag, true);
         } catch (InvalidDirectionException e) {
@@ -166,19 +179,20 @@ public class Door extends SignOrientedMechanism {
         } catch (BlockBagException e) {
         }
     }
-    
+
     /**
      * Toggles the door closest to a location.
      *
      * @param pt
      * @param direction
      * @param bag
+     *
      * @return
      */
     public boolean setState(BlockBag bag, Boolean toOpen)
             throws BlockBagException, InvalidDirectionException,
             UnacceptableTypeException, InvalidConstructionException {
-        
+
         Direction direction = getDirection();
         boolean upwards = isUpwards();
 
@@ -187,40 +201,40 @@ public class Door extends SignOrientedMechanism {
 
         if (direction == Direction.NORTH_SOUTH) {
             sideDir = new Vector(1, 0, 0);
-        } else if(direction == Direction.WEST_EAST) {
+        } else if (direction == Direction.WEST_EAST) {
             sideDir = new Vector(0, 0, 1);
         }
-        
+
         int type = world.getId(pt.add(vertDir));
 
         // Check construction
         if (!canUseBlock(type)) {
             throw new UnacceptableTypeException();
         }
-        
+
         // Check sides
         if (world.getId(pt.add(vertDir).add(sideDir)) != type
                 || world.getId(pt.add(vertDir).subtract(sideDir)) != type) {
             throw new InvalidConstructionException(
                     "The blocks for the door to the sides have to be the same.");
         }
-        
+
         // Detect whether the door needs to be opened
         if (toOpen == null) {
             toOpen = !canPassThrough(world.getId(pt.add(vertDir.multiply(2))));
         }
-        
+
         Vector cur = pt.add(vertDir.multiply(2));
         boolean found = false;
         int dist = 0;
-        
+
         // Find the other side
         for (int i = 0; i < maxLength + 2; i++) {
             int id = world.getId(cur);
 
             if (id == BlockType.SIGN_POST) {
                 SignInterface otherSignText = (SignInterface) world.getBlockEntity(cur);
-                
+
                 if (otherSignText != null) {
                     String line2 = otherSignText.getLine2();
 
@@ -250,7 +264,7 @@ public class Door extends SignOrientedMechanism {
                 || world.getId(otherSideBlockPt.add(sideDir)) != type
                 || world.getId(otherSideBlockPt.subtract(sideDir)) != type) {
             throw new InvalidConstructionException(
-            "The other side must be made with the same blocks.");
+                    "The other side must be made with the same blocks.");
         }
 
         if (toOpen) {
@@ -264,7 +278,7 @@ public class Door extends SignOrientedMechanism {
         }
 
         bag.flushChanges();
-        
+
         return true;
     }
 
@@ -277,6 +291,7 @@ public class Door extends SignOrientedMechanism {
      */
     private void clearColumn(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockBagException {
+
         for (int i = 0; i < dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = world.getId(p);
@@ -297,6 +312,7 @@ public class Door extends SignOrientedMechanism {
      */
     private void setColumn(Vector origin, Vector change, int type, int dist, BlockBag bag)
             throws BlockBagException {
+
         for (int i = 0; i < dist; i++) {
             Vector p = origin.add(change.multiply(i));
             int t = world.getId(p);
@@ -307,16 +323,17 @@ public class Door extends SignOrientedMechanism {
             }
         }
     }
-    
+
     /**
      * Validates the sign's environment.
-     * 
+     *
      * @param signText
+     *
      * @return false to deny
      */
     public static boolean validateEnvironment(PlayerInterface player,
-            Vector pt, SignText signText) {
-        
+                                              Vector pt, SignText signText) {
+
         if (signText.getLine2().equalsIgnoreCase("[Door Up]")) {
             signText.setLine2("[Door Up]");
         } else if (signText.getLine2().equalsIgnoreCase("[Door Down]")) {
@@ -324,43 +341,48 @@ public class Door extends SignOrientedMechanism {
         } else {
             signText.setLine2("[Door]");
         }
-        
+
         player.print("Door really created!");
-        
+
         return true;
     }
-    
+
     /**
      * Thrown when the sign is an invalid direction.
      */
     private static class InvalidDirectionException extends Exception {
+
         private static final long serialVersionUID = -3183606604247616362L;
     }
-    
+
     /**
      * Thrown when the bridge type is unacceptable.
      */
     private static class UnacceptableTypeException extends Exception {
+
         private static final long serialVersionUID = 8340723004466483212L;
     }
-    
+
     /**
      * Thrown when the bridge type is not constructed correctly.
      */
     private static class InvalidConstructionException extends Exception {
+
         private static final long serialVersionUID = 4943494589521864491L;
 
         /**
          * Construct the object.
-         * 
+         *
          * @param msg
          */
         public InvalidConstructionException(String msg) {
+
             super(msg);
         }
     }
-    
+
     public static class DoorSettings {
+
         /**
          * What doors can be made out of.
          */

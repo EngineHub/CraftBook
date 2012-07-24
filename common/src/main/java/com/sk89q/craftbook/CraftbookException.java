@@ -21,26 +21,30 @@ package com.sk89q.craftbook;
 
 /**
  * Parent type for all exceptions specific to CraftBook.
- * 
+ *
  * @author hash
- * 
  */
 public class CraftbookException extends Exception {
+
     private static final long serialVersionUID = -2562837738752646780L;
 
     public CraftbookException() {
+
         super();
     }
-    
+
     public CraftbookException(String message, Throwable cause) {
+
         super(message, cause);
     }
-    
+
     public CraftbookException(String message) {
+
         super(message);
     }
-    
+
     public CraftbookException(Throwable cause) {
+
         super(cause);
     }
 }

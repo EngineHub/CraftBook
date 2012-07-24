@@ -24,66 +24,85 @@ import com.sk89q.craftbook.util.Vector;
 
 /**
  * A version of SignText that gets its sign text from a hMod Sign object.
- * 
+ *
  * @author sk89q
  */
 public class HmodSignImpl extends SignInterface {
+
     /**
      * Sign instance.
      */
     private Sign sign;
-    
+
     private final WorldInterface w;
     private final BlockVector pos;
-    
+
     /**
      * Construct an instance. SignText will be constructed with the 4 lines
      * of text from the sign.
-     * 
+     *
      * @param sign
      */
     public HmodSignImpl(WorldInterface w, BlockVector pos, Sign sign) {
+
         super(sign.getText(0), sign.getText(1),
                 sign.getText(2), sign.getText(3));
         this.sign = sign;
         this.pos = pos;
         this.w = w;
     }
-    
-    public int getX() { return sign.getX(); }
-    public int getY() { return sign.getY(); }
-    public int getZ() { return sign.getZ(); }
-    
+
+    public int getX() {
+
+        return sign.getX();
+    }
+
+    public int getY() {
+
+        return sign.getY();
+    }
+
+    public int getZ() {
+
+        return sign.getZ();
+    }
+
     /**
      * Flush changes to world.
      */
     public void flushChanges() {
+
         if (isChanged()) {
             sign.setText(0, getLine1());
             sign.setText(1, getLine2());
             sign.setText(2, getLine3());
             sign.setText(3, getLine4());
-            if(shouldUpdate()) sign.update();
+            if (shouldUpdate()) sign.update();
         }
     }
 
     public boolean equals(Object other) {
+
         if (other instanceof HmodSignImpl) {
-            HmodSignImpl sign = ((HmodSignImpl)other);
-            return sign.pos.equals(pos)&&sign.w.equals(w);
+            HmodSignImpl sign = ((HmodSignImpl) other);
+            return sign.pos.equals(pos) && sign.w.equals(w);
         } else {
             return false;
         }
     }
+
     public int hashCode() {
-        return pos.hashCode()*31+w.hashCode();
+
+        return pos.hashCode() * 31 + w.hashCode();
     }
 
     public Vector getPosition() {
+
         return pos;
     }
-    
+
     public WorldInterface getWorld() {
+
         return w;
     }
 }

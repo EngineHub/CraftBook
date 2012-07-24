@@ -21,10 +21,10 @@ package com.sk89q.craftbook.mech.area;
 */
 
 /**
- *
  * @author sk89q
  */
 public class MissingCuboidCopyException extends CuboidCopyException {
+
     /**
      * Serialization version ID.
      */
@@ -36,19 +36,22 @@ public class MissingCuboidCopyException extends CuboidCopyException {
 
     /**
      * Construct an instance.
-     * 
+     *
      * @param name
      */
     public MissingCuboidCopyException(String name) {
+
         super();
         this.name = name;
     }
-    
+
     /**
      * Get the missing copy's name.
+     *
      * @return
      */
     public String getCopyName() {
+
         return name;
     }
 }

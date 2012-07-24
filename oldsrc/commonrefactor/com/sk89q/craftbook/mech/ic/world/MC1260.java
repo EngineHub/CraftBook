@@ -29,38 +29,43 @@ import com.sk89q.craftbook.util.Vector;
  * @author yofreke
  */
 public class MC1260 extends BaseIC {
+
     /**
      * Trigger only on rising edge.
      */
     private boolean triggerOnRising = false;
-    
+
     /**
      * Construct the object.
-     * 
+     *
      * @param triggerOnRising
      */
     public MC1260(boolean triggerOnRising) {
+
         this.triggerOnRising = triggerOnRising;
     }
-    
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "WATER SENSOR";
     }
-    
+
     /**
      * Validates the IC's environment. The position of the sign is given.
      * Return a string in order to state an error message and deny
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String yOffsetLine = sign.getLine3();
 
         try {
@@ -79,20 +84,21 @@ public class MC1260 extends BaseIC {
      *
      * @param chip
      */
-    public void think(ChipState chip){
+    public void think(ChipState chip) {
+
         if (triggerOnRising && !chip.getIn(1).is()) {
             return;
         }
-        
+
         Vector blockPos = chip.getBlockPosition();
-        
+
         int x = blockPos.getBlockX();
         int y = blockPos.getBlockY();
         int z = blockPos.getBlockZ();
-        
-        try{
+
+        try {
             String yOffsetLine = chip.getText().getLine3();
-            
+
             if (yOffsetLine.length() > 0) {
                 y += Integer.parseInt(yOffsetLine);
             } else {
@@ -101,11 +107,11 @@ public class MC1260 extends BaseIC {
         } catch (NumberFormatException e) {
             y -= 1;
         }
-        
+
         y = Math.min(Math.max(0, y), 127);
-        
+
         int type = chip.getWorld().getId(x, y, z);
-        
+
         chip.getOut(1).set(type == 8 || type == 9);
     }
 }

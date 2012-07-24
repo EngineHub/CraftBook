@@ -19,25 +19,21 @@
 
 package com.sk89q.craftbook;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.bukkit.event.block.BlockEvent;
-
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.event.block.BlockEvent;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Holds the blocks that are watched by mechanics.
- * 
+ *
  * @author hash
  */
 class WatchBlockManager {
+
     /**
      * Stores the list of watch blocks.
      */
@@ -47,15 +43,17 @@ class WatchBlockManager {
      * Construct the object.
      */
     public WatchBlockManager() {
+
         watchBlocks = new HashMap<BlockWorldVector, Set<PersistentMechanic>>();
     }
 
     /**
      * Register a mechanic.
-     * 
+     *
      * @param m
      */
     public void register(PersistentMechanic m) {
+
         for (BlockWorldVector p : m.getWatchedPositions()) {
             Set<PersistentMechanic> set = watchBlocks.get(p);
             if (set == null) {
@@ -68,12 +66,12 @@ class WatchBlockManager {
 
     /**
      * Update a mechanic.
-     * 
+     *
      * @param m
      * @param oldWatchBlocks
      */
     public void update(PersistentMechanic m,
-            List<BlockWorldVector> oldWatchBlocks) {
+                       List<BlockWorldVector> oldWatchBlocks) {
 
         // This could be more efficient.
         for (BlockWorldVector p : oldWatchBlocks) {
@@ -85,22 +83,24 @@ class WatchBlockManager {
 
     /**
      * De-registers a mechanic.
-     * 
+     *
      * @param m
      */
     public void deregister(PersistentMechanic m) {
+
         for (BlockWorldVector p : m.getWatchedPositions()) {
-            if(p!=null && watchBlocks.get(p)!=null && m!=null)
+            if (p != null && watchBlocks.get(p) != null)
                 watchBlocks.get(p).remove(m);
         }
     }
 
     /**
      * Notify mechanics about a changed block that they are watching.
-     * 
+     *
      * @param event
      */
     public void notify(BlockEvent event) {
+
         Set<PersistentMechanic> pms =
                 watchBlocks.get(BukkitUtil.toWorldVector(event.getBlock()));
 
@@ -115,11 +115,13 @@ class WatchBlockManager {
 
     /**
      * Get the set of mechanics in a specified chunk.
-     * 
+     *
      * @param chunk
+     *
      * @return the set of mechanics in a specified chunk.
      */
     public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
+
         Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
         int chunkX = chunk.getBlockX();
         int chunkZ = chunk.getBlockZ();

@@ -19,53 +19,55 @@
 package com.sk89q.craftbook;
 
 
-import java.io.File;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
+
 /**
  * FileConfiguration handler for CraftBook.
- * 
  * All fields are final because it is never appropriate to modify them during
  * operation, except for when the FileConfiguration is reloaded entirely, at which
  * point it is appropriate to construct an entirely new FileConfiguration instance
  * and update the plugin accordingly.
- * 
+ *
  * @author sk89q
  * @author hash
  */
-public class VehiclesConfiguration extends BaseConfiguration{
+public class VehiclesConfiguration extends BaseConfiguration {
+
     public VehiclesConfiguration(FileConfiguration cfg, File dataFolder) {
-        super(cfg,dataFolder);
+
+        super(cfg, dataFolder);
         this.dataFolder = dataFolder;
 
-        matBoostMax =   Material.getMaterial(getInt(cfg, "max-boost-block",      41));
-        matBoost25x =   Material.getMaterial(getInt(cfg, "25x-boost-block",      14));
-        matSlow50x =    Material.getMaterial(getInt(cfg, "50x-slow-block",       88));
-        matSlow20x =    Material.getMaterial(getInt(cfg, "20x-slow-block",       13));
-        matReverse =    Material.getMaterial(getInt(cfg, "reverse-block",        35));
-        matStation =    Material.getMaterial(getInt(cfg, "station-block",        49));
-        matSorter =     Material.getMaterial(getInt(cfg, "sort-block",           87));
-        matEjector =    Material.getMaterial(getInt(cfg, "eject-block",          42));
-        matDeposit =    Material.getMaterial(getInt(cfg, "deposit-block",        15));
-        matTeleport =   Material.getMaterial(getInt(cfg, "teleport-block",       89));
-        matDispenser =  Material.getMaterial(54);     // this can't be configurable because we need it to be a chest!
-        matMessager =   Material.getMaterial(getInt(cfg, "messager-block",       121));
+        matBoostMax = Material.getMaterial(getInt(cfg, "max-boost-block", 41));
+        matBoost25x = Material.getMaterial(getInt(cfg, "25x-boost-block", 14));
+        matSlow50x = Material.getMaterial(getInt(cfg, "50x-slow-block", 88));
+        matSlow20x = Material.getMaterial(getInt(cfg, "20x-slow-block", 13));
+        matReverse = Material.getMaterial(getInt(cfg, "reverse-block", 35));
+        matStation = Material.getMaterial(getInt(cfg, "station-block", 49));
+        matSorter = Material.getMaterial(getInt(cfg, "sort-block", 87));
+        matEjector = Material.getMaterial(getInt(cfg, "eject-block", 42));
+        matDeposit = Material.getMaterial(getInt(cfg, "deposit-block", 15));
+        matTeleport = Material.getMaterial(getInt(cfg, "teleport-block", 89));
+        matDispenser = Material.getMaterial(54);     // this can't be configurable because we need it to be a chest!
+        matMessager = Material.getMaterial(getInt(cfg, "messager-block", 121));
 
-        minecartEnterOnImpact = getBoolean(cfg, "minecart-enter-on-impact",      true);
-        minecartSlowWhenEmpty = getBoolean(cfg, "minecart-slow-when-empty",      true);
-        minecartDecayWhenEmpty = getBoolean(cfg, "minecart-decay-when-empty",      false);
-        minecartRemoveOnExit = getBoolean(cfg, "minecart-remove-on-exit",        false);
-        minecartRemoveEntities = getBoolean(cfg, "minecart-remove-entities",     false);
+        minecartEnterOnImpact = getBoolean(cfg, "minecart-enter-on-impact", true);
+        minecartSlowWhenEmpty = getBoolean(cfg, "minecart-slow-when-empty", true);
+        minecartDecayWhenEmpty = getBoolean(cfg, "minecart-decay-when-empty", false);
+        minecartRemoveOnExit = getBoolean(cfg, "minecart-remove-on-exit", false);
+        minecartRemoveEntities = getBoolean(cfg, "minecart-remove-entities", false);
         minecartRemoveEntitiesOtherCarts = getBoolean(cfg, "minecart-remove-"
-                + "entities-othercarts",                                        false);
+                + "entities-othercarts", false);
         minecartMaxSpeedModifier = getDouble(cfg, "minecart-max-speed-modifier", 1);
 
-        boatRemoveEntities = getBoolean(cfg, "boat-remove-entities",             false);
+        boatRemoveEntities = getBoolean(cfg, "boat-remove-entities", false);
         boatRemoveEntitiesOtherBoats = getBoolean(cfg, "boat-remove-"
-                + "entities-otherboats",                                        false);
-        boatBreakReturn = getBoolean(cfg, "boat-break-return-boat",              false);
-        minecartTrackMessages = getBoolean(cfg, "minecart-track-messages",       true);
+                + "entities-otherboats", false);
+        boatBreakReturn = getBoolean(cfg, "boat-break-return-boat", false);
+        minecartTrackMessages = getBoolean(cfg, "minecart-track-messages", true);
     }
 
     public final File dataFolder;

@@ -19,9 +19,10 @@
 package com.sk89q.craftbook.ic;
 
 public interface PersistentIC extends IC {
+
     /**
      * Return true if this IC still is valid.
-     * 
+     *
      * @return
      */
     public abstract boolean isActive();

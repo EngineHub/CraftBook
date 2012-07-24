@@ -14,46 +14,54 @@ import org.bukkit.block.Sign;
  */
 public class LowDelayer extends AbstractIC {
 
-	public LowDelayer(Server server, Sign block) {
-		super(server, block);
-	}
+    public LowDelayer(Server server, Sign block) {
 
-	@Override
-	public String getTitle() {
-		return "Low Delayer";
-	}
+        super(server, block);
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "LOW_DELAYER";
-	}
+    @Override
+    public String getTitle() {
 
-	@Override
-	public void trigger(final ChipState chip) {
-		int delay = Integer.parseInt(getSign().getLine(2));
-		if (chip.getInput(0)) {
-			chip.setOutput(0, true);
-		} else {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
-				@Override
-				public void run() {
-					if (!chip.getInput(0)) {
-						chip.setOutput(0, false);
-					}
-				}
-			}, delay * 20);
-		}
-	}
+        return "Low Delayer";
+    }
 
-	public static class Factory extends AbstractICFactory {
+    @Override
+    public String getSignTitle() {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        return "LOW_DELAYER";
+    }
 
-		@Override
-		public IC create(Sign sign) {
-			return new LowDelayer(getServer(), sign);
-		}
-	}
+    @Override
+    public void trigger(final ChipState chip) {
+
+        int delay = Integer.parseInt(getSign().getLine(2));
+        if (chip.getInput(0)) {
+            chip.setOutput(0, true);
+        } else {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+
+                @Override
+                public void run() {
+
+                    if (!chip.getInput(0)) {
+                        chip.setOutput(0, false);
+                    }
+                }
+            }, delay * 20);
+        }
+    }
+
+    public static class Factory extends AbstractICFactory {
+
+        public Factory(Server server) {
+
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+
+            return new LowDelayer(getServer(), sign);
+        }
+    }
 }

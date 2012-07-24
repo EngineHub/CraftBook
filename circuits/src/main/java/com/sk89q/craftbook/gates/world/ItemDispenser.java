@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -25,38 +27,35 @@ import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.worldedit.blocks.BlockType;
-
 public class ItemDispenser extends AbstractIC {
 
     public ItemDispenser(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Item Dispenser";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ITEM DISPENSER";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             String item = getSign().getLine(2);
             int amount = 1;
             try {
                 amount = Math.min(64,
                         Math.max(-1, Integer.parseInt(getSign().getLine(3))));
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
             }
             byte data = 0;
             if (item.contains(":")) {
@@ -64,8 +63,7 @@ public class ItemDispenser extends AbstractIC {
                 item = item.split(":")[0];
             }
             Material mat = Material.matchMaterial(item);
-            if (mat == null)
-                return;
+            if (mat == null) return;
             int id = mat.getId();
             if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
                 Location loc = getSign().getBlock().getLocation();
@@ -91,14 +89,16 @@ public class ItemDispenser extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new ItemDispenser(getServer(), sign);
         }
     }

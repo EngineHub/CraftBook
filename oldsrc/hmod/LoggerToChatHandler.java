@@ -17,10 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import com.sk89q.craftbook.Colors;
+
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-
-import com.sk89q.craftbook.Colors;
 
 /**
  * Sends all logger messages to a player.
@@ -28,6 +28,7 @@ import com.sk89q.craftbook.Colors;
  * @author sk89q
  */
 public class LoggerToChatHandler extends Handler {
+
     /**
      * Player.
      */
@@ -35,10 +36,11 @@ public class LoggerToChatHandler extends Handler {
 
     /**
      * Construct the object.
-     * 
+     *
      * @param player
      */
     public LoggerToChatHandler(Player player) {
+
         this.player = player;
     }
 
@@ -46,18 +48,21 @@ public class LoggerToChatHandler extends Handler {
      * Close the handler.
      */
     public void close() {
+
     }
 
     /**
      * Flush the output.
      */
     public void flush() {
+
     }
 
     /**
      * Publish a log record.
      */
     public void publish(LogRecord record) {
+
         player.sendMessage(Colors.GRAY + record.getLevel().getName() + ": "
                 + Colors.WHITE + record.getMessage());
     }

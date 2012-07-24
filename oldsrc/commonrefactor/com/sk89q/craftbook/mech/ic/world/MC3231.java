@@ -26,12 +26,14 @@ import com.sk89q.craftbook.mech.ic.*;
  * @author sk89q
  */
 public class MC3231 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "TIME CONTROL";
     }
 
@@ -41,6 +43,7 @@ public class MC3231 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
 
@@ -50,6 +53,7 @@ public class MC3231 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         Long specific;
 
         if (chip.getIn(1).isTriggered() && chip.getIn(1).is()) {

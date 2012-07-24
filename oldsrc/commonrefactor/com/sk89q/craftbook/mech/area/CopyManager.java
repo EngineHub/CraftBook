@@ -21,9 +21,9 @@ package com.sk89q.craftbook.mech.area;
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.HistoryHashMap;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -32,36 +32,41 @@ import java.util.HashMap;
  * @author sk89q
  */
 public class CopyManager {
+
     /**
      * Cache.
      */
-    private HashMap<String,HistoryHashMap<String,CuboidCopy>> cache =
-            new HashMap<String,HistoryHashMap<String,CuboidCopy>>();
-    
+    private HashMap<String, HistoryHashMap<String, CuboidCopy>> cache =
+            new HashMap<String, HistoryHashMap<String, CuboidCopy>>();
+
     /**
      * Remembers missing copies so as to not look for them on disk.
      */
-    private HashMap<String,HistoryHashMap<String,Long>> missing =
-            new HashMap<String,HistoryHashMap<String,Long>>();
+    private HashMap<String, HistoryHashMap<String, Long>> missing =
+            new HashMap<String, HistoryHashMap<String, Long>>();
 
     /**
      * Checks to see whether a name is a valid copy name.
-     * 
+     *
      * @param name
+     *
      * @return
      */
     public static boolean isValidName(String name) {
+
         return name.length() > 0 && name.length() <= 30
                 && name.matches("^[A-Za-z0-9_\\- ]+$");
     }
 
     /**
      * Checks to see whether a name is a valid namespace.
-     * 
+     *
      * @param name
+     *
      * @return
      */
     public static boolean isValidNamespace(String name) {
+
         return name.length() > 0 && name.length() <= 15
                 && name.matches("^[A-Za-z0-9_]+$");
     }
@@ -71,22 +76,24 @@ public class CopyManager {
      * cached, the file will be loaded from disk if possible. If the copy does
      * not exist, an exception will be raised. An exception may be raised if the file
      * exists but cannot be read for whatever reason.
-     * 
+     *
      * @param namespace
      * @param id
+     *
      * @return
+     *
      * @throws IOException
      * @throws MissingCuboidCopyException
      * @throws CuboidCopyException
      */
     public CuboidCopy load(WorldInterface world, String namespace, String id)
             throws IOException, CuboidCopyException {
-        
+
         id = id.toLowerCase();
         String cacheKey = namespace + "/" + id;
-        
-        HistoryHashMap<String,Long> missing = getMissing(world.getUniqueIdString());
-        
+
+        HistoryHashMap<String, Long> missing = getMissing(world.getUniqueIdString());
+
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
             if (lastCheck > System.currentTimeMillis()) {
@@ -94,14 +101,14 @@ public class CopyManager {
             }
         }
 
-        HistoryHashMap<String,CuboidCopy> cache = getCache(world.getUniqueIdString());
-        
+        HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUniqueIdString());
+
         CuboidCopy copy = cache.get(id);
 
         if (copy == null) {
             try {
-                File folder = new File(world.getToggleAreaPath(),namespace);
-                copy = CuboidCopy.load(new File(folder,id + ".cbcopy"));
+                File folder = new File(world.getToggleAreaPath(), namespace);
+                copy = CuboidCopy.load(new File(folder, id + ".cbcopy"));
                 missing.remove(cacheKey);
                 cache.put(cacheKey, copy);
                 return copy;
@@ -119,17 +126,19 @@ public class CopyManager {
 
     /**
      * Save a copy to disk. The copy will be cached.
-     * 
+     *
      * @param id
      * @param copy
+     *
      * @throws IOException
      */
     public void save(WorldInterface world, String namespace, String id, CuboidCopy copy)
             throws IOException {
-        HistoryHashMap<String,CuboidCopy> cache = getCache(world.getUniqueIdString());
-        
-        File folder = new File(world.getToggleAreaPath(),namespace);
-        
+
+        HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUniqueIdString());
+
+        File folder = new File(world.getToggleAreaPath(), namespace);
+
         if (!folder.exists()) {
             folder.mkdirs();
         }
@@ -137,7 +146,7 @@ public class CopyManager {
         id = id.toLowerCase();
 
         String cacheKey = namespace + "/" + id;
-        
+
         copy.save(new File(folder, id + ".cbcopy"));
         missing.remove(cacheKey);
         cache.put(id, copy);
@@ -145,48 +154,53 @@ public class CopyManager {
 
     /**
      * Gets whether a copy can be made.
-     * 
+     *
      * @param namespace
      * @param ignore
+     *
      * @return -1 if the copy can be made, some other number for the count
      */
     public int meetsQuota(WorldInterface world, String namespace, String ignore, int quota) {
+
         String ignoreFilename = ignore + ".cbcopy";
-        
-        String[] files = new File(world.getToggleAreaPath(),namespace).list();
-        
+
+        String[] files = new File(world.getToggleAreaPath(), namespace).list();
+
         if (files == null) {
             return quota > 0 ? -1 : 0;
         } else if (ignore == null) {
             return files.length < quota ? -1 : files.length;
         } else {
             int count = 0;
-            
+
             for (String f : files) {
                 if (f.equals(ignoreFilename)) {
                     return -1;
                 }
-                
+
                 count++;
             }
-            
+
             return count < quota ? -1 : count;
         }
     }
-    
-    private HistoryHashMap<String,CuboidCopy> getCache(String world) {
-        if(cache.containsKey(world)) return cache.get(world);
+
+    private HistoryHashMap<String, CuboidCopy> getCache(String world) {
+
+        if (cache.containsKey(world)) return cache.get(world);
         else {
-            HistoryHashMap<String,CuboidCopy> h = new HistoryHashMap<String,CuboidCopy>(10);
-            cache.put(world,h);
+            HistoryHashMap<String, CuboidCopy> h = new HistoryHashMap<String, CuboidCopy>(10);
+            cache.put(world, h);
             return h;
         }
     }
-    private HistoryHashMap<String,Long> getMissing(String world) {
-        if(cache.containsKey(world)) return missing.get(world);
+
+    private HistoryHashMap<String, Long> getMissing(String world) {
+
+        if (cache.containsKey(world)) return missing.get(world);
         else {
-            HistoryHashMap<String,Long> h = new HistoryHashMap<String,Long>(10);
-            missing.put(world,h);
+            HistoryHashMap<String, Long> h = new HistoryHashMap<String, Long>(10);
+            missing.put(world, h);
             return h;
         }
     }

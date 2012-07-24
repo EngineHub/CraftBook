@@ -20,44 +20,46 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.worldedit.BlockWorldVector;
-
 import org.bukkit.block.Sign;
 
 /**
  * MechanicFactory attempts to detect a mechanism at a position and will produce
  * the corresponding Mechanic if it matches.
- * 
+ *
+ * @param <T> returned mechanic
+ *
  * @author sk89q
- * @param <T>
- *            returned mechanic
  */
 public interface MechanicFactory<T extends Mechanic> {
+
     /**
      * Detect the mechanic at a location.
-     * 
+     *
      * @param pos
+     *
      * @return a {@link AbstractMechanic} if a mechanism could be found at the location;
      *         null otherwise
-     * @throws InvalidMechanismException
-     *             if it appears that the position is intended to me a
-     *             mechanism, but the mechanism is misconfigured and inoperable.
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a
+     *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
     public T detect(BlockWorldVector pos) throws InvalidMechanismException;
-    
+
     /**
      * Detect the mechanic at a placed sign.
-     * 
+     *
      * @param pos
      * @param player
      * @param sign
+     *
      * @return a {@link Mechanic} if a mechanism could be found at the location;
      *         null otherwise
-     * @throws InvalidMechanismException
-     *             if it appears that the position is intended to me a
-     *             mechanism, but the mechanism is misconfigured and inoperable.
+     *
+     * @throws InvalidMechanismException   if it appears that the position is intended to me a
+     *                                     mechanism, but the mechanism is misconfigured and inoperable.
      * @throws ProcessedMechanismException
      */
     public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException, ProcessedMechanismException;
-    
+
 }

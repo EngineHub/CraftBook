@@ -18,44 +18,47 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 public class LavaSensor extends AbstractIC {
 
     public LavaSensor(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "LAVA SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-            chip.setOutput(0, hasLava());
-        }
+
+        if (chip.getInput(0)) chip.setOutput(0, hasLava());
     }
 
     /**
      * Returns true if the sign has lava at the specified location.
-     * 
+     *
      * @return
      */
     protected boolean hasLava() {
+
         Block b = SignUtil.getBackBlock(getSign().getBlock());
 
         int x = b.getX();
@@ -63,16 +66,13 @@ public class LavaSensor extends AbstractIC {
         int z = b.getZ();
         try {
             String yOffsetLine = getSign().getLine(2);
-            if (yOffsetLine.length() > 0) {
-                yOffset += Integer.parseInt(yOffsetLine);
-            } else {
-                yOffset -= 1;
-            }
+
+            if (yOffsetLine.length() > 0) yOffset += Integer.parseInt(yOffsetLine);
+            else yOffset -= 1;
         } catch (NumberFormatException e) {
             yOffset -= 1;
         }
-        int blockID = getSign().getBlock().getWorld()
-                .getBlockTypeIdAt(x, yOffset, z);
+        int blockID = getSign().getBlock().getWorld().getBlockTypeIdAt(x, yOffset, z);
 
         return (blockID == 10 || blockID == 11);
     }
@@ -80,11 +80,13 @@ public class LavaSensor extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new LavaSensor(getServer(), sign);
         }
     }

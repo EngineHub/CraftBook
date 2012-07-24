@@ -21,12 +21,12 @@ package com.sk89q.craftbook.blockbag;
 
 
 /**
- *
  * @author sk89q
  */
 public class OutOfSpaceException extends BlockBagException {
+
     private static final long serialVersionUID = -7384479745885980016L;
-    
+
     /**
      * Stores the block ID.
      */
@@ -34,9 +34,11 @@ public class OutOfSpaceException extends BlockBagException {
 
     /**
      * Construct the object.
+     *
      * @param id
      */
     public OutOfSpaceException(int id) {
+
         this.id = id;
     }
 
@@ -44,6 +46,7 @@ public class OutOfSpaceException extends BlockBagException {
      * @return the id
      */
     public int getID() {
+
         return id;
     }
 }

@@ -21,14 +21,16 @@ import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 
 public class HmodMinecartImpl extends HmodBaseEntityImpl
-                           implements MinecartInterface {
+        implements MinecartInterface {
+
     private Minecart cart;
     private Type type;
-    
+
     public HmodMinecartImpl(Minecart cart, WorldInterface w) {
+
         super(cart, w);
         this.cart = cart;
-        switch(cart.getType()) {
+        switch (cart.getType()) {
             case Minecart:
                 type = Type.REGULAR;
                 break;
@@ -42,22 +44,26 @@ public class HmodMinecartImpl extends HmodBaseEntityImpl
                 assert false : "bad enum value";
         }
     }
-    
+
     public void remove() {
+
         cart.destroy();
     }
 
     public Type getType() {
+
         return type;
     }
 
     public boolean hasPassenger() {
-        return cart.getEntity().j!=null;
+
+        return cart.getEntity().j != null;
     }
 
     public boolean isMobType(String mobType) {
+
         if (cart.getEntity().j instanceof mj) {
-            Mob mob = new Mob((mj)cart.getEntity().j);
+            Mob mob = new Mob((mj) cart.getEntity().j);
             if (mobType.equalsIgnoreCase(mob.getName())) {
                 return true;
             }
@@ -66,21 +72,25 @@ public class HmodMinecartImpl extends HmodBaseEntityImpl
     }
 
     public boolean hasPlayer() {
-        return cart.getPassenger()!=null;
+
+        return cart.getPassenger() != null;
     }
-    
+
     public boolean hasAnimal() {
+
         return cart.getEntity().j instanceof bl;
     }
 
     public boolean hasMob() {
+
         return (cart.getEntity().j instanceof hq) || (cart.getEntity().j instanceof hl);
     }
 
     public PlayerInterface getPlayer() {
+
         Player p = cart.getPassenger();
-        if(p==null) return null;
-        return new HmodPlayerImpl(p,world);
+        if (p == null) return null;
+        return new HmodPlayerImpl(p, world);
     }
 }
 

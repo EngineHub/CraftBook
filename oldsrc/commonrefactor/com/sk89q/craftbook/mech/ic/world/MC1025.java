@@ -10,31 +10,35 @@ import com.sk89q.craftbook.mech.ic.ChipState;
  * @author Shaun (sturmeh)
  */
 public class MC1025 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "REL TIME MOD 2";
     }
 
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (chip.getIn(1).is())
-                chip.getOut(1).set(isServerTimeOdd(chip));
+            chip.getOut(1).set(isServerTimeOdd(chip));
     }
 
     /**
      * Returns true if the relative time is odd.
-     * 
+     *
      * @return
      */
     private boolean isServerTimeOdd(ChipState chip) {
+
         long time = chip.getWorld().getTime() % 2;
         if (time < 0) time += 2;
         return (time == 1);

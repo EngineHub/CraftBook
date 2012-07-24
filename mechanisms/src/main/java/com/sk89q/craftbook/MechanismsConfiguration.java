@@ -18,33 +18,29 @@
 
 package com.sk89q.craftbook;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.mech.CustomDropManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
+import java.io.File;
+import java.util.*;
 
 /**
  * FileConfiguration handler for CraftBook.
- * 
  * All fields are final because it is never appropriate to modify them during
  * operation, except for when the FileConfiguration is reloaded entirely, at which
  * point it is appropriate to construct an entirely new FileConfiguration instance
  * and update the plugin accordingly.
- * 
+ *
  * @author sk89q
  * @author hash
  * @author Me4502
  */
-public class MechanismsConfiguration extends BaseConfiguration{
+public class MechanismsConfiguration extends BaseConfiguration {
+
     public MechanismsConfiguration(FileConfiguration cfg, File dataFolder) {
-        super(cfg,dataFolder);
+
+        super(cfg, dataFolder);
         this.dataFolder = dataFolder;
 
         mechSettings = new MechanismSettings(cfg);
@@ -89,33 +85,40 @@ public class MechanismsConfiguration extends BaseConfiguration{
 
     //General settings
     public class MechanismSettings {
+
         public final boolean stopDestruction;
 
         private MechanismSettings(FileConfiguration cfg) {
+
             stopDestruction = getBoolean(cfg, "stop-mechanism-dupe", false);
         }
     }
 
     public class DispenserSettings {
+
         public final boolean enable;
 
         private DispenserSettings(FileConfiguration cfg) {
-            enable = getBoolean(cfg,"dispenser-recipes-enable",true);
+
+            enable = getBoolean(cfg, "dispenser-recipes-enable", true);
         }
     }
 
     public class BookcaseSettings {
+
         public final boolean enable;
         public final String readLine;
 
         private BookcaseSettings(FileConfiguration cfg) {
-            enable = getBoolean(cfg,"bookshelf-enable",true);
-            readLine = getString(cfg,"bookshelf-read-text","You pick up a book...");
+
+            enable = getBoolean(cfg, "bookshelf-enable", true);
+            readLine = getString(cfg, "bookshelf-read-text", "You pick up a book...");
         }
         //FIXME the books file should probably be cached here too
     }
 
     public class BridgeSettings {
+
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
@@ -123,29 +126,33 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final Set<Material> allowedBlocks;
 
         private BridgeSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "bridge-enable", true);
             enableRedstone = getBoolean(cfg, "bridge-redstone", true);
             maxLength = getInt(cfg, "bridge-max-length", 30);
             maxWidth = getInt(cfg, "bridge-max-width", 5);
             List<Integer> tids = cfg.getIntegerList("bridge-blocks");
-            if (tids == null) tids = Arrays.asList(4,5,20,43);
+            if (tids == null) tids = Arrays.asList(4, 5, 20, 43);
             Set<Material> allowedBlocks = new HashSet<Material>();
-            for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
+            for (Integer tid : tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
             cfg.set("bridge-blocks", tids);
         }
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
         public boolean canUseBlock(Material b) {
+
             return allowedBlocks.contains(b);
         }
     }
 
     public class DoorSettings {
+
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxLength;
@@ -153,14 +160,17 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final Set<Material> allowedBlocks;
 
         private DoorSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "door-enable", true);
             enableRedstone = getBoolean(cfg, "door-redstone", true);
             maxLength = getInt(cfg, "door-max-length", 30);
             maxWidth = getInt(cfg, "door-max-width", 5);
             List<Integer> tids = cfg.getIntegerList("door-blocks");
-            if(tids == null) Arrays.asList(4,5,20,43);
+            if (tids == null) Arrays.asList(4, 5, 20, 43);
             Set<Material> allowedBlocks = new HashSet<Material>();
-            for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
+            if (tids != null) {
+                for (Integer tid : tids) allowedBlocks.add(Material.getMaterial(tid));
+            }
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
             cfg.set("door-blocks", tids);
 
@@ -168,69 +178,83 @@ public class MechanismsConfiguration extends BaseConfiguration{
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
         public boolean canUseBlock(Material b) {
+
             return allowedBlocks.contains(b);
         }
     }
 
     public class GateSettings {
+
         public final boolean enable;
         public final boolean enableRedstone;
         public final Set<Material> allowedBlocks;
 
         private GateSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "gate-enable", true);
             enableRedstone = getBoolean(cfg, "gate-redstone", true);
             List<Integer> tids = cfg.getIntegerList("gate-blocks");
-            if (tids == null || tids.isEmpty() || tids.size() < 1) tids = Arrays.asList(85,101,102,113);
+            if (tids == null || tids.isEmpty() || tids.size() < 1) tids = Arrays.asList(85, 101, 102, 113);
             Set<Material> allowedBlocks = new HashSet<Material>();
-            for (Integer tid: tids) allowedBlocks.add(Material.getMaterial(tid));
+            for (Integer tid : tids) allowedBlocks.add(Material.getMaterial(tid));
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
             cfg.set("gate-blocks", tids);
         }
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
         public boolean canUseBlock(Material b) {
+
             return allowedBlocks.contains(b);
         }
     }
 
     public class CommandSettings {
+
         public final boolean enable;
 
         private CommandSettings(FileConfiguration cfg) {
-            enable = getBoolean(cfg,"command-sign-enable",true);
+
+            enable = getBoolean(cfg, "command-sign-enable", true);
         }
     }
 
     public class ElevatorSettings {
+
         public final boolean enable;
 
         private ElevatorSettings(FileConfiguration cfg) {
-            enable = getBoolean(cfg,"elevators-enable",true);
+
+            enable = getBoolean(cfg, "elevators-enable", true);
         }
     }
 
     public class TeleporterSettings {
+
         public final boolean enable;
 
         private TeleporterSettings(FileConfiguration cfg) {
-            enable = getBoolean(cfg,"teleporter-enable",true);
+
+            enable = getBoolean(cfg, "teleporter-enable", true);
         }
     }
 
     public class CauldronSettings {
+
         public final boolean enable;
         public final int cauldronBlock;
 
         private CauldronSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "cauldron-enable", true);
             cauldronBlock = getInt(cfg, "cauldron-block", 1);
         }
@@ -238,38 +262,47 @@ public class MechanismsConfiguration extends BaseConfiguration{
     }
 
     public class LightSwitchSettings {
+
         public final boolean enable;
 
         private LightSwitchSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "light-switch-enable", true);
         }
     }
 
     public class LightStoneSettings {
+
         public final boolean enable;
 
         private LightStoneSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "light-stone-enable", true);
         }
     }
 
     public class AmmeterSettings {
+
         public final boolean enable;
 
         private AmmeterSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "ammeter-enable", true);
         }
     }
 
     public class HiddenSwitchSettings {
+
         public final boolean enable;
 
         private HiddenSwitchSettings(FileConfiguration cfg) {
-            enable = getBoolean(cfg, "hidden-switches-enable",  true);
+
+            enable = getBoolean(cfg, "hidden-switches-enable", true);
         }
     }
 
     public class SnowSettings {
+
         public final boolean enable;
         public final boolean trample;
         public final boolean placeSnow;
@@ -277,6 +310,7 @@ public class MechanismsConfiguration extends BaseConfiguration{
         public final boolean piling;
 
         private SnowSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "snow-piling-enable", true);
             trample = getBoolean(cfg, "snow-trample-enable", true);
             placeSnow = getBoolean(cfg, "placable-snow", true);
@@ -286,12 +320,14 @@ public class MechanismsConfiguration extends BaseConfiguration{
     }
 
     public class AreaSettings {
+
         public final boolean enable;
         public final boolean enableRedstone;
         public final int maxAreasPerUser;
         public final int maxSizePerArea;
 
         private AreaSettings(FileConfiguration cfg) {
+
             enable = getBoolean(cfg, "area-enable", true);
             enableRedstone = getBoolean(cfg, "area-redstone", true);
             maxAreasPerUser = getInt(cfg, "max-areas-per-user", 30);
@@ -300,10 +336,12 @@ public class MechanismsConfiguration extends BaseConfiguration{
     }
 
     public class CustomDropSettings {
+
         public final boolean requirePermissions;
 
         private CustomDropSettings(FileConfiguration cfg) {
-            requirePermissions = getBoolean(cfg,"custom-drops-require-permissions", false);
+
+            requirePermissions = getBoolean(cfg, "custom-drops-require-permissions", false);
         }
     }
 }

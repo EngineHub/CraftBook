@@ -22,7 +22,7 @@ package com.sk89q.craftbook;
 /**
  * Mechanics with this interface indicate that they think outside of
  * event handling. Self-triggered ICs used this, for example.
- * 
+ *
  * @author sk89q
  */
 public interface SelfTriggeringMechanic extends Mechanic {
@@ -33,5 +33,5 @@ public interface SelfTriggeringMechanic extends Mechanic {
      * in the world.
      */
     public void think();
-    
+
 }

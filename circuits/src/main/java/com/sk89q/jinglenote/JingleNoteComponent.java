@@ -28,6 +28,7 @@ public class JingleNoteComponent {
     }
 
     public void disable() {
+
         jingleNoteManager.stopAll();
     }
 
@@ -37,6 +38,7 @@ public class JingleNoteComponent {
      * @return
      */
     public JingleNoteManager getJingleNoteManager() {
+
         return jingleNoteManager;
     }
 }

@@ -19,27 +19,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.mech.ic.custom;
 
 class CustomICSym {
+
     static final int SYM_TYPE = 0;
     static final int SYM_NAME = 1;
     static final int SYM_PROG = 2;
     static final int SYM_FILE = 3;
-    
+
     static class Type {
+
         final String type;
         final String language;
+
         public Type(String type) {
+
             String[] s = type.split("/");
             this.type = s[0];
             this.language = s[1];
         }
     }
+
     static class Name {
+
         final String icName;
         final String title;
+
         public Name(String name) {
+
             String[] s = name.split(":");
             this.icName = s[0];
-            this.title = s.length==2?s[1].replace('-',' '):"UNTITLED IC";
+            this.title = s.length == 2 ? s[1].replace('-', ' ') : "UNTITLED IC";
         }
     }
 }

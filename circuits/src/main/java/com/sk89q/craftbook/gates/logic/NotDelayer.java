@@ -14,46 +14,52 @@ import org.bukkit.block.Sign;
  */
 public class NotDelayer extends AbstractIC {
 
-	public NotDelayer(Server server, Sign block) {
-		super(server, block);
-	}
+    public NotDelayer(Server server, Sign block) {
 
-	@Override
-	public String getTitle() {
-		return "Not Delayer";
-	}
+        super(server, block);
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "NOT_DELAYER";
-	}
+    @Override
+    public String getTitle() {
 
-	@Override
-	public void trigger(final ChipState chip) {
-		int delay = Integer.parseInt(getSign().getLine(2));
-		if (chip.getInput(0)) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
-				@Override
-				public void run() {
-					if (chip.getInput(0)) {
-						chip.setOutput(0, false);
-					}
-				}
-			}, delay * 20);
-		} else {
-			chip.setOutput(0, true);
-		}
-	}
+        return "Not Delayer";
+    }
 
-	public static class Factory extends AbstractICFactory {
+    @Override
+    public String getSignTitle() {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        return "NOT_DELAYER";
+    }
 
-		@Override
-		public IC create(Sign sign) {
-			return new NotDelayer(getServer(), sign);
-		}
-	}
+    @Override
+    public void trigger(final ChipState chip) {
+
+        int delay = Integer.parseInt(getSign().getLine(2));
+        if (chip.getInput(0)) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+
+                @Override
+                public void run() {
+
+                    if (chip.getInput(0)) chip.setOutput(0, false);
+                }
+            }, delay * 20);
+        } else {
+            chip.setOutput(0, true);
+        }
+    }
+
+    public static class Factory extends AbstractICFactory {
+
+        public Factory(Server server) {
+
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+
+            return new NotDelayer(getServer(), sign);
+        }
+    }
 }

@@ -23,30 +23,38 @@ import java.util.logging.Logger;
 
 /**
  * Stores the configuration for Craftbook.
- * 
+ *
  * @author Lymia
  */
 public interface Configuration {
+
     void load() throws IOException;
-    
+
     boolean hasKey(String key);
-    
+
     boolean getBoolean(String key, boolean def);
+
     int getInt(String key, int def);
+
     float getFloat(String key, float def);
+
     String getString(String key, String def);
-    
+
     Boolean getBoolean(String key);
+
     Integer getInt(String key);
+
     Float getFloat(String key);
+
     String getString(String key);
-    
+
     void setString(String key, Object target);
-    
+
     String getItemName(int id);
+
     int getItemId(String name);
-    
+
     Logger getLogger();
-    
+
     boolean isValidMob(String mobName);
 }

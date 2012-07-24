@@ -3,72 +3,73 @@
   Copyright (c) 2010, 2011 sk89q <http://www.sk89q.com> 
   CraftBook is available under the GNU General Public License v3
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.sk89q.craftbook</groupId>
-    <artifactId>craftbook</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.sk89q.craftbook</groupId>
+        <artifactId>craftbook</artifactId>
+        <version>3.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>common</artifactId>
     <version>3.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>common</artifactId>
-  <version>3.1-SNAPSHOT</version>
-  <name>CraftBook Common</name>
-  
-  <build>
-    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+    <name>CraftBook Common</name>
 
-    <!-- Resources -->
-    <resources>
-      <resource>
-        <targetPath>.</targetPath>
-        <filtering>true</filtering>
-        <directory>${basedir}/src/main/resources/</directory>
-        <includes>
-          <include>plugin.yml</include>
-        </includes>
-      </resource>
-      <resource>
-        <targetPath>defaults/</targetPath>
-        <filtering>true</filtering>
-        <directory>${basedir}/src/main/resources/</directory>
-        <includes>
-          <include>config.yml</include>
-        </includes>
-      </resource>
-      <resource>
-        <targetPath>defaults/</targetPath>
-        <filtering>false</filtering>
-        <directory>${basedir}/src/main/resources/</directory>
-        <includes>
-          <include>en_US.txt</include>
-        </includes>
-      </resource>
-    </resources>
+    <build>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 
-    <!-- Plugins -->
-    <plugins>
-      <!-- Compile plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-      </plugin>
+        <!-- Resources -->
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources/</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>defaults/</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources/</directory>
+                <includes>
+                    <include>config.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>defaults/</targetPath>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources/</directory>
+                <includes>
+                    <include>en_US.txt</include>
+                </includes>
+            </resource>
+        </resources>
 
-      <!-- JAR creation plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
-        <configuration>
-          <archive>
-            <addMavenDescriptor>true</addMavenDescriptor>
-            <manifest>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+        <!-- Plugins -->
+        <plugins>
+            <!-- Compile plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+            </plugin>
+
+            <!-- JAR creation plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>true</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

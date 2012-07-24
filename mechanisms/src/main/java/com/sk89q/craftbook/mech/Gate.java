@@ -19,9 +19,16 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -32,22 +39,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or
@@ -55,7 +48,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  * top-most connected fence block, and then proceed to recurse to the sides up
  * to a certain number of fences. To the fences that it gets to, it will iterate
  * over the blocks below to open or close the gate.
- * 
+ *
  * @author sk89q
  */
 public class Gate extends AbstractMechanic {
@@ -63,27 +56,28 @@ public class Gate extends AbstractMechanic {
     /**
      * Plugin.
      */
-    protected MechanismsPlugin plugin;
+    protected final MechanismsPlugin plugin;
 
     /**
      * Location of the gate.
      */
-    protected BlockWorldVector pt;
+    protected final BlockWorldVector pt;
 
     /**
      * Indicates a DGate.
      */
-    protected boolean smallSearchSize;
+    protected final boolean smallSearchSize;
 
     /**
      * Construct a gate for a location.
-     * 
+     *
      * @param pt
      * @param plugin
      * @param smallSearchSize
      */
     public Gate(BlockWorldVector pt, MechanismsPlugin plugin,
-            boolean smallSearchSize) {
+                boolean smallSearchSize) {
+
         super();
         this.pt = pt;
         this.plugin = plugin;
@@ -92,13 +86,15 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Toggles the gate closest to a location.
-     * 
+     *
      * @param pt
      * @param smallSearchSize
+     *
      * @return true if a gate was found and blocks were changed; false
      *         otherwise.
      */
     public boolean toggleGates(LocalPlayer player, WorldVector pt, boolean smallSearchSize) {
+
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
         int y = pt.getBlockY();
@@ -141,15 +137,16 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Set gate states of gates closest to a location.
-     * 
+     *
      * @param pt
      * @param close
      * @param smallSearchSize
+     *
      * @return true if a gate was found and blocks were changed; false
      *         otherwise.
      */
     public boolean setGateState(LocalPlayer player, WorldVector pt, boolean close,
-            boolean smallSearchSize) {
+                                boolean smallSearchSize) {
 
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
@@ -193,15 +190,16 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Toggles one column of gate.
-     * 
+     *
      * @param pt
      * @param visitedColumns
      * @param close
+     *
      * @return true if a gate column was found and blocks were changed; false
      *         otherwise.
      */
     private boolean recurseColumn(LocalPlayer player, WorldVector pt,
-            Set<BlockVector> visitedColumns, Boolean close) {
+                                  Set<BlockVector> visitedColumns, Boolean close) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
         if (visitedColumns.size() > 14) {
@@ -251,13 +249,13 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Actually does the closing/opening. Also recurses to nearby columns.
-     * 
+     *
      * @param topPoint
      * @param close
      * @param visitedColumns
      */
     private void toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
-            Set<BlockVector> visitedColumns) {
+                              Set<BlockVector> visitedColumns) {
 
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
         int x = topPoint.getBlockX();
@@ -288,34 +286,32 @@ public class Gate extends AbstractMechanic {
                     sign = (Sign) state;
             }
 
-            if(sign!=null) {
+            if (sign != null) {
                 otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
             }
 
-            if(sign!=null && sign.getLine(3).length() > 0) {
+            if (sign != null && sign.getLine(3).length() > 0) {
                 try {
                     curBlocks = Integer.parseInt(sign.getLine(3));
-                    if(otherSign != null)
+                    if (otherSign != null)
                         curBlocks += Integer.parseInt(otherSign.getLine(3));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     curBlocks = 0;
                     sign.setLine(3, "0");
                     sign.update();
-                    if(otherSign != null) {
+                    if (otherSign != null) {
                         otherSign.setLine(3, "0");
                         otherSign.update();
                     }
                 }
             }
 
-            if(sign!= null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
+            if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
                 if (cur != 0) {
                     break;
                 }
-            }
-            else {
+            } else {
                 // Allowing water allows the use of gates as flood gates
                 if (cur != BlockID.WATER && cur != BlockID.STATIONARY_WATER
                         && cur != BlockID.LAVA && cur != BlockID.STATIONARY_LAVA
@@ -328,28 +324,27 @@ public class Gate extends AbstractMechanic {
             }
 
             // bag.setBlockID(w, x, y1, z, ID);
-            if(plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                if(ID == 0 || curBlocks > 0) {
-                    if(ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
-                        curBlocks ++;
-                    else if(world.getBlockAt(x, y1, z).getTypeId() == 0 && isValidGateItem(new ItemStack(ID,1)))
-                        curBlocks --;
+            if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                if (ID == 0 || curBlocks > 0) {
+                    if (ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
+                        curBlocks++;
+                    else if (world.getBlockAt(x, y1, z).getTypeId() == 0 && isValidGateItem(new ItemStack(ID, 1)))
+                        curBlocks--;
                     world.getBlockAt(x, y1, z).setTypeId(ID);
 
                     sign.setLine(3, curBlocks + "");
                     sign.update();
-                    if(otherSign!=null) {
+                    if (otherSign != null) {
                         otherSign.setLine(3, "0");
                         otherSign.update();
                     }
-                } else if(curBlocks == 0 && isValidGateItem(new ItemStack(ID,1))) {
-                    if(player!=null) {
+                } else if (curBlocks == 0 && isValidGateItem(new ItemStack(ID, 1))) {
+                    if (player != null) {
                         player.printError("Not enough blocks to trigger mechanic!");
                         break;
                     }
                 }
-            }
-            else
+            } else
                 world.getBlockAt(x, y1, z).setTypeId(ID);
 
             WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
@@ -384,42 +379,42 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Raised when a block is right clicked.
-     * 
+     *
      * @param event
      */
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+
         if (!plugin.getLocalConfiguration().gateSettings.enable)
             return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
-        if(event.getPlayer().getItemInHand() != null) {
-            if(isValidGateItem(event.getPlayer().getItemInHand())) {
+        if (event.getPlayer().getItemInHand() != null) {
+            if (isValidGateItem(event.getPlayer().getItemInHand())) {
 
                 Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId()
+                        == BlockID.WALL_SIGN) {
                     BlockState state = event.getClickedBlock().getState();
                     if (state instanceof Sign)
                         sign = (Sign) state;
                 }
 
-                if(sign!=null) {
+                if (sign != null) {
                     try {
                         int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
                         sign.setLine(3, newBlocks + "");
                         sign.update();
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         sign.setLine(3, "1");
                         sign.update();
                     }
 
-                    if(event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().setItemInHand(new ItemStack(0,0));
-                    }
-                    else
+                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                        event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                    } else
                         event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
 
                     player.print("Gate Restocked!");
@@ -445,11 +440,12 @@ public class Gate extends AbstractMechanic {
 
     /**
      * Raised when an input redstone current changes.
-     * 
+     *
      * @param event
      */
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
+
         if (!plugin.getLocalConfiguration().gateSettings.enableRedstone)
             return;
 
@@ -457,34 +453,40 @@ public class Gate extends AbstractMechanic {
             return;
 
         plugin.getServer().getScheduler()
-        .scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                setGateState(null, pt, event.getNewCurrent() > 0,
-                        smallSearchSize);
-            }
-        }, 2);
+                .scheduleSyncDelayedTask(plugin, new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        setGateState(null, pt, event.getNewCurrent() > 0,
+                                smallSearchSize);
+                    }
+                }, 2);
     }
 
     @Override
     public void unload() {
+
     }
 
     @Override
     public boolean isActive() {
+
         return false; //Is not persistent
     }
 
     public static class Factory extends AbstractMechanicFactory<Gate> {
 
-        protected MechanismsPlugin plugin;
+        protected final MechanismsPlugin plugin;
 
         public Factory(MechanismsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
         @Override
         public Gate detect(BlockWorldVector pt) {
+
             Block block = BukkitUtil.toWorld(pt).getBlockAt(
                     BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
@@ -511,12 +513,13 @@ public class Gate extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
         public Gate detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
+
             if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
                 if (!player.hasPermission("craftbook.mech.gate")) {
                     throw new InsufficientPermissionsException();
@@ -545,16 +548,19 @@ public class Gate extends AbstractMechanic {
     }
 
     public boolean isValidGateBlock(Block block) {
+
         return plugin.getLocalConfiguration().gateSettings.canUseBlock(block.getType());
     }
 
     public boolean isValidGateItem(ItemStack block) {
+
         return plugin.getLocalConfiguration().gateSettings.canUseBlock(block.getType());
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
+
+        if (event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
         Sign sign = null;
 
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
@@ -565,24 +571,26 @@ public class Gate extends AbstractMechanic {
 
         int curBlocks = 0;
 
-        if(sign!=null && sign.getLine(3).length() > 0) {
+        if (sign != null && sign.getLine(3).length() > 0) {
             try {
                 curBlocks = Integer.parseInt(sign.getLine(3));
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 curBlocks = 0;
                 sign.setLine(3, "0");
                 sign.update();
             }
         }
 
-        if(curBlocks > 0) {
+        if (curBlocks > 0) {
             ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
-            sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+            if (sign != null) {
+                sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+            }
         }
     }
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+
     }
 }

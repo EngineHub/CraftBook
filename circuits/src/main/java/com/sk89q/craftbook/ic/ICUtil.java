@@ -26,22 +26,25 @@ import org.bukkit.material.Lever;
 
 /**
  * IC utility functions.
- * 
+ *
  * @author sk89q
  */
 public class ICUtil {
 
     private ICUtil() {
+
     }
 
     /**
      * Set an IC's output state at a block.
-     * 
+     *
      * @param block
      * @param state
+     *
      * @return whether something was changed
      */
     public static boolean setState(Block block, boolean state) {
+
         if (block.getType() != Material.LEVER) return false;
         byte data = block.getData();
         int newData;
@@ -54,7 +57,7 @@ public class ICUtil {
             newData = data | 0x8;
 
         if (newData != data) {
-            block.setData((byte)newData, true);
+            block.setData((byte) newData, true);
             int oldS = state ? (0) : (1);
             int newS = state ? (1) : (0);
             BlockRedstoneEvent event = new BlockRedstoneEvent(sourceBlock, oldS, newS);

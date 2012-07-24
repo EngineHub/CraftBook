@@ -3,71 +3,72 @@
   Copyright (c) 2010, 2011 sk89q <http://www.sk89q.com> 
   CommandBook is available under the GNU General Public License v3
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.sk89q.craftbook</groupId>
-  <artifactId>craftbook</artifactId>
-  <version>3.1-SNAPSHOT</version>
-  <name>CraftBook</name>
-  <description>CraftBook adds fun mechanics and redstone-powered contraptions to Minecraft</description>
-  <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.sk89q.craftbook</groupId>
+    <artifactId>craftbook</artifactId>
+    <version>3.1-SNAPSHOT</version>
+    <name>CraftBook</name>
+    <description>CraftBook adds fun mechanics and redstone-powered contraptions to Minecraft</description>
+    <packaging>pom</packaging>
 
-  <scm>
-    <connection>scm:git:git://github.com/sk89q/craftbook.git</connection>
-    <url>https://github.com/sk89q/craftbook</url>
-    <developerConnection>scm:git:git@github.com:sk89q/craftbook.git</developerConnection>
-  </scm>
-  <properties>
-          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  
-  <repositories>
-    <!-- Repository for zml's stuff -->
-    <repository>
-      <id>zml-repo</id>
-      <url>http://files.zachsthings.com/repo</url>
-    </repository>
-    <!-- Repository for other dependencies of SK's -->
-    <repository>
-      <id>sk89q-mvn2</id>
-      <url>http://mvn2.sk89q.com/repo</url>
-    </repository>
-    <!-- Repository for Bukkit -->
-    <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public</url>
-    </repository>
-  </repositories>
+    <scm>
+        <connection>scm:git:git://github.com/sk89q/craftbook.git</connection>
+        <url>https://github.com/sk89q/craftbook</url>
+        <developerConnection>scm:git:git@github.com:sk89q/craftbook.git</developerConnection>
+    </scm>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.sk89q</groupId>
-      <artifactId>worldedit</artifactId>
-      <version>5.4-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.2.5-R4.0</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.bukkit</groupId>
-    	<artifactId>craftbukkit</artifactId>
-    	<version>1.2.5-R4.0</version>
-    </dependency>
-    <dependency>
-        <groupId>net.milkbowl</groupId>
-        <artifactId>vault</artifactId>
-        <version>1.2.12</version>
-    </dependency>
-  </dependencies>
-  
-  <!-- Modules -->
-  <modules>
-    <module>common</module>
-    <module>mechanisms</module>
-    <module>circuits</module>
-    <module>vehicles</module>
-    <module>distribution</module>
-  </modules>
+    <repositories>
+        <!-- Repository for zml's stuff -->
+        <repository>
+            <id>zml-repo</id>
+            <url>http://files.zachsthings.com/repo</url>
+        </repository>
+        <!-- Repository for other dependencies of SK's -->
+        <repository>
+            <id>sk89q-mvn2</id>
+            <url>http://mvn2.sk89q.com/repo</url>
+        </repository>
+        <!-- Repository for Bukkit -->
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>5.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.2.5-R4.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.2.5-R4.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl</groupId>
+            <artifactId>vault</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Modules -->
+    <modules>
+        <module>common</module>
+        <module>mechanisms</module>
+        <module>circuits</module>
+        <module>vehicles</module>
+        <module>distribution</module>
+    </modules>
 </project>

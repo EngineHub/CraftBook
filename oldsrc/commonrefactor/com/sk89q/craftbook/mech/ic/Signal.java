@@ -22,21 +22,23 @@ package com.sk89q.craftbook.mech.ic;
 
 /**
  * Carries a binary signal.
- * 
+ *
  * @author Shaun (sturmeh)
  * @author sk89q
  */
 public class Signal {
+
     private boolean state;
     private boolean triggered;
 
     /**
      * Constructor for new Signal
      *
-     * @param state initial state
+     * @param state     initial state
      * @param triggered whether the state was triggered
      */
     public Signal(boolean state, boolean triggered) {
+
         this.state = state;
         this.triggered = triggered;
     }
@@ -47,6 +49,7 @@ public class Signal {
      * @param state initial state
      */
     public Signal(boolean state) {
+
         this.state = state;
         this.triggered = true;
     }
@@ -57,6 +60,7 @@ public class Signal {
      * @param state state to set.
      */
     public void set(boolean state) {
+
         this.state = state;
     }
 
@@ -64,6 +68,7 @@ public class Signal {
      * Whether the input was triggered.
      */
     public boolean isTriggered() {
+
         return triggered;
     }
 
@@ -73,6 +78,7 @@ public class Signal {
      * @return current state
      */
     public boolean is() {
+
         return state;
     }
 
@@ -82,6 +88,7 @@ public class Signal {
      * @return the new state.
      */
     public boolean invert() {
+
         state = !state;
         return state;
     }
@@ -93,6 +100,7 @@ public class Signal {
      * @return the inverted state.
      */
     public boolean not() {
+
         return !state;
     }
 
@@ -102,6 +110,7 @@ public class Signal {
      * @return 1 or 0.
      */
     public String text() {
+
         if (state) {
             return "OUTPUT: 1";
         }

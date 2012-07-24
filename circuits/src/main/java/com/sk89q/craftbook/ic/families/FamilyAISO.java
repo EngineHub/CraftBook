@@ -24,12 +24,9 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.material.Diode;
 
 /**
  * Handles detection for the single input single output family.
@@ -38,87 +35,88 @@ import org.bukkit.material.Diode;
  */
 public class FamilyAISO extends AbstractICFamily {
 
-	@Override
-	public ChipState detect(BlockWorldVector source, Sign sign) {
-		return new ChipStateAISO(source, sign);
-	}
+    @Override
+    public ChipState detect(BlockWorldVector source, Sign sign) {
 
-	public static class ChipStateAISO extends AbstractChipState {
+        return new ChipStateAISO(source, sign);
+    }
 
-		public ChipStateAISO(BlockWorldVector source, Sign sign) {
-			super(source, sign);
-		}
+    public static class ChipStateAISO extends AbstractChipState {
 
-		protected Block getBlock(int pin) {
+        public ChipStateAISO(BlockWorldVector source, Sign sign) {
 
-			switch (pin) {
-				case 0:
-					return SignUtil.getFrontBlock(sign.getBlock());
-				case 1:
-					return SignUtil.getLeftBlock(sign.getBlock());
-				case 2:
-					return SignUtil.getRightBlock(sign.getBlock());
-				case 3:
-					BlockFace face = SignUtil.getBack(sign.getBlock());
-					return sign.getBlock().getRelative(face).getRelative(face);
-				default:
-					return null;
-			}
+            super(source, sign);
+        }
 
-		}
+        protected Block getBlock(int pin) {
 
-		@Override
-		public boolean get(int pin) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				return block.isBlockIndirectlyPowered();
-			} else {
-				return false;
-			}
-		}
+            switch (pin) {
+                case 0:
+                    return SignUtil.getFrontBlock(sign.getBlock());
+                case 1:
+                    return SignUtil.getLeftBlock(sign.getBlock());
+                case 2:
+                    return SignUtil.getRightBlock(sign.getBlock());
+                case 3:
+                    BlockFace face = SignUtil.getBack(sign.getBlock());
+                    return sign.getBlock().getRelative(face).getRelative(face);
+                default:
+                    return null;
+            }
 
-		@Override
-		public void set(int pin, boolean value) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				ICUtil.setState(block, value);
-			} else {
-				return;
-			}
-		}
+        }
 
-		@Override
-		public boolean getInput(int inputIndex) {
-			for (int i = 0; i < getInputCount(); i++) {
-				if (isValid(i)) {
-					if (get(i)) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
+        @Override
+        public boolean get(int pin) {
 
-		@Override
-		public boolean getOutput(int outputIndex) {
-			return get(outputIndex + 3);
-		}
+            Block block = getBlock(pin);
+            return block != null && block.isBlockIndirectlyPowered();
+        }
 
-		@Override
-		public void setOutput(int outputIndex, boolean value) {
-			set(outputIndex + 3, value);
-		}
+        @Override
+        public void set(int pin, boolean value) {
 
-		@Override
-		public int getInputCount() {
-			return 3;
-		}
+            Block block = getBlock(pin);
+            if (block != null) ICUtil.setState(block, value);
+        }
 
-		@Override
-		public int getOutputCount() {
-			return 1;
-		}
+        @Override
+        public boolean getInput(int inputIndex) {
 
-	}
+            for (int i = 0; i < getInputCount(); i++) {
+                if (isValid(i)) {
+                    if (get(i)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+
+            return get(outputIndex + 3);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+
+            set(outputIndex + 3, value);
+        }
+
+        @Override
+        public int getInputCount() {
+
+            return 3;
+        }
+
+        @Override
+        public int getOutputCount() {
+
+            return 1;
+        }
+
+    }
 
 }

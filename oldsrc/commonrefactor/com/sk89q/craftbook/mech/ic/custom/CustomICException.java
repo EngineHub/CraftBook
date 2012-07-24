@@ -21,26 +21,30 @@ package com.sk89q.craftbook.mech.ic.custom;
 public class CustomICException extends Exception {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4304013653689426785L;
 
     public CustomICException() {
+
         super();
         // TODO Auto-generated constructor stub
     }
 
     public CustomICException(String message, Throwable cause) {
+
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
     public CustomICException(String message) {
+
         super(message);
         // TODO Auto-generated constructor stub
     }
 
     public CustomICException(Throwable cause) {
+
         super(cause);
         // TODO Auto-generated constructor stub
     }

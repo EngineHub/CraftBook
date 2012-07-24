@@ -21,53 +21,62 @@ import com.sk89q.craftbook.access.WorldInterface;
 
 //Java's lack of multipul implementation inhertance is annoying!
 public class HmodStorageMinecartImpl extends HmodMinecartImpl
-                                  implements StorageMinecartInterface {
+        implements StorageMinecartInterface {
+
     private final ItemArray<?> inventory;
     private final int length;
     private final com.sk89q.craftbook.access.Item[] items;
     private final boolean[] changed;
-    
+
     public HmodStorageMinecartImpl(Minecart cart, WorldInterface w) {
+
         super(cart, w);
         inventory = cart.getStorage();
         length = inventory.getContentsSize();
         items = new com.sk89q.craftbook.access.Item[length];
         changed = new boolean[length];
         Item[] items = inventory.getContents();
-        for(int j=0;j<length;j++) {
+        for (int j = 0; j < length; j++) {
             Item item = items[j];
             com.sk89q.craftbook.access.Item cbItem;
-            if(item!=null) cbItem = new com.sk89q.craftbook.access.Item(item.getItemId(),
+            if (item != null) cbItem = new com.sk89q.craftbook.access.Item(item.getItemId(),
                     item.getAmount());
-            else cbItem = new com.sk89q.craftbook.access.Item(0,0);
-            
+            else cbItem = new com.sk89q.craftbook.access.Item(0, 0);
+
             this.items[j] = cbItem;
         }
     }
 
     public int getLength() {
+
         return length;
     }
-    
+
     public com.sk89q.craftbook.access.Item getItem(int slot) {
+
         return items[slot];
     }
+
     public void setItem(int slot, com.sk89q.craftbook.access.Item item) {
+
         items[slot] = item;
         changed[slot] = true;
     }
-    
+
     public com.sk89q.craftbook.access.Item[] getItems() {
+
         return items.clone();
     }
-    
+
     public void flushChanges() {
-        for(int i=0;i<length;i++) if(changed[i]) {
-            com.sk89q.craftbook.access.Item item = items[i];
-            if(item.id==0||item.count==0) continue;
-            inventory.setSlot(new Item(item.id,item.count), i);
-            changed[i] = false;
-        }
+
+        for (int i = 0; i < length; i++)
+            if (changed[i]) {
+                com.sk89q.craftbook.access.Item item = items[i];
+                if (item.id == 0 || item.count == 0) continue;
+                inventory.setSlot(new Item(item.id, item.count), i);
+                changed[i] = false;
+            }
     }
 }
 

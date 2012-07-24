@@ -7,18 +7,17 @@
 
 package com.sk89q.jinglenote;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.blocks.BlockType;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A manager of play instances.
- * 
+ *
  * @author sk89q
  */
 public class JingleNoteManager {
@@ -31,9 +30,10 @@ public class JingleNoteManager {
      * List of instances.
      */
     protected final Map<String, JingleNotePlayer> instances
-    = new HashMap<String, JingleNotePlayer>();
+            = new HashMap<String, JingleNotePlayer>();
 
     public void play(Player player, MidiJingleSequencer sequencer, int delay) {
+
         String name = player.getName();
         Location loc = findLocation(player);
 
@@ -44,8 +44,8 @@ public class JingleNoteManager {
 
             existing.stop(
                     existingLoc.getBlockX() == loc.getBlockX()
-                    && existingLoc.getBlockY() == loc.getBlockY()
-                    && existingLoc.getBlockZ() == loc.getBlockZ());
+                            && existingLoc.getBlockY() == loc.getBlockY()
+                            && existingLoc.getBlockZ() == loc.getBlockZ());
 
             instances.remove(name);
         }
@@ -59,6 +59,7 @@ public class JingleNoteManager {
     }
 
     public boolean stop(Player player) {
+
         String name = player.getName();
 
         // Existing player found!
@@ -72,21 +73,19 @@ public class JingleNoteManager {
     }
 
     public void stopAll() {
-        for (JingleNotePlayer notePlayer : instances.values()) {
-            notePlayer.stop(false);
-        }
+
+        for (JingleNotePlayer notePlayer : instances.values()) notePlayer.stop(false);
 
         instances.clear();
     }
 
     private Location findLocation(Player player) {
+
         World world = player.getWorld();
         Location loc = player.getLocation();
         loc.setY(loc.getY() - 2);
 
-        if (!BlockType.canPassThrough(world.getBlockTypeIdAt(loc))) {
-            return loc;
-        }
+        if (!BlockType.canPassThrough(world.getBlockTypeIdAt(loc))) return loc;
 
         loc.setY(loc.getY() + 4);
 

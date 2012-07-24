@@ -19,18 +19,16 @@
 
 package com.sk89q.craftbook.util;
 
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
-import com.sk89q.worldedit.blocks.BlockID;
-
 /**
  * <p>
  * Convenience methods for dealing with some sign block data.
  * </p>
- * 
  * <p>
  * If you intend to care about the eight further directions (as opposed to the
  * four cardinal directions and the four ordinal directions), this isn't for you
@@ -38,7 +36,6 @@ import com.sk89q.worldedit.blocks.BlockID;
  * nearest ordinal direction. (If the term "further direction" confuses you,
  * see https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions).
  * </p>
- * 
  * <p>
  * This is direly close to being a replicate of things you can access via
  * org.bukkit.material.Sign (which extends MaterialData). However, that thing:
@@ -54,267 +51,315 @@ import com.sk89q.worldedit.blocks.BlockID;
  * Ideally, I think I'd like to see if I can get something like these methods
  * pushed to bukkit.
  * </p>
- * 
+ *
  * @author hash
- * 
  */
 public class SignUtil {
+
     public static boolean isSign(Block keith) {
+
         return isSign(keith.getTypeId());
     }
+
     public static boolean isSign(int typeid) {
+
         return (typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN);
     }
 
     /**
-     * @param sign
-     *            treated as sign post if it is such, or else assumed to be a
-     *            wall sign (i.e., if you ask about a stone block, it's
-     *            considered a wall sign).
+     * @param sign treated as sign post if it is such, or else assumed to be a
+     *             wall sign (i.e., if you ask about a stone block, it's
+     *             considered a wall sign).
+     *
      * @return the direction a player would be facing when reading the sign;
      *         i.e. the face that is actually the back side of the sign.
      */
     public static BlockFace getFacing(Block sign) {
+
         return getBack(sign);
     }
 
     /**
-     * @param sign
-     *            treated as sign post if it is such, or else assumed to be a
-     *            wall sign (i.e., if you ask about a stone block, it's
-     *            considered a wall sign).
+     * @param sign treated as sign post if it is such, or else assumed to be a
+     *             wall sign (i.e., if you ask about a stone block, it's
+     *             considered a wall sign).
+     *
      * @return the side of the sign containing the text (in other words, when a
      *         player places a new sign, while facing north, this will return
      *         south).
      */
     public static BlockFace getFront(Block sign) {
+
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
-            case 0x0:
-                return BlockFace.WEST;
-            case 0x1:case 0x2:case 0x3:
-                return BlockFace.NORTH_WEST;
-            case 0x4:
-                return BlockFace.NORTH;
-            case 0x5:case 0x6:case 0x7:
-                return BlockFace.NORTH_EAST;
-            case 0x8:
-                return BlockFace.EAST;
-            case 0x9:case 0xA:case 0xB:
-                return BlockFace.SOUTH_EAST;
-            case 0xC:
-                return BlockFace.SOUTH;
-            case 0xD:case 0xE:case 0xF:
-                return BlockFace.SOUTH_WEST;
-            default:
-                return BlockFace.SELF;
+                case 0x0:
+                    return BlockFace.WEST;
+                case 0x1:
+                case 0x2:
+                case 0x3:
+                    return BlockFace.NORTH_WEST;
+                case 0x4:
+                    return BlockFace.NORTH;
+                case 0x5:
+                case 0x6:
+                case 0x7:
+                    return BlockFace.NORTH_EAST;
+                case 0x8:
+                    return BlockFace.EAST;
+                case 0x9:
+                case 0xA:
+                case 0xB:
+                    return BlockFace.SOUTH_EAST;
+                case 0xC:
+                    return BlockFace.SOUTH;
+                case 0xD:
+                case 0xE:
+                case 0xF:
+                    return BlockFace.SOUTH_WEST;
+                default:
+                    return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
-            case 0x2:
-                return BlockFace.EAST;
-            case 0x3:
-                return BlockFace.WEST;
-            case 0x4:
-                return BlockFace.NORTH;
-            case 0x5:
-                return BlockFace.SOUTH;
-            default:
-                return BlockFace.SELF;
+                case 0x2:
+                    return BlockFace.EAST;
+                case 0x3:
+                    return BlockFace.WEST;
+                case 0x4:
+                    return BlockFace.NORTH;
+                case 0x5:
+                    return BlockFace.SOUTH;
+                default:
+                    return BlockFace.SELF;
             }
     }
 
     public static Block getFrontBlock(Block sign) {
+
         return sign.getRelative(getFront(sign));
     }
 
     /**
-     * @param sign
-     *            treated as sign post if it is such, or else assumed to be a
-     *            wall sign (i.e., if you ask about a stone block, it's
-     *            considered a wall sign).
+     * @param sign treated as sign post if it is such, or else assumed to be a
+     *             wall sign (i.e., if you ask about a stone block, it's
+     *             considered a wall sign).
+     *
      * @return the blank side of the sign opposite the text. In the case of a
      *         wall sign, the block in this direction is the block to which the
      *         sign is attached. This is also the direction a player would be
      *         facing when reading the sign; see {@link #getFacing(Block)}.
-     * 
      */
     public static BlockFace getBack(Block sign) {
+
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
-            case 0x0:
-                return BlockFace.EAST;
-            case 0x1:case 0x2:case 0x3:
-                return BlockFace.SOUTH_EAST;
-            case 0x4:
-                return BlockFace.SOUTH;
-            case 0x5:case 0x6:case 0x7:
-                return BlockFace.SOUTH_WEST;
-            case 0x8:
-                return BlockFace.WEST;
-            case 0x9:case 0xA:case 0xB:
-                return BlockFace.NORTH_WEST;
-            case 0xC:
-                return BlockFace.NORTH;
-            case 0xD:case 0xE:case 0xF:
-                return BlockFace.NORTH_EAST;
-            default:
-                return BlockFace.SELF;
+                case 0x0:
+                    return BlockFace.EAST;
+                case 0x1:
+                case 0x2:
+                case 0x3:
+                    return BlockFace.SOUTH_EAST;
+                case 0x4:
+                    return BlockFace.SOUTH;
+                case 0x5:
+                case 0x6:
+                case 0x7:
+                    return BlockFace.SOUTH_WEST;
+                case 0x8:
+                    return BlockFace.WEST;
+                case 0x9:
+                case 0xA:
+                case 0xB:
+                    return BlockFace.NORTH_WEST;
+                case 0xC:
+                    return BlockFace.NORTH;
+                case 0xD:
+                case 0xE:
+                case 0xF:
+                    return BlockFace.NORTH_EAST;
+                default:
+                    return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
-            case 0x2:
-                return BlockFace.WEST;
-            case 0x3:
-                return BlockFace.EAST;
-            case 0x4:
-                return BlockFace.SOUTH;
-            case 0x5:
-                return BlockFace.NORTH;
-            default:
-                return BlockFace.SELF;
+                case 0x2:
+                    return BlockFace.WEST;
+                case 0x3:
+                    return BlockFace.EAST;
+                case 0x4:
+                    return BlockFace.SOUTH;
+                case 0x5:
+                    return BlockFace.NORTH;
+                default:
+                    return BlockFace.SELF;
             }
     }
 
     public static Block getBackBlock(Block sign) {
+
         return sign.getRelative(getBack(sign));
     }
 
     public static Sign getNextSign(Sign sign, String criterea, int searchRadius) {
+
         Sign otherSign = sign;
         Block otherBlock = otherSign.getBlock();
         BlockFace way = sign.getBlock().getFace(getBackBlock(sign.getBlock()));
-        for(int i = 0; i < searchRadius; i++) {
-            if(otherBlock.getRelative(way).getState() instanceof Sign) {
-                otherSign = (Sign)otherBlock.getRelative(way).getState();
-                if(otherSign.getLine(1).equalsIgnoreCase(criterea))
+        for (int i = 0; i < searchRadius; i++) {
+            if (otherBlock.getRelative(way).getState() instanceof Sign) {
+                otherSign = (Sign) otherBlock.getRelative(way).getState();
+                if (otherSign.getLine(1).equalsIgnoreCase(criterea))
                     break;
             }
             otherBlock = otherBlock.getRelative(way);
         }
-        if(otherSign.equals(sign))
+        if (otherSign.equals(sign))
             return null;
         return otherSign;
     }
 
     /**
-     * @param sign
-     *            treated as sign post if it is such, or else assumed to be a
-     *            wall sign (i.e., if you ask about a stone block, it's
-     *            considered a wall sign).
+     * @param sign treated as sign post if it is such, or else assumed to be a
+     *             wall sign (i.e., if you ask about a stone block, it's
+     *             considered a wall sign).
+     *
      * @return the cardinal or ordinal direction to a player's left as they face
      *         the sign to read it; if the sign is oriented in a further
      *         direction, the result is rounded to the nearest ordinal
      *         direction.
      */
     public static BlockFace getRight(Block sign) {
+
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
-            case 0x0:
-                return BlockFace.SOUTH;
-            case 0x1:case 0x2:case 0x3:
-                return BlockFace.SOUTH_WEST;
-            case 0x4:
-                return BlockFace.WEST;
-            case 0x5:case 0x6:case 0x7:
-                return BlockFace.NORTH_WEST;
-            case 0x8:
-                return BlockFace.NORTH;
-            case 0x9:case 0xA:case 0xB:
-                return BlockFace.NORTH_EAST;
-            case 0xC:
-                return BlockFace.EAST;
-            case 0xD:case 0xE:case 0xF:
-                return BlockFace.SOUTH_EAST;
-            default:
-                return BlockFace.SELF;
+                case 0x0:
+                    return BlockFace.SOUTH;
+                case 0x1:
+                case 0x2:
+                case 0x3:
+                    return BlockFace.SOUTH_WEST;
+                case 0x4:
+                    return BlockFace.WEST;
+                case 0x5:
+                case 0x6:
+                case 0x7:
+                    return BlockFace.NORTH_WEST;
+                case 0x8:
+                    return BlockFace.NORTH;
+                case 0x9:
+                case 0xA:
+                case 0xB:
+                    return BlockFace.NORTH_EAST;
+                case 0xC:
+                    return BlockFace.EAST;
+                case 0xD:
+                case 0xE:
+                case 0xF:
+                    return BlockFace.SOUTH_EAST;
+                default:
+                    return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
-            case 0x2:
-                return BlockFace.NORTH;
-            case 0x3:
-                return BlockFace.SOUTH;
-            case 0x4:
-                return BlockFace.EAST;
-            case 0x5:
-                return BlockFace.WEST;
-            default:
-                return BlockFace.SELF;
+                case 0x2:
+                    return BlockFace.NORTH;
+                case 0x3:
+                    return BlockFace.SOUTH;
+                case 0x4:
+                    return BlockFace.EAST;
+                case 0x5:
+                    return BlockFace.WEST;
+                default:
+                    return BlockFace.SELF;
             }
     }
 
     public static Block getLeftBlock(Block sign) {
+
         return sign.getRelative(getLeft(sign));
     }
 
     /**
-     * @param sign
-     *            treated as sign post if it is such, or else assumed to be a
-     *            wall sign (i.e., if you ask about a stone block, it's
-     *            considered a wall sign).
+     * @param sign treated as sign post if it is such, or else assumed to be a
+     *             wall sign (i.e., if you ask about a stone block, it's
+     *             considered a wall sign).
+     *
      * @return the cardinal or ordinal direction to a player's right they face
      *         the sign to read it; if the sign is oriented in a further
      *         direction, the result is rounded to the nearest ordinal
      *         direction.
      */
     public static BlockFace getLeft(Block sign) {
+
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
-            case 0x0:
-                return BlockFace.NORTH;
-            case 0x1:case 0x2:case 0x3:
-                return BlockFace.NORTH_EAST;
-            case 0x4:
-                return BlockFace.EAST;
-            case 0x5:case 0x6:case 0x7:
-                return BlockFace.SOUTH_EAST;
-            case 0x8:
-                return BlockFace.SOUTH;
-            case 0x9:case 0xA:case 0xB:
-                return BlockFace.SOUTH_WEST;
-            case 0xC:
-                return BlockFace.WEST;
-            case 0xD:case 0xE:case 0xF:
-                return BlockFace.NORTH_WEST;
-            default:
-                return BlockFace.SELF;
+                case 0x0:
+                    return BlockFace.NORTH;
+                case 0x1:
+                case 0x2:
+                case 0x3:
+                    return BlockFace.NORTH_EAST;
+                case 0x4:
+                    return BlockFace.EAST;
+                case 0x5:
+                case 0x6:
+                case 0x7:
+                    return BlockFace.SOUTH_EAST;
+                case 0x8:
+                    return BlockFace.SOUTH;
+                case 0x9:
+                case 0xA:
+                case 0xB:
+                    return BlockFace.SOUTH_WEST;
+                case 0xC:
+                    return BlockFace.WEST;
+                case 0xD:
+                case 0xE:
+                case 0xF:
+                    return BlockFace.NORTH_WEST;
+                default:
+                    return BlockFace.SELF;
             }
         else
             switch (sign.getData()) {
-            case 0x2:
-                return BlockFace.SOUTH;
-            case 0x3:
-                return BlockFace.NORTH;
-            case 0x4:
-                return BlockFace.WEST;
-            case 0x5:
-                return BlockFace.EAST;
-            default:
-                return BlockFace.SELF;
+                case 0x2:
+                    return BlockFace.SOUTH;
+                case 0x3:
+                    return BlockFace.NORTH;
+                case 0x4:
+                    return BlockFace.WEST;
+                case 0x5:
+                    return BlockFace.EAST;
+                default:
+                    return BlockFace.SELF;
             }
     }
 
     public static Block getRightBlock(Block sign) {
+
         return sign.getRelative(getRight(sign));
     }
 
     /**
-     * @param sign
-     *            treated as sign post if it is such, or else assumed to be a
-     *            wall sign (i.e., if you ask about a stone block, it's
-     *            considered a wall sign).
+     * @param sign treated as sign post if it is such, or else assumed to be a
+     *             wall sign (i.e., if you ask about a stone block, it's
+     *             considered a wall sign).
+     *
      * @return true if the sign is oriented along a cardinal direction (or if
      *         it's a wall sign, since those are always oriented along cardinal
      *         directions); false otherwise.
      */
     public static boolean isCardinal(Block sign) {
+
         if (sign.getType() == Material.SIGN_POST)
             switch (sign.getData()) {
-            case 0x0:case 0x4:case 0x8:case 0xC:
-                return true;
-            default:
-                return false;
+                case 0x0:
+                case 0x4:
+                case 0x8:
+                case 0xC:
+                    return true;
+                default:
+                    return false;
             }
         else
             return true;
@@ -322,45 +367,56 @@ public class SignUtil {
 
     /**
      * @param face Start from direction
+     *
      * @return clockwise direction
      */
-    public static BlockFace getClockWise(BlockFace face)
-    {
-        switch (face)
-        {
-        case NORTH: return BlockFace.EAST;
-        case EAST: return BlockFace.SOUTH;
-        case SOUTH: return BlockFace.WEST;
-        case WEST: return BlockFace.NORTH;
+    public static BlockFace getClockWise(BlockFace face) {
 
-        default: return BlockFace.SELF;
+        switch (face) {
+            case NORTH:
+                return BlockFace.EAST;
+            case EAST:
+                return BlockFace.SOUTH;
+            case SOUTH:
+                return BlockFace.WEST;
+            case WEST:
+                return BlockFace.NORTH;
+
+            default:
+                return BlockFace.SELF;
         }
     }
 
     /**
      * @param face Start from direction
+     *
      * @return clockwise direction
      */
-    public static BlockFace getCounterClockWise(BlockFace face)
-    {
-        switch (face)
-        {
-        case NORTH: return BlockFace.WEST;
-        case EAST: return BlockFace.NORTH;
-        case SOUTH: return BlockFace.EAST;
-        case WEST: return BlockFace.SOUTH;
+    public static BlockFace getCounterClockWise(BlockFace face) {
 
-        default: return BlockFace.SELF;
+        switch (face) {
+            case NORTH:
+                return BlockFace.WEST;
+            case EAST:
+                return BlockFace.NORTH;
+            case SOUTH:
+                return BlockFace.EAST;
+            case WEST:
+                return BlockFace.SOUTH;
+
+            default:
+                return BlockFace.SELF;
         }
     }
 
     /**
-     * @param sign to change
-     * @param line to change
-     * @param content to change line to
+     * @param Sign    to change
+     * @param Line    to change
+     * @param Content to change line to
      */
     public void setLine(Sign sign, int line, String content) {
-        sign.setLine(line,content);
+
+        sign.setLine(line, content);
         sign.update();
     }
 }

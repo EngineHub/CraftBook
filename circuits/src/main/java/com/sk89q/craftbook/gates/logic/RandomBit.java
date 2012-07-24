@@ -18,48 +18,54 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import java.util.Random;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
+import java.util.Random;
 
 public class RandomBit extends AbstractIC {
-    
-    protected Random random = new Random();
+
+    protected final Random random = new Random();
 
     public RandomBit(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Random Bit";
     }
 
     @Override
     public String getSignTitle() {
+
         return "RANDOM BIT";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
-        	int k = chip.getOutputCount();
-            for (int i = 0; i < k; i++)
-                chip.setOutput(i, random.nextBoolean());
+            for (short i = 0; i < chip.getOutputCount(); i++) chip.setOutput(i, random.nextBoolean());
         }
     }
 
     public static class Factory extends AbstractICFactory {
+
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new RandomBit(getServer(), sign);
         }
     }

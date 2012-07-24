@@ -18,34 +18,34 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class MultipleSetBlock extends AbstractIC {
 
     public MultipleSetBlock(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Multiple SetBlock";
     }
 
     @Override
     public String getSignTitle() {
+
         return "MULTI-SET BLOCK";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         String line3 = getSign().getLine(2).toUpperCase();
         String line4 = getSign().getLine(3);
 
@@ -61,9 +61,9 @@ public class MultipleSetBlock extends AbstractIC {
         int z = body.getZ();
 
         String[] coords;
-        coords = line3.replaceAll("\\+","").split(":");
-        
-        if ( coords.length != 4 )
+        coords = line3.replaceAll("\\+", "").split(":");
+
+        if (coords.length != 4)
             return;
 
         int block = -1;
@@ -81,10 +81,10 @@ public class MultipleSetBlock extends AbstractIC {
             block = 0;
         }
 
-        if ( dim.length == 3 ) {
-            for( int lx = 0; lx < (Integer.parseInt(dim[0])); lx++ ) {
-                for( int ly = 0; ly < (Integer.parseInt(dim[1])); ly++ ) {
-                    for( int lz = 0; lz < (Integer.parseInt(dim[2])); lz++ ) {
+        if (dim.length == 3) {
+            for (int lx = 0; lx < (Integer.parseInt(dim[0])); lx++) {
+                for (int ly = 0; ly < (Integer.parseInt(dim[1])); ly++) {
+                    for (int lz = 0; lz < (Integer.parseInt(dim[2])); lz++) {
                         body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeId(block);
                     }
                 }
@@ -98,11 +98,13 @@ public class MultipleSetBlock extends AbstractIC {
             RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new MultipleSetBlock(getServer(), sign);
         }
     }

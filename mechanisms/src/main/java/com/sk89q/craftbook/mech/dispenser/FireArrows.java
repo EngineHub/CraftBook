@@ -9,22 +9,23 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 /**
- * 
  * @author Me4502
- *
  */
 public class FireArrows extends Recipe {
 
     public FireArrows(int[] recipe) {
+
         super(recipe);
     }
 
     public FireArrows() {
-        super(new int[]{0, 385, 0, 385, 262, 385, 0, 385, 0});
+
+        super(new int[] {0, 385, 0, 385, 262, 385, 0, 385, 0});
     }
 
     @Override
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+
         MaterialData d = dis.getBlock().getState().getData();
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) d;
         BlockFace face = disp.getFacing();

@@ -21,15 +21,16 @@ package com.sk89q.craftbook.ic;
 /**
  * Represents a self-triggered IC. Self-triggered ICs can think on their own
  * through use of an external clock signal.
- * 
+ *
  * @author sk89q
  */
 public interface SelfTriggeredIC extends PersistentIC {
+
     /**
      * Method is called when the IC "thinks" (as triggered by an external
      * clock signal). The given state allows for accessing the data available
      * on the pins.
-     * 
+     *
      * @param state
      */
     public void think(ChipState state);

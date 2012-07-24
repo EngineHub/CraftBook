@@ -18,43 +18,45 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class ServerTimeModulus extends AbstractIC {
 
     public ServerTimeModulus(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Server Time Modulus";
     }
 
     @Override
     public String getSignTitle() {
+
         return "SERVER TIME MOD";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-            chip.setOutput(0, isServerTimeOdd());
-        }
+
+        if (chip.getInput(0)) chip.setOutput(0, isServerTimeOdd());
     }
 
     /**
      * Returns true if the relative time is odd.
-     * 
+     *
      * @return
      */
     private boolean isServerTimeOdd() {
+
         long time = getSign().getBlock().getWorld().getTime() % 2;
         if (time < 0) time += 2;
         return (time == 1);
@@ -63,11 +65,13 @@ public class ServerTimeModulus extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new ServerTimeModulus(getServer(), sign);
         }
     }
