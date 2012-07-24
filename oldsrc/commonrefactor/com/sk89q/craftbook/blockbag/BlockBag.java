@@ -22,8 +22,8 @@ import com.sk89q.craftbook.BlockType;
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.Vector;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a source to get blocks from and store removed ones.
@@ -31,11 +31,12 @@ import java.util.HashMap;
  * @author sk89q
  */
 public abstract class BlockBag {
+
     /**
      * Stores a record of missing blocks.
      */
-    private Map<Integer,Integer> missing = new HashMap<Integer,Integer>();
-    
+    private Map<Integer, Integer> missing = new HashMap<Integer, Integer>();
+
     /**
      * Sets a block.
      *
@@ -43,10 +44,13 @@ public abstract class BlockBag {
      * @param y
      * @param z
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     public boolean setBlockID(WorldInterface w, int x, int y, int z, int id) throws BlockBagException {
+
         if (id == 0) { // Clearing
             int existingID = w.getId(x, y, z);
 
@@ -113,19 +117,19 @@ public abstract class BlockBag {
                     // Look for cobblestone
                     if (id == BlockType.STONE) {
                         fetchBlock(BlockType.COBBLESTONE);
-                    // Look for dirt
+                        // Look for dirt
                     } else if (id == BlockType.GRASS) {
                         fetchBlock(BlockType.DIRT);
-                    // Look for redstone dust
+                        // Look for redstone dust
                     } else if (id == BlockType.REDSTONE_WIRE) {
                         fetchBlock(331);
-                    // Look for furnace
+                        // Look for furnace
                     } else if (id == BlockType.BURNING_FURNACE) {
                         fetchBlock(BlockType.FURNACE);
-                    // Look for lit redstone torch
+                        // Look for lit redstone torch
                     } else if (id == BlockType.REDSTONE_TORCH_OFF) {
                         fetchBlock(BlockType.REDSTONE_TORCH_ON);
-                    // Look for signs
+                        // Look for signs
                     } else if (id == BlockType.WALL_SIGN || id == BlockType.SIGN_POST) {
                         fetchBlock(323);
                     } else {
@@ -136,7 +140,7 @@ public abstract class BlockBag {
                 }
             } catch (OutOfBlocksException e) {
                 int missingID = e.getID();
-                
+
                 if (missing.containsKey(missingID)) {
                     missing.put(missingID, missing.get(missingID) + 1);
                 } else {
@@ -155,11 +159,14 @@ public abstract class BlockBag {
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     public boolean setBlockID(WorldInterface w, Vector pos, int id) throws BlockBagException {
-        return setBlockID(w,pos.getBlockX(),pos.getBlockY(),pos.getBlockZ(),id);
+
+        return setBlockID(w, pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), id);
     }
 
     /**
@@ -168,21 +175,23 @@ public abstract class BlockBag {
      * @param id
      */
     public abstract void fetchBlock(int id) throws BlockBagException;
-    
+
     /**
      * Store a block.
-     * 
+     *
      * @param id
      */
     public abstract void storeBlock(int id) throws BlockBagException;
-    
+
     /**
      * Checks to see if a block exists without removing it.
-     * 
+     *
      * @param id
+     *
      * @return whether the block exists
      */
     public boolean peekBlock(int id) {
+
         try {
             fetchBlock(id);
             storeBlock(id);
@@ -191,7 +200,7 @@ public abstract class BlockBag {
             return false;
         }
     }
-    
+
     /**
      * Flush any changes. This is called at the end.
      */
@@ -201,23 +210,27 @@ public abstract class BlockBag {
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public abstract void addSourcePosition(WorldInterface w, Vector pos);
+
     /**
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public abstract void addSingleSourcePosition(WorldInterface w, Vector pos);
 
     /**
      * Return the list of missing blocks.
-     * 
+     *
      * @return
      */
-    public Map<Integer,Integer> getMissing() {
+    public Map<Integer, Integer> getMissing() {
+
         return missing;
     }
 }

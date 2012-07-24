@@ -18,37 +18,36 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.worldedit.blocks.BlockType;
 
 public class EntitySpawner extends AbstractIC {
 
     public EntitySpawner(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Creature Spawner";
     }
 
     @Override
     public String getSignTitle() {
+
         return "CREATURE SPAWNER";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             String type = getSign().getLine(2).trim();
             String rider = getSign().getLine(3).trim();
@@ -61,11 +60,14 @@ public class EntitySpawner extends AbstractIC {
                 for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
                     if (BlockType.canPassThrough(getSign().getWorld().getBlockTypeIdAt(x, y, z))) {
                         if (rider.length() != 0 && EntityType.fromName(rider) != null) {
-                            LivingEntity ent = getSign().getWorld().spawnCreature(new Location(getSign().getWorld(),x, y, z),EntityType.fromName(type));
-                            LivingEntity ent2 = getSign().getWorld().spawnCreature(new Location(getSign().getWorld(),x, y, z),EntityType.fromName(rider));
+                            Entity ent = getSign().getWorld().spawnEntity(new Location(getSign().getWorld(),
+                                    x, y, z), EntityType.fromName(type));
+                            Entity ent2 = getSign().getWorld().spawnEntity(new Location(getSign().getWorld(),
+                                    x, y, z), EntityType.fromName(rider));
                             ent.setPassenger(ent2);
                         } else {
-                            getSign().getWorld().spawnCreature(new Location(getSign().getWorld(),x, y, z),EntityType.fromName(type));
+                            getSign().getWorld().spawnEntity(new Location(getSign().getWorld(), x, y, z),
+                                    EntityType.fromName(type));
                         }
                         return;
                     }
@@ -77,11 +79,13 @@ public class EntitySpawner extends AbstractIC {
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new EntitySpawner(getServer(), sign);
         }
     }

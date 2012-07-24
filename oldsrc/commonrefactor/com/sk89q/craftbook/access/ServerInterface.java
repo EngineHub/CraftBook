@@ -18,36 +18,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sk89q.craftbook.access;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.sk89q.craftbook.CraftBookDelegateListener;
 import com.sk89q.craftbook.state.StateManager;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 public interface ServerInterface {
+
     boolean isCraftBookLoaded();
+
     boolean isCraftBookEnabled();
-    
+
     boolean isPlayerOnline(String player);
+
     PlayerInterface getPlayer(String player);
+
     PlayerInterface matchPlayer(String player);
+
     List<PlayerInterface> getPlayerList();
-    
+
     void registerListener(Event e, CraftBookDelegateListener l);
-    
+
     WorldInterface matchWorldName(String world);
+
     WorldInterface getWorld(String world);
+
     List<WorldInterface> getWorlds();
-    
+
     Configuration getConfiguration();
-    
+
     void sendMessage(String message);
-    
+
     String getCraftBookVersion();
-    
+
     StateManager getStateManager();
-    
+
     WorldEditInterface getWorldEditBridge();
-    
+
     Logger getLogger();
 }

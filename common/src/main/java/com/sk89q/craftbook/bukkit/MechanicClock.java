@@ -21,15 +21,17 @@ package com.sk89q.craftbook.bukkit;
 import com.sk89q.craftbook.MechanicManager;
 
 public class MechanicClock implements Runnable {
-    
-    private MechanicManager manager;
-    
+
+    private final MechanicManager manager;
+
     public MechanicClock(MechanicManager manager) {
+
         this.manager = manager;
     }
 
     @Override
     public void run() {
+
         manager.think();
     }
 }

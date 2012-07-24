@@ -21,42 +21,39 @@ package com.sk89q.craftbook.mech.ic.logic;
 
 import com.sk89q.craftbook.access.ServerInterface;
 import com.sk89q.craftbook.access.WorldInterface;
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 /**
  * Counter IC
- *
  * 3ISO family chip
- *
- * Counter counts down each time clock input toggles from low to high, it starts 
- * from a predefined value to 0. Output is high when counter reaches 0. If in 
- * 'infinite' mode, it will automatically reset the next time clock is toggled. 
+ * Counter counts down each time clock input toggles from low to high, it starts
+ * from a predefined value to 0. Output is high when counter reaches 0. If in
+ * 'infinite' mode, it will automatically reset the next time clock is toggled.
  * Otherwise, it only resets when the 'reset' input toggles from low to high.
- *
  * Configuration:
  * Line 3: ##:ONCE or ##:INF -- where ## is the counter reset value, and ONCE or INF
- *         specifies if the counter should repeat or not.
+ * specifies if the counter should repeat or not.
  * Line 4: 0 -- must be set to 0 (TODO: Make it auto set the counter to 0 on creation)
- *
  * Inputs:
- *  1 - Clock
- *  2 - Reset
- *  3 - (unused)
- *
+ * 1 - Clock
+ * 2 - Reset
+ * 3 - (unused)
  * Output: HIGH when counter reaches 0, LOW otherwise
  *
  * @author davr
  */
 public class MC3101 extends LogicIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "DOWN COUNTER";
     }
 
@@ -66,9 +63,11 @@ public class MC3101 extends LogicIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface i, WorldInterface world, Vector pos, SignText sign) {
+
         String id = sign.getLine3();
 
         if (id.length() == 0 || !id.matches("^[0-9]+:(INF|ONCE)$")) {
@@ -78,7 +77,7 @@ public class MC3101 extends LogicIC {
         if (!sign.getLine4().equals("")) {
             return "Line 4 must be blank";
         }
-        
+
         sign.setLine4("0");
 
         return null;
@@ -90,19 +89,20 @@ public class MC3101 extends LogicIC {
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         try {
             // Get IC configuration data from line 3 of sign
             String line3 = chip.getText().getLine3();
             String[] config = line3.split(":");
-            
+
             int resetVal = Integer.parseInt(config[0]);
             boolean inf = config[1].equals("INF");
-    
+
             // Get current counter value from line 4 of sign
             String line4 = chip.getText().getLine4();
             int curVal = Integer.parseInt(line4);
             int oldVal = curVal;
-    
+
             // If clock input triggered
             if (chip.getIn(1).isTriggered() && chip.getIn(1).is()) {
                 if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
@@ -112,23 +112,23 @@ public class MC3101 extends LogicIC {
                 } else { // Decrement counter
                     curVal--;
                 }
-    
+
                 // Set output to high if we're at 0, otherwise low
                 if (curVal == 0) {
                     chip.getOut(1).set(true);
                 } else {
                     chip.getOut(1).set(false);
                 }
-            // If reset input triggered, reset counter value
+                // If reset input triggered, reset counter value
             } else if (chip.getIn(2).isTriggered() && chip.getIn(2).is()) {
                 curVal = resetVal;
             }
-    
+
             // Update counter value stored on sign if it's changed
             if (curVal != oldVal) {
                 chip.getText().setLine4(Integer.toString(curVal));
             }
-            
+
             chip.getText().supressUpdate();
         } catch (Exception e) {
             chip.triggerError();

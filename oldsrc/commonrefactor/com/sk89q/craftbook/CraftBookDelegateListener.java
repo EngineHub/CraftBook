@@ -19,92 +19,133 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.access.BaseEntityInterface;
-import com.sk89q.craftbook.access.MinecartInterface;
-import com.sk89q.craftbook.access.PlayerInterface;
-import com.sk89q.craftbook.access.ServerInterface;
-import com.sk89q.craftbook.access.SignInterface;
-import com.sk89q.craftbook.access.WorldInterface;
+import com.sk89q.craftbook.access.*;
 import com.sk89q.craftbook.util.Vector;
 
 /**
  * Proxy plugin listener called by CraftBook. It has additional hooks
  * that are called by the main CraftBook listener, namely the Redstone
  * input hook.
- * 
+ *
  * @author sk89q
  */
 public abstract class CraftBookDelegateListener {
+
     /**
      * CraftBook.
      */
     protected CraftBookCore craftBook;
-    
+
     /**
      * Server interface
      */
     protected ServerInterface server;
-    
-    public CraftBookDelegateListener(){}
-    
+
+    public CraftBookDelegateListener() {
+
+    }
+
     /**
      * Construct the object.
-     * 
+     *
      * @param craftBook
      * @param listener
      */
     public CraftBookDelegateListener(
             CraftBookCore craftBook,
             ServerInterface server) {
+
         this.craftBook = craftBook;
         this.server = server;
     }
-    
+
     /**
      * Reads the configuration from the properties file.
      */
     public abstract void loadConfiguration();
-    
+
     /**
      * Called on plugin unload.
      */
     public void disable() {
-        
+
     }
-    
-    public void onTick(WorldInterface world) {}
-    public void onSignCreate(WorldInterface world, int x, int y, int z) {}
+
+    public void onTick(WorldInterface world) {
+
+    }
+
+    public void onSignCreate(WorldInterface world, int x, int y, int z) {
+
+    }
+
     public boolean onSignChange(PlayerInterface i, WorldInterface world, Vector v, SignInterface s) {
+
         return false;
     }
+
     public boolean onCommand(PlayerInterface player, String[] split) {
+
         return false;
     }
+
     public boolean onConsoleCommand(String[] split) {
+
         return false;
     }
-    public void onWireInput(WorldInterface world, Vector pt, boolean isOn, Vector changed) {}
-    public void onDisconnect(PlayerInterface player) {}
+
+    public void onWireInput(WorldInterface world, Vector pt, boolean isOn, Vector changed) {
+
+    }
+
+    public void onDisconnect(PlayerInterface player) {
+
+    }
+
     public boolean onBlockPlace(WorldInterface world, PlayerInterface p, Vector blockPlaced,
-            Vector blockClicked, int itemInHand) {
+                                Vector blockClicked, int itemInHand) {
+
         return false;
     }
+
     public void onBlockRightClicked(WorldInterface world, PlayerInterface p, Vector block,
-            int itemInHand) {}
+                                    int itemInHand) {
+
+    }
+
     public boolean onBlockDestroy(WorldInterface world, PlayerInterface p, Vector block, int status) {
+
         return false;
     }
-    
-    public void onMinecartPositionChange(WorldInterface world, MinecartInterface cart, int x, int y, int z) {}
-    public void onMinecartVelocityChange(WorldInterface world, MinecartInterface cart) {}
+
+    public void onMinecartPositionChange(WorldInterface world, MinecartInterface cart, int x, int y, int z) {
+
+    }
+
+    public void onMinecartVelocityChange(WorldInterface world, MinecartInterface cart) {
+
+    }
+
     public boolean onMinecartDamage(WorldInterface world, MinecartInterface cart,
                                     BaseEntityInterface attacker, int damage) {
+
         return false;
     }
+
     public void onMinecartEnter(WorldInterface world, MinecartInterface cart,
-                                BaseEntityInterface entity, boolean entering) {}
-    public void onMinecartDestroyed(WorldInterface world, MinecartInterface cart) {}
-    
-    public void onWorldLoad(WorldInterface world) {}
-    public void onWorldUnload(WorldInterface world) {}
+                                BaseEntityInterface entity, boolean entering) {
+
+    }
+
+    public void onMinecartDestroyed(WorldInterface world, MinecartInterface cart) {
+
+    }
+
+    public void onWorldLoad(WorldInterface world) {
+
+    }
+
+    public void onWorldUnload(WorldInterface world) {
+
+    }
 }

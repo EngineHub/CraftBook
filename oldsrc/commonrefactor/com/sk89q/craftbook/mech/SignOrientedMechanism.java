@@ -27,10 +27,11 @@ import com.sk89q.craftbook.util.Vector;
 
 /**
  * A sign oriented mechanism.
- * 
+ *
  * @author sk89q
  */
 public abstract class SignOrientedMechanism {
+
     /**
      * Sign position.
      */
@@ -39,61 +40,65 @@ public abstract class SignOrientedMechanism {
      * Sign text.
      */
     protected SignInterface signText;
-    
+
     protected ServerInterface server;
     protected WorldInterface world;
-    
-    protected int x,y,z;
-    
+
+    protected int x, y, z;
+
     /**
      * Construct the object.
-     * 
+     *
      * @param pt
      */
     public SignOrientedMechanism(ServerInterface s, WorldInterface w, Vector pt) {
+
         x = pt.getBlockX();
         y = pt.getBlockY();
         z = pt.getBlockZ();
-        
-        BlockEntity blockEntity = 
-            w.getBlockEntity(x,y,z);
-        if(blockEntity instanceof SignInterface) 
+
+        BlockEntity blockEntity =
+                w.getBlockEntity(x, y, z);
+        if (blockEntity instanceof SignInterface)
             signText = (SignInterface) blockEntity;
         else throw new IllegalArgumentException("block not sign");
         this.pt = pt;
-        
+
         server = s;
         world = w;
     }
-    
+
     /**
      * Construct the object.
-     * 
+     *
      * @param pt
      */
     public SignOrientedMechanism(ServerInterface s, WorldInterface w, Vector pt, SignInterface signText) {
+
         this.signText = signText;
-        
+
         server = s;
         world = w;
     }
-    
+
     /**
      * Get sign text.
-     * 
+     *
      * @return
      */
     public SignText getSignText() {
+
         return signText;
     }
-    
+
     /**
      * Get the mechanism identifier. This is the second line of the sign
      * (i.e. [Bridge]) and this will return the square brackets as well.
-     * 
+     *
      * @return
      */
     public String getSignIdentifier() {
+
         return signText.getLine2();
     }
 }

@@ -18,34 +18,37 @@ package com.sk89q.craftbook.blockbag;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.List;
-
 import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.Vector;
 
+import java.util.List;
+
 /**
  * A collection of block bags.
- * 
+ *
  * @author Lymia
  */
 public class CompoundBlockBag extends BlockBag {
+
     private List<BlockBag> sources;
 
     /**
      * Construct the instance.
-     * 
+     *
      * @param bags
      */
     public CompoundBlockBag(List<BlockBag> bags) {
+
         this.sources = bags;
     }
 
     /**
      * Store a block.
-     * 
+     *
      * @param id
      */
     public void storeBlock(int id) throws BlockBagException {
+
         for (BlockBag b : sources)
             try {
                 b.storeBlock(id);
@@ -57,10 +60,11 @@ public class CompoundBlockBag extends BlockBag {
 
     /**
      * Get a block.
-     * 
+     *
      * @param id
      */
     public void fetchBlock(int id) throws BlockBagException {
+
         for (BlockBag b : sources)
             try {
                 b.fetchBlock(id);
@@ -74,9 +78,11 @@ public class CompoundBlockBag extends BlockBag {
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSingleSourcePosition(WorldInterface w, Vector pos) {
+
         for (BlockBag b : sources)
             b.addSingleSourcePosition(w, pos);
     }
@@ -85,19 +91,22 @@ public class CompoundBlockBag extends BlockBag {
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSourcePosition(WorldInterface w, Vector pos) {
+
         for (BlockBag b : sources)
             b.addSourcePosition(w, pos);
     }
 
     /**
      * Return the list of missing blocks.
-     * 
+     *
      * @return
      */
     public void flushChanges() {
+
         for (BlockBag b : sources)
             b.flushChanges();
     }

@@ -18,45 +18,43 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-
 public class MessageSender extends AbstractIC {
 
     public MessageSender(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Message Sender";
     }
 
     @Override
     public String getSignTitle() {
+
         return "MESSAGE SENDER";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-            chip.setOutput(0, sendMessage());
-        }
+
+        if (chip.getInput(0)) chip.setOutput(0, sendMessage());
     }
 
     /**
      * Returns true if a message was sent.
-     * 
+     *
      * @return
      */
     private boolean sendMessage() {
+
         boolean sent = false;
         String name = getSign().getLine(2);
         String message = getSign().getLine(3);
@@ -68,8 +66,7 @@ public class MessageSender extends AbstractIC {
         if (player != null) {
             player.sendMessage(message.replace("&", "\u00A7"));
             sent = true;
-        }
-        else if(name.equalsIgnoreCase("BROADCAST"))
+        } else if (name.equalsIgnoreCase("BROADCAST"))
             getServer().broadcastMessage(message);
         return sent;
     }
@@ -77,11 +74,13 @@ public class MessageSender extends AbstractIC {
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new MessageSender(getServer(), sign);
         }
     }

@@ -19,46 +19,49 @@
 package com.sk89q.craftbook.gates.world;
 
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class ArrowBarrage extends ArrowShooter {
 
     public ArrowBarrage(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Arrow Barrage";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ARROW BARRAGE";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-        	shootArrows(5);
-        }
+
+        if (chip.getInput(0)) shootArrows(5);
     }
 
     public static class Factory extends AbstractICFactory implements
             RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new ArrowBarrage(getServer(), sign);
         }
     }

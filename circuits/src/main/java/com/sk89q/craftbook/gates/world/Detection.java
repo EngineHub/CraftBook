@@ -1,28 +1,16 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.*;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -31,38 +19,39 @@ public class Detection extends AbstractIC {
 
     private enum Type {
         PLAYER,
-        MOBHOSTILE,
-        MOBPEACEFUL,
-        ANYMOB,
+        MOB_HOSTILE,
+        MOB_PEACEFUL,
+        MOB_ANY,
         ANY,
         CART,
-        STORAGECART,
-        POWEREDCART;
+        CART_STORAGE,
+        CART_POWERED;
 
         public boolean is(Entity entity) {
 
             switch (this) {
-            case PLAYER:
-                return entity instanceof Player;
-            case MOBHOSTILE:
-                return entity instanceof Monster;
-            case MOBPEACEFUL:
-                return entity instanceof Animals;
-            case ANYMOB:
-                return entity instanceof Creature;
-            case CART:
-                return entity instanceof Minecart;
-            case STORAGECART:
-                return entity instanceof StorageMinecart;
-            case POWEREDCART:
-                return entity instanceof PoweredMinecart;
-            case ANY:
-                return true;
+                case PLAYER:
+                    return entity instanceof Player;
+                case MOB_HOSTILE:
+                    return entity instanceof Monster;
+                case MOB_PEACEFUL:
+                    return entity instanceof Animals;
+                case MOB_ANY:
+                    return entity instanceof Creature;
+                case CART:
+                    return entity instanceof Minecart;
+                case CART_STORAGE:
+                    return entity instanceof StorageMinecart;
+                case CART_POWERED:
+                    return entity instanceof PoweredMinecart;
+                case ANY:
+                    return true;
             }
             return false;
         }
 
         public static Type fromString(String name) {
+
             return EnumUtil.getEnumFromString(Detection.Type.class, name);
         }
     }
@@ -75,6 +64,7 @@ public class Detection extends AbstractIC {
     private int radius;
 
     public Detection(Server server, Sign block) {
+
         super(server, block);
         // lets set some defaults
         offsetX = 0;
@@ -85,11 +75,12 @@ public class Detection extends AbstractIC {
     }
 
     private void load() {
+
         Sign sign = getSign();
         // lets get the type to detect first
-        this.type = Type.fromString(sign.getLine(3).trim());
+        type = Type.fromString(sign.getLine(3).trim());
         // set the type to any if wrong format
-        if (type == null) this.type = Type.ANY;
+        if (type == null) type = Type.ANY;
         // update the sign with correct upper case name
         sign.setLine(3, type.name());
         sign.update();
@@ -101,7 +92,7 @@ public class Detection extends AbstractIC {
         if (line.contains("=")) {
             try {
                 String[] split = line.split("=");
-                this.radius = Integer.parseInt(split[0]);
+                radius = Integer.parseInt(split[0]);
                 // parse the offset
                 String[] offsetSplit = split[1].split(":");
                 offsetX = Integer.parseInt(offsetSplit[0]);
@@ -119,22 +110,26 @@ public class Detection extends AbstractIC {
 
     @Override
     public String getTitle() {
+
         return "Detection";
     }
 
     @Override
     public String getSignTitle() {
+
         return "DETECTION";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
     }
 
     protected boolean isDetected() {
+
         Location location = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
         // add the offset to the location of the block connected to the sign
         // location.add(offsetX, offsetY, offsetZ);
@@ -157,6 +152,7 @@ public class Detection extends AbstractIC {
     }
 
     private Set<Chunk> getSurroundingChunks(Location loc, int radius) {
+
         Set<Chunk> chunks = new LinkedHashSet<Chunk>();
         Chunk chunk = loc.getChunk();
         chunks.add(chunk);
@@ -179,6 +175,7 @@ public class Detection extends AbstractIC {
     }
 
     public static int getGreatestDistance(Location l1, Location l2) {
+
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
         int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
@@ -196,11 +193,13 @@ public class Detection extends AbstractIC {
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Detection(getServer(), sign);
         }
     }

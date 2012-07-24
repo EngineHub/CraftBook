@@ -18,42 +18,48 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class Inverter extends AbstractIC {
 
     public Inverter(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Inverter";
     }
 
     @Override
     public String getSignTitle() {
+
         return "INVERTER";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         chip.setOutput(0, !chip.getInput(0));
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Inverter(getServer(), sign);
         }
     }

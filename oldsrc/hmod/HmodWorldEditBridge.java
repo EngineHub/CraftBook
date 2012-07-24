@@ -30,14 +30,17 @@ import com.sk89q.worldedit.WorldEditNotInstalled;
  * @author sk89q
  */
 public class HmodWorldEditBridge implements WorldEditInterface {
+
     /**
      * Get the minimum point.
      *
      * @param player
+     *
      * @return
      */
     public Vector getRegionMinimumPoint(PlayerInterface player)
             throws LocalWorldEditBridgeException {
+
         try {
             return fromWE(WorldEditBridge.getRegionMinimumPoint(toHmodPlayer(player)));
         } catch (IncompleteRegionException e) {
@@ -51,10 +54,12 @@ public class HmodWorldEditBridge implements WorldEditInterface {
      * Get the maximum point.
      *
      * @param player
+     *
      * @return
      */
     public Vector getRegionMaximumPoint(PlayerInterface player)
             throws LocalWorldEditBridgeException {
+
         try {
             return fromWE(WorldEditBridge.getRegionMaximumPoint(toHmodPlayer(player)));
         } catch (IncompleteRegionException e) {
@@ -68,14 +73,17 @@ public class HmodWorldEditBridge implements WorldEditInterface {
      * Convert a WorldEdit vector to a CraftBook vector.
      *
      * @param vec
+     *
      * @return
      */
     private static Vector fromWE(com.sk89q.worldedit.Vector vec) {
+
         return new Vector(vec.getX(), vec.getY(), vec.getZ());
     }
-    
+
     //Ugllyyyy~
     public static Player toHmodPlayer(PlayerInterface p) {
-        return ((HmodPlayerImpl)p).player;
+
+        return ((HmodPlayerImpl) p).player;
     }
 }

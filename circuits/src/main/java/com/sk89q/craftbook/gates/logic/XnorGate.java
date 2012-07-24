@@ -28,57 +28,55 @@ import org.bukkit.block.Sign;
 public class XnorGate extends AbstractIC {
 
     public XnorGate(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "XNOR Gate";
     }
 
     @Override
     public String getSignTitle() {
+
         return "XNOR";
     }
 
     @Override
-    public void trigger(ChipState chip)
-    {
+    public void trigger(ChipState chip) {
 
-    	Boolean a = null;
-    	Boolean b = null;
-    	
-    	//New input handling: any/first two valid inputs discovered. Moar flexibility!
-    	for (int i = 0; i < chip.getInputCount(); i++)
-    	{
-    		if (chip.isValid(i))
-    		{
-    			boolean pinval = chip.getInput(i);
-    			//Got pin value, assign to first free variable, break if got both.
-    			if (a == null) a = pinval;
-    			else if (b == null) b = pinval;
-    			else break;
-    		}
-    	}
-    	
-    	if (a == null || b == null)
-    		return;
-    	
-    
-    	
-    	boolean result = (a && b) || (!a && !b);
-    	chip.setOutput(0, result);
-        
+        Boolean a = null;
+        Boolean b = null;
+
+        //New input handling: any/first two valid inputs discovered. Moar flexibility!
+        for (short i = 0; i < chip.getInputCount(); i++) {
+            if (chip.isValid(i)) {
+                boolean pinval = chip.getInput(i);
+                //Got pin value, assign to first free variable, break if got both.
+                if (a == null) a = pinval;
+                else if (b == null) b = pinval;
+                else break;
+            }
+        }
+
+        if (a == null || b == null) return;
+
+        chip.setOutput(0, (a && b) || (!a && !b));
+
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new XnorGate(getServer(), sign);
         }
     }

@@ -20,13 +20,18 @@ package com.sk89q.craftbook;
 
 /**
  * Holds an abstraction for players.
- * 
+ *
  * @author sk89q
  */
 public interface LocalPlayer {
+
     public void print(String message);
+
     public void printError(String message);
+
     public void printRaw(String message);
+
     public boolean hasPermission(String perm);
+
     public String getName();
 }

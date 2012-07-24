@@ -20,20 +20,23 @@ import com.sk89q.craftbook.access.MobInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 
 public class HmodMobImpl extends HmodLivingEntityImpl
-                         implements MobInterface {
+        implements MobInterface {
+
     private Mob mob;
 
     /**
      * Construct the object.
-     * 
+     *
      * @param player
      */
     public HmodMobImpl(Mob mob, WorldInterface w) {
-        super(mob,w);
+
+        super(mob, w);
         this.mob = mob;
     }
 
     public String getMobType() {
+
         return mob.getName();
     }
 }

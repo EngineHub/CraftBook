@@ -12,39 +12,46 @@ import org.bukkit.block.Sign;
  */
 public class LowNotPulser extends NotPulser {
 
-	public LowNotPulser(Server server, Sign block) {
-		super(server, block);
-	}
+    public LowNotPulser(Server server, Sign block) {
 
-	@Override
-	public String getTitle() {
-		return "Low Not Pulser";
-	}
+        super(server, block);
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "LOW NOT PULSER";
-	}
+    @Override
+    public String getTitle() {
 
-	@Override
-	protected boolean getInput(ChipState chip) {
-		return !chip.getInput(0);
-	}
+        return "Low Not Pulser";
+    }
 
-	@Override
-	protected void setOutput(ChipState chip, boolean on) {
-		chip.setOutput(0, !on);
-	}
+    @Override
+    public String getSignTitle() {
 
-	public static class Factory extends AbstractICFactory implements RestrictedIC {
+        return "LOW NOT PULSER";
+    }
 
-		public Factory(Server server) {
-			super(server);
-		}
+    @Override
+    protected boolean getInput(ChipState chip) {
 
-		@Override
-		public IC create(Sign sign) {
-			return new LowNotPulser(getServer(), sign);
-		}
-	}
+        return !chip.getInput(0);
+    }
+
+    @Override
+    protected void setOutput(ChipState chip, boolean on) {
+
+        chip.setOutput(0, !on);
+    }
+
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
+
+        public Factory(Server server) {
+
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+
+            return new LowNotPulser(getServer(), sign);
+        }
+    }
 }

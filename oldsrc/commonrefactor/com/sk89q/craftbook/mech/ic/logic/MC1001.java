@@ -19,8 +19,8 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 
 /**
  * Signal Inverter
@@ -28,21 +28,24 @@ import com.sk89q.craftbook.mech.ic.LogicChipState;
  * @author Shaun (sturmeh)
  */
 public class MC1001 extends LogicIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "NOT";
     }
 
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         chip.getOut(1).set(chip.getIn(1).not());
     }
 }

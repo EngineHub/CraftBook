@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.mech.ic.plc;
 
 public class State {
+
     public boolean[] input;
     public byte[] presistantStorage;
 }

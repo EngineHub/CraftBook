@@ -19,24 +19,25 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 
 /**
  * A JK flip flop.
- * 
  * A JK Flip Flop is like a SR Latch (S = J, R = K), but if both J and K is
  * high, it toggles, and it has a clock.
- * 
+ *
  * @author sindreij
  */
 public class MC3032 extends LogicIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "JK EDGE FLIP FLOP";
     }
 
@@ -46,6 +47,7 @@ public class MC3032 extends LogicIC {
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         boolean j = chip.getIn(2).is(); //Set
         boolean k = chip.getIn(3).is(); //Reset
         if (chip.getIn(1).isTriggered() && chip.getIn(1).not()) {

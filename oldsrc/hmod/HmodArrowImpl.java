@@ -20,8 +20,10 @@ import com.sk89q.craftbook.access.ArrowInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 
 public class HmodArrowImpl extends HmodBaseEntityImpl
-                        implements ArrowInterface {
+        implements ArrowInterface {
+
     public HmodArrowImpl(fc arrow, WorldInterface w) {
-        super(new BaseEntity(arrow),w);
+
+        super(new BaseEntity(arrow), w);
     }
 }

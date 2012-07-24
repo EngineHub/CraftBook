@@ -21,41 +21,55 @@ package com.sk89q.craftbook.access;
 import com.sk89q.craftbook.util.Vector;
 
 public abstract class WorldInterface$ implements WorldInterface {
+
     public boolean setId(Vector v, int t) {
-        return setId(v.getBlockX(),v.getBlockY(),v.getBlockZ(),t);
+
+        return setId(v.getBlockX(), v.getBlockY(), v.getBlockZ(), t);
     }
+
     public int getId(Vector v) {
-        return getId(v.getBlockX(),v.getBlockY(),v.getBlockZ());
+
+        return getId(v.getBlockX(), v.getBlockY(), v.getBlockZ());
     }
-    
+
     public boolean setData(Vector v, int t) {
-        return setData(v.getBlockX(),v.getBlockY(),v.getBlockZ(),t);
+
+        return setData(v.getBlockX(), v.getBlockY(), v.getBlockZ(), t);
     }
+
     public boolean setDataAndUpdate(Vector v, int t) {
-        return setDataAndUpdate(v.getBlockX(),v.getBlockY(),v.getBlockZ(),t);
+
+        return setDataAndUpdate(v.getBlockX(), v.getBlockY(), v.getBlockZ(), t);
     }
-    
+
     public int getData(Vector v) {
-        return getData(v.getBlockX(),v.getBlockY(),v.getBlockZ());
+
+        return getData(v.getBlockX(), v.getBlockY(), v.getBlockZ());
     }
 
     public BlockEntity getBlockEntity(Vector v) {
-        return getBlockEntity(v.getBlockX(),v.getBlockY(),v.getBlockZ());
+
+        return getBlockEntity(v.getBlockX(), v.getBlockY(), v.getBlockZ());
     }
-    
+
     public int getLightLevel(Vector v) {
-        return getLightLevel(v.getBlockX(),v.getBlockY(),v.getBlockZ());
+
+        return getLightLevel(v.getBlockX(), v.getBlockY(), v.getBlockZ());
     }
-    
+
     public void kyuu(double x, double y, double z) {
-        explode(x,y,z);
+
+        explode(x, y, z);
     }
 
     public boolean equals(Object o) {
-        if(!(o instanceof WorldInterface)) return false;
-        return getUniqueIdString().equals(((WorldInterface)o).getUniqueIdString());
+
+        if (!(o instanceof WorldInterface)) return false;
+        return getUniqueIdString().equals(((WorldInterface) o).getUniqueIdString());
     }
+
     public int hashCode() {
+
         return getUniqueIdString().hashCode();
     }
 }

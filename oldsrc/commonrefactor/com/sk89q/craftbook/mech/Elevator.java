@@ -33,13 +33,15 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class Elevator {
+
     /**
      * Returns whether this lift has a destination.
-     * 
+     *
      * @param pt
      * @param up
      */
     public static boolean hasLinkedLift(WorldInterface w, Vector pt, boolean up) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -61,18 +63,19 @@ public class Elevator {
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Attempt to lift a player up.
-     * 
+     *
      * @param player
      * @param pt
      * @param up
      */
     public static void performLift(PlayerInterface player, WorldInterface w, Vector pt, boolean up) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -98,13 +101,15 @@ public class Elevator {
 
     /**
      * Get a corresponding lift sign or null.
-     * 
+     *
      * @param player
      * @param pt
      * @param up
+     *
      * @return
      */
     private static SignInterface getSign(WorldInterface w, Vector pt, boolean up) {
+
         int x = pt.getBlockX();
         int y1 = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -115,8 +120,8 @@ public class Elevator {
         if (!(cBlock instanceof SignInterface)) {
             return null;
         }
-        
-        SignInterface sign = (SignInterface)cBlock;
+
+        SignInterface sign = (SignInterface) cBlock;
 
         // Found our stop?
         if (sign.getLine2().equalsIgnoreCase("[Lift Up]")
@@ -124,16 +129,17 @@ public class Elevator {
                 || sign.getLine2().equalsIgnoreCase("[Lift]")) {
             return sign;
         }
-        
+
         return null;
     }
 
     /**
      * Jump to a sign above.
-     * 
+     *
      * @param player
      * @param pt
      * @param up
+     *
      * @return
      */
     private static boolean checkLift(PlayerInterface player, WorldInterface w, Vector pt, boolean up) {
@@ -147,17 +153,17 @@ public class Elevator {
         if (sign != null) {
             // We are going to be teleporting to the same place as the player
             // is currently, except with a shifted Y
-            int plyX = (int)Math.floor(player.getPosition().getX());
+            int plyX = (int) Math.floor(player.getPosition().getX());
             //int plyY = (int)Math.floor(player.getY());
-            int plyZ = (int)Math.floor(player.getPosition().getZ());
+            int plyZ = (int) Math.floor(player.getPosition().getZ());
 
             int y2;
-            
+
             int foundFree = 0;
             boolean foundGround = false;
-            
+
             int startingY = BlockType.canPassThrough(w.getId(plyX, y1 + 1, plyZ))
-                ? y1 + 1 : y1;
+                    ? y1 + 1 : y1;
 
             // Step downwards until we find a spot to stand
             for (y2 = startingY; y2 >= y1 - 5; y2--) {
@@ -168,15 +174,15 @@ public class Elevator {
                     foundGround = true;
                     break;
                 }
-                
+
                 foundFree++;
             }
-            
+
             if (foundFree < 2) {
                 player.sendMessage(Colors.GOLD + "Uh oh! You would be obstructed!");
                 return false;
             }
-            
+
             if (!foundGround) {
                 player.sendMessage(Colors.GOLD + "Uh oh! You would have nothing to stand on!");
                 return false;
@@ -184,7 +190,7 @@ public class Elevator {
 
             // Teleport!
             player.setPosition(new Vector(player.getPosition().getX(), y2 + 1, player.getPosition().getZ()),
-                    (float)player.getYaw(), (float)player.getPitch());
+                    (float) player.getYaw(), (float) player.getPitch());
 
 
             // Now, we want to read the sign so we can tell the player

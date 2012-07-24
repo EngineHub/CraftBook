@@ -27,21 +27,28 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 class CustomICBase extends PlcBase {
+
     private final String name, code;
+
     CustomICBase(PlcLang language, String name, String code) {
+
         super(language);
         this.name = name;
         this.code = code;
     }
 
     public String getTitle() {
+
         return name;
     }
-    
+
     protected String getCode(WorldInterface w, Vector v) throws PlcException {
+
         return code;
     }
+
     protected String validateEnviromentEx(ServerInterface i, WorldInterface w, Vector v, SignText t) {
+
         return null;
     }
 }

@@ -28,30 +28,31 @@ import org.bukkit.block.Sign;
 public class NandGate extends AbstractIC {
 
     public NandGate(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Nand Gate";
     }
 
     @Override
     public String getSignTitle() {
+
         return "NAND";
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-        int on = 0, valid = 0;
-        for (int i = 0; i < chip.getInputCount(); i++) {
-        	if (chip.isValid(i))
-            {
-        		valid++;
+        short on = 0, valid = 0;
+        for (short i = 0; i < chip.getInputCount(); i++) {
+            if (chip.isValid(i)) {
+                valid++;
 
-	            if (chip.getInput(i))
-	                on++;
+                if (chip.getInput(i)) on++;
             }
         }
 
@@ -62,11 +63,13 @@ public class NandGate extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new NandGate(getServer(), sign);
         }
     }

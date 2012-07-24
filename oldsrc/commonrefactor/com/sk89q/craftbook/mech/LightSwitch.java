@@ -28,27 +28,30 @@ import com.sk89q.craftbook.util.Vector;
 
 /**
  * Handler for the light switch feature.
- * 
+ *
  * @author sk89q
  */
 public class LightSwitch {
+
     /**
      * Store a list of recent light toggles to prevent spamming. Someone
      * clever can just use two signs though.
      */
-    private HistoryHashMap<BlockVector,Long> recentLightToggles
-            = new HistoryHashMap<BlockVector,Long>(20);
+    private HistoryHashMap<BlockVector, Long> recentLightToggles
+            = new HistoryHashMap<BlockVector, Long>(20);
 
     /**
      * Toggle lights in the immediate area.
-     * 
+     *
      * @param ox
      * @param oy
      * @param oz
+     *
      * @return
      */
     public boolean toggleLights(WorldInterface w, Vector origin, BlockBag bag)
             throws BlockBagException {
+
         int aboveID = w.getId(origin.add(0, 1, 0));
 
         if (aboveID == BlockType.TORCH || aboveID == BlockType.REDSTONE_TORCH_OFF

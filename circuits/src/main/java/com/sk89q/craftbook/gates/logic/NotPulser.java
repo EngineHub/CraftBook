@@ -12,34 +12,40 @@ import org.bukkit.block.Sign;
  */
 public class NotPulser extends Pulser {
 
-	public NotPulser(Server server, Sign block) {
-		super(server, block);
-	}
+    public NotPulser(Server server, Sign block) {
 
-	@Override
-	public String getTitle() {
-		return "Not Pulser";
-	}
+        super(server, block);
+    }
 
-	@Override
-	public String getSignTitle() {
-		return "NOT PULSER";
-	}
+    @Override
+    public String getTitle() {
 
-	@Override
-	protected void setOutput(ChipState chip, boolean on) {
-		chip.setOutput(0, !on);
-	}
+        return "Not Pulser";
+    }
 
-	public static class Factory extends AbstractICFactory implements RestrictedIC {
+    @Override
+    public String getSignTitle() {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        return "NOT PULSER";
+    }
 
-		@Override
-		public IC create(Sign sign) {
-			return new NotPulser(getServer(), sign);
-		}
-	}
+    @Override
+    protected void setOutput(ChipState chip, boolean on) {
+
+        chip.setOutput(0, !on);
+    }
+
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
+
+        public Factory(Server server) {
+
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+
+            return new NotPulser(getServer(), sign);
+        }
+    }
 }

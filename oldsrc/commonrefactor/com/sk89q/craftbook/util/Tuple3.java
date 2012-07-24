@@ -18,27 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.sk89q.craftbook.util;
 
-public class Tuple3<A,B,C> {
+public class Tuple3<A, B, C> {
+
     public final A a;
     public final B b;
     public final C c;
+
     public Tuple3(A a, B b, C c) {
+
         this.a = a;
         this.b = b;
         this.c = c;
     }
-    
+
     public boolean equals(Object o) {
-        if(!(o instanceof Tuple3<?,?,?>)) return false;
-        else return equals((Tuple3<?,?,?>)o);
+
+        if (!(o instanceof Tuple3<?, ?, ?>)) return false;
+        else return equals((Tuple3<?, ?, ?>) o);
     }
-    public boolean equals(Tuple3<?,?,?> o) {
-        return o.a.equals(a)&&o.b.equals(b)&&o.c.equals(c);
+
+    public boolean equals(Tuple3<?, ?, ?> o) {
+
+        return o.a.equals(a) && o.b.equals(b) && o.c.equals(c);
     }
+
     public int hashCode() {
         //Constants corraspond to glibc's lcg algorithm parameters
-        return ((a.hashCode()*1103515245+12345)^
-                (b.hashCode()*1103515245+12345)^
-                (c.hashCode()*1103515245+12345))*1103515245+12345;
+        return ((a.hashCode() * 1103515245 + 12345) ^
+                (b.hashCode() * 1103515245 + 12345) ^
+                (c.hashCode() * 1103515245 + 12345)) * 1103515245 + 12345;
     }
 }

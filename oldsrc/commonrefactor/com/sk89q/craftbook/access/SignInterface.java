@@ -21,11 +21,15 @@ package com.sk89q.craftbook.access;
 import com.sk89q.craftbook.util.SignText;
 
 public abstract class SignInterface extends SignText implements BlockEntity {
+
     public SignInterface(String l1, String l2, String l3, String l4) {
+
         super(l1, l2, l3, l4);
     }
-    
+
     public abstract int getX();
+
     public abstract int getY();
+
     public abstract int getZ();
 }

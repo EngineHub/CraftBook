@@ -18,43 +18,48 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.LocalPlayer;
-
 public class BukkitPlayer implements LocalPlayer {
 
-    protected BaseBukkitPlugin plugin;
-    protected Player player;
+    protected final BaseBukkitPlugin plugin;
+    protected final Player player;
 
     public BukkitPlayer(BaseBukkitPlugin plugin, Player player) {
+
         this.plugin = plugin;
         this.player = player;
     }
 
     @Override
     public void print(String message) {
+
         player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message));
     }
 
     @Override
     public void printError(String message) {
+
         player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString(message));
     }
 
     @Override
     public void printRaw(String message) {
+
         player.sendMessage(plugin.getLanguageManager().getString(message));
     }
 
     @Override
     public boolean hasPermission(String perm) {
+
         return plugin.hasPermission(player, perm);
     }
 
     @Override
     public String getName() {
+
         return player.getName();
     }
 

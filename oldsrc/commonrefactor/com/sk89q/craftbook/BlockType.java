@@ -19,15 +19,16 @@
 
 package com.sk89q.craftbook;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * List of block IDs.
- * 
+ *
  * @author sk89q
  */
-public final class BlockType {    
+public final class BlockType {
+
     public static final int AIR = 0;
     public static final int STONE = 1;
     public static final int GRASS = 2;
@@ -109,7 +110,7 @@ public final class BlockType {
     /**
      * Stores a list of dropped blocks for blocks.
      */
-    private static final Map<Integer,Integer> blockDrops = new HashMap<Integer,Integer>();
+    private static final Map<Integer, Integer> blockDrops = new HashMap<Integer, Integer>();
 
     /**
      * Static constructor.
@@ -184,11 +185,13 @@ public final class BlockType {
 
     /**
      * Returns true if the block type requires a block underneath.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean isBottomDependentBlock(int id) {
+
         return id == SAPLING
                 || id == YELLOW_FLOWER
                 || id == RED_FLOWER
@@ -210,11 +213,13 @@ public final class BlockType {
 
     /**
      * Checks to see whether a block should be placed last.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean shouldPlaceLast(int id) {
+
         return id == SAPLING
                 || id == YELLOW_FLOWER
                 || id == RED_FLOWER
@@ -244,11 +249,13 @@ public final class BlockType {
 
     /**
      * Checks whether a block can be passed through.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean canPassThrough(int id) {
+
         return id == AIR
                 || id == SAPLING
                 || id == YELLOW_FLOWER
@@ -276,11 +283,13 @@ public final class BlockType {
 
     /**
      * Returns true if the block uses its data value.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean usesData(int id) {
+
         return id == SAPLING
                 || id == WATER
                 || id == STATIONARY_WATER
@@ -309,11 +318,13 @@ public final class BlockType {
 
     /**
      * Returns true if an ID is lava.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean isLava(int id) {
+
         return id == STATIONARY_LAVA
                 || id == LAVA;
     }
@@ -322,9 +333,11 @@ public final class BlockType {
      * Returns true if a block uses redstone in some way.
      *
      * @param id
+     *
      * @return
      */
     public static boolean isRedstoneBlock(int id) {
+
         return id == LEVER
                 || id == STONE_PRESSURE_PLATE
                 || id == WOODEN_PRESSURE_PLATE
@@ -340,11 +353,13 @@ public final class BlockType {
      * Get the block or item that would have been dropped. If nothing is
      * dropped, 0 will be returned. If the block should not be destroyed
      * (i.e. bedrock), -1 will be returned.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static int getDroppedBlock(int id) {
+
         Integer dropped = blockDrops.get(id);
         if (dropped == null) {
             return 0;

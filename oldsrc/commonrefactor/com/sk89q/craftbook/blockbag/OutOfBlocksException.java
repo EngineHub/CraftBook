@@ -21,10 +21,10 @@ package com.sk89q.craftbook.blockbag;
 
 
 /**
- *
  * @author sk89q
  */
 public class OutOfBlocksException extends BlockBagException {
+
     private static final long serialVersionUID = -7063726368378723452L;
     /**
      * Stores the block ID.
@@ -33,9 +33,11 @@ public class OutOfBlocksException extends BlockBagException {
 
     /**
      * Construct the object.
+     *
      * @param id
      */
     public OutOfBlocksException(int id) {
+
         this.id = id;
     }
 
@@ -43,6 +45,7 @@ public class OutOfBlocksException extends BlockBagException {
      * @return the id
      */
     public int getID() {
+
         return id;
     }
 }

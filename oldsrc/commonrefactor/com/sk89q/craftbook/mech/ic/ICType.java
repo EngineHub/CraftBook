@@ -30,15 +30,16 @@ import com.sk89q.craftbook.util.Vector;
 
 /**
  * IC types.
- * 
+ *
  * @author Lymia
  */
 public enum ICType {
     /**
      * Zero input, single output
      */
-    ZISO("ZISO", true) {    
+    ZISO("ZISO", true) {
         public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
+
             Vector outputVec = MinecraftUtil.getWallSignBack(w, v, 2);
             Vector backVec = MinecraftUtil.getWallSignBack(w, v, 1);
 
@@ -60,8 +61,9 @@ public enum ICType {
      * Single input, single output
      */
     SISO("SISO") {
-        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
-                SignInterface sign, IC sisoIC) {
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput,
+                          SignInterface sign, IC sisoIC) {
+
             Vector outputVec = MinecraftUtil.getWallSignBack(w, pt, 2);
             Vector in0 = MinecraftUtil.getWallSignBack(w, pt, -1);
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
@@ -91,8 +93,9 @@ public enum ICType {
      * Single input, triple output
      */
     SI3O("SI3O") {
-        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
-                SignInterface sign, IC si3oIC) {
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput,
+                          SignInterface sign, IC si3oIC) {
+
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = backVec.subtract(pt);
             Vector in0 = MinecraftUtil.getWallSignBack(w, pt, -1);
@@ -130,8 +133,9 @@ public enum ICType {
      * Triple input, single output
      */
     _3ISO("3ISO") {
-        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
-                SignInterface sign, IC _3isoIC) {
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput,
+                          SignInterface sign, IC _3isoIC) {
+
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector outputVec = MinecraftUtil.getWallSignBack(w, pt, 2);
             Vector input1Vec = MinecraftUtil.getWallSignBack(w, pt, -1);
@@ -168,8 +172,9 @@ public enum ICType {
      * Triple input, triple output
      */
     _3I3O("3I3O") {
-        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
-                SignInterface sign, IC _3i3oIC) {
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput,
+                          SignInterface sign, IC _3i3oIC) {
+
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = MinecraftUtil.getWallSignBack(w, pt, 2).subtract(pt);
 
@@ -215,8 +220,9 @@ public enum ICType {
      * Variable input, variable output
      */
     VIVO("VIVO") {
-        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput, 
-                SignInterface sign, IC vivoIC) {
+        public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector pt, Vector changedRedstoneInput,
+                          SignInterface sign, IC vivoIC) {
+
             Vector backVec = MinecraftUtil.getWallSignBack(w, pt, 1);
             Vector backShift = backVec.subtract(pt);
 
@@ -280,22 +286,27 @@ public enum ICType {
     public final boolean isSelfTriggered;
 
     private ICType(String name) {
+
         this.name = name;
         this.isSelfTriggered = false;
     }
 
     private ICType(String name, boolean torchUpdate) {
+
         this.name = name;
         this.isSelfTriggered = torchUpdate;
     }
 
     public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector v, Vector c, SignInterface t, IC i) {
+
     }
 
     public void think(CraftBookCore o, ServerInterface s, WorldInterface w, Vector v, SignInterface t, IC i) {
+
     }
 
     public static ICType forName(String name) {
+
         if (name.equals("ziso"))
             return SISO;
         else if (name.equals("siso"))

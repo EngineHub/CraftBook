@@ -23,14 +23,10 @@ import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.bukkit.*;
-
-import org.bukkit.Material;
+import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.material.Diode;
 
 /**
  * Handles detection for the triple-input triple-output family.
@@ -39,92 +35,93 @@ import org.bukkit.material.Diode;
  */
 public class Family3I3O extends AbstractICFamily {
 
-	@Override
-	public ChipState detect(BlockWorldVector source, Sign sign) {
-		return new ChipState3I3O(source, sign);
-	}
+    @Override
+    public ChipState detect(BlockWorldVector source, Sign sign) {
 
-	public static class ChipState3I3O extends AbstractChipState {
+        return new ChipState3I3O(source, sign);
+    }
 
-		public ChipState3I3O(BlockWorldVector source, Sign sign) {
-			super(source, sign);
-		}
+    public static class ChipState3I3O extends AbstractChipState {
 
-		protected Block getBlock(int pin) {
+        public ChipState3I3O(BlockWorldVector source, Sign sign) {
 
-			// TODO: messes up based on direction.
+            super(source, sign);
+        }
 
-			Block bsign = sign.getBlock();
-			BlockFace fback = SignUtil.getBack(bsign);
+        protected Block getBlock(int pin) {
 
-			switch (pin) {
-				case 0:
-					return SignUtil.getFrontBlock(bsign);
-				case 1:
-					return SignUtil.getLeftBlock(sign.getBlock());
-				case 2:
-					return SignUtil.getRightBlock(sign.getBlock());
-				case 3:
-					return bsign.getRelative(fback).getRelative(fback)
-							.getRelative(fback);
-				case 4:
-					return bsign.getRelative(fback).getRelative(fback)
-							.getRelative(SignUtil.getCounterClockWise(fback));
-				case 5:
-					return bsign.getRelative(fback).getRelative(fback)
-							.getRelative(SignUtil.getClockWise(fback));
-				default:
-					return null;
+            // TODO: messes up based on direction.
 
-			}
+            Block bsign = sign.getBlock();
+            BlockFace fback = SignUtil.getBack(bsign);
 
-		}
+            switch (pin) {
+                case 0:
+                    return SignUtil.getFrontBlock(bsign);
+                case 1:
+                    return SignUtil.getLeftBlock(sign.getBlock());
+                case 2:
+                    return SignUtil.getRightBlock(sign.getBlock());
+                case 3:
+                    return bsign.getRelative(fback).getRelative(fback)
+                            .getRelative(fback);
+                case 4:
+                    return bsign.getRelative(fback).getRelative(fback)
+                            .getRelative(SignUtil.getCounterClockWise(fback));
+                case 5:
+                    return bsign.getRelative(fback).getRelative(fback)
+                            .getRelative(SignUtil.getClockWise(fback));
+                default:
+                    return null;
 
-		@Override
-		public boolean get(int pin) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				return block.isBlockIndirectlyPowered();
-			} else {
-				return false;
-			}
-		}
+            }
 
-		@Override
-		public void set(int pin, boolean value) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				ICUtil.setState(block, value);
-			} else {
-				return;
-			}
-		}
+        }
 
-		@Override
-		public boolean getInput(int inputIndex) {
-			return get(inputIndex);
-		}
+        @Override
+        public boolean get(int pin) {
 
-		@Override
-		public boolean getOutput(int outputIndex) {
-			return get(outputIndex + 3);
-		}
+            Block block = getBlock(pin);
+            return block != null && block.isBlockIndirectlyPowered();
+        }
 
-		@Override
-		public void setOutput(int outputIndex, boolean value) {
-			set(outputIndex + 3, value);
-		}
+        @Override
+        public void set(int pin, boolean value) {
 
-		@Override
-		public int getInputCount() {
-			return 3;
-		}
+            Block block = getBlock(pin);
+            if (block != null) ICUtil.setState(block, value);
+        }
 
-		@Override
-		public int getOutputCount() {
-			return 3;
-		}
+        @Override
+        public boolean getInput(int inputIndex) {
 
-	}
+            return get(inputIndex);
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+
+            return get(outputIndex + 3);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+
+            set(outputIndex + 3, value);
+        }
+
+        @Override
+        public int getInputCount() {
+
+            return 3;
+        }
+
+        @Override
+        public int getOutputCount() {
+
+            return 3;
+        }
+
+    }
 
 }

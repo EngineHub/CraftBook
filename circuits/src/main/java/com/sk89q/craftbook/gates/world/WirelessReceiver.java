@@ -18,40 +18,43 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class WirelessReceiver extends AbstractIC {
 
-    protected String band;
+    protected final String band;
 
     public WirelessReceiver(Server server, Sign sign) {
+
         super(server, sign);
-        
+
         band = sign.getLine(2);
     }
 
     @Override
     public String getTitle() {
+
         return "Wireless Receiver";
     }
 
     @Override
     public String getSignTitle() {
+
         return "RECEIVER";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             Boolean val = WirelessTransmitter.getValue(band);
-            if (val == null)
-                return;
-            
+            if (val == null) return;
+
             chip.setOutput(0, val);
         }
     }
@@ -59,11 +62,13 @@ public class WirelessReceiver extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new WirelessReceiver(getServer(), sign);
         }
     }

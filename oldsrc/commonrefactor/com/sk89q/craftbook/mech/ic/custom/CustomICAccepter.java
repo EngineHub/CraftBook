@@ -21,5 +21,6 @@ package com.sk89q.craftbook.mech.ic.custom;
 import com.sk89q.craftbook.mech.ic.IC;
 
 public interface CustomICAccepter {
+
     void registerIC(String name, IC ic, String type) throws CustomICException;
 }

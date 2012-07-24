@@ -26,8 +26,8 @@ import com.sk89q.craftbook.blockbag.BlockBagException;
 import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.Vector;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed
@@ -39,16 +39,19 @@ import java.util.HashSet;
  * @author sk89q
  */
 public class GateSwitch {
+
     /**
      * Toggles the gate closest to a location.
-     * 
+     *
      * @param pt
      * @param bag
      * @param smallSearchSize
+     *
      * @return
      */
     public static boolean toggleGates(WorldInterface w, Vector pt, BlockBag bag,
-            boolean smallSearchSize) throws BlockBagException {
+                                      boolean smallSearchSize) throws BlockBagException {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -95,10 +98,12 @@ public class GateSwitch {
      * @param bag
      * @param close
      * @param searchSize
+     *
      * @return
      */
     public static boolean setGateState(WorldInterface w, Vector pt, BlockBag bag, boolean close,
-            boolean smallSearchSize) throws BlockBagException {
+                                       boolean smallSearchSize) throws BlockBagException {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -140,21 +145,29 @@ public class GateSwitch {
 
     /**
      * Toggles one column of gate.
-     * 
+     *
      * @param pt
      * @param visitedColumns
      * @param close
      * @param bag
      * @param state
+     *
      * @return
      */
     private static boolean recurseColumn(WorldInterface w, Vector pt, Set<BlockVector> visitedColumns,
-            Boolean close, BlockBag bag)
+                                         Boolean close, BlockBag bag)
             throws BlockBagException {
-        if (visitedColumns.size() > 14) { return false; }
-        if (visitedColumns.contains(pt.setY(0).toBlockVector())) { return false; }
-        if (w.getId(pt) != BlockType.FENCE) { return false; }
-        
+
+        if (visitedColumns.size() > 14) {
+            return false;
+        }
+        if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
+            return false;
+        }
+        if (w.getId(pt) != BlockType.FENCE) {
+            return false;
+        }
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -191,13 +204,13 @@ public class GateSwitch {
 
     /**
      * Actually does the closing/opening. Also recurses to nearby columns.
-     * 
+     *
      * @param topPoint
      * @param close
      * @param visitedColumns
      */
     private static void toggleColumn(WorldInterface w, Vector topPoint, boolean close,
-            Set<BlockVector> visitedColumns, BlockBag bag)
+                                     Set<BlockVector> visitedColumns, BlockBag bag)
             throws BlockBagException {
 
         int x = topPoint.getBlockX();

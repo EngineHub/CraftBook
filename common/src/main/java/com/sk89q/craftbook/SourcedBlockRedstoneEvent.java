@@ -23,27 +23,30 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 
 /**
  * A variation of the redstone event with a source block.
- * 
+ *
  * @author sk89q
  */
 public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
-    
+
     @SuppressWarnings("unused")
-	private static final long serialVersionUID = 1031838877588760298L;
-    
-    protected Block source;
-    
+    private static final long serialVersionUID = 1031838877588760298L;
+
+    protected final Block source;
+
     public SourcedBlockRedstoneEvent(BlockRedstoneEvent event, Block block) {
+
         super(block, event.getOldCurrent(), event.getNewCurrent());
         this.source = event.getBlock();
     }
-    
+
     public SourcedBlockRedstoneEvent(Block source, Block block, int old, int n) {
+
         super(block, old, n);
         this.source = source;
     }
-    
+
     public Block getSource() {
-        return source;  
+
+        return source;
     }
 }

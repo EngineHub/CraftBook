@@ -19,15 +19,14 @@
 
 package com.sk89q.craftbook.circuits;
 
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
@@ -36,19 +35,20 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  */
 public class JackOLantern extends AbstractMechanic {
 
-    private int originalId;
+    private final int originalId;
 
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
+
         public Factory() {
+
         }
 
         @Override
         public JackOLantern detect(BlockWorldVector pt) {
+
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) {
-                return new JackOLantern(pt);
-            }
+            if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) return new JackOLantern(pt);
 
             return null;
         }
@@ -56,10 +56,11 @@ public class JackOLantern extends AbstractMechanic {
 
     /**
      * Construct the mechanic for a location.
-     * 
+     *
      * @param pt
      */
     private JackOLantern(BlockWorldVector pt) {
+
         super();
         originalId = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
     }
@@ -69,15 +70,11 @@ public class JackOLantern extends AbstractMechanic {
      */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-        byte data;
 
-        data = event.getBlock().getData();
-        if (event.getNewCurrent() > 0) {
-            event.getBlock().setTypeId(BlockID.JACKOLANTERN);
-        } else {
-            event.getBlock().setTypeId(BlockID.PUMPKIN);
-        }
-        event.getBlock().setData(data, false);
+        if (event.getNewCurrent() > 0) event.getBlock().setTypeId(BlockID.JACKOLANTERN);
+        else event.getBlock().setTypeId(BlockID.PUMPKIN);
+
+        event.getBlock().setData(event.getBlock().getData(), false);
     }
 
     /**
@@ -85,6 +82,7 @@ public class JackOLantern extends AbstractMechanic {
      */
     @Override
     public void unload() {
+
     }
 
     /**
@@ -92,11 +90,13 @@ public class JackOLantern extends AbstractMechanic {
      */
     @Override
     public boolean isActive() {
+
         return false;
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+
         event.getBlock().setTypeId(originalId);
         event.getBlock().breakNaturally();
         event.setCancelled(true);

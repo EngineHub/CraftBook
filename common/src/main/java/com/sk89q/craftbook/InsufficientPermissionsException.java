@@ -19,21 +19,26 @@
 package com.sk89q.craftbook;
 
 public class InsufficientPermissionsException extends InvalidMechanismException {
+
     private static final long serialVersionUID = -3592509047211745619L;
 
     public InsufficientPermissionsException() {
+
         super("You don't have permission for this.");
     }
 
     public InsufficientPermissionsException(String message, Throwable cause) {
+
         super(message, cause);
     }
 
     public InsufficientPermissionsException(String message) {
+
         super(message);
     }
 
     public InsufficientPermissionsException(Throwable cause) {
+
         super(cause);
     }
 

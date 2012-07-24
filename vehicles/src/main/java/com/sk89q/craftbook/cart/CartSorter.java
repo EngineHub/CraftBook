@@ -1,26 +1,20 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.util.SignUtil;
 
 /*
  * @contributor LordEnki
  */
 
 public class CartSorter extends CartMechanism {
+
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // care?
@@ -29,7 +23,7 @@ public class CartSorter extends CartMechanism {
         // validate
         if (cart == null) return;
         if (!blocks.matches("sort")) return;
-        Sign sign = (Sign)blocks.sign.getState();
+        Sign sign = (Sign) blocks.sign.getState();
 
         // pick which sort conditions apply
         //  (left dominates if both apply)
@@ -46,49 +40,57 @@ public class CartSorter extends CartMechanism {
         byte trackData;
         BlockFace next = SignUtil.getFacing(blocks.sign);
         switch (next) {
-        case WEST:
-            switch (dir) {
-            case LEFT:
-                trackData = 9; break;
-            case RIGHT:
-                trackData = 8; break;
+            case WEST:
+                switch (dir) {
+                    case LEFT:
+                        trackData = 9;
+                        break;
+                    case RIGHT:
+                        trackData = 8;
+                        break;
+                    default:
+                        trackData = 0;
+                }
+                break;
+            case EAST:
+                switch (dir) {
+                    case LEFT:
+                        trackData = 7;
+                        break;
+                    case RIGHT:
+                        trackData = 6;
+                        break;
+                    default:
+                        trackData = 0;
+                }
+                break;
+            case NORTH:
+                switch (dir) {
+                    case LEFT:
+                        trackData = 6;
+                        break;
+                    case RIGHT:
+                        trackData = 9;
+                        break;
+                    default:
+                        trackData = 1;
+                }
+                break;
+            case SOUTH:
+                switch (dir) {
+                    case LEFT:
+                        trackData = 8;
+                        break;
+                    case RIGHT:
+                        trackData = 7;
+                        break;
+                    default:
+                        trackData = 1;
+                }
+                break;
             default:
-                trackData = 0;
-            }
-            break;
-        case EAST:
-            switch (dir) {
-            case LEFT:
-                trackData = 7; break;
-            case RIGHT:
-                trackData = 6; break;
-            default:
-                trackData = 0;
-            }
-            break;
-        case NORTH:
-            switch (dir) {
-            case LEFT:
-                trackData = 6; break;
-            case RIGHT:
-                trackData = 9; break;
-            default:
-                trackData = 1;
-            }
-            break;
-        case SOUTH:
-            switch (dir) {
-            case LEFT:
-                trackData = 8; break;
-            case RIGHT:
-                trackData = 7; break;
-            default:
-                trackData = 1;
-            }
-            break;
-        default:
-            //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
-            return;
+                //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
+                return;
         }
         Block targetTrack = blocks.rail.getRelative(next);
 
@@ -99,10 +101,11 @@ public class CartSorter extends CartMechanism {
     }
 
     private enum Hand {
-        STRAIGHT, LEFT, RIGHT;
+        STRAIGHT, LEFT, RIGHT
     }
 
     public static boolean isSortApplicable(String line, Minecart minecart) {
+
         if (line.equalsIgnoreCase("All")) {
             return true;
         }
@@ -159,7 +162,7 @@ public class CartSorter extends CartMechanism {
                     if (player.getItemInHand().getTypeId() == item) {
                         return true;
                     }
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException ignored) {
                 }
             } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
                 if (parts[1].equalsIgnoreCase(player.getName())) {
@@ -172,23 +175,22 @@ public class CartSorter extends CartMechanism {
                 StorageMinecart storageCart = (StorageMinecart) minecart;
                 Inventory storageInventory = storageCart.getInventory();
 
-                if(parts.length == 3) {
+                if (parts.length == 3) {
                     try {
                         int item = Integer.parseInt(parts[1]);
                         short durability = Short.parseShort(parts[2]);
-                        if (storageInventory.contains(new ItemStack(item,1,durability))) {
+                        if (storageInventory.contains(new ItemStack(item, 1, durability))) {
                             return true;
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException ignored) {
                     }
-                }
-                else {
+                } else {
                     try {
                         int item = Integer.parseInt(parts[1]);
                         if (storageInventory.contains(item)) {
                             return true;
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException ignored) {
                     }
                 }
             }
@@ -199,7 +201,7 @@ public class CartSorter extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

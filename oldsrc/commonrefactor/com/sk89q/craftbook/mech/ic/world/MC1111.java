@@ -30,12 +30,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1111 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "RECEIVER";
     }
 
@@ -45,9 +47,11 @@ public class MC1111 extends BaseIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(Vector pos, SignText sign) {
+
         String id = sign.getLine3();
 
         if (id.length() == 0) {
@@ -63,6 +67,7 @@ public class MC1111 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         String id = chip.getText().getLine3();
         if (!id.isEmpty()) {
             Boolean out = chip.getCore().getTransmissions().get(id);

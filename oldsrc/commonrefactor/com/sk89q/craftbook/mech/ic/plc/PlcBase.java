@@ -28,78 +28,88 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 public abstract class PlcBase extends BaseIC {
+
     private PlcLang language;
+
     public PlcBase(PlcLang language) {
+
         this.language = language;
     }
 
     public void think(ChipState chip) {
+
         SignText t = chip.getText();
-        
+
         String code;
         try {
             code = getCode(chip.getWorld(), chip.getPosition());
         } catch (PlcException e) {
-            t.setLine2("§c"+t.getLine2());
+            t.setLine2("§c" + t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("code not found");
             return;
         }
-        
-        if(!t.getLine3().equals("HASH:"+Integer.toHexString(code.hashCode()))) {
-            t.setLine2("§c"+t.getLine2());
+
+        if (!t.getLine3().equals("HASH:" + Integer.toHexString(code.hashCode()))) {
+            t.setLine2("§c" + t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("code modified");
             return;
         }
-        
+
         boolean[] output;
         try {
             output = language.tick(chip, code);
         } catch (PlcException e) {
-            t.setLine2("§c"+t.getLine2());
+            t.setLine2("§c" + t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4(e.getMessage());
             return;
         } catch (Throwable r) {
-            t.setLine2("§c"+t.getLine2());
+            t.setLine2("§c" + t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4(r.getClass().getSimpleName());
             return;
         }
-        
+
         try {
-            for(int i=0;i<output.length;i++) {
-                Signal out = chip.getOut(i+1);
-                if(out==null) break;
+            for (int i = 0; i < output.length; i++) {
+                Signal out = chip.getOut(i + 1);
+                if (out == null) break;
                 out.set(output[i]);
             }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            t.setLine2("§c"+t.getLine2());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            t.setLine2("§c" + t.getLine2());
             t.setLine3("!ERROR!");
             t.setLine4("too many outputs");
             return;
         }
-        
+
         t.supressUpdate();
     }
-    
+
     public String validateEnvironment(ServerInterface i, WorldInterface w, Vector v, SignText t) {
-        if(!t.getLine3().isEmpty()) return "line 3 is not empty";
-        
+
+        if (!t.getLine3().isEmpty()) return "line 3 is not empty";
+
         String code;
         try {
-            code = getCode(w,v);
+            code = getCode(w, v);
         } catch (PlcException e) {
             return "Code block not found.";
         }
-        
-        t.setLine3("HASH:"+Integer.toHexString(code.hashCode()));
-        
-        return validateEnviromentEx(i,w,v,t);
+
+        t.setLine3("HASH:" + Integer.toHexString(code.hashCode()));
+
+        return validateEnviromentEx(i, w, v, t);
     }
-    
+
     protected abstract String validateEnviromentEx(ServerInterface i, WorldInterface world, Vector v, SignText t);
+
     protected abstract String getCode(WorldInterface world, Vector v) throws PlcException;
-    protected PlcLang getLanguage() {return language;}
+
+    protected PlcLang getLanguage() {
+
+        return language;
+    }
 }

@@ -21,26 +21,30 @@ package com.sk89q.craftbook.mech.ic.plc;
 public class PlcException extends Exception {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -527901206562124404L;
 
     public PlcException() {
+
         super();
         // TODO Auto-generated constructor stub
     }
 
     public PlcException(String message, Throwable cause) {
+
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
 
     public PlcException(String message) {
+
         super(message);
         // TODO Auto-generated constructor stub
     }
 
     public PlcException(Throwable cause) {
+
         super(cause);
         // TODO Auto-generated constructor stub
     }

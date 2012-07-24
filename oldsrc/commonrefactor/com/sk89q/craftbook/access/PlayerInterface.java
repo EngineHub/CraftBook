@@ -20,10 +20,10 @@
 package com.sk89q.craftbook.access;
 
 /**
- *
  * @author sk89q
  */
 public interface PlayerInterface extends LivingEntityInterface {
+
     /**
      * Get the name of the player.
      *
@@ -59,17 +59,18 @@ public interface PlayerInterface extends LivingEntityInterface {
      * @param msg
      */
     public void printError(String msg);
-    
+
     public boolean canUseCommand(String permission);
-    
+
     public boolean canUseObject(String object);
+
     public boolean canCreateObject(String object);
-    
+
     public boolean canCreateIC(String icId);
 
     public void sendMessage(String string);
-    
+
     public boolean isInGroup(String group);
-    
+
     public int getItemInHand();
 }
