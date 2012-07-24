@@ -19,19 +19,50 @@
 package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 public class EntitySpawner extends AbstractIC {
 
-    public EntitySpawner(Server server, Sign sign) {
+	private EntityType entityType = EntityType.PIG;
+	private EntityType entityRider;
+	private boolean spawnRider = false;
+	private int amount = 1;
+	private Block center;
 
+    public EntitySpawner(Server server, Sign sign) {
         super(server, sign);
+	    load();
     }
+
+	private void load() {
+		entityType = EntityType.fromName(getSign().getLine(2).trim());
+		String line = getSign().getLine(3).trim();
+		// parse the amount or rider type
+		try {
+			amount = Integer.parseInt(line);
+		} catch (NumberFormatException e) {
+			entityRider = EntityType.fromName(line);
+			spawnRider = entityRider != null;
+		}
+		// lets calculate the next possible block to spawn a mob
+		center = SignUtil.getBackBlock(getSign().getBlock());
+		while (center.getType() != Material.AIR && center.getRelative(BlockFace.UP).getType() != Material.AIR) {
+			if (!(center.getY() < center.getWorld().getMaxHeight())) {
+				break;
+			}
+			center = center.getRelative(BlockFace.UP);
+		}
+	}
 
     @Override
     public String getTitle() {
@@ -49,29 +80,17 @@ public class EntitySpawner extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            String type = getSign().getLine(2).trim();
-            String rider = getSign().getLine(3).trim();
-            if (EntityType.fromName(type) != null) {
-                Location loc = getSign().getBlock().getLocation();
-                int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
-                int x = loc.getBlockX();
-                int z = loc.getBlockZ();
-
-                for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
-                    if (BlockType.canPassThrough(getSign().getWorld().getBlockTypeIdAt(x, y, z))) {
-                        if (rider.length() != 0 && EntityType.fromName(rider) != null) {
-                            Entity ent = getSign().getWorld().spawnEntity(new Location(getSign().getWorld(),
-                                    x, y, z), EntityType.fromName(type));
-                            Entity ent2 = getSign().getWorld().spawnEntity(new Location(getSign().getWorld(),
-                                    x, y, z), EntityType.fromName(rider));
-                            ent.setPassenger(ent2);
-                        } else {
-                            getSign().getWorld().spawnEntity(new Location(getSign().getWorld(), x, y, z),
-                                    EntityType.fromName(type));
-                        }
-                        return;
-                    }
-                }
+            if (entityType != null) {
+	            if (spawnRider) {
+		            // spawn the entity plus rider
+		            Entity entity = center.getWorld().spawnEntity(center.getLocation(), entityType);
+		            entity.setPassenger(center.getWorld().spawnEntity(center.getLocation(), entityRider));
+	            } else {
+		            // spawn amount of mobs
+		            for (int i = 0; i < amount; i++) {
+			            center.getWorld().spawnEntity(center.getLocation(), entityType);
+		            }
+	            }
             }
         }
     }
