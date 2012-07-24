@@ -189,6 +189,10 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     }
 
+	public boolean isInGroup(String player, String group) {
+		return perms.inGroup(player, group);
+	}
+
     public LanguageManager getLanguageManager() {
 
         return languageManager;
