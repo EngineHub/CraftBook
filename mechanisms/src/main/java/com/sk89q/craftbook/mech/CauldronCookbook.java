@@ -19,16 +19,8 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import java.io.*;
@@ -39,10 +31,11 @@ import java.util.logging.Logger;
  * @author sk89q
  */
 public class CauldronCookbook {
+
     /**
      * Constructs a CauldronCookbook - reads recipes.
      */
-    public CauldronCookbook(){
+    public CauldronCookbook() {
 
         try {
             CauldronCookbook recipes = readCauldronRecipes("cauldron-recipes.txt");
@@ -63,17 +56,16 @@ public class CauldronCookbook {
             log.warning("cauldron-recipes.txt not loaded: " + e.getMessage());
         }
     }
+
     /**
      * For fast recipe lookup.
-     * 
      */
-    private List<Recipe> recipes =
-            new ArrayList<Recipe>();
+    private final List<Recipe> recipes = new ArrayList<Recipe>();
 
     /**
      * For logging purposes.
      */
-    static Logger log = Logger.getLogger("Minecraft");
+    static final Logger log = Logger.getLogger("Minecraft");
 
     /**
      * Adds a recipe.
@@ -81,6 +73,7 @@ public class CauldronCookbook {
      * @param recipe
      */
     public void add(Recipe recipe) {
+
         recipes.add(recipe);
     }
 
@@ -89,11 +82,13 @@ public class CauldronCookbook {
      * the specified ingredients, the first one that matches will be selected
      * (the list is checked in the same order as recipes are entered in the
      * config file).
-     * 
+     *
      * @param ingredients
+     *
      * @return a recipe matching the given ingredients
      */
-    public Recipe find(Map<Integer,Integer> ingredients) {
+    public Recipe find(Map<Integer, Integer> ingredients) {
+
         for (Recipe recipe : recipes) {
             if (recipe.hasAllIngredients(ingredients)) {
                 return recipe;
@@ -104,14 +99,17 @@ public class CauldronCookbook {
 
     /**
      * Get the number of recipes.
-     * 
+     *
      * @return the number of recipes.
      */
     public int size() {
+
         return recipes.size();
     }
+
     private CauldronCookbook readCauldronRecipes(String path)
             throws IOException {
+
         File file = new File("plugins/CraftBookMechanisms", path);
         FileReader input = null;
         try {
@@ -151,7 +149,7 @@ public class CauldronCookbook {
                 if (input != null) {
                     input.close();
                 }
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -160,6 +158,7 @@ public class CauldronCookbook {
      * Parse a list of cauldron items.
      */
     private List<Integer> parseCauldronItems(String list) {
+
         String[] parts = list.split(",");
 
         List<Integer> out = new ArrayList<Integer>();
@@ -183,11 +182,11 @@ public class CauldronCookbook {
                 } catch (NumberFormatException e) {
                     /*int item = server.getConfiguration().getItemId(part);
 
-					if (item > 0) {
-						for (int i = 0; i < multiplier; i++) {
-							out.add(item);
-						}
-					} else {*/
+                    if (item > 0) {
+                        for (int i = 0; i < multiplier; i++) {
+                            out.add(item);
+                        }
+                    } else {*/
                     log.log(Level.WARNING, "Cauldron: Unknown item " + part);
                     //}
                 }
@@ -199,10 +198,10 @@ public class CauldronCookbook {
     }
 
     /**
-     *
      * @author sk89q
      */
     public static final class Recipe {
+
         /**
          * Recipe name.
          */
@@ -214,8 +213,8 @@ public class CauldronCookbook {
         /**
          * Stores a list of ingredients.
          */
-        private final Map<Integer,Integer> ingredientLookup
-        = new HashMap<Integer,Integer>();
+        private final Map<Integer, Integer> ingredientLookup
+                = new HashMap<Integer, Integer>();
         /**
          * List of resulting items or blocks.
          */
@@ -227,14 +226,15 @@ public class CauldronCookbook {
 
         /**
          * Construct the instance. The list will be sorted.
-         * 
+         *
          * @param name
          * @param ingredients
          * @param results
          * @param groups
          */
         public Recipe(String name, List<Integer> ingredients,
-                List<Integer> results, String[] groups) {
+                      List<Integer> results, String[] groups) {
+
             this.name = name;
             this.ingredients = Collections.unmodifiableList(ingredients);
             this.results = Collections.unmodifiableList(results);
@@ -254,6 +254,7 @@ public class CauldronCookbook {
          * @return the name
          */
         public String getName() {
+
             return name;
         }
 
@@ -261,6 +262,7 @@ public class CauldronCookbook {
          * @return the ingredients
          */
         public List<Integer> getIngredients() {
+
             return ingredients;
         }
 
@@ -268,6 +270,7 @@ public class CauldronCookbook {
          * @return the groups
          */
         public String[] getGroups() {
+
             return groups;
         }
 
@@ -276,8 +279,9 @@ public class CauldronCookbook {
          *
          * @param check
          */
-        public boolean hasAllIngredients(Map<Integer,Integer> check) {
-            for (Map.Entry<Integer,Integer> entry : ingredientLookup.entrySet()) {
+        public boolean hasAllIngredients(Map<Integer, Integer> check) {
+
+            for (Map.Entry<Integer, Integer> entry : ingredientLookup.entrySet()) {
                 int id = entry.getKey();
                 if (!check.containsKey(id)) {
                     return false;
@@ -292,6 +296,7 @@ public class CauldronCookbook {
          * @return the results
          */
         public List<Integer> getResults() {
+
             return results;
         }
     }

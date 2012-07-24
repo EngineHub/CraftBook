@@ -22,13 +22,17 @@ package com.sk89q.craftbook;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class AbstractMechanic implements Mechanic {
+
     public void onRightClick(PlayerInteractEvent event) {
+
     }
-    
+
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
     }
-    
+
     public void onLeftClick(PlayerInteractEvent event) {
+
     }
-    
+
 }

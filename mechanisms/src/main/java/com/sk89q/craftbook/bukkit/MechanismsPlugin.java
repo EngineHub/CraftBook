@@ -18,42 +18,24 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.mech.*;
+import com.sk89q.craftbook.mech.area.Area;
+import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.mech.Ammeter;
-import com.sk89q.craftbook.mech.Bookcase;
-import com.sk89q.craftbook.mech.Bridge;
-import com.sk89q.craftbook.mech.Cauldron;
-import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.Command;
-import com.sk89q.craftbook.mech.CookingPot;
-import com.sk89q.craftbook.mech.CustomCrafting;
-import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.Door;
-import com.sk89q.craftbook.mech.Elevator;
-import com.sk89q.craftbook.mech.Gate;
-import com.sk89q.craftbook.mech.HiddenSwitch;
-import com.sk89q.craftbook.mech.LightSwitch;
-import com.sk89q.craftbook.mech.Payment;
-import com.sk89q.craftbook.mech.Snow;
-import com.sk89q.craftbook.mech.Teleporter;
-import com.sk89q.craftbook.mech.area.Area;
-import com.sk89q.craftbook.mech.area.CopyManager;
-import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
-
 
 /**
  * Plugin for CraftBook's mechanisms.
- * 
+ *
  * @author sk89q
  */
 public class MechanismsPlugin extends BaseBukkitPlugin {
@@ -64,10 +46,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     public static Economy economy = null;
 
-    public CopyManager copyManager = new CopyManager();
+    public final CopyManager copyManager = new CopyManager();
 
     @Override
     public void onEnable() {
+
         super.onEnable();
 
         createDefaultConfiguration("books.txt", false);
@@ -81,7 +64,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-        if(getServer().getPluginManager().isPluginEnabled("Vault"))
+        if (getServer().getPluginManager().isPluginEnabled("Vault"))
             setupEconomy();
 
         MechanicManager manager = new MechanicManager(this);
@@ -104,8 +87,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new CookingPot.Factory(this));
 
-        if(economy!=null)
-            manager.register(new Payment.Factory(this));
+        if (economy != null) manager.register(new Payment.Factory(this));
 
         /*
          * Until fixed, Cauldron must be at the bottom of the registration list as
@@ -121,6 +103,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      * Setup the required components of self-triggered Mechanics..
      */
     private void setupSelfTriggered(MechanicManager manager) {
+
         logger.info("CraftBook: Enumerating chunks for self-triggered components...");
 
         long start = System.currentTimeMillis();
@@ -142,11 +125,12 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
                 + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
 
         // Set up the clock for self-triggered Mechanics.
-        getServer().getScheduler().scheduleSyncRepeatingTask(this,new MechanicClock(manager), 0, 2);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
     }
 
     @Override
     protected void registerEvents() {
+
         CustomCrafting cc = new CustomCrafting(this);
         cc.addRecipes();
         getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
@@ -161,18 +145,21 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     }
 
     public boolean reloadLocalConfiguration(CommandSender sender) {
+
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
         return true;
     }
 
     public MechanismsConfiguration getLocalConfiguration() {
+
         return config;
     }
 
-    private boolean setupEconomy()
-    {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+    private boolean setupEconomy() {
+
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
+                .milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
         }

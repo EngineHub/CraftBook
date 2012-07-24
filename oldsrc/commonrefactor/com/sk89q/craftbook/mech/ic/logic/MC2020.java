@@ -19,10 +19,10 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import java.util.Random;
-
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
+
+import java.util.Random;
 
 /**
  * 3-bit random number generator.
@@ -30,6 +30,7 @@ import com.sk89q.craftbook.mech.ic.LogicChipState;
  * @author sk89q
  */
 public class MC2020 extends LogicIC {
+
     /**
      * Random number generator.
      */
@@ -41,6 +42,7 @@ public class MC2020 extends LogicIC {
      * @return
      */
     public String getTitle() {
+
         return "3-BIT RANDOM";
     }
 
@@ -50,6 +52,7 @@ public class MC2020 extends LogicIC {
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         if (chip.getIn(1).is()) {
             chip.getOut(1).set(random.nextBoolean());
             chip.getOut(2).set(random.nextBoolean());

@@ -20,11 +20,7 @@
 package com.sk89q.craftbook.mech;
 
 //import java.util.logging.Logger;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 //import java.io.*;
 
 /**
@@ -33,9 +29,9 @@ import java.util.ArrayList;
  * @author sk89q
  */
 public class CauldronCookbook {
+
     /**
      * For fast recipe lookup.
-     * 
      */
     private List<Recipe> recipes =
             new ArrayList<Recipe>();
@@ -46,6 +42,7 @@ public class CauldronCookbook {
      * @param recipe
      */
     public void add(Recipe recipe) {
+
         recipes.add(recipe);
     }
 
@@ -54,7 +51,8 @@ public class CauldronCookbook {
      *
      * @param ingredients
      */
-    public Recipe find(Map<Integer,Integer> ingredients) {
+    public Recipe find(Map<Integer, Integer> ingredients) {
+
         for (Recipe recipe : recipes) {
             if (recipe.hasAllIngredients(ingredients)) {
                 return recipe;
@@ -65,107 +63,115 @@ public class CauldronCookbook {
 
     /**
      * Get the number of recipes.
-     * 
+     *
      * @return
      */
     public int size() {
+
         return recipes.size();
     }
-    
+
     /**
-    *
-    * @author sk89q
-    */
-   public static final class Recipe {
-       /**
-        * Recipe name.
-        */
-       private final String name;
-       /**
-        * Stores a list of ingredients.
-        */
-       private final List<Integer> ingredients;
-       /**
-        * Stores a list of ingredients.
-        */
-       private final Map<Integer,Integer> ingredientLookup
-               = new HashMap<Integer,Integer>();
-       /**
-        * List of resulting items or blocks.
-        */
-       private final List<Integer> results;
-       /**
-        * List of groups that can use this recipe. This may be null.
-        */
-       private final String[] groups;
+     * @author sk89q
+     */
+    public static final class Recipe {
 
-       /**
-        * Construct the instance. The list will be sorted.
-        * 
-        * @param ingredients
-        * @param results
-        */
-       public Recipe(String name, List<Integer> ingredients,
-               List<Integer> results, String[] groups) {
-           this.name = name;
-           this.ingredients = Collections.unmodifiableList(ingredients);
-           this.results = Collections.unmodifiableList(results);
-           this.groups = groups;
+        /**
+         * Recipe name.
+         */
+        private final String name;
+        /**
+         * Stores a list of ingredients.
+         */
+        private final List<Integer> ingredients;
+        /**
+         * Stores a list of ingredients.
+         */
+        private final Map<Integer, Integer> ingredientLookup
+                = new HashMap<Integer, Integer>();
+        /**
+         * List of resulting items or blocks.
+         */
+        private final List<Integer> results;
+        /**
+         * List of groups that can use this recipe. This may be null.
+         */
+        private final String[] groups;
 
-           // Make a list of required ingredients by item ID
-           for (Integer id : ingredients) {
-               if (ingredientLookup.containsKey(id)) {
-                   ingredientLookup.put(id, ingredientLookup.get(id) + 1);
-               } else {
-                   ingredientLookup.put(id, 1);
-               }
-           }
-       }
+        /**
+         * Construct the instance. The list will be sorted.
+         *
+         * @param ingredients
+         * @param results
+         */
+        public Recipe(String name, List<Integer> ingredients,
+                      List<Integer> results, String[] groups) {
 
-       /**
-        * @return the name
-        */
-       public String getName() {
-           return name;
-       }
+            this.name = name;
+            this.ingredients = Collections.unmodifiableList(ingredients);
+            this.results = Collections.unmodifiableList(results);
+            this.groups = groups;
 
-       /**
-        * @return the ingredients
-        */
-       public List<Integer> getIngredients() {
-           return ingredients;
-       }
+            // Make a list of required ingredients by item ID
+            for (Integer id : ingredients) {
+                if (ingredientLookup.containsKey(id)) {
+                    ingredientLookup.put(id, ingredientLookup.get(id) + 1);
+                } else {
+                    ingredientLookup.put(id, 1);
+                }
+            }
+        }
 
-       /**
-        * @return the groups
-        */
-       public String[] getGroups() {
-           return groups;
-       }
+        /**
+         * @return the name
+         */
+        public String getName() {
 
-       /**
-        * Checks to see if all the ingredients are met.
-        *
-        * @param check
-        * @return
-        */
-       public boolean hasAllIngredients(Map<Integer,Integer> check) {
-           for (Map.Entry<Integer,Integer> entry : ingredientLookup.entrySet()) {
-               int id = entry.getKey();
-               if (!check.containsKey(id)) {
-                   return false;
-               } else if (check.get(id) < entry.getValue()) {
-                   return false;
-               }
-           }
-           return true;
-       }
+            return name;
+        }
 
-       /**
-        * @return the results
-        */
-       public List<Integer> getResults() {
-           return results;
-       }
-   }
+        /**
+         * @return the ingredients
+         */
+        public List<Integer> getIngredients() {
+
+            return ingredients;
+        }
+
+        /**
+         * @return the groups
+         */
+        public String[] getGroups() {
+
+            return groups;
+        }
+
+        /**
+         * Checks to see if all the ingredients are met.
+         *
+         * @param check
+         *
+         * @return
+         */
+        public boolean hasAllIngredients(Map<Integer, Integer> check) {
+
+            for (Map.Entry<Integer, Integer> entry : ingredientLookup.entrySet()) {
+                int id = entry.getKey();
+                if (!check.containsKey(id)) {
+                    return false;
+                } else if (check.get(id) < entry.getValue()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+         * @return the results
+         */
+        public List<Integer> getResults() {
+
+            return results;
+        }
+    }
 }

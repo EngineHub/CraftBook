@@ -28,24 +28,32 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class DummyBlockBag extends BlockBag {
+
     private boolean fetch = true, store = true;
-    
-    public DummyBlockBag() {}
+
+    public DummyBlockBag() {
+
+    }
+
     public DummyBlockBag(boolean fetch, boolean store) {
+
         this.fetch = fetch;
         this.store = store;
     }
-    
+
     /**
      * Gets a block.
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockBagException {
-        if(!fetch) throw new OutOfBlocksException(id);
+
+        if (!fetch) throw new OutOfBlocksException(id);
     }
 
     /**
@@ -53,67 +61,81 @@ public class DummyBlockBag extends BlockBag {
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id) throws BlockBagException {
-        if(!store) throw new OutOfSpaceException(id);
+
+        if (!store) throw new OutOfSpaceException(id);
     }
 
     /**
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSourcePosition(WorldInterface w, Vector pos) {
+
     }
-    
+
     /**
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSingleSourcePosition(WorldInterface w, Vector pos) {
+
     }
 
     /**
      * Flush changes.
      */
     public void flushChanges() {
+
     }
-    
+
     /**
      * Unlimited black hole bag that will provided unlimited blocks and
      * discard any accepted blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class UnlimitedBlackHoleFactory implements BlockBagFactory {
+
         public BlockBag createBlockSource(WorldInterface w, Vector v) {
+
             return new DummyBlockBag();
         }
     }
-    
+
     /**
      * Discards all given blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class BlackHoleFactory implements BlockBagFactory {
+
         public BlockBag createBlockSource(WorldInterface w, Vector v) {
+
             return new DummyBlockBag(false, true);
         }
     }
-    
+
     /**
      * Provides unlimited blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class UnlimitedSourceFactory implements BlockBagFactory {
+
         public BlockBag createBlockSource(WorldInterface w, Vector v) {
+
             return new DummyBlockBag(true, false);
         }
     }

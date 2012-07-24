@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RedstoneUtil.Power;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-
-public class CartMessager extends CartMechanism{
+public class CartMessager extends CartMechanism {
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
-        try
-        {
+
+        try {
             // validate
             if (cart == null) return;
 
@@ -33,27 +32,26 @@ public class CartMessager extends CartMechanism{
                 if (!blocks.matches("print")) {
 
                 } else {
-                    if(cart.getPassenger() instanceof Player) {
+                    if (cart.getPassenger() instanceof Player) {
                         Player p = (Player) cart.getPassenger();
                         Sign s = (Sign) blocks.sign.getState();
-                        if(s.getLine(1)!=null && !s.getLine(1).trim().equalsIgnoreCase(""))
+                        if (s.getLine(1) != null && !s.getLine(1).trim().equalsIgnoreCase(""))
                             p.chat(s.getLine(1));
-                        if(s.getLine(2)!=null && !s.getLine(2).trim().equalsIgnoreCase(""))
+                        if (s.getLine(2) != null && !s.getLine(2).trim().equalsIgnoreCase(""))
                             p.chat(s.getLine(2));
-                        if(s.getLine(3)!=null && !s.getLine(3).trim().equalsIgnoreCase(""))
+                        if (s.getLine(3) != null && !s.getLine(3).trim().equalsIgnoreCase(""))
                             p.chat(s.getLine(3));
                     }
                 }
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 

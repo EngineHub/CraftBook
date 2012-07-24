@@ -16,98 +16,122 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import com.sk89q.craftbook.access.Configuration;
+
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.sk89q.craftbook.access.Configuration;
-
 public class HmodConfigurationImpl implements Configuration {
+
     /**
      * Logger.
      */
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
-    
+
     private PropertiesFile f;
     private DataSource s = etc.getDataSource();
-    
+
     public HmodConfigurationImpl(PropertiesFile f) throws IOException {
+
         this.f = f;
         f.load();
     }
-    
+
     public boolean hasKey(String key) {
+
         return f.containsKey(key);
     }
-    
+
     public boolean getBoolean(String key, boolean def) {
+
         Boolean b = getBoolean(key);
-        if(b==null) {
-            setString(key,def);
+        if (b == null) {
+            setString(key, def);
             return def;
         } else {
             return b;
         }
     }
+
     public int getInt(String key, int def) {
-        return f.getInt(key,def);
+
+        return f.getInt(key, def);
     }
+
     public float getFloat(String key, float def) {
-        return (float)f.getDouble(key,def);
+
+        return (float) f.getDouble(key, def);
     }
+
     public String getString(String key, String def) {
-        return f.getString(key,def);
+
+        return f.getString(key, def);
     }
-    
+
     public Boolean getBoolean(String key) {
+
         String s = getString(key);
-        if(s==null) return null;
-        else if(s.equals("true")) return true;
-        else if(s.equals("false")) return false;
+        if (s == null) return null;
+        else if (s.equals("true")) return true;
+        else if (s.equals("false")) return false;
         else return null;
     }
+
     public Integer getInt(String key) {
+
         String s = getString(key);
-        if(s==null) return null;
+        if (s == null) return null;
         else try {
             return Integer.parseInt(key);
         } catch (NumberFormatException e) {
             return null;
         }
     }
+
     public Float getFloat(String key) {
+
         String s = getString(key);
-        if(s==null) return null;
+        if (s == null) return null;
         else try {
             return Float.parseFloat(key);
         } catch (NumberFormatException e) {
             return null;
         }
     }
+
     public String getString(String key) {
-        if(!f.containsKey(key)) return null;
+
+        if (!f.containsKey(key)) return null;
         else return f.getString(key);
     }
-    
+
     public void setString(String key, Object target) {
+
         f.setString(key, target.toString());
     }
-    
+
     public void load() throws IOException {
+
         f.load();
     }
 
     public String getItemName(int id) {
+
         return s.getItem(id);
     }
+
     public int getItemId(String name) {
+
         return s.getItem(name);
     }
 
     public Logger getLogger() {
+
         return logger;
     }
 
     public boolean isValidMob(String mobName) {
+
         return Mob.isValid(mobName);
     }
 }

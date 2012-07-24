@@ -20,7 +20,7 @@ package com.sk89q.craftbook.ic;
 
 /**
  * Base IC family.
- * 
+ *
  * @author sk89q
  */
 public abstract class AbstractICFamily implements ICFamily {

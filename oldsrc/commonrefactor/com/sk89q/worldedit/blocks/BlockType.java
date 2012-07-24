@@ -19,9 +19,9 @@
 
 package com.sk89q.worldedit.blocks;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Block types.
@@ -30,7 +30,7 @@ import java.util.EnumSet;
  */
 public enum BlockType {
     AIR(0, "Air", "air"),
-    STONE(1, "Stone", new String[]{"stone", "rock"}),
+    STONE(1, "Stone", new String[] {"stone", "rock"}),
     GRASS(2, "Grass", "grass"),
     DIRT(3, "Dirt", "dirt"),
     COBBLESTONE(4, "Cobblestone", "cobblestone"),
@@ -41,7 +41,7 @@ public enum BlockType {
     STATIONARY_WATER(9, "Water (stationary)", "water"),
     LAVA(10, "Lava", "lavamoving"),
     STATIONARY_LAVA(11, "Lava (stationary)", "lava"),
-    SAND(12,    "Sand", "sand"),
+    SAND(12, "Sand", "sand"),
     GRAVEL(13, "Gravel", "gravel"),
     GOLD_ORE(14, "Gold ore", "goldore"),
     IRON_ORE(15, "Iron ore", "ironore"),
@@ -52,16 +52,16 @@ public enum BlockType {
     GLASS(20, "Glass", "glass"),
     CLOTH(35, "Cloth", "cloth"),
     YELLOW_FLOWER(37, "Yellow flower", "yellowflower"),
-    RED_FLOWER(38, "Red rose", new String[]{"redflower", "redrose"}),
+    RED_FLOWER(38, "Red rose", new String[] {"redflower", "redrose"}),
     BROWN_MUSHROOM(39, "Brown mushroom", "brownmushroom"),
     RED_MUSHROOM(40, "Red mushroom", "redmushroom"),
-    GOLD_BLOCK(41, "Gold block", new String[]{"gold", "goldblock"}),
-    IRON_BLOCK(42, "Iron block", new String[]{"iron", "ironblock"}),
+    GOLD_BLOCK(41, "Gold block", new String[] {"gold", "goldblock"}),
+    IRON_BLOCK(42, "Iron block", new String[] {"iron", "ironblock"}),
     DOUBLE_STEP(43, "Double step", "doublestep"),
     STEP(44, "Step", "step"),
     BRICK(45, "Brick", "brick"),
     TNT(46, "TNT", "tnt"),
-    BOOKCASE(47, "Bookcase", new String[]{"bookshelf", "bookshelf"}),
+    BOOKCASE(47, "Bookcase", new String[] {"bookshelf", "bookshelf"}),
     MOSSY_COBBLESTONE(48, "Cobblestone (mossy)", "mossycobblestone"),
     OBSIDIAN(49, "Obsidian", "obsidian"),
     TORCH(50, "Torch", "torch"),
@@ -71,16 +71,16 @@ public enum BlockType {
     CHEST(54, "Chest", "chest"),
     REDSTONE_WIRE(55, "Redstone wire", "redstone"),
     DIAMOND_ORE(56, "Diamond ore", "diamondore"),
-    DIAMOND_BLOCK(57, "Diamond block", new String[]{"diamond", "diamondblock"}),
+    DIAMOND_BLOCK(57, "Diamond block", new String[] {"diamond", "diamondblock"}),
     WORKBENCH(58, "Workbench", "workbench"),
     CROPS(59, "Crops", "crops"),
     SOIL(60, "Soil", "soil"),
     FURNACE(61, "Furnace", "furnace"),
     BURNING_FURNACE(62, "Furnace (burning)", "burningfurnace"),
-    SIGN_POST(63, "Sign post", new String[]{"sign", "signpost"}),
+    SIGN_POST(63, "Sign post", new String[] {"sign", "signpost"}),
     WOODEN_DOOR(64, "Wooden door", "wooddoor"),
     LADDER(65, "Ladder", "ladder"),
-    MINECART_TRACKS(66, "Minecart tracks", new String[]{"track", "tracks"}),
+    MINECART_TRACKS(66, "Minecart tracks", new String[] {"track", "tracks"}),
     COBBLESTONE_STAIRS(67, "Cobblestone stairs", "cobblestonestairs"),
     WALL_SIGN(68, "Wall sign", "wallsign"),
     LEVER(69, "Lever", "level"),
@@ -90,7 +90,7 @@ public enum BlockType {
     REDSTONE_ORE(73, "Redstone ore", "redstoneore"),
     GLOWING_REDSTONE_ORE(74, "Glowing redstone ore", "glowingredstoneore"),
     REDSTONE_TORCH_OFF(75, "Redstone torch (off)",
-            new String[]{"redstonetorch"," redstonetorchon"}),
+            new String[] {"redstonetorch", " redstonetorchon"}),
     REDSTONE_TORCH_ON(76, "Redstone torch (on)", "redstonetorchon"),
     STONE_BUTTON(77, "Stone Button", "stonebutton"),
     SNOW(78, "Snow", "snow"),
@@ -102,27 +102,27 @@ public enum BlockType {
     JUKEBOX(84, "Jukebox", "jukebox"),
     FENCE(85, "Fence", "fence"),
     PUMPKIN(86, "Pumpkin", "pumpkin"),
-    RED_BLOCK(87, "Cobblestone (red mossy)", new String[]{"redmossycobblestone", "redcobblestone"}),
+    RED_BLOCK(87, "Cobblestone (red mossy)", new String[] {"redmossycobblestone", "redcobblestone"}),
     HELL_DIRT(88, "Mud", "mud"),
     HELL_GOLD(89, "Brittle gold", "brittlegold"),
     PORTAL(90, "Portal", "portal"),
-    LIGHTED_PUMPKIN(91, "Pumpkin (on)", new String[]{"pumpkinlighted", "pumpkinon", "litpumpkin"});
+    LIGHTED_PUMPKIN(91, "Pumpkin (on)", new String[] {"pumpkinlighted", "pumpkinon", "litpumpkin"});
 
     /**
      * Stores a map of the IDs for fast access.
      */
-    private static final Map<Integer,BlockType> ids = new HashMap<Integer,BlockType>();
+    private static final Map<Integer, BlockType> ids = new HashMap<Integer, BlockType>();
     /**
      * Stores a map of the names for fast access.
      */
-    private static final Map<String,BlockType> lookup = new HashMap<String,BlockType>();
+    private static final Map<String, BlockType> lookup = new HashMap<String, BlockType>();
 
     private final int id;
     private final String name;
     private final String[] lookupKeys;
 
     static {
-        for(BlockType type : EnumSet.allOf(BlockType.class)) {
+        for (BlockType type : EnumSet.allOf(BlockType.class)) {
             ids.put(type.id, type);
             for (String key : type.lookupKeys) {
                 lookup.put(key, type);
@@ -138,9 +138,10 @@ public enum BlockType {
      * @param name
      */
     BlockType(int id, String name, String lookupKey) {
+
         this.id = id;
         this.name = name;
-        this.lookupKeys = new String[]{lookupKey};
+        this.lookupKeys = new String[] {lookupKey};
     }
 
     /**
@@ -150,6 +151,7 @@ public enum BlockType {
      * @param name
      */
     BlockType(int id, String name, String[] lookupKeys) {
+
         this.id = id;
         this.name = name;
         this.lookupKeys = lookupKeys;
@@ -159,9 +161,11 @@ public enum BlockType {
      * Return type from ID. May return null.
      *
      * @param id
+     *
      * @return
      */
     public static BlockType fromID(int id) {
+
         return ids.get(id);
     }
 
@@ -169,9 +173,11 @@ public enum BlockType {
      * Return type from name. May return null.
      *
      * @param name
+     *
      * @return
      */
     public static BlockType lookup(String name) {
+
         return lookup.get(name.toLowerCase());
     }
 
@@ -181,6 +187,7 @@ public enum BlockType {
      * @return
      */
     public int getID() {
+
         return id;
     }
 
@@ -190,6 +197,7 @@ public enum BlockType {
      * @return
      */
     public String getName() {
+
         return name;
     }
 
@@ -197,19 +205,23 @@ public enum BlockType {
      * Checks to see whether a block should be placed last.
      *
      * @param id
+     *
      * @return
      */
     public boolean shouldPlaceLast() {
+
         return shouldPlaceLast(id);
     }
 
     /**
      * Checks to see whether a block should be placed last.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean shouldPlaceLast(int id) {
+
         return id == 6 // Saplings
                 || id == 37 // Yellow flower
                 || id == 38 // Red flower
@@ -241,9 +253,11 @@ public enum BlockType {
      * Checks whether a block can be passed through.
      *
      * @param id
+     *
      * @return
      */
     public static boolean canPassThrough(int id) {
+
         return id == 0 // Air
                 || id == 6 // Saplings
                 || id == 37 // Yellow flower
@@ -271,11 +285,13 @@ public enum BlockType {
 
     /**
      * Returns true if the block uses its data value.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static boolean usesData(int id) {
+
         return id == 6 // Saplings
                 || id == 8 // Water
                 || id == 9 // Water

@@ -24,6 +24,7 @@ import com.sk89q.craftbook.access.SignInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 
 public class MinecraftUtil {
+
     /**
      * Gets the block behind a sign.
      *
@@ -31,9 +32,11 @@ public class MinecraftUtil {
      * @param y
      * @param z
      * @param multiplier
+     *
      * @return
      */
     public static Vector getWallSignBack(WorldInterface w, Vector pt, int multiplier) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -56,9 +59,11 @@ public class MinecraftUtil {
      * @param y
      * @param z
      * @param multiplier
+     *
      * @return
      */
     public static Vector getSignPostOrthogonalBack(WorldInterface w, Vector pt, int multiplier) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -83,15 +88,17 @@ public class MinecraftUtil {
      * @param y
      * @param z
      * @param multiplier
+     *
      * @return
      */
     public static Vector getWallSignSide(WorldInterface w, Vector pt, int multiplier) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
         int data = w.getData(x, y, z);
         if (data == 0x2) { // East
-            return new Vector(x + multiplier, y, z );
+            return new Vector(x + multiplier, y, z);
         } else if (data == 0x3) { // West
             return new Vector(x - multiplier, y, z);
         } else if (data == 0x4) { // North
@@ -104,28 +111,32 @@ public class MinecraftUtil {
     /**
      * Checks whether a sign at a location has a certain text on a
      * particular line, case in-sensitive.
-     * 
+     *
      * @param pt
      * @param lineNo
      * @param text
+     *
      * @return
      */
     public static boolean doesSignSay(WorldInterface w, Vector pt, int lineNo, String text) {
+
         BlockEntity e = w.getBlockEntity(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-        
-        if(e instanceof SignInterface) {
-            return ((SignInterface)e).getLine(lineNo).equalsIgnoreCase(text);
+
+        if (e instanceof SignInterface) {
+            return ((SignInterface) e).getLine(lineNo).equalsIgnoreCase(text);
         }
-    
+
         return false;
     }
 
     public static void dropSign(WorldInterface world, int x, int y, int z) {
+
         world.setId(x, y, z, 0);
         world.dropItem(x, y, z, 323, 1);
     }
 
     public static void dropSign(WorldInterface world, Vector pt) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();

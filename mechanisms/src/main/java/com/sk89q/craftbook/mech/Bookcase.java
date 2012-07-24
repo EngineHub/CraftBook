@@ -19,24 +19,19 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Random;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import java.io.*;
+import java.util.Random;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line
@@ -54,26 +49,28 @@ public class Bookcase extends AbstractMechanic {
     /**
      * Configuration.
      */
-    protected MechanismsPlugin plugin;
+    protected final MechanismsPlugin plugin;
 
     /**
      * Construct a bookcase for a location.
-     * 
+     *
      * @param pt
      * @param plugin
      */
     public Bookcase(BlockWorldVector pt, MechanismsPlugin plugin) {
+
         super();
         this.plugin = plugin;
     }
 
     /**
      * Reads a book.
-     * 
+     *
      * @param player
      * @param bookReadLine message to print to the user
      */
     public void read(LocalPlayer player, String bookReadLine) {
+
         if (!player.hasPermission("craftbook.mech.bookshelf.use")) {
             return;
         }
@@ -94,23 +91,26 @@ public class Bookcase extends AbstractMechanic {
 
     /**
      * Get a line from the book lines file.
-     * 
+     *
      * @return a line from the book lines file.
-     * @throws IOException
-     *             if we have trouble with the "books.txt" configuration file.
+     *
+     * @throws IOException if we have trouble with the "books.txt" configuration file.
      */
     protected String getBookLine() throws IOException {
-        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
+
+        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getLocalConfiguration()
+                .dataFolder, "books.txt")));
         lnr.skip(Long.MAX_VALUE);
         int lines = lnr.getLineNumber();
         lnr.close();
         int toRead = new Random().nextInt(lines);
-        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
-        String line = "";
+        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder,
+                "books.txt")));
+        String line;
         int passes = 0;
-        while((line = br.readLine())!=null) {
+        while ((line = br.readLine()) != null) {
             passes++;
-            if(passes >= toRead) break;
+            if (passes >= toRead) break;
         }
         br.close();
         return line;
@@ -118,15 +118,16 @@ public class Bookcase extends AbstractMechanic {
 
     /**
      * Raised when a block is right clicked.
-     * 
+     *
      * @param event
      */
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+
         if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
 
         Player player = event.getPlayer();
-        if(!player.getItemInHand().getType().isBlock())
+        if (!player.getItemInHand().getType().isBlock())
             read(plugin.wrap(player), plugin.getLocalConfiguration().bookcaseSettings.readLine);
     }
 
@@ -135,6 +136,7 @@ public class Bookcase extends AbstractMechanic {
      */
     @Override
     public void unload() {
+
     }
 
     /**
@@ -142,19 +144,23 @@ public class Bookcase extends AbstractMechanic {
      */
     @Override
     public boolean isActive() {
-        return false;   // this isn't a persistent mechanic, so the manager will never keep it around long enough to even check this.
+
+        return false;   // this isn't a persistent mechanic, so the manager will never keep it around long enough to
+        // even check this.
     }
 
     public static class Factory extends AbstractMechanicFactory<Bookcase> {
 
-        protected MechanismsPlugin plugin;
+        protected final MechanismsPlugin plugin;
 
         public Factory(MechanismsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
         @Override
         public Bookcase detect(BlockWorldVector pt) {
+
             if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE) {
                 return new Bookcase(pt, plugin);
             }
@@ -171,5 +177,6 @@ public class Bookcase extends AbstractMechanic {
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+
     }
 }

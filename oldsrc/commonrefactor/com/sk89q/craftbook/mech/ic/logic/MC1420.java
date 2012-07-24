@@ -19,8 +19,8 @@
 
 package com.sk89q.craftbook.mech.ic.logic;
 
-import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.mech.ic.LogicChipState;
+import com.sk89q.craftbook.mech.ic.LogicIC;
 import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
@@ -30,12 +30,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author Sir Propane
  */
 public class MC1420 extends LogicIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "CLOCK";
     }
 
@@ -45,24 +47,26 @@ public class MC1420 extends LogicIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(Vector pos, SignText sign) {
+
         if (sign.getLine3().length() == 0) {
             return "Specify a clock number on the third line.";
         }
-        
+
         int clockTime;
         try {
             clockTime = Integer.parseInt(sign.getLine3());
         } catch (NumberFormatException e) {
             return "Clock rate is not a number.";
         }
-        
-        if (clockTime < 5){
+
+        if (clockTime < 5) {
             return "Clock rate must be a minimum of 5.";
         }
-        if (clockTime > 15){
+        if (clockTime > 15) {
             return "Clock rate may not be greater than 15.";
         }
 
@@ -79,13 +83,14 @@ public class MC1420 extends LogicIC {
      * @param chip
      */
     public void think(LogicChipState chip) {
+
         int clockTime = Integer.parseInt(chip.getText().getLine3());
         int count = chip.getText().getLine4().length();
-        if(count % clockTime == clockTime-1){
+        if (count % clockTime == clockTime - 1) {
             chip.getOut(1).set(!chip.getLast(1));
             chip.getText().setLine4("");
-        } else chip.getText().setLine4(chip.getText().getLine4()+" ");
-        
+        } else chip.getText().setLine4(chip.getText().getLine4() + " ");
+
         chip.getText().supressUpdate();
     }
 }

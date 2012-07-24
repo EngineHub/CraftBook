@@ -23,10 +23,7 @@ import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.bukkit.*;
-
-import org.bukkit.Material;
+import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -38,84 +35,85 @@ import org.bukkit.block.Sign;
  */
 public class FamilySI3O extends AbstractICFamily {
 
-	@Override
-	public ChipState detect(BlockWorldVector source, Sign sign) {
-		return new ChipStateSI3O(source, sign);
-	}
+    @Override
+    public ChipState detect(BlockWorldVector source, Sign sign) {
 
-	public static class ChipStateSI3O extends AbstractChipState {
+        return new ChipStateSI3O(source, sign);
+    }
 
-		public ChipStateSI3O(BlockWorldVector source, Sign sign) {
-			super(source, sign);
-		}
+    public static class ChipStateSI3O extends AbstractChipState {
 
-		protected Block getBlock(int pin) {
+        public ChipStateSI3O(BlockWorldVector source, Sign sign) {
 
-			Block bsign = sign.getBlock();
-			BlockFace fback = SignUtil.getBack(bsign);
+            super(source, sign);
+        }
 
-			switch (pin) {
-				case 0:
-					return SignUtil.getFrontBlock(bsign);
-				case 1:
-					return bsign.getRelative(fback).getRelative(fback);
-				case 2:
-					return bsign.getRelative(fback).getRelative(
-							SignUtil.getCounterClockWise(fback));
-				case 3:
-					return bsign.getRelative(fback).getRelative(
-							SignUtil.getClockWise(fback));
-				default:
-					return null;
-			}
+        protected Block getBlock(int pin) {
 
-		}
+            Block bsign = sign.getBlock();
+            BlockFace fback = SignUtil.getBack(bsign);
 
-		@Override
-		public boolean get(int pin) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				return block.isBlockIndirectlyPowered();
-			} else {
-				return false;
-			}
-		}
+            switch (pin) {
+                case 0:
+                    return SignUtil.getFrontBlock(bsign);
+                case 1:
+                    return bsign.getRelative(fback).getRelative(fback);
+                case 2:
+                    return bsign.getRelative(fback).getRelative(
+                            SignUtil.getCounterClockWise(fback));
+                case 3:
+                    return bsign.getRelative(fback).getRelative(
+                            SignUtil.getClockWise(fback));
+                default:
+                    return null;
+            }
 
-		@Override
-		public void set(int pin, boolean value) {
-			Block block = getBlock(pin);
-			if (block != null) {
-				ICUtil.setState(block, value);
-			} else {
-				return;
-			}
-		}
+        }
 
-		@Override
-		public boolean getInput(int inputIndex) {
-			return get(inputIndex);
-		}
+        @Override
+        public boolean get(int pin) {
 
-		@Override
-		public boolean getOutput(int outputIndex) {
-			return get(outputIndex + 1);
-		}
+            Block block = getBlock(pin);
+            return block != null && block.isBlockIndirectlyPowered();
+        }
 
-		@Override
-		public void setOutput(int outputIndex, boolean value) {
-			set(outputIndex + 1, value);
-		}
+        @Override
+        public void set(int pin, boolean value) {
 
-		@Override
-		public int getInputCount() {
-			return 1;
-		}
+            Block block = getBlock(pin);
+            if (block != null) ICUtil.setState(block, value);
+        }
 
-		@Override
-		public int getOutputCount() {
-			return 3;
-		}
+        @Override
+        public boolean getInput(int inputIndex) {
 
-	}
+            return get(inputIndex);
+        }
+
+        @Override
+        public boolean getOutput(int outputIndex) {
+
+            return get(outputIndex + 1);
+        }
+
+        @Override
+        public void setOutput(int outputIndex, boolean value) {
+
+            set(outputIndex + 1, value);
+        }
+
+        @Override
+        public int getInputCount() {
+
+            return 1;
+        }
+
+        @Override
+        public int getOutputCount() {
+
+            return 3;
+        }
+
+    }
 
 }

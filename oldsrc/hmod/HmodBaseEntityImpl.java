@@ -21,19 +21,22 @@ import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.Vector;
 
 public class HmodBaseEntityImpl implements BaseEntityInterface {
+
     private BaseEntity entity;
-    
+
     protected WorldInterface world;
-    
+
     public HmodBaseEntityImpl(BaseEntity entity, WorldInterface world) {
+
         this.entity = entity;
         this.world = world;
     }
-    
+
     public WorldInterface getWorld() {
+
         return world;
     }
-    
+
     /**
      * Get the point of the block that is being stood in.
      *
@@ -41,6 +44,7 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
      */
     @Override
     public Vector getBlockIn() {
+
         return Vector.toBlockPoint(entity.getX(), entity.getY(), entity.getZ());
     }
 
@@ -51,17 +55,19 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
      */
     @Override
     public Vector getBlockOn() {
+
         return Vector.toBlockPoint(entity.getX(), entity.getY() - 1, entity.getZ());
     }
 
-    
+
     /**
      * Move the player.
      *
      * @param pos
      */
     public void setPosition(Vector pos) {
-        setPosition(pos, (float)getPitch(), (float)getYaw());
+
+        setPosition(pos, (float) getPitch(), (float) getYaw());
     }
 
     /**
@@ -71,6 +77,7 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
      */
     @Override
     public double getPitch() {
+
         return entity.getPitch();
     }
 
@@ -81,6 +88,7 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
      */
     @Override
     public Vector getPosition() {
+
         return new Vector(entity.getX(), entity.getY(), entity.getZ());
     }
 
@@ -91,6 +99,7 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
      */
     @Override
     public double getYaw() {
+
         return entity.getRotation();
     }
 
@@ -103,6 +112,7 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
      */
     @Override
     public void setPosition(Vector pos, float pitch, float yaw) {
+
         Location loc = new Location();
         loc.x = pos.getX();
         loc.y = pos.getY();
@@ -113,57 +123,82 @@ public class HmodBaseEntityImpl implements BaseEntityInterface {
     }
 
     public void setYaw(double yaw) {
-        entity.setRotation((float)yaw);
+
+        entity.setRotation((float) yaw);
     }
+
     public void setPitch(double pitch) {
-        entity.setPitch((float)pitch);
+
+        entity.setPitch((float) pitch);
     }
 
     public double getX() {
+
         return entity.getX();
     }
+
     public double getY() {
+
         return entity.getY();
     }
+
     public double getZ() {
+
         return entity.getZ();
     }
 
     public void setX(double x) {
+
         entity.setX(x);
     }
+
     public void setY(double y) {
+
         entity.setY(y);
     }
+
     public void setZ(double z) {
+
         entity.setZ(z);
     }
 
     public void remove() {
+
         etc.getServer().getMCServer().e.e(entity.getEntity());
     }
 
     public int getEntityId() {
+
         return entity.getId();
     }
-    
+
     public double getXSpeed() {
+
         return entity.getEntity().s;
     }
+
     public double getYSpeed() {
+
         return entity.getEntity().t;
     }
+
     public double getZSpeed() {
+
         return entity.getEntity().u;
     }
 
     public void setXSpeed(double s) {
+
         entity.getEntity().s = s;
     }
+
     public void setYSpeed(double s) {
+
         entity.getEntity().t = s;
     }
+
     public void setZSpeed(double s) {
+
         entity.getEntity().u = s;
     }
 }

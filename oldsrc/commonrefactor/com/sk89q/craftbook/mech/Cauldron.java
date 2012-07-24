@@ -25,10 +25,10 @@ import com.sk89q.craftbook.access.WorldInterface;
 import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.Vector;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Handler for cauldrons.
@@ -36,6 +36,7 @@ import java.util.ArrayList;
  * @author sk89q
  */
 public class Cauldron {
+
     /**
      * Stores the recipes.
      */
@@ -43,10 +44,11 @@ public class Cauldron {
 
     /**
      * Construct the handler.
-     * 
+     *
      * @param recipes
      */
     public Cauldron(CauldronCookbook recipes) {
+
         this.recipes = recipes;
     }
 
@@ -54,25 +56,28 @@ public class Cauldron {
      * Thrown when a suspected formation is not actually a valid cauldron.
      */
     private class NotACauldronException extends Exception {
+
         private static final long serialVersionUID = 3091428924893050849L;
 
         /**
          * Construct the exception with a message.
-         * 
+         *
          * @param msg
          */
         public NotACauldronException(String msg) {
+
             super(msg);
         }
     }
 
     /**
      * Do cauldron.
-     * 
+     *
      * @param pt
      * @param player
      */
     public void preCauldron(PlayerInterface player, WorldInterface world, Vector pt) {
+
         int x = pt.getBlockX();
         int y = pt.getBlockY();
         int z = pt.getBlockZ();
@@ -100,7 +105,7 @@ public class Cauldron {
 
     /**
      * Attempt to perform a cauldron recipe.
-     * 
+     *
      * @param pt
      * @param player
      * @param recipes
@@ -110,7 +115,7 @@ public class Cauldron {
         int rootY = pt.getBlockY();
 
         // Used to store cauldron blocks -- walls are counted
-        Map<BlockVector,Integer> visited = new HashMap<BlockVector,Integer>();
+        Map<BlockVector, Integer> visited = new HashMap<BlockVector, Integer>();
 
         try {
             // The following attempts to recursively find adjacent blocks so
@@ -125,11 +130,11 @@ public class Cauldron {
             }
 
             // Key is the block ID and the value is the amount
-            Map<Integer,Integer> contents = new HashMap<Integer,Integer>();
+            Map<Integer, Integer> contents = new HashMap<Integer, Integer>();
 
             // Now we have to ignore stone blocks so that we get the real
             // contents of the cauldron
-            for (Map.Entry<BlockVector,Integer> entry : visited.entrySet()) {
+            for (Map.Entry<BlockVector, Integer> entry : visited.entrySet()) {
                 if (entry.getValue() != BlockType.STONE) {
                     if (!contents.containsKey(entry.getValue())) {
                         contents.put(entry.getValue(), 1);
@@ -145,33 +150,33 @@ public class Cauldron {
 
             if (recipe != null) {
                 String[] groups = recipe.getGroups();
-                
+
                 if (groups != null) {
                     boolean found = false;
-                    
+
                     for (String group : groups) {
                         if (player.isInGroup(group)) {
                             found = true;
                             break;
                         }
                     }
-                    
+
                     if (!found) {
                         player.sendMessage(Colors.DARK_RED + "Doesn't seem as if you have the ability...");
                         return;
                     }
                 }
-                
+
                 player.sendMessage(Colors.GOLD + "In a poof of smoke, you've made "
                         + recipe.getName() + ".");
 
                 List<Integer> ingredients =
                         new ArrayList<Integer>(recipe.getIngredients());
-                
+
                 List<BlockVector> removeQueue = new ArrayList<BlockVector>();
 
                 // Get rid of the blocks in world
-                for (Map.Entry<BlockVector,Integer> entry : visited.entrySet()) {
+                for (Map.Entry<BlockVector, Integer> entry : visited.entrySet()) {
                     // This is not a fast operation, but we should not have
                     // too many ingredients
                     if (ingredients.contains(entry.getValue())) {
@@ -185,7 +190,7 @@ public class Cauldron {
                         ingredients.remove(entry.getValue());
                     }
                 }
-                
+
                 for (BlockVector v : removeQueue) {
                     world.setId(v, 0);
                 }
@@ -194,7 +199,7 @@ public class Cauldron {
                 for (Integer id : recipe.getResults()) {
                     player.giveItem(id, 1);
                 }
-            // Didn't find a recipe
+                // Didn't find a recipe
             } else {
                 player.sendMessage(Colors.RED + "Hmm, this doesn't make anything...");
             }
@@ -214,14 +219,19 @@ public class Cauldron {
      * @param minY
      * @param maxY
      * @param visited
+     *
      * @throws Cauldron.NotACauldronException
      */
     public void findCauldronContents(WorldInterface world, BlockVector pt, int minY, int maxY,
-            Map<BlockVector,Integer> visited) throws NotACauldronException {
+                                     Map<BlockVector, Integer> visited) throws NotACauldronException {
 
         // Don't want to go too low or high
-        if (pt.getBlockY() < minY) { return; }
-        if (pt.getBlockY() > maxY) { return; }
+        if (pt.getBlockY() < minY) {
+            return;
+        }
+        if (pt.getBlockY() > maxY) {
+            return;
+        }
 
         // There is likely a leak in the cauldron (or this isn't a cauldron)
         if (visited.size() > 24) {
@@ -229,7 +239,9 @@ public class Cauldron {
         }
 
         // Prevent infinite looping
-        if (visited.containsKey(pt)) { return; }
+        if (visited.containsKey(pt)) {
+            return;
+        }
 
         int type = world.getId(pt);
 
@@ -242,12 +254,14 @@ public class Cauldron {
         if (type == 11) {
             type = 10;
         }
-        
+
         visited.put(pt, type);
 
         // It's a wall -- we only needed to remember that we visited it but
         // we don't need to recurse
-        if (type == BlockType.STONE) { return; }
+        if (type == BlockType.STONE) {
+            return;
+        }
 
         // Must have a lava floor
         Vector lavaPos = pt.subtract(0, pt.getBlockY() - minY + 1, 0);

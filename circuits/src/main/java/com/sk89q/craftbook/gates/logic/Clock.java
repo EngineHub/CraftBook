@@ -18,57 +18,54 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+public class Clock extends AbstractIC implements SelfTriggeredIC {
 
-public class Clock extends AbstractIC implements SelfTriggeredIC{
-
-    Sign sign;
+    final Sign sign;
 
     public Clock(Server server, Sign psign) {
+
         super(server, psign);
         sign = psign;
     }
 
     @Override
     public String getTitle() {
+
         return "Clock";
     }
 
     @Override
     public String getSignTitle() {
+
         return "CLOCK";
     }
 
     @Override
-    public void trigger(ChipState chip) {}
+    public void trigger(ChipState chip) {
+
+    }
 
     @Override
     public void think(ChipState chip) {
 
-        int tick, reset;
-        try
-        {
-            reset = Integer.parseInt(sign.getLine(2));
+        short tick, reset;
+        try {
+            reset = Short.parseShort(sign.getLine(2));
         } catch (NumberFormatException e) {
             return;
         }
 
-        try
-        {
-            tick = Integer.parseInt(sign.getLine(3));
+        try {
+            tick = Short.parseShort(sign.getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
         }
 
-        tick ++;
+        tick++;
 
         if (tick == reset) {
             tick = 0;
@@ -76,38 +73,40 @@ public class Clock extends AbstractIC implements SelfTriggeredIC{
         }
 
         // don't update, would cause lag!
-        sign.setLine(3, Integer.toString(tick));
+        sign.setLine(3, Short.toString(tick));
     }
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Clock(getServer(), sign);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException
-        {
-            int lol = -1;
-            try
-            {
+        public void verify(Sign sign) throws ICVerificationException {
+
+            int lol;
+            try {
                 lol = Integer.parseInt(sign.getLine(2));
             } catch (NumberFormatException e) {
-                throw new ICVerificationException("The fourth line must be a number between 5 and 15.");
+                throw new ICVerificationException("The fourth line must be a number between 5 and 150.");
             }
 
             lol = Math.max(lol, 5);
-            lol = Math.min(lol, 50);
+            lol = Math.min(lol, 150);
 
             sign.setLine(2, Integer.toString(lol));
             sign.setLine(3, "0");

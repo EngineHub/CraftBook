@@ -19,14 +19,13 @@
 
 package com.sk89q.craftbook.blockbag;
 
-import org.bukkit.World;
-
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
+import org.bukkit.World;
 
 /**
  * For the uninitiated.
@@ -34,24 +33,32 @@ import com.sk89q.worldedit.bags.OutOfSpaceException;
  * @author sk89q
  */
 public class DummyBlockBag extends BlockBag {
+
     private boolean fetch = true, store = true;
-    
-    public DummyBlockBag() {}
+
+    public DummyBlockBag() {
+
+    }
+
     public DummyBlockBag(boolean fetch, boolean store) {
+
         this.fetch = fetch;
         this.store = store;
     }
-    
+
     /**
      * Gets a block.
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfBlocksException
      */
     public void fetchBlock(int id) throws BlockBagException {
-        if(!fetch) throw new OutOfBlocksException();
+
+        if (!fetch) throw new OutOfBlocksException();
     }
 
     /**
@@ -59,67 +66,81 @@ public class DummyBlockBag extends BlockBag {
      *
      * @param pos
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     public void storeBlock(int id) throws BlockBagException {
-        if(!store) throw new OutOfSpaceException(id);
+
+        if (!store) throw new OutOfSpaceException(id);
     }
 
     /**
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSourcePosition(WorldVector arg0) {
+
     }
-    
+
     /**
      * Adds a position to be used a source.
      *
      * @param pos
+     *
      * @return
      */
     public void addSingleSourcePosition(WorldVector arg0) {
+
     }
 
     /**
      * Flush changes.
      */
     public void flushChanges() {
+
     }
-    
+
     /**
      * Unlimited black hole bag that will provided unlimited blocks and
      * discard any accepted blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class UnlimitedBlackHoleFactory implements BlockBagFactory {
+
         public BlockBag createBlockSource(World w, Vector v) {
+
             return new DummyBlockBag();
         }
     }
-    
+
     /**
      * Discards all given blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class BlackHoleFactory implements BlockBagFactory {
+
         public BlockBag createBlockSource(World w, Vector v) {
+
             return new DummyBlockBag(false, true);
         }
     }
-    
+
     /**
      * Provides unlimited blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class UnlimitedSourceFactory implements BlockBagFactory {
+
         public BlockBag createBlockSource(World w, Vector v) {
+
             return new DummyBlockBag(true, false);
         }
     }

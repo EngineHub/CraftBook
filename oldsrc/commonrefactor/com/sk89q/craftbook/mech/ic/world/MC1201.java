@@ -33,12 +33,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1201 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "DISPENSER";
     }
 
@@ -48,6 +50,7 @@ public class MC1201 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
 
@@ -57,14 +60,16 @@ public class MC1201 extends BaseIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface i, WorldInterface w, Vector pos, SignText sign) {
+
         String id = sign.getLine3();
 
         if (id.length() == 0) {
             return "Specify a item type on the third line.";
-        } else if (CraftBookUtil.getItem(i.getConfiguration(),id) < 1) {
+        } else if (CraftBookUtil.getItem(i.getConfiguration(), id) < 1) {
             return "Not a valid item type: " + sign.getLine3() + ".";
         }
 
@@ -85,10 +90,11 @@ public class MC1201 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (!chip.getIn(1).is()) {
             return;
         }
-        
+
         String id = chip.getText().getLine3();
         int quantity = 1;
 
@@ -98,7 +104,7 @@ public class MC1201 extends BaseIC {
         } catch (NumberFormatException e) {
         }
 
-        int item = CraftBookUtil.getItem(chip.getServer().getConfiguration(),id);
+        int item = CraftBookUtil.getItem(chip.getServer().getConfiguration(), id);
 
         if (item > 0 && !(item >= 21 && item <= 34) && item != 36) {
             Vector pos = chip.getBlockPosition();

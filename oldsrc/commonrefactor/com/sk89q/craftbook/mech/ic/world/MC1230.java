@@ -10,27 +10,30 @@ import com.sk89q.craftbook.mech.ic.ChipState;
  * @author Shaun (sturmeh)
  */
 public class MC1230 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "IS IT DAY";
     }
 
     /**
      * Think.
-     * 
+     *
      * @param chip
      */
     public void think(ChipState chip) {
+
         long time = (chip.getWorld().getTime() % 24000);
         if (time < 0) time += 24000;
-        
+
         if (time < 13000l)
             chip.getOut(1).set(true);
-        else 
+        else
             chip.getOut(1).set(false);
     }
 }

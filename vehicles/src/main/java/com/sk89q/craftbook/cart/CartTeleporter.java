@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 
 
 public class CartTeleporter extends CartMechanism {
+
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
@@ -24,9 +25,9 @@ public class CartTeleporter extends CartMechanism {
             world = cart.getServer().getWorld(blocks.getSign().getLine(3));
         }
 
-        Double x = new Double(0D);
-        Double y = new Double(0D);
-        Double z = new Double(0D);
+        Double x = 0D;
+        Double y = 0D;
+        Double z = 0D;
         try {
             x = Double.parseDouble(pts[0]);
             y = Double.parseDouble(pts[1]);
@@ -45,8 +46,10 @@ public class CartTeleporter extends CartMechanism {
             cart.setVelocity(new Vector(0D, 0D, 0D));
         }
 
-        Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0) {});
-        if(!loc.getChunk().isLoaded())
+        Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0) {
+
+        });
+        if (!loc.getChunk().isLoaded())
             loc.getChunk().load(true);
         if (cart.getWorld() == world) {
             cart.teleport(loc);
@@ -58,14 +61,15 @@ public class CartTeleporter extends CartMechanism {
                 passenger.teleport(loc);
                 toCart.setPassenger(passenger);
             }
-            toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out <- Nice portal quote :)
+            toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out <- Nice portal
+            // quote :)
             cart.remove();
         }
     }
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

@@ -19,62 +19,50 @@
 
 package com.sk89q.craftbook;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.sk89q.craftbook.access.BaseEntityInterface;
-import com.sk89q.craftbook.access.BlockEntity;
-import com.sk89q.craftbook.access.Configuration;
-import com.sk89q.craftbook.access.MinecartInterface;
-import com.sk89q.craftbook.access.PlayerInterface;
-import com.sk89q.craftbook.access.ServerInterface;
-import com.sk89q.craftbook.access.SignInterface;
-import com.sk89q.craftbook.access.StorageMinecartInterface;
-import com.sk89q.craftbook.access.WorldInterface;
+import com.sk89q.craftbook.access.*;
 import com.sk89q.craftbook.blockbag.BlockBagException;
 import com.sk89q.craftbook.blockbag.NearbyChestBlockBag;
 import com.sk89q.craftbook.mech.MinecartDecayWatcher;
-import com.sk89q.craftbook.util.CraftBookUtil;
-import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.MinecraftUtil;
-import com.sk89q.craftbook.util.RedstoneUtil;
-import com.sk89q.craftbook.util.Tuple3;
-import com.sk89q.craftbook.util.Vector;
+import com.sk89q.craftbook.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Delegate listener for vehicle-related hooks and features.
- * 
+ *
  * @author sk89q
  */
 public class VehicleListener extends CraftBookDelegateListener {
+
     /**
      * Station to stop at.
      */
-    private Map<String,String> stopStation =
-            new HashMap<String,String>();
+    private Map<String, String> stopStation =
+            new HashMap<String, String>();
     /**
      * Last minecart message sent from a sign to a player.
      */
-    private Map<String,String> lastMinecartMsg =
-            new HashMap<String,String>();
+    private Map<String, String> lastMinecartMsg =
+            new HashMap<String, String>();
     /**
      * Last time minecart message sent from a sign to a player.
      */
-    private Map<String,Long> lastMinecartMsgTime =
-            new HashMap<String,Long>();
-    
+    private Map<String, Long> lastMinecartMsgTime =
+            new HashMap<String, Long>();
+
     /**
      * Decay watchers. Used to remove empty minecarts.
      */
-    private MinecartDecayWatcher decayWatcher; 
-    
+    private MinecartDecayWatcher decayWatcher;
+
     /**
      * Track direction for sorting.
      */
     private enum SortDir {
         FORWARD, LEFT, RIGHT
     }
-    
+
     // Settings
     private boolean minecartControlBlocks = true;
     private boolean slickPressurePlates = false;
@@ -93,25 +81,27 @@ public class VehicleListener extends CraftBookDelegateListener {
     private int minecartSortBlock = BlockType.NETHERSTONE;
     private boolean minecartDestroyOnExit = false;
     private boolean minecartDropOnExit = false;
-    
+
     /**
      * Construct the object.
-     * 
+     *
      * @param craftBook
      * @param listener
      * @param properties
      */
     public VehicleListener(CraftBookCore craftBook, ServerInterface server) {
+
         super(craftBook, server);
     }
 
     /**
-    /**
+     * /**
      * Loads CraftBooks's configuration from file.
      */
     public void loadConfiguration() {
+
         Configuration c = server.getConfiguration();
-        
+
         minecartControlBlocks = c.getBoolean("minecart-control-blocks", true);
         slickPressurePlates = c.getBoolean("hinder-minecart-pressure-plate-slow", true);
         unoccupiedCoast = c.getBoolean("minecart-hinder-unoccupied-slowdown", true);
@@ -127,15 +117,15 @@ public class VehicleListener extends CraftBookDelegateListener {
         minecartDepositBlock = c.getInt("minecart-deposit-block", BlockType.IRON_ORE);
         minecartEjectBlock = c.getInt("minecart-eject-block", BlockType.IRON_BLOCK);
         minecartSortBlock = c.getInt("minecart-sort-block", BlockType.NETHERSTONE);
-        
+
         int decay = c.getInt("minecart-decay-time", 0);
-        
+
         decayWatcher = null;
-        
-        if(decay!=0) {
+
+        if (decay != 0) {
             decayWatcher = new MinecartDecayWatcher(decay);
         }
-        
+
         minecartDestroyOnExit = c.getBoolean("minecart-destroy-on-exit", false);
         minecartDropOnExit = c.getBoolean("minecart-drop-on-exit", false);
     }
@@ -143,9 +133,10 @@ public class VehicleListener extends CraftBookDelegateListener {
     /**
      * Called before the command is parsed. Return true if you don't want the
      * command to be parsed.
-     * 
+     *
      * @param player
      * @param split
+     *
      * @return false if you want the command to be parsed.
      */
     public boolean onCommand(PlayerInterface player, String[] split) {
@@ -174,22 +165,23 @@ public class VehicleListener extends CraftBookDelegateListener {
      * @param isOn
      */
     public void onWireInput(WorldInterface world, Vector pt, boolean isOn, Vector changed) {
+
         int type = world.getId(pt);
-        
+
         // Minecart dispenser
         if (minecartDispensers && type == BlockType.CHEST
                 && (world.getId(pt.add(0, -2, 0)) == BlockType.SIGN_POST
-                    || world.getId(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
-            
+                || world.getId(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
+
             // Rising edge-triggered only
             if (!isOn) {
                 return;
             }
-            
+
             Vector signPos = pt.add(0, -2, 0);
 
             SignInterface sign = getControllerSign(world, pt.add(0, -1, 0), "[Dispenser]");
-            
+
             if (sign == null) {
                 return;
             }
@@ -206,15 +198,15 @@ public class VehicleListener extends CraftBookDelegateListener {
             }*/
 
             NearbyChestBlockBag blockBag = new NearbyChestBlockBag(pt);
-            blockBag.addSingleSourcePosition(world,pt);
-            blockBag.addSingleSourcePosition(world,pt.add(1, 0, 0));
-            blockBag.addSingleSourcePosition(world,pt.add(-1, 0, 0));
-            blockBag.addSingleSourcePosition(world,pt.add(0, 0, 1));
-            blockBag.addSingleSourcePosition(world,pt.add(0, 0, -1));
+            blockBag.addSingleSourcePosition(world, pt);
+            blockBag.addSingleSourcePosition(world, pt.add(1, 0, 0));
+            blockBag.addSingleSourcePosition(world, pt.add(-1, 0, 0));
+            blockBag.addSingleSourcePosition(world, pt.add(0, 0, 1));
+            blockBag.addSingleSourcePosition(world, pt.add(0, 0, -1));
 
             try {
                 MinecartInterface minecart;
-                
+
                 if (collectType.equalsIgnoreCase("Storage")) {
                     try {
                         blockBag.fetchBlock(ItemType.STORAGE_MINECART);
@@ -228,7 +220,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             throw new BlockBagException();
                         }
                     }
-                    
+
                     minecart = world.spawnMinecart(
                             depositPt.getX(),
                             depositPt.getY(),
@@ -247,7 +239,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             throw new BlockBagException();
                         }
                     }
-                    
+
                     minecart = world.spawnMinecart(
                             depositPt.getX(),
                             depositPt.getY(),
@@ -261,10 +253,10 @@ public class VehicleListener extends CraftBookDelegateListener {
                             depositPt.getZ(),
                             MinecartInterface.Type.REGULAR);
                 }
-                
+
                 if (push) {
                     int data = world.getData(signPos);
-                    
+
                     if (data == 0x0) {
                         minecart.setXSpeed(0);
                         minecart.setYSpeed(0);
@@ -286,11 +278,11 @@ public class VehicleListener extends CraftBookDelegateListener {
             } catch (BlockBagException e) {
                 // No minecarts
             }
-        // Minecart station
+            // Minecart station
         } else if (minecartControlBlocks && type == minecartStationBlock
                 && world.getId(pt.add(0, 1, 0)) == BlockType.MINECART_TRACKS
                 && (world.getId(pt.add(0, -2, 0)) == BlockType.SIGN_POST
-                    || world.getId(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
+                || world.getId(pt.add(0, -1, 0)) == BlockType.SIGN_POST)) {
             BlockEntity cblock = world.getBlockEntity(
                     pt.getBlockX(), pt.getBlockY() - 2, pt.getBlockZ());
 
@@ -304,7 +296,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 return;
             }
 
-            SignInterface sign = (SignInterface)cblock;
+            SignInterface sign = (SignInterface) cblock;
             String line2 = sign.getLine2();
 
             if (!line2.equalsIgnoreCase("[Station]")) {
@@ -314,7 +306,7 @@ public class VehicleListener extends CraftBookDelegateListener {
             Vector motion;
             int data = world.getData(
                     pt.getBlockX(), cblock.getPosition().getBlockY(), pt.getBlockZ());
-            
+
             if (data == 0x0) {
                 motion = new Vector(0, 0, -0.3);
             } else if (data == 0x4) {
@@ -328,9 +320,9 @@ public class VehicleListener extends CraftBookDelegateListener {
             }
 
             for (MinecartInterface minecart : world.getMinecartList()) {
-                int cartX = (int)Math.floor(minecart.getX());
-                int cartY = (int)Math.floor(minecart.getY());
-                int cartZ = (int)Math.floor(minecart.getZ());
+                int cartX = (int) Math.floor(minecart.getX());
+                int cartY = (int) Math.floor(minecart.getY());
+                int cartZ = (int) Math.floor(minecart.getZ());
 
                 if (cartX == pt.getBlockX()
                         && cartY == pt.getBlockY() + 1
@@ -342,18 +334,19 @@ public class VehicleListener extends CraftBookDelegateListener {
             }
         }
     }
-    
+
     /**
      * Called when a vehicle changes block
      *
      * @param vehicle the vehicle
-     * @param blockX coordinate x
-     * @param blockY coordinate y
-     * @param blockZ coordinate z
+     * @param blockX  coordinate x
+     * @param blockY  coordinate y
+     * @param blockZ  coordinate z
      */
     @Override
     public void onMinecartPositionChange(WorldInterface world, MinecartInterface minecart,
-            int blockX, int blockY, int blockZ) {
+                                         int blockX, int blockY, int blockZ) {
+
         if (!minecartControlBlocks && !minecartTrackMessages && !minecartDispensers) {
             return;
         }
@@ -366,11 +359,11 @@ public class VehicleListener extends CraftBookDelegateListener {
             if (Math.abs(minecart.getXSpeed()) > 100) {
                 minecart.setXSpeed(Math.signum(minecart.getXSpeed()) * 100);
             }
-            
+
             if (Math.abs(minecart.getZSpeed()) > 100) {
                 minecart.setZSpeed(Math.signum(minecart.getZSpeed()) * 100);
             }
-            
+
             if (under == minecart25xBoostBlock) {
                 Boolean test = RedstoneUtil.testAnyInput(world, underPt);
 
@@ -429,14 +422,14 @@ public class VehicleListener extends CraftBookDelegateListener {
                             }
                         }
                     }
-                    
+
                     if (reverseX) {
                         minecart.setXSpeed(minecart.getXSpeed() * -1);
                     }
                     if (reverseZ) {
                         minecart.setZSpeed(minecart.getZSpeed() * -1);
                     }
-                    
+
                     return;
                 }
             } else if (under == minecartDepositBlock) {
@@ -457,14 +450,14 @@ public class VehicleListener extends CraftBookDelegateListener {
                             bag.addSingleSourcePosition(world, pt.add(0, y, -1));
                             bag.addSingleSourcePosition(world, pt.add(0, y, -2));
                         }
-                        
+
                         if (bag.getChestBlockCount() > 0) {
                             if (getControllerSign(world, pt.add(0, -1, 0), "[Deposit]") != null) {
                                 InventoryUtil.moveChestBagToItemArray(
-                                        (StorageMinecartInterface)minecart, bag);
+                                        (StorageMinecartInterface) minecart, bag);
                             } else {
                                 InventoryUtil.moveItemArrayToChestBag(
-                                        (StorageMinecartInterface)minecart, bag);
+                                        (StorageMinecartInterface) minecart, bag);
                             }
                         }
                     }
@@ -478,8 +471,8 @@ public class VehicleListener extends CraftBookDelegateListener {
                     PlayerInterface player = minecart.getPlayer();
                     if (player != null) {
                         // Let's find a place to put the player
-                        Tuple3<Integer,Integer,Integer> loc = 
-                            new Tuple3<Integer,Integer,Integer>(blockX, blockY, blockZ);
+                        Tuple3<Integer, Integer, Integer> loc =
+                                new Tuple3<Integer, Integer, Integer>(blockX, blockY, blockZ);
                         Vector signPos = new Vector(blockX, blockY - 2, blockZ);
 
                         if (world.getId(signPos) == BlockType.SIGN_POST
@@ -493,7 +486,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                 // Is the spot free?
                                 if (BlockType.canPassThrough(world.getId(pos.add(0, 1, 0)))
                                         && BlockType.canPassThrough(world.getId(pos))) {
-                                    loc = new Tuple3<Integer,Integer,Integer>(
+                                    loc = new Tuple3<Integer, Integer, Integer>(
                                             pos.getBlockX(),
                                             pos.getBlockY(),
                                             pos.getBlockZ());
@@ -502,7 +495,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                             blockX, blockY - 2, blockZ);
 
                                     if (cBlock instanceof SignInterface) {
-                                        SignInterface sign = (SignInterface)cBlock;
+                                        SignInterface sign = (SignInterface) cBlock;
                                         String text = sign.getLine1();
                                         if (text.length() > 0) {
                                             player.sendMessage(Colors.GOLD + "You've arrived at: "
@@ -524,9 +517,9 @@ public class VehicleListener extends CraftBookDelegateListener {
                 Boolean test = RedstoneUtil.testAnyInput(world, underPt);
 
                 if (test == null || test) {
-                    SignInterface sign = 
-                        getControllerSign(world, blockX, blockY - 1, blockZ, "[Sort]");
-                    
+                    SignInterface sign =
+                            getControllerSign(world, blockX, blockY - 1, blockZ, "[Sort]");
+
                     if (sign != null) {
                         SortDir dir = SortDir.FORWARD;
 
@@ -542,7 +535,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                 sign.getX(), sign.getY(), sign.getZ());
                         int newData = 0;
                         Vector targetTrack = null;
-                        
+
                         if (signData == 0x8) { // West
                             if (dir == SortDir.LEFT) {
                                 newData = 9;
@@ -580,7 +573,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             }
                             targetTrack = new Vector(blockX + 1, blockY, blockZ);
                         }
-                        
+
                         if (targetTrack != null
                                 && world.getId(targetTrack) == BlockType.MINECART_TRACKS) {
                             world.setData(targetTrack, newData);
@@ -595,7 +588,7 @@ public class VehicleListener extends CraftBookDelegateListener {
         if (minecartTrackMessages
                 && world.getId(underPt.add(0, -1, 0)) == BlockType.SIGN_POST) {
             Vector signPos = underPt.add(0, -1, 0);
-            
+
             Boolean test = RedstoneUtil.testAnyInput(world, signPos);
 
             if (test == null || test) {
@@ -606,13 +599,15 @@ public class VehicleListener extends CraftBookDelegateListener {
                     return;
                 }
 
-                SignInterface sign = (SignInterface)cblock;
+                SignInterface sign = (SignInterface) cblock;
                 String line1 = sign.getLine1();
 
                 if (line1.equalsIgnoreCase("[Print]")) {
-                    if (!minecart.hasPlayer()) { return; }
+                    if (!minecart.hasPlayer()) {
+                        return;
+                    }
                     PlayerInterface player = minecart.getPlayer();
-                    
+
                     String name = player.getName();
                     String msg = sign.getLine2() + sign.getLine3() + sign.getLine4();
                     long now = System.currentTimeMillis();
@@ -659,10 +654,10 @@ public class VehicleListener extends CraftBookDelegateListener {
             }
 
             if (depositPt != null) {
-                SignInterface sign = 
-                    getControllerSign(world, depositPt.add(0, -1, 0), "[Dispenser]");
+                SignInterface sign =
+                        getControllerSign(world, depositPt.add(0, -1, 0), "[Dispenser]");
                 String collectType = sign != null ? sign.getLine2() : "";
-                
+
                 NearbyChestBlockBag blockBag = new NearbyChestBlockBag(depositPt);
                 blockBag.addSingleSourcePosition(world, depositPt);
                 blockBag.addSingleSourcePosition(world, depositPt.add(1, 0, 0));
@@ -681,7 +676,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 } else if (type == MinecartInterface.Type.STORAGE) {
                     try {
                         InventoryUtil.moveItemArrayToChestBag(
-                                (StorageMinecartInterface)minecart, blockBag);
+                                (StorageMinecartInterface) minecart, blockBag);
 
                         if (collectType.equalsIgnoreCase("Storage")) {
                             blockBag.storeBlock(ItemType.STORAGE_MINECART);
@@ -689,7 +684,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             blockBag.storeBlock(ItemType.MINECART);
                             blockBag.storeBlock(BlockType.CHEST);
                         }
-                        
+
                         minecart.remove();
                     } catch (BlockBagException e) {
                         // Ran out of space
@@ -707,7 +702,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                         // Ran out of space
                     }
                 }
-                
+
                 blockBag.flushChanges();
             }
         }
@@ -720,20 +715,21 @@ public class VehicleListener extends CraftBookDelegateListener {
      */
     @Override
     public void onMinecartVelocityChange(WorldInterface world, MinecartInterface minecart) {
+
         if (!minecartControlBlocks && !unoccupiedCoast) {
             return;
         }
-    
-        int blockX = (int)Math.floor(minecart.getX());
-        int blockY = (int)Math.floor(minecart.getY());
-        int blockZ = (int)Math.floor(minecart.getZ());
+
+        int blockX = (int) Math.floor(minecart.getX());
+        int blockY = (int) Math.floor(minecart.getY());
+        int blockZ = (int) Math.floor(minecart.getZ());
         Vector underPt = new Vector(blockX, blockY - 1, blockZ);
         int under = world.getId(blockX, blockY - 1, blockZ);
-    
+
         if (minecartControlBlocks) {
             if (under == minecartStationBlock) {
                 Boolean test = RedstoneUtil.testAnyInput(world, underPt);
-    
+
                 if (test != null) {
                     if (!test) {
                         minecart.setXSpeed(0);
@@ -743,33 +739,33 @@ public class VehicleListener extends CraftBookDelegateListener {
                     } else {
                         BlockEntity cblock = world.getBlockEntity(
                                 blockX, blockY - 2, blockZ);
-    
+
                         // Maybe it's the sign directly below
                         if (cblock == null || !(cblock instanceof SignInterface)) {
                             cblock = world.getBlockEntity(
                                     blockX, blockY - 3, blockZ);
                         }
-    
+
                         if (cblock != null && cblock instanceof SignInterface) {
-                            SignInterface sign = (SignInterface)cblock;
+                            SignInterface sign = (SignInterface) cblock;
                             String line2 = sign.getLine2();
-    
+
                             if (!line2.equalsIgnoreCase("[Station]")) {
                                 return;
                             }
-    
+
                             String line3 = sign.getLine3();
                             String line4 = sign.getLine4();
-                            
+
                             if (line3.equalsIgnoreCase("Pulse")
                                     || line4.equalsIgnoreCase("Pulse")) {
                                 return;
                             }
-    
-                            Vector motion  = null;
+
+                            Vector motion = null;
                             int data = world.getData(
                                     blockX, cblock.getPosition().getBlockY(), blockZ);
-                            
+
                             if (data == 0x0) {
                                 motion = new Vector(0, 0, -0.3);
                             } else if (data == 0x4) {
@@ -779,7 +775,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                             } else if (data == 0xC) {
                                 motion = new Vector(-0.3, 0, 0);
                             }
-    
+
                             if (motion != null) {
                                 if (!CraftBookUtil.isSameSign(minecart.getXSpeed(), motion.getX())
                                         || minecart.getXSpeed() < motion.getX()) {
@@ -793,7 +789,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                                         || minecart.getZSpeed() < motion.getZ()) {
                                     minecart.setZSpeed(motion.getZ());
                                 }
-                                
+
                                 return;
                             }
                         }
@@ -801,7 +797,7 @@ public class VehicleListener extends CraftBookDelegateListener {
                 }
             }
         }
-        
+
         int block = world.getId(blockX, blockY, blockZ);
         if (slickPressurePlates
                 && (block == BlockType.STONE_PRESSURE_PLATE
@@ -811,7 +807,7 @@ public class VehicleListener extends CraftBookDelegateListener {
             minecart.setYSpeed(0);
             minecart.setZSpeed(minecart.getZSpeed() / 0.55);
         }
-    
+
         if (unoccupiedCoast && minecart.getPlayer() == null) {
             minecart.setXSpeed(minecart.getXSpeed() * 1.018825);
             minecart.setZSpeed(minecart.getZSpeed() * 1.018825);
@@ -824,11 +820,12 @@ public class VehicleListener extends CraftBookDelegateListener {
      * @param vehicle
      * @param attacker entity that dealt the damage
      * @param damage
+     *
      * @return false to set damage
      */
     @Override
     public boolean onMinecartDamage(WorldInterface world, MinecartInterface cart,
-            BaseEntityInterface attacker, int damage) {
+                                    BaseEntityInterface attacker, int damage) {
 
         if (!inCartControl) {
             return false;
@@ -838,11 +835,11 @@ public class VehicleListener extends CraftBookDelegateListener {
 
         // Player.equals() now works correctly as of recent hMod versions
         if (passenger != null) {
-            double speed2 = cart.getXSpeed()*cart.getXSpeed()+
-                            cart.getYSpeed()*cart.getYSpeed()+
-                            cart.getZSpeed()*cart.getZSpeed();
+            double speed2 = cart.getXSpeed() * cart.getXSpeed() +
+                    cart.getYSpeed() * cart.getYSpeed() +
+                    cart.getZSpeed() * cart.getZSpeed();
 
-            if (speed2 > 0.01*0.01) { // Stop the cart
+            if (speed2 > 0.01 * 0.01) { // Stop the cart
                 cart.setXSpeed(0);
                 cart.setYSpeed(0);
                 cart.setZSpeed(0);
@@ -900,26 +897,27 @@ public class VehicleListener extends CraftBookDelegateListener {
 
     /**
      * Called when someone places a block. Return true to prevent the placement.
-     * 
+     *
      * @param player
      * @param blockPlaced
      * @param blockClicked
      * @param itemInHand
+     *
      * @return true if you want to undo the block placement
      */
-    public boolean onBlockPlace(WorldInterface world, PlayerInterface player, 
-            Vector blockPlaced, Vector blockClicked, int itemInHand) {
-        
+    public boolean onBlockPlace(WorldInterface world, PlayerInterface player,
+                                Vector blockPlaced, Vector blockClicked, int itemInHand) {
+
         if (world.getId(blockPlaced) == BlockType.MINECART_TRACKS) {
             int under = world.getId(blockPlaced.getBlockX(),
                     blockPlaced.getBlockY() - 1, blockPlaced.getBlockZ());
-            
+
             if (minecartControlBlocks && under == minecartStationBlock) {
                 SignInterface sign = getControllerSign(world, blockPlaced.getBlockX(),
-                    blockPlaced.getBlockY() - 1, blockPlaced.getBlockZ(), "[Station]");
+                        blockPlaced.getBlockY() - 1, blockPlaced.getBlockZ(), "[Station]");
                 Vector pt = new Vector(blockPlaced.getX(),
-                    blockPlaced.getBlockY() - 1, blockPlaced.getBlockZ());
-                
+                        blockPlaced.getBlockY() - 1, blockPlaced.getBlockZ());
+
                 boolean needsRedstone = RedstoneUtil.testAnyInput(world, pt) == null;
 
                 if (sign == null && needsRedstone) {
@@ -960,17 +958,20 @@ public class VehicleListener extends CraftBookDelegateListener {
                 }
             }
         }
-        
+
         return false;
     }
 
     /**
      * Called when a sign is updated.
+     *
      * @param player
      * @param cblock
+     *
      * @return
      */
     public boolean onSignChange(PlayerInterface player, WorldInterface world, Vector v, SignInterface s) {
+
         int type = world.getId(
                 s.getX(), s.getY(), s.getZ());
 
@@ -980,10 +981,10 @@ public class VehicleListener extends CraftBookDelegateListener {
         // Station
         if (line2.equalsIgnoreCase("[Station]")) {
             craftBook.informUser(player);
-            
+
             s.setLine2("[Station]");
             s.flushChanges();
-            
+
             if (minecartControlBlocks) {
                 int data = world.getData(
                         s.getX(), s.getY(), s.getZ());
@@ -997,19 +998,19 @@ public class VehicleListener extends CraftBookDelegateListener {
                     MinecraftUtil.dropSign(world, s.getX(), s.getY(), s.getZ());
                     return true;
                 }
-                
+
                 player.sendMessage(Colors.GOLD + "Station sign detected.");
             } else {
                 player.sendMessage(Colors.RED
                         + "Minecart control blocks are disabled on this server.");
             }
-        // Sort
+            // Sort
         } else if (line2.equalsIgnoreCase("[Sort]")) {
             craftBook.informUser(player);
-            
+
             s.setLine2("[Sort]");
             s.flushChanges();
-            
+
             if (minecartControlBlocks) {
                 int data = world.getData(
                         s.getX(), s.getY(), s.getZ());
@@ -1023,49 +1024,50 @@ public class VehicleListener extends CraftBookDelegateListener {
                     MinecraftUtil.dropSign(world, s.getX(), s.getY(), s.getZ());
                     return true;
                 }
-                
+
                 player.sendMessage(Colors.GOLD + "Sort sign detected.");
             } else {
                 player.sendMessage(Colors.RED
                         + "Minecart control blocks are disabled on this server.");
             }
-        // Dispenser
+            // Dispenser
         } else if (line2.equalsIgnoreCase("[Dispenser]")) {
             craftBook.informUser(player);
-            
+
             s.setLine2("[Dispenser]");
             s.flushChanges();
-        
+
             player.sendMessage(Colors.GOLD + "Dispenser sign detected.");
-        // Print
+            // Print
         } else if (line1.equalsIgnoreCase("[Print]")) {
             craftBook.informUser(player);
-            
+
             s.setLine1("[Print]");
             s.flushChanges();
-        
+
             player.sendMessage(Colors.GOLD + "Message print block detected.");
         }
-        
+
         return false;
     }
 
     /**
      * Called when a player enter or leaves a vehicle
-     * 
+     *
      * @param vehicle the vehicle
-     * @param player the player
+     * @param player  the player
      */
     public void onMinecartEnter(WorldInterface world, MinecartInterface cart,
-            BaseEntityInterface entity, boolean entering) {
+                                BaseEntityInterface entity, boolean entering) {
+
         if (decayWatcher != null) {
             decayWatcher.trackEnter(world, cart);
         }
-        
+
         if (minecartDestroyOnExit && entering) {
             cart.remove();
-            
-            if (minecartDropOnExit && cart.getPlayer()!=null) {
+
+            if (minecartDropOnExit && cart.getPlayer() != null) {
                 cart.getPlayer().giveItem(ItemType.MINECART, 1);
             }
         }
@@ -1073,138 +1075,147 @@ public class VehicleListener extends CraftBookDelegateListener {
 
     /**
      * Called when a vehicle is destroyed
-     * 
+     *
      * @param vehicle the vehicle
      */
     public void onMinecartDestroyed(WorldInterface world, MinecartInterface cart) {
+
         if (decayWatcher != null) {
             decayWatcher.forgetMinecart(cart);
         }
     }
-    
+
     public void onWorldUnload(WorldInterface world) {
+
         decayWatcher.removeWorld(world);
     }
-    
+
     /**
      * Called on plugin unload.
      */
     public void disable() {
+
         if (decayWatcher != null) {
             decayWatcher.disable();
         }
     }
-    
+
     /**
      * Get the controller sign for a block type. The coordinates provided
      * are those of the block (signs are to be underneath). The provided
      * text must be on the second line of the sign.
-     * 
+     *
      * @param pt
      * @param text
+     *
      * @return
      */
     private SignInterface getControllerSign(WorldInterface w, Vector pt, String text) {
+
         return getControllerSign(w, pt.getBlockX(), pt.getBlockY(),
                 pt.getBlockZ(), text);
     }
-    
+
     /**
      * Get the controller sign for a block type. The coordinates provided
      * are those of the block (signs are to be underneath). The provided
      * text must be on the second line of the sign.
-     * 
+     *
      * @param x
      * @param y
      * @param z
      * @param text
+     *
      * @return
      */
     private SignInterface getControllerSign(WorldInterface w, int x, int y, int z, String text) {
+
         BlockEntity cblock = w.getBlockEntity(x, y - 1, z);
 
         if (cblock instanceof SignInterface
-                && ((SignInterface)cblock).getLine2().equalsIgnoreCase(text)) {
-            return (SignInterface)cblock;
+                && ((SignInterface) cblock).getLine2().equalsIgnoreCase(text)) {
+            return (SignInterface) cblock;
         }
-        
+
         cblock = w.getBlockEntity(x, y - 2, z);
 
         if (cblock instanceof SignInterface
-                && ((SignInterface)cblock).getLine2().equalsIgnoreCase(text)) {
-            return (SignInterface)cblock;
+                && ((SignInterface) cblock).getLine2().equalsIgnoreCase(text)) {
+            return (SignInterface) cblock;
         }
-        
+
         return null;
     }
-    
+
     /**
      * Returns true if a filter line satisfies the conditions.
-     * 
+     *
      * @param line
      * @param minecart
      * @param trackPos
+     *
      * @return
      */
     public boolean satisfiesCartSort(String line, MinecartInterface minecart, Vector trackPos) {
+
         PlayerInterface player = minecart.getPlayer();
-        
+
         if (line.equalsIgnoreCase("All")) {
             return true;
         }
-        
+
         if ((line.equalsIgnoreCase("Unoccupied")
                 || line.equalsIgnoreCase("Empty"))
                 && !minecart.hasPassenger()) {
             return true;
         }
-        
+
         if (line.equalsIgnoreCase("Storage")
                 && minecart.getType() == MinecartInterface.Type.STORAGE) {
             return true;
         }
-        
+
         if (line.equalsIgnoreCase("Powered")
                 && minecart.getType() == MinecartInterface.Type.POWERED) {
             return true;
         }
-        
+
         if (line.equalsIgnoreCase("Minecart")
                 && minecart.getType() == MinecartInterface.Type.REGULAR) {
             return true;
         }
-        
+
         if ((line.equalsIgnoreCase("Occupied")
                 || line.equalsIgnoreCase("Full"))
                 && minecart.hasPassenger()) {
             return true;
         }
-        
+
         if (line.equalsIgnoreCase("Animal")
                 && minecart.hasAnimal()) {
             return true;
         }
-        
+
         if (line.equalsIgnoreCase("Mob")
                 && minecart.hasMob()) {
             return true;
         }
-        
+
         if ((line.equalsIgnoreCase("Player")
                 || line.equalsIgnoreCase("Ply"))
                 && minecart.hasPlayer()) {
             return true;
         }
-        
+
         if (minecart.hasPlayer()) {
             String stop = stopStation.get(player.getName());
             if (stop != null && stop.equals(line)) {
                 return true;
             }
         }
-        
+
         String[] parts = line.split(":");
-        
+
         if (parts.length >= 2) {
             if (minecart.hasPlayer() && parts[0].equalsIgnoreCase("Held")) {
                 try {
@@ -1227,16 +1238,16 @@ public class VehicleListener extends CraftBookDelegateListener {
                 minecart.isMobType(testMob);
             }
         }
-        
+
         return false;
     }
 
     /**
-     *
      * @param player
      */
     @Override
     public void onDisconnect(PlayerInterface player) {
+
         lastMinecartMsg.remove(player.getName());
         lastMinecartMsgTime.remove(player.getName());
         stopStation.remove(player.getName());

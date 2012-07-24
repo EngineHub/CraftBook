@@ -18,65 +18,69 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
-    
-    protected String band;
-    
-    protected Sign isign;
+
+    protected final String band;
+
+    protected final Sign iSign;
 
     public WirelessReceiverST(Server server, Sign sign) {
+
         super(server, sign);
-        
-        isign = sign;
+
+        iSign = sign;
         band = sign.getLine(2);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Wireless Receiver";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST RECEIVER";
     }
 
     @Override
     public void think(ChipState chip) {
-            Boolean val = WirelessTransmitter.getValue(band);
-            
-            if (val == null)
-                return;
-            
-            chip.setOutput(0, val);
+
+        Boolean val = WirelessTransmitter.getValue(band);
+
+        if (val == null) return;
+
+        chip.setOutput(0, val);
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new WirelessReceiverST(getServer(), sign);
         }
     }
 
-	@Override
-	public boolean isActive() {
-		return true;
-	}
+    @Override
+    public boolean isActive() {
 
-	@Override
-	public void trigger(ChipState chip) { }
+        return true;
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+
+    }
 
 }

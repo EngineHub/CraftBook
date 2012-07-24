@@ -19,6 +19,13 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,27 +33,22 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
 /**
  * This allows users to Right-click to check the power level of redstone.
  */
 public class Ammeter extends AbstractMechanic {
 
-    protected MechanismsPlugin plugin;
+    protected final MechanismsPlugin plugin;
 
     public Ammeter(MechanismsPlugin plugin) {
+
         super();
         this.plugin = plugin;
     }
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+
         if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.ammeter.use")) {
             return;
         }
@@ -54,46 +56,50 @@ public class Ammeter extends AbstractMechanic {
         Block block = event.getClickedBlock();
         if (event.getPlayer().getItemInHand().getType() == Material.COAL
                 && (BlockType.canTransferRedstone(block.getTypeId()) ||
-                        BlockType.isRedstoneSource(block.getTypeId()))) {
+                BlockType.isRedstoneSource(block.getTypeId()))) {
             int data = getSpecialData(block);
             String line = getCurrentLine(data);
-            int current = Integer.valueOf(data);
             event.getPlayer().sendMessage(
                     ChatColor.YELLOW + "Ammeter: " + line + ChatColor.WHITE +
-                    " " + current + " A");
+                            " " + data + " A");
         }
     }
 
     private int getSpecialData(Block block) {
-        Material type = block.getType();
+
+        int typeId = block.getTypeId();
         byte data = block.getData();
         int current = 0;
-        if (type == Material.LEVER || type == Material.STONE_BUTTON) {
-            if ((data & 0x8) == 0x8) {
+        switch (typeId) {
+            case BlockID.REDSTONE_WIRE:
+                current = data;
+                break;
+            case BlockID.LEVER:
+            case BlockID.STONE_BUTTON:
+                if ((data & 0x8) == 0x8) current = 15;
+                break;
+            case BlockID.STONE_PRESSURE_PLATE:
+                if ((data & 0x1) == 0x1) current = 15;
+                break;
+            case BlockID.POWERED_RAIL:
+            case BlockID.DETECTOR_RAIL:
+                if (data >= 0x8) current = 15;
+                break;
+            case BlockID.REDSTONE_TORCH_ON:
+            case BlockID.REDSTONE_REPEATER_ON:
                 current = 15;
-            }
-        } else if (type == Material.STONE_PLATE || type == Material.STONE_PLATE) {
-            if ((data & 0x1) == 0x1) {
-                current = 15;
-            }
-        } else if (type == Material.POWERED_RAIL || type == Material.DETECTOR_RAIL) {
-            if (data >= 0x8) {
-                current = 15;
-            }
-        } else if (type == Material.REDSTONE_TORCH_ON) {
-            current = 15;
-        } else if (type == Material.REDSTONE_TORCH_OFF) {
-            current = 0;
-        } else if (type == Material.REDSTONE_WIRE) {
-            current = data;
-        } else if (type == Material.DIODE_BLOCK_ON) {
-            current = 15;
+                break;
+            default:
+                current = 0;
+                break;
+
         }
 
         return current;
     }
 
     private String getCurrentLine(int data) {
+
         String line = ChatColor.YELLOW + "[";
         if (data > 10) {
             line = line + ChatColor.DARK_GREEN;
@@ -114,9 +120,11 @@ public class Ammeter extends AbstractMechanic {
     }
 
     public void unload() {
+
     }
 
     public boolean isActive() {
+
         return false; // this isn't a persistent mechanic, so the manager will
         // never keep it around long enough to even check this.
     }
@@ -124,13 +132,15 @@ public class Ammeter extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Ammeter> {
 
-        protected MechanismsPlugin plugin;
+        protected final MechanismsPlugin plugin;
 
         public Factory(MechanismsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
         public Ammeter detect(BlockWorldVector pt) {
+
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (BlockType.canTransferRedstone(block.getTypeId()) ||
                     BlockType.isRedstoneSource(block.getTypeId())) {
@@ -148,5 +158,6 @@ public class Ammeter extends AbstractMechanic {
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+
     }
 }

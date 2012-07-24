@@ -21,9 +21,13 @@
 package com.sk89q.craftbook.mech.ic;
 
 public abstract class LogicIC extends BaseIC {
+
     public final void think(ChipState state) {
-        LogicChipState s = new LogicChipState(state.getInputs(),state.getOutputs(),state.getText(),state.getBlockPosition());
+
+        LogicChipState s = new LogicChipState(state.getInputs(), state.getOutputs(), state.getText(),
+                state.getBlockPosition());
         think(s);
     }
+
     public abstract void think(LogicChipState state);
 }

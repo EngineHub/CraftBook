@@ -20,23 +20,29 @@ import com.sk89q.craftbook.access.LivingEntityInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 
 public class HmodLivingEntityImpl extends HmodBaseEntityImpl
-                               implements LivingEntityInterface{
+        implements LivingEntityInterface {
+
     private LivingEntity entity;
-    
+
     public HmodLivingEntityImpl(LivingEntity entity, WorldInterface w) {
+
         super(entity, w);
         this.entity = entity;
     }
 
     public int getHealth() {
+
         return entity.getHealth();
     }
+
     public void setHealth(int health) {
+
         entity.setHealth(health);
     }
 
     public void kill() {
-        if(entity.getHealth()<=0) return;
+
+        if (entity.getHealth() <= 0) return;
         entity.setHealth(0);
-    }    
+    }
 }

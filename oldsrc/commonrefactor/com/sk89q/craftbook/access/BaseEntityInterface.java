@@ -21,39 +21,52 @@ package com.sk89q.craftbook.access;
 import com.sk89q.craftbook.util.Vector;
 
 public interface BaseEntityInterface {
+
     public Vector getPosition();
-    
+
     public double getYaw();
+
     public double getPitch();
-    
+
     public void setYaw(double yaw);
+
     public void setPitch(double pitch);
-    
+
     public double getX();
+
     public double getY();
+
     public double getZ();
-    
+
     public void setX(double x);
+
     public void setY(double y);
+
     public void setZ(double z);
-    
+
     public void setPosition(Vector pos);
+
     public void setPosition(Vector pos, float pitch, float yaw);
 
     public WorldInterface getWorld();
-    
+
     public Vector getBlockIn();
+
     public Vector getBlockOn();
-    
+
     public void remove();
-    
+
     public int getEntityId();
 
     double getXSpeed();
+
     double getYSpeed();
+
     double getZSpeed();
-    
+
     void setXSpeed(double s);
+
     void setYSpeed(double s);
+
     void setZSpeed(double s);
 }

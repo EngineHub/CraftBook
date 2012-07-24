@@ -19,18 +19,23 @@
 
 package com.sk89q.craftbook.state;
 
+import com.sk89q.craftbook.access.WorldInterface;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import com.sk89q.craftbook.access.WorldInterface;
-
 public interface StateHolder {
+
     void resetCommonData();
+
     void writeCommonData(DataOutput o) throws IOException;
+
     void readCommonData(DataInput i) throws IOException;
-    
+
     void resetWorldData(WorldInterface w);
+
     void writeWorldData(WorldInterface w, DataOutput o) throws IOException;
+
     void readWorldData(WorldInterface w, DataInput i) throws IOException;
 }

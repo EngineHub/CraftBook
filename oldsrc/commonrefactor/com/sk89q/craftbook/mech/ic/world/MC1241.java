@@ -27,31 +27,34 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1241 extends MC1240 {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "ARROW BARRAGE";
     }
-    
+
     /**
      * Shoot the arrow.
-     * 
+     *
      * @param chip
      * @param speed
      * @param spread
      * @param vertVel
      */
     protected void shoot(ChipState chip, float speed, float spread, float vertVel) {
+
         for (int i = 0; i < 5; i++) {
             Vector backDir = chip.getBlockPosition().subtract(
                     chip.getPosition());
             Vector firePos = chip.getBlockPosition().add(backDir);
-            chip.getWorld().shootArrow(firePos.getBlockX() + 0.5, firePos.getBlockY() + 0.5, firePos.getBlockZ() + 0.5, 
-                                       backDir.getBlockX(), vertVel, backDir.getBlockZ(), 
-                                       speed, spread);
+            chip.getWorld().shootArrow(firePos.getBlockX() + 0.5, firePos.getBlockY() + 0.5, firePos.getBlockZ() + 0.5,
+                    backDir.getBlockX(), vertVel, backDir.getBlockZ(),
+                    speed, spread);
         }
     }
 }

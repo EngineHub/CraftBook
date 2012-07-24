@@ -20,10 +20,10 @@
 package com.sk89q.craftbook.util;
 
 /**
- *
  * @author Albert
  */
 public class Vector {
+
     protected final double x, y, z;
 
     /**
@@ -34,6 +34,7 @@ public class Vector {
      * @param z
      */
     public Vector(double x, double y, double z) {
+
         this.x = x;
         this.y = y;
         this.z = z;
@@ -47,9 +48,10 @@ public class Vector {
      * @param z
      */
     public Vector(int x, int y, int z) {
-        this.x = (double)x;
-        this.y = (double)y;
-        this.z = (double)z;
+
+        this.x = (double) x;
+        this.y = (double) y;
+        this.z = (double) z;
     }
 
     /**
@@ -60,9 +62,10 @@ public class Vector {
      * @param z
      */
     public Vector(float x, float y, float z) {
-        this.x = (double)x;
-        this.y = (double)y;
-        this.z = (double)z;
+
+        this.x = (double) x;
+        this.y = (double) y;
+        this.z = (double) z;
     }
 
     /**
@@ -71,6 +74,7 @@ public class Vector {
      * @param pt
      */
     public Vector(Vector pt) {
+
         this.x = pt.x;
         this.y = pt.y;
         this.z = pt.z;
@@ -80,6 +84,7 @@ public class Vector {
      * Construct the Vector object.
      */
     public Vector() {
+
         this.x = 0;
         this.y = 0;
         this.z = 0;
@@ -89,6 +94,7 @@ public class Vector {
      * @return the x
      */
     public double getX() {
+
         return x;
     }
 
@@ -96,16 +102,19 @@ public class Vector {
      * @return the x
      */
     public int getBlockX() {
-        return (int)Math.floor(x);
+
+        return (int) Math.floor(x);
     }
 
     /**
      * Set X.
      *
      * @param x
+     *
      * @return new vector
      */
     public Vector setX(double x) {
+
         return new Vector(x, y, z);
     }
 
@@ -113,9 +122,11 @@ public class Vector {
      * Set X.
      *
      * @param x
+     *
      * @return new vector
      */
     public Vector setX(int x) {
+
         return new Vector(x, y, z);
     }
 
@@ -123,6 +134,7 @@ public class Vector {
      * @return the y
      */
     public double getY() {
+
         return y;
     }
 
@@ -130,16 +142,19 @@ public class Vector {
      * @return the y
      */
     public int getBlockY() {
-        return (int)Math.floor(y);
+
+        return (int) Math.floor(y);
     }
 
     /**
      * Set Y.
      *
      * @param y
+     *
      * @return new vector
      */
     public Vector setY(double y) {
+
         return new Vector(x, y, z);
     }
 
@@ -147,9 +162,11 @@ public class Vector {
      * Set Y.
      *
      * @param y
+     *
      * @return new vector
      */
     public Vector setY(int y) {
+
         return new Vector(x, y, z);
     }
 
@@ -157,6 +174,7 @@ public class Vector {
      * @return the z
      */
     public double getZ() {
+
         return z;
     }
 
@@ -164,16 +182,19 @@ public class Vector {
      * @return the z
      */
     public int getBlockZ() {
-        return (int)Math.floor(z);
+
+        return (int) Math.floor(z);
     }
 
     /**
      * Set Z.
      *
      * @param z
+     *
      * @return new vector
      */
     public Vector setZ(double z) {
+
         return new Vector(x, y, z);
     }
 
@@ -181,9 +202,11 @@ public class Vector {
      * Set Z.
      *
      * @param z
+     *
      * @return new vector
      */
     public Vector setZ(int z) {
+
         return new Vector(x, y, z);
     }
 
@@ -191,9 +214,11 @@ public class Vector {
      * Adds two points.
      *
      * @param other
+     *
      * @return New point
      */
     public Vector add(Vector other) {
+
         return new Vector(x + other.x, y + other.y, z + other.z);
     }
 
@@ -203,9 +228,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector add(double x, double y, double z) {
+
         return new Vector(this.x + x, this.y + y, this.z + z);
     }
 
@@ -215,9 +242,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector add(int x, int y, int z) {
+
         return new Vector(this.x + x, this.y + y, this.z + z);
     }
 
@@ -225,9 +254,11 @@ public class Vector {
      * Adds points.
      *
      * @param others
+     *
      * @return New point
      */
-    public Vector add(Vector ... others) {
+    public Vector add(Vector... others) {
+
         double newX = x, newY = y, newZ = z;
 
         for (int i = 0; i < others.length; i++) {
@@ -242,9 +273,11 @@ public class Vector {
      * Subtracts two points.
      *
      * @param other
+     *
      * @return New point
      */
     public Vector subtract(Vector other) {
+
         return new Vector(x - other.x, y - other.y, z - other.z);
     }
 
@@ -254,9 +287,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector subtract(double x, double y, double z) {
+
         return new Vector(this.x - x, this.y - y, this.z - z);
     }
 
@@ -266,9 +301,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector subtract(int x, int y, int z) {
+
         return new Vector(this.x - x, this.y - y, this.z - z);
     }
 
@@ -276,9 +313,11 @@ public class Vector {
      * Subtract points.
      *
      * @param others
+     *
      * @return New point
      */
-    public Vector subtract(Vector ... others) {
+    public Vector subtract(Vector... others) {
+
         double newX = x, newY = y, newZ = z;
 
         for (int i = 0; i < others.length; i++) {
@@ -293,9 +332,11 @@ public class Vector {
      * Multiplies two points.
      *
      * @param other
+     *
      * @return New point
      */
     public Vector multiply(Vector other) {
+
         return new Vector(x * other.x, y * other.y, z * other.z);
     }
 
@@ -305,9 +346,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector multiply(double x, double y, double z) {
+
         return new Vector(this.x * x, this.y * y, this.z * z);
     }
 
@@ -317,9 +360,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector multiply(int x, int y, int z) {
+
         return new Vector(this.x * x, this.y * y, this.z * z);
     }
 
@@ -327,9 +372,11 @@ public class Vector {
      * Multiply points.
      *
      * @param others
+     *
      * @return New point
      */
-    public Vector multiply(Vector ... others) {
+    public Vector multiply(Vector... others) {
+
         double newX = x, newY = y, newZ = z;
 
         for (int i = 0; i < others.length; i++) {
@@ -344,9 +391,11 @@ public class Vector {
      * Scalar multiplication.
      *
      * @param n
+     *
      * @return New point
      */
     public Vector multiply(double n) {
+
         return new Vector(this.x * n, this.y * n, this.z * n);
     }
 
@@ -354,9 +403,11 @@ public class Vector {
      * Scalar multiplication.
      *
      * @param n
+     *
      * @return New point
      */
     public Vector multiply(float n) {
+
         return new Vector(this.x * n, this.y * n, this.z * n);
     }
 
@@ -364,9 +415,11 @@ public class Vector {
      * Scalar multiplication.
      *
      * @param n
+     *
      * @return New point
      */
     public Vector multiply(int n) {
+
         return new Vector(this.x * n, this.y * n, this.z * n);
     }
 
@@ -374,9 +427,11 @@ public class Vector {
      * Divide two points.
      *
      * @param other
+     *
      * @return New point
      */
     public Vector divide(Vector other) {
+
         return new Vector(x / other.x, y / other.y, z / other.z);
     }
 
@@ -386,9 +441,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector divide(double x, double y, double z) {
+
         return new Vector(this.x / x, this.y / y, this.z / z);
     }
 
@@ -398,9 +455,11 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return New point
      */
     public Vector divide(int x, int y, int z) {
+
         return new Vector(this.x / x, this.y / y, this.z / z);
     }
 
@@ -408,9 +467,11 @@ public class Vector {
      * Scalar division.
      *
      * @param n
+     *
      * @return new point
      */
     public Vector divide(int n) {
+
         return new Vector(x / n, y / n, z / n);
     }
 
@@ -418,9 +479,11 @@ public class Vector {
      * Scalar division.
      *
      * @param n
+     *
      * @return new point
      */
     public Vector divide(double n) {
+
         return new Vector(x / n, y / n, z / n);
     }
 
@@ -428,9 +491,11 @@ public class Vector {
      * Scalar division.
      *
      * @param n
+     *
      * @return new point
      */
     public Vector divide(float n) {
+
         return new Vector(x / n, y / n, z / n);
     }
 
@@ -438,9 +503,11 @@ public class Vector {
      * Get the distance away from a point.
      *
      * @param pt
+     *
      * @return distance
      */
     public double distance(Vector pt) {
+
         return Math.sqrt(Math.pow(pt.x - x, 2) +
                 Math.pow(pt.y - y, 2) +
                 Math.pow(pt.z - z, 2));
@@ -451,9 +518,11 @@ public class Vector {
      *
      * @param min
      * @param max
+     *
      * @return
      */
     public boolean containedWithin(Vector min, Vector max) {
+
         return x >= min.getX() && x <= max.getX()
                 && y >= min.getY() && z <= max.getY()
                 && z >= min.getZ() && z <= max.getY();
@@ -464,9 +533,11 @@ public class Vector {
      *
      * @param min
      * @param max
+     *
      * @return
      */
     public boolean containedWithinBlock(Vector min, Vector max) {
+
         return getBlockX() >= min.getBlockX() && getBlockX() <= max.getBlockX()
                 && getBlockY() >= min.getBlockY() && getBlockY() <= max.getBlockY()
                 && getBlockZ() >= min.getBlockZ() && getBlockZ() <= max.getBlockY();
@@ -476,23 +547,25 @@ public class Vector {
      * 2D transformation.
      *
      * @param vec
-     * @param angle in degrees
+     * @param angle      in degrees
      * @param aboutX
      * @param aboutY
      * @param translateX
      * @param translateY
+     *
      * @return
      */
     public Vector transform2D(double angle,
-            double aboutX, double aboutZ, double translateX, double translateZ) {
+                              double aboutX, double aboutZ, double translateX, double translateZ) {
+
         angle = Math.toRadians(angle);
         double x = this.x;
         double z = this.z;
         double x2 = x * Math.cos(angle) - z * Math.sin(angle);
         double z2 = x * Math.sin(angle) + z * Math.cos(angle);
         return new Vector(x2 + aboutX + translateX,
-                          y,
-                          z2 + aboutZ + translateZ);
+                y,
+                z2 + aboutZ + translateZ);
     }
 
     /**
@@ -501,26 +574,30 @@ public class Vector {
      * @param x
      * @param y
      * @param z
+     *
      * @return point
      */
     public static Vector toBlockPoint(double x, double y, double z) {
-        return new Vector((int)Math.floor(x),
-                         (int)Math.floor(y),
-                         (int)Math.floor(z));
+
+        return new Vector((int) Math.floor(x),
+                (int) Math.floor(y),
+                (int) Math.floor(z));
     }
 
     /**
      * Checks if another object is equivalent.
      *
      * @param obj
+     *
      * @return whether the other object is equivalent
      */
     @Override
     public boolean equals(Object obj) {
+
         if (!(obj instanceof Vector)) {
             return false;
         }
-        Vector other = (Vector)obj;
+        Vector other = (Vector) obj;
         return other.x == this.x && other.y == this.y && other.z == this.z;
 
     }
@@ -532,6 +609,7 @@ public class Vector {
      */
     @Override
     public int hashCode() {
+
         return ((new Double(x)).hashCode() >> 13) ^
                 ((new Double(y)).hashCode() >> 7) ^
                 (new Double(z)).hashCode();
@@ -544,6 +622,7 @@ public class Vector {
      */
     @Override
     public String toString() {
+
         return "(" + x + ", " + y + ", " + z + ")";
     }
 
@@ -553,6 +632,7 @@ public class Vector {
      * @return BlockVector
      */
     public BlockVector toBlockVector() {
+
         return new BlockVector(this);
     }
 }

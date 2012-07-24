@@ -19,6 +19,8 @@
 package com.sk89q.craftbook.gates.world;
 
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -26,77 +28,76 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-
 public class ArrowShooter extends AbstractIC {
 
     public ArrowShooter(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Arrow Shooter";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ARROW SHOOTER";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        if (chip.getInput(0)) {
-        	shootArrows(1);
-        }
+
+        if (chip.getInput(0)) shootArrows(1);
     }
-    
+
     public void shootArrows(int n) {
-    	float speed = 0.6F;
-    	float spread = 12;
-    	float vert = 0;
-    	try {
-    		String[] velocity = getSign().getLine(2).trim().split(":");
-    		speed = Float.parseFloat(velocity[0]);
-    		spread = Float.parseFloat(velocity[1]);
-    		vert = Float.parseFloat(getSign().getLine(3).trim());
-    	} catch (Exception e) {  }
-    	
-    	if(speed > 2.0) speed = 2F;
-    	if(speed < 0.2) speed = 0.2F;
-    	if(spread > 50) spread = 50;
-    	if(spread < 0) spread = 0;
-    	if(vert > 1) vert = 1;
-    	if(vert < -1) vert = -1;
-    	
-    	
+
+        float speed = 0.6F;
+        float spread = 12;
+        float vert = 0;
+        try {
+            String[] velocity = getSign().getLine(2).trim().split(":");
+            speed = Float.parseFloat(velocity[0]);
+            spread = Float.parseFloat(velocity[1]);
+            vert = Float.parseFloat(getSign().getLine(3).trim());
+        } catch (Exception ignored) {
+        }
+
+        if (speed > 2.0) speed = 2F;
+        else if (speed < 0.2) speed = 0.2F;
+        if (spread > 50) spread = 50;
+        else if (spread < 0) spread = 0;
+        if (vert > 1) vert = 1;
+        else if (vert < -1) vert = -1;
+
+
         Block signBlock = getSign().getBlock();
-    	BlockFace face = SignUtil.getBack(signBlock);
-        Block targetDir =  signBlock.getRelative(face).getRelative(face);
-        
+        BlockFace face = SignUtil.getBack(signBlock);
+        Block targetDir = signBlock.getRelative(face).getRelative(face);
+
         float x = targetDir.getX() - signBlock.getX();
         float z = targetDir.getZ() - signBlock.getZ();
-    	Vector velocity = new Vector(x, vert, z);
-    	Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
+        Vector velocity = new Vector(x, vert, z);
+        Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
+                targetDir.getZ() + 0.5);
 
-    	for(int i = 0; i < n; i++)
-    	    getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
+        for (short i = 0; i < n; i++) getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
     }
 
     public static class Factory extends AbstractICFactory implements
             RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new ArrowShooter(getServer(), sign);
         }
     }

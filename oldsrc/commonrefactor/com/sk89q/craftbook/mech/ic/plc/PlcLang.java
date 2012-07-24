@@ -25,8 +25,12 @@ import com.sk89q.craftbook.util.SignText;
 import com.sk89q.craftbook.util.Vector;
 
 public interface PlcLang extends StateHolder {
+
     String getName();
+
     boolean[] tick(ChipState chip, String program) throws PlcException;
+
     void checkSyntax(String program) throws PlcException;
+
     String validateEnvironment(WorldInterface w, Vector v, SignText t, String code);
 }

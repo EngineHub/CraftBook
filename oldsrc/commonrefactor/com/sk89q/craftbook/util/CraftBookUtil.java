@@ -19,57 +19,64 @@
 
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.InsufficientArgumentsException;
+import com.sk89q.craftbook.access.Configuration;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
-import com.sk89q.craftbook.InsufficientArgumentsException;
-import com.sk89q.craftbook.access.Configuration;
-
 /**
  * Utility methods.
- * 
+ *
  * @author sk89q
  */
 public class CraftBookUtil {
+
     /**
      * Trim a string if it is longer than a certain length.
-     *  
+     *
      * @param str
      * @param len
+     *
      * @return
      */
     public static String trimLength(String str, int len) {
+
         if (str.length() > len) {
             return str.substring(0, len);
         }
-        
+
         return str;
     }
-    
+
     /**
      * Returns true if two numbers are of the same sign.
-     * 
+     *
      * @param a
      * @param b
+     *
      * @return
      */
     public static boolean isSameSign(double a, double b) {
-        int signA = (int)Math.floor(Math.signum(a));
-        int signB = (int)Math.floor(Math.signum(b));
+
+        int signA = (int) Math.floor(Math.signum(a));
+        int signB = (int) Math.floor(Math.signum(b));
         return signA == signB;
     }
-    
+
     /**
      * Change a block ID to its name.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static String toBlockName(int id) {
+
         com.sk89q.worldedit.blocks.BlockType blockType =
                 com.sk89q.worldedit.blocks.BlockType.fromID(id);
-    
+
         if (blockType == null) {
             return "#" + id;
         } else {
@@ -82,10 +89,12 @@ public class CraftBookUtil {
      *
      * @param str
      * @param delimiter
+     *
      * @return
      */
     public static String joinString(String[] str, String delimiter,
-            int initialIndex) {
+                                    int initialIndex) {
+
         if (str.length == 0) {
             return "";
         }
@@ -98,12 +107,14 @@ public class CraftBookUtil {
 
     /**
      * Repeat a string.
-     * 
+     *
      * @param string
      * @param num
+     *
      * @return
      */
     public static String repeatString(String str, int num) {
+
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < num; i++) {
             buffer.append(str);
@@ -115,16 +126,18 @@ public class CraftBookUtil {
      * Convert a comma-delimited list to a set of integers.
      *
      * @param str
+     *
      * @return
      */
     public static Set<Integer> toBlockIDSet(Configuration c, String str) {
+
         if (str.trim().length() == 0) {
             return null;
         }
-    
+
         String[] items = str.split(",");
         Set<Integer> result = new HashSet<Integer>();
-    
+
         for (String item : items) {
             try {
                 result.add(Integer.parseInt(item.trim()));
@@ -138,7 +151,7 @@ public class CraftBookUtil {
                 }
             }
         }
-    
+
         return result;
     }
 
@@ -147,12 +160,14 @@ public class CraftBookUtil {
      *
      * @param args
      * @param min
-     * @param max -1 for no maximum
-     * @param cmd command name
+     * @param max  -1 for no maximum
+     * @param cmd  command name
+     *
      * @throws InsufficientArgumentsException
      */
     public static void checkArgs(String[] args, int min, int max, String cmd)
             throws InsufficientArgumentsException {
+
         if (args.length <= min) {
             throw new InsufficientArgumentsException("Minimum " + min + " arguments");
         } else if (max != -1 && args.length - 1 > max) {
@@ -162,11 +177,13 @@ public class CraftBookUtil {
 
     /**
      * Get an item from its name or ID.
-     * 
+     *
      * @param id
+     *
      * @return
      */
     public static int getItem(Configuration c, String id) {
+
         try {
             return Integer.parseInt(id.trim());
         } catch (NumberFormatException e) {

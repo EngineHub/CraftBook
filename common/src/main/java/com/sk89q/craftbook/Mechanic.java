@@ -25,7 +25,6 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 /**
  * A Mechanic is a an object that manages a set of BlockVectors to enhance those
  * positions with CraftBook functionality.
- * 
  * <p>
  * Mechanic instances are subject to lazy instantiation and must be able to
  * derive all of their internal state from the blocks in the world at any time.
@@ -36,7 +35,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  * -- this is so that Mechanic instances can be discarded when their containing
  * chunks are unloaded, as well as for general insurance against server crashes.
  * </p>
- * 
+ *
  * @author sk89q
  * @author hash
  */
@@ -65,14 +64,14 @@ public interface Mechanic {
 
     /**
      * Raised when a block is broken.
-     * 
+     *
      * @param event
      */
     public void onBlockBreak(BlockBreakEvent event);
 
     /**
      * Raised when a block is right clicked.
-     * 
+     *
      * @param event
      */
     public void onRightClick(PlayerInteractEvent event);
@@ -80,7 +79,7 @@ public interface Mechanic {
 
     /**
      * Raised when block is left clicked.
-     * 
+     *
      * @param event
      */
     public void onLeftClick(PlayerInteractEvent event);
@@ -88,7 +87,7 @@ public interface Mechanic {
 
     /**
      * Raised when an input redstone current changes.
-     * 
+     *
      * @param event
      */
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event);

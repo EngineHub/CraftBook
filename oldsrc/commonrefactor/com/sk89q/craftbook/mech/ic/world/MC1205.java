@@ -31,12 +31,14 @@ import com.sk89q.craftbook.util.Vector;
  * @author sk89q
  */
 public class MC1205 extends BaseIC {
+
     /**
      * Get the title of the IC.
      *
      * @return
      */
     public String getTitle() {
+
         return "SET BLOCK ABOVE";
     }
 
@@ -46,6 +48,7 @@ public class MC1205 extends BaseIC {
      * @return
      */
     public boolean requiresPermission() {
+
         return true;
     }
 
@@ -55,9 +58,11 @@ public class MC1205 extends BaseIC {
      * creation, otherwise return null to allow.
      *
      * @param sign
+     *
      * @return
      */
     public String validateEnvironment(ServerInterface i, WorldInterface w, Vector pos, SignText sign) {
+
         String id = sign.getLine3();
         String force = sign.getLine4();
 
@@ -82,6 +87,7 @@ public class MC1205 extends BaseIC {
      * @param chip
      */
     public void think(ChipState chip) {
+
         if (!chip.getIn(1).is()) {
             return;
         }
@@ -105,7 +111,7 @@ public class MC1205 extends BaseIC {
             } else {
                 chip.getOut(1).set(false);
             }
-            
+
             return;
         }
 

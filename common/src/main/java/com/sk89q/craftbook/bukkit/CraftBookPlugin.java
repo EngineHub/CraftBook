@@ -20,12 +20,13 @@ package com.sk89q.craftbook.bukkit;
 
 /**
  * Plugin for CraftBook's core.
- * 
+ *
  * @author sk89q
  */
 public class CraftBookPlugin extends BaseBukkitPlugin {
-        
+
     @Override
     protected void registerEvents() {
+
     }
 }

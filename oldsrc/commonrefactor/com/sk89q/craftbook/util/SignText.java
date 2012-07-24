@@ -20,10 +20,10 @@
 package com.sk89q.craftbook.util;
 
 /**
- *
  * @author sk89q
  */
 public class SignText {
+
     private String line1;
     private String line2;
     private String line3;
@@ -33,13 +33,14 @@ public class SignText {
 
     /**
      * Construct the object.
-     * 
+     *
      * @param l1
      * @param l2
      * @param l3
      * @param l4
      */
     public SignText(String l1, String l2, String l3, String l4) {
+
         line1 = l1;
         line2 = l2;
         line3 = l3;
@@ -50,6 +51,7 @@ public class SignText {
      * @return the line1
      */
     public String getLine1() {
+
         return line1;
     }
 
@@ -57,7 +59,8 @@ public class SignText {
      * @param line1 the line1 to set
      */
     public void setLine1(String line1) {
-        if(this.line1.equals(line1)) return;
+
+        if (this.line1.equals(line1)) return;
         this.line1 = line1;
         changed = true;
     }
@@ -66,6 +69,7 @@ public class SignText {
      * @return the line2
      */
     public String getLine2() {
+
         return line2;
     }
 
@@ -73,7 +77,8 @@ public class SignText {
      * @param line2 the line2 to set
      */
     public void setLine2(String line2) {
-        if(this.line2.equals(line2)) return;
+
+        if (this.line2.equals(line2)) return;
         this.line2 = line2;
         changed = true;
     }
@@ -82,6 +87,7 @@ public class SignText {
      * @return the line3
      */
     public String getLine3() {
+
         return line3;
     }
 
@@ -89,7 +95,8 @@ public class SignText {
      * @param line3 the line3 to set
      */
     public void setLine3(String line3) {
-        if(this.line3.equals(line3)) return;
+
+        if (this.line3.equals(line3)) return;
         this.line3 = line3;
         changed = true;
     }
@@ -98,6 +105,7 @@ public class SignText {
      * @return the line4
      */
     public String getLine4() {
+
         return line4;
     }
 
@@ -105,7 +113,8 @@ public class SignText {
      * @param line4 the line4 to set
      */
     public void setLine4(String line4) {
-        if(this.line4.equals(line4)) return;
+
+        if (this.line4.equals(line4)) return;
         this.line4 = line4;
         changed = true;
     }
@@ -114,6 +123,7 @@ public class SignText {
      * Suppress sending the client a update.
      */
     public void supressUpdate() {
+
         noUpdate = true;
     }
 
@@ -121,40 +131,61 @@ public class SignText {
      * Allow sending the client a update.
      */
     public void allowUpdate() {
+
         noUpdate = false;
     }
-    
+
     /**
      * @return the changed
      */
     public boolean isChanged() {
+
         return changed;
     }
+
     /**
      * Check if an update is requested.
-     * 
+     *
      * @return
      */
     public boolean shouldUpdate() {
+
         return !noUpdate;
     }
-    
+
     public void setLine(int i, String line) {
-        switch(i) {
-            case 0: line1 = line; return;
-            case 1: line2 = line; return;
-            case 2: line3 = line; return;
-            case 3: line4 = line; return;
-            default: throw new IllegalArgumentException();
+
+        switch (i) {
+            case 0:
+                line1 = line;
+                return;
+            case 1:
+                line2 = line;
+                return;
+            case 2:
+                line3 = line;
+                return;
+            case 3:
+                line4 = line;
+                return;
+            default:
+                throw new IllegalArgumentException();
         }
     }
+
     public String getLine(int i) {
-        switch(i) {
-            case 0: return line1;
-            case 1: return line2;
-            case 2: return line3;
-            case 3: return line4;
-            default: throw new IllegalArgumentException();
+
+        switch (i) {
+            case 0:
+                return line1;
+            case 1:
+                return line2;
+            case 2:
+                return line3;
+            case 3:
+                return line4;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 }

@@ -21,12 +21,12 @@ import com.sk89q.craftbook.access.PlayerInterface;
 import com.sk89q.craftbook.access.WorldInterface;
 
 /**
- *
  * @author sk89q
  * @author Lymia
  */
 public class HmodPlayerImpl extends HmodLivingEntityImpl
-                         implements PlayerInterface {
+        implements PlayerInterface {
+
     /**
      * Stores the player.
      */
@@ -34,11 +34,12 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
 
     /**
      * Construct the object.
-     * 
+     *
      * @param player
      */
     public HmodPlayerImpl(Player player, WorldInterface w) {
-        super(player,w);
+
+        super(player, w);
         this.player = player;
     }
 
@@ -49,6 +50,7 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      */
     @Override
     public String getName() {
+
         return player.getName();
     }
 
@@ -60,6 +62,7 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      */
     @Override
     public void giveItem(int type, int amt) {
+
         player.giveItem(type, amt);
     }
 
@@ -70,6 +73,7 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      */
     @Override
     public void printRaw(String msg) {
+
         player.sendMessage(msg);
     }
 
@@ -80,6 +84,7 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      */
     @Override
     public void print(String msg) {
+
         player.sendMessage(Colors.Gold + msg);
     }
 
@@ -90,6 +95,7 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      */
     @Override
     public void printError(String msg) {
+
         player.sendMessage(Colors.Rose + msg);
     }
 
@@ -97,45 +103,54 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      * @return the player
      */
     public Player getPlayerObject() {
+
         return player;
     }
 
     public boolean canUseCommand(String permission) {
-        return player.canUseCommand("/"+permission);
+
+        return player.canUseCommand("/" + permission);
     }
 
     public boolean canUseObject(String object) {
-        return player.canUseCommand("/"+object);
+
+        return player.canUseCommand("/" + object);
     }
 
     public boolean canCreateObject(String object) {
-        return player.canUseCommand("/make"+object);
+
+        return player.canUseCommand("/make" + object);
     }
 
     public boolean canCreateIC(String icId) {
-        return player.canUseCommand("/"+icId)||player.canUseCommand("/allic");
+
+        return player.canUseCommand("/" + icId) || player.canUseCommand("/allic");
     }
-    
+
     public void sendMessage(String msg) {
+
         player.sendMessage(msg);
     }
 
     public boolean isInGroup(String group) {
+
         return player.isInGroup(group);
     }
-    
+
     /**
      * Returns true if equal.
      *
      * @param other
+     *
      * @return whether the other object is equivalent
      */
     @Override
     public boolean equals(Object other) {
+
         if (!(other instanceof PlayerInterface)) {
             return false;
         }
-        PlayerInterface other2 = (PlayerInterface)other;
+        PlayerInterface other2 = (PlayerInterface) other;
         return other2.getName().equals(getName());
     }
 
@@ -146,11 +161,13 @@ public class HmodPlayerImpl extends HmodLivingEntityImpl
      */
     @Override
     public int hashCode() {
+
         return getName().hashCode();
     }
 
     @Override
     public int getItemInHand() {
+
         return player.getItemInHand();
     }
 }

@@ -19,11 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.sk89q.craftbook.mech.ic.custom;
 
 class UnknownTokenException extends CustomICException {
+
     private static final long serialVersionUID = 8993605202110405821L;
-    
+
     final int line, column;
-    
+
     UnknownTokenException(int line, int column) {
+
         this.line = line;
         this.column = column;
     }

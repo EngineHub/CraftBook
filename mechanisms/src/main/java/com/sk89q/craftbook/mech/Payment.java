@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,42 +18,32 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Lever;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
 /**
  * Payment Mech, takes payment. (Requires Vault.)
- * 
- * @author Me4502
  *
+ * @author Me4502
  */
-public class Payment extends AbstractMechanic{
+public class Payment extends AbstractMechanic {
 
-    MechanismsPlugin plugin;
+    final MechanismsPlugin plugin;
 
-    protected BlockWorldVector pt;
+    protected final BlockWorldVector pt;
 
 
     public Payment(BlockWorldVector pt, MechanismsPlugin plugin) {
+
         this.pt = pt;
         this.plugin = plugin;
     }
 
     @Override
     public void unload() {
+
     }
 
     @Override
     public boolean isActive() {
+
         return false;
     }
 
@@ -59,11 +55,12 @@ public class Payment extends AbstractMechanic{
 
     /**
      * Raised when a block is right clicked.
-     * 
+     *
      * @param event
      */
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.pay.use")) {
@@ -82,20 +79,19 @@ public class Payment extends AbstractMechanic{
                 sign = (Sign) state;
         }
 
-        if(sign==null) return;
+        if (sign == null) return;
 
         double money = Double.parseDouble(sign.getLine(2));
         String reciever = sign.getLine(3);
 
-        if(MechanismsPlugin.economy.withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess()) {
-            if(MechanismsPlugin.economy.depositPlayer(reciever, money).transactionSuccess()) {
+        if (MechanismsPlugin.economy.withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess()) {
+            if (MechanismsPlugin.economy.depositPlayer(reciever, money).transactionSuccess()) {
                 Block back = SignUtil.getBackBlock(sign.getBlock());
                 BlockFace bface = sign.getBlock().getFace(back);
                 Block redstoneItem = back.getRelative(bface);
-                if(setState(sign.getBlock(), true))
+                if (setState(sign.getBlock(), true))
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new turnOff(redstoneItem), 20L);
-            }
-            else
+            } else
                 MechanismsPlugin.economy.depositPlayer(event.getPlayer().getName(), money);
         }
 
@@ -104,20 +100,23 @@ public class Payment extends AbstractMechanic{
 
     private class turnOff implements Runnable {
 
-        Block block;
+        final Block block;
 
         public turnOff(Block block) {
+
             this.block = block;
         }
 
         @Override
         public void run() {
-            setState(block,false);
+
+            setState(block, false);
         }
 
     }
 
     public static boolean setState(Block block, boolean state) {
+
         if (block.getType() != Material.LEVER) return false;
         byte data = block.getData();
         int newData;
@@ -130,7 +129,7 @@ public class Payment extends AbstractMechanic{
             newData = data | 0x8;
 
         if (newData != data) {
-            block.setData((byte)newData, true);
+            block.setData((byte) newData, true);
             int oldS = state ? (0) : (1);
             int newS = state ? (1) : (0);
             BlockRedstoneEvent event = new BlockRedstoneEvent(sourceBlock, oldS, newS);
@@ -142,14 +141,16 @@ public class Payment extends AbstractMechanic{
 
     public static class Factory extends AbstractMechanicFactory<Payment> {
 
-        protected MechanismsPlugin plugin;
+        protected final MechanismsPlugin plugin;
 
         public Factory(MechanismsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
         @Override
         public Payment detect(BlockWorldVector pt) {
+
             Block block = BukkitUtil.toWorld(pt).getBlockAt(
                     BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN) {
@@ -167,12 +168,13 @@ public class Payment extends AbstractMechanic{
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
         public Payment detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
+
             if (sign.getLine(1).equalsIgnoreCase("[Pay]")) {
                 if (!player.hasPermission("craftbook.mech.pay")) {
                     throw new InsufficientPermissionsException();
@@ -191,6 +193,7 @@ public class Payment extends AbstractMechanic{
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+
     }
 
 }
