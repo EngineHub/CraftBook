@@ -101,6 +101,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
             if (config.minecartEnterOnImpact && (vehicle instanceof Minecart)) {
                 if (!vehicle.isEmpty()) return;
+                if(event.getEntity() instanceof Minecart) return;
                 vehicle.setPassenger(event.getEntity());
 
                 return;
