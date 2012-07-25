@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -16,53 +17,16 @@ import java.util.Set;
 /**
  * @author Silthus
  */
-public class Detection extends AbstractIC {
-
-    private enum Type {
-        PLAYER,
-        MOBHOSTILE,
-        MOBPEACEFUL,
-        ANYMOB,
-        ANY,
-        CART,
-        STORAGECART,
-        POWEREDCART;
-
-        public boolean is(Entity entity) {
-
-            switch (this) {
-            case PLAYER:
-                return entity instanceof Player;
-            case MOBHOSTILE:
-                return entity instanceof Monster;
-            case MOBPEACEFUL:
-                return entity instanceof Animals;
-            case ANYMOB:
-                return entity instanceof Creature;
-            case CART:
-                return entity instanceof Minecart;
-            case STORAGECART:
-                return entity instanceof StorageMinecart;
-            case POWEREDCART:
-                return entity instanceof PoweredMinecart;
-            case ANY:
-                return true;
-            }
-            return false;
-        }
-
-        public static Type fromString(String name) {
-            return EnumUtil.getEnumFromString(Detection.Type.class, name);
-        }
-    }
-
-    private Type type;
+public class PlayerDetection extends AbstractIC {
 
 	private Location center;
 	private Set<Chunk> chunks;
     private int radius;
+	private String player = "";
+	private String group = "";
+	private boolean detectPlayer;
 
-    public Detection(Server server, Sign block) {
+    public PlayerDetection(Server server, Sign block) {
         super(server, block);
         // lets set some defaults
         radius = 0;
@@ -72,13 +36,6 @@ public class Detection extends AbstractIC {
     private void load() {
         Sign sign = getSign();
 	    Block block = SignUtil.getBackBlock(sign.getBlock());
-	    // lets get the type to detect first
-	    this.type = Type.fromString(sign.getLine(3).trim());
-	    // set the type to any if wrong format
-	    if (type == null) this.type = Type.ANY;
-	    // update the sign with correct upper case name
-	    sign.setLine(3, type.name());
-	    sign.update();
 	    // now check the third line for the radius and offset
 	    String line = sign.getLine(2).trim();
 	    boolean relativeOffset = line.contains("!") ? false : true;
@@ -108,18 +65,30 @@ public class Detection extends AbstractIC {
         } else {
             this.radius = Integer.parseInt(line);
         }
+	    // parse the group or player name
+	    line = sign.getLine(3).trim();
+	    detectPlayer = line.contains("p:");
+	    try {
+		    if (detectPlayer) {
+				player = line.split(":")[1];
+		    } else {
+			    group = line.split(":")[1];
+		    }
+	    } catch (Exception e) {
+		    // do nothing and use the defaults
+	    }
 	    this.center = block.getLocation();
 	    this.chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
     @Override
     public String getTitle() {
-        return "Detection";
+        return "Player Detection";
     }
 
     @Override
     public String getSignTitle() {
-        return "DETECTION";
+        return "P-DETECTION";
     }
 
     @Override
@@ -135,11 +104,15 @@ public class Detection extends AbstractIC {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
                     if (!entity.isDead()) {
-                        if (type.is(entity)) {
-                            // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
-                                return true;
-                            }
+                        if (entity instanceof Player) {
+	                        // at last check if the entity is within the radius
+	                        if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
+		                        if (detectPlayer) {
+			                        return ((Player) entity).getName().equals(player);
+		                        } else {
+			                        return CircuitsPlugin.getInst().isInGroup(((Player) entity).getName(), group);
+		                        }
+	                        }
                         }
                     }
                 }
@@ -156,7 +129,7 @@ public class Detection extends AbstractIC {
 
         @Override
         public IC create(Sign sign) {
-	        return new Detection(getServer(), sign);
+	        return new PlayerDetection(getServer(), sign);
         }
     }
 }
