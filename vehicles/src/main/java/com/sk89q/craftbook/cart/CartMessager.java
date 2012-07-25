@@ -23,6 +23,7 @@ public class CartMessager extends CartMechanism {
 
         // care?
         if (cart.getPassenger() == null) return;
+        if(!(blocks.sign != null) && !(blocks.sign.getState() instanceof Sign)) return;
 
         if(plugin.getLocalConfiguration().minecartTrackMessages == false) return;
 
