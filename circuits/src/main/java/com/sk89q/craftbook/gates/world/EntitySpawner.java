@@ -18,13 +18,18 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class EntitySpawner extends AbstractIC {
 
@@ -60,14 +65,14 @@ public class EntitySpawner extends AbstractIC {
                 for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
                     if (BlockType.canPassThrough(getSign().getWorld().getBlockTypeIdAt(x, y, z))) {
                         if (rider.length() != 0 && EntityType.fromName(rider) != null) {
-                            Entity ent = getSign().getWorld().spawnEntity(new Location(getSign().getWorld(),
-                                    x, y, z), EntityType.fromName(type));
-                            Entity ent2 = getSign().getWorld().spawnEntity(new Location(getSign().getWorld(),
-                                    x, y, z), EntityType.fromName(rider));
+                            Entity ent = getSign().getWorld().spawn(new Location(getSign().getWorld(),
+                                    x, y, z), EntityType.fromName(type).getEntityClass());
+                            Entity ent2 = getSign().getWorld().spawn(new Location(getSign().getWorld(),
+                                    x, y, z), EntityType.fromName(rider).getEntityClass());
                             ent.setPassenger(ent2);
                         } else {
-                            getSign().getWorld().spawnEntity(new Location(getSign().getWorld(), x, y, z),
-                                    EntityType.fromName(type));
+                            getSign().getWorld().spawn(new Location(getSign().getWorld(), x, y, z),
+                                    EntityType.fromName(type).getEntityClass());
                         }
                         return;
                     }
