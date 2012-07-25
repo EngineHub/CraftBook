@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -77,7 +78,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-        getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(), this);
+        getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(this), this);
         getServer().getPluginManager().registerEvents(new CraftBookVehicleBlockListener(), this);
     }
 
@@ -93,8 +94,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      */
     class CraftBookVehicleListener implements Listener {
 
-        public CraftBookVehicleListener() {
+        VehiclesPlugin plugin;
 
+        public CraftBookVehicleListener(VehiclesPlugin plugin) {
+            this.plugin = plugin;
         }
 
         /**
@@ -182,6 +185,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (config.minecartRemoveOnExit) {
                 vehicle.remove();
             }
+            else if(config.minecartDecayWhenEmpty) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart)vehicle), config.minecartDecayTime);
+            }
         }
 
         /**
@@ -191,9 +197,6 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
-
-            if (config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty())
-                ((Minecart) event.getVehicle()).setDamage(((Minecart) event.getVehicle()).getDamage() + 3);
 
             cartman.impact(event);
         }
@@ -306,5 +309,21 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 }
             }
         }
+    }
+
+    class Decay implements Runnable {
+
+        Minecart cart;
+
+        public Decay(Minecart cart) {
+            this.cart = cart;
+        }
+
+        @Override
+        public void run() {
+            if(cart.isEmpty())
+                cart.setDamage(41);
+        }
+
     }
 }
