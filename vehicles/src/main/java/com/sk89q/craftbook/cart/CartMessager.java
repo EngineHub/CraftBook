@@ -35,7 +35,7 @@ public class CartMessager extends CartMechanism {
             Sign s = (Sign) blocks.sign.getState();
             if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]")) return;
             if (s.getLine(1) != null && !s.getLine(1).trim().equalsIgnoreCase("")  && !s.getLine(1).equalsIgnoreCase("[print]"))
-                p.sendMessage(s.getLine(2).trim());
+                p.sendMessage(s.getLine(1).trim());
             if (s.getLine(2) != null && !s.getLine(2).trim().equalsIgnoreCase(""))
                 p.sendMessage(s.getLine(2).trim());
             if (s.getLine(3) != null && !s.getLine(3).trim().equalsIgnoreCase(""))
