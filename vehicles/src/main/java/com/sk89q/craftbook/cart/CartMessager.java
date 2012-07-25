@@ -35,12 +35,10 @@ public class CartMessager extends CartMechanism {
         if (cart.getPassenger() instanceof Player) {
             Player p = (Player) cart.getPassenger();
             Sign s = (Sign) blocks.sign.getState();
-            if (s.getLine(1) != null && !s.getLine(1).trim().equalsIgnoreCase(""))
-                p.chat(s.getLine(1));
             if (s.getLine(2) != null && !s.getLine(2).trim().equalsIgnoreCase(""))
-                p.chat(s.getLine(2));
+                p.sendMessage(s.getLine(2).trim());
             if (s.getLine(3) != null && !s.getLine(3).trim().equalsIgnoreCase(""))
-                p.chat(s.getLine(3));
+                p.sendMessage(s.getLine(3).trim());
         }
     }
 
