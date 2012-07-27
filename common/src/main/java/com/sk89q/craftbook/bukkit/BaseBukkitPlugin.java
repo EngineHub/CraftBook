@@ -18,20 +18,21 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.wepif.PermissionsResolverManager;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -71,6 +72,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public void onEnable() {
 
+        // Make the data folder for the plugin where configuration files
+        // and other data files will be stored
+        getDataFolder().mkdirs();
         createDefaultConfiguration("en_US.txt", true);
         createDefaultConfiguration("config.yml", false);
 
@@ -80,9 +84,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         logger.info(getDescription().getName() + " "
                 + getDescription().getVersion() + " enabled.");
 
-        // Make the data folder for the plugin where configuration files
-        // and other data files will be stored
-        getDataFolder().mkdirs();
 
         // Prepare permissions
         PermissionsResolverManager.initialize(this);
@@ -189,9 +190,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     }
 
-	public boolean isInGroup(String player, String group) {
-		return perms.inGroup(player, group);
-	}
+    public boolean isInGroup(String player, String group) {
+        return perms.inGroup(player, group);
+    }
 
     public LanguageManager getLanguageManager() {
 
