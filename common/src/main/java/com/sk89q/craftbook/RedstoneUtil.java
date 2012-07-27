@@ -55,7 +55,7 @@ public abstract class RedstoneUtil {
      * @param pow
      *
      * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be
-     * wires).
+     *         wires).
      */
     public static boolean isPotentialPowerSource(Block pow) {
 
@@ -68,7 +68,7 @@ public abstract class RedstoneUtil {
      * @param pow
      *
      * @return true if a mechanism in the mech block is able to receive power from the pow block (i.e. if it's a
-     * power conductor and if it has a sense of directionality it is also pointing at mech).
+     *         power conductor and if it has a sense of directionality it is also pointing at mech).
      */
     public static boolean isPotentialPowerSource(Block mech, Block pow) {
 

@@ -18,16 +18,11 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
 
 public class MessageSender extends AbstractIC {
 
@@ -72,8 +67,9 @@ public class MessageSender extends AbstractIC {
         if (player != null) {
             player.sendMessage(message.replace("&", "\u00A7"));
             sent = true;
-        } else if (name.equalsIgnoreCase("BROADCAST"))
+        } else if (name.equalsIgnoreCase("BROADCAST")) {
             getServer().broadcastMessage(message);
+        }
         return sent;
     }
 
@@ -92,8 +88,9 @@ public class MessageSender extends AbstractIC {
 
         @Override
         public void checkPlayer(Sign sign, LocalPlayer player) throws ICVerificationException {
-            if(!sign.getLine(2).equalsIgnoreCase(player.getName()))
-                if(!player.hasPermission("craftbook.ic.restricted.mc1510"))
+
+            if (!sign.getLine(2).equalsIgnoreCase(player.getName()))
+                if (!player.hasPermission("craftbook.ic.restricted.mc1510"))
                     throw new ICVerificationException("You don't have permission to use other players!");
         }
     }

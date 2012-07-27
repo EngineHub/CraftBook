@@ -360,7 +360,7 @@ public class Door extends AbstractMechanic {
         public void run() {
 
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that
-            // needs to be fixed in the overall scheme
+                // needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 int oldType = 0;
                 if (b != null) oldType = b.getTypeId();
@@ -396,7 +396,7 @@ public class Door extends AbstractMechanic {
         public void run() {
 
             for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that
-            // needs to be fixed in the overall scheme
+                // needs to be fixed in the overall scheme
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId())) {
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {

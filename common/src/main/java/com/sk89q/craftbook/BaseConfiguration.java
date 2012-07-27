@@ -21,11 +21,13 @@ public class BaseConfiguration {
 
         public final String language;
         public final boolean obeyCancelled;
+        public final boolean opPerms;
 
         private CommonSettings(FileConfiguration cfg) {
 
             language = getString(cfg, "language", "en_US");
             obeyCancelled = getBoolean(cfg, "obey-cancelled", true);
+            opPerms = getBoolean(cfg, "op-perms", true);
         }
     }
 
