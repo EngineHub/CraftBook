@@ -18,35 +18,24 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.vehicle.*;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -97,6 +86,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         VehiclesPlugin plugin;
 
         public CraftBookVehicleListener(VehiclesPlugin plugin) {
+
             this.plugin = plugin;
         }
 
@@ -115,7 +105,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
             if (config.minecartEnterOnImpact && (vehicle instanceof Minecart)) {
                 if (!vehicle.isEmpty()) return;
-                if(!(event.getEntity() instanceof LivingEntity)) return;
+                if (!(event.getEntity() instanceof LivingEntity)) return;
                 vehicle.setPassenger(event.getEntity());
 
                 return;
@@ -184,9 +174,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             VehiclesConfiguration config = getLocalConfiguration();
             if (config.minecartRemoveOnExit) {
                 vehicle.remove();
-            }
-            else if(config.minecartDecayWhenEmpty) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart)vehicle), config.minecartDecayTime);
+            } else if (config.minecartDecayWhenEmpty) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) vehicle),
+                        config.minecartDecayTime);
             }
         }
 
@@ -245,6 +235,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             //TODO make this method simpler :|
             Sign s = (Sign) event.getBlock().getState();
             LocalPlayer player = wrap(event.getPlayer());
+
             if (s.getLine(1).equalsIgnoreCase("[deposit]") || s.getLine(1).equalsIgnoreCase("[collect]")) {
                 if (!player.hasPermission("craftbook.vehicles.deposit")) {
                     player.printError("vehicles.create-permission");
@@ -316,12 +307,14 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         Minecart cart;
 
         public Decay(Minecart cart) {
+
             this.cart = cart;
         }
 
         @Override
         public void run() {
-            if(cart.isEmpty())
+
+            if (cart.isEmpty())
                 cart.setDamage(41);
         }
 

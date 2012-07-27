@@ -21,6 +21,7 @@ package com.sk89q.craftbook.mech;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -49,7 +50,9 @@ public class Ammeter extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.ammeter.use")) {
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+
+        if (!player.hasPermission("craftbook.mech.ammeter.use")) {
             return;
         }
 
@@ -59,7 +62,7 @@ public class Ammeter extends AbstractMechanic {
                 BlockType.isRedstoneSource(block.getTypeId()))) {
             int data = getSpecialData(block);
             String line = getCurrentLine(data);
-            event.getPlayer().sendMessage(
+            player.print(
                     ChatColor.YELLOW + "Ammeter: " + line + ChatColor.WHITE +
                             " " + data + " A");
         }

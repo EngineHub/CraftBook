@@ -22,7 +22,6 @@ import com.sk89q.craftbook.mech.ic.LogicChipState;
 import com.sk89q.craftbook.mech.ic.plc.LogicPlcLang;
 import com.sk89q.craftbook.util.BlockVector;
 import com.sk89q.craftbook.util.SignText;
-import com.sk89q.craftbook.util.Vector;
 
 import java.io.DataInput;
 import java.io.DataOutput;
