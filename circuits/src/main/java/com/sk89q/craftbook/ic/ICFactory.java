@@ -18,9 +18,8 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.LocalPlayer;
+import org.bukkit.block.Sign;
 
 /**
  * Factories are used to generate instances of ICs.

@@ -18,37 +18,19 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.mech.*;
+import com.sk89q.craftbook.mech.area.Area;
+import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.mech.Ammeter;
-import com.sk89q.craftbook.mech.Bookcase;
-import com.sk89q.craftbook.mech.Bridge;
-import com.sk89q.craftbook.mech.Cauldron;
-import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.Command;
-import com.sk89q.craftbook.mech.CookingPot;
-import com.sk89q.craftbook.mech.CustomCrafting;
-import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.Door;
-import com.sk89q.craftbook.mech.Elevator;
-import com.sk89q.craftbook.mech.Gate;
-import com.sk89q.craftbook.mech.HiddenSwitch;
-import com.sk89q.craftbook.mech.LightSwitch;
-import com.sk89q.craftbook.mech.Payment;
-import com.sk89q.craftbook.mech.Snow;
-import com.sk89q.craftbook.mech.Teleporter;
-import com.sk89q.craftbook.mech.area.Area;
-import com.sk89q.craftbook.mech.area.CopyManager;
-import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 
 
 /**
@@ -101,7 +83,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Area.Factory(this));
         manager.register(new Command.Factory(this));
         manager.register(new ChunkAnchor.Factory(this));
-        //manager.register(new LightStone.Factory(this));
+        manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new CookingPot.Factory(this));

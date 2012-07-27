@@ -26,7 +26,7 @@ public class CustomDrops extends MechanismsPlugin implements Listener {
         if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
             return;
         if (plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
-                !event.getPlayer().hasPermission("craftbook.mech.drops")) return;
+                !plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
         if (event.isCancelled()) return;
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();

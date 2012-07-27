@@ -18,21 +18,22 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.wepif.PermissionsResolverManager;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -181,16 +182,30 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
 
-        if (sender.isOp()) {
+        if (!(sender instanceof Player)) {
+            return ((sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender))
+                    || perms.hasPermission(sender.getName(), perm));
+        }
+        return hasPermission(sender, ((Player) sender).getWorld(), perm);
+    }
+
+    public boolean hasPermission(CommandSender sender, World world, String perm) {
+
+        if ((sender.isOp() && config.commonSettings.opPerms) || sender instanceof ConsoleCommandSender) {
             return true;
         }
 
         // Invoke the permissions resolver
-        return sender instanceof Player && perms.hasPermission(sender.getName(), perm);
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            return perms.hasPermission(world.getName(), player.getName(), perm);
+        }
 
+        return false;
     }
 
     public boolean isInGroup(String player, String group) {
+
         return perms.inGroup(player, group);
     }
 

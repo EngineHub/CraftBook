@@ -82,7 +82,8 @@ public class CartStation extends CartMechanism {
                 l.setZ(l.getZ() + 0.5);
                 if (!cart.getLocation().equals(l))
                     cart.teleport(l);
-                // recentering and parking almost completely prevents more than one cart from getting onto the same station.
+                // recentering and parking almost completely prevents more than one cart from getting onto the same
+                // station.
                 break;
         }
     }
