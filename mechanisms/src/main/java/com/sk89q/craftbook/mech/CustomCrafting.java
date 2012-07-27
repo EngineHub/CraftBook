@@ -36,8 +36,9 @@ public class CustomCrafting implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if(event.getInventory() instanceof FurnaceInventory) {
+            if(fuels == null || fuels.size() <= 0) return;
             FurnaceInventory inv = (FurnaceInventory)event.getInventory();
-            if(event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1) {
+            if(event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) {
                 if(fuels.get(inv.getItem(1).getTypeId()) > 0) {
                     inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
                     inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
