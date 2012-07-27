@@ -1,24 +1,17 @@
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
-import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.*;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.io.*;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class CustomCrafting implements Listener {
 
@@ -32,16 +25,32 @@ public class CustomCrafting implements Listener {
     public final HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
 
     @EventHandler
+    public void onClick(InventoryClickEvent event) {
+
+        if (event.getInventory() instanceof FurnaceInventory) {
+            if (fuels == null || fuels.size() <= 0) return;
+            FurnaceInventory inv = (FurnaceInventory) event.getInventory();
+            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) {
+                if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
+                    inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
+                    inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
+                }
+            }
+        } else
+            return;
+    }
+
+    @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
 
         if (event.getFuel() == null) return;
-        if (event.getBurnTime() != 0) return;
+        if (event.getBurnTime() > 0) return;
         Furnace f = (Furnace) event.getBlock().getState();
         if (f.getInventory().getSmelting() != null) return;
         if (f.getInventory().getItem(0) != null) return;
         if (fuels.get(event.getFuel().getTypeId()) == null) return;
         if (fuels.get(event.getFuel().getTypeId()) > 0) {
-            short burnTime = (short) fuels.get(event.getFuel().getTypeId()).intValue();
+            short burnTime = fuels.get(event.getFuel().getTypeId()).shortValue();
             event.setBurnTime(burnTime);
             event.setBurning(true);
         }
@@ -148,6 +157,7 @@ public class CustomCrafting implements Listener {
                     if (contents.length() == 0) continue;
                     int burnTime = Integer.parseInt(contents);
                     fuels.put(id, burnTime);
+                    plugin.getLogger().info("Furnace Fuel Added!");
                 } else if (lastLine.startsWith("*[")) { //2x2 Shaped Recipe
                     String output = lastLine.split(Pattern.quote("*["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
@@ -193,9 +203,9 @@ public class CustomCrafting implements Listener {
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]) +
                             getShapeData(items[2].split(":")[0]),
                             getShapeData(items[3].split(":")[0]) + getShapeData(items[4].split(":")[0]) +
-                            getShapeData(items[5].split(":")[0]),
+                                    getShapeData(items[5].split(":")[0]),
                             getShapeData(items[6].split(":")[0]) + getShapeData(items[7].split(":")[0]) +
-                            getShapeData(items[8].split(":")[0]));
+                                    getShapeData(items[8].split(":")[0]));
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];

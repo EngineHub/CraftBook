@@ -21,11 +21,9 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.access.*;
-import com.sk89q.craftbook.blockbag.*;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.MinecraftUtil;
-import com.sk89q.craftbook.util.Vector;
 
 import java.util.*;
 import java.util.logging.Level;

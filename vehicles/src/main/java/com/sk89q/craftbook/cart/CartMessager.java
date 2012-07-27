@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.cart;
 
 import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -8,44 +9,39 @@ import org.bukkit.entity.Player;
 
 public class CartMessager extends CartMechanism {
 
+    VehiclesPlugin plugin;
+
+    public CartMessager(VehiclesPlugin plugin) {
+
+        this.plugin = plugin;
+    }
+
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+        // validate
+        if (cart == null) return;
 
-        try {
-            // validate
-            if (cart == null) return;
+        // care?
+        if (cart.getPassenger() == null) return;
+        if (!(blocks.sign != null) && !(blocks.sign.getState() instanceof Sign)) return;
 
-            // Field f = VehiclesPlugin.class.getDeclaredField("config");
-            //f.setAccessible(true);
-            //VehiclesConfiguration cfg = (VehiclesConfiguration) f.get(null);
+        if (plugin.getLocalConfiguration().minecartTrackMessages == false) return;
 
-            // care?
-            if (cart.getPassenger() == null) return;
+        // enabled?
+        if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
 
-            // enabled?
-            if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
-
-            // go
-            if (blocks.sign == null) {
-
-            } else {
-                if (!blocks.matches("print")) {
-
-                } else {
-                    if (cart.getPassenger() instanceof Player) {
-                        Player p = (Player) cart.getPassenger();
-                        Sign s = (Sign) blocks.sign.getState();
-                        if (s.getLine(1) != null && !s.getLine(1).trim().equalsIgnoreCase(""))
-                            p.chat(s.getLine(1));
-                        if (s.getLine(2) != null && !s.getLine(2).trim().equalsIgnoreCase(""))
-                            p.chat(s.getLine(2));
-                        if (s.getLine(3) != null && !s.getLine(3).trim().equalsIgnoreCase(""))
-                            p.chat(s.getLine(3));
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        // go
+        if (cart.getPassenger() instanceof Player) {
+            Player p = (Player) cart.getPassenger();
+            Sign s = (Sign) blocks.sign.getState();
+            if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]")) return;
+            if (s.getLine(1) != null && !s.getLine(1).trim().equalsIgnoreCase("") && !s.getLine(1).equalsIgnoreCase
+                    ("[print]"))
+                p.sendMessage(s.getLine(1).trim());
+            if (s.getLine(2) != null && !s.getLine(2).trim().equalsIgnoreCase(""))
+                p.sendMessage(s.getLine(2).trim());
+            if (s.getLine(3) != null && !s.getLine(3).trim().equalsIgnoreCase(""))
+                p.sendMessage(s.getLine(3).trim());
         }
     }
 
@@ -54,5 +50,4 @@ public class CartMessager extends CartMechanism {
                       boolean minor) {
 
     }
-
 }

@@ -24,6 +24,7 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -66,7 +67,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-        getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(), this);
+        getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(this), this);
         getServer().getPluginManager().registerEvents(new CraftBookVehicleBlockListener(), this);
     }
 
@@ -82,8 +83,11 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      */
     class CraftBookVehicleListener implements Listener {
 
-        public CraftBookVehicleListener() {
+        VehiclesPlugin plugin;
 
+        public CraftBookVehicleListener(VehiclesPlugin plugin) {
+
+            this.plugin = plugin;
         }
 
         /**
@@ -101,6 +105,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
             if (config.minecartEnterOnImpact && (vehicle instanceof Minecart)) {
                 if (!vehicle.isEmpty()) return;
+                if (!(event.getEntity() instanceof LivingEntity)) return;
                 vehicle.setPassenger(event.getEntity());
 
                 return;
@@ -169,6 +174,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             VehiclesConfiguration config = getLocalConfiguration();
             if (config.minecartRemoveOnExit) {
                 vehicle.remove();
+            } else if (config.minecartDecayWhenEmpty) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) vehicle),
+                        config.minecartDecayTime);
             }
         }
 
@@ -179,9 +187,6 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
-
-            if (config.minecartDecayWhenEmpty && Math.random() > 0.8D && event.getVehicle().isEmpty())
-                ((Minecart) event.getVehicle()).setDamage(((Minecart) event.getVehicle()).getDamage() + 3);
 
             cartman.impact(event);
         }
@@ -230,6 +235,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             //TODO make this method simpler :|
             Sign s = (Sign) event.getBlock().getState();
             LocalPlayer player = wrap(event.getPlayer());
+
             if (s.getLine(1).equalsIgnoreCase("[deposit]") || s.getLine(1).equalsIgnoreCase("[collect]")) {
                 if (!player.hasPermission("craftbook.vehicles.deposit")) {
                     player.printError("vehicles.create-permission");
@@ -294,5 +300,23 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 }
             }
         }
+    }
+
+    class Decay implements Runnable {
+
+        Minecart cart;
+
+        public Decay(Minecart cart) {
+
+            this.cart = cart;
+        }
+
+        @Override
+        public void run() {
+
+            if (cart.isEmpty())
+                cart.setDamage(41);
+        }
+
     }
 }
