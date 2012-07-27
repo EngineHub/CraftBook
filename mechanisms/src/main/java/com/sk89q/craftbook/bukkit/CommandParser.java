@@ -1,18 +1,20 @@
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.mech.area.CopyManager;
-import com.sk89q.craftbook.mech.area.CuboidCopy;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import java.io.IOException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.area.CuboidCopy;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 
 /**
  * @author Me4502
@@ -33,18 +35,22 @@ public class CommandParser implements CommandExecutor {
             if (args.length > 0)
                 if (args[0].equalsIgnoreCase("reload")) return plugin.reloadLocalConfiguration(sender);
             return true;
-        } else if (command.getName().equalsIgnoreCase("savearea") && sender.hasPermission("craftbook.mech.savearea")) {
+        } else if (command.getName().equalsIgnoreCase("savearea")) {
 
             if (!(sender instanceof Player)) return false;
-            Player player = (Player) sender;
+            LocalPlayer player = plugin.wrap((Player) sender);
 
+            if(!player.hasPermission("craftbook.mech.savearea")) {
+                player.printError("You don't have permissions to use this command!");
+                return true;
+            }
             String id;
             String namespace = "~" + player.getName();
 
             id = args[0];
 
             if (!CopyManager.isValidName(id)) {
-                player.sendMessage(ChatColor.RED + "Invalid area name.");
+                player.printError("Invalid area name.");
                 return true;
             }
 
@@ -52,7 +58,7 @@ public class CommandParser implements CommandExecutor {
                 WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin
                         ("WorldEdit");
 
-                Selection sel = worldEdit.getSelection(player);
+                Selection sel = worldEdit.getSelection(((Player)sender));
                 Vector min = BukkitUtil.toVector(sel.getMinimumPoint());
                 Vector max = BukkitUtil.toVector(sel.getMaximumPoint());
                 Vector size = max.subtract(min).add(1, 1, 1);
@@ -60,7 +66,7 @@ public class CommandParser implements CommandExecutor {
                 // Check maximum size
                 if (size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration()
                         .areaSettings.maxSizePerArea) {
-                    player.sendMessage(ChatColor.RED + "Area is larger than allowed "
+                    player.printError("Area is larger than allowed "
                             + plugin.getLocalConfiguration().areaSettings.maxSizePerArea + " blocks.");
                     return true;
                 }
@@ -68,11 +74,11 @@ public class CommandParser implements CommandExecutor {
                 // Check to make sure that a user doesn't have too many toggle
                 // areas (to prevent flooding the server with files)
                 if (plugin.getLocalConfiguration().areaSettings.maxAreasPerUser >= 0 && !namespace.equals("global")) {
-                    int count = plugin.copyManager.meetsQuota(player.getWorld(),
+                    int count = plugin.copyManager.meetsQuota(((Player)sender).getWorld(),
                             namespace, id, plugin.getLocalConfiguration().areaSettings.maxAreasPerUser, plugin);
 
                     if (count > -1) {
-                        player.sendMessage(ChatColor.RED + "You are limited to "
+                        player.printError("You are limited to "
                                 + plugin.getLocalConfiguration().areaSettings.maxAreasPerUser + " toggle area(s). You" +
                                 " have "
                                 + count + " areas.");
@@ -82,27 +88,31 @@ public class CommandParser implements CommandExecutor {
 
                 // Copy
                 CuboidCopy copy = new CuboidCopy(min, size);
-                copy.copy(player.getWorld());
+                copy.copy(((Player)sender).getWorld());
 
                 plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '"
                         + namespace + "' and ID '" + id + "'.");
 
                 // Save
                 try {
-                    plugin.copyManager.save(player.getWorld(), namespace, id, copy, plugin);
-                    player.sendMessage(ChatColor.GOLD + "Area saved as '" + id + "' under the specified namespace.");
+                    plugin.copyManager.save(((Player)sender).getWorld(), namespace, id, copy, plugin);
+                    player.print("Area saved as '" + id + "' under the specified namespace.");
                 } catch (IOException e) {
-                    player.sendMessage(ChatColor.RED + "Could not save area: " + e.getMessage());
+                    player.printError("Could not save area: " + e.getMessage());
                 }
             } catch (NoClassDefFoundError e) {
-                player.sendMessage(ChatColor.RED + "WorldEdit.jar does not exist in plugins/.");
+                player.printError("WorldEdit.jar does not exist in plugins/.");
             }
             return true;
-        } else if (command.getName().equalsIgnoreCase("savensarea") && sender.hasPermission("craftbook.mech" +
-                ".savensarea")) {
+        } else if (command.getName().equalsIgnoreCase("savensarea")) {
 
             if (!(sender instanceof Player)) return false;
-            Player player = (Player) sender;
+            LocalPlayer player = plugin.wrap((Player) sender);
+
+            if(!player.hasPermission("craftbook.mech.savensarea")) {
+                player.printError("You don't have permissions to use this command!");
+                return true;
+            }
 
             String id;
             String namespace;
@@ -114,14 +124,14 @@ public class CommandParser implements CommandExecutor {
                 namespace = "global";
             } else {
                 if (!CopyManager.isValidNamespace(namespace)) {
-                    player.sendMessage(ChatColor.RED + "Invalid namespace name. For the global namespace, use @");
+                    player.printError("Invalid namespace name. For the global namespace, use @");
                     return true;
                 }
                 namespace = "~" + namespace;
             }
 
             if (!CopyManager.isValidName(id)) {
-                player.sendMessage(ChatColor.RED + "Invalid area name.");
+                player.printError("Invalid area name.");
                 return true;
             }
 
@@ -129,7 +139,7 @@ public class CommandParser implements CommandExecutor {
                 WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin
                         ("WorldEdit");
 
-                Selection sel = worldEdit.getSelection(player);
+                Selection sel = worldEdit.getSelection((Player)sender);
                 Vector min = BukkitUtil.toVector(sel.getMinimumPoint());
                 Vector max = BukkitUtil.toVector(sel.getMaximumPoint());
                 Vector size = max.subtract(min).add(1, 1, 1);
@@ -137,7 +147,7 @@ public class CommandParser implements CommandExecutor {
                 // Check maximum size
                 if (size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration()
                         .areaSettings.maxSizePerArea) {
-                    player.sendMessage(ChatColor.RED + "Area is larger than allowed "
+                    player.printError("Area is larger than allowed "
                             + plugin.getLocalConfiguration().areaSettings.maxSizePerArea + " blocks.");
                     return true;
                 }
@@ -145,11 +155,11 @@ public class CommandParser implements CommandExecutor {
                 // Check to make sure that a user doesn't have too many toggle
                 // areas (to prevent flooding the server with files)
                 if (plugin.getLocalConfiguration().areaSettings.maxAreasPerUser >= 0 && !namespace.equals("global")) {
-                    int count = plugin.copyManager.meetsQuota(player.getWorld(),
+                    int count = plugin.copyManager.meetsQuota(((Player)sender).getWorld(),
                             namespace, id, plugin.getLocalConfiguration().areaSettings.maxAreasPerUser, plugin);
 
                     if (count > -1) {
-                        player.sendMessage(ChatColor.RED + "You are limited to "
+                        player.printError("You are limited to "
                                 + plugin.getLocalConfiguration().areaSettings.maxAreasPerUser + " toggle area(s). You" +
                                 " have "
                                 + count + " areas.");
@@ -159,20 +169,20 @@ public class CommandParser implements CommandExecutor {
 
                 // Copy
                 CuboidCopy copy = new CuboidCopy(min, size);
-                copy.copy(player.getWorld());
+                copy.copy(((Player)sender).getWorld());
 
                 plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '"
                         + namespace + "' and ID '" + id + "'.");
 
                 // Save
                 try {
-                    plugin.copyManager.save(player.getWorld(), namespace, id, copy, plugin);
-                    player.sendMessage(ChatColor.GOLD + "Area saved as '" + id + "' under the specified namespace.");
+                    plugin.copyManager.save(((Player)sender).getWorld(), namespace, id, copy, plugin);
+                    player.print(ChatColor.GOLD + "Area saved as '" + id + "' under the specified namespace.");
                 } catch (IOException e) {
-                    player.sendMessage(ChatColor.RED + "Could not save area: " + e.getMessage());
+                    player.printError("Could not save area: " + e.getMessage());
                 }
             } catch (NoClassDefFoundError e) {
-                player.sendMessage(ChatColor.RED + "WorldEdit.jar does not exist in plugins/.");
+                player.printError("WorldEdit.jar does not exist in plugins/.");
             }
             return true;
         }
