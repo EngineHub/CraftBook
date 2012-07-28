@@ -250,6 +250,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 for(Entity ent : event.getChunk().getEntities()) {
                     if(ent == null || ent.isDead()) continue;
                     if(!(ent instanceof Minecart)) continue;
+                    if(!ent.isEmpty()) continue;
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) (Minecart)ent),
                             config.minecartDecayTime);
                 }
