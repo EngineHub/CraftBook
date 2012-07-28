@@ -193,19 +193,19 @@ public class MechanicListenerAdapter {
             try {
                 if (type == BlockID.LEVER) {
                     // Fake data
-                    w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x8 : w.getBlockData(v) & 0x7);
+                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x8 : w.getBlockData(v) & 0x7);
                 } else if (type == BlockID.STONE_PRESSURE_PLATE) {
                     // Fake data
-                    w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x1 : w.getBlockData(v) & 0x14);
+                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x1 : w.getBlockData(v) & 0x14);
                 } else if (type == BlockID.WOODEN_PRESSURE_PLATE) {
                     // Fake data
-                    w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x1 : w.getBlockData(v) & 0x14);
+                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x1 : w.getBlockData(v) & 0x14);
                 } else if (type == BlockID.STONE_BUTTON) {
                     // Fake data
-                    w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x8 : w.getBlockData(v) & 0x7);
+                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x8 : w.getBlockData(v) & 0x7);
                 } else if (type == BlockID.REDSTONE_WIRE) {
                     // Fake data
-                    w.setBlockData(v, newLevel);
+                    //w.setBlockData(v, newLevel);
 
                     int above = world.getBlockTypeIdAt(x, y + 1, z);
 
@@ -272,7 +272,7 @@ public class MechanicListenerAdapter {
                 // Can be triggered from below
                 handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
             } finally {
-                w.setBlockData(v, oldData);
+                //w.setBlockData(v, oldData);
             }
         }
 
