@@ -18,9 +18,9 @@
 
 package com.sk89q.craftbook;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * Configuration handler for CraftBook.
