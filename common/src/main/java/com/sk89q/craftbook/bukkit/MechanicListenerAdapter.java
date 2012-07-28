@@ -110,13 +110,11 @@ public class MechanicListenerAdapter {
 
             if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
                 return;
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 manager.dispatchBlockRightClick(event);
-            }
 
-            if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK)
                 manager.dispatchBlockLeftClick(event);
-            }
         }
     }
 
@@ -174,9 +172,8 @@ public class MechanicListenerAdapter {
 
             // For efficiency reasons, we're only going to consider changes between
             // off and on state, and ignore simple current changes (i.e. 15->13)
-            if (!wasChange) {
+            if (!wasChange)
                 return;
-            }
 
             LocalWorld w = BukkitUtil.getLocalWorld(world);
             int x = v.getBlockX();
@@ -185,28 +182,8 @@ public class MechanicListenerAdapter {
 
             int type = block.getTypeId();
 
-            // When this hook has been called, the level in the world has not
-            // yet been updated, so we're going to do this very ugly thing of
-            // faking the value with the new one whenever the data value of this
-            // block is requested -- it is quite ugly
-            int oldData = w.getBlockData(v);
             try {
-                if (type == BlockID.LEVER) {
-                    // Fake data
-                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x8 : w.getBlockData(v) & 0x7);
-                } else if (type == BlockID.STONE_PRESSURE_PLATE) {
-                    // Fake data
-                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x1 : w.getBlockData(v) & 0x14);
-                } else if (type == BlockID.WOODEN_PRESSURE_PLATE) {
-                    // Fake data
-                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x1 : w.getBlockData(v) & 0x14);
-                } else if (type == BlockID.STONE_BUTTON) {
-                    // Fake data
-                    //w.setBlockData(v, newLevel > 0 ? w.getBlockData(v) | 0x8 : w.getBlockData(v) & 0x7);
-                } else if (type == BlockID.REDSTONE_WIRE) {
-                    // Fake data
-                    //w.setBlockData(v, newLevel);
-
+                if (type == BlockID.REDSTONE_WIRE) {
                     int above = world.getBlockTypeIdAt(x, y + 1, z);
 
                     int westSide = world.getBlockTypeIdAt(x, y, z + 1);
@@ -271,8 +248,9 @@ public class MechanicListenerAdapter {
 
                 // Can be triggered from below
                 handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
-            } finally {
-                //w.setBlockData(v, oldData);
+            }
+            catch(Exception e) {
+
             }
         }
 

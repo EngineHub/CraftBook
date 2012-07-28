@@ -18,12 +18,17 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
-import java.util.*;
+import com.sk89q.craftbook.mech.CustomDropManager;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -114,7 +119,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enable = getBoolean(cfg, "bookshelf-enable", true);
             readLine = getString(cfg, "bookshelf-read-text", "You pick up a book...");
         }
-        //FIXME the books file should probably be cached here too
     }
 
     public class BridgeSettings {
@@ -168,9 +172,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
             List<Integer> tids = cfg.getIntegerList("door-blocks");
             if (tids == null) Arrays.asList(4, 5, 20, 43);
             Set<Material> allowedBlocks = new HashSet<Material>();
-            if (tids != null) {
+            if (tids != null)
                 for (Integer tid : tids) allowedBlocks.add(Material.getMaterial(tid));
-            }
             this.allowedBlocks = Collections.unmodifiableSet(allowedBlocks);
             cfg.set("door-blocks", tids);
 

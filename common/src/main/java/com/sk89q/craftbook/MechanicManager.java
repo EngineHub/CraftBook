@@ -19,10 +19,16 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.ChangedSign;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -35,11 +41,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.ChangedSign;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
@@ -126,12 +131,6 @@ public class MechanicManager {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event)) return false;
 
-        // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact,
-        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
-        // illegal block damages and for invalidating the mechanism proactively.
-        //watchBlockManager.notify(event);
-
         // See if this event could be occurring on any mechanism's triggering blocks
         Block block = event.getBlock();
         BlockWorldVector pos = toWorldVector(block);
@@ -174,9 +173,6 @@ public class MechanicManager {
 
         int returnValue = 0;
         // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact,
-        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
-        // illegal block damages and for invalidating the mechanism proactively.
         watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
@@ -211,11 +207,6 @@ public class MechanicManager {
         if (!passesFilter(event)) return 0;
 
         int returnValue = 0;
-        // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact,
-        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
-        // illegal block damages and for invalidating the mechanism proactively.
-        //watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -249,11 +240,6 @@ public class MechanicManager {
         if (!passesFilter(event)) return 0;
 
         int returnValue = 0;
-        // Announce the event to anyone who considers it to be on one of their defining blocks
-        //TODO: separate the processing of events which could destroy blocks vs just interact,
-        // because interacts can't really do anything to watch blocks; watch blocks are only really for cancelling
-        // illegal block damages and for invalidating the mechanism proactively.
-        //watchBlockManager.notify(event);
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
