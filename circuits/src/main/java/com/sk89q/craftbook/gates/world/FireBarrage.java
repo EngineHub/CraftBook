@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 /**
  * @author Me4502
@@ -36,7 +37,7 @@ public class FireBarrage extends FireShooter {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 
@@ -49,6 +50,4 @@ public class FireBarrage extends FireShooter {
             return new FireBarrage(getServer(), sign);
         }
     }
-
-
 }
