@@ -68,6 +68,8 @@ public class VehiclesConfiguration extends BaseConfiguration {
                 + "entities-otherboats", false);
         boatBreakReturn = getBoolean(cfg, "boat-break-return-boat", false);
         minecartTrackMessages = getBoolean(cfg, "minecart-track-messages", true);
+
+        minecartDecayTime = getInt(cfg, "minecart-decay-time", 20);
     }
 
     public final File dataFolder;
@@ -97,4 +99,6 @@ public class VehiclesConfiguration extends BaseConfiguration {
     public final boolean boatRemoveEntities;
     public final boolean boatRemoveEntitiesOtherBoats;
     public final boolean boatBreakReturn;
+
+    public final int minecartDecayTime;
 }

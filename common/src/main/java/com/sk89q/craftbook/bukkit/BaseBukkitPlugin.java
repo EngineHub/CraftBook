@@ -22,7 +22,9 @@ import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.wepif.PermissionsResolverManager;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -71,6 +73,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public void onEnable() {
 
+        // Make the data folder for the plugin where configuration files
+        // and other data files will be stored
+        getDataFolder().mkdirs();
         createDefaultConfiguration("en_US.txt", true);
         createDefaultConfiguration("config.yml", false);
 
@@ -80,9 +85,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         logger.info(getDescription().getName() + " "
                 + getDescription().getVersion() + " enabled.");
 
-        // Make the data folder for the plugin where configuration files
-        // and other data files will be stored
-        getDataFolder().mkdirs();
 
         // Prepare permissions
         PermissionsResolverManager.initialize(this);
@@ -180,18 +182,32 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
 
-        if (sender.isOp()) {
+        if (!(sender instanceof Player)) {
+            return ((sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender))
+                    || perms.hasPermission(sender.getName(), perm));
+        }
+        return hasPermission(sender, ((Player) sender).getWorld(), perm);
+    }
+
+    public boolean hasPermission(CommandSender sender, World world, String perm) {
+
+        if ((sender.isOp() && config.commonSettings.opPerms) || sender instanceof ConsoleCommandSender) {
             return true;
         }
 
         // Invoke the permissions resolver
-        return sender instanceof Player && perms.hasPermission(sender.getName(), perm);
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            return perms.hasPermission(world.getName(), player.getName(), perm);
+        }
 
+        return false;
     }
 
-	public boolean isInGroup(String player, String group) {
-		return perms.inGroup(player, group);
-	}
+    public boolean isInGroup(String player, String group) {
+
+        return perms.inGroup(player, group);
+    }
 
     public LanguageManager getLanguageManager() {
 

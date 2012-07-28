@@ -18,15 +18,105 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.io.File;
+
+import org.bukkit.Chunk;
+import org.bukkit.Server;
+import org.bukkit.World;
+
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
 import com.sk89q.craftbook.circuits.Netherrack;
-import com.sk89q.craftbook.gates.logic.*;
-import com.sk89q.craftbook.gates.weather.*;
-import com.sk89q.craftbook.gates.world.*;
+import com.sk89q.craftbook.gates.logic.AndGate;
+import com.sk89q.craftbook.gates.logic.Clock;
+import com.sk89q.craftbook.gates.logic.ClockDivider;
+import com.sk89q.craftbook.gates.logic.Counter;
+import com.sk89q.craftbook.gates.logic.Delayer;
+import com.sk89q.craftbook.gates.logic.DownCounter;
+import com.sk89q.craftbook.gates.logic.EdgeTriggerDFlipFlop;
+import com.sk89q.craftbook.gates.logic.InvertedRsNandLatch;
+import com.sk89q.craftbook.gates.logic.Inverter;
+import com.sk89q.craftbook.gates.logic.JkFlipFlop;
+import com.sk89q.craftbook.gates.logic.LevelTriggeredDFlipFlop;
+import com.sk89q.craftbook.gates.logic.LowDelayer;
+import com.sk89q.craftbook.gates.logic.LowNotPulser;
+import com.sk89q.craftbook.gates.logic.LowPulser;
+import com.sk89q.craftbook.gates.logic.Marquee;
+import com.sk89q.craftbook.gates.logic.MemorySetter;
+import com.sk89q.craftbook.gates.logic.Monostable;
+import com.sk89q.craftbook.gates.logic.Multiplexer;
+import com.sk89q.craftbook.gates.logic.NandGate;
+import com.sk89q.craftbook.gates.logic.NotDelayer;
+import com.sk89q.craftbook.gates.logic.NotLowDelayer;
+import com.sk89q.craftbook.gates.logic.NotPulser;
+import com.sk89q.craftbook.gates.logic.Pulser;
+import com.sk89q.craftbook.gates.logic.ROM;
+import com.sk89q.craftbook.gates.logic.Random3Bit;
+import com.sk89q.craftbook.gates.logic.RandomBit;
+import com.sk89q.craftbook.gates.logic.Repeater;
+import com.sk89q.craftbook.gates.logic.RsNandLatch;
+import com.sk89q.craftbook.gates.logic.RsNorFlipFlop;
+import com.sk89q.craftbook.gates.logic.ToggleFlipFlop;
+import com.sk89q.craftbook.gates.logic.XnorGate;
+import com.sk89q.craftbook.gates.logic.XorGate;
+import com.sk89q.craftbook.gates.weather.RainSensor;
+import com.sk89q.craftbook.gates.weather.RainSensorST;
+import com.sk89q.craftbook.gates.weather.TStormSensor;
+import com.sk89q.craftbook.gates.weather.TStormSensorST;
+import com.sk89q.craftbook.gates.weather.WeatherControl;
+import com.sk89q.craftbook.gates.weather.WeatherControlAdvanced;
+import com.sk89q.craftbook.gates.weather.WeatherFaker;
+import com.sk89q.craftbook.gates.world.ArrowBarrage;
+import com.sk89q.craftbook.gates.world.ArrowShooter;
+import com.sk89q.craftbook.gates.world.BlockSensor;
+import com.sk89q.craftbook.gates.world.BlockSensorST;
+import com.sk89q.craftbook.gates.world.ChestCollector;
+import com.sk89q.craftbook.gates.world.ChestCollectorST;
+import com.sk89q.craftbook.gates.world.ChestDispenser;
+import com.sk89q.craftbook.gates.world.CombinationLock;
+import com.sk89q.craftbook.gates.world.DaySensor;
+import com.sk89q.craftbook.gates.world.DaySensorST;
+import com.sk89q.craftbook.gates.world.Detection;
+import com.sk89q.craftbook.gates.world.DetectionST;
+import com.sk89q.craftbook.gates.world.EntitySpawner;
+import com.sk89q.craftbook.gates.world.EntityTrap;
+import com.sk89q.craftbook.gates.world.EntityTrapST;
+import com.sk89q.craftbook.gates.world.FireBarrage;
+import com.sk89q.craftbook.gates.world.FireShooter;
+import com.sk89q.craftbook.gates.world.FlexibleSetBlock;
+import com.sk89q.craftbook.gates.world.ItemDispenser;
+import com.sk89q.craftbook.gates.world.LavaSensor;
+import com.sk89q.craftbook.gates.world.LavaSensorST;
+import com.sk89q.craftbook.gates.world.LightSensor;
+import com.sk89q.craftbook.gates.world.LightSensorST;
+import com.sk89q.craftbook.gates.world.LightningSummon;
+import com.sk89q.craftbook.gates.world.Melody;
+import com.sk89q.craftbook.gates.world.MessageSender;
+import com.sk89q.craftbook.gates.world.MultipleSetBlock;
+import com.sk89q.craftbook.gates.world.ParticleEffect;
+import com.sk89q.craftbook.gates.world.ParticleEffectST;
+import com.sk89q.craftbook.gates.world.PlayerDetection;
+import com.sk89q.craftbook.gates.world.PlayerDetectionST;
+import com.sk89q.craftbook.gates.world.PotionInducer;
+import com.sk89q.craftbook.gates.world.RangedOutput;
+import com.sk89q.craftbook.gates.world.ServerTimeModulus;
+import com.sk89q.craftbook.gates.world.SetBlockAbove;
+import com.sk89q.craftbook.gates.world.SetBlockAboveChest;
+import com.sk89q.craftbook.gates.world.SetBlockBelow;
+import com.sk89q.craftbook.gates.world.SetBlockBelowChest;
+import com.sk89q.craftbook.gates.world.SetBridge;
+import com.sk89q.craftbook.gates.world.SetDoor;
+import com.sk89q.craftbook.gates.world.TimeControl;
+import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
+import com.sk89q.craftbook.gates.world.TimeFaker;
+import com.sk89q.craftbook.gates.world.WaterSensor;
+import com.sk89q.craftbook.gates.world.WaterSensorST;
+import com.sk89q.craftbook.gates.world.WirelessReceiver;
+import com.sk89q.craftbook.gates.world.WirelessReceiverST;
+import com.sk89q.craftbook.gates.world.WirelessTransmitter;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
@@ -35,11 +125,6 @@ import com.sk89q.craftbook.ic.families.FamilyAISO;
 import com.sk89q.craftbook.ic.families.FamilySI3O;
 import com.sk89q.craftbook.ic.families.FamilySISO;
 import com.sk89q.wepif.PermissionsResolverManager;
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.World;
-
-import java.io.File;
 // import com.sk89q.bukkit.migration.*;
 
 /**
@@ -85,20 +170,19 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         adapter.register(manager);
 
         File midi = new File(getDataFolder(), "midi/");
-        if (!midi.exists()) midi.mkdir();
+        if (!midi.exists()) midi.mkdirs();
+        File rom = new File(getDataFolder(), "rom/");
+        if (!rom.exists()) rom.mkdirs();
 
         registerICs();
 
         // Let's register mechanics!
-        if (config.enableNetherstone) {
+        if (config.enableNetherstone)
             manager.register(new Netherrack.Factory());
-        }
-        if (config.enablePumpkins) {
+        if (config.enablePumpkins)
             manager.register(new JackOLantern.Factory());
-        }
-        if (config.enableGlowStone) {
+        if (config.enableGlowStone)
             manager.register(new GlowStone.Factory());
-        }
         if (config.enableICs) {
             manager.register(new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
@@ -140,8 +224,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO);
         icManager.register("MC1209", new ChestCollector.Factory(server), familySISO);
         icManager.register("MC1210", new ParticleEffect.Factory(server), familySISO);                  // Restricted
-	    icManager.register("MC1211", new SetBridge.Factory(server), familySISO);                  // Restricted
-	    icManager.register("MC1212", new SetDoor.Factory(server), familySISO);                  // Restricted
+        icManager.register("MC1211", new SetBridge.Factory(server), familySISO);                  // Restricted
+        icManager.register("MC1212", new SetDoor.Factory(server), familySISO);                  // Restricted
         icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO);             // Restricted
         icManager.register("MC1217", new PotionInducer.Factory(server), familySISO);
@@ -159,8 +243,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1263", new BlockSensor.Factory(server), familySISO);
         icManager.register("MC1270", new Melody.Factory(server), familySISO);
         icManager.register("MC1271", new Detection.Factory(server), familySISO);          // Restricted
-	    icManager.register("MC1272", new PlayerDetection.Factory(server), familySISO);          // Restricted
-	    icManager.register("MC1299", new ParticleEffect.Factory(server), familySISO);       // Restricted
+        icManager.register("MC1272", new PlayerDetection.Factory(server), familySISO);          // Restricted
+        icManager.register("MC1299", new ParticleEffect.Factory(server), familySISO);       // Restricted
         icManager.register("MC1420", new ClockDivider.Factory(server), familySISO);
         icManager.register("MC1510", new MessageSender.Factory(server), familySISO);
         icManager.register("MC2100", new Delayer.Factory(server), familySISO);
@@ -174,6 +258,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         //SI3Os
         icManager.register("MC2020", new Random3Bit.Factory(server), familySI3O);
+        icManager.register("MC2300", new ROM.Factory(server), familySI3O);          // Restricted
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
 
         //3ISOs
@@ -193,6 +278,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3102", new Counter.Factory(server), family3ISO);
         icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);        // Restricted
         //Missing: 3231                                                                         // Restricted
+        icManager.register("MC3300", new MemorySetter.Factory(server), family3ISO);          // Restricted
         //3I3Os
         //Missing: 4000
         //Missing: 4010
@@ -211,7 +297,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
         icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
         icManager.register("MC0271", new DetectionST.Factory(server), familySISO);      // Restricted
-	    icManager.register("MC0272", new PlayerDetectionST.Factory(server), familySISO);      // Restricted
+        icManager.register("MC0272", new PlayerDetectionST.Factory(server), familySISO);      // Restricted
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
         icManager.register("MC0500", new RangedOutput.Factory(server), familySISO);
@@ -247,8 +333,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MCA1208", new MultipleSetBlock.Factory(server), familyAISO);
         icManager.register("MCA1209", new ChestCollector.Factory(server), familyAISO);
         icManager.register("MCA1210", new ParticleEffect.Factory(server), familyAISO);                  // Restricted
-	    icManager.register("MCA1211", new SetBridge.Factory(server), familyAISO);                  // Restricted
-	    icManager.register("MCA1212", new SetDoor.Factory(server), familyAISO);                  // Restricted
+        icManager.register("MCA1211", new SetBridge.Factory(server), familyAISO);                  // Restricted
+        icManager.register("MCA1212", new SetDoor.Factory(server), familyAISO);                  // Restricted
         icManager.register("MCA1215", new SetBlockAboveChest.Factory(server), familyAISO);             // Restricted
         icManager.register("MCA1216", new SetBlockBelowChest.Factory(server), familyAISO);             // Restricted
         icManager.register("MCA1217", new PotionInducer.Factory(server), familyAISO);
@@ -266,8 +352,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MCA1263", new BlockSensor.Factory(server), familyAISO);
         icManager.register("MCA1270", new Melody.Factory(server), familyAISO);
         icManager.register("MCA1271", new Detection.Factory(server), familyAISO);          // Restricted
-	    icManager.register("MCA1272", new PlayerDetection.Factory(server), familySISO);          // Restricted
-	    icManager.register("MCA1299", new ParticleEffect.Factory(server), familyAISO);      // Restricted
+        icManager.register("MCA1272", new PlayerDetection.Factory(server), familySISO);          // Restricted
+        icManager.register("MCA1299", new ParticleEffect.Factory(server), familyAISO);      // Restricted
         icManager.register("MCA1420", new ClockDivider.Factory(server), familyAISO);
         icManager.register("MCA1510", new MessageSender.Factory(server), familyAISO);
         icManager.register("MCA2100", new Delayer.Factory(server), familyAISO);
@@ -315,6 +401,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     }
 
+    @Override
     public CircuitsConfiguration getLocalConfiguration() {
 
         return config;

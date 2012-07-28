@@ -95,6 +95,95 @@ public class EntitySpawner extends AbstractIC {
         }
     }
 
+    public void setEntityData(Entity ent, String data) {
+
+        if (data.equalsIgnoreCase("")) return;
+        if (ent instanceof Animals) {
+            if (data.equalsIgnoreCase("baby"))
+                ((Animals) ent).setBaby();
+        }
+        if (ent instanceof Creeper) {
+            if (data.equalsIgnoreCase("charged"))
+                ((Creeper) ent).setPowered(true);
+        }
+        if (ent instanceof Slime) {
+            if (data.equalsIgnoreCase("huge"))
+                ((Slime) ent).setSize(16);
+            if (data.equalsIgnoreCase("large"))
+                ((Slime) ent).setSize(11);
+            if (data.equalsIgnoreCase("normal"))
+                ((Slime) ent).setSize(6);
+            if (data.equalsIgnoreCase("small"))
+                ((Slime) ent).setSize(3);
+        }
+        if (ent instanceof MagmaCube) {
+            if (data.equalsIgnoreCase("huge"))
+                ((MagmaCube) ent).setSize(16);
+            if (data.equalsIgnoreCase("large"))
+                ((MagmaCube) ent).setSize(11);
+            if (data.equalsIgnoreCase("normal"))
+                ((MagmaCube) ent).setSize(6);
+            if (data.equalsIgnoreCase("small"))
+                ((MagmaCube) ent).setSize(3);
+        }
+        if (ent instanceof Wolf) {
+            if (data.equalsIgnoreCase("tame"))
+                ((Wolf) ent).setTamed(true);
+            if (data.equalsIgnoreCase("angry"))
+                ((Wolf) ent).setAngry(true);
+        }
+        if (ent instanceof PigZombie) {
+            if (data.equalsIgnoreCase("angry"))
+                ((PigZombie) ent).setAngry(true);
+        }
+        if (ent instanceof Villager) {
+            if (data.equalsIgnoreCase("butcher"))
+                ((Villager) ent).setProfession(Profession.BUTCHER);
+            if (data.equalsIgnoreCase("smith"))
+                ((Villager) ent).setProfession(Profession.BLACKSMITH);
+            if (data.equalsIgnoreCase("priest"))
+                ((Villager) ent).setProfession(Profession.PRIEST);
+            if (data.equalsIgnoreCase("library"))
+                ((Villager) ent).setProfession(Profession.LIBRARIAN);
+            if (data.equalsIgnoreCase("farmer"))
+                ((Villager) ent).setProfession(Profession.FARMER);
+        }
+        if (ent instanceof Sheep) {
+            if (data.equalsIgnoreCase("black"))
+                ((Sheep) ent).setColor(DyeColor.BLACK);
+            if (data.equalsIgnoreCase("red"))
+                ((Sheep) ent).setColor(DyeColor.RED);
+            if (data.equalsIgnoreCase("green"))
+                ((Sheep) ent).setColor(DyeColor.GREEN);
+            if (data.equalsIgnoreCase("brown"))
+                ((Sheep) ent).setColor(DyeColor.BROWN);
+            if (data.equalsIgnoreCase("blue"))
+                ((Sheep) ent).setColor(DyeColor.BLUE);
+            if (data.equalsIgnoreCase("purple"))
+                ((Sheep) ent).setColor(DyeColor.PURPLE);
+            if (data.equalsIgnoreCase("cyan"))
+                ((Sheep) ent).setColor(DyeColor.CYAN);
+            if (data.equalsIgnoreCase("silver"))
+                ((Sheep) ent).setColor(DyeColor.SILVER);
+            if (data.equalsIgnoreCase("gray"))
+                ((Sheep) ent).setColor(DyeColor.GRAY);
+            if (data.equalsIgnoreCase("pink"))
+                ((Sheep) ent).setColor(DyeColor.PINK);
+            if (data.equalsIgnoreCase("lime"))
+                ((Sheep) ent).setColor(DyeColor.LIME);
+            if (data.equalsIgnoreCase("yellow"))
+                ((Sheep) ent).setColor(DyeColor.YELLOW);
+            if (data.equalsIgnoreCase("lblue"))
+                ((Sheep) ent).setColor(DyeColor.LIGHT_BLUE);
+            if (data.equalsIgnoreCase("magenta"))
+                ((Sheep) ent).setColor(DyeColor.MAGENTA);
+            if (data.equalsIgnoreCase("orange"))
+                ((Sheep) ent).setColor(DyeColor.ORANGE);
+            if (data.equalsIgnoreCase("white"))
+                ((Sheep) ent).setColor(DyeColor.WHITE);
+        }
+    }
+
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {

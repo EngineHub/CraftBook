@@ -12,7 +12,7 @@
         <version>3.1-SNAPSHOT</version>
     </parent>
     <artifactId>vehicles</artifactId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.2-SNAPSHOT</version>
     <name>CraftBook Vehicles</name>
 
     <dependencies>
@@ -42,6 +42,13 @@
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
                     <include>config.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>defaults/</targetPath>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources/</directory>
+                <includes>
                     <include>en_US.txt</include>
                 </includes>
             </resource>

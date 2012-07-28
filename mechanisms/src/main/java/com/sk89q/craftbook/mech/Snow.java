@@ -39,9 +39,11 @@ public class Snow implements Listener {
         if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
             return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
+
         if (!player.hasPermission("craftbook.mech.snow.place")) {
             return;
         }
+
         if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
         try {
             if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL

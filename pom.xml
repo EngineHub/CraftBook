@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sk89q.craftbook</groupId>
     <artifactId>craftbook</artifactId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.2-SNAPSHOT</version>
     <name>CraftBook</name>
     <description>CraftBook adds fun mechanics and redstone-powered contraptions to Minecraft</description>
     <packaging>pom</packaging>
@@ -49,12 +49,12 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.2.5-R4.1-SNAPSHOT</version>
+            <version>1.2.5-R5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.2.5-R4.1-SNAPSHOT</version>
+            <version>1.2.5-R5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl</groupId>

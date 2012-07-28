@@ -42,6 +42,7 @@ import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
+import com.sk89q.craftbook.mech.LightStone;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.Snow;
@@ -101,19 +102,14 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new Area.Factory(this));
         manager.register(new Command.Factory(this));
         manager.register(new ChunkAnchor.Factory(this));
-        //manager.register(new LightStone.Factory(this));
+        manager.register(new LightStone.Factory(this));
         manager.register(new LightSwitch.Factory(this));
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new CookingPot.Factory(this));
-
-        if (economy != null) manager.register(new Payment.Factory(this));
-
-        /*
-         * Until fixed, Cauldron must be at the bottom of the registration list as
-         * it'll conflict with other mechanics
-         */
-
         manager.register(new Cauldron.Factory(this));
+
+        //Special mechanics.
+        if (economy != null) manager.register(new Payment.Factory(this));
 
         setupSelfTriggered(manager);
     }

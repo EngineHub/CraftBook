@@ -14,12 +14,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.LocalPlayer;
 
 /**
  * Abstract IC factory.
@@ -40,8 +42,17 @@ public abstract class AbstractICFactory implements ICFactory {
         return server;
     }
 
+    @Override
     public void verify(Sign sign) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
+        //TODO make some IC's use this to check if its valid.
+    }
+
+    @Override
+    public void checkPlayer(Sign sign, LocalPlayer player) throws ICVerificationException {
+        // No default check needed; if the sign just has the right ID string,
+        // that's good enough in most cases.
+        //TODO Use this to make some restricted IC's allowed to normal users, but limited.
     }
 }
