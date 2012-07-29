@@ -33,7 +33,7 @@ public class CommandParser implements CommandExecutor {
 
         if (command.getName().equalsIgnoreCase("cbmech") && sender.hasPermission("craftbook.mech.cbmech")) {
             if (args.length > 0)
-                if (args[0].equalsIgnoreCase("reload")) return plugin.reloadLocalConfiguration(sender);
+                if (args[0].equalsIgnoreCase("reload")) return plugin.reloadPlugin(sender);
             return true;
         } else if (command.getName().equalsIgnoreCase("savearea")) {
 

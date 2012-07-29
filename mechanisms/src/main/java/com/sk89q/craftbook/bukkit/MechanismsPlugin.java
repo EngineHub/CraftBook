@@ -159,13 +159,14 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         getCommand("cbmech").setExecutor(commandExecutor);
     }
 
-    public boolean reloadLocalConfiguration(CommandSender sender) {
-
-        config = new MechanismsConfiguration(getConfig(), getDataFolder());
+    public boolean reloadPlugin(CommandSender sender) { //XXX experimental
         sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
+        getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
+        getServer().getPluginManager().disablePlugin(this);
         return true;
     }
 
+    @Override
     public MechanismsConfiguration getLocalConfiguration() {
 
         return config;
@@ -175,9 +176,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
                 .milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
+        if (economyProvider != null)
             economy = economyProvider.getProvider();
-        }
 
         return (economy != null);
     }
