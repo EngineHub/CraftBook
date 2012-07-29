@@ -13,9 +13,9 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
-public class ROM extends AbstractIC {
+public class MemoryAccess extends AbstractIC {
 
-    public ROM(Server server, Sign block) {
+    public MemoryAccess(Server server, Sign block) {
         super(server, block);
     }
 
@@ -68,7 +68,7 @@ public class ROM extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ROM(getServer(), sign);
+            return new MemoryAccess(getServer(), sign);
         }
     }
 }
