@@ -42,7 +42,11 @@ public class PowerSensorST extends PowerSensor implements SelfTriggeredIC {
 
         @Override
         public IC create(Sign sign) {
-            return new PowerSensorST(getServer(), sign);
+	        if (sign.getLine(1).equalsIgnoreCase("[MC0270]")) {
+		        sign.setLine(1, "[MC0266]");
+		        sign.update();
+	        }
+	        return new PowerSensorST(getServer(), sign);
         }
     }
 }

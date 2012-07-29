@@ -216,6 +216,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	    icManager.register("MC0264", new ItemSensorST.Factory(server), familySISO);     // Restricted
 	    icManager.register("MC0265", new ItemNotSensorST.Factory(server), familySISO);     // Restricted
 	    icManager.register("MC0266", new PowerSensorST.Factory(server), familySISO);      // Restricted
+	    icManager.register("MC0270", new PowerSensorST.Factory(server), familySISO);
         icManager.register("MC0271", new DetectionST.Factory(server), familySISO);      // Restricted
 	    icManager.register("MC0272", new PlayerDetectionST.Factory(server), familySISO);      // Restricted
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
