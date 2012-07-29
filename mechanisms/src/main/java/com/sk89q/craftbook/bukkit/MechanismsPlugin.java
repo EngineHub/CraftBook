@@ -22,6 +22,7 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.craftbook.LanguageManager;
@@ -171,5 +172,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             economy = economyProvider.getProvider();
 
         return (economy != null);
+    }
+    
+    public boolean reloadPlugin(CommandSender sender) { //XXX experimental
+    	return super.reloadPlugin(sender);
     }
 }
