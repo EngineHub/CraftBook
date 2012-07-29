@@ -21,21 +21,17 @@ package com.sk89q.craftbook.gates.world;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 
 public class EntitySpawner extends AbstractIC {
 
 	private EntityType entityType = EntityType.PIG;
-	private EntityType entityRider;
-	private boolean spawnRider = false;
+	private String data;
+	private boolean spawnData = false;
 	private int amount = 1;
 	private Block center;
 
@@ -51,8 +47,8 @@ public class EntitySpawner extends AbstractIC {
 		try {
 			amount = Integer.parseInt(line);
 		} catch (NumberFormatException e) {
-			entityRider = EntityType.fromName(line);
-			spawnRider = entityRider != null;
+			data = line;
+			spawnData = true;
 		}
 		// lets calculate the next possible block to spawn a mob
 		center = SignUtil.getBackBlock(getSign().getBlock());
@@ -81,10 +77,10 @@ public class EntitySpawner extends AbstractIC {
 
         if (chip.getInput(0)) {
             if (entityType != null) {
-	            if (spawnRider) {
+	            if (spawnData) {
 		            // spawn the entity plus rider
 		            Entity entity = center.getWorld().spawnEntity(center.getLocation(), entityType);
-		            entity.setPassenger(center.getWorld().spawnEntity(center.getLocation(), entityRider));
+		            setEntityData(entity, data);
 	            } else {
 		            // spawn amount of mobs
 		            for (int i = 0; i < amount; i++) {
@@ -138,15 +134,15 @@ public class EntitySpawner extends AbstractIC {
         }
         if (ent instanceof Villager) {
             if (data.equalsIgnoreCase("butcher"))
-                ((Villager) ent).setProfession(Profession.BUTCHER);
+                ((Villager) ent).setProfession(Villager.Profession.BUTCHER);
             if (data.equalsIgnoreCase("smith"))
-                ((Villager) ent).setProfession(Profession.BLACKSMITH);
+                ((Villager) ent).setProfession(Villager.Profession.BLACKSMITH);
             if (data.equalsIgnoreCase("priest"))
-                ((Villager) ent).setProfession(Profession.PRIEST);
+                ((Villager) ent).setProfession(Villager.Profession.PRIEST);
             if (data.equalsIgnoreCase("library"))
-                ((Villager) ent).setProfession(Profession.LIBRARIAN);
+                ((Villager) ent).setProfession(Villager.Profession.LIBRARIAN);
             if (data.equalsIgnoreCase("farmer"))
-                ((Villager) ent).setProfession(Profession.FARMER);
+                ((Villager) ent).setProfession(Villager.Profession.FARMER);
         }
         if (ent instanceof Sheep) {
             if (data.equalsIgnoreCase("black"))
