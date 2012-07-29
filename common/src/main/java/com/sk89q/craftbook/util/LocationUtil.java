@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -156,5 +157,23 @@ public final class LocationUtil {
 			block = block.getRelative(facing);
 		}
 		return block;
+	}
+
+	public static Block getNextFreeSpace(Block block, BlockFace direction) {
+		while (block.getType() != Material.AIR && block.getRelative(direction).getType() != Material.AIR) {
+			if (!(block.getY() < block.getWorld().getMaxHeight())) {
+				break;
+			}
+			block = block.getRelative(direction);
+		}
+		return block;
+	}
+
+	public static Location getCenterOfBlock(Block block) {
+		Location location = block.getLocation();
+		location.setX(block.getX() + 0.5);
+		location.setZ(block.getZ() + 0.5);
+		location.setY(block.getY() + 1);
+		return location;
 	}
 }
