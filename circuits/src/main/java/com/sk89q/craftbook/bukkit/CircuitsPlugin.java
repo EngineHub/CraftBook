@@ -53,7 +53,7 @@ import com.sk89q.craftbook.gates.logic.NotDelayer;
 import com.sk89q.craftbook.gates.logic.NotLowDelayer;
 import com.sk89q.craftbook.gates.logic.NotPulser;
 import com.sk89q.craftbook.gates.logic.Pulser;
-import com.sk89q.craftbook.gates.logic.ROM;
+import com.sk89q.craftbook.gates.logic.MemoryAccess;
 import com.sk89q.craftbook.gates.logic.Random3Bit;
 import com.sk89q.craftbook.gates.logic.RandomBit;
 import com.sk89q.craftbook.gates.logic.Repeater;
@@ -258,7 +258,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         //SI3Os
         icManager.register("MC2020", new Random3Bit.Factory(server), familySI3O);
-        icManager.register("MC2300", new ROM.Factory(server), familySI3O);          // Restricted
+        icManager.register("MC2300", new MemoryAccess.Factory(server), familySI3O);          // Restricted
         icManager.register("MC2999", new Marquee.Factory(server), familySI3O);
 
         //3ISOs
