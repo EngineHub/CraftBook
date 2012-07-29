@@ -20,10 +20,8 @@ package com.sk89q.craftbook.bukkit;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.craftbook.LanguageManager;
@@ -157,13 +155,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         getCommand("savensarea").setExecutor(commandExecutor);
         getCommand("savearea").setExecutor(commandExecutor);
         getCommand("cbmech").setExecutor(commandExecutor);
-    }
-
-    public boolean reloadPlugin(CommandSender sender) { //XXX experimental
-        sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
-        getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
-        getServer().getPluginManager().disablePlugin(this);
-        return true;
     }
 
     @Override

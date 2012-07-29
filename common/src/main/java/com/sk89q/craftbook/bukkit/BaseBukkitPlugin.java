@@ -18,10 +18,13 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.wepif.PermissionsResolverManager;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
+
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -29,11 +32,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -71,6 +73,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * Called when the plugin is enabled. This is where configuration is loaded,
      * and the plugin is setup.
      */
+    @Override
     public void onEnable() {
 
         // Make the data folder for the plugin where configuration files
@@ -98,6 +101,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * Called when the plugin is disabled. Shutdown and clearing of any
      * temporary data occurs here.
      */
+    @Override
     public void onDisable() {
 
     }
@@ -136,9 +140,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                     output = new FileOutputStream(actual);
                     byte[] buf = new byte[8192];
                     int length;
-                    while ((length = input.read(buf)) > 0) {
+                    while ((length = input.read(buf)) > 0)
                         output.write(buf, 0, length);
-                    }
 
                     logger.info(getDescription().getName()
                             + ": Default configuration file written: " + name);
@@ -182,18 +185,16 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player))
             return ((sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender))
                     || perms.hasPermission(sender.getName(), perm));
-        }
         return hasPermission(sender, ((Player) sender).getWorld(), perm);
     }
 
     public boolean hasPermission(CommandSender sender, World world, String perm) {
 
-        if ((sender.isOp() && config.commonSettings.opPerms) || sender instanceof ConsoleCommandSender) {
+        if ((sender.isOp() && config.commonSettings.opPerms) || sender instanceof ConsoleCommandSender)
             return true;
-        }
 
         // Invoke the permissions resolver
         if (sender instanceof Player) {
@@ -217,5 +218,17 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     public BaseConfiguration getLocalConfiguration() {
 
         return config;
+    }
+
+    public boolean reloadPlugin(CommandSender sender) { //XXX experimental
+        try {
+            sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
+            getServer().getPluginManager().enablePlugin(this.getClass().newInstance());
+            getServer().getPluginManager().disablePlugin(this);
+        }
+        catch(Exception e){
+            return false;
+        }
+        return true;
     }
 }
