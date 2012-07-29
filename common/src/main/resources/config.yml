@@ -1,1 +1,2 @@
 language: en_US
+allow-indirect-redstone: false

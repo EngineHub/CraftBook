@@ -41,7 +41,12 @@ public class FamilyAISO extends AbstractICFamily {
         return new ChipStateAISO(source, sign);
     }
 
-    public static class ChipStateAISO extends AbstractChipState {
+	@Override
+	public String getModifier() {
+		return "MCA";
+	}
+
+	public static class ChipStateAISO extends AbstractChipState {
 
         public ChipStateAISO(BlockWorldVector source, Sign sign) {
 

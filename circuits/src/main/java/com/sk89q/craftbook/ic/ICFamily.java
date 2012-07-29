@@ -41,4 +41,11 @@ public interface ICFamily {
      */
     public ChipState detect(BlockWorldVector source, Sign sign);
 
+	/**
+	 * Gets the sign modifier of the family. In case of the base ic thats MC.
+	 *
+	 * @return family modifier
+	 */
+	public String getModifier();
+
 }
