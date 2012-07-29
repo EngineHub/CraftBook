@@ -48,7 +48,7 @@ public class EntitySpawner extends AbstractIC {
 			amount = Integer.parseInt(line);
 		} catch (NumberFormatException e) {
 			data = line;
-			spawnData = true;
+			spawnData = !line.equals("");
 		}
 		// lets calculate the next possible block to spawn a mob
 		center = SignUtil.getBackBlock(getSign().getBlock());
