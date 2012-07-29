@@ -49,15 +49,18 @@ public class ICManager {
      *
      * @param id           case-insensitive ID (such as MC1001)
      * @param factory      factory to create ICs
-     * @param nativeFamily the native family for the IC
+     * @param families families for the ic
      */
-    public void register(String id, ICFactory factory, ICFamily nativeFamily) {
+    public void register(String id, ICFactory factory, ICFamily... families) {
 
-        RegisteredICFactory registration
-                = new RegisteredICFactory(id, factory, nativeFamily);
+	    for (ICFamily family : families) {
+		    id = id.replace("MC", family.getModifier());
+		    RegisteredICFactory registration
+				    = new RegisteredICFactory(id, factory, family);
+		    // Lowercase the ID so that we can do case in-sensitive lookups
+		    registered.put(id.toLowerCase(), registration);
+	    }
 
-        // Lowercase the ID so that we can do case in-sensitive lookups
-        registered.put(id.toLowerCase(), registration);
     }
 
     /**

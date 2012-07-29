@@ -19,17 +19,29 @@
 package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
 public class LightningSummon extends AbstractIC {
 
-    public LightningSummon(Server server, Sign sign) {
+	private Block center;
 
+    public LightningSummon(Server server, Sign sign) {
         super(server, sign);
+	    load();
     }
+
+	private void load() {
+		String line = getSign().getLine(2);
+		if (line.length() > 0) {
+			center = SignUtil.getBackBlock(getSign().getBlock().getRelative(BlockFace.UP, Integer.parseInt(line)));
+		}
+	}
 
     @Override
     public String getTitle() {
@@ -47,29 +59,22 @@ public class LightningSummon extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            Location loc = SignUtil.getBackBlock(getSign().getBlock()).getLocation();
-            if (getSign().getLine(2).length() != 0) {
-                try {
-                    double y = Integer.parseInt(getSign().getLine(2)) + loc.getY();
-                    loc.setY(y);
-                } catch (NumberFormatException e) {
-                    return;
-                }
-            }
-            getSign().getWorld().strikeLightning(loc);
+	        Block target = center;
+	        if (target == null) {
+		        target = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(getSign().getBlock()), BlockFace.UP);
+	        }
+	        target.getWorld().strikeLightning(target.getLocation());
         }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new LightningSummon(getServer(), sign);
         }
     }
