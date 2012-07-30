@@ -1,17 +1,15 @@
 package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
@@ -107,5 +105,10 @@ public class ItemSensor extends AbstractIC {
         public IC create(Sign sign) {
 	        return new ItemSensor(getServer(), sign);
         }
+
+	    @Override
+	    public void verify(Sign sign) throws ICVerificationException {
+		    ICUtil.verifySignSyntax(sign);
+	    }
     }
 }

@@ -1,8 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -54,6 +52,11 @@ public class PowerSensor extends AbstractIC {
 		@Override
 		public IC create(Sign sign) {
 			return new PowerSensor(getServer(), sign);
+		}
+
+		@Override
+		public void verify(Sign sign) throws ICVerificationException {
+			ICUtil.verifySignSyntax(sign);
 		}
 	}
 }

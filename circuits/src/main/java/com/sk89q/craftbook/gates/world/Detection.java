@@ -131,5 +131,10 @@ public class Detection extends AbstractIC {
         public IC create(Sign sign) {
 	        return new Detection(getServer(), sign);
         }
+
+	    @Override
+	    public void verify(Sign sign) throws ICVerificationException {
+		    ICUtil.verifySignSyntax(sign);
+	    }
     }
 }

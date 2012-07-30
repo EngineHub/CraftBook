@@ -17,20 +17,32 @@ import java.util.Random;
  */
 public class FireShooter extends AbstractIC {
 
-    public FireShooter(Server server, Sign sign) {
+	private float speed = 0.6F;
+	private float spread = 4;
+	private float vert = 0;
 
+    public FireShooter(Server server, Sign sign) {
         super(server, sign);
+	    load();
     }
+
+	private void load() {
+		try {
+			String[] velocity = getSign().getLine(2).trim().split(":");
+			speed = Float.parseFloat(velocity[0]);
+			spread = Float.parseFloat(velocity[1]);
+			vert = Float.parseFloat(getSign().getLine(3).trim());
+		} catch (Exception ignored) {
+		}
+	}
 
     @Override
     public String getTitle() {
-
         return "Fire Shooter";
     }
 
     @Override
     public String getSignTitle() {
-
         return "FIRE SHOOTER";
     }
 
@@ -41,17 +53,6 @@ public class FireShooter extends AbstractIC {
     }
 
     public void shootFire(int n) {
-
-        float speed = 0.6F;
-        float spread = 4;
-        float vert = 0;
-        try {
-            String[] velocity = getSign().getLine(2).trim().split(":");
-            speed = Float.parseFloat(velocity[0]);
-            spread = Float.parseFloat(velocity[1]);
-            vert = Float.parseFloat(getSign().getLine(3).trim());
-        } catch (Exception ignored) {
-        }
 
         if (speed > 2.0) speed = 2F;
         else if (speed < 0.2) speed = 0.2F;
@@ -91,13 +92,11 @@ public class FireShooter extends AbstractIC {
             RestrictedIC {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new FireShooter(getServer(), sign);
         }
     }

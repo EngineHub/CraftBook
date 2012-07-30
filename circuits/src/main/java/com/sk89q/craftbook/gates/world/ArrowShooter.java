@@ -64,6 +64,8 @@ public class ArrowShooter extends AbstractIC {
             spread = Float.parseFloat(velocity[1]);
             vert = Float.parseFloat(getSign().getLine(3).trim());
         } catch (Exception ignored) {
+	        getSign().setLine(2, speed + ":" + spread + ":" + vert);
+	        getSign().update();
         }
 
         if (speed > 2.0) speed = 2F;
@@ -91,13 +93,11 @@ public class ArrowShooter extends AbstractIC {
             RestrictedIC {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new ArrowShooter(getServer(), sign);
         }
     }

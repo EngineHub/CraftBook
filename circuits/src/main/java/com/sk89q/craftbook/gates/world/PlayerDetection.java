@@ -2,15 +2,13 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.Set;
 
@@ -106,5 +104,10 @@ public class PlayerDetection extends AbstractIC {
         public IC create(Sign sign) {
 	        return new PlayerDetection(getServer(), sign);
         }
+
+	    @Override
+	    public void verify(Sign sign) throws ICVerificationException {
+		    ICUtil.verifySignSyntax(sign);
+	    }
     }
 }
