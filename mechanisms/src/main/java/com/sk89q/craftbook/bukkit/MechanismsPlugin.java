@@ -108,7 +108,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	manager.register(new HiddenSwitch.Factory(this));
 	manager.register(new CookingPot.Factory(this));
 	manager.register(new Cauldron.Factory(this));
-	manager.register(new Chair.Factory(this));
 
 	//Special mechanics.
 	if (economy != null) manager.register(new Payment.Factory(this));
