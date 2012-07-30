@@ -15,7 +15,6 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -128,7 +127,7 @@ public class Chair implements Listener {
 	}
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
 	if(event.isCancelled()) return;
 	if(chairs.containsKey(event.getPlayer().getName()))
