@@ -10,7 +10,6 @@ import net.minecraft.server.Packet40EntityMetadata;
 import net.minecraft.server.WatchableObject;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -133,7 +132,7 @@ public class Chair implements Listener {
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
 	if(event.isCancelled()) return;
 	if(chairs.containsKey(event.getPlayer().getName()))
-	    event.getPlayer().teleport((Location) chairs.get(event.getPlayer().getName()));
+	    event.getPlayer().teleport(chairs.get(event.getPlayer().getName()).getLocation());
     }
 
     public static class ChairWatcher extends DataWatcher {
