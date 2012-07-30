@@ -33,6 +33,7 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
@@ -107,6 +108,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	manager.register(new HiddenSwitch.Factory(this));
 	manager.register(new CookingPot.Factory(this));
 	manager.register(new Cauldron.Factory(this));
+	manager.register(new Chair.Factory(this));
 
 	//Special mechanics.
 	if (economy != null) manager.register(new Payment.Factory(this));
@@ -151,6 +153,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
 	getServer().getPluginManager().registerEvents(new Snow(this), this);
 	getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
+	getServer().getPluginManager().registerEvents(new Chair(this), this);
 	getServer().getPluginManager().registerEvents(cc, this);
 
 	commandExecutor = new CommandParser(this);

@@ -20,9 +20,12 @@ package com.sk89q.craftbook;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.craftbook.mech.CustomDropManager;
@@ -335,6 +338,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 	public final boolean enable;
 	public final boolean requireSneak;
 	public final Set<Material> allowedBlocks;
+	public Map<String, Block> chairs = new HashMap<String, Block>();
 
 	private ChairSettings(FileConfiguration cfg) {
 
