@@ -1,36 +1,45 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 public class BlockSensor extends AbstractIC {
 
-    public BlockSensor(Server server, Sign sign) {
+	private Block center;
+	private int id = 0;
+	private byte data = -1;
 
+    public BlockSensor(Server server, Sign sign) {
         super(server, sign);
+	    load();
     }
+
+	private void load() {
+
+		center = ICUtil.parseBlockLocation(getSign());
+		String ids = getSign().getLine(3);
+		try {
+			id = Integer.parseInt(ids.split(":")[0]);
+			data = Byte.parseByte(ids.split(":")[1]);
+		} catch (Exception ignored) {
+			// use defaults
+		}
+	}
 
     @Override
     public String getTitle() {
-
         return "Block Sensor";
     }
 
     @Override
     public String getSignTitle() {
-
         return "BLOCK SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
-
         if (chip.getInput(0)) {
             chip.setOutput(0, hasBlock());
         }
@@ -43,36 +52,11 @@ public class BlockSensor extends AbstractIC {
      */
     protected boolean hasBlock() {
 
-        Block b = SignUtil.getBackBlock(getSign().getBlock());
-
-        int x = b.getX();
-        int yOffset = b.getY();
-        int z = b.getZ();
-        String ids;
-        int id = 0;
-        byte data = (byte) -1;
-        try {
-            String yOffsetLine = getSign().getLine(2);
-            ids = getSign().getLine(3);
-            if (yOffsetLine.length() > 0) {
-                yOffset += Integer.parseInt(yOffsetLine);
-            } else {
-                yOffset -= 1;
-            }
-            if (ids.contains(":")) {
-                id = Integer.parseInt(ids.split(":")[0]);
-                data = Byte.parseByte(ids.split(":")[1]);
-            } else {
-                id = Integer.parseInt(ids);
-            }
-        } catch (NumberFormatException e) {
-            yOffset -= 1;
-        }
-        int blockID = getSign().getBlock().getWorld().getBlockTypeIdAt(x, yOffset, z);
+        int blockID = center.getTypeId();
 
         if (data != (byte) -1) {
             if (blockID == id)
-                return data == getSign().getBlock().getWorld().getBlockAt(x, yOffset, z).getData();
+	            return data == center.getData();
         }
         return blockID == id;
     }
@@ -80,15 +64,24 @@ public class BlockSensor extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new BlockSensor(getServer(), sign);
         }
+
+	    @Override
+	    public void verify(Sign sign) throws ICVerificationException {
+		    try {
+			    String[] split = sign.getLine(3).split(":");
+			    Integer.parseInt(split[0]);
+		    } catch (Exception ignored) {
+			    throw new ICVerificationException("You need to specify an block in line four.");
+		    }
+		    ICUtil.verifySignSyntax(sign);
+	    }
     }
 
 }

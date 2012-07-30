@@ -18,37 +18,32 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 public class LavaSensor extends AbstractIC {
 
-    public LavaSensor(Server server, Sign sign) {
+	private Block center;
 
+    public LavaSensor(Server server, Sign sign) {
         super(server, sign);
+	    center = ICUtil.parseBlockLocation(sign);
     }
 
     @Override
     public String getTitle() {
-
         return "Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
-
         return "LAVA SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
-
         if (chip.getInput(0)) chip.setOutput(0, hasLava());
     }
 
@@ -59,36 +54,26 @@ public class LavaSensor extends AbstractIC {
      */
     protected boolean hasLava() {
 
-        Block b = SignUtil.getBackBlock(getSign().getBlock());
+	    int blockID = center.getTypeId();
 
-        int x = b.getX();
-        int yOffset = b.getY();
-        int z = b.getZ();
-        try {
-            String yOffsetLine = getSign().getLine(2);
-
-            if (yOffsetLine.length() > 0) yOffset += Integer.parseInt(yOffsetLine);
-            else yOffset -= 1;
-        } catch (NumberFormatException e) {
-            yOffset -= 1;
-        }
-        int blockID = getSign().getBlock().getWorld().getBlockTypeIdAt(x, yOffset, z);
-
-        return (blockID == 10 || blockID == 11);
+	    return (blockID == 10 || blockID == 11);
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new LavaSensor(getServer(), sign);
         }
+
+	    @Override
+	    public void verify(Sign sign) throws ICVerificationException {
+		    ICUtil.verifySignSyntax(sign);
+	    }
     }
 
 }

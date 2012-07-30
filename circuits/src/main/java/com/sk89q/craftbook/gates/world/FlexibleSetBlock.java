@@ -27,19 +27,21 @@ import org.bukkit.block.Sign;
 public class FlexibleSetBlock extends AbstractIC {
 
     public FlexibleSetBlock(Server server, Sign sign) {
-
         super(server, sign);
+	    load();
     }
+
+	private void load() {
+
+	}
 
     @Override
     public String getTitle() {
-
         return "Flexible Set";
     }
 
     @Override
     public String getSignTitle() {
-
         return "FLEX SET";
     }
 
@@ -102,17 +104,14 @@ public class FlexibleSetBlock extends AbstractIC {
 
     }
 
-    public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new FlexibleSetBlock(getServer(), sign);
         }
     }

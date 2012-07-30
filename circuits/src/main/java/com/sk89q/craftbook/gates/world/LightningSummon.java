@@ -18,68 +18,63 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-
 public class LightningSummon extends AbstractIC {
 
-    private Block center;
+	private Block center;
 
     public LightningSummon(Server server, Sign sign) {
-	super(server, sign);
-	load();
+        super(server, sign);
+	    load();
     }
 
-    private void load() {
-	String line = getSign().getLine(2);
-	if (line.length() > 0) {
-	    center = SignUtil.getBackBlock(getSign().getBlock().getRelative(BlockFace.UP, Integer.parseInt(line)));
+	private void load() {
+		String line = getSign().getLine(2);
+		if (line.length() > 0) {
+			center = SignUtil.getBackBlock(getSign().getBlock().getRelative(BlockFace.UP, Integer.parseInt(line)));
+		}
 	}
-    }
 
     @Override
     public String getTitle() {
 
-	return "Zeus Bolt";
+        return "Zeus Bolt";
     }
 
     @Override
     public String getSignTitle() {
 
-	return "ZEUS BOLT";
+        return "ZEUS BOLT";
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-	if (chip.getInput(0)) {
-	    Block target = center;
-	    if (target == null) {
-		target = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(getSign().getBlock()), BlockFace.UP);
-	    }
-	    target.getWorld().strikeLightning(target.getLocation());
-	}
+        if (chip.getInput(0)) {
+	        Block target = center;
+	        if (target == null) {
+		        target = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(getSign().getBlock()), BlockFace.UP);
+	        }
+	        target.getWorld().strikeLightning(target.getLocation());
+        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-	public Factory(Server server) {
-	    super(server);
-	}
+        public Factory(Server server) {
+            super(server);
+        }
 
-	@Override
-	public IC create(Sign sign) {
-	    return new LightningSummon(getServer(), sign);
-	}
+        @Override
+        public IC create(Sign sign) {
+            return new LightningSummon(getServer(), sign);
+        }
     }
 }

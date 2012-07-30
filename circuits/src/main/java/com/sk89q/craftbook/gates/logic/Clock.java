@@ -102,7 +102,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
             try {
                 lol = Integer.parseInt(sign.getLine(2));
             } catch (NumberFormatException e) {
-                throw new ICVerificationException("The fourth line must be a number between 5 and 150.");
+                throw new ICVerificationException("The third line must be a number between 5 and 150.");
             }
 
             lol = Math.max(lol, 5);

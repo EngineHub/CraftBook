@@ -135,12 +135,43 @@ public class ICUtil {
 		return target;
 	}
 
+	public static Block parseBlockLocation(Sign sign, int lPos) {
+		return parseBlockLocation(sign, lPos, true);
+	}
+
 	public static Block parseBlockLocation(Sign sign) {
 		return parseBlockLocation(sign, 2, true);
 	}
 
+	public static void verifySignSyntax(Sign sign) throws ICVerificationException {
+		verifySignSyntax(sign, 2);
+	}
+
+	public static void verifySignSyntax(Sign sign, int i) throws ICVerificationException {
+		try {
+			String line = sign.getLine(i);
+			String[] strings = line.split(":");
+			if (line.contains("=")) {
+				String[] split = line.split("=");
+				Integer.parseInt(split[0]);
+				strings = split[1].split(":");
+			}
+			if (strings.length > 1) {
+				Integer.parseInt(strings[1]);
+				Integer.parseInt(strings[2]);
+			}
+			Integer.parseInt(strings[0]);
+		} catch (Exception e) {
+			throw new ICVerificationException("Wrong syntax! Needs to be: radius=x:y:z or radius=y or y");
+		}
+	}
+
 	public static int parseRadius(Sign sign) {
-		String line = sign.getLine(2);
+		return parseRadius(sign, 2);
+	}
+
+	public static int parseRadius(Sign sign, int lPos) {
+		String line = sign.getLine(lPos);
 		int radius = 0;
 		try {
 			return Integer.parseInt(line.split("=")[0]);

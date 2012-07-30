@@ -1,17 +1,12 @@
 package com.sk89q.craftbook.gates.logic;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 public class MemoryAccess extends AbstractIC {
 
@@ -43,7 +38,7 @@ public class MemoryAccess extends AbstractIC {
                 return false;
             }
             BufferedReader br = new BufferedReader(new FileReader(f));
-            String line = "";
+            String line;
             int linenum = 0;
             while((line = br.readLine()) != null || linenum > 2) {
                 chip.setOutput(linenum, line.equalsIgnoreCase("1"));
@@ -61,13 +56,11 @@ public class MemoryAccess extends AbstractIC {
     RestrictedIC {
 
         public Factory(Server server) {
-
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-
             return new MemoryAccess(getServer(), sign);
         }
     }

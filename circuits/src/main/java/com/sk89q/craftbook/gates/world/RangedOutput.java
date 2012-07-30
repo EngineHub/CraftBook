@@ -16,26 +16,22 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     int maxAmount = 0;
 
     public RangedOutput(Server server, Sign sign) {
-
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
-
         return "Ranged Output";
     }
 
     @Override
     public String getSignTitle() {
-
         return "RANGE OUTPUT";
     }
 
 
     @Override
     public void think(ChipState chip) {
-
         chip.setOutput(0, shouldOutput(chip));
     }
 
@@ -73,28 +69,25 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
         return false;
     }
 
-    public static class Factory extends AbstractICFactory {
-
-        public Factory(Server server) {
-
-            super(server);
-        }
-
-        @Override
-        public IC create(Sign sign) {
-
-            return new RangedOutput(getServer(), sign);
-        }
-    }
-
     @Override
     public boolean isActive() {
-
         return true;
     }
 
-    @Override
-    public void trigger(ChipState chip) {
+	@Override
+	public void trigger(ChipState chip) {
+		// self triggered only
+	}
 
-    }
+	public static class Factory extends AbstractICFactory {
+
+		public Factory(Server server) {
+			super(server);
+		}
+
+		@Override
+		public IC create(Sign sign) {
+			return new RangedOutput(getServer(), sign);
+		}
+	}
 }

@@ -41,11 +41,6 @@ public class ChestCollector extends AbstractIC {
         if (chip.getInput(0)) chip.setOutput(0, collect());
     }
 
-    /**
-     * Returns true if the sign has water at the specified location.
-     *
-     * @return
-     */
     protected boolean collect() {
 
         Block b = SignUtil.getBackBlock(getSign().getBlock());
