@@ -104,14 +104,14 @@ public class Chair implements Listener {
 	    if(plugin.getLocalConfiguration().chairSettings.requireSneak == true)
 		if(!player.getPlayer().isSneaking())
 		    return;
-	    if(chairs.containsKey(player.getName())) { //Stand
+	    if(chairs.containsKey(player.getPlayer().getName())) { //Stand
 		Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte)0));
 		for(Chunk c : LocationUtil.getSurroundingChunks(event.getClickedBlock(), plugin.getServer().getViewDistance() * 16)) {
 		    for(Entity e : c.getEntities())
 			if(e instanceof Player)
 			    ((CraftPlayer)e).getHandle().netServerHandler.sendPacket(packet);
 		}
-		chairs.remove(player.getName());
+		chairs.remove(player.getPlayer().getName());
 	    }
 	    else { //Sit
 		if(chairs.containsValue(event.getClickedBlock()))
@@ -123,7 +123,7 @@ public class Chair implements Listener {
 			if(e instanceof Player)
 			    ((CraftPlayer)e).getHandle().netServerHandler.sendPacket(packet);
 		}
-		chairs.put(player.getName(), event.getClickedBlock());
+		chairs.put(player.getPlayer().getName(), event.getClickedBlock());
 	    }
 	}
     }
