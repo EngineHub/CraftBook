@@ -44,5 +44,10 @@ public class ItemNotSensorST extends ItemSensor implements SelfTriggeredIC {
         public IC create(Sign sign) {
             return new ItemNotSensorST(getServer(), sign);
         }
+
+	    @Override
+	    public void verify(Sign sign) throws ICVerificationException {
+		    ICUtil.verifySignSyntax(sign);
+	    }
     }
 }

@@ -25,43 +25,49 @@ import org.bukkit.block.Sign;
  */
 public class DownCounter extends AbstractIC {
 
-    public DownCounter(Server server, Sign sign) {
+	private int resetVal;
+	private boolean inf;
 
+    public DownCounter(Server server, Sign sign) {
         super(server, sign);
+	    load();
     }
+
+	private void load() {
+		// Get IC configuration data from line 3 of sign
+		String line2 = getSign().getLine(2);
+		String[] config = line2.split(":");
+
+		resetVal = 0;
+		inf = false;
+		try {
+			resetVal = Integer.parseInt(config[0]);
+			inf = config[1].equals("INF");
+		} catch (NumberFormatException e) {
+			resetVal = 5;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			inf = false;
+		} catch (Exception ignored) {
+		}
+		getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
+		getSign().update();
+	}
 
     @Override
     public String getTitle() {
-
         return "Down Counter";
     }
 
     @Override
     public String getSignTitle() {
-
         return "DOWN COUNTER";
     }
 
     @Override
     public void trigger(ChipState chip) {
-        // Get IC configuration data from line 3 of sign
-        String line2 = getSign().getLine(2);
-        String[] config = line2.split(":");
-
-        int resetVal = 0;
-        boolean inf = false;
-        try {
-            resetVal = Integer.parseInt(config[0]);
-            inf = config[1].equals("INF");
-        } catch (NumberFormatException e) {
-            resetVal = 5;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            inf = false;
-        } catch (Exception ignored) {
-        }
         // Get current counter value from line 4 of sign
         String line3 = getSign().getLine(3);
-        int curVal = 0;
+        int curVal;
 
         try {
             curVal = Integer.parseInt(line3);
@@ -80,10 +86,11 @@ public class DownCounter extends AbstractIC {
                 }
 
                 // Set output to high if we're at 0, otherwise low
-                chip.set(3, (curVal == 0));
+                chip.setOutput(0, (curVal == 0));
                 // If reset input triggered, reset counter value
             } else if (chip.isTriggered(1) && chip.get(1)) {
                 curVal = resetVal;
+	            chip.setOutput(0, false);
             }
         } catch (Exception ignored) {
         }
