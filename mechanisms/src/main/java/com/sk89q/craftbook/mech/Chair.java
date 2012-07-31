@@ -12,7 +12,6 @@ import net.minecraft.server.WatchableObject;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +25,7 @@ import org.bukkit.event.player.PlayerToggleSprintEvent;
 
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.LocationUtil;
 
 public class Chair implements Listener {
 
@@ -45,13 +45,10 @@ public class Chair implements Listener {
 	    for (Entry<String, Block> e : chairs.entrySet())
 		if (e.getValue() == event.getBlock()) {
 		    Player p = plugin.getServer().getPlayer(e.getKey());
-		    if(p!=null) {
-			Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(), new ChairWatcher((byte)0));
-			for(Entity ent : plugin.getServer().getOnlinePlayers())
-			    if(ent instanceof Player)
-				((CraftPlayer)ent).getHandle().netServerHandler.sendPacket(packet);
-			chairs.remove(p.getName());
-		    }
+		    Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(), new ChairWatcher((byte)0));
+		    for(Player play : LocationUtil.getNearbyPlayers(event.getBlock(), plugin.getServer().getViewDistance()*16))
+			((CraftPlayer)play).getHandle().netServerHandler.sendPacket(packet);
+		    chairs.remove(p.getName());
 		}
 	}
     }
@@ -95,9 +92,8 @@ public class Chair implements Listener {
 		    return;
 	    if(chairs.containsKey(player.getPlayer().getName())) { //Stand
 		Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte)0));
-		for(Entity e : plugin.getServer().getOnlinePlayers())
-		    if(e instanceof Player)
-			((CraftPlayer)e).getHandle().netServerHandler.sendPacket(packet);
+		for(Player play : LocationUtil.getNearbyPlayers(event.getClickedBlock(), plugin.getServer().getViewDistance()*16))
+		    ((CraftPlayer)play).getHandle().netServerHandler.sendPacket(packet);
 		chairs.remove(player.getPlayer().getName());
 	    }
 	    else { //Sit
@@ -105,9 +101,8 @@ public class Chair implements Listener {
 		    return;
 		player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 0, 0.5)); //Teleport to the seat
 		Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte)4));
-		for(Entity e : plugin.getServer().getOnlinePlayers())
-		    if(e instanceof Player)
-			((CraftPlayer)e).getHandle().netServerHandler.sendPacket(packet);
+		for(Player play : LocationUtil.getNearbyPlayers(event.getClickedBlock(), plugin.getServer().getViewDistance()*16))
+		    ((CraftPlayer)play).getHandle().netServerHandler.sendPacket(packet);
 		chairs.put(player.getPlayer().getName(), event.getClickedBlock());
 	    }
 	}
