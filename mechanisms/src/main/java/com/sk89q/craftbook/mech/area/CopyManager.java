@@ -190,7 +190,7 @@ public class CopyManager {
 
 	private HistoryHashMap<String, Long> getMissing(String world) {
 
-		if (cache.containsKey(world)) return missing.get(world);
+		if (missing.containsKey(world)) return missing.get(world);
 		else {
 			HistoryHashMap<String, Long> h = new HistoryHashMap<String, Long>(10);
 			missing.put(world, h);
