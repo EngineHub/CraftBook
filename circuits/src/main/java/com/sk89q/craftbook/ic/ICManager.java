@@ -47,19 +47,19 @@ public class ICManager {
      * case because IC IDs are case-insensitive. Re-using an already
      * registered name will override the previous registration.
      *
-     * @param id           case-insensitive ID (such as MC1001)
-     * @param factory      factory to create ICs
+     * @param id       case-insensitive ID (such as MC1001)
+     * @param factory  factory to create ICs
      * @param families families for the ic
      */
     public void register(String id, ICFactory factory, ICFamily... families) {
 
-	    for (ICFamily family : families) {
-		    id = id.replace("MC", family.getModifier());
-		    RegisteredICFactory registration
-				    = new RegisteredICFactory(id, factory, family);
-		    // Lowercase the ID so that we can do case in-sensitive lookups
-		    registered.put(id.toLowerCase(), registration);
-	    }
+        for (ICFamily family : families) {
+            id = id.replace("MC", family.getModifier());
+            RegisteredICFactory registration
+                    = new RegisteredICFactory(id, factory, family);
+            // Lowercase the ID so that we can do case in-sensitive lookups
+            registered.put(id.toLowerCase(), registration);
+        }
 
     }
 

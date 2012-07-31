@@ -70,12 +70,13 @@ public class ParticleEffect extends AbstractIC {
 
         @Override
         public IC create(Sign sign) {
-	        if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
-		        sign.setLine(1, "[MC1212]");
-		        sign.update();
-		        return new SetDoor(getServer(), sign);
-	        }
-	        return new ParticleEffect(getServer(), sign);
+
+            if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
+                sign.setLine(1, "[MC1212]");
+                sign.update();
+                return new SetDoor(getServer(), sign);
+            }
+            return new ParticleEffect(getServer(), sign);
         }
     }
 }

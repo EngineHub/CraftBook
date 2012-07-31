@@ -18,36 +18,25 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.vehicle.*;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -229,6 +218,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         VehiclesPlugin plugin;
 
         public CraftBookVehicleBlockListener(VehiclesPlugin plugin) {
+
             this.plugin = plugin;
         }
 
@@ -246,12 +236,13 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         @EventHandler
         public void onChunkLoad(ChunkLoadEvent event) {
+
             if (config.minecartDecayWhenEmpty) {
-                for(Entity ent : event.getChunk().getEntities()) {
-                    if(ent == null || ent.isDead()) continue;
-                    if(!(ent instanceof Minecart)) continue;
-                    if(!ent.isEmpty()) continue;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) (Minecart)ent),
+                for (Entity ent : event.getChunk().getEntities()) {
+                    if (ent == null || ent.isDead()) continue;
+                    if (!(ent instanceof Minecart)) continue;
+                    if (!ent.isEmpty()) continue;
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) (Minecart) ent),
                             config.minecartDecayTime);
                 }
             }

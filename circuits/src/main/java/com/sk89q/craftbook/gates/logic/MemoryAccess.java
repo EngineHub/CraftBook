@@ -11,56 +11,62 @@ import java.io.FileReader;
 public class MemoryAccess extends AbstractIC {
 
     public MemoryAccess(Server server, Sign block) {
+
         super(server, block);
     }
 
     @Override
     public String getTitle() {
+
         return "ROM Accessor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ROM";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0))
             readMemory(chip);
     }
 
     public boolean readMemory(ChipState chip) {
+
         try {
             File f = new File("plugins/CraftBookCircuits/ROM/", getSign().getLine(2));
-            if(!f.exists()) {
+            if (!f.exists()) {
                 f.createNewFile();
                 return false;
             }
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line;
             int linenum = 0;
-            while((line = br.readLine()) != null || linenum > 2) {
+            while ((line = br.readLine()) != null || linenum > 2) {
                 chip.setOutput(linenum, line.equalsIgnoreCase("1"));
                 linenum++;
             }
             br.close();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
 
         }
         return false;
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new MemoryAccess(getServer(), sign);
         }
     }

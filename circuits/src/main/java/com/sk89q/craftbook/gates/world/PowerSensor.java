@@ -11,52 +11,61 @@ import org.bukkit.block.Sign;
 public class PowerSensor extends AbstractIC {
 
 
-	private Block center;
+    private Block center;
 
-	public PowerSensor(Server server, Sign block) {
-		super(server, block);
-		load();
-	}
+    public PowerSensor(Server server, Sign block) {
 
-	private void load() {
-		center = ICUtil.parseBlockLocation(getSign());
-	}
+        super(server, block);
+        load();
+    }
 
-	@Override
-	public String getTitle() {
-		return "Power Sensor";
-	}
+    private void load() {
 
-	@Override
-	public String getSignTitle() {
-		return "POWER SENSOR";
-	}
+        center = ICUtil.parseBlockLocation(getSign());
+    }
 
-	@Override
-	public void trigger(ChipState chip) {
-		if (chip.getInput(0)) {
-			chip.setOutput(0, isPowered());
-		}
-	}
+    @Override
+    public String getTitle() {
 
-	protected boolean isPowered() {
-		return center.isBlockPowered() || center.isBlockIndirectlyPowered();
-	}
+        return "Power Sensor";
+    }
 
-	public static class Factory extends AbstractICFactory implements RestrictedIC {
+    @Override
+    public String getSignTitle() {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        return "POWER SENSOR";
+    }
 
-		@Override
-		public IC create(Sign sign) {
-			return new PowerSensor(getServer(), sign);
-		}
+    @Override
+    public void trigger(ChipState chip) {
 
-		@Override
-		public void verify(Sign sign) throws ICVerificationException {
-			ICUtil.verifySignSyntax(sign);
-		}
-	}
+        if (chip.getInput(0)) {
+            chip.setOutput(0, isPowered());
+        }
+    }
+
+    protected boolean isPowered() {
+
+        return center.isBlockPowered() || center.isBlockIndirectlyPowered();
+    }
+
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
+
+        public Factory(Server server) {
+
+            super(server);
+        }
+
+        @Override
+        public IC create(Sign sign) {
+
+            return new PowerSensor(getServer(), sign);
+        }
+
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
+    }
 }

@@ -49,18 +49,20 @@ public class Pulser extends AbstractIC {
                 // defaults will be used
             }
         }
-	    sign.setLine(2, pulseLength + ":" + startDelay);
-	    sign.setLine(3, pulseCount + ":" + pulseLength);
-	    sign.update();
+        sign.setLine(2, pulseLength + ":" + startDelay);
+        sign.setLine(3, pulseCount + ":" + pulseLength);
+        sign.update();
     }
 
     @Override
     public String getTitle() {
+
         return "Pulser";
     }
 
     @Override
     public String getSignTitle() {
+
         return "PULSER";
     }
 
@@ -167,11 +169,13 @@ public class Pulser extends AbstractIC {
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Pulser(getServer(), sign);
         }
     }

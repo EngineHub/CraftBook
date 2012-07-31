@@ -92,11 +92,13 @@ public class Marquee extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new Marquee(getServer(), sign);
         }
     }

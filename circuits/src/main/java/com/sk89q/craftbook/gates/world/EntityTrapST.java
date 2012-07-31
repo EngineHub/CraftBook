@@ -10,45 +10,53 @@ import org.bukkit.block.Sign;
 public class EntityTrapST extends EntityTrap implements SelfTriggeredIC {
 
     public EntityTrapST(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Entity Trap";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST ENTITY TRAP";
     }
 
     @Override
     public void think(ChipState chip) {
+
         chip.setOutput(0, hurt());
     }
 
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
-	public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        public Factory(Server server) {
 
-		@Override
-		public IC create(Sign sign) {
-			return new EntityTrapST(getServer(), sign);
-		}
+            super(server);
+        }
 
-		@Override
-		public void verify(Sign sign) throws ICVerificationException {
-			ICUtil.verifySignSyntax(sign);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+
+            return new EntityTrapST(getServer(), sign);
+        }
+
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
+    }
 
 }

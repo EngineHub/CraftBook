@@ -50,26 +50,26 @@ public class Family3I3O extends AbstractICFamily {
 
         protected Block getBlock(int pin) {
 
-	        BlockFace fback = SignUtil.getBack(sign.getBlock());
-	        Block backBlock = SignUtil.getBackBlock(sign.getBlock()).getRelative(fback);
+            BlockFace fback = SignUtil.getBack(sign.getBlock());
+            Block backBlock = SignUtil.getBackBlock(sign.getBlock()).getRelative(fback);
 
-	        switch (pin) {
-		        case 0:
-			        return SignUtil.getFrontBlock(sign.getBlock());
-		        case 1:
-			        return SignUtil.getLeftBlock(sign.getBlock());
-		        case 2:
-			        return SignUtil.getRightBlock(sign.getBlock());
-		        case 3:
-			        return backBlock.getRelative(fback);
-		        case 4:
-			        return backBlock.getRelative(SignUtil.getCounterClockWise(fback));
-		        case 5:
-			        return backBlock.getRelative(SignUtil.getClockWise(fback));
-		        default:
-			        return null;
+            switch (pin) {
+                case 0:
+                    return SignUtil.getFrontBlock(sign.getBlock());
+                case 1:
+                    return SignUtil.getLeftBlock(sign.getBlock());
+                case 2:
+                    return SignUtil.getRightBlock(sign.getBlock());
+                case 3:
+                    return backBlock.getRelative(fback);
+                case 4:
+                    return backBlock.getRelative(SignUtil.getCounterClockWise(fback));
+                case 5:
+                    return backBlock.getRelative(SignUtil.getClockWise(fback));
+                default:
+                    return null;
 
-	        }
+            }
 
         }
 
