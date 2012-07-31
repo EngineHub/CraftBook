@@ -20,6 +20,7 @@ package com.sk89q.craftbook.mech.area;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
 
 import java.io.File;
@@ -109,7 +110,7 @@ public class CopyManager {
         if (copy == null) {
             try {
                 File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
-                copy = CuboidCopy.load(new File(folder, id + ".cbcopy"));
+                copy = CuboidCopy.load(new File(folder, id + ".schematic"));
                 missing.remove(cacheKey);
                 cache.put(cacheKey, copy);
                 return copy;
@@ -119,6 +120,9 @@ public class CopyManager {
             } catch (IOException e) {
                 missing.put(cacheKey, System.currentTimeMillis() + 10000);
                 throw e;
+            } catch (DataException e) {
+	            missing.put(cacheKey, System.currentTimeMillis() + 10000);
+	            throw new  MissingCuboidCopyException(id);
             }
         }
 
@@ -134,7 +138,7 @@ public class CopyManager {
      * @throws IOException
      */
     public void save(World world, String namespace, String id, CuboidCopy copy, MechanismsPlugin plugin)
-            throws IOException {
+		    throws IOException, DataException {
 
         HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
 
@@ -146,7 +150,7 @@ public class CopyManager {
 
         String cacheKey = namespace + "/" + id;
 
-        copy.save(new File(folder, id + ".cbcopy"));
+        copy.save(new File(folder, id + ".schematic"));
         missing.remove(cacheKey);
         cache.put(id, copy);
     }
@@ -161,7 +165,7 @@ public class CopyManager {
      */
     public int meetsQuota(World world, String namespace, String ignore, int quota, MechanismsPlugin plugin) {
 
-        String ignoreFilename = ignore + ".cbcopy";
+        String ignoreFilename = ignore + ".schematic";
 
         String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
@@ -196,8 +200,9 @@ public class CopyManager {
 
     private HistoryHashMap<String, Long> getMissing(String world) {
 
-        if (cache.containsKey(world)) return missing.get(world);
-        else {
+        if (missing.containsKey(world)) {
+	        return missing.get(world);
+        } else {
             HistoryHashMap<String, Long> h = new HistoryHashMap<String, Long>(10);
             missing.put(world, h);
             return h;

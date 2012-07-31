@@ -54,6 +54,7 @@
                     <include>en_US.txt</include>
                     <include>custom-block-drops.txt</include>
                     <include>custom-mob-drops.txt</include>
+                    <include>recipes.yml</include>
                 </includes>
             </resource>
         </resources>

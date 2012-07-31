@@ -3,8 +3,12 @@ package com.sk89q.craftbook.mech.area;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -99,6 +103,23 @@ public class Area extends AbstractMechanic {
 
     public final BlockWorldVector pt;
 
+	private final WorldEditPlugin worldEdit;
+
+	/**
+	 * @param pt     if you didn't already check if this is a signpost with appropriate
+	 *               text, you're going on Santa's naughty list.
+	 * @param plugin
+	 *
+	 * @throws InvalidMechanismException
+	 */
+	private Area(BlockWorldVector pt, MechanismsPlugin plugin) throws InvalidMechanismException {
+
+		super();
+		this.plugin = plugin;
+		this.pt = pt;
+		this.worldEdit = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+	}
+
 
     /**
      * Raised when a block is right clicked.
@@ -113,36 +134,40 @@ public class Area extends AbstractMechanic {
             return;
         }
         try {
-            Sign s = null;
-            if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
-                s = ((Sign) BukkitUtil.toBlock(pt).getState());
-            if (s == null) return;
-            boolean save = s.getLine(1).equalsIgnoreCase("[SaveArea]");
-            String namespace = s.getLine(0);
-            String id = s.getLine(2);
-            String inactiveID = s.getLine(3);
+	        EditSession editSession = worldEdit.createEditSession(event.getPlayer());
+	        Sign s = null;
+	        if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
+		        s = ((Sign) BukkitUtil.toBlock(pt).getState());
+	        if (s == null) return;
+	        boolean save = s.getLine(1).equalsIgnoreCase("[SaveArea]");
+	        String namespace = s.getLine(0);
+	        String id = s.getLine(2);
+	        String inactiveID = s.getLine(3);
 
-            if (id == null || id.equalsIgnoreCase("") || id.length() < 1) return;
-            if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return;
-            if (event.getPlayer().getWorld() == null) return;
+	        if (id == null || id.equalsIgnoreCase("") || id.length() < 1) return;
+	        if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return;
+	        if (event.getPlayer().getWorld() == null) return;
 
-            CuboidCopy copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
-            if (!copy.shouldClear(event.getPlayer().getWorld())) {
-                if (save)
-                    plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copy, plugin);
-                copy.paste(event.getPlayer().getWorld());
-            } else {
-                if (inactiveID.length() == 0) {
-                    if (save)
-                        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
-                    copy.clear(event.getPlayer().getWorld());
-                } else {
-                    if (save)
-                        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
-                    copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
-                    copy.paste(event.getPlayer().getWorld());
-                }
-            }
+	        CuboidCopy copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
+	        copy.toggle(editSession);
+	        /*
+	        if (!copy.shouldClear()) {
+		        if (save)
+			        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copy, plugin);
+		        copy.paste(editSession);
+	        } else {
+		        if (inactiveID.length() == 0) {
+			        if (save)
+				        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
+			        copy.clear(event.getPlayer().getWorld());
+		        } else {
+			        if (save)
+				        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
+			        copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
+			        copy.paste(editSession);
+		        }
+	        }
+	        */
         } catch (Exception e) {
             final Writer result = new StringWriter();
             final PrintWriter printWriter = new PrintWriter(result);
@@ -164,17 +189,24 @@ public class Area extends AbstractMechanic {
         if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
             return;
         try {
-            Sign s = null;
-            if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
-                s = ((Sign) BukkitUtil.toBlock(pt).getState());
-            if (s == null) return;
-            String namespace = s.getLine(0);
-            String id = s.getLine(2);
 
-            CuboidCopy copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
 
-            if (!copy.shouldClear(BukkitUtil.toWorld(pt.getWorld()))) {
-                copy.paste(BukkitUtil.toWorld(pt.getWorld()));
+	        Sign s = null;
+	        if (BukkitUtil.toBlock(pt).getState() instanceof Sign) {
+		        s = ((Sign) BukkitUtil.toBlock(pt).getState());
+	        }
+	        if (s == null) return;
+	        String namespace = s.getLine(0);
+	        String id = s.getLine(2);
+
+	        EditSession editSession = new EditSession(
+			        new BukkitWorld(s.getWorld()),
+			        plugin.getLocalConfiguration().areaSettings.maxSizePerArea
+	        );
+	        CuboidCopy copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
+
+            if (!copy.shouldClear()) {
+	            copy.paste(editSession);
             } else {
                 String inactiveID = s.getLine(3);
 
@@ -182,7 +214,7 @@ public class Area extends AbstractMechanic {
                     copy.clear(BukkitUtil.toWorld(pt.getWorld()));
                 } else {
                     copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, inactiveID, plugin);
-                    copy.paste(BukkitUtil.toWorld(pt.getWorld()));
+                    copy.paste(editSession);
                 }
             }
         } catch (Exception e) {
@@ -191,20 +223,6 @@ public class Area extends AbstractMechanic {
             e.printStackTrace(printWriter);
             plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + result.toString());
         }
-    }
-
-    /**
-     * @param pt     if you didn't already check if this is a signpost with appropriate
-     *               text, you're going on Santa's naughty list.
-     * @param plugin
-     *
-     * @throws InvalidMechanismException
-     */
-    private Area(BlockWorldVector pt, MechanismsPlugin plugin) throws InvalidMechanismException {
-
-        super();
-        this.plugin = plugin;
-        this.pt = pt;
     }
 
     @Override

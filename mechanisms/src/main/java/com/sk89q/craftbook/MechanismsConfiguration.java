@@ -20,6 +20,9 @@ package com.sk89q.craftbook;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -235,15 +238,17 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
     public class CauldronSettings {
 
-	public final boolean enable;
-	public final int cauldronBlock;
+        public final boolean enable;
+        public final int cauldronBlock;
+	    public final boolean enableNew;
 
 	private CauldronSettings(FileConfiguration cfg) {
 
-	    enable = getBoolean(cfg, "cauldron-enable", true);
-	    cauldronBlock = getInt(cfg, "cauldron-block", 1);
-	}
-	//FIXME the recipes should probably go here
+            enable = getBoolean(cfg, "cauldron-enable", false);
+            cauldronBlock = getInt(cfg, "cauldron-block", 1);
+	        enableNew = getBoolean(cfg, "new-cauldron-enable", true);
+        }
+        //FIXME the recipes should probably go here
     }
 
     public class LightSwitchSettings {
