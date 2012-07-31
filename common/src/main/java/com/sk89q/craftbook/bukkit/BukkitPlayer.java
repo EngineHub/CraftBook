@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -60,6 +61,12 @@ public class BukkitPlayer implements LocalPlayer {
     public boolean hasPermission(String perm) {
 
         return plugin.hasPermission(player, perm);
+    }
+
+    @Override
+    public void checkPermission(String perm) throws InsufficientPermissionsException {
+
+        if (!hasPermission(perm)) throw new InsufficientPermissionsException();
     }
 
     @Override

@@ -31,6 +31,8 @@ public interface LocalPlayer {
 
     public void printRaw(String message);
 
+    public void checkPermission(String perm) throws InsufficientPermissionsException;
+
     public boolean hasPermission(String perm);
 
     public String getName();
