@@ -133,9 +133,7 @@ public class MechanicManager {
 
         BlockState state = event.getBlock().getState();
 
-        if (!(state instanceof Sign)) {
-            return false;
-        }
+        if (!(state instanceof Sign)) return false;
 
         Sign sign = (Sign) state;
 
@@ -162,11 +160,11 @@ public class MechanicManager {
      *
      * @return the number of mechanics to processed
      */
-    public int dispatchBlockBreak(BlockBreakEvent event) {
+    public short dispatchBlockBreak(BlockBreakEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event)) return 0;
 
-        int returnValue = 0;
+        short returnValue = 0;
         // Announce the event to anyone who considers it to be on one of their defining blocks
         watchBlockManager.notify(event);
 
@@ -197,11 +195,11 @@ public class MechanicManager {
      *
      * @return the number of mechanics to processed
      */
-    public int dispatchBlockRightClick(PlayerInteractEvent event) {
+    public short dispatchBlockRightClick(PlayerInteractEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event)) return 0;
 
-        int returnValue = 0;
+        short returnValue = 0;
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -230,11 +228,11 @@ public class MechanicManager {
      *
      * @return the number of mechanics to processed
      */
-    public int dispatchBlockLeftClick(PlayerInteractEvent event) {
+    public short dispatchBlockLeftClick(PlayerInteractEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event)) return 0;
 
-        int returnValue = 0;
+        short returnValue = 0;
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -263,11 +261,11 @@ public class MechanicManager {
      *
      * @return the number of mechanics to processed
      */
-    public int dispatchBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public short dispatchBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event)) return 0;
 
-        int returnValue = 0;
+        short returnValue = 0;
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getBlock());
         try {
