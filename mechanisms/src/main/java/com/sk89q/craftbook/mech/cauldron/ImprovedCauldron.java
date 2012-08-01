@@ -104,7 +104,7 @@ public class ImprovedCauldron extends AbstractMechanic {
                         Random r = new Random();
                         double ran = r.nextDouble();
                         event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
-                                .getDurability());
+                                .getDurability()));
                         if (chance <= ran) {
                             cook(recipe, items);
                             event.getPlayer().sendMessage(
