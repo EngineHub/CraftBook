@@ -22,7 +22,6 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.bukkit.commands.AreaCommands;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.*;
 import com.sk89q.craftbook.mech.area.Area;
@@ -34,7 +33,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 
