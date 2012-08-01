@@ -25,8 +25,6 @@ import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -36,7 +34,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.vehicle.*;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -190,25 +187,6 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (!(event.getVehicle() instanceof Minecart)) return;
 
             cartman.impact(event);
-        }
-
-        /**
-         * Called when a vehicle is destroied.
-         */
-        @EventHandler
-        public void onVehicleDestroy(VehicleDestroyEvent event) {
-
-            if (!(event.getVehicle() instanceof Boat)) return;
-
-            VehiclesConfiguration config = getLocalConfiguration();
-            if (config.boatBreakReturn) {
-                ItemStack boatStack = new ItemStack(Material.BOAT, 1);
-                Boat boat = (Boat) event.getVehicle();
-                Location loc = boat.getLocation();
-                loc.getWorld().dropItemNaturally(loc, boatStack);
-                boat.remove();
-                event.setCancelled(true);
-            }
         }
     }
 
