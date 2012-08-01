@@ -24,7 +24,6 @@ public class MCEditCuboidCopy extends CuboidCopy {
     public MCEditCuboidCopy(Vector origin, Vector size) {
         super(origin, size);
         this.clipboard = new CuboidClipboard(size, origin);
-        on = true;
     }
 
     protected MCEditCuboidCopy() {
@@ -47,6 +46,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
             clipboard.paste(new EditSession(new BukkitWorld(sign.getWorld()), -1), origin, false);
             sign.setLine(1, sign.getLine(1) + "#");
             sign.update();
+            on = true;
         } catch (MaxChangedBlocksException e) {
             // is never thrown because we are on infinite mode
         }
@@ -57,6 +57,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
         super.clear(sign);
         sign.setLine(1, sign.getLine(1).replace("#", ""));
         sign.update();
+        on = false;
     }
 
     @Override
@@ -68,7 +69,6 @@ public class MCEditCuboidCopy extends CuboidCopy {
 
     @Override
     public boolean shouldClear(Sign sign) {
-        on = sign.getLine(1).contains("#");
-        return !on;
+        return on;
     }
 }
