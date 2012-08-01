@@ -1,323 +1,173 @@
 package com.sk89q.craftbook.mech.area;
-// $Id$
-/*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 
-import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores a copy of a cuboid.
+ * Represents a cuboid copy that can be saved to disk and
+ * loaded from disk. Supports multiple formats, like MCEDIT,
+ * or flat file copying.
  *
- * @author sk89q
+ * @author Silthus
  */
-public class CuboidCopy {
+public abstract class CuboidCopy {
 
-	private Vector origin;
-	private int width;
-	private int height;
-	private int length;
-	private byte[] blocks;
-	private byte[] data;
-	private Vector testOffset;
+    protected Vector origin;
+    protected Vector size;
+    protected int width;
+    protected int height;
+    protected int length;
 
-	/**
-	 * Construct the object. This is to create a new copy at a certain
-	 * location.
-	 *
-	 * @param origin
-	 * @param size
-	 */
-	public CuboidCopy(Vector origin, Vector size) {
+    public CuboidCopy(Vector origin, Vector size) {
 
-		this.origin = origin;
-		width = size.getBlockX();
-		height = size.getBlockY();
-		length = size.getBlockZ();
-		blocks = new byte[width * height * length];
-		data = new byte[width * height * length];
-	}
+        this.origin = origin;
+        this.size = size;
+        this.width = size.getBlockX();
+        this.height = size.getBlockY();
+        this.length = size.getBlockZ();
+    }
 
-	/**
-	 * Used to create a copy when loaded from file.
-	 */
-	private CuboidCopy() {
+    protected CuboidCopy() {
+        // used as constructor when file is loaded
+    }
 
-	}
+    /**
+     * Loads a cuboid copy from the given file. This acts as a factory
+     * selecting the right file type depending on the given File.
+     *
+     * @param file to load from
+     * @return loaded CuboidCopy
+     * @throws CuboidCopyException is thrown when loading error occured
+     */
+    public static CuboidCopy load(File file) throws CuboidCopyException {
+        // we need to split off the file extenstion to check what class we need to use
+        int index = file.getName().lastIndexOf('.');
+        String extension = file.getName().substring(index);
+        CuboidCopy copy = null;
+        if (extension.equalsIgnoreCase("cbcopy")) {
+            // this copies only blocks and not sign text or chest contents
+            copy = new FlatCuboidCopy();
+        } else if (extension.equalsIgnoreCase("schematic")) {
+            // this copies all blocks including chest content and sign text
+            copy = new MCEditCuboidCopy();
+        }
+        if (copy == null) {
+            throw new MissingCuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
+        }
+        try {
+            copy.loadFromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CuboidCopyException(e.getMessage());
+        } catch (DataException e) {
+            e.printStackTrace();
+            throw new CuboidCopyException(e.getMessage());
+        }
+        // make sure that null is never returned but an exception is thrown instead
+        return copy;
+    }
 
-	/**
-	 * Save the copy to file.
-	 *
-	 * @param dest
-	 * @throws IOException
-	 */
-	public void save(File dest) throws IOException {
+    /**
+     * Toggles the cuboid copy on or off depending on its state.
+     *
+     * @param world to toggle cuboid in
+     */
+    public void toggle(World world) {
+        if (shouldClear(world)) {
+            clear(world);
+        } else {
+            paste(world);
+        }
+    }
 
-		FileOutputStream out = new FileOutputStream(dest);
-		DataOutputStream writer = new DataOutputStream(out);
-		writer.writeByte(1);
-		writer.writeInt(origin.getBlockX());
-		writer.writeInt(origin.getBlockY());
-		writer.writeInt(origin.getBlockZ());
-		writer.writeInt(width);
-		writer.writeInt(height);
-		writer.writeInt(length);
-		writer.write(blocks, 0, blocks.length);
-		writer.write(data, 0, data.length);
-		writer.close();
-		out.close();
-	}
+    /**
+     * Clear the area.
+     */
+    public void clear(World w) {
 
-	/**
-	 * Save the copy to a file.
-	 *
-	 * @param path
-	 * @throws IOException
-	 */
-	public void save(String path) throws IOException {
+        List<Vector> queued = new ArrayList<Vector>();
 
-		save(new File(path));
-	}
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                for (int z = 0; z < length; z++) {
+                    Vector pt = origin.add(x, y, z);
+                    if (BlockType.shouldPlaceLast(w.getBlockTypeIdAt(BukkitUtil.toLocation(w, pt)))) {
+                        w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
+                    } else {
+                        // Can't destroy these blocks yet
+                        queued.add(pt);
+                    }
+                }
+            }
+        }
 
-	/**
-	 * Load a copy.
-	 *
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 * @throws CuboidCopyException
-	 */
-	public static CuboidCopy load(File file) throws IOException, CuboidCopyException {
+        for (Vector pt : queued) {
+            w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
+        }
+    }
 
-		FileInputStream in = new FileInputStream(file);
-		DataInputStream reader = new DataInputStream(in);
+    /**
+     * Get the distance between a point and this cuboid.
+     *
+     * @param pos of the vector to compare
+     * @return distance between cuboid and point
+     */
+    public double distance(Vector pos) {
 
-		int x, y, z;
-		int width, height, length;
-		byte[] blocks;
-		byte[] data;
+        Vector max = origin.add(new Vector(width, height, length));
+        int closestX = Math.max(origin.getBlockX(),
+                Math.min(max.getBlockX(), pos.getBlockX()));
+        int closestY = Math.max(origin.getBlockY(),
+                Math.min(max.getBlockY(), pos.getBlockY()));
+        int closestZ = Math.max(origin.getBlockZ(),
+                Math.min(max.getBlockZ(), pos.getBlockZ()));
+        return pos.distance(new Vector(closestX, closestY, closestZ));
+    }
 
-		try {
-			@SuppressWarnings("unused")
-			byte version = reader.readByte();
-			x = reader.readInt();
-			y = reader.readInt();
-			z = reader.readInt();
-			width = reader.readInt();
-			height = reader.readInt();
-			length = reader.readInt();
-			int size = width * height * length;
-			blocks = new byte[size];
-			data = new byte[size];
-			if (reader.read(blocks, 0, size) != size) {
-				throw new CuboidCopyException("File error: Bad size");
-			}
-			data = new byte[size];
-			if (reader.read(data, 0, size) != size) {
-				throw new CuboidCopyException("File error: Bad size");
-			}
-		} finally {
-			try {
-				in.close();
-			} catch (IOException ignored) {
-			}
-		}
+    /**
+     * Checks the state of the cuboid. If it should be toggled on or off.
+     *
+     * @param world to check in
+     * @return true if cuboid is toggled on and should be cleared
+     */
+    public abstract boolean shouldClear(World world);
 
-		CuboidCopy copy = new CuboidCopy();
-		copy.origin = new Vector(x, y, z);
-		copy.width = width;
-		copy.height = height;
-		copy.length = length;
-		copy.blocks = blocks;
-		copy.data = data;
-		copy.findTestOffset();
+    /**
+     * Saves the cuboid to file.
+     *
+     * @param file to save to
+     * @throws IOException
+     */
+    public abstract void save(File file) throws IOException, DataException;
 
-		return copy;
-	}
+    /**
+     * Loads the cuboid from file. This method is for all sub classes.
+     *
+     * @param file to load from
+     * @throws IOException
+     * @throws CuboidCopyException
+     */
+    protected abstract void loadFromFile(File file) throws IOException, CuboidCopyException, DataException;
 
-	/**
-	 * Load a copy from a file.
-	 *
-	 * @param path
-	 * @return
-	 * @throws IOException
-	 * @throws CuboidCopyException
-	 */
-	public static CuboidCopy load(String path) throws IOException, CuboidCopyException {
+    /**
+     * Pastes the cuboid copy into the world on its point of origin.
+     *
+     * @param world to paste into
+     */
+    public abstract void paste(World world);
 
-		return load(new File(path));
-	}
-
-	/**
-	 * Make the copy from world.
-	 */
-	public void copy(World w) {
-
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < length; z++) {
-					int index = y * width * length + z * width + x;
-					blocks[index] = (byte) w.getBlockTypeIdAt(BukkitUtil.toLocation(w, origin.add(x, y, z)));
-					data[index] = w.getBlockAt(BukkitUtil.toLocation(w, origin.add(x, y, z))).getData();
-				}
-			}
-		}
-
-		findTestOffset();
-	}
-
-	/**
-	 * Paste to world.
-	 */
-	public void paste(World w) {
-
-		ArrayList<Tuple2<Vector, byte[]>> queueAfter =
-				new ArrayList<Tuple2<Vector, byte[]>>();
-		ArrayList<Tuple2<Vector, byte[]>> queueLast =
-				new ArrayList<Tuple2<Vector, byte[]>>();
-
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < length; z++) {
-					int index = y * width * length + z * width + x;
-					Vector pt = origin.add(x, y, z);
-
-					if (BlockType.shouldPlaceLast(w.getBlockTypeIdAt(BukkitUtil.toLocation(w, pt)))) {
-						w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
-					}
-
-					if (BlockType.shouldPlaceLast(blocks[index])) {
-						queueLast.add(new Tuple2<Vector, byte[]>(pt, new byte[]{blocks[index], data[index]}));
-					} else {
-						queueAfter.add(new Tuple2<Vector, byte[]>(pt, new byte[]{blocks[index], data[index]}));
-					}
-				}
-			}
-		}
-
-		for (Tuple2<Vector, byte[]> entry : queueAfter) {
-			byte[] v = entry.b;
-			w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setTypeId(v[0]);
-			if (BlockType.usesData(v[0])) {
-				w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setData(v[1]);
-			}
-		}
-
-		for (Tuple2<Vector, byte[]> entry : queueLast) {
-			byte[] v = entry.b;
-			w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setTypeId(v[0]);
-			if (BlockType.usesData(v[0])) {
-				w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setData(v[1]);
-			}
-		}
-
-	}
-
-	/**
-	 * Clear the area.
-	 */
-	public void clear(World w) {
-
-		List<Vector> queued = new ArrayList<Vector>();
-
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < length; z++) {
-					Vector pt = origin.add(x, y, z);
-					if (BlockType.shouldPlaceLast(w.getBlockTypeIdAt(BukkitUtil.toLocation(w, pt)))) {
-						w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
-					} else {
-						// Can't destroy these blocks yet
-						queued.add(pt);
-					}
-				}
-			}
-		}
-
-		for (Vector pt : queued) {
-			w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
-		}
-	}
-
-	/**
-	 * Toggles the area.
-	 *
-	 * @return
-	 */
-	public void toggle(World w) {
-
-		if (shouldClear(w)) {
-			clear(w);
-		} else {
-			paste(w);
-		}
-	}
-
-	/**
-	 * Returns true if the bridge should be turned 'off'.
-	 *
-	 * @return
-	 */
-	public boolean shouldClear(World w) {
-
-		Vector v = origin.add(testOffset);
-		return w.getBlockTypeIdAt(BukkitUtil.toLocation(w, v)) != 0;
-	}
-
-	/**
-	 * Find a good position to test if an area is active.
-	 */
-	private void findTestOffset() {
-
-		for (int y = height - 1; y >= 0; y--) {
-			for (int x = 0; x < width; x++) {
-				for (int z = 0; z < length; z++) {
-					int index = y * width * length + z * width + x;
-					if (blocks[index] != 0) {
-						testOffset = new Vector(x, y, z);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Get the distance between a point and this cuboid.
-	 *
-	 * @param pos
-	 * @return
-	 */
-	public double distance(Vector pos) {
-
-		Vector max = origin.add(new Vector(width, height, length));
-		int closestX = Math.max(origin.getBlockX(),
-				Math.min(max.getBlockX(), pos.getBlockX()));
-		int closestY = Math.max(origin.getBlockY(),
-				Math.min(max.getBlockY(), pos.getBlockY()));
-		int closestZ = Math.max(origin.getBlockZ(),
-				Math.min(max.getBlockZ(), pos.getBlockZ()));
-		return pos.distance(new Vector(closestX, closestY, closestZ));
-	}
+    /**
+     * Copies the cuboid from the world caching its state and blocks.
+     *
+     * @param world to copy from
+     */
+    public abstract void copy(World world);
 }

@@ -53,40 +53,45 @@ public class EntityTrap extends AbstractIC {
         }
     }
 
-	private Block center;
-	private int radius;
-	private Type type;
+    private Block center;
+    private int radius;
+    private Type type;
 
     public EntityTrap(Server server, Sign sign) {
+
         super(server, sign);
-	    load();
+        load();
     }
 
-	private void load() {
-		Sign sign = getSign();
-		this.center = ICUtil.parseBlockLocation(sign);
-		this.radius = ICUtil.parseRadius(sign);
-		// lets get the type to detect first
-		type = Type.fromString(sign.getLine(3).trim());
-		// set the type to any if wrong format
-		if (type == null) type = Type.ANY;
-		// update the sign with correct upper case name
-		sign.setLine(3, type.name());
-		sign.update();
-	}
+    private void load() {
+
+        Sign sign = getSign();
+        this.center = ICUtil.parseBlockLocation(sign);
+        this.radius = ICUtil.parseRadius(sign);
+        // lets get the type to detect first
+        type = Type.fromString(sign.getLine(3).trim());
+        // set the type to any if wrong format
+        if (type == null) type = Type.ANY;
+        // update the sign with correct upper case name
+        sign.setLine(3, type.name());
+        sign.update();
+    }
 
     @Override
     public String getTitle() {
+
         return "Entity Trap";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ENTITY TRAP";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             chip.setOutput(0, hurt());
         }
@@ -98,7 +103,8 @@ public class EntityTrap extends AbstractIC {
      * @return
      */
     protected boolean hurt() {
-		int damage = 2;
+
+        int damage = 2;
         // add the offset to the location of the block connected to the sign
         for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) {
             if (chunk.isLoaded()) {
@@ -107,7 +113,8 @@ public class EntityTrap extends AbstractIC {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
                             // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(entity.getLocation(), center.getLocation()) <= radius) {
+                            if (LocationUtil.getGreatestDistance(entity.getLocation(),
+                                    center.getLocation()) <= radius) {
                                 if (entity instanceof LivingEntity)
                                     ((LivingEntity) entity).damage(damage);
                                 else if (entity instanceof Minecart)
@@ -128,17 +135,20 @@ public class EntityTrap extends AbstractIC {
             RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new EntityTrap(getServer(), sign);
         }
 
-	    @Override
-	    public void verify(Sign sign) throws ICVerificationException {
-		    ICUtil.verifySignSyntax(sign);
-	    }
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
     }
 }

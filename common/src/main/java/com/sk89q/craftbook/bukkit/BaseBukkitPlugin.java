@@ -18,13 +18,11 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.wepif.PermissionsResolverManager;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -33,10 +31,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.wepif.PermissionsResolverManager;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.

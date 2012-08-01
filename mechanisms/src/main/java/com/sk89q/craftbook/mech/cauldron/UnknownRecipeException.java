@@ -5,7 +5,7 @@ package com.sk89q.craftbook.mech.cauldron;
  */
 public class UnknownRecipeException extends Throwable {
 
-	public UnknownRecipeException(String message) {
-		super(message);
-	}
+    public UnknownRecipeException(String message) {
+        super(message);
+    }
 }

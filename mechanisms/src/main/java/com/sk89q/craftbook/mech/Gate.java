@@ -29,6 +29,7 @@ import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -313,12 +314,7 @@ public class Gate extends AbstractMechanic {
                 }
             } else {
                 // Allowing water allows the use of gates as flood gates
-                if (cur != BlockID.WATER && cur != BlockID.STATIONARY_WATER
-                        && cur != BlockID.LAVA && cur != BlockID.STATIONARY_LAVA
-                        && cur != BlockID.FENCE
-                        && cur != BlockID.NETHER_BRICK_FENCE && cur != BlockID.SNOW
-                        && cur != BlockID.IRON_BARS && cur != BlockID.GLASS_PANE
-                        && cur != BlockID.LONG_GRASS && cur != 0) {
+                if (!canPassThrough(cur)) {
                     break;
                 }
             }
@@ -385,8 +381,7 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getLocalConfiguration().gateSettings.enable)
-            return;
+        if (!plugin.getLocalConfiguration().gateSettings.enable) return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
@@ -395,11 +390,10 @@ public class Gate extends AbstractMechanic {
 
                 Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId()
-                        == BlockID.WALL_SIGN) {
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
                     BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign)
-                        sign = (Sign) state;
+                    if (state instanceof Sign) sign = (Sign) state;
                 }
 
                 if (sign != null) {
@@ -446,11 +440,9 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if (!plugin.getLocalConfiguration().gateSettings.enableRedstone)
-            return;
+        if (!plugin.getLocalConfiguration().gateSettings.enableRedstone) return;
 
-        if (event.getNewCurrent() == event.getOldCurrent())
-            return;
+        if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         plugin.getServer().getScheduler()
                 .scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -549,12 +541,22 @@ public class Gate extends AbstractMechanic {
 
     public boolean isValidGateBlock(Block block) {
 
-        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block.getType());
+        return isValidGateBlock(block.getTypeId());
+    }
+
+    public boolean isValidGateBlock(int block) {
+
+        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
     }
 
     public boolean isValidGateItem(ItemStack block) {
 
-        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block.getType());
+        return isValidGateItem(block.getTypeId());
+    }
+
+    public boolean isValidGateItem(int block) {
+
+        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
     }
 
     @Override
@@ -592,5 +594,79 @@ public class Gate extends AbstractMechanic {
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
 
+    }
+
+    private boolean canPassThrough(int t) {
+
+        int[] passableBlocks = new int[9];
+        passableBlocks[0] = BlockID.WATER;
+        passableBlocks[1] = BlockID.STATIONARY_WATER;
+        passableBlocks[2] = BlockID.LAVA;
+        passableBlocks[3] = BlockID.STATIONARY_LAVA;
+        passableBlocks[4] = BlockID.SNOW;
+        passableBlocks[5] = BlockID.LONG_GRASS;
+        passableBlocks[6] = BlockID.VINE;
+        passableBlocks[7] = BlockID.DEAD_BUSH;
+        passableBlocks[8] = BlockID.AIR;
+
+        for (int aPassableBlock : passableBlocks) {
+            if (aPassableBlock == t) return true;
+        }
+
+        return isValidGateBlock(t);
+    }
+
+
+    // TODO Use this to clean this mech up
+    protected class GateColumn {
+
+        private final BlockWorldVector bwv;
+
+
+        public GateColumn(LocalWorld world, int x, int y, int z) {
+
+            this.bwv = new BlockWorldVector(world, x, y, z);
+        }
+
+        public BlockVector getStartingPoint() {
+
+            return bwv.toBlockVector();
+        }
+
+        public BlockVector getEndingPoint() {
+
+            return new BlockVector(bwv.getBlockX(), getEndingY(), bwv.getBlockZ());
+        }
+
+        public int getStartingY() {
+
+            return bwv.getBlockY();
+        }
+
+        public int getEndingY() {
+
+            for (int y = bwv.getBlockY(); y > 0; y--) {
+
+                if (!canPassThrough(bwv.getWorld().getBlockType(bwv.toBlockVector()))) {
+                    return y + 1;
+                }
+            }
+            return 0;
+        }
+
+        public int getX() {
+
+            return bwv.getBlockX();
+        }
+
+        public int getZ() {
+
+            return bwv.getBlockZ();
+        }
+
+        public CuboidRegion getRegion() {
+
+            return new CuboidRegion(getStartingPoint(), getEndingPoint());
+        }
     }
 }

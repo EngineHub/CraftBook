@@ -36,7 +36,7 @@ public class FireBarrage extends FireShooter {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 

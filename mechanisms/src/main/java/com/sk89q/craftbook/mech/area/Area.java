@@ -124,21 +124,21 @@ public class Area extends AbstractMechanic {
 			if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return;
 			if (event.getPlayer().getWorld() == null) return;
 
-			CuboidCopy copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
-			if (!copy.shouldClear(event.getPlayer().getWorld())) {
+			CuboidCopy copyFlat = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
+			if (!copyFlat.shouldClear(event.getPlayer().getWorld())) {
 				if (save)
-					plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copy, plugin);
-				copy.paste(event.getPlayer().getWorld());
+					plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copyFlat, plugin);
+				copyFlat.paste(event.getPlayer().getWorld());
 			} else {
 				if (inactiveID.length() == 0) {
 					if (save)
-						plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
-					copy.clear(event.getPlayer().getWorld());
+						plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copyFlat, plugin);
+					copyFlat.clear(event.getPlayer().getWorld());
 				} else {
 					if (save)
-						plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
-					copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
-					copy.paste(event.getPlayer().getWorld());
+						plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copyFlat, plugin);
+					copyFlat = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
+					copyFlat.paste(event.getPlayer().getWorld());
 				}
 			}
 		} catch (Exception e) {
@@ -169,18 +169,18 @@ public class Area extends AbstractMechanic {
 			String namespace = s.getLine(0);
 			String id = s.getLine(2);
 
-			CuboidCopy copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
+            CuboidCopy copyFlat = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
 
-			if (!copy.shouldClear(BukkitUtil.toWorld(pt.getWorld()))) {
-				copy.paste(BukkitUtil.toWorld(pt.getWorld()));
+			if (!copyFlat.shouldClear(BukkitUtil.toWorld(pt.getWorld()))) {
+				copyFlat.paste(BukkitUtil.toWorld(pt.getWorld()));
 			} else {
 				String inactiveID = s.getLine(3);
 
 				if (inactiveID.length() == 0) {
-					copy.clear(BukkitUtil.toWorld(pt.getWorld()));
+					copyFlat.clear(BukkitUtil.toWorld(pt.getWorld()));
 				} else {
-					copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, inactiveID, plugin);
-					copy.paste(BukkitUtil.toWorld(pt.getWorld()));
+					copyFlat = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, inactiveID, plugin);
+					copyFlat.paste(BukkitUtil.toWorld(pt.getWorld()));
 				}
 			}
 		} catch (Exception e) {

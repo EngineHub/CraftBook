@@ -25,25 +25,29 @@ import org.bukkit.block.Sign;
 
 public class LavaSensor extends AbstractIC {
 
-	private Block center;
+    private Block center;
 
     public LavaSensor(Server server, Sign sign) {
+
         super(server, sign);
-	    center = ICUtil.parseBlockLocation(sign);
+        center = ICUtil.parseBlockLocation(sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "LAVA SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) chip.setOutput(0, hasLava());
     }
 
@@ -54,26 +58,29 @@ public class LavaSensor extends AbstractIC {
      */
     protected boolean hasLava() {
 
-	    int blockID = center.getTypeId();
+        int blockID = center.getTypeId();
 
-	    return (blockID == 10 || blockID == 11);
+        return (blockID == 10 || blockID == 11);
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new LavaSensor(getServer(), sign);
         }
 
-	    @Override
-	    public void verify(Sign sign) throws ICVerificationException {
-		    ICUtil.verifySignSyntax(sign);
-	    }
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
     }
 
 }

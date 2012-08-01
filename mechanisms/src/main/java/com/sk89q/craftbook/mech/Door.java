@@ -64,27 +64,21 @@ public class Door extends AbstractMechanic {
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Door Down]")) {
-                if (!player.hasPermission("craftbook.mech.door")) {
-                    throw new InsufficientPermissionsException();
-                }
+                player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Down]");
                 sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
-                if (!player.hasPermission("craftbook.mech.door")) {
-                    throw new InsufficientPermissionsException();
-                }
+                player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Up]");
                 sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door]")) {
-                if (!player.hasPermission("craftbook.mech.door")) {
-                    throw new InsufficientPermissionsException();
-                }
+                player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door]");
                 sign.setLine(0, "0");
@@ -114,8 +108,8 @@ public class Door extends AbstractMechanic {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
-            if (!((Sign) block.getState()).getLine(1).contains("Door") || ((Sign) block.getState()).getLine(1)
-                    .equalsIgnoreCase("[Door]"))
+            if (!((Sign) block.getState()).getLine(1).contains("Door")
+                    || ((Sign) block.getState()).getLine(1).equalsIgnoreCase("[Door]"))
                 return null;
 
             // okay, now we can start doing exploration of surrounding blocks
@@ -147,19 +141,22 @@ public class Door extends AbstractMechanic {
 
         Sign s = (Sign) trigger.getState();
 
-        Material mat;
+        int block;
         findBase:
         {
             if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-            } else
+            } else {
                 throw new InvalidConstructionException("Sign is incorrectly made.");
-            mat = proximalBaseCenter.getType();
-            if (settings.canUseBlock(mat)) {
-                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat
-                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat))
+            }
+
+            block = proximalBaseCenter.getTypeId();
+
+            if (settings.canUseBlock(block)) {
+                if ((proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() == block
+                        && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == block))
                     break findBase;
                 throw new InvalidConstructionException("mech.door.material");
             } else {
@@ -204,10 +201,10 @@ public class Door extends AbstractMechanic {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
 
-        if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
-                || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter
+        if ((distalBaseCenter.getTypeId() != block && distalBaseCenter.getData() != proximalBaseCenter.getData())
+                || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() != block && distalBaseCenter
                 .getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
-                || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() != mat && distalBaseCenter
+                || (distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() != block && distalBaseCenter
                 .getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())))
             throw new InvalidConstructionException("mech.door.material");
 
@@ -217,59 +214,49 @@ public class Door extends AbstractMechanic {
         int left, right;
         try {
             left = Integer.parseInt(s.getLine(2));
+            if (left < 0) left = 0;   // No negatives please
         } catch (Exception e) {
             left = 1;
         }
         try {
             right = Integer.parseInt(s.getLine(3));
+            if (right < 0) right = 0; // No negatives please
         } catch (Exception e) {
             right = 1;
         }
-        if (left > plugin.getLocalConfiguration().doorSettings.maxWidth)
-            left = plugin.getLocalConfiguration().doorSettings.maxWidth;
-        if (right > plugin.getLocalConfiguration().doorSettings.maxWidth)
-            right = plugin.getLocalConfiguration().doorSettings.maxWidth;
 
-        if (left == 1) {
+        // Check width
+        if (left > settings.maxWidth) left = settings.maxWidth;
+        if (right > settings.maxWidth) right = settings.maxWidth;
+
+        // Expand Left
+        for (int i = 0; i < left; i++) {
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        } else if (left > 1) {
-            for (int i = 0; i < left; i++) {
-                try {
-                    toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
-                } catch (RegionOperationException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        if (right == 1)
+
+        // Expand Right
+        for (int i = 0; i < right; i++) {
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        else if (right > 1) {
-            for (int i = 0; i < right; i++) {
-                try {
-                    toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
-                } catch (RegionOperationException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+
+        // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(BlockFace.UP), BukkitUtil.toVector(BlockFace.DOWN));
     }
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getLocalConfiguration().doorSettings.enable) return;
+        if (!settings.enable) return;
 
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-            return;
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
 
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if (!player.hasPermission("craftbook.mech.door.use")) {
@@ -281,11 +268,10 @@ public class Door extends AbstractMechanic {
             if (getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
                 Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId()
-                        == BlockID.WALL_SIGN) {
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
                     BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign)
-                        sign = (Sign) state;
+                    if (state instanceof Sign) sign = (Sign) state;
                 }
 
                 if (sign != null) {
@@ -347,11 +333,8 @@ public class Door extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden door, just weird
         // results.
-        if (canPassThrough(hinge.getTypeId())) {
-            new ToggleRegionClosed(player).run();
-        } else {
-            new ToggleRegionOpen().run();
-        }
+        if (canPassThrough(hinge.getTypeId())) new ToggleRegionClosed(player).run();
+        else new ToggleRegionOpen().run();
     }
 
     private class ToggleRegionOpen implements Runnable {
@@ -540,8 +523,7 @@ public class Door extends AbstractMechanic {
 
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = event.getBlock().getState();
-            if (state instanceof Sign)
-                sign = (Sign) state;
+            if (state instanceof Sign) sign = (Sign) state;
         }
 
         int curBlocks = 0;
