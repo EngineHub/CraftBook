@@ -153,7 +153,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableRedstone;
         public final int maxLength;
         public final int maxWidth;
-        public final Set<Material> allowedBlocks;
+        public final Set<Integer> allowedBlocks;
 
         private DoorSettings(FileConfiguration cfg) {
 
@@ -161,7 +161,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableRedstone = getBoolean(cfg, "door-redstone", true);
             maxLength = getInt(cfg, "door-max-length", 30);
             maxWidth = getInt(cfg, "door-max-width", 5);
-            allowedBlocks = getMaterialSet(cfg, "door-blocks", Arrays.asList(4, 5, 20, 43));
+            allowedBlocks = getIntegerSet(cfg, "door-blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
@@ -169,7 +169,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
-        public boolean canUseBlock(Material b) {
+        public boolean canUseBlock(int b) {
 
             return allowedBlocks.contains(b);
         }
@@ -179,13 +179,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final boolean enableRedstone;
-        public final Set<Material> allowedBlocks;
+        public final Set<Integer> allowedBlocks;
 
         private GateSettings(FileConfiguration cfg) {
 
             enable = getBoolean(cfg, "gate-enable", true);
             enableRedstone = getBoolean(cfg, "gate-redstone", true);
-            allowedBlocks = getMaterialSet(cfg, "gate-blocks", Arrays.asList(85, 101, 102, 113));
+            allowedBlocks = getIntegerSet(cfg, "gate-blocks", Arrays.asList(85, 101, 102, 113));
         }
 
         /**
@@ -193,7 +193,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
-        public boolean canUseBlock(Material b) {
+        public boolean canUseBlock(int b) {
 
             return allowedBlocks.contains(b);
         }
@@ -234,12 +234,14 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enable;
         public final int cauldronBlock;
         public final boolean enableNew;
+        public final boolean newSpoons;
 
         private CauldronSettings(FileConfiguration cfg) {
 
             enable = getBoolean(cfg, "cauldron-enable", false);
             cauldronBlock = getInt(cfg, "cauldron-block", 1);
             enableNew = getBoolean(cfg, "new-cauldron-enable", true);
+            newSpoons = getBoolean(cfg, "new-cauldron-spoons", true);
         }
         //FIXME the recipes should probably go here
     }
