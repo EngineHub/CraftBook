@@ -60,7 +60,7 @@ public abstract class CuboidCopy {
             copy = new MCEditCuboidCopy();
         }
         if (copy == null) {
-            throw new MissingCuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
+            throw new CuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
         }
         try {
             copy.loadFromFile(file);
