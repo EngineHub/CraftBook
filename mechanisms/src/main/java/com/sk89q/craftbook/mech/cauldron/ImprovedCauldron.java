@@ -12,17 +12,20 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Silthus
@@ -31,33 +34,33 @@ public class ImprovedCauldron extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<ImprovedCauldron> {
 
-        protected final MechanismsPlugin plugin;
-        protected final ImprovedCauldronCookbook recipes;
+	protected final MechanismsPlugin plugin;
+	protected final ImprovedCauldronCookbook recipes;
 
-        public Factory(MechanismsPlugin plugin) {
-            this.plugin = plugin;
-            recipes = new ImprovedCauldronCookbook(
-                    YamlConfiguration.loadConfiguration(
-                            new File(plugin.getDataFolder(), "recipes.yml")
-                    ), plugin.getDataFolder());
-        }
+	public Factory(MechanismsPlugin plugin) {
+	    this.plugin = plugin;
+	    recipes = new ImprovedCauldronCookbook(
+		    YamlConfiguration.loadConfiguration(
+			    new File(plugin.getDataFolder(), "recipes.yml")
+			    ), plugin.getDataFolder());
+	}
 
-        @Override
-        public ImprovedCauldron detect(BlockWorldVector pos) throws InvalidMechanismException {
-            if (isCauldron(pos)) {
-                return new ImprovedCauldron(plugin, BukkitUtil.toBlock(pos), recipes);
-            }
-            return null;
-        }
+	@Override
+	public ImprovedCauldron detect(BlockWorldVector pos) throws InvalidMechanismException {
+	    if (isCauldron(pos)) {
+		return new ImprovedCauldron(plugin, BukkitUtil.toBlock(pos), recipes);
+	    }
+	    return null;
+	}
 
-        private boolean isCauldron(BlockWorldVector pos) {
-            Block block = BukkitUtil.toBlock(pos);
-            if (block.getType() == Material.CAULDRON) {
-                Cauldron cauldron = (Cauldron) block.getState().getData();
-                return block.getRelative(BlockFace.DOWN).getType() == Material.FIRE && cauldron.isFull();
-            }
-            return false;
-        }
+	private boolean isCauldron(BlockWorldVector pos) {
+	    Block block = BukkitUtil.toBlock(pos);
+	    if (block.getType() == Material.CAULDRON) {
+		Cauldron cauldron = (Cauldron) block.getState().getData();
+		return block.getRelative(BlockFace.DOWN).getType() == Material.FIRE && cauldron.isFull();
+	    }
+	    return false;
+	}
 
     }
 
@@ -66,33 +69,73 @@ public class ImprovedCauldron extends AbstractMechanic {
     private ImprovedCauldronCookbook cookbook;
 
     private ImprovedCauldron(MechanismsPlugin plugin, Block block, ImprovedCauldronCookbook recipes) {
-        super();
-        this.plugin = plugin;
-        this.block = block;
-        this.cookbook = recipes;
+	super();
+	this.plugin = plugin;
+	this.block = block;
+	cookbook = recipes;
     }
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
-        if (!plugin.getLocalConfiguration().cauldronSettings.enableNew) return;
-        if (block.equals(event.getClickedBlock())) {
-            if (!event.getPlayer().hasPermission("craftbook.mech.cauldron.use")) {
-                event.getPlayer().sendMessage(ChatColor.RED + "You don't have the permission to use cauldrons.");
-                return;
-            }
-            try {
-                Collection<Item> items = getItems();
-                ImprovedCauldronCookbook.Recipe recipe = cookbook.getRecipe(CauldronItemStack.convert(items));
-                cook(recipe, items);
-                event.getPlayer().sendMessage(
-                        ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
-                block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-            } catch (UnknownRecipeException e) {
-                event.getPlayer().sendMessage(ChatColor.RED + e.getMessage());
-            }
-        }
+	if (!plugin.getLocalConfiguration().cauldronSettings.enableNew) return;
+	if (block.equals(event.getClickedBlock())) {
+	    if (!event.getPlayer().hasPermission("craftbook.mech.cauldron.use")) {
+		event.getPlayer().sendMessage(ChatColor.RED + "You don't have the permission to use cauldrons.");
+		return;
+	    }
+	    try {
+		Collection<Item> items = getItems();
+		ImprovedCauldronCookbook.Recipe recipe = cookbook.getRecipe(CauldronItemStack.convert(items));
+		if(!plugin.getLocalConfiguration().cauldronSettings.newSpoons) {
+		    cook(recipe, items);
+		    event.getPlayer().sendMessage(
+			    ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+		    block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+		}
+		else { //Spoons :|
+		    if (event.getPlayer().getItemInHand() == null) return;
+		    if(isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
+			double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
+			Random r = new Random();
+			double ran = r.nextDouble();
+			event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - 1));
+			if(chance <= ran) {
+			    cook(recipe, items);
+			    event.getPlayer().sendMessage(
+				    ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+			    block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+			}
+			else {
+			    event.getPlayer().sendMessage(
+				    ChatColor.YELLOW + "You stir the cauldron but nothing happens.");
+			}
+		    }
+		}
+	    } catch (UnknownRecipeException e) {
+		event.getPlayer().sendMessage(ChatColor.RED + e.getMessage());
+	    }
+	}
     }
 
+    public boolean isItemSpoon(int id) {
+	return id == 256 || id == 269 || id == 273 || id == 277 || id == 284;
+    }
+
+    public double getSpoonChance(ItemStack item, double chance) {
+	int id = item.getTypeId();
+	double temp = chance / 100;
+	if(temp > 1) return 1;
+	double toGo = temp = 1 - temp;
+	double tenth = toGo/10;
+	int mutliplier = 0;
+	if(id == 269) mutliplier = 1;
+	if(id == 273) mutliplier = 2;
+	if(id == 256) mutliplier = 3;
+	if(id == 277) mutliplier = 4;
+	if(id == 284) mutliplier = 5;
+	mutliplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);
+	return temp + tenth*mutliplier;
+    }
 
     /**
      * When this is called we know that all ingredients match.
@@ -102,48 +145,48 @@ public class ImprovedCauldron extends AbstractMechanic {
      * @param items
      */
     private void cook(ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
-        // first lets destroy all items inside the cauldron
-        for (Item item : items) {
-            item.remove();
-        }
-        // then give out the result items
-        for (CauldronItemStack stack : recipe.getResults()) {
-            block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
-        }
+	// first lets destroy all items inside the cauldron
+	for (Item item : items) {
+	    item.remove();
+	}
+	// then give out the result items
+	for (CauldronItemStack stack : recipe.getResults()) {
+	    block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
+	}
     }
 
     private Collection<Item> getItems() {
-        List<Item> items = new ArrayList<Item>();
-        for (Entity entity : block.getChunk().getEntities()) {
-            if (entity instanceof Item) {
-                Location location = entity.getLocation();
-                if (location.getBlockX() == block.getX()
-                        && location.getBlockY() == block.getY()
-                        && location.getBlockZ() == block.getZ()) {
-                    items.add(((Item) entity));
-                }
-            }
-        }
-        return items;
+	List<Item> items = new ArrayList<Item>();
+	for (Entity entity : block.getChunk().getEntities()) {
+	    if (entity instanceof Item) {
+		Location location = entity.getLocation();
+		if (location.getBlockX() == block.getX()
+			&& location.getBlockY() == block.getY()
+			&& location.getBlockZ() == block.getZ()) {
+		    items.add((Item) entity);
+		}
+	    }
+	}
+	return items;
     }
 
     @Override
     public void unload() {
-        // do nothing
+	// do nothing
     }
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
-        // do nothing
+	// do nothing
     }
 
     @Override
     public boolean isActive() {
-        return false;
+	return false;
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        // do nothing
+	// do nothing
     }
 }

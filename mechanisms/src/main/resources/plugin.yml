@@ -2,6 +2,7 @@ name: CraftBookMechanisms
 main: com.sk89q.craftbook.bukkit.MechanismsPlugin
 version: "${project.version}"
 depend: [CraftBookCommon]
+dev-url: http://dev.bukkit.org/server-mods/craftbook/
 softdepend: [Vault]
 commands:
     savearea:

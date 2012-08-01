@@ -5,8 +5,6 @@ import com.sk89q.craftbook.mech.cauldron.ImprovedCauldronCookbook;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -15,22 +13,17 @@ import org.bukkit.command.CommandSender;
  */
 public class CauldronCommands {
 
-    private final MechanismsPlugin plugin;
-    private final WorldEditPlugin worldEdit;
-
     public CauldronCommands(MechanismsPlugin plugin) {
-        this.plugin = plugin;
-        worldEdit = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
     }
 
     @Command(
-            aliases = {"reload"},
-            desc = "Reloads the cauldron recipes from the config."
-    )
+	    aliases = {"reload"},
+	    desc = "Reloads the cauldron recipes from the config."
+	    )
     @CommandPermissions("craftbook.mech.cauldron.reload")
     public void reload(CommandContext context, CommandSender sender) {
-        ImprovedCauldronCookbook.INSTANCE.reload();
-        sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
+	ImprovedCauldronCookbook.INSTANCE.reload();
+	sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
     }
 
 }

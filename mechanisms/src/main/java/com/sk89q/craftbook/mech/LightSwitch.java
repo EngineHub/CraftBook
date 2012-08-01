@@ -43,51 +43,51 @@ public class LightSwitch extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<LightSwitch> {
 
-        protected final MechanismsPlugin plugin;
+	protected final MechanismsPlugin plugin;
 
-        public Factory(MechanismsPlugin plugin) {
+	public Factory(MechanismsPlugin plugin) {
 
-            this.plugin = plugin;
-        }
+	    this.plugin = plugin;
+	}
 
-        @Override
-        public LightSwitch detect(BlockWorldVector pt) {
+	@Override
+	public LightSwitch detect(BlockWorldVector pt) {
 
-            Block block = BukkitUtil.toBlock(pt);
-            // check if this looks at all like something we're interested in first
-            if (block.getTypeId() != BlockID.WALL_SIGN) return null;
-            String line = ((Sign) block.getState()).getLine(1);
-            if (!line.equalsIgnoreCase("[|]") && !line.equalsIgnoreCase("[I]")) return null;
+	    Block block = BukkitUtil.toBlock(pt);
+	    // check if this looks at all like something we're interested in first
+	    if (block.getTypeId() != BlockID.WALL_SIGN) return null;
+	    String line = ((Sign) block.getState()).getLine(1);
+	    if (!line.equalsIgnoreCase("[|]") && !line.equalsIgnoreCase("[I]")) return null;
 
-            // okay, now we can start doing exploration of surrounding blocks
-            // and if something goes wrong in here then we throw fits.
-            return new LightSwitch(pt, plugin);
-        }
+	    // okay, now we can start doing exploration of surrounding blocks
+	    // and if something goes wrong in here then we throw fits.
+	    return new LightSwitch(pt, plugin);
+	}
 
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public LightSwitch detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
-                throws InvalidMechanismException, ProcessedMechanismException {
+	/**
+	 * Detect the mechanic at a placed sign.
+	 *
+	 * @throws ProcessedMechanismException
+	 */
+	@Override
+	public LightSwitch detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+		throws InvalidMechanismException, ProcessedMechanismException {
 
-            String line = sign.getLine(1);
+	    String line = sign.getLine(1);
 
-            if (line.equalsIgnoreCase("[|]") || line.equalsIgnoreCase("[I]")) {
-                if (!player.hasPermission("craftbook.mech.light-switch")) {
-                    throw new InsufficientPermissionsException();
-                }
+	    if (line.equalsIgnoreCase("[|]") || line.equalsIgnoreCase("[I]")) {
+		if (!player.hasPermission("craftbook.mech.light-switch")) {
+		    throw new InsufficientPermissionsException();
+		}
 
-                sign.setLine(1, "[I]");
-                player.print("Light switch created.");
-            } else {
-                return null;
-            }
+		sign.setLine(1, "[I]");
+		player.print("Light switch created.");
+	    } else {
+		return null;
+	    }
 
-            throw new ProcessedMechanismException();
-        }
+	    throw new ProcessedMechanismException();
+	}
     }
 
     /**
@@ -95,7 +95,7 @@ public class LightSwitch extends AbstractMechanic {
      * clever can just use two signs though.
      */
     private final HistoryHashMap<BlockWorldVector, Long> recentLightToggles = new HistoryHashMap<BlockWorldVector,
-            Long>(20);
+	    Long>(20);
 
     /**
      * Configuration.
@@ -112,18 +112,18 @@ public class LightSwitch extends AbstractMechanic {
      */
     private LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
 
-        super();
-        this.pt = pt;
-        this.plugin = plugin;
+	super();
+	this.pt = pt;
+	this.plugin = plugin;
     }
 
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
-        toggleLights(pt);
+	if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
+	if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
+	toggleLights(pt);
     }
 
     /**
@@ -136,59 +136,77 @@ public class LightSwitch extends AbstractMechanic {
      */
     private boolean toggleLights(BlockWorldVector pt) {
 
-        World world = BukkitUtil.toWorld(pt);
+	World world = BukkitUtil.toWorld(pt);
 
-        int wx = pt.getBlockX();
-        int wy = pt.getBlockY();
-        int wz = pt.getBlockZ();
-        int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
+	Block block = BukkitUtil.toBlock(pt);
+	// check if this looks at all like something we're interested in first
+	if (block.getTypeId() != BlockID.WALL_SIGN) return false;
+	int radius = 10;
+	int maximum = 20;
+	try {
+	    radius = Integer.parseInt(((Sign) block.getState()).getLine(2));
+	}
+	catch(Exception e) {
+	}
+	try {
+	    maximum = Integer.parseInt(((Sign) block.getState()).getLine(3));
+	}
+	catch(Exception e) {
+	}
+	if(radius > plugin.getLocalConfiguration().lightSwitchSettings.maxRange) radius = plugin.getLocalConfiguration().lightSwitchSettings.maxRange;
+	if(maximum > plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum) maximum = plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum;
 
-        if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
-                || aboveID == BlockID.REDSTONE_TORCH_ON) {
-            // Check if block above is a redstone torch.
-            // Used to get what to change torches to.
-            boolean on = (aboveID != BlockID.TORCH);
-            // Prevent spam
-            Long lastUse = recentLightToggles.remove(pt);
-            long currTime = System.currentTimeMillis();
+	int wx = pt.getBlockX();
+	int wy = pt.getBlockY();
+	int wz = pt.getBlockZ();
+	int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
 
-            if (lastUse != null && currTime - lastUse < 500) {
-                recentLightToggles.put(pt, lastUse);
-                return true;
-            }
+	if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF
+		|| aboveID == BlockID.REDSTONE_TORCH_ON) {
+	    // Check if block above is a redstone torch.
+	    // Used to get what to change torches to.
+	    boolean on = aboveID != BlockID.TORCH;
+	    // Prevent spam
+	    Long lastUse = recentLightToggles.remove(pt);
+	    long currTime = System.currentTimeMillis();
 
-            recentLightToggles.put(pt, currTime);
-            int changed = 0;
-            for (int x = -10 + wx; x <= 10 + wx; x++) {
-                for (int y = -10 + wy; y <= 10 + wy; y++) {
-                    for (int z = -5 + wz; z <= 5 + wz; z++) {
-                        int id = world.getBlockTypeIdAt(x, y, z);
-                        if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
-                                || id == BlockID.REDSTONE_TORCH_ON) {
-                            // Limit the maximum number of changed lights
-                            if (changed >= 20) return true;
+	    if (lastUse != null && currTime - lastUse < 500) {
+		recentLightToggles.put(pt, lastUse);
+		return true;
+	    }
 
-                            if (on) world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
-                            else world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
-                            changed++;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
+	    recentLightToggles.put(pt, currTime);
+	    int changed = 0;
+	    for (int x = -radius + wx; x <= radius + wx; x++) {
+		for (int y = -radius + wy; y <= radius + wy; y++) {
+		    for (int z = -radius + wz; z <= radius + wz; z++) {
+			int id = world.getBlockTypeIdAt(x, y, z);
+			if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
+				|| id == BlockID.REDSTONE_TORCH_ON) {
+			    // Limit the maximum number of changed lights
+			    if (changed >= maximum) return true;
+
+			    if (on) world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+			    else world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+			    changed++;
+			}
+		    }
+		}
+	    }
+	    return true;
+	}
+	return false;
     }
 
     @Override
     public void unload() {
-        /* No persistence. */
+	/* No persistence. */
     }
 
     @Override
     public boolean isActive() {
 
-        return false; /* Keeps no state */
+	return false; /* Keeps no state */
     }
 
     @Override

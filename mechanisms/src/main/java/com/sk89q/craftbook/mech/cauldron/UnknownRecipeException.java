@@ -5,7 +5,12 @@ package com.sk89q.craftbook.mech.cauldron;
  */
 public class UnknownRecipeException extends Throwable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public UnknownRecipeException(String message) {
-        super(message);
+	super(message);
     }
 }
