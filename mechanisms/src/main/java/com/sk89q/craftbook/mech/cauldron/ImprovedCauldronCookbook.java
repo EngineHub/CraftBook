@@ -23,8 +23,8 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
     public ImprovedCauldronCookbook(FileConfiguration cfg, File dataFolder) {
 	super(cfg, dataFolder);
 	recipes = new ArrayList<Recipe>();
-	config = new File(dataFolder, "recipes.yml");
-	load(cfg.getConfigurationSection("recipes"));
+	config = new File(dataFolder, "cauldron-recipes.yml");
+	load(cfg.getConfigurationSection("cauldron-recipes"));
 	INSTANCE = this;
     }
 
