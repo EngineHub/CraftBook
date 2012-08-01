@@ -69,6 +69,6 @@ public class MCEditCuboidCopy extends CuboidCopy {
     @Override
     public boolean shouldClear(Sign sign) {
         on = sign.getLine(1).contains("#");
-        return on;
+        return !on;
     }
 }
