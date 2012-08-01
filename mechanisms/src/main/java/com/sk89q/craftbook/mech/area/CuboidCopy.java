@@ -52,10 +52,10 @@ public abstract class CuboidCopy {
         int index = file.getName().lastIndexOf('.');
         String extension = file.getName().substring(index);
         CuboidCopy copy = null;
-        if (extension.equalsIgnoreCase("cbcopy")) {
+        if (extension.equalsIgnoreCase(".cbcopy")) {
             // this copies only blocks and not sign text or chest contents
             copy = new FlatCuboidCopy();
-        } else if (extension.equalsIgnoreCase("schematic")) {
+        } else if (extension.equalsIgnoreCase(".schematic")) {
             // this copies all blocks including chest content and sign text
             copy = new MCEditCuboidCopy();
         }
