@@ -43,129 +43,129 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public class MechanismsPlugin extends BaseBukkitPlugin {
 
-	protected MechanismsConfiguration config;
+    protected MechanismsConfiguration config;
 
-	public static Economy economy = null;
+    public static Economy economy = null;
 
-	public final CopyManager copyManager = new CopyManager();
+    public final CopyManager copyManager = new CopyManager();
 
-	@Override
-	public void onEnable() {
+    @Override
+    public void onEnable() {
 
-		super.onEnable();
+        super.onEnable();
 
-		// Register command classes
-		final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
-		reg.register(MechanismCommands.class);
+        // Register command classes
+        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
+        reg.register(MechanismCommands.class);
 
-		createDefaultConfiguration("books.txt", false);
-		createDefaultConfiguration("cauldron-recipes.txt", false);
-		createDefaultConfiguration("config.yml", false);
-		createDefaultConfiguration("custom-mob-drops.txt", false);
-		createDefaultConfiguration("custom-block-drops.txt", false);
-		createDefaultConfiguration("recipes.txt", false);
-		createDefaultConfiguration("cauldron-recipes.yml", false);
+        createDefaultConfiguration("books.txt", false);
+        createDefaultConfiguration("cauldron-recipes.txt", false);
+        createDefaultConfiguration("config.yml", false);
+        createDefaultConfiguration("custom-mob-drops.txt", false);
+        createDefaultConfiguration("custom-block-drops.txt", false);
+        createDefaultConfiguration("recipes.txt", false);
+        createDefaultConfiguration("cauldron-recipes.yml", false);
 
-		config = new MechanismsConfiguration(getConfig(), getDataFolder());
-		saveConfig();
+        config = new MechanismsConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
-		languageManager = new LanguageManager(this);
+        languageManager = new LanguageManager(this);
 
-		if (getServer().getPluginManager().isPluginEnabled("Vault"))
-			setupEconomy();
+        if (getServer().getPluginManager().isPluginEnabled("Vault"))
+            setupEconomy();
 
-		MechanicManager manager = new MechanicManager(this);
-		MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
-		adapter.register(manager);
+        MechanicManager manager = new MechanicManager(this);
+        MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
+        adapter.register(manager);
 
-		// Let's register mechanics!
-		manager.register(new Ammeter.Factory(this));
-		manager.register(new Bookcase.Factory(this));
-		manager.register(new Gate.Factory(this));
-		manager.register(new Bridge.Factory(this));
-		manager.register(new Door.Factory(this));
-		manager.register(new Elevator.Factory(this));
-		manager.register(new Teleporter.Factory(this));
-		manager.register(new Area.Factory(this));
-		manager.register(new Command.Factory(this));
-		manager.register(new ChunkAnchor.Factory(this));
-		manager.register(new LightStone.Factory(this));
-		manager.register(new LightSwitch.Factory(this));
-		manager.register(new HiddenSwitch.Factory(this));
-		manager.register(new CookingPot.Factory(this));
-		manager.register(new Cauldron.Factory(this));
-		manager.register(new ImprovedCauldron.Factory(this));
+        // Let's register mechanics!
+        manager.register(new Ammeter.Factory(this));
+        manager.register(new Bookcase.Factory(this));
+        manager.register(new Gate.Factory(this));
+        manager.register(new Bridge.Factory(this));
+        manager.register(new Door.Factory(this));
+        manager.register(new Elevator.Factory(this));
+        manager.register(new Teleporter.Factory(this));
+        manager.register(new Area.Factory(this));
+        manager.register(new Command.Factory(this));
+        manager.register(new ChunkAnchor.Factory(this));
+        manager.register(new LightStone.Factory(this));
+        manager.register(new LightSwitch.Factory(this));
+        manager.register(new HiddenSwitch.Factory(this));
+        manager.register(new CookingPot.Factory(this));
+        manager.register(new Cauldron.Factory(this));
+        manager.register(new ImprovedCauldron.Factory(this));
 
-		//Special mechanics.
-		if (economy != null) manager.register(new Payment.Factory(this));
+        //Special mechanics.
+        if (economy != null) manager.register(new Payment.Factory(this));
 
-		setupSelfTriggered(manager);
-	}
+        setupSelfTriggered(manager);
+    }
 
-	/**
-	 * Setup the required components of INSTANCE-triggered Mechanics..
-	 */
-	private void setupSelfTriggered(MechanicManager manager) {
+    /**
+     * Setup the required components of INSTANCE-triggered Mechanics..
+     */
+    private void setupSelfTriggered(MechanicManager manager) {
 
-		logger.info("CraftBook: Enumerating chunks for INSTANCE-triggered components...");
+        logger.info("CraftBook: Enumerating chunks for INSTANCE-triggered components...");
 
-		long start = System.currentTimeMillis();
-		int numWorlds = 0;
-		int numChunks = 0;
+        long start = System.currentTimeMillis();
+        int numWorlds = 0;
+        int numChunks = 0;
 
-		for (World world : getServer().getWorlds()) {
-			for (Chunk chunk : world.getLoadedChunks()) {
-				manager.enumerate(chunk);
-				numChunks++;
-			}
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                manager.enumerate(chunk);
+                numChunks++;
+            }
 
-			numWorlds++;
-		}
+            numWorlds++;
+        }
 
-		long time = System.currentTimeMillis() - start;
+        long time = System.currentTimeMillis() - start;
 
-		logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
-				+ "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
+        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
+                + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
 
-		// Set up the clock for INSTANCE-triggered Mechanics.
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
-	}
+        // Set up the clock for INSTANCE-triggered Mechanics.
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
+    }
 
-	@Override
-	protected void registerEvents() {
+    @Override
+    protected void registerEvents() {
 
-		CustomCrafting cc = new CustomCrafting(this);
-		cc.addRecipes();
-		getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
-		getServer().getPluginManager().registerEvents(new Snow(this), this);
-		getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
-		getServer().getPluginManager().registerEvents(cc, this);
-	}
+        CustomCrafting cc = new CustomCrafting(this);
+        cc.addRecipes();
+        getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
+        getServer().getPluginManager().registerEvents(new Snow(this), this);
+        getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
+        getServer().getPluginManager().registerEvents(cc, this);
+    }
 
-	@Override
-	public MechanismsConfiguration getLocalConfiguration() {
+    @Override
+    public MechanismsConfiguration getLocalConfiguration() {
 
-		return config;
-	}
+        return config;
+    }
 
-	private boolean setupEconomy() {
+    private boolean setupEconomy() {
 
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
-				.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null)
-			economy = economyProvider.getProvider();
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
+                .milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null)
+            economy = economyProvider.getProvider();
 
-		return economy != null;
-	}
+        return economy != null;
+    }
 
-	public boolean reloadPlugin(CommandSender sender) { //XXX experimental
-		try {
-			sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
-			getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
-			getServer().getPluginManager().disablePlugin(this);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
+    public boolean reloadPlugin(CommandSender sender) { //XXX experimental
+        try {
+            sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
+            getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
+            getServer().getPluginManager().disablePlugin(this);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

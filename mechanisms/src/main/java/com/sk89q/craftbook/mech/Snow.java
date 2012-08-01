@@ -49,7 +49,7 @@ public class Snow implements Listener {
                     incrementData(event.getClickedBlock());
                 }
             } else if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
-                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1,0))
+                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
                     .getTypeId() == 0) {
                 event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
                         .setTypeId(78);
