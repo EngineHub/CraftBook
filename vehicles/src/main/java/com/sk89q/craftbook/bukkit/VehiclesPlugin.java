@@ -20,19 +20,17 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.RedstoneUtil;
 import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.vehicle.*;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -223,15 +221,12 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         }
 
         @EventHandler
-        public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-            // ignore events that are only changes in current strength
-            if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
+        public void onBlockRedstoneChange(BlockPhysicsEvent event) {
 
-            // remember that bukkit only gives us redstone events for wires and things that already respond to
-            // redstone, which is entirely unhelpful.
-            // So: issue four actual events per bukkit event.
-            for (BlockFace bf : CartMechanism.powerSupplyOptions)
-                cartman.impact(new SourcedBlockRedstoneEvent(event, event.getBlock().getRelative(bf)));
+            // TODO Why does this do its own thing?
+            if (!RedstoneUtil.isPotentialPowerSource(event.getChangedTypeId())) return;
+
+            cartman.impact(event);
         }
 
         @EventHandler
@@ -242,7 +237,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                     if (ent == null || ent.isDead()) continue;
                     if (!(ent instanceof Minecart)) continue;
                     if (!ent.isEmpty()) continue;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) (Minecart) ent),
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) ent),
                             config.minecartDecayTime);
                 }
             }

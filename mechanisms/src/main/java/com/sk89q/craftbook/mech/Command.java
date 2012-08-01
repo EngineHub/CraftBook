@@ -7,6 +7,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -109,7 +110,7 @@ public class Command extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(BlockPhysicsEvent event) {
         /* we only affect players, so we don't care about redstone events */
     }
 
