@@ -159,6 +159,8 @@ public class LightSwitch extends AbstractMechanic {
 	}
 	catch(Exception e) {
 	}
+	if(radius > plugin.getLocalConfiguration().lightSwitchSettings.maxRange) radius = plugin.getLocalConfiguration().lightSwitchSettings.maxRange;
+	if(maximum > plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum) maximum = plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum;
 
 	int wx = pt.getBlockX();
 	int wy = pt.getBlockY();

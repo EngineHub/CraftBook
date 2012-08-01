@@ -250,10 +250,14 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class LightSwitchSettings {
 
 	public final boolean enable;
+	public final int maxRange;
+	public final int maxMaximum;
 
 	private LightSwitchSettings(FileConfiguration cfg) {
 
 	    enable = getBoolean(cfg, "light-switch-enable", true);
+	    maxRange = getInt(cfg, "light-switch-max-range", 10);
+	    maxMaximum = getInt(cfg, "light-switch-max-lights", 20);
 	}
     }
 
