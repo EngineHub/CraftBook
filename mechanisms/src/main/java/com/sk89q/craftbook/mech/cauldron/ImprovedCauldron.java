@@ -99,8 +99,8 @@ public class ImprovedCauldron extends AbstractMechanic {
 			double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
 			Random r = new Random();
 			double ran = r.nextDouble();
+			event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - 1));
 			if(chance <= ran) {
-			    event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - 1));
 			    cook(recipe, items);
 			    event.getPlayer().sendMessage(
 				    ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
