@@ -68,15 +68,13 @@ public class Payment extends AbstractMechanic {
             return;
         }
 
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                BukkitUtil.toLocation(pt));
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         Sign sign = null;
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
-            if (state instanceof Sign)
-                sign = (Sign) state;
+            if (state instanceof Sign) sign = (Sign) state;
         }
 
         if (sign == null) return;
@@ -123,10 +121,8 @@ public class Payment extends AbstractMechanic {
 
         Block sourceBlock = block.getRelative(((Lever) block.getState().getData()).getAttachedFace());
 
-        if (!state)
-            newData = data & 0x7;
-        else
-            newData = data | 0x8;
+        if (!state) newData = data & 0x7;
+        else newData = data | 0x8;
 
         if (newData != data) {
             block.setData((byte) newData, true);

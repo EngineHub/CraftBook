@@ -55,8 +55,7 @@ public class LightSwitch extends AbstractMechanic {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
-            if (block.getTypeId() != BlockID.WALL_SIGN)
-                return null;
+            if (block.getTypeId() != BlockID.WALL_SIGN) return null;
             String line = ((Sign) block.getState()).getLine(1);
             if (!line.equalsIgnoreCase("[|]") && !line.equalsIgnoreCase("[I]")) return null;
 
@@ -152,10 +151,12 @@ public class LightSwitch extends AbstractMechanic {
             // Prevent spam
             Long lastUse = recentLightToggles.remove(pt);
             long currTime = System.currentTimeMillis();
+
             if (lastUse != null && currTime - lastUse < 500) {
                 recentLightToggles.put(pt, lastUse);
                 return true;
             }
+
             recentLightToggles.put(pt, currTime);
             int changed = 0;
             for (int x = -10 + wx; x <= 10 + wx; x++) {
@@ -165,14 +166,10 @@ public class LightSwitch extends AbstractMechanic {
                         if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
                                 || id == BlockID.REDSTONE_TORCH_ON) {
                             // Limit the maximum number of changed lights
-                            if (changed >= 20) {
-                                return true;
-                            }
-                            if (on) {
-                                world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
-                            } else {
-                                world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
-                            }
+                            if (changed >= 20) return true;
+
+                            if (on) world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+                            else world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
                             changed++;
                         }
                     }

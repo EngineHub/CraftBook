@@ -71,9 +71,7 @@ public class Bookcase extends AbstractMechanic {
      */
     public void read(LocalPlayer player, String bookReadLine) {
 
-        if (!player.hasPermission("craftbook.mech.bookshelf.use")) {
-            return;
-        }
+        if (!player.hasPermission("craftbook.mech.bookshelf.use")) return;
 
         try {
             String text = getBookLine();

@@ -25,44 +25,52 @@ import org.bukkit.block.Sign;
 public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
 
     public WaterSensorST(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Water Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST WATER SENSOR";
     }
 
     @Override
     public void think(ChipState chip) {
+
         chip.setOutput(0, hasWater());
     }
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        public Factory(Server server) {
 
-		@Override
-		public IC create(Sign sign) {
-			return new WaterSensorST(getServer(), sign);
-		}
+            super(server);
+        }
 
-		@Override
-		public void verify(Sign sign) throws ICVerificationException {
-			ICUtil.verifySignSyntax(sign);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+
+            return new WaterSensorST(getServer(), sign);
+        }
+
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
+    }
 
 }

@@ -76,10 +76,8 @@ public class Elevator extends AbstractMechanic {
                     return new Elevator(block, dir, plugin);
                 case RECV:
                     throw new NoDepartureException();
-                case NONE:
-                default:    // there are no uncovered cases, i don't know why eclipse insists this be here
-                    return null;
             }
+            return null;
         }
 
         /**
@@ -94,33 +92,26 @@ public class Elevator extends AbstractMechanic {
             Direction dir = isLift(sign);
             switch (dir) {
                 case UP:
-                    if (!player.hasPermission("craftbook.mech.elevator")) {
-                        throw new InsufficientPermissionsException();
-                    }
+                    player.checkPermission("craftbook.mech.elevator");
 
                     player.print("mech.lift.up-sign-created");
                     sign.setLine(1, "[Lift Up]");
                     break;
                 case DOWN:
-                    if (!player.hasPermission("craftbook.mech.elevator")) {
-                        throw new InsufficientPermissionsException();
-                    }
+                    player.checkPermission("craftbook.mech.elevator");
 
                     player.print("mech.lift.down-sign-created");
                     sign.setLine(1, "[Lift Down]");
                     break;
                 case RECV:
-                    if (!player.hasPermission("craftbook.mech.elevator")) {
-                        throw new InsufficientPermissionsException();
-                    }
+                    player.checkPermission("craftbook.mech.elevator");
 
                     player.print("mech.lift.target-sign-created");
                     sign.setLine(1, "[Lift]");
                     break;
-                default:    // there are no uncovered cases, i don't know why eclipse insists this be here
+                default:
                     return null;
             }
-
             throw new ProcessedMechanismException();
         }
     }

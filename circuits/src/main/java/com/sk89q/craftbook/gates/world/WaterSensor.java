@@ -25,25 +25,29 @@ import org.bukkit.block.Sign;
 
 public class WaterSensor extends AbstractIC {
 
-	Block center;
+    Block center;
 
     public WaterSensor(Server server, Sign sign) {
+
         super(server, sign);
-	    center = ICUtil.parseBlockLocation(sign);
+        center = ICUtil.parseBlockLocation(sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Water Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "WATER SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             chip.setOutput(0, hasWater());
         }
@@ -56,26 +60,29 @@ public class WaterSensor extends AbstractIC {
      */
     protected boolean hasWater() {
 
-	    int blockID = center.getTypeId();
+        int blockID = center.getTypeId();
 
-	    return (blockID == 8 || blockID == 9);
+        return (blockID == 8 || blockID == 9);
     }
 
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new WaterSensor(getServer(), sign);
         }
 
-	    @Override
-	    public void verify(Sign sign) throws ICVerificationException {
-		    ICUtil.verifySignSyntax(sign);
-	    }
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
     }
 
 }
