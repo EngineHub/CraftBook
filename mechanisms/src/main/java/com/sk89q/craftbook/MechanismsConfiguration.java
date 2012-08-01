@@ -235,23 +235,29 @@ public class MechanismsConfiguration extends BaseConfiguration {
 	public final boolean enable;
 	public final int cauldronBlock;
 	public final boolean enableNew;
+	public final boolean newSpoons;
 
 	private CauldronSettings(FileConfiguration cfg) {
 
 	    enable = getBoolean(cfg, "cauldron-enable", false);
 	    cauldronBlock = getInt(cfg, "cauldron-block", 1);
 	    enableNew = getBoolean(cfg, "new-cauldron-enable", true);
+	    newSpoons = getBoolean(cfg, "new-cauldron-spoons", true);
 	}
-	//FIXME the recipes should probably go here
+	//TODO the recipes should probably go here
     }
 
     public class LightSwitchSettings {
 
 	public final boolean enable;
+	public final int maxRange;
+	public final int maxMaximum;
 
 	private LightSwitchSettings(FileConfiguration cfg) {
 
 	    enable = getBoolean(cfg, "light-switch-enable", true);
+	    maxRange = getInt(cfg, "light-switch-max-range", 10);
+	    maxMaximum = getInt(cfg, "light-switch-max-lights", 20);
 	}
     }
 
