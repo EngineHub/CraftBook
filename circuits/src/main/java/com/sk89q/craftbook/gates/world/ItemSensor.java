@@ -3,6 +3,7 @@ package com.sk89q.craftbook.gates.world;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -19,7 +20,7 @@ import java.util.Set;
  */
 public class ItemSensor extends AbstractIC {
 
-    private Material item;
+    private int item;
     private short data = -1;
 
     private Block center;
@@ -39,17 +40,18 @@ public class ItemSensor extends AbstractIC {
         String[] split = sign.getLine(3).trim().split(":");
         // lets get the type to detect first
         try {
-            item = Material.getMaterial(Integer.parseInt(split[0]));
+            item = Integer.parseInt(split[0]);
         } catch (NumberFormatException e) {
             // seems to be the name of the item
-            item = Material.getMaterial(split[0]);
+            item = Material.getMaterial(split[0]).getId();
         }
-        if (item == null) {
-            item = Material.STONE;
-        }
+
+        if (item == 0) item = BlockID.STONE;
+
         if (split.length > 1) {
             data = Short.parseShort(split[1]);
         }
+
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
@@ -86,10 +88,8 @@ public class ItemSensor extends AbstractIC {
                 for (Entity entity : chunk.getEntities()) {
                     if (entity instanceof Item) {
                         ItemStack itemStack = ((Item) entity).getItemStack();
-                        if (itemStack.getType() == item) {
-                            if (data != -1 && !(itemStack.getDurability() == data)) {
-                                return false;
-                            }
+                        if (itemStack.getTypeId() == item) {
+                            if (data != -1 && !(itemStack.getDurability() == data)) return false;
                             if (LocationUtil.getGreatestDistance(entity.getLocation(),
                                     center.getLocation()) <= radius) {
                                 return true;

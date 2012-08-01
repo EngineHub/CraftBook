@@ -22,7 +22,6 @@ public class PlayerDetection extends AbstractIC {
     private int radius;
     private String player = "";
     private String group = "";
-    private boolean detectPlayer;
 
     public PlayerDetection(Server server, Sign block) {
 
@@ -43,11 +42,10 @@ public class PlayerDetection extends AbstractIC {
         this.radius = ICUtil.parseRadius(sign);
         // parse the group or player name
         String line = sign.getLine(3).trim();
-        detectPlayer = line.contains("p:");
         try {
-            if (detectPlayer) {
+            if (line.contains("p:")) {
                 player = line.split(":")[1];
-            } else {
+            } else if (line.contains("g:")) {
                 group = line.split(":")[1];
             }
         } catch (Exception e) {
@@ -82,15 +80,17 @@ public class PlayerDetection extends AbstractIC {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
-                    if (!entity.isDead()) {
+                    if (!entity.isDead() && entity.isValid()) {
                         if (entity instanceof Player) {
                             // at last check if the entity is within the radius
                             if (LocationUtil.getGreatestDistance(entity.getLocation(),
                                     center.getLocation()) <= radius) {
-                                if (detectPlayer) {
+                                if (!player.equals("")) {
                                     return ((Player) entity).getName().equals(player);
-                                } else {
+                                } else if (!group.equals("")) {
                                     return CircuitsPlugin.getInst().isInGroup(((Player) entity).getName(), group);
+                                } else {
+                                    return true;
                                 }
                             }
                         }
