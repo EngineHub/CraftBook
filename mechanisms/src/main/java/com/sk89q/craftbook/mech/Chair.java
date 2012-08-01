@@ -43,9 +43,11 @@ public class Chair implements Listener {
                     if (p != null) {
                         Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
                                 new ChairWatcher((byte) 0));
-                        for (Entity ent : plugin.getServer().getOnlinePlayers())
-                            if (ent instanceof Player)
+                        for (Entity ent : plugin.getServer().getOnlinePlayers()) {
+                            if (ent instanceof Player) {
                                 ((CraftPlayer) ent).getHandle().netServerHandler.sendPacket(packet);
+                            }
+                        }
                         chairs.remove(p.getName());
                     }
                 }
@@ -55,22 +57,19 @@ public class Chair implements Listener {
     @EventHandler
     public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 
-        if (chairs.containsKey(event.getPlayer().getName()))
-            event.setCancelled(true);
+        if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 
-        if (chairs.containsKey(event.getPlayer().getName()))
-            event.setCancelled(true);
+        if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
 
-        if (chairs.containsKey(event.getPlayer().getName()))
-            chairs.remove(event.getPlayer().getName());
+        if (chairs.containsKey(event.getPlayer().getName())) chairs.remove(event.getPlayer().getName());
     }
 
     @EventHandler
@@ -88,28 +87,29 @@ public class Chair implements Listener {
         }
 
         //Now everything looks good, continue;
-        if (player.getPlayer().getItemInHand() == null || player.getPlayer().getItemInHand().getType().isBlock() ==
-                false || player.getPlayer().getItemInHand().getTypeId() == 0) {
-            if (plugin.getLocalConfiguration().chairSettings.requireSneak == true)
-                if (!player.getPlayer().isSneaking())
-                    return;
+        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock()
+                || player.getPlayer().getItemInHand().getTypeId() == 0) {
+            if (plugin.getLocalConfiguration().chairSettings.requireSneak && !player.getPlayer().isSneaking()) return;
             if (chairs.containsKey(player.getPlayer().getName())) { //Stand
                 Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(),
                         new ChairWatcher((byte) 0));
-                for (Entity e : plugin.getServer().getOnlinePlayers())
-                    if (e instanceof Player)
+                for (Entity e : plugin.getServer().getOnlinePlayers()) {
+                    if (e instanceof Player) {
                         ((CraftPlayer) e).getHandle().netServerHandler.sendPacket(packet);
+                    }
+                }
                 chairs.remove(player.getPlayer().getName());
             } else { //Sit
-                if (chairs.containsValue(event.getClickedBlock()))
-                    return;
+                if (chairs.containsValue(event.getClickedBlock())) return;
                 player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 0,
                         0.5)); //Teleport to the seat
                 Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(),
                         new ChairWatcher((byte) 4));
-                for (Entity e : plugin.getServer().getOnlinePlayers())
-                    if (e instanceof Player)
+                for (Entity e : plugin.getServer().getOnlinePlayers()) {
+                    if (e instanceof Player) {
                         ((CraftPlayer) e).getHandle().netServerHandler.sendPacket(packet);
+                    }
+                }
                 chairs.put(player.getPlayer().getName(), event.getClickedBlock());
             }
         }
@@ -141,7 +141,7 @@ public class Chair implements Listener {
         public ArrayList<WatchableObject> b() {
 
             ArrayList<WatchableObject> list = new ArrayList<WatchableObject>();
-            WatchableObject wo = new WatchableObject(0, 0, Byte.valueOf(metadata));
+            WatchableObject wo = new WatchableObject(0, 0, metadata);
             list.add(wo);
             return list;
         }

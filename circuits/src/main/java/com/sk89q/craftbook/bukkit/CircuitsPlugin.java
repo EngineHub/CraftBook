@@ -90,15 +90,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerICs();
 
         // Let's register mechanics!
-        if (config.enableNetherstone) {
-            manager.register(new Netherrack.Factory());
-        }
-        if (config.enablePumpkins) {
-            manager.register(new JackOLantern.Factory());
-        }
-        if (config.enableGlowStone) {
-            manager.register(new GlowStone.Factory());
-        }
+        if (config.enableNetherstone) manager.register(new Netherrack.Factory());
+        if (config.enablePumpkins) manager.register(new JackOLantern.Factory());
+        if (config.enableGlowStone) manager.register(new GlowStone.Factory());
         if (config.enableICs) {
             manager.register(new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
@@ -129,29 +123,21 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1025", new ServerTimeModulus.Factory(server), familySISO, familyAISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO, familyAISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server), familySISO, familyAISO);
-        icManager.register("MC1200", new EntitySpawner.Factory(server), familySISO, familyAISO);     // Restricted
+        icManager.register("MC1200", new EntitySpawner.Factory(server), familySISO, familyAISO);       // Restricted
         icManager.register("MC1201", new ItemDispenser.Factory(server), familySISO, familyAISO);       // Restricted
         icManager.register("MC1202", new ChestDispenser.Factory(server), familySISO, familyAISO);      // Restricted
         icManager.register("MC1203", new LightningSummon.Factory(server), familySISO, familyAISO);     // Restricted
-        icManager.register("MC1204", new EntityTrap.Factory(server), familySISO, familyAISO);     // Restricted
-        icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO,
-                familyAISO);             // Restricted
-        icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO,
-                familyAISO);             // Restricted
-        icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO,
-                familyAISO);          // Restricted
+        icManager.register("MC1204", new EntityTrap.Factory(server), familySISO, familyAISO);          // Restricted
+        icManager.register("MC1205", new SetBlockAbove.Factory(server), familySISO, familyAISO);       // Restricted
+        icManager.register("MC1206", new SetBlockBelow.Factory(server), familySISO, familyAISO);       // Restricted
+        icManager.register("MC1207", new FlexibleSetBlock.Factory(server), familySISO, familyAISO);    // Restricted
         icManager.register("MC1208", new MultipleSetBlock.Factory(server), familySISO, familyAISO);
         icManager.register("MC1209", new ChestCollector.Factory(server), familySISO, familyAISO);
-        icManager.register("MC1210", new ParticleEffect.Factory(server), familySISO,
-                familyAISO);                  // Restricted
-        icManager.register("MC1211", new SetBridge.Factory(server), familySISO, familyAISO);                  //
-        // Restricted
-        icManager.register("MC1212", new SetDoor.Factory(server), familySISO, familyAISO);                  //
-        // Restricted
-        icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO,
-                familyAISO);             // Restricted
-        icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO,
-                familyAISO);             // Restricted
+        icManager.register("MC1210", new ParticleEffect.Factory(server), familySISO, familyAISO);      // Restricted
+        icManager.register("MC1211", new SetBridge.Factory(server), familySISO, familyAISO);           // Restricted
+        icManager.register("MC1212", new SetDoor.Factory(server), familySISO, familyAISO);             // Restricted
+        icManager.register("MC1215", new SetBlockAboveChest.Factory(server), familySISO, familyAISO);  // Restricted
+        icManager.register("MC1216", new SetBlockBelowChest.Factory(server), familySISO, familyAISO);  // Restricted
         icManager.register("MC1217", new PotionInducer.Factory(server), familySISO, familyAISO);
         icManager.register("MC1230", new DaySensor.Factory(server), familySISO, familyAISO);
         icManager.register("MC1231", new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
@@ -165,14 +151,13 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1261", new LavaSensor.Factory(server), familySISO, familyAISO);
         icManager.register("MC1262", new LightSensor.Factory(server), familySISO, familyAISO);
         icManager.register("MC1263", new BlockSensor.Factory(server), familySISO, familyAISO);
-        icManager.register("MC1264", new ItemSensor.Factory(server), familySISO, familyAISO);       // Restricted
+        icManager.register("MC1264", new ItemSensor.Factory(server), familySISO, familyAISO);          // Restricted
         icManager.register("MC1265", new ItemNotSensor.Factory(server), familySISO, familyAISO);       // Restricted
-        icManager.register("MC1266", new PowerSensor.Factory(server), familySISO, familyAISO);      // Restricted
+        icManager.register("MC1266", new PowerSensor.Factory(server), familySISO, familyAISO);         // Restricted
         icManager.register("MC1270", new Melody.Factory(server), familySISO, familyAISO);
-        icManager.register("MC1271", new Detection.Factory(server), familySISO, familyAISO);          // Restricted
-        icManager.register("MC1272", new PlayerDetection.Factory(server), familySISO,
-                familyAISO);          // Restricted
-        icManager.register("MC1299", new ParticleEffect.Factory(server), familySISO, familyAISO);       // Restricted
+        icManager.register("MC1271", new Detection.Factory(server), familySISO, familyAISO);           // Restricted
+        icManager.register("MC1272", new PlayerDetection.Factory(server), familySISO, familyAISO);     // Restricted
+        icManager.register("MC1299", new ParticleEffect.Factory(server), familySISO, familyAISO);      // Restricted
         icManager.register("MC1420", new ClockDivider.Factory(server), familySISO, familyAISO);
         icManager.register("MC1510", new MessageSender.Factory(server), familySISO, familyAISO);
         icManager.register("MC2100", new Delayer.Factory(server), familySISO, familyAISO);
@@ -203,8 +188,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC3050", new CombinationLock.Factory(server), family3ISO);
         icManager.register("MC3101", new DownCounter.Factory(server), family3ISO);
         icManager.register("MC3102", new Counter.Factory(server), family3ISO);
-        icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);        // Restricted
-        //Missing: 3231                                                                         // Restricted
+        icManager.register("MC3231", new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
+        //Missing: 3231                                                                                // Restricted
         //3I3Os
         //Missing: 4000
         //Missing: 4010
@@ -214,7 +199,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         //Self triggered
         icManager.register("MC0111", new WirelessReceiverST.Factory(server), familySISO);
-        icManager.register("MC0204", new EntityTrapST.Factory(server), familySISO);     // Restricted
+        icManager.register("MC0204", new EntityTrapST.Factory(server), familySISO);                    // Restricted
         icManager.register("MC0209", new ChestCollectorST.Factory(server), familySISO);
         icManager.register("MC0210", new ParticleEffectST.Factory(server), familySISO);
         icManager.register("MC0230", new DaySensorST.Factory(server), familySISO);
@@ -222,12 +207,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0261", new LavaSensorST.Factory(server), familySISO);
         icManager.register("MC0262", new LightSensorST.Factory(server), familySISO);
         icManager.register("MC0263", new BlockSensorST.Factory(server), familySISO);
-        icManager.register("MC0264", new ItemSensorST.Factory(server), familySISO);     // Restricted
-        icManager.register("MC0265", new ItemNotSensorST.Factory(server), familySISO);     // Restricted
-        icManager.register("MC0266", new PowerSensorST.Factory(server), familySISO);      // Restricted
+        icManager.register("MC0264", new ItemSensorST.Factory(server), familySISO);                    // Restricted
+        icManager.register("MC0265", new ItemNotSensorST.Factory(server), familySISO);                 // Restricted
+        icManager.register("MC0266", new PowerSensorST.Factory(server), familySISO);                   // Restricted
         icManager.register("MC0270", new PowerSensorST.Factory(server), familySISO);
-        icManager.register("MC0271", new DetectionST.Factory(server), familySISO);      // Restricted
-        icManager.register("MC0272", new PlayerDetectionST.Factory(server), familySISO);      // Restricted
+        icManager.register("MC0271", new DetectionST.Factory(server), familySISO);                     // Restricted
+        icManager.register("MC0272", new PlayerDetectionST.Factory(server), familySISO);               // Restricted
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
         icManager.register("MC0500", new RangedOutput.Factory(server), familySISO);
@@ -270,8 +255,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                 + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
 
         // Set up the clock for self-triggered ICs.
-        getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                new MechanicClock(manager), 0, 2);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
     }
 
     @Override

@@ -251,10 +251,16 @@ public final class CustomDropManager {
             this.countMax = countMax;
         }
 
-        public ItemStack createStack() {
+        public ItemStack getItemStack() {
 
             return new ItemStack(id, countMin == countMax ? countMin : countMin + RNG.nextInt(countMax - countMin +
                     1), data);
+        }
+
+        public ItemStack[] getItemStacks() {
+
+            // TODO return item stacks with random quantities of the drop to add a more realistic feel
+            return null;
         }
     }
 }

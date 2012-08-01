@@ -64,6 +64,17 @@ public class BaseConfiguration {
         return it;
     }
 
+    public Set<Integer> getIntegerSet(FileConfiguration cfg, String name, List<Integer> def) {
+
+        List<Integer> tids = cfg.getIntegerList(name);
+        if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
+        Set<Integer> allowedBlocks = new HashSet<Integer>();
+        for (Integer tid : tids) allowedBlocks.add(tid);
+        cfg.set(name, tids);
+        return allowedBlocks;
+
+    }
+
     public Set<Material> getMaterialSet(FileConfiguration cfg, String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);

@@ -65,8 +65,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-        if (getServer().getPluginManager().isPluginEnabled("Vault"))
-            setupEconomy();
+        if (getServer().getPluginManager().isPluginEnabled("Vault")) setupEconomy();
 
         MechanicManager manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
@@ -159,7 +158,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     public boolean reloadPlugin(CommandSender sender) { //XXX experimental
         try {
-            sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
+            sender.sendMessage(ChatColor.RED + "Successfully reloaded configuration!");
             getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
             getServer().getPluginManager().disablePlugin(this);
         } catch (Exception e) {

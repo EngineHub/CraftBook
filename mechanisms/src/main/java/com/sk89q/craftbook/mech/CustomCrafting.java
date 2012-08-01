@@ -36,8 +36,7 @@ public class CustomCrafting implements Listener {
                     inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
                 }
             }
-        } else
-            return;
+        }
     }
 
     @EventHandler
@@ -102,7 +101,7 @@ public class CustomCrafting implements Listener {
                     int amount = 1;
                     try {
                         amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                     FurnaceRecipe r = new FurnaceRecipe(new ItemStack(id, amount, data), Material.AIR);
                     String contents = br.readLine();
@@ -163,10 +162,8 @@ public class CustomCrafting implements Listener {
 
                         r.setIngredient((iid + "").charAt(0), Material.getMaterial(iid), iidata);
                     }
-                    if (plugin.getServer().addRecipe(r))
-                        plugin.getLogger().info("Recipe Added!");
-                    else
-                        plugin.getLogger().warning("Failed to add recipe!");
+                    if (plugin.getServer().addRecipe(r)) plugin.getLogger().info("Recipe Added!");
+                    else plugin.getLogger().warning("Failed to add recipe!");
                 } else if (lastLine.startsWith("[")) { //Shaped Recipe
                     String output = lastLine.split(Pattern.quote("["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
@@ -196,10 +193,8 @@ public class CustomCrafting implements Listener {
 
                         r.setIngredient((iid + "").charAt(0), Material.getMaterial(iid), iidata);
                     }
-                    if (plugin.getServer().addRecipe(r))
-                        plugin.getLogger().info("Recipe Added!");
-                    else
-                        plugin.getLogger().warning("Failed to add recipe!");
+                    if (plugin.getServer().addRecipe(r)) plugin.getLogger().info("Recipe Added!");
+                    else plugin.getLogger().warning("Failed to add recipe!");
                 }
             }
             br.close();

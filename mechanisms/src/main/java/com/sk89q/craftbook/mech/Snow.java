@@ -2,8 +2,9 @@ package com.sk89q.craftbook.mech;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,30 +35,26 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if (!plugin.getLocalConfiguration().snowSettings.placeSnow)
-            return;
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-            return;
+        if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
+        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
+
         LocalPlayer player = plugin.wrap(event.getPlayer());
-
-        if (!player.hasPermission("craftbook.mech.snow.place")) {
-            return;
-        }
-
+        if (!player.hasPermission("craftbook.mech.snow.place")) return;
         if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+
         try {
-            if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
+            if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
                     && event.getClickedBlock().getTypeId() == 78) {
                 if (event.getClickedBlock().getData() < (byte) 7) {
                     incrementData(event.getClickedBlock());
                 }
-            } else if (event.getPlayer().getItemInHand().getType() == Material.SNOW_BALL
-                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1,
-                    0)).getTypeId() == 0) {
-                event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1,
-                        0)).setTypeId(78);
-                incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1,
-                        0)));
+            } else if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
+                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1,0))
+                    .getTypeId() == 0) {
+                event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
+                        .setTypeId(78);
+                incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation()
+                        .add(0, 1, 0)));
             }
         } catch (Exception ignored) {
         }
@@ -66,36 +63,28 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if (!plugin.getLocalConfiguration().snowSettings.trample)
-            return;
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-            return;
+        if (!plugin.getLocalConfiguration().snowSettings.trample) return;
+        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
+
         LocalPlayer player = plugin.wrap(event.getPlayer());
-        if (!player.hasPermission("craftbook.mech.snow.trample")) {
-            return;
-        }
+        if (!player.hasPermission("craftbook.mech.snow.trample")) return;
+
         Random random = new Random();
         if (plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() >= 0D)
             return;
         if (random.nextInt(10) == 6) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
-            if (b.getTypeId() == 78) {
-                if (b.getData() > (byte) 7)
-                    setBlockDataWithNotify(b, (byte) 7);
-                else if (b.getData() > (byte) 1)
-                    lowerData(b);
-                else
-                    b.setTypeId(0);
+            if (b.getTypeId() == BlockID.SNOW) {
+                if (b.getData() > (byte) 7) setBlockDataWithNotify(b, (byte) 7);
+                else if (b.getData() > (byte) 1) lowerData(b);
+                else b.setTypeId(0);
             }
 
             b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
-            if (b.getTypeId() == 78) {
-                if (b.getData() > (byte) 7)
-                    setBlockDataWithNotify(b, (byte) 7);
-                else if (b.getData() > (byte) 1)
-                    lowerData(b);
-                else
-                    b.setTypeId(0);
+            if (b.getTypeId() == BlockID.SNOW) {
+                if (b.getData() > (byte) 7) setBlockDataWithNotify(b, (byte) 7);
+                else if (b.getData() > (byte) 1) lowerData(b);
+                else b.setTypeId(0);
             }
         }
     }
@@ -103,17 +92,16 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockForm(final BlockFormEvent event) {
 
-        if (!plugin.getLocalConfiguration().snowSettings.enable)
-            return;
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-            return;
-        if (event.getNewState().getTypeId() == 78) {
+        if (!plugin.getLocalConfiguration().snowSettings.enable) return;
+        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
+        if (event.getNewState().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 
-            if ((block.getTypeId() != 80) && (block.getTypeId() != 78)) {
+            if ((block.getTypeId() != BlockID.SNOW_BLOCK) && (block.getTypeId() != BlockID.SNOW)) {
                 Location blockLoc = block.getLocation().subtract(0, 1, 0);
-                if ((block.getWorld().getBlockAt(blockLoc).getTypeId() == 80 && !plugin.getLocalConfiguration()
-                        .snowSettings.piling) || block.getWorld().getBlockAt(blockLoc).getTypeId() == 78)
+                if ((block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
+                        && !plugin.getLocalConfiguration().snowSettings.piling)
+                        || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
                     return;
                 Random random = new Random();
                 long delay = random.nextInt(100) + 60;
@@ -137,13 +125,11 @@ public class Snow implements Listener {
         public void run() {
 
             if (event.getWorld().hasStorm()) {
-                if (event.getBlock().getData() > (byte) 7)
-                    return;
-                if (event.subtract(0, 1, 0).getBlock().getTypeId() == 0)
-                    return;
+                if (event.getBlock().getData() > (byte) 7) return;
+                if (event.subtract(0, 1, 0).getBlock().getTypeId() == 0) return;
+
                 event.add(0, 1, 0);
-                if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80))
-                    return;
+                if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80)) return;
                 incrementData(event.getBlock());
                 Random random = new Random();
                 long delay = random.nextInt(100) + 60;
@@ -163,8 +149,8 @@ public class Snow implements Listener {
     public void lowerData(Block block) {
 
         byte newData = (byte) (block.getData() - 1);
-        if (block.getTypeId() == 80) {
-            block.setTypeId(78);
+        if (block.getTypeId() == BlockID.SNOW_BLOCK) {
+            block.setTypeId(BlockID.SNOW);
             newData = (byte) 7;
         }
         if (newData > (byte) 7)
@@ -176,7 +162,7 @@ public class Snow implements Listener {
 
         byte newData = (byte) (block.getData() + 1);
         if (newData > (byte) 7) {
-            block.setTypeId(80);
+            block.setTypeId(BlockID.SNOW_BLOCK);
             newData = (byte) 0;
         }
         setBlockDataWithNotify(block, newData);
