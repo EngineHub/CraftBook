@@ -308,6 +308,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableRedstone;
         public final int maxAreasPerUser;
         public final int maxSizePerArea;
+        public final boolean useSchematics;
 
         private AreaSettings(FileConfiguration cfg) {
 
@@ -315,6 +316,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableRedstone = getBoolean(cfg, "area-redstone", true);
             maxAreasPerUser = getInt(cfg, "max-areas-per-user", 30);
             maxSizePerArea = getInt(cfg, "max-size-per-area", 5000);
+            useSchematics = getBoolean(cfg, "area-use-schematic", false);
         }
     }
 

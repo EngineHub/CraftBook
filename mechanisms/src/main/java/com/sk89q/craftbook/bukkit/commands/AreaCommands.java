@@ -4,6 +4,8 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.area.CuboidCopy;
+import com.sk89q.craftbook.mech.area.FlatCuboidCopy;
+import com.sk89q.craftbook.mech.area.MCEditCuboidCopy;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -12,6 +14,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -94,7 +97,12 @@ public class AreaCommands {
             }
 
             // Copy
-            CuboidCopy copy = new CuboidCopy(min, size);
+            CuboidCopy copy;
+            if (plugin.getLocalConfiguration().areaSettings.useSchematics) {
+                copy = new MCEditCuboidCopy(min, size);
+            } else {
+                copy = new FlatCuboidCopy(min, size);
+            }
             copy.copy(((Player) sender).getWorld());
 
             plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '"
@@ -106,6 +114,8 @@ public class AreaCommands {
                 player.print("Area saved as '" + id + "' under the specified namespace.");
             } catch (IOException e) {
                 player.printError("Could not save area: " + e.getMessage());
+            } catch (DataException e) {
+                player.print(e.getMessage());
             }
         } catch (NoClassDefFoundError e) {
             player.printError("WorldEdit.jar does not exist in plugins/.");
