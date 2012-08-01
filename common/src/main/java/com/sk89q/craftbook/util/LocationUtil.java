@@ -16,7 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 /**
- * @author Silthus
+ * @author Silthus, Me4502
  */
 public final class LocationUtil {
 
@@ -155,6 +155,14 @@ public final class LocationUtil {
 	return chunks;
     }
 
+    /**
+     * Get relative block X that way.
+     * 
+     * @param block
+     * @param facing
+     * @param amount
+     * @return The block
+     */
     private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
 	amount = Math.abs(amount);
 	for (int i = 0; i < amount; i++) {
@@ -163,6 +171,13 @@ public final class LocationUtil {
 	return block;
     }
 
+    /**
+     * Gets next vertical free space
+     * 
+     * @param block
+     * @param direction
+     * @return next air block vertically.
+     */
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
 	while (block.getType() != Material.AIR && block.getRelative(direction).getType() != Material.AIR) {
 	    if (!(block.getY() < block.getWorld().getMaxHeight())) {
@@ -173,6 +188,12 @@ public final class LocationUtil {
 	return block;
     }
 
+    /**
+     * Gets centre of passed block.
+     * 
+     * @param block
+     * @return Centre location
+     */
     public static Location getCenterOfBlock(Block block) {
 	Location location = block.getLocation();
 	location.setX(block.getX() + 0.5);

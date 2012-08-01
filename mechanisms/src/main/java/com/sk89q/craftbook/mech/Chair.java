@@ -27,6 +27,11 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
 
+/**
+ * 
+ * @author Me4502
+ *
+ */
 public class Chair implements Listener {
 
     public Chair(MechanismsPlugin plugin) {
