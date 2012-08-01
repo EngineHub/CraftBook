@@ -52,7 +52,8 @@ public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC 
 
         @Override
         public IC create(Sign sign) {
-	        return new ParticleEffectST(getServer(), sign);
+
+            return new ParticleEffectST(getServer(), sign);
         }
     }
 }

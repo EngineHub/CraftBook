@@ -9,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class CustomDrops extends MechanismsPlugin implements Listener {
 
@@ -20,54 +19,46 @@ public class CustomDrops extends MechanismsPlugin implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-            return;
+        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
         if (plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
                 !plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
-        if (event.isCancelled()) return;
+
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
+
         CustomDropManager.CustomItemDrop drop = plugin.getLocalConfiguration().customDrops.getBlockDrops(id);
+
         if (drop != null) {
             CustomDropManager.DropDefinition[] drops = drop.getDrop(data);
             if (drops != null) {
                 Location l = event.getBlock().getLocation();
                 World w = event.getBlock().getWorld();
-                for (CustomDropManager.DropDefinition d : drops) {
-                    ItemStack i = d.createStack();
-                    int count = i.getAmount();
-                    i.setAmount(1);
-                    for (; count != 0; count--) {
-                        w.dropItemNaturally(l, i);
-                    }
+                // Add the custom drops
+                for (CustomDropManager.DropDefinition dropDefinition : drops) {
+                    w.dropItemNaturally(l, dropDefinition.getItemStack());
                 }
 
-                //TODO Totally incorrect, because of some block's special behaviors. Fix later.
-                event.getBlock().setTypeId(0);
+                event.getBlock().breakNaturally(null);
                 event.setCancelled(true);
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void handleCustomMobDrops(EntityDeathEvent event) {
 
         EntityType entityType = event.getEntityType();
-        if (entityType == null || entityType == EntityType.PLAYER) return;
+        if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
         CustomDropManager.DropDefinition[] drops =
                 plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
         if (drops != null) {
             event.getDrops().clear();
-            for (CustomDropManager.DropDefinition d : drops) {
-                ItemStack i = d.createStack();
-                int count = i.getAmount();
-                i.setAmount(1);
-                for (; count != 0; count--) {
-                    event.getDrops().add(i);
-                }
+            // Add the custom drops
+            for (CustomDropManager.DropDefinition dropDefinition : drops) {
+                event.getDrops().add(dropDefinition.getItemStack());
             }
         }
     }

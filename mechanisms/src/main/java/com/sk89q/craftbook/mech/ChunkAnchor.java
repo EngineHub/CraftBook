@@ -117,7 +117,6 @@ public class ChunkAnchor extends PersistentMechanic {
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
 
-        if (event.getChunk().equals(trigger.getWorld().getChunkAt(trigger)))
-            event.setCancelled(true);
+        if (event.getChunk().equals(trigger.getWorld().getChunkAt(trigger))) event.setCancelled(true);
     }
 }

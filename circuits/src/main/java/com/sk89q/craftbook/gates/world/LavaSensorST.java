@@ -25,44 +25,52 @@ import org.bukkit.block.Sign;
 public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 
     public LavaSensorST(Server server, Sign sign) {
+
         super(server, sign);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-triggered Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ST LAVA SENSOR";
     }
 
     @Override
     public void think(ChipState chip) {
+
         chip.setOutput(0, hasLava());
     }
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        public Factory(Server server) {
 
-		@Override
-		public IC create(Sign sign) {
-			return new LavaSensorST(getServer(), sign);
-		}
+            super(server);
+        }
 
-		@Override
-		public void verify(Sign sign) throws ICVerificationException {
-			ICUtil.verifySignSyntax(sign);
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+
+            return new LavaSensorST(getServer(), sign);
+        }
+
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
+    }
 
 }

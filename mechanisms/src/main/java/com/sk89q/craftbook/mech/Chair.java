@@ -27,6 +27,7 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
 
+
 /**
  * 
  * @author Me4502
@@ -60,20 +61,20 @@ public class Chair implements Listener {
 
     @EventHandler
     public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
-	if(chairs.containsKey(event.getPlayer().getName()))
-	    event.setCancelled(true);
+
+	if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-	if(chairs.containsKey(event.getPlayer().getName()))
-	    event.setCancelled(true);
+
+	if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-	if(chairs.containsKey(event.getPlayer().getName()))
-	    chairs.remove(event.getPlayer().getName());
+
+	if (chairs.containsKey(event.getPlayer().getName())) chairs.remove(event.getPlayer().getName());
     }
 
     @EventHandler
@@ -115,8 +116,8 @@ public class Chair implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
-	if(chairs.containsKey(event.getPlayer().getName())) {
-	    if(chairs.get(event.getPlayer().getName()).getLocation().add(0.5, 0, 0.5).distance(event.getTo()) > 1.0D) {
+	if (chairs.containsKey(event.getPlayer().getName())) {
+	    if (chairs.get(event.getPlayer().getName()).getLocation().add(0.5, 0, 0.5).distance(event.getTo()) > 1.0D) {
 		Location loc = chairs.get(event.getPlayer().getName()).getLocation().add(0.5, 0, 0.5);
 		loc.setPitch(event.getPlayer().getLocation().getPitch());
 		loc.setYaw(event.getPlayer().getLocation().getYaw());
@@ -127,18 +128,19 @@ public class Chair implements Listener {
     }
 
     public static class ChairWatcher extends DataWatcher {
+
 	private byte metadata;
 
-	public ChairWatcher(byte metadata)
-	{
+	public ChairWatcher(byte metadata) {
+
 	    this.metadata = metadata;
 	}
 
 	@Override
-	public ArrayList<WatchableObject> b()
-	{
+	public ArrayList<WatchableObject> b() {
+
 	    ArrayList<WatchableObject> list = new ArrayList<WatchableObject>();
-	    WatchableObject wo = new WatchableObject(0, 0, Byte.valueOf(metadata));
+	    WatchableObject wo = new WatchableObject(0, 0, metadata);
 	    list.add(wo);
 	    return list;
 	}

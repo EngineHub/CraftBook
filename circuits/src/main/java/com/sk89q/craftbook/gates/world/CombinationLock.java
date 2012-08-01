@@ -58,22 +58,25 @@ public class CombinationLock extends AbstractIC implements SelfTriggeredIC {
         }
     }
 
-	public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory {
 
-		public Factory(Server server) {
-			super(server);
-		}
+        public Factory(Server server) {
 
-		@Override
-		public IC create(Sign sign) {
-			return new CombinationLock(getServer(), sign);
-		}
+            super(server);
+        }
 
-		@Override
-		public void verify(Sign sign) throws ICVerificationException {
-			if (sign.getLine(2) == null && sign.getLine(2).equals("")) {
-				throw new ICVerificationException("Line three needs to be a combination");
-			}
-		}
-	}
+        @Override
+        public IC create(Sign sign) {
+
+            return new CombinationLock(getServer(), sign);
+        }
+
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            if (sign.getLine(2) == null && sign.getLine(2).equals("")) {
+                throw new ICVerificationException("Line three needs to be a combination");
+            }
+        }
+    }
 }

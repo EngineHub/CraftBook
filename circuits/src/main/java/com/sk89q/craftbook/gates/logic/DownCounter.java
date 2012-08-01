@@ -25,41 +25,44 @@ import org.bukkit.block.Sign;
  */
 public class DownCounter extends AbstractIC {
 
-	private int resetVal;
-	private boolean inf;
+    private int resetVal;
+    private boolean inf;
 
     public DownCounter(Server server, Sign sign) {
+
         super(server, sign);
-	    load();
+        load();
     }
 
-	private void load() {
-		// Get IC configuration data from line 3 of sign
-		String line2 = getSign().getLine(2);
-		String[] config = line2.split(":");
+    private void load() {
+        // Get IC configuration data from line 3 of sign
+        String line2 = getSign().getLine(2);
+        String[] config = line2.split(":");
 
-		resetVal = 0;
-		inf = false;
-		try {
-			resetVal = Integer.parseInt(config[0]);
-			inf = config[1].equals("INF");
-		} catch (NumberFormatException e) {
-			resetVal = 5;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			inf = false;
-		} catch (Exception ignored) {
-		}
-		getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
-		getSign().update();
-	}
+        resetVal = 0;
+        inf = false;
+        try {
+            resetVal = Integer.parseInt(config[0]);
+            inf = config[1].equals("INF");
+        } catch (NumberFormatException e) {
+            resetVal = 5;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            inf = false;
+        } catch (Exception ignored) {
+        }
+        getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
+        getSign().update();
+    }
 
     @Override
     public String getTitle() {
+
         return "Down Counter";
     }
 
     @Override
     public String getSignTitle() {
+
         return "DOWN COUNTER";
     }
 
@@ -90,7 +93,7 @@ public class DownCounter extends AbstractIC {
                 // If reset input triggered, reset counter value
             } else if (chip.isTriggered(1) && chip.get(1)) {
                 curVal = resetVal;
-	            chip.setOutput(0, false);
+                chip.setOutput(0, false);
             }
         } catch (Exception ignored) {
         }

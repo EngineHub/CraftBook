@@ -10,21 +10,25 @@ import org.bukkit.block.Sign;
 public class ItemNotSensor extends ItemSensor {
 
     public ItemNotSensor(Server server, Sign block) {
+
         super(server, block);
     }
 
     @Override
     public String getTitle() {
+
         return "Item Not Sensor";
     }
 
     @Override
     public String getSignTitle() {
+
         return "ITEM NOT SENSOR";
     }
 
     @Override
     public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) {
             chip.setOutput(0, !isDetected());
         }
@@ -33,17 +37,20 @@ public class ItemNotSensor extends ItemSensor {
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
-	        return new ItemNotSensor(getServer(), sign);
+
+            return new ItemNotSensor(getServer(), sign);
         }
 
-	    @Override
-	    public void verify(Sign sign) throws ICVerificationException {
-		    ICUtil.verifySignSyntax(sign);
-	    }
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            ICUtil.verifySignSyntax(sign);
+        }
     }
 }

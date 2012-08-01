@@ -19,24 +19,7 @@
 
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
@@ -46,6 +29,15 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.RegionOperationException;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
@@ -98,16 +90,14 @@ public class Bridge extends AbstractMechanic {
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Bridge]")) {
-                if (!player.hasPermission("craftbook.mech.bridge"))
-                    throw new InsufficientPermissionsException();
+                player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge]");
                 sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
-                if (!player.hasPermission("craftbook.mech.bridge"))
-                    throw new InsufficientPermissionsException();
+                player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge End]");
                 sign.setLine(0, "0");
@@ -149,21 +139,21 @@ public class Bridge extends AbstractMechanic {
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
-            if (settings.canUseBlock(mat))
-                if(isValidBridge(proximalBaseCenter,mat,s))
-                    break findBase; //Valid.
+            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, s)) break findBase; //On Top
+
+            // If we've reached this point nothing was found on the top, check the bottom
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if(isValidBridge(proximalBaseCenter,mat,s))
-                    break findBase;     // it's below
-                throw new InvalidConstructionException("mech.bridge.material");
-            } else
+                if (isValidBridge(proximalBaseCenter, mat, s)) break findBase; // it's below
+                else throw new InvalidConstructionException("mech.bridge.material");
+            } else {
                 throw new UnacceptableMaterialException();
+            }
         }
 
         // Find the other side
-        farside = trigger.getRelative(dir);
+        farSide = trigger.getRelative(dir);
         for (int i = 0; i <= settings.maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
@@ -171,19 +161,17 @@ public class Bridge extends AbstractMechanic {
             // i = settings.maxLength is actually the farthest place we're
             // allowed to find the distal signpost
 
-            if (farside.getType() == Material.SIGN_POST) {
-                String otherSignText = ((Sign) farside.getState()).getLines()[1];
-                if ("[Bridge]".equalsIgnoreCase(otherSignText)) break;
-                if ("[Bridge End]".equalsIgnoreCase(otherSignText)) break;
+            if (farSide.getType() == Material.SIGN_POST) {
+                String otherSignText = ((Sign) farSide.getState()).getLine(1);
+                if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) break;
             }
 
-            farside = farside.getRelative(dir);
+            farSide = farSide.getRelative(dir);
         }
-        if (farside.getType() != Material.SIGN_POST)
-            throw new InvalidConstructionException("mech.bridge.other-sign");
+        if (farSide.getType() != Material.SIGN_POST) throw new InvalidConstructionException("mech.bridge.other-sign");
 
         // Check the other side's base blocks for matching type
-        Block distalBaseCenter = farside.getRelative(trigger.getFace(proximalBaseCenter));
+        Block distalBaseCenter = farSide.getRelative(trigger.getFace(proximalBaseCenter));
         if ((distalBaseCenter.getType() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
                 || ((distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() != mat && distalBaseCenter
                 .getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData())
@@ -196,46 +184,40 @@ public class Bridge extends AbstractMechanic {
         int left, right;
         try {
             left = Integer.parseInt(s.getLine(2));
-        } catch (Exception e) {
+            if (left < 0) left = 0;   // No negatives please
+        } catch (Exception ignored) {
             left = 1;
         }
         try {
             right = Integer.parseInt(s.getLine(3));
-        } catch (Exception e) {
+            if (right < 0) right = 0; // No negatives please
+        } catch (Exception ignored) {
             right = 1;
         }
-        if (left > plugin.getLocalConfiguration().bridgeSettings.maxWidth)
-            left = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
-        if (right > plugin.getLocalConfiguration().bridgeSettings.maxWidth)
-            right = plugin.getLocalConfiguration().bridgeSettings.maxWidth;
 
-        if (left == 1)
+        // Check Width
+        if (left > settings.maxWidth) left = settings.maxWidth;
+        if (right > settings.maxWidth) right = settings.maxWidth;
+
+        // Expand Left
+        for (int i = 0; i < left; i++) {
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        else if (left > 1)
-            for (int i = 0; i < left; i++)
-                try {
-                    toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
-                } catch (RegionOperationException e) {
-                    e.printStackTrace();
-                }
-        if (right == 1)
+        }
+
+        // Expand Right
+        for (int i = 0; i < right; i++) {
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        else if (right > 1)
-            for (int i = 0; i < right; i++)
-                try {
-                    toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
-                } catch (RegionOperationException e) {
-                    e.printStackTrace();
-                }
+        }
 
+        // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
                 BukkitUtil.toVector(SignUtil.getFront(trigger)));
     }
@@ -254,7 +236,7 @@ public class Bridge extends AbstractMechanic {
     /**
      * The signpost on the other end.
      */
-    private Block farside;
+    private Block farSide;
     /**
      * The rectangle that we toggle.
      */
@@ -282,11 +264,10 @@ public class Bridge extends AbstractMechanic {
             if (getBridgeMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
                 Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId()
-                        == BlockID.WALL_SIGN) {
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
                     BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign)
-                        sign = (Sign) state;
+                    if (state instanceof Sign) sign = (Sign) state;
                 }
 
                 if (sign != null) {
@@ -299,10 +280,11 @@ public class Bridge extends AbstractMechanic {
                         sign.update();
                     }
 
-                    if (event.getPlayer().getItemInHand().getAmount() <= 1)
+                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
                         event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                    else
+                    } else {
                         event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                    }
 
                     player.print("Bridge Restocked!");
                     event.setCancelled(true);
@@ -341,10 +323,8 @@ public class Bridge extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (canPassThrough(hinge.getTypeId()))
-            new ToggleRegionClosed(player).run();
-        else
-            new ToggleRegionOpen().run();
+        if (canPassThrough(hinge.getTypeId())) new ToggleRegionClosed(player).run();
+        else new ToggleRegionOpen().run();
     }
 
     private class ToggleRegionOpen implements Runnable {
@@ -366,8 +346,7 @@ public class Bridge extends AbstractMechanic {
                         } catch (NumberFormatException e) {
                             curBlocks = 0;
                         }
-                        if (oldType != 0)
-                            curBlocks++;
+                        if (oldType != 0) curBlocks++;
                         s.setLine(0, curBlocks + "");
                         s.update();
                     }
@@ -406,8 +385,7 @@ public class Bridge extends AbstractMechanic {
                             s.setLine(0, curBlocks + "");
                             s.update();
                         } else {
-                            if (player != null)
-                                player.printError("Not enough blocks for mechanic to function!");
+                            if (player != null) player.printError("Not enough blocks for mechanic to function!");
                             return;
                         }
                     } else {
@@ -429,13 +407,14 @@ public class Bridge extends AbstractMechanic {
     }
 
     public boolean isValidBridge(Block baseCenter, Material mat, Sign s) throws InvalidMechanismException {
-        if(!s.getLine(2).equalsIgnoreCase("0")) {
+
+        if (!s.getLine(2).equalsIgnoreCase("0")) {
             if (!(proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getType() == mat))
                 return false;
         } else if (!(proximalBaseCenter.getType() == mat))
             return false;
 
-        if(!s.getLine(3).equalsIgnoreCase("0")) {
+        if (!s.getLine(3).equalsIgnoreCase("0")) {
             if (!(proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getType() == mat))
                 return false;
         } else if (!(proximalBaseCenter.getType() == mat))
@@ -517,8 +496,7 @@ public class Bridge extends AbstractMechanic {
 
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = event.getBlock().getState();
-            if (state instanceof Sign)
-                sign = (Sign) state;
+            if (state instanceof Sign) sign = (Sign) state;
         }
 
         int curBlocks = 0;

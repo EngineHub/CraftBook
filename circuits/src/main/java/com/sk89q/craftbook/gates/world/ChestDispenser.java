@@ -19,26 +19,29 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ChestDispenser extends AbstractIC {
 
-	private int amount = 1;
+    private int amount = 1;
 
     public ChestDispenser(Server server, Sign sign) {
+
         super(server, sign);
-	    try {
-		    amount = Integer.parseInt(getSign().getLine(2));
-	    } catch (Exception ignored) {
-			// use default
-		    sign.setLine(2, amount + "");
-		    sign.update();
-	    }
+        try {
+            amount = Integer.parseInt(getSign().getLine(2));
+        } catch (Exception ignored) {
+            // use default
+            sign.setLine(2, amount + "");
+            sign.update();
+        }
     }
 
     @Override
     public String getTitle() {
+
         return "Chest Dispenser";
     }
 
     @Override
     public String getSignTitle() {
+
         return "CHEST DISPENSER";
     }
 
@@ -85,11 +88,13 @@ public class ChestDispenser extends AbstractIC {
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
+
             super(server);
         }
 
         @Override
         public IC create(Sign sign) {
+
             return new ChestDispenser(getServer(), sign);
         }
     }
