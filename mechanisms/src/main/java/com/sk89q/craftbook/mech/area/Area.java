@@ -174,7 +174,7 @@ public class Area extends AbstractMechanic {
 			String namespace = s.getLine(0);
 			String id = s.getLine(2);
 
-            if (CopyManager.isExistingArea(namespace, id, plugin)) {
+            if (!CopyManager.isExistingArea(namespace, id, plugin)) {
                 plugin.getLogger().warning("Area " + namespace + ":" + id + " does not exist.");
             }
 
