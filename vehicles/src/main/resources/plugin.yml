@@ -2,6 +2,7 @@ name: CraftBookVehicles
 main: com.sk89q.craftbook.bukkit.VehiclesPlugin
 version: "${project.version}"
 depend: [CraftBookCommon]
+dev-url: http://dev.bukkit.org/server-mods/craftbook/
 commands:
     st:
         description: Choose a stop
