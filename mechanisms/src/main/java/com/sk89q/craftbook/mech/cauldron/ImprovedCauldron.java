@@ -42,7 +42,7 @@ public class ImprovedCauldron extends AbstractMechanic {
 	    this.plugin = plugin;
 	    recipes = new ImprovedCauldronCookbook(
 		    YamlConfiguration.loadConfiguration(
-			    new File(plugin.getDataFolder(), "recipes.yml")
+			    new File(plugin.getDataFolder(), "cauldron-recipes.yml")
 			    ), plugin.getDataFolder());
 	}
 
@@ -99,7 +99,7 @@ public class ImprovedCauldron extends AbstractMechanic {
 			double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
 			Random r = new Random();
 			double ran = r.nextDouble();
-			event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - 1));
+			event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability());
 			if(chance <= ran) {
 			    cook(recipe, items);
 			    event.getPlayer().sendMessage(
