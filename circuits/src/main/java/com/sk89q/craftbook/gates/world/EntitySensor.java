@@ -11,39 +11,43 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Silthus
  */
-public class Detection extends AbstractIC {
+public class EntitySensor extends AbstractIC {
 
     private enum Type {
         PLAYER,
-        MOBHOSTILE,
-        MOBPEACEFUL,
-        ANYMOB,
+        ITEM,
+        MOB_HOSTILE,
+        MOB_PEACEFUL,
+        MOB_ANY,
         ANY,
         CART,
-        STORAGECART,
-        POWEREDCART;
+        CART_STORAGE,
+        CART_POWERED;
 
         public boolean is(Entity entity) {
 
             switch (this) {
                 case PLAYER:
                     return entity instanceof Player;
-                case MOBHOSTILE:
+                case ITEM:
+                    return entity instanceof Item;
+                case MOB_HOSTILE:
                     return entity instanceof Monster;
-                case MOBPEACEFUL:
+                case MOB_PEACEFUL:
                     return entity instanceof Animals;
-                case ANYMOB:
+                case MOB_ANY:
                     return entity instanceof Creature;
                 case CART:
                     return entity instanceof Minecart;
-                case STORAGECART:
+                case CART_STORAGE:
                     return entity instanceof StorageMinecart;
-                case POWEREDCART:
+                case CART_POWERED:
                     return entity instanceof PoweredMinecart;
                 case ANY:
                     return true;
@@ -53,17 +57,17 @@ public class Detection extends AbstractIC {
 
         public static Type fromString(String name) {
 
-            return EnumUtil.getEnumFromString(Detection.Type.class, name);
+            return EnumUtil.getEnumFromString(EntitySensor.Type.class, name);
         }
     }
 
-    private Type type;
+    private HashSet<Type> types;
 
     private Location center;
     private Set<Chunk> chunks;
     private int radius;
 
-    public Detection(Server server, Sign block) {
+    public EntitySensor(Server server, Sign block) {
 
         super(server, block);
         load();
@@ -73,13 +77,16 @@ public class Detection extends AbstractIC {
 
         Sign sign = getSign();
         Block block = SignUtil.getBackBlock(sign.getBlock());
-        // lets get the type to detect first
-        this.type = Type.fromString(sign.getLine(3).trim());
-        // set the type to any if wrong format
-        if (type == null) this.type = Type.ANY;
-        // update the sign with correct upper case name
-        sign.setLine(3, type.name());
+
+        // lets get the types to detect first
+        this.types = getDetected(sign.getLine(3).trim());
+
+        // Add all if no params are specified
+        if (types.size() == 0) types.add(Type.ANY);
+
+        sign.setLine(3, sign.getLine(3).toUpperCase());
         sign.update();
+
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
@@ -88,16 +95,59 @@ public class Detection extends AbstractIC {
         this.chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
+    private HashSet<Type> getDetected(String line) {
+
+        char[] characters = line.toCharArray();
+
+        HashSet<Type> types = new HashSet<Type>();
+
+        for (char aCharacter : characters) {
+            switch (aCharacter) {
+                case 'p':
+                    types.add(Type.PLAYER);
+                    break;
+                case 'i':
+                    types.add(Type.ITEM);
+                    break;
+                case 'h':
+                    types.add(Type.MOB_HOSTILE);
+                    break;
+                case 'a':
+                    types.add(Type.MOB_PEACEFUL);
+                    break;
+                case 'm':
+                    types.add(Type.MOB_ANY);
+                    break;
+                case 'l':
+                    types.add(Type.ANY);
+                    break;
+                case 'c':
+                    types.add(Type.CART);
+                    break;
+                case 's':
+                    types.add(Type.CART_STORAGE);
+                    break;
+                case 'e':
+                    types.add(Type.CART_POWERED);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return types;
+    }
+
     @Override
     public String getTitle() {
 
-        return "Detection";
+        return "Entity Sensor";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "DETECTION";
+        return "ENTITY SENSOR";
     }
 
     @Override
@@ -112,13 +162,17 @@ public class Detection extends AbstractIC {
 
         for (Chunk chunk : this.chunks) {
             if (chunk.isLoaded()) {
-                // get all entites from the chunks in the defined radius
+                // Get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
-                    if (!entity.isDead()) {
-                        if (type.is(entity)) {
-                            // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
-                                return true;
+                    if (!entity.isDead() && entity.isValid()) {
+                        for (Type type : types) {
+                            // Check Type
+                            if (type.is(entity)) {
+                                // Check Radius
+                                if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
+                                    return true;
+                                }
+                                break;
                             }
                         }
                     }
@@ -138,7 +192,7 @@ public class Detection extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Detection(getServer(), sign);
+            return new EntitySensor(getServer(), sign);
         }
 
         @Override

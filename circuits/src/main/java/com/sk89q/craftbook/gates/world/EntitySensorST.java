@@ -7,9 +7,9 @@ import org.bukkit.block.Sign;
 /**
  * @author Silthus
  */
-public class DetectionST extends Detection implements SelfTriggeredIC {
+public class EntitySensorST extends EntitySensor implements SelfTriggeredIC {
 
-    public DetectionST(Server server, Sign block) {
+    public EntitySensorST(Server server, Sign block) {
 
         super(server, block);
     }
@@ -17,13 +17,13 @@ public class DetectionST extends Detection implements SelfTriggeredIC {
     @Override
     public String getTitle() {
 
-        return "Self Triggered Detection";
+        return "Self-triggered Entity Sensor";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ST DETECTION";
+        return "ST ENTITY SENSOR";
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DetectionST extends Detection implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new DetectionST(getServer(), sign);
+            return new EntitySensorST(getServer(), sign);
         }
 
         @Override
