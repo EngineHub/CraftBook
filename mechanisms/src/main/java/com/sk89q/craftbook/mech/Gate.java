@@ -19,17 +19,10 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.regions.CuboidRegion;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -40,8 +33,23 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.regions.CuboidRegion;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or
@@ -77,12 +85,12 @@ public class Gate extends AbstractMechanic {
      * @param smallSearchSize
      */
     public Gate(BlockWorldVector pt, MechanismsPlugin plugin,
-                boolean smallSearchSize) {
+	    boolean smallSearchSize) {
 
-        super();
-        this.pt = pt;
-        this.plugin = plugin;
-        this.smallSearchSize = smallSearchSize;
+	super();
+	this.pt = pt;
+	this.plugin = plugin;
+	this.smallSearchSize = smallSearchSize;
     }
 
     /**
@@ -96,44 +104,44 @@ public class Gate extends AbstractMechanic {
      */
     public boolean toggleGates(LocalPlayer player, WorldVector pt, boolean smallSearchSize) {
 
-        LocalWorld world = pt.getWorld();
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
+	LocalWorld world = pt.getWorld();
+	int x = pt.getBlockX();
+	int y = pt.getBlockY();
+	int z = pt.getBlockZ();
 
-        boolean foundGate = false;
+	boolean foundGate = false;
 
-        Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
+	Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
 
-        if (smallSearchSize) {
-            // Toggle nearby gates
-            for (int x1 = x - 1; x1 <= x + 1; x1++) {
-                for (int y1 = y - 2; y1 <= y + 1; y1++) {
-                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                        if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
-                                visitedColumns, null)) {
-                            foundGate = true;
-                        }
-                    }
-                }
-            }
-        } else {
-            // Toggle nearby gates
-            for (int x1 = x - 3; x1 <= x + 3; x1++) {
-                for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                        if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
-                                visitedColumns, null)) {
-                            foundGate = true;
-                        }
-                    }
-                }
-            }
-        }
+	if (smallSearchSize) {
+	    // Toggle nearby gates
+	    for (int x1 = x - 1; x1 <= x + 1; x1++) {
+		for (int y1 = y - 2; y1 <= y + 1; y1++) {
+		    for (int z1 = z - 1; z1 <= z + 1; z1++) {
+			if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
+				visitedColumns, null)) {
+			    foundGate = true;
+			}
+		    }
+		}
+	    }
+	} else {
+	    // Toggle nearby gates
+	    for (int x1 = x - 3; x1 <= x + 3; x1++) {
+		for (int y1 = y - 3; y1 <= y + 6; y1++) {
+		    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+			if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
+				visitedColumns, null)) {
+			    foundGate = true;
+			}
+		    }
+		}
+	    }
+	}
 
-        // bag.flushChanges();
+	// bag.flushChanges();
 
-        return foundGate;
+	return foundGate;
     }
 
     /**
@@ -147,46 +155,46 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     public boolean setGateState(LocalPlayer player, WorldVector pt, boolean close,
-                                boolean smallSearchSize) {
+	    boolean smallSearchSize) {
 
-        LocalWorld world = pt.getWorld();
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
+	LocalWorld world = pt.getWorld();
+	int x = pt.getBlockX();
+	int y = pt.getBlockY();
+	int z = pt.getBlockZ();
 
-        boolean foundGate = false;
+	boolean foundGate = false;
 
-        Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
+	Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
 
-        if (smallSearchSize) {
-            // Toggle nearby gates
-            for (int x1 = x - 1; x1 <= x + 1; x1++) {
-                for (int y1 = y - 2; y1 <= y + 1; y1++) {
-                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                        if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
-                                visitedColumns, close)) {
-                            foundGate = true;
-                        }
-                    }
-                }
-            }
-        } else {
-            // Toggle nearby gates
-            for (int x1 = x - 3; x1 <= x + 3; x1++) {
-                for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                        if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
-                                visitedColumns, close)) {
-                            foundGate = true;
-                        }
-                    }
-                }
-            }
-        }
+	if (smallSearchSize) {
+	    // Toggle nearby gates
+	    for (int x1 = x - 1; x1 <= x + 1; x1++) {
+		for (int y1 = y - 2; y1 <= y + 1; y1++) {
+		    for (int z1 = z - 1; z1 <= z + 1; z1++) {
+			if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
+				visitedColumns, close)) {
+			    foundGate = true;
+			}
+		    }
+		}
+	    }
+	} else {
+	    // Toggle nearby gates
+	    for (int x1 = x - 3; x1 <= x + 3; x1++) {
+		for (int y1 = y - 3; y1 <= y + 6; y1++) {
+		    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+			if (recurseColumn(player, new WorldVector(world, x1, y1, z1),
+				visitedColumns, close)) {
+			    foundGate = true;
+			}
+		    }
+		}
+	    }
+	}
 
-        // bag.flushChanges();
+	// bag.flushChanges();
 
-        return foundGate;
+	return foundGate;
     }
 
     /**
@@ -200,52 +208,52 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     private boolean recurseColumn(LocalPlayer player, WorldVector pt,
-                                  Set<BlockVector> visitedColumns, Boolean close) {
+	    Set<BlockVector> visitedColumns, Boolean close) {
 
-        World world = ((BukkitWorld) pt.getWorld()).getWorld();
-        if (visitedColumns.size() > 14) {
-            return false;
-        }
-        if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
-            return false;
-        }
-        if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
-            return false;
-        }
+	World world = ((BukkitWorld) pt.getWorld()).getWorld();
+	if (visitedColumns.size() > 14) {
+	    return false;
+	}
+	if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
+	    return false;
+	}
+	if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
+	    return false;
+	}
 
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
+	int x = pt.getBlockX();
+	int y = pt.getBlockY();
+	int z = pt.getBlockZ();
 
-        visitedColumns.add(pt.setY(0).toBlockVector());
+	visitedColumns.add(pt.setY(0).toBlockVector());
 
-        // Find the top most fence
-        for (int y1 = y + 1; y1 <= y + 12; y1++) {
-            if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
-                y = y1;
-            } else {
-                break;
-            }
-        }
+	// Find the top most fence
+	for (int y1 = y + 1; y1 <= y + 12; y1++) {
+	    if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
+		y = y1;
+	    } else {
+		break;
+	    }
+	}
 
-        // The block above the gate cannot be air -- it has to be some
-        // non-fence block
-        if (world.getBlockTypeIdAt(x, y + 1, z) == 0) {
-            return false;
-        }
+	// The block above the gate cannot be air -- it has to be some
+	// non-fence block
+	if (world.getBlockTypeIdAt(x, y + 1, z) == 0) {
+	    return false;
+	}
 
-        if (close == null) {
-            // Close the gate if the block below does not exist as a fence
-            // block, otherwise open the gate
+	if (close == null) {
+	    // Close the gate if the block below does not exist as a fence
+	    // block, otherwise open the gate
 
-            close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
-        }
+	    close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
+	}
 
-        // Recursively go to connected fence blocks of the same level
-        // and 'close' or 'open' them
-        toggleColumn(player, new BlockWorldVector(pt, x, y, z), close, visitedColumns);
+	// Recursively go to connected fence blocks of the same level
+	// and 'close' or 'open' them
+	toggleColumn(player, new BlockWorldVector(pt, x, y, z), close, visitedColumns);
 
-        return true;
+	return true;
     }
 
     /**
@@ -256,121 +264,121 @@ public class Gate extends AbstractMechanic {
      * @param visitedColumns
      */
     private void toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
-                              Set<BlockVector> visitedColumns) {
+	    Set<BlockVector> visitedColumns) {
 
-        World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
-        int x = topPoint.getBlockX();
-        int y = topPoint.getBlockY();
-        int z = topPoint.getBlockZ();
+	World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
+	int x = topPoint.getBlockX();
+	int y = topPoint.getBlockY();
+	int z = topPoint.getBlockZ();
 
-        int curBlocks = 0;
+	int curBlocks = 0;
 
-        // If we want to close the gate then we replace air/water blocks
-        // below with fence blocks; otherwise, we want to replace fence
-        // blocks below with air
-        int minY = Math.max(0, y - 12);
-        int ID = 0;
-        if (close)
-            ID = world.getBlockAt(x, y, z).getTypeId();
-        for (int y1 = y - 1; y1 >= minY; y1--) {
-            int cur = world.getBlockTypeIdAt(x, y1, z);
+	// If we want to close the gate then we replace air/water blocks
+	// below with fence blocks; otherwise, we want to replace fence
+	// blocks below with air
+	int minY = Math.max(0, y - 12);
+	int ID = 0;
+	if (close)
+	    ID = world.getBlockAt(x, y, z).getTypeId();
+	for (int y1 = y - 1; y1 >= minY; y1--) {
+	    int cur = world.getBlockTypeIdAt(x, y1, z);
 
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                    BukkitUtil.toLocation(pt));
+	    Block block = BukkitUtil.toWorld(pt).getBlockAt(
+		    BukkitUtil.toLocation(pt));
 
-            Sign sign = null;
-            Sign otherSign = null;
+	    Sign sign = null;
+	    Sign otherSign = null;
 
-            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-                BlockState state = block.getState();
-                if (state instanceof Sign)
-                    sign = (Sign) state;
-            }
+	    if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
+		BlockState state = block.getState();
+		if (state instanceof Sign)
+		    sign = (Sign) state;
+	    }
 
-            if (sign != null) {
-                otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
-            }
+	    if (sign != null) {
+		otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
+	    }
 
-            if (sign != null && sign.getLine(3).length() > 0) {
-                try {
-                    curBlocks = Integer.parseInt(sign.getLine(3));
-                    if (otherSign != null)
-                        curBlocks += Integer.parseInt(otherSign.getLine(3));
-                } catch (Exception e) {
-                    curBlocks = 0;
-                    sign.setLine(3, "0");
-                    sign.update();
-                    if (otherSign != null) {
-                        otherSign.setLine(3, "0");
-                        otherSign.update();
-                    }
-                }
-            }
+	    if (sign != null && sign.getLine(3).length() > 0) {
+		try {
+		    curBlocks = Integer.parseInt(sign.getLine(3));
+		    if (otherSign != null)
+			curBlocks += Integer.parseInt(otherSign.getLine(3));
+		} catch (Exception e) {
+		    curBlocks = 0;
+		    sign.setLine(3, "0");
+		    sign.update();
+		    if (otherSign != null) {
+			otherSign.setLine(3, "0");
+			otherSign.update();
+		    }
+		}
+	    }
 
-            if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
-                // If NoReplace is on line 3 of sign, do not replace blocks.
-                if (cur != 0) {
-                    break;
-                }
-            } else {
-                // Allowing water allows the use of gates as flood gates
-                if (!canPassThrough(cur)) {
-                    break;
-                }
-            }
+	    if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
+		// If NoReplace is on line 3 of sign, do not replace blocks.
+		if (cur != 0) {
+		    break;
+		}
+	    } else {
+		// Allowing water allows the use of gates as flood gates
+		if (!canPassThrough(cur)) {
+		    break;
+		}
+	    }
 
-            // bag.setBlockID(w, x, y1, z, ID);
-            if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                if (ID == 0 || curBlocks > 0) {
-                    if (ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
-                        curBlocks++;
-                    else if (world.getBlockAt(x, y1, z).getTypeId() == 0 && isValidGateItem(new ItemStack(ID, 1)))
-                        curBlocks--;
-                    world.getBlockAt(x, y1, z).setTypeId(ID);
+	    // bag.setBlockID(w, x, y1, z, ID);
+	    if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+		if (ID == 0 || curBlocks > 0) {
+		    if (ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
+			curBlocks++;
+		    else if (world.getBlockAt(x, y1, z).getTypeId() == 0 && isValidGateItem(new ItemStack(ID, 1)))
+			curBlocks--;
+		    world.getBlockAt(x, y1, z).setTypeId(ID);
 
-                    sign.setLine(3, curBlocks + "");
-                    sign.update();
-                    if (otherSign != null) {
-                        otherSign.setLine(3, "0");
-                        otherSign.update();
-                    }
-                } else if (curBlocks == 0 && isValidGateItem(new ItemStack(ID, 1))) {
-                    if (player != null) {
-                        player.printError("Not enough blocks to trigger mechanic!");
-                        break;
-                    }
-                }
-            } else
-                world.getBlockAt(x, y1, z).setTypeId(ID);
+		    sign.setLine(3, curBlocks + "");
+		    sign.update();
+		    if (otherSign != null) {
+			otherSign.setLine(3, "0");
+			otherSign.update();
+		    }
+		} else if (curBlocks == 0 && isValidGateItem(new ItemStack(ID, 1))) {
+		    if (player != null) {
+			player.printError("Not enough blocks to trigger mechanic!");
+			break;
+		    }
+		}
+	    } else
+		world.getBlockAt(x, y1, z).setTypeId(ID);
 
-            WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(1, 0, 0)),
-                    visitedColumns, close);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(-1, 0, 0)),
-                    visitedColumns, close);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, 1)),
-                    visitedColumns, close);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, -1)),
-                    visitedColumns, close);
-        }
+	    WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
+	    recurseColumn(player, new BlockWorldVector(topPoint, pt.add(1, 0, 0)),
+		    visitedColumns, close);
+	    recurseColumn(player, new BlockWorldVector(topPoint, pt.add(-1, 0, 0)),
+		    visitedColumns, close);
+	    recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, 1)),
+		    visitedColumns, close);
+	    recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, -1)),
+		    visitedColumns, close);
+	}
 
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(1, 0, 0)),
-                visitedColumns, close);
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(-1, 0, 0)),
-                visitedColumns, close);
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 0, 1)),
-                visitedColumns, close);
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 0, -1)),
-                visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(1, 0, 0)),
+		visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(-1, 0, 0)),
+		visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 0, 1)),
+		visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 0, -1)),
+		visitedColumns, close);
 
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(1, 1, 0)),
-                visitedColumns, close);
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(-1, 1, 0)),
-                visitedColumns, close);
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 1, 1)),
-                visitedColumns, close);
-        recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 1, -1)),
-                visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(1, 1, 0)),
+		visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(-1, 1, 0)),
+		visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 1, 1)),
+		visitedColumns, close);
+	recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 1, -1)),
+		visitedColumns, close);
     }
 
     /**
@@ -381,55 +389,57 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getLocalConfiguration().gateSettings.enable) return;
+	if (!plugin.getLocalConfiguration().gateSettings.enable) return;
 
-        LocalPlayer player = plugin.wrap(event.getPlayer());
+	LocalPlayer player = plugin.wrap(event.getPlayer());
 
-        if (event.getPlayer().getItemInHand() != null) {
-            if (isValidGateItem(event.getPlayer().getItemInHand())) {
+	if (event.getPlayer().getItemInHand() != null) {
+	    if (isValidGateItem(event.getPlayer().getItemInHand())) {
 
-                Sign sign = null;
+		Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
-                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-                    BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign) sign = (Sign) state;
-                }
+		if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+			|| event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+		    BlockState state = event.getClickedBlock().getState();
+		    if (state instanceof Sign) sign = (Sign) state;
+		}
 
-                if (sign != null) {
-                    try {
-                        int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
-                        sign.setLine(3, newBlocks + "");
-                        sign.update();
-                    } catch (Exception e) {
-                        sign.setLine(3, "1");
-                        sign.update();
-                    }
+		if (sign != null) {
+		    try {
+			int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
+			sign.setLine(3, newBlocks + "");
+			sign.update();
+		    } catch (Exception e) {
+			sign.setLine(3, "1");
+			sign.update();
+		    }
 
-                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                    } else
-                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+		    if(!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+			if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+			    event.getPlayer().setItemInHand(new ItemStack(0, 0));
+			} else
+			    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+		    }
 
-                    player.print("Gate Restocked!");
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-        }
+		    player.print("Gate Restocked!");
+		    event.setCancelled(true);
+		    return;
+		}
+	    }
+	}
 
-        if (!player.hasPermission("craftbook.mech.gate.use")) {
-            player.printError("mech.use-permission");
-            return;
-        }
+	if (!player.hasPermission("craftbook.mech.gate.use")) {
+	    player.printError("mech.use-permission");
+	    return;
+	}
 
-        if (toggleGates(player, pt, smallSearchSize)) {
-            player.print("mech.gate.toggle");
-        } else {
-            player.printError("mech.gate.not-found");
-        }
+	if (toggleGates(player, pt, smallSearchSize)) {
+	    player.print("mech.gate.toggle");
+	} else {
+	    player.printError("mech.gate.not-found");
+	}
 
-        event.setCancelled(true);
+	event.setCancelled(true);
     }
 
     /**
@@ -440,20 +450,20 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if (!plugin.getLocalConfiguration().gateSettings.enableRedstone) return;
+	if (!plugin.getLocalConfiguration().gateSettings.enableRedstone) return;
 
-        if (event.getNewCurrent() == event.getOldCurrent()) return;
+	if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        plugin.getServer().getScheduler()
-                .scheduleSyncDelayedTask(plugin, new Runnable() {
+	plugin.getServer().getScheduler()
+	.scheduleSyncDelayedTask(plugin, new Runnable() {
 
-                    @Override
-                    public void run() {
+	    @Override
+	    public void run() {
 
-                        setGateState(null, pt, event.getNewCurrent() > 0,
-                                smallSearchSize);
-                    }
-                }, 2);
+		setGateState(null, pt, event.getNewCurrent() > 0,
+			smallSearchSize);
+	    }
+	}, 2);
     }
 
     @Override
@@ -464,131 +474,131 @@ public class Gate extends AbstractMechanic {
     @Override
     public boolean isActive() {
 
-        return false; //Is not persistent
+	return false; //Is not persistent
     }
 
     public static class Factory extends AbstractMechanicFactory<Gate> {
 
-        protected final MechanismsPlugin plugin;
+	protected final MechanismsPlugin plugin;
 
-        public Factory(MechanismsPlugin plugin) {
+	public Factory(MechanismsPlugin plugin) {
 
-            this.plugin = plugin;
-        }
+	    this.plugin = plugin;
+	}
 
-        @Override
-        public Gate detect(BlockWorldVector pt) {
+	@Override
+	public Gate detect(BlockWorldVector pt) {
 
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                    BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-                BlockState state = block.getState();
-                if (state instanceof Sign) {
-                    Sign sign = (Sign) state;
-                    if (sign.getLine(1).equalsIgnoreCase("[Gate]")
-                            || sign.getLine(1).equalsIgnoreCase("[DGate]")) {
-                        // this is a little funky because we don't actually look
-                        // for the blocks
-                        // that make up the movable parts of the gate until
-                        // we're running the
-                        // event later... so the factory can succeed even if the
-                        // signpost doesn't
-                        // actually operate any gates correctly. but it works!
-                        return new Gate(pt, plugin, sign.getLine(1)
-                                .equalsIgnoreCase("[DGate]"));
-                    }
-                }
-            }
+	    Block block = BukkitUtil.toWorld(pt).getBlockAt(
+		    BukkitUtil.toLocation(pt));
+	    if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
+		BlockState state = block.getState();
+		if (state instanceof Sign) {
+		    Sign sign = (Sign) state;
+		    if (sign.getLine(1).equalsIgnoreCase("[Gate]")
+			    || sign.getLine(1).equalsIgnoreCase("[DGate]")) {
+			// this is a little funky because we don't actually look
+			// for the blocks
+			// that make up the movable parts of the gate until
+			// we're running the
+			// event later... so the factory can succeed even if the
+			// signpost doesn't
+			// actually operate any gates correctly. but it works!
+			return new Gate(pt, plugin, sign.getLine(1)
+				.equalsIgnoreCase("[DGate]"));
+		    }
+		}
+	    }
 
-            return null;
-        }
+	    return null;
+	}
 
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public Gate detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
-                throws InvalidMechanismException, ProcessedMechanismException {
+	/**
+	 * Detect the mechanic at a placed sign.
+	 *
+	 * @throws ProcessedMechanismException
+	 */
+	@Override
+	public Gate detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+		throws InvalidMechanismException, ProcessedMechanismException {
 
-            if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
-                if (!player.hasPermission("craftbook.mech.gate")) {
-                    throw new InsufficientPermissionsException();
-                }
+	    if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
+		if (!player.hasPermission("craftbook.mech.gate")) {
+		    throw new InsufficientPermissionsException();
+		}
 
-                sign.setLine(1, "[Gate]");
-                sign.setLine(3, "0");
-                sign.update();
-                player.print("mech.gate.create");
-            } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
-                if (!player.hasPermission("craftbook.mech.gate")) {
-                    throw new InsufficientPermissionsException();
-                }
+		sign.setLine(1, "[Gate]");
+		sign.setLine(3, "0");
+		sign.update();
+		player.print("mech.gate.create");
+	    } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
+		if (!player.hasPermission("craftbook.mech.gate")) {
+		    throw new InsufficientPermissionsException();
+		}
 
-                sign.setLine(1, "[DGate]");
-                sign.setLine(3, "0");
-                sign.update();
-                player.print("mech.dgate.create");
-            } else {
-                return null;
-            }
+		sign.setLine(1, "[DGate]");
+		sign.setLine(3, "0");
+		sign.update();
+		player.print("mech.dgate.create");
+	    } else {
+		return null;
+	    }
 
-            throw new ProcessedMechanismException();
-        }
+	    throw new ProcessedMechanismException();
+	}
 
     }
 
     public boolean isValidGateBlock(Block block) {
 
-        return isValidGateBlock(block.getTypeId());
+	return isValidGateBlock(block.getTypeId());
     }
 
     public boolean isValidGateBlock(int block) {
 
-        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+	return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
     }
 
     public boolean isValidGateItem(ItemStack block) {
 
-        return isValidGateItem(block.getTypeId());
+	return isValidGateItem(block.getTypeId());
     }
 
     public boolean isValidGateItem(int block) {
 
-        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+	return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
-        Sign sign = null;
+	if (event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
+	Sign sign = null;
 
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
-            BlockState state = event.getBlock().getState();
-            if (state instanceof Sign)
-                sign = (Sign) state;
-        }
+	if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
+	    BlockState state = event.getBlock().getState();
+	    if (state instanceof Sign)
+		sign = (Sign) state;
+	}
 
-        int curBlocks = 0;
+	int curBlocks = 0;
 
-        if (sign != null && sign.getLine(3).length() > 0) {
-            try {
-                curBlocks = Integer.parseInt(sign.getLine(3));
-            } catch (Exception e) {
-                curBlocks = 0;
-                sign.setLine(3, "0");
-                sign.update();
-            }
-        }
+	if (sign != null && sign.getLine(3).length() > 0) {
+	    try {
+		curBlocks = Integer.parseInt(sign.getLine(3));
+	    } catch (Exception e) {
+		curBlocks = 0;
+		sign.setLine(3, "0");
+		sign.update();
+	    }
+	}
 
-        if (curBlocks > 0) {
-            ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
-            if (sign != null) {
-                sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
-            }
-        }
+	if (curBlocks > 0) {
+	    ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
+	    if (sign != null) {
+		sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+	    }
+	}
     }
 
     @Override
@@ -598,75 +608,75 @@ public class Gate extends AbstractMechanic {
 
     private boolean canPassThrough(int t) {
 
-        int[] passableBlocks = new int[9];
-        passableBlocks[0] = BlockID.WATER;
-        passableBlocks[1] = BlockID.STATIONARY_WATER;
-        passableBlocks[2] = BlockID.LAVA;
-        passableBlocks[3] = BlockID.STATIONARY_LAVA;
-        passableBlocks[4] = BlockID.SNOW;
-        passableBlocks[5] = BlockID.LONG_GRASS;
-        passableBlocks[6] = BlockID.VINE;
-        passableBlocks[7] = BlockID.DEAD_BUSH;
-        passableBlocks[8] = BlockID.AIR;
+	int[] passableBlocks = new int[9];
+	passableBlocks[0] = BlockID.WATER;
+	passableBlocks[1] = BlockID.STATIONARY_WATER;
+	passableBlocks[2] = BlockID.LAVA;
+	passableBlocks[3] = BlockID.STATIONARY_LAVA;
+	passableBlocks[4] = BlockID.SNOW;
+	passableBlocks[5] = BlockID.LONG_GRASS;
+	passableBlocks[6] = BlockID.VINE;
+	passableBlocks[7] = BlockID.DEAD_BUSH;
+	passableBlocks[8] = BlockID.AIR;
 
-        for (int aPassableBlock : passableBlocks) {
-            if (aPassableBlock == t) return true;
-        }
+	for (int aPassableBlock : passableBlocks) {
+	    if (aPassableBlock == t) return true;
+	}
 
-        return isValidGateBlock(t);
+	return isValidGateBlock(t);
     }
 
 
     // TODO Use this to clean this mech up
     protected class GateColumn {
 
-        private final BlockWorldVector bwv;
+	private final BlockWorldVector bwv;
 
 
-        public GateColumn(LocalWorld world, int x, int y, int z) {
+	public GateColumn(LocalWorld world, int x, int y, int z) {
 
-            this.bwv = new BlockWorldVector(world, x, y, z);
-        }
+	    bwv = new BlockWorldVector(world, x, y, z);
+	}
 
-        public BlockVector getStartingPoint() {
+	public BlockVector getStartingPoint() {
 
-            return bwv.toBlockVector();
-        }
+	    return bwv.toBlockVector();
+	}
 
-        public BlockVector getEndingPoint() {
+	public BlockVector getEndingPoint() {
 
-            return new BlockVector(bwv.getBlockX(), getEndingY(), bwv.getBlockZ());
-        }
+	    return new BlockVector(bwv.getBlockX(), getEndingY(), bwv.getBlockZ());
+	}
 
-        public int getStartingY() {
+	public int getStartingY() {
 
-            return bwv.getBlockY();
-        }
+	    return bwv.getBlockY();
+	}
 
-        public int getEndingY() {
+	public int getEndingY() {
 
-            for (int y = bwv.getBlockY(); y > 0; y--) {
+	    for (int y = bwv.getBlockY(); y > 0; y--) {
 
-                if (!canPassThrough(bwv.getWorld().getBlockType(bwv.toBlockVector()))) {
-                    return y + 1;
-                }
-            }
-            return 0;
-        }
+		if (!canPassThrough(bwv.getWorld().getBlockType(bwv.toBlockVector()))) {
+		    return y + 1;
+		}
+	    }
+	    return 0;
+	}
 
-        public int getX() {
+	public int getX() {
 
-            return bwv.getBlockX();
-        }
+	    return bwv.getBlockX();
+	}
 
-        public int getZ() {
+	public int getZ() {
 
-            return bwv.getBlockZ();
-        }
+	    return bwv.getBlockZ();
+	}
 
-        public CuboidRegion getRegion() {
+	public CuboidRegion getRegion() {
 
-            return new CuboidRegion(getStartingPoint(), getEndingPoint());
-        }
+	    return new CuboidRegion(getStartingPoint(), getEndingPoint());
+	}
     }
 }

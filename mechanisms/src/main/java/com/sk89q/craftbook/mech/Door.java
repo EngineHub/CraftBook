@@ -19,6 +19,7 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -291,10 +292,12 @@ public class Door extends AbstractMechanic {
 			sign.update();
 		    }
 
-		    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
-			event.getPlayer().setItemInHand(new ItemStack(0, 0));
-		    } else
-			event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+		    if(!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+			if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+			    event.getPlayer().setItemInHand(new ItemStack(0, 0));
+			} else
+			    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+		    }
 
 		    player.print("Door Restocked!");
 		    event.setCancelled(true);
@@ -405,7 +408,7 @@ public class Door extends AbstractMechanic {
 			    s.update();
 			} else {
 			    if (player != null) player.printError("Not enough blocks for mechanic to function!");
-				    return;
+			    return;
 			}
 
 		    } else {
