@@ -12,11 +12,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -94,7 +96,7 @@ public class ImprovedCauldron extends AbstractMechanic {
 		else { //Spoons :|
 		    if (event.getPlayer().getItemInHand() == null) return;
 		    if(isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
-			double chance = getSpoonChance(event.getPlayer().getItemInHand().getTypeId(), recipe.getChance());
+			double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
 			Random r = new Random();
 			double ran = r.nextDouble();
 			if(chance <= ran) {
@@ -120,17 +122,20 @@ public class ImprovedCauldron extends AbstractMechanic {
 	return id == 256 || id == 269 || id == 273 || id == 277 || id == 284;
     }
 
-    public double getSpoonChance(int id, double chance) {
+    public double getSpoonChance(ItemStack item, double chance) {
+	int id = item.getTypeId();
 	double temp = chance / 100;
 	if(temp > 1) return 1;
 	double toGo = temp = 1 - temp;
-	double fifth = toGo/5;
-	if(id == 269) return temp + fifth*1;
-	if(id == 273) return temp + fifth*2;
-	if(id == 256) return temp + fifth*3;
-	if(id == 277) return temp + fifth*4;
-	if(id == 284) return temp + fifth*5;
-	return 0;
+	double tenth = toGo/10;
+	int mutliplier = 0;
+	if(id == 269) mutliplier = 1;
+	if(id == 273) mutliplier = 2;
+	if(id == 256) mutliplier = 3;
+	if(id == 277) mutliplier = 4;
+	if(id == 284) mutliplier = 5;
+	mutliplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);
+	return temp + tenth*mutliplier;
     }
 
     /**
