@@ -15,22 +15,22 @@ import org.bukkit.command.CommandSender;
  */
 public class CauldronCommands {
 
-	private final MechanismsPlugin plugin;
-	private final WorldEditPlugin worldEdit;
+    private final MechanismsPlugin plugin;
+    private final WorldEditPlugin worldEdit;
 
-	public CauldronCommands(MechanismsPlugin plugin) {
-		this.plugin = plugin;
-		worldEdit = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-	}
+    public CauldronCommands(MechanismsPlugin plugin) {
+        this.plugin = plugin;
+        worldEdit = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+    }
 
-	@Command(
-			aliases = {"reload"},
-			desc = "Reloads the cauldron recipes from the config."
-	)
-	@CommandPermissions("craftbook.mech.cauldron.reload")
-	public void reload(CommandContext context, CommandSender sender) {
-		ImprovedCauldronCookbook.INSTANCE.reload();
-		sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
-	}
+    @Command(
+            aliases = {"reload"},
+            desc = "Reloads the cauldron recipes from the config."
+    )
+    @CommandPermissions("craftbook.mech.cauldron.reload")
+    public void reload(CommandContext context, CommandSender sender) {
+        ImprovedCauldronCookbook.INSTANCE.reload();
+        sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
+    }
 
 }
