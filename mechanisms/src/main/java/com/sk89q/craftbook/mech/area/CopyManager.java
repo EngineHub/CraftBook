@@ -70,6 +70,13 @@ public class CopyManager {
 				&& name.matches("^[A-Za-z0-9_]+$");
 	}
 
+    public static boolean isExistingArea(String namespace, String id, MechanismsPlugin plugin) {
+        id = id.toLowerCase();
+        String key = namespace + "/" + id;
+        key += plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy";
+        return new File(new File(plugin.getDataFolder(), "areas"), key).exists();
+    }
+
 	/**
 	 * Load a copy from disk. This may return a cached copy. If the copy is not
 	 * cached, the file will be loaded from disk if possible. If the copy does

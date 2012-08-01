@@ -123,6 +123,10 @@ public class Area extends AbstractMechanic {
 			if (id == null || id.equalsIgnoreCase("") || id.length() < 1) return;
 			if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return;
 			if (event.getPlayer().getWorld() == null) return;
+            if (!CopyManager.isExistingArea(namespace, id, plugin) || !CopyManager.isExistingArea(namespace,
+                    inactiveID, plugin)) {
+                event.getPlayer().sendMessage(ChatColor.RED + "Area does not exist. Create it with /area save <id>");
+            }
 
 			CuboidCopy copyFlat = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
 			if (!copyFlat.shouldClear(s)) {
@@ -145,6 +149,7 @@ public class Area extends AbstractMechanic {
 			final Writer result = new StringWriter();
 			final PrintWriter printWriter = new PrintWriter(result);
 			e.printStackTrace(printWriter);
+            event.getPlayer().sendMessage(ChatColor.RED + "Failed to toggle Area: " + result.toString());
 			plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + result.toString());
 		}
 
@@ -168,6 +173,10 @@ public class Area extends AbstractMechanic {
 			if (s == null) return;
 			String namespace = s.getLine(0);
 			String id = s.getLine(2);
+
+            if (CopyManager.isExistingArea(namespace, id, plugin)) {
+                plugin.getLogger().warning("Area " + namespace + ":" + id + " does not exist.");
+            }
 
             CuboidCopy copyFlat = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
 
