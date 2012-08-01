@@ -125,7 +125,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableRedstone;
         public final int maxLength;
         public final int maxWidth;
-        public final Set<Integer> allowedBlocks;
+        public final Set<Material> allowedBlocks;
 
         private BridgeSettings(FileConfiguration cfg) {
 
@@ -133,12 +133,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableRedstone = getBoolean(cfg, "bridge-redstone", true);
             maxLength = getInt(cfg, "bridge-max-length", 30);
             maxWidth = getInt(cfg, "bridge-max-width", 5);
-            allowedBlocks = getIntegerSet(cfg, "bridge-blocks", Arrays.asList(4, 5, 20, 43));
+            allowedBlocks = getMaterialSet(cfg, "bridge-blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
          * @param b
-         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
@@ -154,7 +153,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableRedstone;
         public final int maxLength;
         public final int maxWidth;
-        public final Set<Integer> allowedBlocks;
+        public final Set<Material> allowedBlocks;
 
         private DoorSettings(FileConfiguration cfg) {
 
@@ -162,16 +161,15 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableRedstone = getBoolean(cfg, "door-redstone", true);
             maxLength = getInt(cfg, "door-max-length", 30);
             maxWidth = getInt(cfg, "door-max-width", 5);
-            allowedBlocks = getIntegerSet(cfg, "door-blocks", Arrays.asList(4, 5, 20, 43));
+            allowedBlocks = getMaterialSet(cfg, "door-blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
          * @param b
-         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
-        public boolean canUseBlock(Integer b) {
+        public boolean canUseBlock(Material b) {
 
             return allowedBlocks.contains(b);
         }
@@ -181,22 +179,21 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final boolean enableRedstone;
-        public final Set<Integer> allowedBlocks;
+        public final Set<Material> allowedBlocks;
 
         private GateSettings(FileConfiguration cfg) {
 
             enable = getBoolean(cfg, "gate-enable", true);
             enableRedstone = getBoolean(cfg, "gate-redstone", true);
-            allowedBlocks = getIntegerSet(cfg, "gate-blocks", Arrays.asList(85, 101, 102, 113));
+            allowedBlocks = getMaterialSet(cfg, "gate-blocks", Arrays.asList(85, 101, 102, 113));
         }
 
         /**
          * @param b
-         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
-        public boolean canUseBlock(int b) {
+        public boolean canUseBlock(Material b) {
 
             return allowedBlocks.contains(b);
         }
@@ -236,13 +233,15 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final int cauldronBlock;
+        public final boolean enableNew;
 
         private CauldronSettings(FileConfiguration cfg) {
 
-            enable = getBoolean(cfg, "cauldron-enable", true);
+            enable = getBoolean(cfg, "cauldron-enable", false);
             cauldronBlock = getInt(cfg, "cauldron-block", 1);
+            enableNew = getBoolean(cfg, "new-cauldron-enable", true);
         }
-        //TODO the recipes should probably go here
+        //FIXME the recipes should probably go here
     }
 
     public class LightSwitchSettings {
@@ -339,13 +338,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
             enable = getBoolean(cfg, "chair-enable", true);
             requireSneak = getBoolean(cfg, "chair-sneaking", true);
-            allowedBlocks = getMaterialSet(cfg, "chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
-                    136));
+            allowedBlocks = getMaterialSet(cfg, "chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135, 136));
         }
 
         /**
          * @param b
-         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */

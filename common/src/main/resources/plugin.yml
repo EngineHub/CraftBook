@@ -1,4 +1,5 @@
 name: CraftBookCommon
 main: com.sk89q.craftbook.bukkit.CraftBookPlugin
 version: "${project.version}"
+depend: [WorldEdit]
 commands:
