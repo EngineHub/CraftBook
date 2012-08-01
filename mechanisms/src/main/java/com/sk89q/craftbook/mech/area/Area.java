@@ -125,20 +125,20 @@ public class Area extends AbstractMechanic {
 			if (event.getPlayer().getWorld() == null) return;
 
 			CuboidCopy copyFlat = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
-			if (!copyFlat.shouldClear(event.getPlayer().getWorld())) {
+			if (!copyFlat.shouldClear(s)) {
 				if (save)
 					plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copyFlat, plugin);
-				copyFlat.paste(event.getPlayer().getWorld());
+				copyFlat.paste(s);
 			} else {
 				if (inactiveID.length() == 0) {
 					if (save)
 						plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copyFlat, plugin);
-					copyFlat.clear(event.getPlayer().getWorld());
+					copyFlat.clear(s);
 				} else {
 					if (save)
 						plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copyFlat, plugin);
 					copyFlat = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
-					copyFlat.paste(event.getPlayer().getWorld());
+					copyFlat.paste(s);
 				}
 			}
 		} catch (Exception e) {
@@ -171,16 +171,16 @@ public class Area extends AbstractMechanic {
 
             CuboidCopy copyFlat = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
 
-			if (!copyFlat.shouldClear(BukkitUtil.toWorld(pt.getWorld()))) {
-				copyFlat.paste(BukkitUtil.toWorld(pt.getWorld()));
+			if (!copyFlat.shouldClear(s)) {
+				copyFlat.paste(s);
 			} else {
 				String inactiveID = s.getLine(3);
 
 				if (inactiveID.length() == 0) {
-					copyFlat.clear(BukkitUtil.toWorld(pt.getWorld()));
+					copyFlat.clear(s);
 				} else {
 					copyFlat = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, inactiveID, plugin);
-					copyFlat.paste(BukkitUtil.toWorld(pt.getWorld()));
+					copyFlat.paste(s);
 				}
 			}
 		} catch (Exception e) {
