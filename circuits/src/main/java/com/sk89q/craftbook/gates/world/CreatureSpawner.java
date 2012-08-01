@@ -29,7 +29,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 
-public class EntitySpawner extends AbstractIC {
+public class CreatureSpawner extends AbstractIC {
 
     private EntityType entityType = EntityType.PIG;
     private String data;
@@ -37,7 +37,7 @@ public class EntitySpawner extends AbstractIC {
     private int amount = 1;
     private Block center;
 
-    public EntitySpawner(Server server, Sign sign) {
+    public CreatureSpawner(Server server, Sign sign) {
 
         super(server, sign);
         load();
@@ -73,7 +73,7 @@ public class EntitySpawner extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            if (entityType != null) {
+            if (entityType != null && entityType.isAlive()) {
                 Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
                         BlockFace.UP));
                 if (spawnData) {
@@ -189,7 +189,7 @@ public class EntitySpawner extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new EntitySpawner(getServer(), sign);
+            return new CreatureSpawner(getServer(), sign);
         }
     }
 }
