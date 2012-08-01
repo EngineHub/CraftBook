@@ -14,7 +14,8 @@ gate-enable: true
 gate-redstone: true
 gate-blocks: [85,101,102,113]
 elevators-enable: true
-cauldron-enable: true
+new-cauldron-enable: true
+cauldron-enable: false
 cauldron-block: 1
 light-switch-enable: true
 light-stone-enable: true

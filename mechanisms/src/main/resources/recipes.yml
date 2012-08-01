@@ -1,0 +1,11 @@
+recipes:
+  default:
+    name: "Default"
+    description: "Test Recipe"
+    ingredients:
+      # 10 light wooden planks
+      'wood:2': 10
+      # 5 brown wool
+      '35:12': 5
+    results:
+      1: 12
