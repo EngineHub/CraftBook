@@ -23,6 +23,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.World;
+import org.bukkit.block.Sign;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class FlatCuboidCopy extends CuboidCopy {
 	 * @param dest
 	 * @throws IOException
 	 */
+    @Override
 	public void save(File dest) throws IOException {
 
 		FileOutputStream out = new FileOutputStream(dest);
@@ -91,6 +93,7 @@ public class FlatCuboidCopy extends CuboidCopy {
 	 * @throws IOException
 	 * @throws CuboidCopyException
 	 */
+    @Override
 	public void loadFromFile(File file) throws IOException, CuboidCopyException {
 
 		FileInputStream in = new FileInputStream(file);
@@ -139,6 +142,7 @@ public class FlatCuboidCopy extends CuboidCopy {
 	/**
 	 * Make the copy from world.
 	 */
+    @Override
 	public void copy(World w) {
 
 		for (int x = 0; x < width; x++) {
@@ -157,9 +161,11 @@ public class FlatCuboidCopy extends CuboidCopy {
 	/**
 	 * Paste to world.
 	 */
-	public void paste(World w) {
+    @Override
+	public void paste(Sign sign) {
 
-		ArrayList<Tuple2<Vector, byte[]>> queueAfter =
+        World w = sign.getWorld();
+        ArrayList<Tuple2<Vector, byte[]>> queueAfter =
 				new ArrayList<Tuple2<Vector, byte[]>>();
 		ArrayList<Tuple2<Vector, byte[]>> queueLast =
 				new ArrayList<Tuple2<Vector, byte[]>>();
@@ -201,10 +207,11 @@ public class FlatCuboidCopy extends CuboidCopy {
 
 	}
 
-	public boolean shouldClear(World w) {
+    @Override
+	public boolean shouldClear(Sign sign) {
 
 		Vector v = origin.add(testOffset);
-		return w.getBlockTypeIdAt(BukkitUtil.toLocation(w, v)) != 0;
+		return sign.getWorld().getBlockTypeIdAt(BukkitUtil.toLocation(sign.getWorld(), v)) != 0;
 	}
 
 	/**

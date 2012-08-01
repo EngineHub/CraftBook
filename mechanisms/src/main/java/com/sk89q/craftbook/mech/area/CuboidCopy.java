@@ -5,6 +5,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
+import org.bukkit.block.Sign;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,21 +79,22 @@ public abstract class CuboidCopy {
     /**
      * Toggles the cuboid copy on or off depending on its state.
      *
-     * @param world to toggle cuboid in
+     * @param sign that toggled the cuboid
      */
-    public void toggle(World world) {
-        if (shouldClear(world)) {
-            clear(world);
+    public void toggle(Sign sign) {
+        if (shouldClear(sign)) {
+            clear(sign);
         } else {
-            paste(world);
+            paste(sign);
         }
     }
 
     /**
      * Clear the area.
      */
-    public void clear(World w) {
+    public void clear(Sign sign) {
 
+        World w = sign.getWorld();
         List<Vector> queued = new ArrayList<Vector>();
 
         for (int x = 0; x < width; x++) {
@@ -135,10 +137,10 @@ public abstract class CuboidCopy {
     /**
      * Checks the state of the cuboid. If it should be toggled on or off.
      *
-     * @param world to check in
+     * @param sign attached with the area
      * @return true if cuboid is toggled on and should be cleared
      */
-    public abstract boolean shouldClear(World world);
+    public abstract boolean shouldClear(Sign sign);
 
     /**
      * Saves the cuboid to file.
@@ -160,9 +162,9 @@ public abstract class CuboidCopy {
     /**
      * Pastes the cuboid copy into the world on its point of origin.
      *
-     * @param world to paste into
+     * @param sign that triggered the paste
      */
-    public abstract void paste(World world);
+    public abstract void paste(Sign sign);
 
     /**
      * Copies the cuboid from the world caching its state and blocks.

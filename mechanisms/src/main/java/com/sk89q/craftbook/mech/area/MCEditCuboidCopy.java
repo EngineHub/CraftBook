@@ -8,6 +8,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.schematic.SchematicFormat;
 import org.bukkit.World;
+import org.bukkit.block.Sign;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +19,12 @@ import java.io.IOException;
 public class MCEditCuboidCopy extends CuboidCopy {
 
     private CuboidClipboard clipboard;
+    private boolean on;
 
     public MCEditCuboidCopy(Vector origin, Vector size) {
         super(origin, size);
         this.clipboard = new CuboidClipboard(size, origin);
+        on = true;
     }
 
     protected MCEditCuboidCopy() {
@@ -39,23 +42,33 @@ public class MCEditCuboidCopy extends CuboidCopy {
     }
 
     @Override
-    public void paste(World world) {
+    public void paste(Sign sign) {
         try {
-            clipboard.paste(new EditSession(new BukkitWorld(world), -1), origin, false);
+            clipboard.paste(new EditSession(new BukkitWorld(sign.getWorld()), -1), origin, false);
+            sign.setLine(1, sign.getLine(1) + "#");
+            sign.update();
         } catch (MaxChangedBlocksException e) {
             // is never thrown because we are on infinite mode
         }
     }
 
     @Override
-    public void copy(World world) {
-        // -1 means no block limit
-        clipboard.copy(new EditSession(new BukkitWorld(world), -1));
+    public void clear(Sign sign) {
+        super.clear(sign);
+        sign.setLine(1, sign.getLine(1).replace("#", ""));
+        sign.update();
     }
 
     @Override
-    public boolean shouldClear(World world) {
-        // TODO:
-        return false;
+    public void copy(World world) {
+        // -1 means no block limit
+        clipboard.copy(new EditSession(new BukkitWorld(world), -1));
+        on = true;
+    }
+
+    @Override
+    public boolean shouldClear(Sign sign) {
+        on = sign.getLine(1).contains("#");
+        return on;
     }
 }
