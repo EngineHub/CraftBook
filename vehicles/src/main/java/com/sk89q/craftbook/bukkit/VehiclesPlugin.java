@@ -27,8 +27,8 @@ import com.sk89q.craftbook.cart.MinecartManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -251,69 +251,70 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         @EventHandler
         public void onSignChange(SignChangeEvent event) {
             //TODO make this method simpler :|
-            Sign s = (Sign) event.getBlock().getState();
+            Block block = event.getBlock();
+            String[] lines = event.getLines();
             LocalPlayer player = wrap(event.getPlayer());
 
-            if (s.getLine(1).equalsIgnoreCase("[deposit]") || s.getLine(1).equalsIgnoreCase("[collect]")) {
+            if (lines[1].equalsIgnoreCase("[deposit]") || lines[1].equalsIgnoreCase("[collect]")) {
                 if (!player.hasPermission("craftbook.vehicles.deposit")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[dispenser]")) {
+            if (lines[1].equalsIgnoreCase("[dispenser]")) {
                 if (!player.hasPermission("craftbook.vehicles.dispenser")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[eject]")) {
+            if (lines[1].equalsIgnoreCase("[eject]")) {
                 if (!player.hasPermission("craftbook.vehicles.eject")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[print]")) {
+            if (lines[1].equalsIgnoreCase("[print]")) {
                 if (!player.hasPermission("craftbook.vehicles.print")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[reverse]")) {
+            if (lines[1].equalsIgnoreCase("[reverse]")) {
                 if (!player.hasPermission("craftbook.vehicles.reverse")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[sort]")) {
+            if (lines[1].equalsIgnoreCase("[sort]")) {
                 if (!player.hasPermission("craftbook.vehicles.sort")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[station]")) {
+            if (lines[1].equalsIgnoreCase("[station]")) {
                 if (!player.hasPermission("craftbook.vehicles.station")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
             }
-            if (s.getLine(1).equalsIgnoreCase("[teleport]")) {
+            if (lines[1].equalsIgnoreCase("[teleport]")) {
                 if (!player.hasPermission("craftbook.vehicles.teleport")) {
                     player.printError("vehicles.create-permission");
-                    event.getBlock().breakNaturally();
+                    block.breakNaturally();
                     event.setCancelled(true);
                 }
             }
