@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech.ai;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
@@ -16,7 +17,7 @@ public class ZombieAIMechanic implements BaseAIMechanic {
 
     @Override
     public void onEntityTarget(EntityTargetEvent event) {
-	if(!(event.getEntity() instanceof Zombie)) return; //Just making sure
+	if(!(event.getEntity() instanceof Zombie) || event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) return; //Just making sure
 
 	Zombie zombie = (Zombie)event.getEntity();
 	if(!zombie.hasLineOfSight(event.getTarget())) { //Zombie can't see the target.
