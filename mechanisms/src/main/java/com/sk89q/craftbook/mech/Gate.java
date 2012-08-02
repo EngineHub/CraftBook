@@ -317,7 +317,7 @@ public class Gate extends AbstractMechanic {
 
 	    if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
 		// If NoReplace is on line 3 of sign, do not replace blocks.
-		if (cur != 0) {
+		if (cur != 0 && !isValidGateBlock(cur)) {
 		    break;
 		}
 	    } else {
