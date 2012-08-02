@@ -193,7 +193,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	return true;
     }
 
-    /*
+    /**
      * Register a mechanic if possible
      *
      * @param factory
@@ -203,7 +203,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	manager.register(factory);
     }
 
-    /*
+    /**
      * Register a array of mechanics if possible
      *
      * @param factory
@@ -215,7 +215,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	}
     }
 
-    /*
+    /**
      * Unregister a mechanic if possible
      *
      * TODO Ensure no remnants are left behind
