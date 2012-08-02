@@ -33,6 +33,7 @@ import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
+import com.sk89q.craftbook.mech.AIMechanic;
 import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
@@ -162,6 +163,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	getServer().getPluginManager().registerEvents(new Snow(this), this);
 	getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
 	getServer().getPluginManager().registerEvents(cc, this);
+	getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
     }
 
     @Override
