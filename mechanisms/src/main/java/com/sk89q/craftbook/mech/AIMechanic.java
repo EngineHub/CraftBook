@@ -14,7 +14,7 @@ public class AIMechanic implements Listener {
     public MechanismsPlugin plugin;
 
     public AIMechanic(MechanismsPlugin plugin) {
-
+	this.plugin = plugin;
     }
 
     @EventHandler
