@@ -1,4 +1,4 @@
-recipes:
+cauldron-recipes:
   default:
     name: "Default"
     description: "Test Recipe"
