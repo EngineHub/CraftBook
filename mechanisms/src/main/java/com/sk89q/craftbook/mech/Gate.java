@@ -414,11 +414,12 @@ public class Gate extends AbstractMechanic {
 			sign.update();
 		    }
 
-		    if(!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+		    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
 			if (event.getPlayer().getItemInHand().getAmount() <= 1) {
 			    event.getPlayer().setItemInHand(new ItemStack(0, 0));
 			} else
-			    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+			    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+				    - 1);
 		    }
 
 		    player.print("Gate Restocked!");

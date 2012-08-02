@@ -24,9 +24,8 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -201,11 +200,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (!(event.getVehicle() instanceof Boat)) return;
 
             VehiclesConfiguration config = getLocalConfiguration();
-            if (config.boatBreakReturn) {
-                ItemStack boatStack = new ItemStack(Material.BOAT, 1);
+            if (config.boatBreakReturn && event.getAttacker() == null) {
                 Boat boat = (Boat) event.getVehicle();
-                Location loc = boat.getLocation();
-                loc.getWorld().dropItemNaturally(loc, boatStack);
+                boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), new ItemStack(ItemID.WOOD_BOAT));
                 boat.remove();
                 event.setCancelled(true);
             }
