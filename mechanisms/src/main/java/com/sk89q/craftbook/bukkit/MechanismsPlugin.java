@@ -26,7 +26,6 @@ import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.*;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
-import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
@@ -94,7 +93,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         manager.register(new HiddenSwitch.Factory(this));
         manager.register(new CookingPot.Factory(this));
         manager.register(new Cauldron.Factory(this));
-        manager.register(new ImprovedCauldron.Factory(this));
+        //manager.register(new ImprovedCauldron.Factory(this)); TODO Fix NPE so this can be turned back on
 
         //Special mechanics.
         if (economy != null) manager.register(new Payment.Factory(this));

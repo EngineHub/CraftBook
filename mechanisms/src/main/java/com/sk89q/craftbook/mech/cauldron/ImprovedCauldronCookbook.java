@@ -36,9 +36,10 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
     }
 
     private void load(ConfigurationSection cfg) {
+        // TODO Fix NPE
         // lets load all recipes
         Set<String> keys = cfg.getKeys(false);
-        if (cfg.getKeys(false) != null) {
+        if (keys != null) {
             for (String key : keys) {
                 recipes.add(new Recipe(key, cfg));
             }
