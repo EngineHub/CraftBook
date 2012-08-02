@@ -190,7 +190,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     }
 
     /*
-     * Register a mechanic if possible
+     * Unregister a mechanic if possible
+     *
+     * TODO Ensure no remnants are left behind
      *
      * @param factory
      *
