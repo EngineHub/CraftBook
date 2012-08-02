@@ -20,6 +20,7 @@ public class AIMechanic implements Listener {
     @EventHandler
     public void onEntityTarget(EntityTargetEvent event) {
 	if(!plugin.getLocalConfiguration().aiSettings.enabled) return;
+	if(event.getTarget() == null || event.getEntity() == null) return;
 	BaseAIMechanic ai = null;
 	if(event.getEntity() instanceof Zombie)
 	    ai = new ZombieAIMechanic(plugin);
