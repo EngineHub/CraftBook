@@ -53,6 +53,7 @@ import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 
 
@@ -115,7 +116,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	registerMechanic(new HiddenSwitch.Factory(this));
 	registerMechanic(new CookingPot.Factory(this));
 	registerMechanic(new Cauldron.Factory(this));
-	//manager.register(new ImprovedCauldron.Factory(this)); TODO Fix NPE so this can be turned back on
+	registerMechanic(new ImprovedCauldron.Factory(this));
 
 	//Special mechanics.
 	if (economy != null) manager.register(new Payment.Factory(this));
