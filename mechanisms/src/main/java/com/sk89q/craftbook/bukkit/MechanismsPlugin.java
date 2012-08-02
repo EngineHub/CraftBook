@@ -19,9 +19,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.*;
 import com.sk89q.craftbook.mech.area.Area;
@@ -42,11 +40,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public class MechanismsPlugin extends BaseBukkitPlugin {
 
+    public final CopyManager copyManager = new CopyManager();
+
     protected MechanismsConfiguration config;
 
-    public static Economy economy = null;
-
-    public final CopyManager copyManager = new CopyManager();
+    private MechanicManager manager;
+    public static Economy economy = null;  //TODO this probably should be implemented differently
 
     @Override
     public void onEnable() {
@@ -73,26 +72,26 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getServer().getPluginManager().isPluginEnabled("Vault"))
             setupEconomy();
 
-        MechanicManager manager = new MechanicManager(this);
+        manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
 
         // Let's register mechanics!
-        manager.register(new Ammeter.Factory(this));
-        manager.register(new Bookcase.Factory(this));
-        manager.register(new Gate.Factory(this));
-        manager.register(new Bridge.Factory(this));
-        manager.register(new Door.Factory(this));
-        manager.register(new Elevator.Factory(this));
-        manager.register(new Teleporter.Factory(this));
-        manager.register(new Area.Factory(this));
-        manager.register(new Command.Factory(this));
-        manager.register(new ChunkAnchor.Factory(this));
-        manager.register(new LightStone.Factory(this));
-        manager.register(new LightSwitch.Factory(this));
-        manager.register(new HiddenSwitch.Factory(this));
-        manager.register(new CookingPot.Factory(this));
-        manager.register(new Cauldron.Factory(this));
+        registerMechanic(new Ammeter.Factory(this));
+        registerMechanic(new Bookcase.Factory(this));
+        registerMechanic(new Gate.Factory(this));
+        registerMechanic(new Bridge.Factory(this));
+        registerMechanic(new Door.Factory(this));
+        registerMechanic(new Elevator.Factory(this));
+        registerMechanic(new Teleporter.Factory(this));
+        registerMechanic(new Area.Factory(this));
+        registerMechanic(new Command.Factory(this));
+        registerMechanic(new ChunkAnchor.Factory(this));
+        registerMechanic(new LightStone.Factory(this));
+        registerMechanic(new LightSwitch.Factory(this));
+        registerMechanic(new HiddenSwitch.Factory(this));
+        registerMechanic(new CookingPot.Factory(this));
+        registerMechanic(new Cauldron.Factory(this));
         //manager.register(new ImprovedCauldron.Factory(this)); TODO Fix NPE so this can be turned back on
 
         //Special mechanics.
@@ -159,12 +158,46 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     public boolean reloadPlugin(CommandSender sender) { //XXX experimental
         try {
-            sender.sendMessage(ChatColor.RED + "Succesfully reloaded configuration!");
+            sender.sendMessage(ChatColor.RED + "Successfully reloaded configuration!");
             getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
             getServer().getPluginManager().disablePlugin(this);
         } catch (Exception e) {
             return false;
         }
         return true;
+    }
+
+    /*
+     * Register a mechanic if possible
+     *
+     * @param factory
+     */
+    public void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
+
+        manager.register(factory);
+    }
+
+    /*
+     * Register a array of mechanics if possible
+     *
+     * @param factory
+     */
+    public void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
+
+        for (MechanicFactory<? extends Mechanic> aFactory : factories) {
+            registerMechanic(aFactory);
+        }
+    }
+
+    /*
+     * Register a mechanic if possible
+     *
+     * @param factory
+     *
+     * @return true if the mechanic was successfully unregistered.
+     */
+    private boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
+
+        return manager.unregister(factory);
     }
 }
