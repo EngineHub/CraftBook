@@ -29,7 +29,7 @@ public class ZombieAIMechanic implements BaseAIMechanic {
 	}
 	if(zombie.getLocation().getBlock().getLightLevel() > 6) return; //They can clearly see the target.
 	if(event.getTarget() instanceof Player) {
-	    if(((Player)event.getTarget()).isSneaking())
+	    if(((Player)event.getTarget()).isSneaking() && event.getTarget().getLocation().distance(zombie.getLocation()) > 2)
 		event.setCancelled(true);
 	}
     }
