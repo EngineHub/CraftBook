@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -36,8 +37,11 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
 
     private void load(ConfigurationSection cfg) {
         // lets load all recipes
-        for (String key : cfg.getKeys(false)) {
-            recipes.add(new Recipe(key, cfg));
+        Set<String> keys = cfg.getKeys(false);
+        if (cfg.getKeys(false) != null) {
+            for (String key : keys) {
+                recipes.add(new Recipe(key, cfg));
+            }
         }
     }
 
