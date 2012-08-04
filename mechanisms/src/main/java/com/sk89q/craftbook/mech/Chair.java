@@ -49,9 +49,9 @@ public class Chair extends AbstractMechanic implements Listener {
     private Map<String, Block> chairs = new HashMap<String, Block>();
 
     @Override
-    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
+	if(event.isCancelled()) return;
 	if (!plugin.getLocalConfiguration().chairSettings.enable) return;
 	if (chairs.containsValue(event.getBlock())) { //Stand
 	    for (Entry<String, Block> e : chairs.entrySet())
@@ -67,13 +67,13 @@ public class Chair extends AbstractMechanic implements Listener {
 	}
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 
 	if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 
 	if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
@@ -128,7 +128,7 @@ public class Chair extends AbstractMechanic implements Listener {
 	}
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
 	if (chairs.containsKey(event.getPlayer().getName())) {
 	    if (chairs.get(event.getPlayer().getName()).getLocation().add(0.5, 0, 0.5).distance(event.getTo()) > 1.0D) {
