@@ -332,7 +332,7 @@ public class Gate extends AbstractMechanic {
 		if (ID == 0 || curBlocks > 0) {
 		    if (ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
 			curBlocks++;
-		    else if (world.getBlockAt(x, y1, z).getTypeId() == 0 && isValidGateItem(new ItemStack(ID, 1)))
+		    else if (ID != 0 && canReplace(world.getBlockAt(x, y1, z).getTypeId()) && isValidGateItem(new ItemStack(ID, 1)))
 			curBlocks--;
 		    world.getBlockAt(x, y1, z).setTypeId(ID);
 
@@ -606,8 +606,7 @@ public class Gate extends AbstractMechanic {
 
     }
 
-    private boolean canPassThrough(int t) {
-
+    private boolean canReplace(int t) {
 	int[] passableBlocks = new int[9];
 	passableBlocks[0] = BlockID.WATER;
 	passableBlocks[1] = BlockID.STATIONARY_WATER;
@@ -623,7 +622,14 @@ public class Gate extends AbstractMechanic {
 	    if (aPassableBlock == t) return true;
 	}
 
-	return isValidGateBlock(t);
+	return false;
+    }
+
+    private boolean canPassThrough(int t) {
+	if(canReplace(t) != true)
+	    return isValidGateBlock(t);
+	else
+	    return true;
     }
 
 
