@@ -18,45 +18,20 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
+import com.sk89q.craftbook.mech.*;
+import com.sk89q.craftbook.mech.area.Area;
+import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
+import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
-import com.sk89q.craftbook.mech.AIMechanic;
-import com.sk89q.craftbook.mech.Ammeter;
-import com.sk89q.craftbook.mech.Bookcase;
-import com.sk89q.craftbook.mech.Bridge;
-import com.sk89q.craftbook.mech.Cauldron;
-import com.sk89q.craftbook.mech.Chair;
-import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.Command;
-import com.sk89q.craftbook.mech.CookingPot;
-import com.sk89q.craftbook.mech.CustomCrafting;
-import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.Door;
-import com.sk89q.craftbook.mech.Elevator;
-import com.sk89q.craftbook.mech.Gate;
-import com.sk89q.craftbook.mech.HiddenSwitch;
-import com.sk89q.craftbook.mech.LightStone;
-import com.sk89q.craftbook.mech.LightSwitch;
-import com.sk89q.craftbook.mech.Payment;
-import com.sk89q.craftbook.mech.Snow;
-import com.sk89q.craftbook.mech.Teleporter;
-import com.sk89q.craftbook.mech.area.Area;
-import com.sk89q.craftbook.mech.area.CopyManager;
-import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
-import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 
 
 /**
@@ -76,73 +51,73 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @Override
     public void onEnable() {
 
-	super.onEnable();
+        super.onEnable();
 
-	// Register command classes
-	final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
-	reg.register(MechanismCommands.class);
+        // Register command classes
+        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
+        reg.register(MechanismCommands.class);
 
-	createDefaultConfiguration("books.txt", false);
-	createDefaultConfiguration("cauldron-recipes.txt", false);
-	createDefaultConfiguration("config.yml", false);
-	createDefaultConfiguration("custom-mob-drops.txt", false);
-	createDefaultConfiguration("custom-block-drops.txt", false);
-	createDefaultConfiguration("recipes.txt", false);
-	createDefaultConfiguration("cauldron-recipes.yml", false);
+        createDefaultConfiguration("books.txt", false);
+        createDefaultConfiguration("cauldron-recipes.txt", false);
+        createDefaultConfiguration("config.yml", false);
+        createDefaultConfiguration("custom-mob-drops.txt", false);
+        createDefaultConfiguration("custom-block-drops.txt", false);
+        createDefaultConfiguration("recipes.txt", false);
+        createDefaultConfiguration("cauldron-recipes.yml", false);
 
-	config = new MechanismsConfiguration(getConfig(), getDataFolder());
-	saveConfig();
+        config = new MechanismsConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
-	languageManager = new LanguageManager(this);
+        languageManager = new LanguageManager(this);
 
-	if (getServer().getPluginManager().isPluginEnabled("Vault"))
-	    setupEconomy();
+        if (getServer().getPluginManager().isPluginEnabled("Vault"))
+            setupEconomy();
 
-	manager = new MechanicManager(this);
-	MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
-	adapter.register(manager);
+        manager = new MechanicManager(this);
+        MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
+        adapter.register(manager);
 
-	// Let's register mechanics!
-	if(getLocalConfiguration().ammeterSettings.enable)
-	    registerMechanic(new Ammeter.Factory(this));
-	if(getLocalConfiguration().bookcaseSettings.enable)
-	    registerMechanic(new Bookcase.Factory(this));
-	if(getLocalConfiguration().gateSettings.enable)
-	    registerMechanic(new Gate.Factory(this));
-	if(getLocalConfiguration().bridgeSettings.enable)
-	    registerMechanic(new Bridge.Factory(this));
-	if(getLocalConfiguration().doorSettings.enable)
-	    registerMechanic(new Door.Factory(this));
-	if(getLocalConfiguration().elevatorSettings.enable)
-	    registerMechanic(new Elevator.Factory(this));
-	if(getLocalConfiguration().teleporterSettings.enable)
-	    registerMechanic(new Teleporter.Factory(this));
-	if(getLocalConfiguration().areaSettings.enable)
-	    registerMechanic(new Area.Factory(this));
-	if(getLocalConfiguration().commandSettings.enable)
-	    registerMechanic(new Command.Factory(this));
-	if(getLocalConfiguration().anchorSettings.enable)
-	    registerMechanic(new ChunkAnchor.Factory(this));
-	if(getLocalConfiguration().lightStoneSettings.enable)
-	    registerMechanic(new LightStone.Factory(this));
-	if(getLocalConfiguration().lightSwitchSettings.enable)
-	    registerMechanic(new LightSwitch.Factory(this));
-	if(getLocalConfiguration().hiddenSwitchSettings.enable)
-	    registerMechanic(new HiddenSwitch.Factory(this));
-	if(getLocalConfiguration().cookingPotSettings.enable)
-	    registerMechanic(new CookingPot.Factory(this));
-	if(getLocalConfiguration().cauldronSettings.enable)
-	    registerMechanic(new Cauldron.Factory(this));
-	if(getLocalConfiguration().cauldronSettings.enableNew)
-	    registerMechanic(new ImprovedCauldron.Factory(this));
+        // Let's register mechanics!
+        if (getLocalConfiguration().ammeterSettings.enable)
+            registerMechanic(new Ammeter.Factory(this));
+        if (getLocalConfiguration().bookcaseSettings.enable)
+            registerMechanic(new Bookcase.Factory(this));
+        if (getLocalConfiguration().gateSettings.enable)
+            registerMechanic(new Gate.Factory(this));
+        if (getLocalConfiguration().bridgeSettings.enable)
+            registerMechanic(new Bridge.Factory(this));
+        if (getLocalConfiguration().doorSettings.enable)
+            registerMechanic(new Door.Factory(this));
+        if (getLocalConfiguration().elevatorSettings.enable)
+            registerMechanic(new Elevator.Factory(this));
+        if (getLocalConfiguration().teleporterSettings.enable)
+            registerMechanic(new Teleporter.Factory(this));
+        if (getLocalConfiguration().areaSettings.enable)
+            registerMechanic(new Area.Factory(this));
+        if (getLocalConfiguration().commandSettings.enable)
+            registerMechanic(new Command.Factory(this));
+        if (getLocalConfiguration().anchorSettings.enable)
+            registerMechanic(new ChunkAnchor.Factory(this));
+        if (getLocalConfiguration().lightStoneSettings.enable)
+            registerMechanic(new LightStone.Factory(this));
+        if (getLocalConfiguration().lightSwitchSettings.enable)
+            registerMechanic(new LightSwitch.Factory(this));
+        if (getLocalConfiguration().hiddenSwitchSettings.enable)
+            registerMechanic(new HiddenSwitch.Factory(this));
+        if (getLocalConfiguration().cookingPotSettings.enable)
+            registerMechanic(new CookingPot.Factory(this));
+        if (getLocalConfiguration().cauldronSettings.enable)
+            registerMechanic(new Cauldron.Factory(this));
+        if (getLocalConfiguration().cauldronSettings.enableNew)
+            registerMechanic(new ImprovedCauldron.Factory(this));
 
-	//Special mechanics.
-	if (economy != null) registerMechanic(new Payment.Factory(this));
+        //Special mechanics.
+        if (economy != null) registerMechanic(new Payment.Factory(this));
 
-	setupSelfTriggered(manager);
+        setupSelfTriggered(manager);
 
-	// Register events
-	registerEvents();
+        // Register events
+        registerEvents();
     }
 
     /**
@@ -150,72 +125,72 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      */
     private void setupSelfTriggered(MechanicManager manager) {
 
-	logger.info("CraftBook: Enumerating chunks for INSTANCE-triggered components...");
+        logger.info("CraftBook: Enumerating chunks for INSTANCE-triggered components...");
 
-	long start = System.currentTimeMillis();
-	int numWorlds = 0;
-	int numChunks = 0;
+        long start = System.currentTimeMillis();
+        int numWorlds = 0;
+        int numChunks = 0;
 
-	for (World world : getServer().getWorlds()) {
-	    for (Chunk chunk : world.getLoadedChunks()) {
-		manager.enumerate(chunk);
-		numChunks++;
-	    }
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                manager.enumerate(chunk);
+                numChunks++;
+            }
 
-	    numWorlds++;
-	}
+            numWorlds++;
+        }
 
-	long time = System.currentTimeMillis() - start;
+        long time = System.currentTimeMillis() - start;
 
-	logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
-		+ "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
+        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
+                + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
 
-	// Set up the clock for INSTANCE-triggered Mechanics.
-	getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
+        // Set up the clock for INSTANCE-triggered Mechanics.
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
     }
 
     @Override
     protected void registerEvents() {
 
-	if(getLocalConfiguration().dispenserSettings.enable)
-	    getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
-	if(getLocalConfiguration().snowSettings.enable)
-	    getServer().getPluginManager().registerEvents(new Snow(this), this);
-	if(getLocalConfiguration().customDropSettings.enable)
-	    getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
-	if(getLocalConfiguration().customCraftingSettings.enable)
-	    getServer().getPluginManager().registerEvents(new CustomCrafting(this), this);
-	if(getLocalConfiguration().aiSettings.enabled)
-	    getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
-	if(getLocalConfiguration().chairSettings.enable)
-	    getServer().getPluginManager().registerEvents(new Chair(this), this);
+        if (getLocalConfiguration().dispenserSettings.enable)
+            getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
+        if (getLocalConfiguration().snowSettings.enable)
+            getServer().getPluginManager().registerEvents(new Snow(this), this);
+        if (getLocalConfiguration().customDropSettings.enable)
+            getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
+        if (getLocalConfiguration().customCraftingSettings.enable)
+            getServer().getPluginManager().registerEvents(new CustomCrafting(this), this);
+        if (getLocalConfiguration().aiSettings.enabled)
+            getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
+        if (getLocalConfiguration().chairSettings.enable)
+            getServer().getPluginManager().registerEvents(new Chair(this), this);
     }
 
     @Override
     public MechanismsConfiguration getLocalConfiguration() {
 
-	return config;
+        return config;
     }
 
     private boolean setupEconomy() {
 
-	RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
-		.milkbowl.vault.economy.Economy.class);
-	if (economyProvider != null)
-	    economy = economyProvider.getProvider();
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
+                .milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null)
+            economy = economyProvider.getProvider();
 
-	return economy != null;
+        return economy != null;
     }
 
     public boolean reloadPlugin(CommandSender sender) { //XXX experimental
-	try {
-	    sender.sendMessage(ChatColor.RED + "Successfully reloaded configuration!");
-	    getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
-	    getServer().getPluginManager().disablePlugin(this);
-	} catch (Exception e) {
-	    return false;
-	}
-	return true;
+        try {
+            sender.sendMessage(ChatColor.RED + "Successfully reloaded configuration!");
+            getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
+            getServer().getPluginManager().disablePlugin(this);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -225,7 +200,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      */
     public void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
 
-	manager.register(factory);
+        manager.register(factory);
     }
 
     /**
@@ -235,14 +210,13 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      */
     public void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
-	for (MechanicFactory<? extends Mechanic> aFactory : factories) {
-	    registerMechanic(aFactory);
-	}
+        for (MechanicFactory<? extends Mechanic> aFactory : factories) {
+            registerMechanic(aFactory);
+        }
     }
 
     /**
      * Unregister a mechanic if possible
-     *
      * TODO Ensure no remnants are left behind
      *
      * @param factory
@@ -252,6 +226,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @SuppressWarnings("unused")
     private boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
-	return manager.unregister(factory);
+        return manager.unregister(factory);
     }
 }
