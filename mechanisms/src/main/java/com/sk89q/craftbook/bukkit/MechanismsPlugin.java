@@ -136,7 +136,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	    registerMechanic(new ImprovedCauldron.Factory(this));
 
 	//Special mechanics.
-	if (economy != null) manager.register(new Payment.Factory(this));
+	if (economy != null) registerMechanic(new Payment.Factory(this));
 
 	setupSelfTriggered(manager);
     }
