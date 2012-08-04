@@ -38,6 +38,7 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
@@ -134,6 +135,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	    registerMechanic(new Cauldron.Factory(this));
 	if(getLocalConfiguration().cauldronSettings.enableNew)
 	    registerMechanic(new ImprovedCauldron.Factory(this));
+	if(getLocalConfiguration().chairSettings.enable)
+	    registerMechanic(new Chair.Factory(this));
 
 	//Special mechanics.
 	if (economy != null) registerMechanic(new Payment.Factory(this));
