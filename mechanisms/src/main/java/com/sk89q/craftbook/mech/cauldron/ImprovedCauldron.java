@@ -15,12 +15,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
@@ -82,10 +79,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 	this.plugin = plugin;
 	this.block = block;
 	cookbook = recipes;
-	plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    /*TODO@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerPickup(PlayerPickupItemEvent event) {
 	if(block == null) return;
 	if(event.getItem().getLocation().getBlock().getLocation().distance(block.getLocation()) < 1) {
@@ -93,7 +89,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 		event.setCancelled(true);
 	    }
 	}
-    }
+    }*/
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
