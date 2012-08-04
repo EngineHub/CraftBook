@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -34,7 +35,7 @@ public class CustomCrafting implements Listener {
 
     public final HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
 
 	if (event.getInventory() instanceof FurnaceInventory) {
@@ -49,7 +50,7 @@ public class CustomCrafting implements Listener {
 	}
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFurnaceBurn(FurnaceBurnEvent event) {
 
 	if (event.getFuel() == null) return;
