@@ -186,6 +186,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 	    manager.register(new ICMechanicFactory(this, icManager));
 	    setupSelfTriggered();
 	}
+
+	// Register events
+	registerEvents();
     }
 
     /**

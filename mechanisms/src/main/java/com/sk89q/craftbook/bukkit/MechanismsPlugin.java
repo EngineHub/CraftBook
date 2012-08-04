@@ -142,6 +142,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	if (economy != null) registerMechanic(new Payment.Factory(this));
 
 	setupSelfTriggered(manager);
+
+	// Register events
+	registerEvents();
     }
 
     /**
