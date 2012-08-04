@@ -310,7 +310,7 @@ public class Gate extends AbstractMechanic {
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
-                if (cur != 0 && !isValidGateBlock(cur)) {
+                if (cur != 0) {
                     break;
                 }
             } else {
@@ -325,8 +325,8 @@ public class Gate extends AbstractMechanic {
                 if (ID == 0 || curBlocks > 0) {
                     if (ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
                         curBlocks++;
-                    else if (ID != 0 && canReplace(world.getBlockAt(x, y1, z).getTypeId()) && isValidGateItem(new
-                            ItemStack(ID, 1)))
+                    else if (ID != 0 && canPassThrough(world.getBlockAt(x, y1, z).getTypeId())
+                            && isValidGateItem(new ItemStack(ID, 1)))
                         curBlocks--;
                     world.getBlockAt(x, y1, z).setTypeId(ID);
 
@@ -567,6 +567,7 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
+        if (event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
         Sign sign = null;
 
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
@@ -600,7 +601,7 @@ public class Gate extends AbstractMechanic {
 
     }
 
-    private boolean canReplace(int t) {
+    private boolean canPassThrough(int t) {
 
         int[] passableBlocks = new int[9];
         passableBlocks[0] = BlockID.WATER;
@@ -617,15 +618,7 @@ public class Gate extends AbstractMechanic {
             if (aPassableBlock == t) return true;
         }
 
-        return false;
-    }
-
-    private boolean canPassThrough(int t) {
-
-        if (canReplace(t) != true)
-            return isValidGateBlock(t);
-        else
-            return true;
+        return isValidGateBlock(t);
     }
 
 
