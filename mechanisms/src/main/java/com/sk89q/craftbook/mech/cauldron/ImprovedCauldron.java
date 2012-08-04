@@ -29,7 +29,6 @@ import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
@@ -120,7 +119,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 			double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
 			Random r = new Random();
 			double ran = r.nextDouble();
-			event.getPlayer().setItemInHand(ItemUtil.getUsedItem(event.getPlayer().getItemInHand()));
+			event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - (short)1));
 			if (chance <= ran) {
 			    cook(recipe, items);
 			    event.getPlayer().sendMessage(
