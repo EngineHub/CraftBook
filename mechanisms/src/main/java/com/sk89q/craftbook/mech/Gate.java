@@ -310,7 +310,7 @@ public class Gate extends AbstractMechanic {
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
-                if (cur != 0) {
+                if (cur != 0 && !isValidGateBlock(cur)) {
                     break;
                 }
             } else {
@@ -567,7 +567,6 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
         Sign sign = null;
 
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
