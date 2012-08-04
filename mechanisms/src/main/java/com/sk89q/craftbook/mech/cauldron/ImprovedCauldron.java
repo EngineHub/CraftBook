@@ -83,10 +83,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 	this.plugin = plugin;
 	this.block = block;
 	cookbook = recipes;
-    }
-
-    public ImprovedCauldron() {
-
+	plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
