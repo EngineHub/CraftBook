@@ -63,6 +63,14 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
 	super.onEnable();
 
+	createDefaultConfiguration("config.yml", false);
+
+	// config has to be loaded before the listeners are built because they cache stuff
+	config = new VehiclesConfiguration(getConfig(), getDataFolder());
+	saveConfig();
+
+	languageManager = new LanguageManager(this);
+
 	cartman = new MinecartManager(this);
 
 	// Register events
@@ -71,16 +79,6 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
     @Override
     protected void registerEvents() {
-
-	createDefaultConfiguration("config.yml", false);
-
-	// config has to be loaded before the listeners are built because they cache stuff
-	config = new VehiclesConfiguration(getConfig(), getDataFolder());
-	saveConfig();
-
-
-	languageManager = new LanguageManager(this);
-
 	getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(this), this);
 	getServer().getPluginManager().registerEvents(new CraftBookVehicleBlockListener(this), this);
     }
