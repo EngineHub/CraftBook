@@ -176,9 +176,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @Override
     protected void registerEvents() {
 
-	CustomCrafting cc = new CustomCrafting(this);
-	if(getLocalConfiguration().customCraftingSettings.enable)
-	    cc.addRecipes();
 	if(getLocalConfiguration().dispenserSettings.enable)
 	    getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
 	if(getLocalConfiguration().snowSettings.enable)
@@ -186,7 +183,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	if(getLocalConfiguration().customDropSettings.enable)
 	    getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
 	if(getLocalConfiguration().customCraftingSettings.enable)
-	    getServer().getPluginManager().registerEvents(cc, this);
+	    getServer().getPluginManager().registerEvents(new CustomCrafting(this), this);
 	if(getLocalConfiguration().aiSettings.enabled)
 	    getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
     }
