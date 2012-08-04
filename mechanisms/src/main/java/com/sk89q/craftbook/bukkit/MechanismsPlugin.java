@@ -102,22 +102,38 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	adapter.register(manager);
 
 	// Let's register mechanics!
-	registerMechanic(new Ammeter.Factory(this));
-	registerMechanic(new Bookcase.Factory(this));
-	registerMechanic(new Gate.Factory(this));
-	registerMechanic(new Bridge.Factory(this));
-	registerMechanic(new Door.Factory(this));
-	registerMechanic(new Elevator.Factory(this));
-	registerMechanic(new Teleporter.Factory(this));
-	registerMechanic(new Area.Factory(this));
-	registerMechanic(new Command.Factory(this));
-	registerMechanic(new ChunkAnchor.Factory(this));
-	registerMechanic(new LightStone.Factory(this));
-	registerMechanic(new LightSwitch.Factory(this));
-	registerMechanic(new HiddenSwitch.Factory(this));
-	registerMechanic(new CookingPot.Factory(this));
-	registerMechanic(new Cauldron.Factory(this));
-	registerMechanic(new ImprovedCauldron.Factory(this));
+	if(getLocalConfiguration().ammeterSettings.enable)
+	    registerMechanic(new Ammeter.Factory(this));
+	if(getLocalConfiguration().bookcaseSettings.enable)
+	    registerMechanic(new Bookcase.Factory(this));
+	if(getLocalConfiguration().gateSettings.enable)
+	    registerMechanic(new Gate.Factory(this));
+	if(getLocalConfiguration().bridgeSettings.enable)
+	    registerMechanic(new Bridge.Factory(this));
+	if(getLocalConfiguration().doorSettings.enable)
+	    registerMechanic(new Door.Factory(this));
+	if(getLocalConfiguration().elevatorSettings.enable)
+	    registerMechanic(new Elevator.Factory(this));
+	if(getLocalConfiguration().teleporterSettings.enable)
+	    registerMechanic(new Teleporter.Factory(this));
+	if(getLocalConfiguration().areaSettings.enable)
+	    registerMechanic(new Area.Factory(this));
+	if(getLocalConfiguration().commandSettings.enable)
+	    registerMechanic(new Command.Factory(this));
+	if(getLocalConfiguration().anchorSettings.enable)
+	    registerMechanic(new ChunkAnchor.Factory(this));
+	if(getLocalConfiguration().lightStoneSettings.enable)
+	    registerMechanic(new LightStone.Factory(this));
+	if(getLocalConfiguration().lightSwitchSettings.enable)
+	    registerMechanic(new LightSwitch.Factory(this));
+	if(getLocalConfiguration().hiddenSwitchSettings.enable)
+	    registerMechanic(new HiddenSwitch.Factory(this));
+	if(getLocalConfiguration().cookingPotSettings.enable)
+	    registerMechanic(new CookingPot.Factory(this));
+	if(getLocalConfiguration().cauldronSettings.enable)
+	    registerMechanic(new Cauldron.Factory(this));
+	if(getLocalConfiguration().cauldronSettings.enableNew)
+	    registerMechanic(new ImprovedCauldron.Factory(this));
 
 	//Special mechanics.
 	if (economy != null) manager.register(new Payment.Factory(this));
@@ -158,12 +174,18 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     protected void registerEvents() {
 
 	CustomCrafting cc = new CustomCrafting(this);
-	cc.addRecipes();
-	getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
-	getServer().getPluginManager().registerEvents(new Snow(this), this);
-	getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
-	getServer().getPluginManager().registerEvents(cc, this);
-	getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
+	if(getLocalConfiguration().customCraftingSettings.enable)
+	    cc.addRecipes();
+	if(getLocalConfiguration().dispenserSettings.enable)
+	    getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
+	if(getLocalConfiguration().snowSettings.enable)
+	    getServer().getPluginManager().registerEvents(new Snow(this), this);
+	if(getLocalConfiguration().customDropSettings.enable)
+	    getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
+	if(getLocalConfiguration().customCraftingSettings.enable)
+	    getServer().getPluginManager().registerEvents(cc, this);
+	if(getLocalConfiguration().aiSettings.enabled)
+	    getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
     }
 
     @Override

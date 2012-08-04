@@ -65,6 +65,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 	dispenserSettings = new DispenserSettings(cfg);
 	chairSettings = new ChairSettings(cfg);
 	aiSettings = new AISettings(cfg);
+	anchorSettings = new AnchorSettings(cfg);
+	cookingPotSettings = new CookingPotSettings(cfg);
+	customCraftingSettings = new CustomCraftingSettings(cfg);
     }
 
     public final File dataFolder;
@@ -88,6 +91,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public final DispenserSettings dispenserSettings;
     public final ChairSettings chairSettings;
     public final AISettings aiSettings;
+    public final AnchorSettings anchorSettings;
+    public final CookingPotSettings cookingPotSettings;
+    public final CustomCraftingSettings customCraftingSettings;
 
     //General settings
     public class MechanismSettings {
@@ -107,6 +113,36 @@ public class MechanismsConfiguration extends BaseConfiguration {
 	private DispenserSettings(FileConfiguration cfg) {
 
 	    enable = getBoolean(cfg, "dispenser-recipes-enable", true);
+	}
+    }
+
+    public class AnchorSettings {
+
+	public final boolean enable;
+
+	private AnchorSettings(FileConfiguration cfg) {
+
+	    enable = getBoolean(cfg, "chunk-anchor-enable", true);
+	}
+    }
+
+    public class CustomCraftingSettings {
+
+	public final boolean enable;
+
+	private CustomCraftingSettings(FileConfiguration cfg) {
+
+	    enable = getBoolean(cfg, "custom-crafting-enable", true);
+	}
+    }
+
+    public class CookingPotSettings {
+
+	public final boolean enable;
+
+	private CookingPotSettings(FileConfiguration cfg) {
+
+	    enable = getBoolean(cfg, "cooking-pot-enable", true);
 	}
     }
 
@@ -332,10 +368,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
     public class CustomDropSettings {
 
+	public final boolean enable;
 	public final boolean requirePermissions;
 
 	private CustomDropSettings(FileConfiguration cfg) {
 
+	    enable = getBoolean(cfg, "custom-drops-enable", true);
 	    requirePermissions = getBoolean(cfg, "custom-drops-require-permissions", false);
 	}
     }
