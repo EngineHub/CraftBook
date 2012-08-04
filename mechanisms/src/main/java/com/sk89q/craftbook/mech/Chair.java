@@ -51,7 +51,6 @@ public class Chair extends AbstractMechanic implements Listener {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-	if(event.isCancelled()) return;
 	if (!plugin.getLocalConfiguration().chairSettings.enable) return;
 	if (chairs.containsValue(event.getBlock())) { //Stand
 	    for (Entry<String, Block> e : chairs.entrySet())

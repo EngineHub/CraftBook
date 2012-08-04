@@ -20,15 +20,16 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -37,23 +38,21 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  */
 public class GlowStone extends AbstractMechanic {
 
-    private final int originalId;
-
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
 
-        public Factory() {
+	public Factory() {
 
-        }
+	}
 
-        @Override
-        public GlowStone detect(BlockWorldVector pt) {
+	@Override
+	public GlowStone detect(BlockWorldVector pt) {
 
-            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
+	    int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.GLASS || type == BlockID.LIGHTSTONE) return new GlowStone(pt);
+	    if (type == BlockID.GLASS || type == BlockID.LIGHTSTONE) return new GlowStone(pt);
 
-            return null;
-        }
+	    return null;
+	}
     }
 
     /**
@@ -63,8 +62,7 @@ public class GlowStone extends AbstractMechanic {
      */
     private GlowStone(BlockWorldVector pt) {
 
-        super();
-        originalId = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
+	super();
     }
 
     /**
@@ -73,10 +71,10 @@ public class GlowStone extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (event.getNewCurrent() > 0) event.getBlock().setTypeId(BlockID.LIGHTSTONE);
-        else event.getBlock().setTypeId(BlockID.GLASS);
+	if (event.getNewCurrent() > 0) event.getBlock().setTypeId(BlockID.LIGHTSTONE);
+	else event.getBlock().setTypeId(BlockID.GLASS);
 
-        event.getBlock().setData(event.getBlock().getData(), false);
+	event.getBlock().setData(event.getBlock().getData(), false);
     }
 
     /**
@@ -85,10 +83,10 @@ public class GlowStone extends AbstractMechanic {
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
-        if (event.getClickedBlock().isBlockPowered()
-                && event.getClickedBlock().getTypeId() == BlockID.LIGHTSTONE) {
-            event.setCancelled(true);
-        }
+	if (event.getClickedBlock().isBlockPowered()
+		&& event.getClickedBlock().getTypeId() == BlockID.LIGHTSTONE) {
+	    event.setCancelled(true);
+	}
     }
 
     /**
@@ -105,15 +103,11 @@ public class GlowStone extends AbstractMechanic {
     @Override
     public boolean isActive() {
 
-        return false;
+	return false;
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-
-        event.getBlock().setTypeId(originalId);
-        event.getBlock().breakNaturally();
-        event.setCancelled(true);
     }
 
     @Override

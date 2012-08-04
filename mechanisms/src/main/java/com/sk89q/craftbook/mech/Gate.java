@@ -573,7 +573,6 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-	if (event.isCancelled()) return; //This is needed, if its cancelled, it will dupe.
 	Sign sign = null;
 
 	if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
