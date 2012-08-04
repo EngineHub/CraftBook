@@ -135,8 +135,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	    registerMechanic(new Cauldron.Factory(this));
 	if(getLocalConfiguration().cauldronSettings.enableNew)
 	    registerMechanic(new ImprovedCauldron.Factory(this));
-	if(getLocalConfiguration().chairSettings.enable)
-	    registerMechanic(new Chair.Factory(this));
 
 	//Special mechanics.
 	if (economy != null) registerMechanic(new Payment.Factory(this));
@@ -189,6 +187,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 	    getServer().getPluginManager().registerEvents(new CustomCrafting(this), this);
 	if(getLocalConfiguration().aiSettings.enabled)
 	    getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
+	if(getLocalConfiguration().chairSettings.enable)
+	    getServer().getPluginManager().registerEvents(new Chair(this), this);
     }
 
     @Override

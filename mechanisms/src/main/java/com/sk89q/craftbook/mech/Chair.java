@@ -21,34 +21,26 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 
 /**
  * @author Me4502
  */
-public class Chair extends AbstractMechanic implements Listener {
+public class Chair implements Listener {
 
-    private Chair(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
-	super();
+    public Chair(MechanismsPlugin plugin) {
 	this.plugin = plugin;
 	chairs = plugin.getLocalConfiguration().chairSettings.chairs;
     }
 
     private MechanismsPlugin plugin;
-    private Block trigger;
     private Map<String, Block> chairs = new HashMap<String, Block>();
 
-    @Override
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
 	if (!plugin.getLocalConfiguration().chairSettings.enable) return;
@@ -78,18 +70,16 @@ public class Chair extends AbstractMechanic implements Listener {
 	if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
 	if (chairs.containsKey(event.getPlayer().getName())) chairs.remove(event.getPlayer().getName());
     }
 
-    @Override
+    @EventHandler(ignoreCancelled = true)
     public void onRightClick(PlayerInteractEvent event) {
 
 	if (!plugin.getLocalConfiguration().chairSettings.enable) return;
-	if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-	    return; //wth? our manager is insane
 	if (!plugin.getLocalConfiguration().chairSettings.canUseBlock(event.getClickedBlock().getType()))
 	    return; //???
 
@@ -156,51 +146,6 @@ public class Chair extends AbstractMechanic implements Listener {
 	    WatchableObject wo = new WatchableObject(0, 0, metadata);
 	    list.add(wo);
 	    return list;
-	}
-    }
-
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public void unloadWithEvent(ChunkUnloadEvent event) {
-
-    }
-
-    @Override
-    public boolean isActive() {
-	return false;
-    }
-
-    public static class Factory extends AbstractMechanicFactory<Chair> {
-
-	public Factory(MechanismsPlugin plugin) {
-
-	    this.plugin = plugin;
-	}
-
-	private final MechanismsPlugin plugin;
-
-	/**
-	 * Find a chair.
-	 *
-	 * @param pt, the chair.
-	 *
-	 * @return A chair.
-	 * 
-	 * @throws InvalidMechanismException never
-	 */
-	@Override
-	public Chair detect(BlockWorldVector pt) throws InvalidMechanismException {
-
-	    Block block = BukkitUtil.toBlock(pt);
-	    if(plugin.getLocalConfiguration().chairSettings.canUseBlock(block.getType()))
-		return new Chair(block, plugin);
-	    else {
-		return null;
-	    }
 	}
     }
 }
