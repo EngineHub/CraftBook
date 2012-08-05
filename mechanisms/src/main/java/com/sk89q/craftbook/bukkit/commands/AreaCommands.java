@@ -16,6 +16,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.data.DataException;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -60,7 +61,7 @@ public class AreaCommands {
         id = context.getString(0);
 
         if (!CopyManager.isValidName(id)) {
-            player.printError("Invalid area name.");
+            player.printError("Invalid area name. Needs to be between 1 and 13 letters long.");
             return;
         }
 
@@ -68,14 +69,15 @@ public class AreaCommands {
             WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin
                     ("WorldEdit");
 
+            World world = ((Player) sender).getWorld();
             Selection sel = worldEdit.getSelection(((Player) sender));
             Vector min = BukkitUtil.toVector(sel.getMinimumPoint());
             Vector max = BukkitUtil.toVector(sel.getMaximumPoint());
             Vector size = max.subtract(min).add(1, 1, 1);
 
             // Check maximum size
-            if (size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration()
-                    .areaSettings.maxSizePerArea) {
+            if (plugin.getLocalConfiguration().areaSettings.maxSizePerArea != -1 &&
+                    size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration().areaSettings.maxSizePerArea) {
                 player.printError("Area is larger than allowed "
                         + plugin.getLocalConfiguration().areaSettings.maxSizePerArea + " blocks.");
                 return;
@@ -84,7 +86,7 @@ public class AreaCommands {
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
             if (plugin.getLocalConfiguration().areaSettings.maxAreasPerUser >= 0 && !namespace.equals("global")) {
-                int count = plugin.copyManager.meetsQuota(((Player) sender).getWorld(),
+                int count = plugin.copyManager.meetsQuota(world,
                         namespace, id, plugin.getLocalConfiguration().areaSettings.maxAreasPerUser, plugin);
 
                 if (count > -1) {
@@ -99,18 +101,18 @@ public class AreaCommands {
             // Copy
             CuboidCopy copy;
             if (plugin.getLocalConfiguration().areaSettings.useSchematics) {
-                copy = new MCEditCuboidCopy(min, size);
+                copy = new MCEditCuboidCopy(min, size, world);
             } else {
-                copy = new FlatCuboidCopy(min, size);
+                copy = new FlatCuboidCopy(min, size, world);
             }
-            copy.copy(((Player) sender).getWorld());
+            copy.copy();
 
             plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '"
                     + namespace + "' and ID '" + id + "'.");
 
             // Save
             try {
-                plugin.copyManager.save(((Player) sender).getWorld(), namespace, id, copy, plugin);
+                CopyManager.INSTANCE.save(world, namespace, id, copy, plugin);
                 player.print("Area saved as '" + id + "' under the specified namespace.");
             } catch (IOException e) {
                 player.printError("Could not save area: " + e.getMessage());

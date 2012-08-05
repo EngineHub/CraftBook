@@ -30,9 +30,11 @@ import java.util.HashMap;
 /**
  * Used to load, save, and cache cuboid copies.
  *
- * @author sk89q
+ * @author sk89q, Silthus
  */
 public class CopyManager {
+
+    public static final CopyManager INSTANCE = new CopyManager();
 
 	/**
 	 * Cache.
@@ -54,8 +56,10 @@ public class CopyManager {
 	 */
 	public static boolean isValidName(String name) {
 
-		return name.length() > 0 && name.length() <= 30
-				&& name.matches("^[A-Za-z0-9_\\- ]+$");
+        // name needs to be between 1 and 13 letters long so we can fit the - XXX - on the sides of the sign to
+        // indicate what area is toggled on
+		return name.length() > 0 && name.length() <= 13
+				&& name.matches("^[A-Za-z0-9_]+$");
 	}
 
 	/**
@@ -66,7 +70,7 @@ public class CopyManager {
 	 */
 	public static boolean isValidNamespace(String name) {
 
-		return name.length() > 0 && name.length() <= 15
+		return name.length() > 0 && name.length() <= 14
 				&& name.matches("^[A-Za-z0-9_]+$");
 	}
 
@@ -104,11 +108,7 @@ public class CopyManager {
 
 		if (copy == null) {
             File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
-            if (plugin.getLocalConfiguration().areaSettings.useSchematics) {
-                copy = CuboidCopy.load(new File(folder, id + ".schematic"));
-            } else {
-                copy = CuboidCopy.load(new File(folder, id + ".cbcopy"));
-            }
+            copy = CuboidCopy.load(new File(folder, id + getFileSuffix(plugin)), world);
             missing.remove(cacheKey);
             cache.put(cacheKey, copy);
             return copy;
@@ -137,7 +137,7 @@ public class CopyManager {
 
 		String cacheKey = namespace + "/" + id;
 
-		copyFlat.save(new File(folder, id + ".cbcopy"));
+		copyFlat.save(new File(folder, id + getFileSuffix(plugin)));
 		missing.remove(cacheKey);
 		cache.put(id, copyFlat);
 	}
@@ -151,7 +151,7 @@ public class CopyManager {
 	 */
 	public int meetsQuota(World world, String namespace, String ignore, int quota, MechanismsPlugin plugin) {
 
-		String ignoreFilename = ignore + ".cbcopy";
+		String ignoreFilename = ignore + getFileSuffix(plugin);
 
 		String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
@@ -193,4 +193,8 @@ public class CopyManager {
 			return h;
 		}
 	}
+
+    private String getFileSuffix(MechanismsPlugin plugin) {
+        return plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy";
+    }
 }

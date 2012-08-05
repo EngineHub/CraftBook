@@ -23,7 +23,6 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.World;
-import org.bukkit.block.Sign;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -37,7 +36,6 @@ public class FlatCuboidCopy extends CuboidCopy {
 
 	private byte[] blocks;
 	private byte[] data;
-	private Vector testOffset;
 
 	/**
 	 * Construct the object. This is to create a new copy at a certain
@@ -46,9 +44,9 @@ public class FlatCuboidCopy extends CuboidCopy {
 	 * @param origin
 	 * @param size
 	 */
-	public FlatCuboidCopy(Vector origin, Vector size) {
+	public FlatCuboidCopy(Vector origin, Vector size, World world) {
 
-		super(origin, size);
+		super(origin, size, world);
 		blocks = new byte[width * height * length];
 		data = new byte[width * height * length];
 	}
@@ -136,35 +134,31 @@ public class FlatCuboidCopy extends CuboidCopy {
         this.length = length;
         this.blocks = blocks;
         this.data = data;
-		findTestOffset();
 	}
 
 	/**
 	 * Make the copy from world.
 	 */
     @Override
-	public void copy(World w) {
+	public void copy() {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				for (int z = 0; z < length; z++) {
 					int index = y * width * length + z * width + x;
-					blocks[index] = (byte) w.getBlockTypeIdAt(BukkitUtil.toLocation(w, origin.add(x, y, z)));
-					data[index] = w.getBlockAt(BukkitUtil.toLocation(w, origin.add(x, y, z))).getData();
+					blocks[index] = (byte) world.getBlockTypeIdAt(BukkitUtil.toLocation(world, origin.add(x, y, z)));
+					data[index] = world.getBlockAt(BukkitUtil.toLocation(world, origin.add(x, y, z))).getData();
 				}
 			}
 		}
-
-		findTestOffset();
 	}
 
 	/**
 	 * Paste to world.
 	 */
     @Override
-	public void paste(Sign sign) {
+	public void paste() {
 
-        World w = sign.getWorld();
         ArrayList<Tuple2<Vector, byte[]>> queueAfter =
 				new ArrayList<Tuple2<Vector, byte[]>>();
 		ArrayList<Tuple2<Vector, byte[]>> queueLast =
@@ -176,8 +170,8 @@ public class FlatCuboidCopy extends CuboidCopy {
 					int index = y * width * length + z * width + x;
 					Vector pt = origin.add(x, y, z);
 
-					if (BlockType.shouldPlaceLast(w.getBlockTypeIdAt(BukkitUtil.toLocation(w, pt)))) {
-						w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
+					if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
+						world.getBlockAt(BukkitUtil.toLocation(world, pt)).setTypeId(0);
 					}
 
 					if (BlockType.shouldPlaceLast(blocks[index])) {
@@ -191,43 +185,19 @@ public class FlatCuboidCopy extends CuboidCopy {
 
 		for (Tuple2<Vector, byte[]> entry : queueAfter) {
 			byte[] v = entry.b;
-			w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setTypeId(v[0]);
+			world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setTypeId(v[0]);
 			if (BlockType.usesData(v[0])) {
-				w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setData(v[1]);
+				world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
 			}
 		}
 
 		for (Tuple2<Vector, byte[]> entry : queueLast) {
 			byte[] v = entry.b;
-			w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setTypeId(v[0]);
+			world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setTypeId(v[0]);
 			if (BlockType.usesData(v[0])) {
-				w.getBlockAt(BukkitUtil.toLocation(w, entry.a)).setData(v[1]);
+				world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
 			}
 		}
 
-	}
-
-    @Override
-	public boolean shouldClear(Sign sign) {
-
-		Vector v = origin.add(testOffset);
-		return sign.getWorld().getBlockTypeIdAt(BukkitUtil.toLocation(sign.getWorld(), v)) != 0;
-	}
-
-	/**
-	 * Find a good position to test if an area is active.
-	 */
-	private void findTestOffset() {
-
-		for (int y = height - 1; y >= 0; y--) {
-			for (int x = 0; x < width; x++) {
-				for (int z = 0; z < length; z++) {
-					int index = y * width * length + z * width + x;
-					if (blocks[index] != 0) {
-						testOffset = new Vector(x, y, z);
-					}
-				}
-			}
-		}
 	}
 }

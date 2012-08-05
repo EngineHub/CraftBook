@@ -5,7 +5,8 @@ import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
-import org.bukkit.block.Sign;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,16 +22,18 @@ import java.util.List;
  */
 public abstract class CuboidCopy {
 
+    protected World world;
     protected Vector origin;
     protected Vector size;
     protected int width;
     protected int height;
     protected int length;
 
-    public CuboidCopy(Vector origin, Vector size) {
+    public CuboidCopy(Vector origin, Vector size, World world) {
 
         this.origin = origin;
         this.size = size;
+        this.world = world;
         this.width = size.getBlockX();
         this.height = size.getBlockY();
         this.length = size.getBlockZ();
@@ -48,7 +51,7 @@ public abstract class CuboidCopy {
      * @return loaded CuboidCopy
      * @throws CuboidCopyException is thrown when loading error occured
      */
-    public static CuboidCopy load(File file) throws CuboidCopyException {
+    public static CuboidCopy load(File file, World world) throws CuboidCopyException {
         // we need to split off the file extenstion to check what class we need to use
         int index = file.getName().lastIndexOf('.');
         String extension = file.getName().substring(index);
@@ -58,7 +61,7 @@ public abstract class CuboidCopy {
             copy = new FlatCuboidCopy();
         } else if (extension.equalsIgnoreCase(".schematic")) {
             // this copies all blocks including chest content and sign text
-            copy = new MCEditCuboidCopy();
+            copy = new MCEditCuboidCopy(world);
         }
         if (copy == null) {
             throw new CuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
@@ -77,32 +80,23 @@ public abstract class CuboidCopy {
     }
 
     /**
-     * Toggles the cuboid copy on or off depending on its state.
-     *
-     * @param sign that toggled the cuboid
-     */
-    public void toggle(Sign sign) {
-        if (shouldClear(sign)) {
-            clear(sign);
-        } else {
-            paste(sign);
-        }
-    }
-
-    /**
      * Clear the area.
      */
-    public void clear(Sign sign) {
+    public void clear() {
 
-        World w = sign.getWorld();
         List<Vector> queued = new ArrayList<Vector>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     Vector pt = origin.add(x, y, z);
-                    if (BlockType.shouldPlaceLast(w.getBlockTypeIdAt(BukkitUtil.toLocation(w, pt)))) {
-                        w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
+                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
+                        Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));
+                        if (block instanceof InventoryHolder) {
+                            InventoryHolder holder = (InventoryHolder) block;
+                            holder.getInventory().clear();
+                        }
+                        block.setTypeId(0);
                     } else {
                         // Can't destroy these blocks yet
                         queued.add(pt);
@@ -112,7 +106,13 @@ public abstract class CuboidCopy {
         }
 
         for (Vector pt : queued) {
-            w.getBlockAt(BukkitUtil.toLocation(w, pt)).setTypeId(0);
+            Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));
+            if (block instanceof InventoryHolder) {
+
+                InventoryHolder holder = (InventoryHolder) block;
+                holder.getInventory().clear();
+            }
+            block.setTypeId(0);
         }
     }
 
@@ -135,20 +135,12 @@ public abstract class CuboidCopy {
     }
 
     /**
-     * Checks the state of the cuboid. If it should be toggled on or off.
-     *
-     * @param sign attached with the area
-     * @return true if cuboid is toggled on and should be cleared
-     */
-    public abstract boolean shouldClear(Sign sign);
-
-    /**
      * Saves the cuboid to file.
      *
      * @param file to save to
      * @throws IOException
      */
-    public abstract void save(File file) throws IOException, DataException;
+    protected abstract void save(File file) throws IOException, DataException;
 
     /**
      * Loads the cuboid from file. This method is for all sub classes.
@@ -161,15 +153,11 @@ public abstract class CuboidCopy {
 
     /**
      * Pastes the cuboid copy into the world on its point of origin.
-     *
-     * @param sign that triggered the paste
      */
-    public abstract void paste(Sign sign);
+    public abstract void paste();
 
     /**
      * Copies the cuboid from the world caching its state and blocks.
-     *
-     * @param world to copy from
      */
-    public abstract void copy(World world);
+    public abstract void copy();
 }
