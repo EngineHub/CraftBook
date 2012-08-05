@@ -56,7 +56,11 @@ public class ItemSensor extends AbstractIC {
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         this.radius = ICUtil.parseRadius(getSign());
-        this.center = ICUtil.parseBlockLocation(getSign());
+        if (getSign().getLine(2).contains("=")) {
+            center = ICUtil.parseBlockLocation(getSign());
+        } else {
+            center = SignUtil.getBackBlock(getSign().getBlock());
+        }
         this.chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 

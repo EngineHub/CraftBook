@@ -20,187 +20,181 @@ package com.sk89q.craftbook.mech.area;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Used to load, save, and cache cuboid copies.
  *
- * @author sk89q
+ * @author sk89q, Silthus
  */
 public class CopyManager {
 
-    /**
-     * Cache.
-     */
-    private final HashMap<String, HistoryHashMap<String, CuboidCopy>> cache =
-            new HashMap<String, HistoryHashMap<String, CuboidCopy>>();
+    public static final CopyManager INSTANCE = new CopyManager();
 
-    /**
-     * Remembers missing copies so as to not look for them on disk.
-     */
-    private final HashMap<String, HistoryHashMap<String, Long>> missing =
-            new HashMap<String, HistoryHashMap<String, Long>>();
+	/**
+	 * Cache.
+	 */
+	private final HashMap<String, HistoryHashMap<String, CuboidCopy>> cache =
+			new HashMap<String, HistoryHashMap<String, CuboidCopy>>();
 
-    /**
-     * Checks to see whether a name is a valid copy name.
-     *
-     * @param name
-     *
-     * @return
-     */
-    public static boolean isValidName(String name) {
+	/**
+	 * Remembers missing copies so as to not look for them on disk.
+	 */
+	private final HashMap<String, HistoryHashMap<String, Long>> missing =
+			new HashMap<String, HistoryHashMap<String, Long>>();
 
-        return name.length() > 0 && name.length() <= 30
-                && name.matches("^[A-Za-z0-9_\\- ]+$");
-    }
+	/**
+	 * Checks to see whether a name is a valid copy name.
+	 *
+	 * @param name
+	 * @return
+	 */
+	public static boolean isValidName(String name) {
 
-    /**
-     * Checks to see whether a name is a valid namespace.
-     *
-     * @param name
-     *
-     * @return
-     */
-    public static boolean isValidNamespace(String name) {
+        // name needs to be between 1 and 13 letters long so we can fit the - XXX - on the sides of the sign to
+        // indicate what area is toggled on
+		return name.length() > 0 && name.length() <= 13
+				&& name.matches("^[A-Za-z0-9_]+$");
+	}
 
-        return name.length() > 0 && name.length() <= 15
-                && name.matches("^[A-Za-z0-9_]+$");
-    }
+	/**
+	 * Checks to see whether a name is a valid namespace.
+	 *
+	 * @param name
+	 * @return
+	 */
+	public static boolean isValidNamespace(String name) {
 
-    /**
-     * Load a copy from disk. This may return a cached copy. If the copy is not
-     * cached, the file will be loaded from disk if possible. If the copy does
-     * not exist, an exception will be raised. An exception may be raised if the file
-     * exists but cannot be read for whatever reason.
-     *
-     * @param namespace
-     * @param id
-     *
-     * @return
-     *
-     * @throws IOException
-     * @throws MissingCuboidCopyException
-     * @throws CuboidCopyException
-     */
-    public CuboidCopy load(World world, String namespace, String id, MechanismsPlugin plugin)
-            throws IOException, CuboidCopyException {
+		return name.length() > 0 && name.length() <= 14
+				&& name.matches("^[A-Za-z0-9_]+$");
+	}
 
-        id = id.toLowerCase();
-        String cacheKey = namespace + "/" + id;
+	/**
+	 * Load a copy from disk. This may return a cached copy. If the copy is not
+	 * cached, the file will be loaded from disk if possible. If the copy does
+	 * not exist, an exception will be raised. An exception may be raised if the file
+	 * exists but cannot be read for whatever reason.
+	 *
+	 * @param namespace
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 * @throws MissingCuboidCopyException
+	 * @throws CuboidCopyException
+	 */
+	public CuboidCopy load(World world, String namespace, String id, MechanismsPlugin plugin)
+			throws IOException, CuboidCopyException {
 
-        HistoryHashMap<String, Long> missing = getMissing(world.getUID().toString());
+		id = id.toLowerCase();
+		String cacheKey = namespace + "/" + id;
 
-        if (missing.containsKey(cacheKey)) {
-            long lastCheck = missing.get(cacheKey);
-            if (lastCheck > System.currentTimeMillis()) {
-                throw new MissingCuboidCopyException(id);
-            }
-        }
+		HistoryHashMap<String, Long> missing = getMissing(world.getUID().toString());
 
-        HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
+		if (missing.containsKey(cacheKey)) {
+			long lastCheck = missing.get(cacheKey);
+			if (lastCheck > System.currentTimeMillis()) {
+				throw new MissingCuboidCopyException(id);
+			}
+		}
+
+		HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
 
         CuboidCopy copy = cache.get(id);
 
-        if (copy == null) {
-            try {
-                File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
-                copy = CuboidCopy.load(new File(folder, id + ".cbcopy"));
-                missing.remove(cacheKey);
-                cache.put(cacheKey, copy);
-                return copy;
-            } catch (FileNotFoundException e) {
-                missing.put(cacheKey, System.currentTimeMillis() + 10000);
-                throw new MissingCuboidCopyException(id);
-            } catch (IOException e) {
-                missing.put(cacheKey, System.currentTimeMillis() + 10000);
-                throw e;
-            }
+		if (copy == null) {
+            File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
+            copy = CuboidCopy.load(new File(folder, id + getFileSuffix(plugin)), world);
+            missing.remove(cacheKey);
+            cache.put(cacheKey, copy);
+            return copy;
         }
 
-        return copy;
-    }
+		return copy;
+	}
 
-    /**
-     * Save a copy to disk. The copy will be cached.
-     *
-     * @param id
-     * @param copy
-     *
-     * @throws IOException
-     */
-    public void save(World world, String namespace, String id, CuboidCopy copy, MechanismsPlugin plugin)
-            throws IOException {
+	/**
+	 * Save a copy to disk. The copy will be cached.
+	 *
+	 * @param id
+	 * @param copyFlat
+	 * @throws IOException
+	 */
+	public void save(World world, String namespace, String id, CuboidCopy copyFlat, MechanismsPlugin plugin)
+            throws IOException, DataException {
 
-        HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
+		HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
 
-        File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
+		File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
 
-        if (!folder.exists()) folder.mkdirs();
+		if (!folder.exists()) folder.mkdirs();
 
-        id = id.toLowerCase();
+		id = id.toLowerCase();
 
-        String cacheKey = namespace + "/" + id;
+		String cacheKey = namespace + "/" + id;
 
-        copy.save(new File(folder, id + ".cbcopy"));
-        missing.remove(cacheKey);
-        cache.put(id, copy);
-    }
+		copyFlat.save(new File(folder, id + getFileSuffix(plugin)));
+		missing.remove(cacheKey);
+		cache.put(id, copyFlat);
+	}
 
-    /**
-     * Gets whether a copy can be made.
-     *
-     * @param namespace
-     * @param ignore
-     *
-     * @return -1 if the copy can be made, some other number for the count
-     */
-    public int meetsQuota(World world, String namespace, String ignore, int quota, MechanismsPlugin plugin) {
+	/**
+	 * Gets whether a copy can be made.
+	 *
+	 * @param namespace
+	 * @param ignore
+	 * @return -1 if the copy can be made, some other number for the count
+	 */
+	public int meetsQuota(World world, String namespace, String ignore, int quota, MechanismsPlugin plugin) {
 
-        String ignoreFilename = ignore + ".cbcopy";
+		String ignoreFilename = ignore + getFileSuffix(plugin);
 
-        String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
+		String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
-        if (files == null) {
-            return quota > 0 ? -1 : 0;
-        } else if (ignore == null) {
-            return files.length < quota ? -1 : files.length;
-        } else {
-            int count = 0;
+		if (files == null) {
+			return quota > 0 ? -1 : 0;
+		} else if (ignore == null) {
+			return files.length < quota ? -1 : files.length;
+		} else {
+			int count = 0;
 
-            for (String f : files) {
-                if (f.equals(ignoreFilename)) {
-                    return -1;
-                }
+			for (String f : files) {
+				if (f.equals(ignoreFilename)) {
+					return -1;
+				}
 
-                count++;
-            }
+				count++;
+			}
 
-            return count < quota ? -1 : count;
-        }
-    }
+			return count < quota ? -1 : count;
+		}
+	}
 
-    private HistoryHashMap<String, CuboidCopy> getCache(String world) {
+	private HistoryHashMap<String, CuboidCopy> getCache(String world) {
 
-        if (cache.containsKey(world)) return cache.get(world);
-        else {
-            HistoryHashMap<String, CuboidCopy> h = new HistoryHashMap<String, CuboidCopy>(10);
-            cache.put(world, h);
-            return h;
-        }
-    }
+		if (cache.containsKey(world)) return cache.get(world);
+		else {
+			HistoryHashMap<String, CuboidCopy> h = new HistoryHashMap<String, CuboidCopy>(10);
+			cache.put(world, h);
+			return h;
+		}
+	}
 
-    private HistoryHashMap<String, Long> getMissing(String world) {
+	private HistoryHashMap<String, Long> getMissing(String world) {
 
-        if (missing.containsKey(world)) return missing.get(world);
-        else {
-            HistoryHashMap<String, Long> h = new HistoryHashMap<String, Long>(10);
-            missing.put(world, h);
-            return h;
-        }
+		if (missing.containsKey(world)) return missing.get(world);
+		else {
+			HistoryHashMap<String, Long> h = new HistoryHashMap<String, Long>(10);
+			missing.put(world, h);
+			return h;
+		}
+	}
+
+    private String getFileSuffix(MechanismsPlugin plugin) {
+        return plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy";
     }
 }
