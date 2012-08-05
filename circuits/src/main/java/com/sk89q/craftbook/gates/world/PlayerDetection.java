@@ -3,6 +3,7 @@ package com.sk89q.craftbook.gates.world;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -38,7 +39,11 @@ public class PlayerDetection extends AbstractIC {
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
-        this.center = ICUtil.parseBlockLocation(sign);
+        if (getSign().getLine(2).contains("=")) {
+            center = ICUtil.parseBlockLocation(getSign());
+        } else {
+            center = SignUtil.getBackBlock(getSign().getBlock());
+        }
         this.radius = ICUtil.parseRadius(sign);
         // parse the group or player name
         String line = sign.getLine(3).trim();

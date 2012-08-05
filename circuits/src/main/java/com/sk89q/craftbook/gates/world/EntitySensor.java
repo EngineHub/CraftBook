@@ -5,7 +5,6 @@ import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -64,7 +63,7 @@ public class EntitySensor extends AbstractIC {
 
     private HashSet<Type> types;
 
-    private Location center;
+    private Block center;
     private Set<Chunk> chunks;
     private int radius;
 
@@ -92,7 +91,11 @@ public class EntitySensor extends AbstractIC {
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
-        center = ICUtil.parseBlockLocation(getSign()).getLocation();
+        if (getSign().getLine(2).contains("=")) {
+            center = ICUtil.parseBlockLocation(getSign());
+        } else {
+            center = SignUtil.getBackBlock(getSign().getBlock());
+        }
         chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
@@ -170,7 +173,7 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (LocationUtil.getGreatestDistance(entity.getLocation(), center) <= radius) {
+                                if (LocationUtil.getGreatestDistance(entity.getLocation(), center.getLocation()) <= radius) {
                                     return true;
                                 }
                                 break;
