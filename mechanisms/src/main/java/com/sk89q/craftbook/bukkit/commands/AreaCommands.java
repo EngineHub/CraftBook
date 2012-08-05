@@ -38,12 +38,8 @@ public class AreaCommands {
     @Command(
             aliases = {"save"},
             desc = "Saves the selected area",
-            usage = "<name>",
-            help = "Saves the selection as area:\n" +
-                    "Flags:\n" +
-                    "  -n <namespace> saves the to the given namespace",
-            min = 1,
-            flags = "n"
+            usage = "<id> <namespace>",
+            min = 1
     )
     @CommandPermissions({"craftbook.mech.area.save"})
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
@@ -57,8 +53,8 @@ public class AreaCommands {
         }
         String id;
         String namespace = "~" + player.getName();
-        if (context.hasFlag('n')) {
-            namespace = context.getFlag('n');
+        if (!context.getString(1).equals("")) {
+            namespace = context.getString(1);
         }
 
         id = context.getString(0);
