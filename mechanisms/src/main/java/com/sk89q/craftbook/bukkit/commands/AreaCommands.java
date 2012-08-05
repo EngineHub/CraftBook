@@ -53,8 +53,12 @@ public class AreaCommands {
         }
         String id;
         String namespace = "~" + player.getName();
-        if (!context.getString(1).equals("")) {
-            namespace = context.getString(1);
+        try {
+            if (!context.getString(1).equals("")) {
+                namespace = context.getString(1);
+            }
+        } catch (Exception e) {
+            // do nothing and use player name as namespace
         }
 
         id = context.getString(0);
