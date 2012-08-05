@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.*;
@@ -54,8 +53,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         super.onEnable();
 
         // Register command classes
-        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
-        reg.register(MechanismCommands.class);
+        registerCommand(MechanismCommands.class);
 
         createDefaultConfiguration("books.txt", false);
         createDefaultConfiguration("cauldron-recipes.txt", false);
@@ -206,7 +204,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     /**
      * Register a array of mechanics if possible
      *
-     * @param factory
+     * @param factories
      */
     public void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
