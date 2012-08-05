@@ -57,6 +57,9 @@ public class AreaCommands {
         }
         String id;
         String namespace = "~" + player.getName();
+        if (context.hasFlag('n')) {
+            namespace = context.getFlag('n');
+        }
 
         id = context.getString(0);
 
