@@ -20,10 +20,13 @@ package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.mech.CustomDropManager;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -63,6 +66,10 @@ public class MechanismsConfiguration extends BaseConfiguration {
         customDropSettings = new CustomDropSettings(cfg);
         dispenserSettings = new DispenserSettings(cfg);
         chairSettings = new ChairSettings(cfg);
+        aiSettings = new AISettings(cfg);
+        anchorSettings = new AnchorSettings(cfg);
+        cookingPotSettings = new CookingPotSettings(cfg);
+        customCraftingSettings = new CustomCraftingSettings(cfg);
     }
 
     public final File dataFolder;
@@ -85,6 +92,10 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public final CustomDropSettings customDropSettings;
     public final DispenserSettings dispenserSettings;
     public final ChairSettings chairSettings;
+    public final AISettings aiSettings;
+    public final AnchorSettings anchorSettings;
+    public final CookingPotSettings cookingPotSettings;
+    public final CustomCraftingSettings customCraftingSettings;
 
     //General settings
     public class MechanismSettings {
@@ -104,6 +115,36 @@ public class MechanismsConfiguration extends BaseConfiguration {
         private DispenserSettings(FileConfiguration cfg) {
 
             enable = getBoolean(cfg, "dispenser-recipes-enable", true);
+        }
+    }
+
+    public class AnchorSettings {
+
+        public final boolean enable;
+
+        private AnchorSettings(FileConfiguration cfg) {
+
+            enable = getBoolean(cfg, "chunk-anchor-enable", true);
+        }
+    }
+
+    public class CustomCraftingSettings {
+
+        public final boolean enable;
+
+        private CustomCraftingSettings(FileConfiguration cfg) {
+
+            enable = getBoolean(cfg, "custom-crafting-enable", true);
+        }
+    }
+
+    public class CookingPotSettings {
+
+        public final boolean enable;
+
+        private CookingPotSettings(FileConfiguration cfg) {
+
+            enable = getBoolean(cfg, "cooking-pot-enable", true);
         }
     }
 
@@ -138,6 +179,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
@@ -166,6 +208,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
@@ -190,6 +233,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
@@ -243,7 +287,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableNew = getBoolean(cfg, "new-cauldron-enable", true);
             newSpoons = getBoolean(cfg, "new-cauldron-spoons", true);
         }
-        //FIXME the recipes should probably go here
+        //TODO the recipes should probably go here
     }
 
     public class LightSwitchSettings {
@@ -328,10 +372,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
     public class CustomDropSettings {
 
+        public final boolean enable;
         public final boolean requirePermissions;
 
         private CustomDropSettings(FileConfiguration cfg) {
 
+            enable = getBoolean(cfg, "custom-drops-enable", true);
             requirePermissions = getBoolean(cfg, "custom-drops-require-permissions", false);
         }
     }
@@ -341,22 +387,37 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enable;
         public final boolean requireSneak;
         public final Set<Material> allowedBlocks;
+        public Map<String, Block> chairs = new HashMap<String, Block>();
 
         private ChairSettings(FileConfiguration cfg) {
 
             enable = getBoolean(cfg, "chair-enable", true);
             requireSneak = getBoolean(cfg, "chair-sneaking", true);
-            allowedBlocks = getMaterialSet(cfg, "chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135, 136));
+            allowedBlocks = getMaterialSet(cfg, "chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
+                    136));
         }
 
         /**
          * @param b
+         *
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
         public boolean canUseBlock(Material b) {
 
             return allowedBlocks.contains(b);
+        }
+    }
+
+    public class AISettings {
+
+        public final boolean enabled;
+        public final boolean zombieVision;
+
+        private AISettings(FileConfiguration cfg) {
+
+            enabled = getBoolean(cfg, "ai-mechanic-enable", true);
+            zombieVision = getBoolean(cfg, "realistic-zombie-vision", true);
         }
     }
 }

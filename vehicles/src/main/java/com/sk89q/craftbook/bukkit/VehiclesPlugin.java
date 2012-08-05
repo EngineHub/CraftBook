@@ -24,9 +24,8 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -53,25 +52,28 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         super.onEnable();
 
-        cartman = new MinecartManager(this);
-    }
-
-    @Override
-    protected void registerEvents() {
-
         createDefaultConfiguration("config.yml", false);
 
         // config has to be loaded before the listeners are built because they cache stuff
         config = new VehiclesConfiguration(getConfig(), getDataFolder());
         saveConfig();
 
-
         languageManager = new LanguageManager(this);
+
+        cartman = new MinecartManager(this);
+
+        // Register events
+        registerEvents();
+    }
+
+    @Override
+    protected void registerEvents() {
 
         getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(this), this);
         getServer().getPluginManager().registerEvents(new CraftBookVehicleBlockListener(this), this);
     }
 
+    @Override
     public VehiclesConfiguration getLocalConfiguration() {
 
         return config;
@@ -104,7 +106,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (entity instanceof Player) return;
             if (!config.boatRemoveEntities && !config.minecartRemoveEntities && !config.minecartEnterOnImpact) return;
 
-            if (config.minecartEnterOnImpact && (vehicle instanceof Minecart)) {
+            if (config.minecartEnterOnImpact && vehicle instanceof Minecart) {
                 if (!vehicle.isEmpty()) return;
                 if (!(event.getEntity() instanceof LivingEntity)) return;
                 vehicle.setPassenger(event.getEntity());
@@ -112,18 +114,18 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 return;
             }
 
-            if (config.boatRemoveEntities && (vehicle instanceof Boat)) {
+            if (config.boatRemoveEntities && vehicle instanceof Boat) {
                 if (!config.boatRemoveEntitiesOtherBoats &&
-                        (entity instanceof Boat)) return;
+                        entity instanceof Boat) return;
 
                 entity.remove();
 
                 return;
             }
 
-            if (config.minecartRemoveEntities && (vehicle instanceof Minecart)) {
+            if (config.minecartRemoveEntities && vehicle instanceof Minecart) {
                 if (!config.minecartRemoveEntitiesOtherCarts &&
-                        (entity instanceof Minecart)) return;
+                        entity instanceof Minecart) return;
 
                 entity.remove();
             }
@@ -201,11 +203,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (!(event.getVehicle() instanceof Boat)) return;
 
             VehiclesConfiguration config = getLocalConfiguration();
-            if (config.boatBreakReturn) {
-                ItemStack boatStack = new ItemStack(Material.BOAT, 1);
+            if (config.boatBreakReturn && event.getAttacker() == null) {
                 Boat boat = (Boat) event.getVehicle();
-                Location loc = boat.getLocation();
-                loc.getWorld().dropItemNaturally(loc, boatStack);
+                boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), new ItemStack(ItemID.WOOD_BOAT));
                 boat.remove();
                 event.setCancelled(true);
             }
@@ -225,7 +225,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         @EventHandler
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             // ignore events that are only changes in current strength
-            if ((event.getOldCurrent() > 0) == (event.getNewCurrent() > 0)) return;
+            if (event.getOldCurrent() > 0 == event.getNewCurrent() > 0) return;
 
             // remember that bukkit only gives us redstone events for wires and things that already respond to
             // redstone, which is entirely unhelpful.
@@ -242,7 +242,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                     if (ent == null || ent.isDead()) continue;
                     if (!(ent instanceof Minecart)) continue;
                     if (!ent.isEmpty()) continue;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) (Minecart) ent),
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) ent),
                             config.minecartDecayTime);
                 }
             }

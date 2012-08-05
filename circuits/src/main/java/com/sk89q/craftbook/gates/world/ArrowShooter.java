@@ -63,7 +63,7 @@ public class ArrowShooter extends AbstractIC {
             speed = Float.parseFloat(velocity[0]);
             spread = Float.parseFloat(velocity[1]);
             vert = Float.parseFloat(getSign().getLine(3).trim());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             getSign().setLine(2, speed + ":" + spread + ":" + vert);
             getSign().update();
         }

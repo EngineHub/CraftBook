@@ -14,16 +14,18 @@ import org.bukkit.command.CommandSender;
 public class CauldronCommands {
 
     public CauldronCommands(MechanismsPlugin plugin) {
+
     }
 
     @Command(
-	    aliases = {"reload"},
-	    desc = "Reloads the cauldron recipes from the config."
-	    )
+            aliases = {"reload"},
+            desc = "Reloads the cauldron recipes from the config."
+    )
     @CommandPermissions("craftbook.mech.cauldron.reload")
     public void reload(CommandContext context, CommandSender sender) {
-	ImprovedCauldronCookbook.INSTANCE.reload();
-	sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
+
+        ImprovedCauldronCookbook.INSTANCE.reload();
+        sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
     }
 
 }

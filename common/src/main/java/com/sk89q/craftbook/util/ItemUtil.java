@@ -111,4 +111,20 @@ public class ItemUtil {
 
         return item.getType().isEdible();
     }
+
+    public static ItemStack getUsedItem(ItemStack item) {
+
+        if (item.getTypeId() == ItemID.MUSHROOM_SOUP)
+            item.setTypeId(ItemID.BOWL); //Get your bowl back
+        else if (item.getTypeId() == ItemID.POTION)
+            item.setTypeId(ItemID.GLASS_BOTTLE); //Get your bottle back
+        else if (item.getTypeId() == ItemID.LAVA_BUCKET || item.getTypeId() == ItemID.WATER_BUCKET || item.getTypeId
+                () == ItemID.MILK_BUCKET)
+            item.setTypeId(ItemID.BUCKET); //Get your bucket back
+        else if (item.getAmount() == 1)
+            item.setTypeId(0);
+        else
+            item.setAmount(item.getAmount() - 1);
+        return item;
+    }
 }

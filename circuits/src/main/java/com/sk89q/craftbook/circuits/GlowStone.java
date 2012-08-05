@@ -37,8 +37,6 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  */
 public class GlowStone extends AbstractMechanic {
 
-    private final int originalId;
-
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
 
         public Factory() {
@@ -64,7 +62,6 @@ public class GlowStone extends AbstractMechanic {
     private GlowStone(BlockWorldVector pt) {
 
         super();
-        originalId = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
     }
 
     /**
@@ -111,9 +108,6 @@ public class GlowStone extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        event.getBlock().setTypeId(originalId);
-        event.getBlock().breakNaturally();
-        event.setCancelled(true);
     }
 
     @Override

@@ -50,7 +50,7 @@ import java.io.File;
 public class CircuitsPlugin extends BaseBukkitPlugin {
 
     protected CircuitsConfiguration config;
-    protected ICManager icManager;
+    public ICManager icManager;
     private PermissionsResolverManager perms;
     private MechanicManager manager;
     private static CircuitsPlugin instance;
@@ -97,6 +97,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             manager.register(new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
         }
+
+        // Register events
+        registerEvents();
     }
 
     /**
@@ -123,7 +126,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1025", new ServerTimeModulus.Factory(server), familySISO, familyAISO);
         icManager.register("MC1110", new WirelessTransmitter.Factory(server), familySISO, familyAISO);
         icManager.register("MC1111", new WirelessReceiver.Factory(server), familySISO, familyAISO);
-        icManager.register("MC1200", new EntitySpawner.Factory(server), familySISO, familyAISO);       // Restricted
+        icManager.register("MC1200", new CreatureSpawner.Factory(server), familySISO, familyAISO);     // Restricted
         icManager.register("MC1201", new ItemDispenser.Factory(server), familySISO, familyAISO);       // Restricted
         icManager.register("MC1202", new ChestDispenser.Factory(server), familySISO, familyAISO);      // Restricted
         icManager.register("MC1203", new LightningSummon.Factory(server), familySISO, familyAISO);     // Restricted
@@ -155,7 +158,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC1265", new ItemNotSensor.Factory(server), familySISO, familyAISO);       // Restricted
         icManager.register("MC1266", new PowerSensor.Factory(server), familySISO, familyAISO);         // Restricted
         icManager.register("MC1270", new Melody.Factory(server), familySISO, familyAISO);
-        icManager.register("MC1271", new Detection.Factory(server), familySISO, familyAISO);           // Restricted
+        icManager.register("MC1271", new EntitySensor.Factory(server), familySISO, familyAISO);        // Restricted
         icManager.register("MC1272", new PlayerDetection.Factory(server), familySISO, familyAISO);     // Restricted
         icManager.register("MC1299", new ParticleEffect.Factory(server), familySISO, familyAISO);      // Restricted
         icManager.register("MC1420", new ClockDivider.Factory(server), familySISO, familyAISO);
@@ -211,7 +214,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         icManager.register("MC0265", new ItemNotSensorST.Factory(server), familySISO);                 // Restricted
         icManager.register("MC0266", new PowerSensorST.Factory(server), familySISO);                   // Restricted
         icManager.register("MC0270", new PowerSensorST.Factory(server), familySISO);
-        icManager.register("MC0271", new DetectionST.Factory(server), familySISO);                     // Restricted
+        icManager.register("MC0271", new EntitySensorST.Factory(server), familySISO);                  // Restricted
         icManager.register("MC0272", new PlayerDetectionST.Factory(server), familySISO);               // Restricted
         icManager.register("MC0420", new Clock.Factory(server), familySISO);
         icManager.register("MC0421", new Monostable.Factory(server), familySISO);
@@ -263,6 +266,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     }
 
+    @Override
     public CircuitsConfiguration getLocalConfiguration() {
 
         return config;

@@ -104,11 +104,9 @@ public class MechanicListenerAdapter {
             this.plugin = plugin;
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onPlayerInteract(PlayerInteractEvent event) {
 
-            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-                return;
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
             }
@@ -141,23 +139,19 @@ public class MechanicListenerAdapter {
             this.plugin = plugin;
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSignChange(SignChangeEvent event) {
 
-            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-                return;
             manager.dispatchSignChange(event);
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
 
-            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-                return;
             manager.dispatchBlockBreak(event);
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 
             int oldLevel = event.getOldCurrent();
@@ -193,27 +187,27 @@ public class MechanicListenerAdapter {
                 if (type == BlockID.LEVER) {
                     // Fake data
                     /*w.fakeData(x, y, z,
-                        newLevel > 0
-                            ? w.getData(x, y, z) | 0x8
-                            : w.getData(x, y, z) & 0x7);*/
+           newLevel > 0
+               ? w.getData(x, y, z) | 0x8
+               : w.getData(x, y, z) & 0x7);*/
                 } else if (type == BlockID.STONE_PRESSURE_PLATE) {
                     // Fake data
                     /*w.fakeData(x, y, z,
-                        newLevel > 0
-                            ? w.getData(x, y, z) | 0x1
-                            : w.getData(x, y, z) & 0x14);*/
+           newLevel > 0
+               ? w.getData(x, y, z) | 0x1
+               : w.getData(x, y, z) & 0x14);*/
                 } else if (type == BlockID.WOODEN_PRESSURE_PLATE) {
                     // Fake data
                     /*w.fakeData(x, y, z,
-                        newLevel > 0
-                            ? w.getData(x, y, z) | 0x1
-                            : w.getData(x, y, z) & 0x14);*/
+           newLevel > 0
+               ? w.getData(x, y, z) | 0x1
+               : w.getData(x, y, z) & 0x14);*/
                 } else if (type == BlockID.STONE_BUTTON) {
                     // Fake data
                     /*w.fakeData(x, y, z,
-                        newLevel > 0
-                            ? w.getData(x, y, z) | 0x8
-                            : w.getData(x, y, z) & 0x7);*/
+           newLevel > 0
+               ? w.getData(x, y, z) | 0x8
+               : w.getData(x, y, z) & 0x7);*/
                 } else if (type == BlockID.POWERED_RAIL) {
                     // do nothing
                 } else if (type == BlockID.REDSTONE_WIRE) {
@@ -340,7 +334,7 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is loaded.
          */
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onChunkLoad(final ChunkLoadEvent event) {
 
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -356,11 +350,9 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is unloaded.
          */
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onChunkUnload(ChunkUnloadEvent event) {
 
-            if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled())
-                return;
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
 

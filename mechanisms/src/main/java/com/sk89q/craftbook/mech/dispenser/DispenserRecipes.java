@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,15 +23,16 @@ public class DispenserRecipes implements Listener {
     public DispenserRecipes(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
-        recipes.add(new XPShooter());
-        recipes.add(new SnowShooter());
-        recipes.add(new FireArrows());
-        recipes.add(new Fan());
+        addRecipe(new XPShooter());
+        addRecipe(new SnowShooter());
+        addRecipe(new FireArrows());
+        addRecipe(new Fan());
     }
 
     @EventHandler
     public void onBlockDispense(BlockDispenseEvent event) {
 
+        if (event.isCancelled()) return;
         if (event.getBlock().getState() instanceof Dispenser && plugin.getLocalConfiguration().dispenserSettings
                 .enable) {
             Dispenser dis = (Dispenser) event.getBlock().getState();
@@ -40,7 +42,7 @@ public class DispenserRecipes implements Listener {
         }
     }
 
-    public boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    private boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
         ItemStack[] stacks = dis.getInventory().getContents();
@@ -53,28 +55,18 @@ public class DispenserRecipes implements Listener {
                 }
                 current:
                 {
-                    if ((r.recipe[0] == 0 && stacks[0] == null) || (r.recipe[0] == stacks[0].getTypeId())) {
+                    if (r.recipe[0] == 0 && stacks[0] == null || r.recipe[0] == stacks[0].getTypeId()) {
                         for (int i = 1; i < stacks.length; i++) {
-                            if (!(!(r.recipe[i] != 0 && stacks[i] == null) && ((r.recipe[i] == 0 && stacks[i] ==
-                                    null) || (r.recipe[i] == stacks[i].getTypeId()))))
-                                break current; //This recipe is invalid.
+                            if (!(!(r.recipe[i] != 0 && stacks[i] == null) && (r.recipe[i] == 0 && stacks[i] ==
+                                    null || r.recipe[i] == stacks[i].getTypeId())))
+                                break current; //This recipe is wrong.
                         }
                         toReturn = r.doAction(dis, item, velocity, event);
                         for (int i = 1; i < stacks.length; i++) {
-                            if ((r.recipe[i] == 0 && stacks[i] == null) || (r.recipe[i] == stacks[i].getTypeId())) {
-                                if (stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0) {
-
-                                } else if (stacks[i].getTypeId() == 282)
-                                    stacks[i].setTypeId(281); //Get your bowl back
-                                else if (stacks[i].getTypeId() == 373)
-                                    stacks[i].setTypeId(374); //Get your bottle back
-                                else if (stacks[i].getTypeId() == 326 || stacks[i].getTypeId() == 327 || stacks[i]
-                                        .getTypeId() == 335)
-                                    stacks[i].setTypeId(325); //Get your bucket back
-                                else if (stacks[i].getAmount() == 1)
-                                    stacks[i].setTypeId(0);
-                                else
-                                    stacks[i].setAmount(stacks[i].getAmount() - 1);
+                            if (r.recipe[i] == 0 && stacks[i] == null || r.recipe[i] == stacks[i].getTypeId()) {
+                                if (stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0)
+                                    continue;
+                                stacks[i] = ItemUtil.getUsedItem(stacks[i]);
                             } else
                                 return true; //Cancel the event, as obviously something went wrong.
                         }
@@ -87,5 +79,16 @@ public class DispenserRecipes implements Listener {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * Adds a dispenser recipe.
+     *
+     * @param recipe
+     */
+    public void addRecipe(Recipe recipe) {
+
+        if (recipes.contains(recipe)) return;
+        recipes.add(recipe);
     }
 }

@@ -32,11 +32,10 @@ public class Snow implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.place")) return;
@@ -49,7 +48,7 @@ public class Snow implements Listener {
                     incrementData(event.getClickedBlock());
                 }
             } else if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
-                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1,0))
+                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
                     .getTypeId() == 0) {
                 event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
                         .setTypeId(78);
@@ -60,11 +59,10 @@ public class Snow implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.trample) return;
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.trample")) return;
@@ -89,18 +87,17 @@ public class Snow implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockForm(final BlockFormEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.enable) return;
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
         if (event.getNewState().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 
-            if ((block.getTypeId() != BlockID.SNOW_BLOCK) && (block.getTypeId() != BlockID.SNOW)) {
+            if (block.getTypeId() != BlockID.SNOW_BLOCK && block.getTypeId() != BlockID.SNOW) {
                 Location blockLoc = block.getLocation().subtract(0, 1, 0);
-                if ((block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
-                        && !plugin.getLocalConfiguration().snowSettings.piling)
+                if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
+                        && !plugin.getLocalConfiguration().snowSettings.piling
                         || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
                     return;
                 Random random = new Random();

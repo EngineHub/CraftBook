@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mech.cauldron;
+package com.sk89q.craftbook.mech.crafting;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -9,9 +9,9 @@ import java.util.*;
 /**
  * @author Silthus
  */
-public class CauldronItemStack implements Comparable<CauldronItemStack> {
+public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
-    public static Collection<CauldronItemStack> convert(Collection<Item> stacks) {
+    public static Collection<CraftingItemStack> convert(Collection<Item> stacks) {
 
         Map<String, Integer> items = new HashMap<String, Integer>();
         for (Item item : stacks) {
@@ -23,11 +23,11 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
                 items.put(name, stack.getAmount());
             }
         }
-        Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
+        Set<CraftingItemStack> stackSet = new LinkedHashSet<CraftingItemStack>();
         // merge the amounts and stacks
         for (String stack : items.keySet()) {
             String[] split = stack.split(":");
-            stackSet.add(new CauldronItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
+            stackSet.add(new CraftingItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
                     items.get(stack)));
         }
         return stackSet;
@@ -37,25 +37,25 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     private short data;
     private int amount;
 
-    public CauldronItemStack(Material material, short data, int amount) {
+    public CraftingItemStack(Material material, short data, int amount) {
 
         this.material = material;
         this.data = data;
         this.amount = amount;
     }
 
-    public CauldronItemStack(Material material, int amount) {
+    public CraftingItemStack(Material material, int amount) {
 
         this.material = material;
         this.amount = amount;
     }
 
-    public CauldronItemStack(Material material, short data) {
+    public CraftingItemStack(Material material, short data) {
 
         this(material, data, 0);
     }
 
-    public CauldronItemStack(Material material) {
+    public CraftingItemStack(Material material) {
 
         this(material, 0);
     }
@@ -95,10 +95,10 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         return new ItemStack(material, amount, data);
     }
 
-    public CauldronItemStack add(CauldronItemStack stack) {
+    public CraftingItemStack add(CraftingItemStack stack) {
 
         if (stack.equals(this)) {
-            this.amount += stack.getAmount();
+            amount += stack.getAmount();
         }
         return this;
     }
@@ -106,14 +106,14 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     @Override
     public boolean equals(Object obj) {
 
-        if (obj instanceof CauldronItemStack) {
-            CauldronItemStack stack = (CauldronItemStack) obj;
+        if (obj instanceof CraftingItemStack) {
+            CraftingItemStack stack = (CraftingItemStack) obj;
             return isSameType(stack) && stack.getAmount() == getAmount();
         }
         return false;
     }
 
-    public boolean isSameType(CauldronItemStack stack) {
+    public boolean isSameType(CraftingItemStack stack) {
 
         if (data == -1 || stack.getData() == -1) {
             return stack.getMaterial() == getMaterial();
@@ -123,7 +123,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     }
 
     @Override
-    public int compareTo(CauldronItemStack stack) {
+    public int compareTo(CraftingItemStack stack) {
 
         if (getAmount() > stack.getAmount()) return 1;
         if (getAmount() == stack.getAmount()) return 0;

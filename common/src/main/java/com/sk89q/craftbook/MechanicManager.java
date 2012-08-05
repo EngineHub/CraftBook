@@ -105,14 +105,27 @@ public class MechanicManager {
     }
 
     /**
-     * Register a mechanic factory. Make sure that the same factory isn't
-     * registered twice -- that condition isn't ever checked.
+     * Register a mechanic factory.
      *
      * @param factory
      */
     public void register(MechanicFactory<? extends Mechanic> factory) {
 
         if (!factories.contains(factory)) factories.add(factory);
+    }
+
+    /**
+     * Unregister a mechanic factory.
+     *
+     * @param factory
+     */
+    public boolean unregister(MechanicFactory<? extends Mechanic> factory) {
+
+        if (factories.contains(factory)) {
+            factories.remove(factory);
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mech.cauldron;
+package com.sk89q.craftbook.mech.crafting;
 
 import com.sk89q.craftbook.BaseConfiguration;
 import org.bukkit.Material;
@@ -11,28 +11,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * @author Silthus
- */
-public class ImprovedCauldronCookbook extends BaseConfiguration {
+public class RecipeManager extends BaseConfiguration {
 
-    public static ImprovedCauldronCookbook INSTANCE;
+    public static RecipeManager INSTANCE;
     private final Collection<Recipe> recipes;
     private final File config;
 
-    public ImprovedCauldronCookbook(FileConfiguration cfg, File dataFolder) {
+    public RecipeManager(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
         recipes = new ArrayList<Recipe>();
-        config = new File(dataFolder, "cauldron-recipes.yml");
-        load(cfg.getConfigurationSection("cauldron-recipes"));
+        config = new File(dataFolder, "crafting-recipes.yml");
+        load(cfg.getConfigurationSection("crafting-recipes"));
         INSTANCE = this;
     }
 
     public void reload() {
 
         recipes.clear();
-        load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("cauldron-recipes"));
+        load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("crafting-recipes"));
     }
 
     private void load(ConfigurationSection cfg) {
@@ -46,49 +43,36 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         }
     }
 
-    public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
-
-        for (Recipe recipe : recipes) {
-            if (recipe.checkIngredients(items)) {
-                return recipe;
-            }
-        }
-        throw new UnknownRecipeException("Are you sure you have the right ingredients?");
-    }
-
     public static final class Recipe {
 
         private final String id;
         private final ConfigurationSection config;
 
         private String name;
-        private String description;
-        private Collection<CauldronItemStack> ingredients;
-        private Collection<CauldronItemStack> results;
-        private double chance;
+        private String type;
+        private Collection<CraftingItemStack> ingredients;
+        private Collection<CraftingItemStack> results;
 
         private Recipe(String id, ConfigurationSection cfg) {
 
             this.id = id;
             config = cfg.getConfigurationSection(id);
-            ingredients = new ArrayList<CauldronItemStack>();
-            results = new ArrayList<CauldronItemStack>();
-            chance = 60;
+            ingredients = new ArrayList<CraftingItemStack>();
+            results = new ArrayList<CraftingItemStack>();
             load();
         }
 
         private void load() {
 
             name = config.getString("name");
-            description = config.getString("description");
+            type = config.getString("type");
             ingredients = getItems(config.getConfigurationSection("ingredients"));
             results = getItems(config.getConfigurationSection("results"));
-            chance = config.getDouble("chance", 60);
         }
 
-        private Collection<CauldronItemStack> getItems(ConfigurationSection section) {
+        private Collection<CraftingItemStack> getItems(ConfigurationSection section) {
 
-            Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
+            Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             for (String item : section.getKeys(false)) {
                 String[] split = item.split(":");
                 Material material;
@@ -99,7 +83,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
                     material = Material.getMaterial(split[0].toUpperCase());
                 }
                 if (material != null) {
-                    CauldronItemStack itemStack = new CauldronItemStack(material);
+                    CraftingItemStack itemStack = new CraftingItemStack(material);
                     if (split.length > 1) {
                         itemStack.setData(Short.parseShort(split[1]));
                     } else {
@@ -122,14 +106,9 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             return name;
         }
 
-        public String getDescription() {
+        public String getType() {
 
-            return description;
-        }
-
-        public double getChance() {
-
-            return chance;
+            return type;
         }
 
         /**
@@ -139,10 +118,10 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
          *
          * @return
          */
-        public boolean checkIngredients(Collection<CauldronItemStack> items) {
+        public boolean checkIngredients(Collection<CraftingItemStack> items) {
 
             if (items.size() <= 0) return false;
-            for (CauldronItemStack item : items) {
+            for (CraftingItemStack item : items) {
                 if (!ingredients.contains(item)) {
                     return false;
                 }
@@ -150,7 +129,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             return true;
         }
 
-        public Collection<CauldronItemStack> getResults() {
+        public Collection<CraftingItemStack> getResults() {
 
             return results;
         }

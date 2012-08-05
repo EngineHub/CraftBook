@@ -22,7 +22,6 @@ public class CustomDrops extends MechanismsPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
-        if (plugin.getLocalConfiguration().commonSettings.obeyCancelled && event.isCancelled()) return;
         if (plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
                 !plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 

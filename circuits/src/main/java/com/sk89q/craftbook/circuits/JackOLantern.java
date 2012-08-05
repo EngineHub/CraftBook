@@ -35,8 +35,6 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  */
 public class JackOLantern extends AbstractMechanic {
 
-    private final int originalId;
-
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
 
         public Factory() {
@@ -62,7 +60,6 @@ public class JackOLantern extends AbstractMechanic {
     private JackOLantern(BlockWorldVector pt) {
 
         super();
-        originalId = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
     }
 
     /**
@@ -97,9 +94,6 @@ public class JackOLantern extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        event.getBlock().setTypeId(originalId);
-        event.getBlock().breakNaturally();
-        event.setCancelled(true);
     }
 
     @Override
