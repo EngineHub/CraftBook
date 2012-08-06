@@ -5,7 +5,9 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -13,15 +15,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.IOException;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 /**
  * Area.
  *
- * @author Me4502, Sk89q
+ * @author Me4502, Sk89q, Silthus
  */
 
 public class Area extends AbstractMechanic {
@@ -44,19 +45,25 @@ public class Area extends AbstractMechanic {
         public Area detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
-            if (!plugin.getLocalConfiguration().areaSettings.enable)
-                return null;
-            if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-                if (!player.hasPermission("craftbook.mech.area")) {
-                    throw new InsufficientPermissionsException();
-                }
+            if (!plugin.getLocalConfiguration().areaSettings.enable) return null;
+
+            String[] lines = sign.getLines();
+
+            if (lines[1].equalsIgnoreCase("[Area]") || lines[1].equalsIgnoreCase("[SaveArea]")) {
                 if (sign.getLine(0).trim().equalsIgnoreCase("")) sign.setLine(0, "~" + player.getName());
-                if (sign.getLine(1).equalsIgnoreCase("[Area]")) sign.setLine(1, "[Area]");
-                else sign.setLine(1, "[SaveArea]");
+                if (lines[1].equalsIgnoreCase("[Area]")) {
+                    player.checkPermission("craftbook.mech.area.sign.area");
+                    sign.setLine(1, "[Area]");
+                } else if (lines[1].equalsIgnoreCase("[SaveArea]")) {
+                    player.checkPermission("craftbook.mech.area.sign.savearea");
+                    sign.setLine(1, "[SaveArea]");
+
+                }
                 player.print("Toggle area created.");
             } else {
                 return null;
             }
+
 
             throw new ProcessedMechanismException();
         }
@@ -96,9 +103,8 @@ public class Area extends AbstractMechanic {
     }
 
     public final MechanismsPlugin plugin;
-
     public final BlockWorldVector pt;
-
+    private boolean toggledOn;
 
     /**
      * Raised when a block is right clicked.
@@ -112,43 +118,13 @@ public class Area extends AbstractMechanic {
             event.getPlayer().sendMessage(ChatColor.RED + "You don't have permission to use areas.");
             return;
         }
-        try {
-            Sign s = null;
-            if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
-                s = ((Sign) BukkitUtil.toBlock(pt).getState());
-            if (s == null) return;
-            boolean save = s.getLine(1).equalsIgnoreCase("[SaveArea]");
-            String namespace = s.getLine(0);
-            String id = s.getLine(2);
-            String inactiveID = s.getLine(3);
-
-            if (id == null || id.equalsIgnoreCase("") || id.length() < 1) return;
-            if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return;
-            if (event.getPlayer().getWorld() == null) return;
-
-            CuboidCopy copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, id, plugin);
-            if (!copy.shouldClear(event.getPlayer().getWorld())) {
-                if (save)
-                    plugin.copyManager.save(event.getPlayer().getWorld(), namespace, inactiveID, copy, plugin);
-                copy.paste(event.getPlayer().getWorld());
-            } else {
-                if (inactiveID.length() == 0) {
-                    if (save)
-                        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
-                    copy.clear(event.getPlayer().getWorld());
-                } else {
-                    if (save)
-                        plugin.copyManager.save(event.getPlayer().getWorld(), namespace, id, copy, plugin);
-                    copy = plugin.copyManager.load(event.getPlayer().getWorld(), namespace, inactiveID, plugin);
-                    copy.paste(event.getPlayer().getWorld());
-                }
-            }
-        } catch (Exception e) {
-            final Writer result = new StringWriter();
-            final PrintWriter printWriter = new PrintWriter(result);
-            e.printStackTrace(printWriter);
-            plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + result.toString());
-        }
+        // check if the sign still exists
+        Sign sign = null;
+        if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
+            sign = ((Sign) BukkitUtil.toBlock(pt).getState());
+        if (sign == null) return;
+        // toggle the area on or off
+        toggle(sign);
 
         event.setCancelled(true);
     }
@@ -163,34 +139,13 @@ public class Area extends AbstractMechanic {
 
         if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
             return;
-        try {
-            Sign s = null;
-            if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
-                s = ((Sign) BukkitUtil.toBlock(pt).getState());
-            if (s == null) return;
-            String namespace = s.getLine(0);
-            String id = s.getLine(2);
-
-            CuboidCopy copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, id, plugin);
-
-            if (!copy.shouldClear(BukkitUtil.toWorld(pt.getWorld()))) {
-                copy.paste(BukkitUtil.toWorld(pt.getWorld()));
-            } else {
-                String inactiveID = s.getLine(3);
-
-                if (inactiveID.length() == 0) {
-                    copy.clear(BukkitUtil.toWorld(pt.getWorld()));
-                } else {
-                    copy = plugin.copyManager.load(BukkitUtil.toWorld(pt.getWorld()), namespace, inactiveID, plugin);
-                    copy.paste(BukkitUtil.toWorld(pt.getWorld()));
-                }
-            }
-        } catch (Exception e) {
-            final Writer result = new StringWriter();
-            final PrintWriter printWriter = new PrintWriter(result);
-            e.printStackTrace(printWriter);
-            plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + result.toString());
-        }
+        // check if the sign still exists
+        Sign sign = null;
+        if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
+            sign = ((Sign) BukkitUtil.toBlock(pt).getState());
+        if (sign == null) return;
+        // toggle the area
+        toggle(sign);
     }
 
     /**
@@ -205,6 +160,90 @@ public class Area extends AbstractMechanic {
         super();
         this.plugin = plugin;
         this.pt = pt;
+    }
+
+    public boolean isToggledOn() {
+
+        return toggledOn;
+    }
+
+    private void toggle(Sign sign) {
+
+        if (!checkSign(sign)) return;
+
+        try {
+            World world = sign.getWorld();
+            boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
+            String namespace = sign.getLine(0);
+            String id = sign.getLine(2).replace("-", "");
+            String inactiveID = sign.getLine(3).replace("-", "");
+
+            CuboidCopy copy = CopyManager.INSTANCE.load(world, namespace, id, plugin);
+
+            if (isToggledOn()) {
+                // if this is a save area save it before toggling off
+                if (save) {
+                    copy.copy();
+                    CopyManager.INSTANCE.save(world, namespace, id, copy, plugin);
+                }
+                // if we are toggling to the second area we dont clear the old area
+                if (inactiveID.length() > 0 && !inactiveID.equals("--")) {
+                    copy = CopyManager.INSTANCE.load(world, namespace, inactiveID, plugin);
+                    copy.paste();
+                } else {
+                    copy.clear();
+                }
+                setToggledState(sign, false);
+            } else {
+                // toggle the area on
+                copy.paste();
+                setToggledState(sign, true);
+            }
+        } catch (CuboidCopyException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
+        } catch (DataException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
+        }
+    }
+
+    private boolean checkSign(Sign sign) {
+
+        String namespace = sign.getLine(0);
+        String id = sign.getLine(2);
+
+        if (id == null || id.equalsIgnoreCase("") || id.length() < 1) return false;
+        if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return false;
+
+        checkToggleState(sign);
+        return true;
+    }
+
+    // pattern to check where the markers for on and off state are
+    private static final Pattern pattern = Pattern.compile("^\\-[A-Za-z0-9_]*?\\-$");
+
+    private void checkToggleState(Sign sign) {
+
+        String line3 = sign.getLine(2);
+        String line4 = sign.getLine(3);
+        if (pattern.matcher(line3).matches()) {
+            toggledOn = true;
+            return;
+        } else if (line4.equals("--") || pattern.matcher(line4).matches()) {
+            toggledOn = false;
+        } else {
+            toggledOn = true;
+        }
+    }
+
+    private void setToggledState(Sign sign, boolean state) {
+
+        int toToggleOn = state ? 2 : 3;
+        int toToggleOff = state ? 3 : 2;
+        sign.setLine(toToggleOff, sign.getLine(toToggleOff).replace("-", ""));
+        sign.setLine(toToggleOn, "-" + sign.getLine(toToggleOn) + "-");
+        sign.update();
     }
 
     @Override

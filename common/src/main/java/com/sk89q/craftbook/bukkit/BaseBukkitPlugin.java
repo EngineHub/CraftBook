@@ -18,12 +18,12 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
-
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.wepif.PermissionsResolverManager;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -32,17 +32,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
-import com.sk89q.wepif.PermissionsResolverManager;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -64,6 +58,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     protected LanguageManager languageManager;
 
     protected final CommandsManager<CommandSender> commands;
+    private final CommandsManagerRegistration commandManager;
 
     /**
      * Logger for messages.
@@ -72,202 +67,209 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public BaseBukkitPlugin() {
 
-	commands = new CommandsManager<CommandSender>() {
+        commands = new CommandsManager<CommandSender>() {
 
-	    @Override
-	    public boolean hasPermission(CommandSender player, String perm) {
+            @Override
+            public boolean hasPermission(CommandSender player, String perm) {
 
-		return player.hasPermission(perm);
-	    }
-	};
+                return player.hasPermission(perm);
+            }
+        };
+        // create the command manager
+        this.commandManager = new CommandsManagerRegistration(this, commands);
+        // Set the proper command injector
+        commands.setInjector(new SimpleInjector(this));
     }
 
     /**
      * Called on load.
      */
-     @Override
-     public void onLoad() {
+    @Override
+    public void onLoad() {
 
-     }
+    }
 
-     /**
-      * Called when the plugin is enabled. This is where configuration is loaded,
-      * and the plugin is setup.
-      */
-     @Override
-     public void onEnable() {
+    /**
+     * Called when the plugin is enabled. This is where configuration is loaded,
+     * and the plugin is setup.
+     */
+    @Override
+    public void onEnable() {
 
-	 // Set the proper command injector
-	 commands.setInjector(new SimpleInjector(this));
-	 // Make the data folder for the plugin where configuration files
-	 // and other data files will be stored
-	 getDataFolder().mkdirs();
-	 createDefaultConfiguration("en_US.txt", true);
-	 createDefaultConfiguration("config.yml", false);
+        // Make the data folder for the plugin where configuration files
+        // and other data files will be stored
+        getDataFolder().mkdirs();
+        createDefaultConfiguration("en_US.txt", true);
+        createDefaultConfiguration("config.yml", false);
 
-	 config = new BaseConfiguration(getConfig(), getDataFolder());
-	 saveConfig();
+        config = new BaseConfiguration(getConfig(), getDataFolder());
+        saveConfig();
 
-	 logger.info(getDescription().getName() + " "
-		 + getDescription().getVersion() + " enabled.");
+        logger.info(getDescription().getName() + " "
+                + getDescription().getVersion() + " enabled.");
 
 
-	 // Prepare permissions
-	 PermissionsResolverManager.initialize(this);
-	 perms = PermissionsResolverManager.getInstance();
-     }
+        // Prepare permissions
+        PermissionsResolverManager.initialize(this);
+        perms = PermissionsResolverManager.getInstance();
+    }
 
-     /**
-      * Called when the plugin is disabled. Shutdown and clearing of any
-      * temporary data occurs here.
-      */
-     @Override
-     public void onDisable() {
+    /**
+     * Called when the plugin is disabled. Shutdown and clearing of any
+     * temporary data occurs here.
+     */
+    @Override
+    public void onDisable() {
 
-     }
+    }
 
-     /**
-      * Register the events that are used.
-      */
-     protected abstract void registerEvents();
+    /**
+     * Register the events that are used.
+     */
+    protected abstract void registerEvents();
 
-     /**
-      * Register an event.
-      *
-      * @param listener
-      */
-     protected void registerEvents(Listener listener) {
+    /**
+     * Register an event.
+     *
+     * @param listener
+     */
+    protected void registerEvents(Listener listener) {
 
-	 getServer().getPluginManager().registerEvents(listener, this);
-     }
+        getServer().getPluginManager().registerEvents(listener, this);
+    }
 
-     /**
-      * Create a default configuration file from the .jar.
-      *
-      * @param name
-      */
-     protected void createDefaultConfiguration(String name, boolean force) {
+    protected void registerCommand(Class clazz) {
 
-	 File actual = new File(getDataFolder(), name);
-	 if (!actual.exists() || force) {
+        commandManager.register(clazz);
+    }
 
-	     InputStream input =
-		     this.getClass().getResourceAsStream("/defaults/" + name);
-	     if (input != null) {
-		 FileOutputStream output = null;
+    /**
+     * Create a default configuration file from the .jar.
+     *
+     * @param name
+     */
+    protected void createDefaultConfiguration(String name, boolean force) {
 
-		 try {
-		     output = new FileOutputStream(actual);
-		     byte[] buf = new byte[8192];
-		     int length;
-		     while ((length = input.read(buf)) > 0) {
-			 output.write(buf, 0, length);
-		     }
+        File actual = new File(getDataFolder(), name);
+        if (!actual.exists() || force) {
 
-		     logger.info(getDescription().getName()
-			     + ": Default configuration file written: " + name);
-		 } catch (IOException e) {
-		     e.printStackTrace();
-		 } finally {
-		     try {
-			 input.close();
-		     } catch (IOException ignored) {
-		     }
+            InputStream input =
+                    this.getClass().getResourceAsStream("/defaults/" + name);
+            if (input != null) {
+                FileOutputStream output = null;
 
-		     try {
-			 if (output != null)
-			     output.close();
-		     } catch (IOException ignored) {
-		     }
-		 }
-	     }
-	 }
-     }
+                try {
+                    output = new FileOutputStream(actual);
+                    byte[] buf = new byte[8192];
+                    int length;
+                    while ((length = input.read(buf)) > 0) {
+                        output.write(buf, 0, length);
+                    }
 
-     /**
-      * Get a player.
-      *
-      * @param player Bukkit Player object
-      *
-      * @return a (new!) object wrapping Bukkit's player type with our own.
-      */
-     public LocalPlayer wrap(Player player) {
+                    logger.info(getDescription().getName()
+                            + ": Default configuration file written: " + name);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        input.close();
+                    } catch (IOException ignored) {
+                    }
 
-	 return new BukkitPlayer(this, player);
-     }
+                    try {
+                        if (output != null)
+                            output.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
+        }
+    }
 
-     /**
-      * Checks permissions.
-      *
-      * @param sender
-      * @param perm
-      *
-      * @return true if the sender has the requested permission, false otherwise
-      */
-     public boolean hasPermission(CommandSender sender, String perm) {
+    /**
+     * Get a player.
+     *
+     * @param player Bukkit Player object
+     *
+     * @return a (new!) object wrapping Bukkit's player type with our own.
+     */
+    public LocalPlayer wrap(Player player) {
 
-	 if (!(sender instanceof Player))
-	     return sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
-		     || perms.hasPermission(sender.getName(), perm);
-	 return hasPermission(sender, ((Player) sender).getWorld(), perm);
-     }
+        return new BukkitPlayer(this, player);
+    }
 
-     public boolean hasPermission(CommandSender sender, World world, String perm) {
+    /**
+     * Checks permissions.
+     *
+     * @param sender
+     * @param perm
+     *
+     * @return true if the sender has the requested permission, false otherwise
+     */
+    public boolean hasPermission(CommandSender sender, String perm) {
 
-	 if (sender.isOp() && config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
-	     return true;
+        if (!(sender instanceof Player))
+            return sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
+                    || perms.hasPermission(sender.getName(), perm);
+        return hasPermission(sender, ((Player) sender).getWorld(), perm);
+    }
 
-	 // Invoke the permissions resolver
-	 if (sender instanceof Player) {
-	     Player player = (Player) sender;
-	     return perms.hasPermission(world.getName(), player.getName(), perm);
-	 }
+    public boolean hasPermission(CommandSender sender, World world, String perm) {
 
-	 return false;
-     }
+        if (sender.isOp() && config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
+            return true;
 
-     public boolean isInGroup(String player, String group) {
+        // Invoke the permissions resolver
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            return perms.hasPermission(world.getName(), player.getName(), perm);
+        }
 
-	 return perms.inGroup(player, group);
-     }
+        return false;
+    }
 
-     public LanguageManager getLanguageManager() {
+    public boolean isInGroup(String player, String group) {
 
-	 return languageManager;
-     }
+        return perms.inGroup(player, group);
+    }
 
-     public BaseConfiguration getLocalConfiguration() {
+    public LanguageManager getLanguageManager() {
 
-	 return config;
-     }
+        return languageManager;
+    }
 
-     /**
-      * Handle a command.
-      */
-     @Override
-     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-	     String[] args) {
+    public BaseConfiguration getLocalConfiguration() {
 
-	 try {
-	     commands.execute(cmd.getName(), args, sender, sender);
-	 } catch (CommandPermissionsException e) {
-	     sender.sendMessage(ChatColor.RED + "You don't have permission.");
-	 } catch (MissingNestedCommandException e) {
-	     sender.sendMessage(ChatColor.RED + e.getUsage());
-	 } catch (CommandUsageException e) {
-	     sender.sendMessage(ChatColor.RED + e.getMessage());
-	     sender.sendMessage(ChatColor.RED + e.getUsage());
-	 } catch (WrappedCommandException e) {
-	     if (e.getCause() instanceof NumberFormatException) {
-		 sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
-	     } else {
-		 sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
-		 e.printStackTrace();
-	     }
-	 } catch (CommandException e) {
-	     sender.sendMessage(ChatColor.RED + e.getMessage());
-	 }
+        return config;
+    }
 
-	 return true;
-     }
+    /**
+     * Handle a command.
+     */
+    @Override
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
+                             String[] args) {
+
+        try {
+            commands.execute(cmd.getName(), args, sender, sender);
+        } catch (CommandPermissionsException e) {
+            sender.sendMessage(ChatColor.RED + "You don't have permission.");
+        } catch (MissingNestedCommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getUsage());
+        } catch (CommandUsageException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
+            sender.sendMessage(ChatColor.RED + e.getUsage());
+        } catch (WrappedCommandException e) {
+            if (e.getCause() instanceof NumberFormatException) {
+                sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
+            } else {
+                sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
+                e.printStackTrace();
+            }
+        } catch (CommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
+        }
+
+        return true;
+    }
 }

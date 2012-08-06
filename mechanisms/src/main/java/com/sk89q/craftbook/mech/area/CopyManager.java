@@ -20,19 +20,21 @@ package com.sk89q.craftbook.mech.area;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Used to load, save, and cache cuboid copies.
  *
- * @author sk89q
+ * @author sk89q, Silthus
  */
 public class CopyManager {
+
+    public static final CopyManager INSTANCE = new CopyManager();
 
     /**
      * Cache.
@@ -55,8 +57,10 @@ public class CopyManager {
      */
     public static boolean isValidName(String name) {
 
-        return name.length() > 0 && name.length() <= 30
-                && name.matches("^[A-Za-z0-9_\\- ]+$");
+        // name needs to be between 1 and 13 letters long so we can fit the - XXX - on the sides of the sign to
+        // indicate what area is toggled on
+        return name.length() > 0 && name.length() <= 13
+                && name.matches("^[A-Za-z0-9_]+$");
     }
 
     /**
@@ -68,7 +72,7 @@ public class CopyManager {
      */
     public static boolean isValidNamespace(String name) {
 
-        return name.length() > 0 && name.length() <= 15
+        return name.length() > 0 && name.length() <= 14
                 && name.matches("^[A-Za-z0-9_]+$");
     }
 
@@ -107,19 +111,11 @@ public class CopyManager {
         CuboidCopy copy = cache.get(id);
 
         if (copy == null) {
-            try {
-                File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
-                copy = CuboidCopy.load(new File(folder, id + ".cbcopy"));
-                missing.remove(cacheKey);
-                cache.put(cacheKey, copy);
-                return copy;
-            } catch (FileNotFoundException e) {
-                missing.put(cacheKey, System.currentTimeMillis() + 10000);
-                throw new MissingCuboidCopyException(id);
-            } catch (IOException e) {
-                missing.put(cacheKey, System.currentTimeMillis() + 10000);
-                throw e;
-            }
+            File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
+            copy = CuboidCopy.load(new File(folder, id + getFileSuffix(plugin)), world);
+            missing.remove(cacheKey);
+            cache.put(cacheKey, copy);
+            return copy;
         }
 
         return copy;
@@ -129,12 +125,12 @@ public class CopyManager {
      * Save a copy to disk. The copy will be cached.
      *
      * @param id
-     * @param copy
+     * @param copyFlat
      *
      * @throws IOException
      */
-    public void save(World world, String namespace, String id, CuboidCopy copy, MechanismsPlugin plugin)
-            throws IOException {
+    public void save(World world, String namespace, String id, CuboidCopy copyFlat, MechanismsPlugin plugin)
+            throws IOException, DataException {
 
         HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
 
@@ -146,9 +142,9 @@ public class CopyManager {
 
         String cacheKey = namespace + "/" + id;
 
-        copy.save(new File(folder, id + ".cbcopy"));
+        copyFlat.save(new File(folder, id + getFileSuffix(plugin)));
         missing.remove(cacheKey);
-        cache.put(id, copy);
+        cache.put(id, copyFlat);
     }
 
     /**
@@ -161,7 +157,7 @@ public class CopyManager {
      */
     public int meetsQuota(World world, String namespace, String ignore, int quota, MechanismsPlugin plugin) {
 
-        String ignoreFilename = ignore + ".cbcopy";
+        String ignoreFilename = ignore + getFileSuffix(plugin);
 
         String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
@@ -202,5 +198,10 @@ public class CopyManager {
             missing.put(world, h);
             return h;
         }
+    }
+
+    private String getFileSuffix(MechanismsPlugin plugin) {
+
+        return plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy";
     }
 }

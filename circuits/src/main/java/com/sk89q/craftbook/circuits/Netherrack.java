@@ -19,18 +19,17 @@
 
 package com.sk89q.craftbook.circuits;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
@@ -41,19 +40,19 @@ public class Netherrack extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Netherrack> {
 
-	public Factory() {
+        public Factory() {
 
-	}
+        }
 
-	@Override
-	public Netherrack detect(BlockWorldVector pt) {
+        @Override
+        public Netherrack detect(BlockWorldVector pt) {
 
-	    int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
+            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-	    if (type == BlockID.NETHERRACK) return new Netherrack(pt);
+            if (type == BlockID.NETHERRACK) return new Netherrack(pt);
 
-	    return null;
-	}
+            return null;
+        }
     }
 
     /**
@@ -63,7 +62,7 @@ public class Netherrack extends AbstractMechanic {
      */
     private Netherrack(BlockWorldVector pt) {
 
-	super();
+        super();
     }
 
     /**
@@ -72,10 +71,10 @@ public class Netherrack extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-	Block above = event.getBlock().getRelative(0, 1, 0);
+        Block above = event.getBlock().getRelative(0, 1, 0);
 
-	if (event.getNewCurrent() > 0 && above.getTypeId() == BlockID.AIR) above.setTypeId(BlockID.FIRE);
-	else if (above.getTypeId() == BlockID.FIRE) above.setTypeId(BlockID.AIR);
+        if (event.getNewCurrent() > 0 && above.getTypeId() == BlockID.AIR) above.setTypeId(BlockID.FIRE);
+        else if (above.getTypeId() == BlockID.FIRE) above.setTypeId(BlockID.AIR);
     }
 
     /**
@@ -84,19 +83,19 @@ public class Netherrack extends AbstractMechanic {
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
-	if (event.getBlockFace() != BlockFace.UP) return;
+        if (event.getBlockFace() != BlockFace.UP) return;
 
-	Block block = event.getClickedBlock();
+        Block block = event.getClickedBlock();
 
-	if (block.isBlockIndirectlyPowered()) {
-	    event.setCancelled(true);
-	    return;
-	}
+        if (block.isBlockIndirectlyPowered()) {
+            event.setCancelled(true);
+            return;
+        }
 
-	block = block.getRelative(0, -1, 0);
-	if (block.isBlockIndirectlyPowered()) {
-	    event.setCancelled(true);
-	}
+        block = block.getRelative(0, -1, 0);
+        if (block.isBlockIndirectlyPowered()) {
+            event.setCancelled(true);
+        }
     }
 
     /**
@@ -113,11 +112,12 @@ public class Netherrack extends AbstractMechanic {
     @Override
     public boolean isActive() {
 
-	return false;
+        return false;
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+
     }
 
     @Override

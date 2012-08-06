@@ -1,10 +1,9 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.io.File;
 
 public class CustomCrafting {
 
@@ -13,7 +12,8 @@ public class CustomCrafting {
 
     public CustomCrafting(MechanismsPlugin plugin) {
 
-	this.plugin = plugin;
-	recipes = new RecipeManager(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml")), plugin.getDataFolder());
+        this.plugin = plugin;
+        recipes = new RecipeManager(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(),
+                "crafting-recipes.yml")), plugin.getDataFolder());
     }
 }

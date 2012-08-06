@@ -72,5 +72,19 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
 
             return new PotionInducer(getServer(), sign);
         }
+
+        @Override
+        public void verify(Sign sign) throws ICVerificationException {
+
+            try {
+                int effectId = Integer.parseInt(sign.getLine(2).split(":")[0]);
+
+                if (PotionEffectType.getById(effectId) == null) {
+                    throw new ICVerificationException("The third line must be a valid potion effect id.");
+                }
+            } catch (NumberFormatException e) {
+                throw new ICVerificationException("The third line must be a valid potion effect id.");
+            }
+        }
     }
 }
