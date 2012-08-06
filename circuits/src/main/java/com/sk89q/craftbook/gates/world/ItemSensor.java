@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class ItemSensor extends AbstractIC {
 
-    private int item;
+    private int item = 0;
     private short data = -1;
 
     private Block center;
@@ -43,7 +43,10 @@ public class ItemSensor extends AbstractIC {
             item = Integer.parseInt(split[0]);
         } catch (NumberFormatException e) {
             // seems to be the name of the item
-            item = Material.getMaterial(split[0]).getId();
+            Material material = Material.getMaterial(split[0]);
+	        if (material != null) {
+		        item = material.getId();
+	        }
         }
 
         if (item == 0) item = BlockID.STONE;
