@@ -58,7 +58,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     protected LanguageManager languageManager;
 
     protected final CommandsManager<CommandSender> commands;
-	private final CommandsManagerRegistration commandManager;
+    private final CommandsManagerRegistration commandManager;
 
     /**
      * Logger for messages.
@@ -75,10 +75,10 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                 return player.hasPermission(perm);
             }
         };
-	    // create the command manager
-	    this.commandManager = new CommandsManagerRegistration(this, commands);
-	    // Set the proper command injector
-	    commands.setInjector(new SimpleInjector(this));
+        // create the command manager
+        this.commandManager = new CommandsManagerRegistration(this, commands);
+        // Set the proper command injector
+        commands.setInjector(new SimpleInjector(this));
     }
 
     /**
@@ -138,10 +138,10 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(listener, this);
     }
 
-	protected void registerCommand(Class clazz) {
+    protected void registerCommand(Class clazz) {
 
-		commandManager.register(clazz);
-	}
+        commandManager.register(clazz);
+    }
 
     /**
      * Create a default configuration file from the .jar.

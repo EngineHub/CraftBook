@@ -44,9 +44,9 @@ public class ItemSensor extends AbstractIC {
         } catch (NumberFormatException e) {
             // seems to be the name of the item
             Material material = Material.getMaterial(split[0]);
-	        if (material != null) {
-		        item = material.getId();
-	        }
+            if (material != null) {
+                item = material.getId();
+            }
         }
 
         if (item == 0) item = BlockID.STONE;
