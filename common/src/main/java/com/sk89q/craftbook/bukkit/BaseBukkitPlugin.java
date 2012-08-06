@@ -18,12 +18,12 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.minecraft.util.commands.*;
-import com.sk89q.wepif.PermissionsResolverManager;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -32,11 +32,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.minecraft.util.commands.CommandUsageException;
+import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
+import com.sk89q.minecraft.util.commands.SimpleInjector;
+import com.sk89q.minecraft.util.commands.WrappedCommandException;
+import com.sk89q.wepif.PermissionsResolverManager;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -67,18 +74,18 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public BaseBukkitPlugin() {
 
-        commands = new CommandsManager<CommandSender>() {
+	commands = new CommandsManager<CommandSender>() {
 
-            @Override
-            public boolean hasPermission(CommandSender player, String perm) {
+	    @Override
+	    public boolean hasPermission(CommandSender player, String perm) {
 
-                return player.hasPermission(perm);
-            }
-        };
-        // create the command manager
-        this.commandManager = new CommandsManagerRegistration(this, commands);
-        // Set the proper command injector
-        commands.setInjector(new SimpleInjector(this));
+		return player.hasPermission(perm);
+	    }
+	};
+	// create the command manager
+	commandManager = new CommandsManagerRegistration(this, commands);
+	// Set the proper command injector
+	commands.setInjector(new SimpleInjector(this));
     }
 
     /**
@@ -96,22 +103,22 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        // Make the data folder for the plugin where configuration files
-        // and other data files will be stored
-        getDataFolder().mkdirs();
-        createDefaultConfiguration("en_US.txt", true);
-        createDefaultConfiguration("config.yml", false);
+	// Make the data folder for the plugin where configuration files
+	// and other data files will be stored
+	getDataFolder().mkdirs();
+	createDefaultConfiguration("en_US.txt", true);
+	createDefaultConfiguration("config.yml", false);
 
-        config = new BaseConfiguration(getConfig(), getDataFolder());
-        saveConfig();
+	config = new BaseConfiguration(getConfig(), getDataFolder());
+	saveConfig();
 
-        logger.info(getDescription().getName() + " "
-                + getDescription().getVersion() + " enabled.");
+	logger.info(getDescription().getName() + " "
+		+ getDescription().getVersion() + " enabled.");
 
 
-        // Prepare permissions
-        PermissionsResolverManager.initialize(this);
-        perms = PermissionsResolverManager.getInstance();
+	// Prepare permissions
+	PermissionsResolverManager.initialize(this);
+	perms = PermissionsResolverManager.getInstance();
     }
 
     /**
@@ -135,12 +142,12 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     protected void registerEvents(Listener listener) {
 
-        getServer().getPluginManager().registerEvents(listener, this);
+	getServer().getPluginManager().registerEvents(listener, this);
     }
 
-    protected void registerCommand(Class clazz) {
+    protected void registerCommand(Class<?> clazz) {
 
-        commandManager.register(clazz);
+	commandManager.register(clazz);
     }
 
     /**
@@ -150,40 +157,40 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     protected void createDefaultConfiguration(String name, boolean force) {
 
-        File actual = new File(getDataFolder(), name);
-        if (!actual.exists() || force) {
+	File actual = new File(getDataFolder(), name);
+	if (!actual.exists() || force) {
 
-            InputStream input =
-                    this.getClass().getResourceAsStream("/defaults/" + name);
-            if (input != null) {
-                FileOutputStream output = null;
+	    InputStream input =
+		    this.getClass().getResourceAsStream("/defaults/" + name);
+	    if (input != null) {
+		FileOutputStream output = null;
 
-                try {
-                    output = new FileOutputStream(actual);
-                    byte[] buf = new byte[8192];
-                    int length;
-                    while ((length = input.read(buf)) > 0) {
-                        output.write(buf, 0, length);
-                    }
+		try {
+		    output = new FileOutputStream(actual);
+		    byte[] buf = new byte[8192];
+		    int length;
+		    while ((length = input.read(buf)) > 0) {
+			output.write(buf, 0, length);
+		    }
 
-                    logger.info(getDescription().getName()
-                            + ": Default configuration file written: " + name);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        input.close();
-                    } catch (IOException ignored) {
-                    }
+		    logger.info(getDescription().getName()
+			    + ": Default configuration file written: " + name);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} finally {
+		    try {
+			input.close();
+		    } catch (IOException ignored) {
+		    }
 
-                    try {
-                        if (output != null)
-                            output.close();
-                    } catch (IOException ignored) {
-                    }
-                }
-            }
-        }
+		    try {
+			if (output != null)
+			    output.close();
+		    } catch (IOException ignored) {
+		    }
+		}
+	    }
+	}
     }
 
     /**
@@ -195,7 +202,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public LocalPlayer wrap(Player player) {
 
-        return new BukkitPlayer(this, player);
+	return new BukkitPlayer(this, player);
     }
 
     /**
@@ -208,39 +215,39 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
 
-        if (!(sender instanceof Player))
-            return sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
-                    || perms.hasPermission(sender.getName(), perm);
-        return hasPermission(sender, ((Player) sender).getWorld(), perm);
+	if (!(sender instanceof Player))
+	    return sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
+		    || perms.hasPermission(sender.getName(), perm);
+	return hasPermission(sender, ((Player) sender).getWorld(), perm);
     }
 
     public boolean hasPermission(CommandSender sender, World world, String perm) {
 
-        if (sender.isOp() && config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
-            return true;
+	if (sender.isOp() && config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
+	    return true;
 
-        // Invoke the permissions resolver
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            return perms.hasPermission(world.getName(), player.getName(), perm);
-        }
+	// Invoke the permissions resolver
+	if (sender instanceof Player) {
+	    Player player = (Player) sender;
+	    return perms.hasPermission(world.getName(), player.getName(), perm);
+	}
 
-        return false;
+	return false;
     }
 
     public boolean isInGroup(String player, String group) {
 
-        return perms.inGroup(player, group);
+	return perms.inGroup(player, group);
     }
 
     public LanguageManager getLanguageManager() {
 
-        return languageManager;
+	return languageManager;
     }
 
     public BaseConfiguration getLocalConfiguration() {
 
-        return config;
+	return config;
     }
 
     /**
@@ -248,28 +255,28 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-                             String[] args) {
+	    String[] args) {
 
-        try {
-            commands.execute(cmd.getName(), args, sender, sender);
-        } catch (CommandPermissionsException e) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission.");
-        } catch (MissingNestedCommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getUsage());
-        } catch (CommandUsageException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-            sender.sendMessage(ChatColor.RED + e.getUsage());
-        } catch (WrappedCommandException e) {
-            if (e.getCause() instanceof NumberFormatException) {
-                sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
-            } else {
-                sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
-                e.printStackTrace();
-            }
-        } catch (CommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-        }
+	try {
+	    commands.execute(cmd.getName(), args, sender, sender);
+	} catch (CommandPermissionsException e) {
+	    sender.sendMessage(ChatColor.RED + "You don't have permission.");
+	} catch (MissingNestedCommandException e) {
+	    sender.sendMessage(ChatColor.RED + e.getUsage());
+	} catch (CommandUsageException e) {
+	    sender.sendMessage(ChatColor.RED + e.getMessage());
+	    sender.sendMessage(ChatColor.RED + e.getUsage());
+	} catch (WrappedCommandException e) {
+	    if (e.getCause() instanceof NumberFormatException) {
+		sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
+	    } else {
+		sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
+		e.printStackTrace();
+	    }
+	} catch (CommandException e) {
+	    sender.sendMessage(ChatColor.RED + e.getMessage());
+	}
 
-        return true;
+	return true;
     }
 }
