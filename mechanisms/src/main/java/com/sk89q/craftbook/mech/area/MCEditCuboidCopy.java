@@ -65,8 +65,10 @@ public class MCEditCuboidCopy extends CuboidCopy {
 
     @Override
     public void clear() {
+
         try {
-            CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1, size.getZ() - 1));
+            CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1,
+                    size.getZ() - 1));
             EditSession editSession = new EditSession(new BukkitWorld(world), -1);
             editSession.enableQueue();
             editSession.setBlocks(region, new BaseBlock(0));
@@ -78,6 +80,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
 
     @Override
     public void copy() {
+
         EditSession editSession = new EditSession(new BukkitWorld(world), -1);
         editSession.enableQueue();
         // -1 means no block limit

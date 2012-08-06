@@ -27,89 +27,91 @@ import java.util.regex.Pattern;
 
 public class Area extends AbstractMechanic {
 
-	public static class Factory extends AbstractMechanicFactory<Area> {
+    public static class Factory extends AbstractMechanicFactory<Area> {
 
-		public Factory(MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
-			this.plugin = plugin;
-		}
+            this.plugin = plugin;
+        }
 
-		private final MechanismsPlugin plugin;
+        private final MechanismsPlugin plugin;
 
-		/**
-		 * Detect the mechanic at a placed sign.
-		 *
-		 * @throws ProcessedMechanismException
-		 */
-		@Override
-		public Area detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
-				throws InvalidMechanismException, ProcessedMechanismException {
+        /**
+         * Detect the mechanic at a placed sign.
+         *
+         * @throws ProcessedMechanismException
+         */
+        @Override
+        public Area detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+                throws InvalidMechanismException, ProcessedMechanismException {
 
-			if (!plugin.getLocalConfiguration().areaSettings.enable)
-				return null;
-			if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-				if (!player.hasPermission("craftbook.mech.area")) {
-					throw new InsufficientPermissionsException();
-				}
-				if (sign.getLine(0).trim().equalsIgnoreCase("")) sign.setLine(0, "~" + player.getName());
-				if (sign.getLine(1).equalsIgnoreCase("[Area]")) sign.setLine(1, "[Area]");
-				else sign.setLine(1, "[SaveArea]");
-				player.print("Toggle area created.");
-			} else {
-				return null;
-			}
+            if (!plugin.getLocalConfiguration().areaSettings.enable)
+                return null;
+            if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
+                if (!player.hasPermission("craftbook.mech.area")) {
+                    throw new InsufficientPermissionsException();
+                }
+                if (sign.getLine(0).trim().equalsIgnoreCase("")) sign.setLine(0, "~" + player.getName());
+                if (sign.getLine(1).equalsIgnoreCase("[Area]")) sign.setLine(1, "[Area]");
+                else sign.setLine(1, "[SaveArea]");
+                player.print("Toggle area created.");
+            } else {
+                return null;
+            }
 
-			throw new ProcessedMechanismException();
-		}
+            throw new ProcessedMechanismException();
+        }
 
-		/**
-		 * Explore around the trigger to find a Door; throw if things look funny.
-		 *
-		 * @param pt the trigger (should be a signpost)
-		 * @return a Area if we could make a valid one, or null if this looked
-		 *         nothing like a area.
-		 * @throws InvalidMechanismException if the area looked like it was intended to be a area, but
-		 *                                   it failed.
-		 */
-		@Override
-		public Area detect(BlockWorldVector pt) throws InvalidMechanismException {
+        /**
+         * Explore around the trigger to find a Door; throw if things look funny.
+         *
+         * @param pt the trigger (should be a signpost)
+         *
+         * @return a Area if we could make a valid one, or null if this looked
+         *         nothing like a area.
+         *
+         * @throws InvalidMechanismException if the area looked like it was intended to be a area, but
+         *                                   it failed.
+         */
+        @Override
+        public Area detect(BlockWorldVector pt) throws InvalidMechanismException {
 
-			if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
-				return null;
+            if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
+                return null;
 
-			Block block = BukkitUtil.toWorld(pt).getBlockAt(
-					BukkitUtil.toLocation(pt));
-			if (block.getTypeId() == BlockID.SIGN_POST || block.getTypeId() == BlockID.WALL_SIGN) {
-				BlockState state = block.getState();
-				if (state instanceof Sign) {
-					Sign sign = (Sign) state;
+            Block block = BukkitUtil.toWorld(pt).getBlockAt(
+                    BukkitUtil.toLocation(pt));
+            if (block.getTypeId() == BlockID.SIGN_POST || block.getTypeId() == BlockID.WALL_SIGN) {
+                BlockState state = block.getState();
+                if (state instanceof Sign) {
+                    Sign sign = (Sign) state;
                     if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-						if (!sign.getLine(0).equalsIgnoreCase(""))
-							sign.setLine(0, "global");
-						return new Area(pt, plugin);
-					}
-				}
-			}
-			return null;
-		}
-	}
+                        if (!sign.getLine(0).equalsIgnoreCase(""))
+                            sign.setLine(0, "global");
+                        return new Area(pt, plugin);
+                    }
+                }
+            }
+            return null;
+        }
+    }
 
-	public final MechanismsPlugin plugin;
-	public final BlockWorldVector pt;
+    public final MechanismsPlugin plugin;
+    public final BlockWorldVector pt;
     private boolean toggledOn;
 
-	/**
-	 * Raised when a block is right clicked.
-	 *
-	 * @param event
-	 */
-	@Override
-	public void onRightClick(PlayerInteractEvent event) {
+    /**
+     * Raised when a block is right clicked.
+     *
+     * @param event
+     */
+    @Override
+    public void onRightClick(PlayerInteractEvent event) {
 
-		if (!event.getPlayer().hasPermission("craftbook.mech.area.use")) {
-			event.getPlayer().sendMessage(ChatColor.RED + "You don't have permission to use areas.");
-			return;
-		}
+        if (!event.getPlayer().hasPermission("craftbook.mech.area.use")) {
+            event.getPlayer().sendMessage(ChatColor.RED + "You don't have permission to use areas.");
+            return;
+        }
         // check if the sign still exists
         Sign sign = null;
         if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
@@ -118,19 +120,19 @@ public class Area extends AbstractMechanic {
         // toggle the area on or off
         toggle(sign);
 
-		event.setCancelled(true);
-	}
+        event.setCancelled(true);
+    }
 
-	/**
-	 * Raised when an input redstone current changes.
-	 *
-	 * @param event
-	 */
-	@Override
-	public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    /**
+     * Raised when an input redstone current changes.
+     *
+     * @param event
+     */
+    @Override
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-		if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
-			return;
+        if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
+            return;
         // check if the sign still exists
         Sign sign = null;
         if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
@@ -138,22 +140,24 @@ public class Area extends AbstractMechanic {
         if (sign == null) return;
         // toggle the area
         toggle(sign);
-	}
+    }
 
-	/**
-	 * @param pt     if you didn't already check if this is a signpost with appropriate
-	 *               text, you're going on Santa's naughty list.
-	 * @param plugin
-	 * @throws InvalidMechanismException
-	 */
-	private Area(BlockWorldVector pt, MechanismsPlugin plugin) throws InvalidMechanismException {
+    /**
+     * @param pt     if you didn't already check if this is a signpost with appropriate
+     *               text, you're going on Santa's naughty list.
+     * @param plugin
+     *
+     * @throws InvalidMechanismException
+     */
+    private Area(BlockWorldVector pt, MechanismsPlugin plugin) throws InvalidMechanismException {
 
-		super();
-		this.plugin = plugin;
-		this.pt = pt;
-	}
+        super();
+        this.plugin = plugin;
+        this.pt = pt;
+    }
 
     public boolean isToggledOn() {
+
         return toggledOn;
     }
 
@@ -236,24 +240,24 @@ public class Area extends AbstractMechanic {
         sign.update();
     }
 
-	@Override
-	public void unload() {
+    @Override
+    public void unload() {
 
-	}
+    }
 
-	@Override
-	public boolean isActive() {
+    @Override
+    public boolean isActive() {
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void onBlockBreak(BlockBreakEvent event) {
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
 
-	}
+    }
 
-	@Override
-	public void unloadWithEvent(ChunkUnloadEvent event) {
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
 
-	}
+    }
 }

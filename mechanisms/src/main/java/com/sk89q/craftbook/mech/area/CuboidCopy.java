@@ -48,7 +48,9 @@ public abstract class CuboidCopy {
      * selecting the right file type depending on the given File.
      *
      * @param file to load from
+     *
      * @return loaded CuboidCopy
+     *
      * @throws CuboidCopyException is thrown when loading error occured
      */
     public static CuboidCopy load(File file, World world) throws CuboidCopyException {
@@ -120,6 +122,7 @@ public abstract class CuboidCopy {
      * Get the distance between a point and this cuboid.
      *
      * @param pos of the vector to compare
+     *
      * @return distance between cuboid and point
      */
     public double distance(Vector pos) {
@@ -138,6 +141,7 @@ public abstract class CuboidCopy {
      * Saves the cuboid to file.
      *
      * @param file to save to
+     *
      * @throws IOException
      */
     protected abstract void save(File file) throws IOException, DataException;
@@ -146,6 +150,7 @@ public abstract class CuboidCopy {
      * Loads the cuboid from file. This method is for all sub classes.
      *
      * @param file to load from
+     *
      * @throws IOException
      * @throws CuboidCopyException
      */

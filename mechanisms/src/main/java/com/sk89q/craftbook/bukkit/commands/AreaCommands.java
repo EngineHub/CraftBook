@@ -31,6 +31,7 @@ public class AreaCommands {
     private final WorldEditPlugin worldEdit;
 
     public AreaCommands(MechanismsPlugin plugin) {
+
         this.plugin = plugin;
         worldEdit = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
     }
@@ -80,7 +81,8 @@ public class AreaCommands {
 
             // Check maximum size
             if (plugin.getLocalConfiguration().areaSettings.maxSizePerArea != -1 &&
-                    size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration().areaSettings.maxSizePerArea) {
+                    size.getBlockX() * size.getBlockY() * size.getBlockZ() > plugin.getLocalConfiguration()
+                            .areaSettings.maxSizePerArea) {
                 player.printError("Area is larger than allowed "
                         + plugin.getLocalConfiguration().areaSettings.maxSizePerArea + " blocks.");
                 return;
