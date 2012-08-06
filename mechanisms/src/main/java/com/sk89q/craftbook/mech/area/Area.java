@@ -45,19 +45,25 @@ public class Area extends AbstractMechanic {
         public Area detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
-            if (!plugin.getLocalConfiguration().areaSettings.enable)
-                return null;
-            if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-                if (!player.hasPermission("craftbook.mech.area")) {
-                    throw new InsufficientPermissionsException();
-                }
+            if (!plugin.getLocalConfiguration().areaSettings.enable) return null;
+
+            String[] lines = sign.getLines();
+
+            if (lines[1].equalsIgnoreCase("[Area]") || lines[1].equalsIgnoreCase("[SaveArea]")) {
                 if (sign.getLine(0).trim().equalsIgnoreCase("")) sign.setLine(0, "~" + player.getName());
-                if (sign.getLine(1).equalsIgnoreCase("[Area]")) sign.setLine(1, "[Area]");
-                else sign.setLine(1, "[SaveArea]");
+                if (lines[1].equalsIgnoreCase("[Area]")) {
+                    player.checkPermission("craftbook.mech.area.sign.area");
+                    sign.setLine(1, "[Area]");
+                } else if (lines[1].equalsIgnoreCase("[SaveArea]")) {
+                    player.checkPermission("craftbook.mech.area.sign.savearea");
+                    sign.setLine(1, "[SaveArea]");
+
+                }
                 player.print("Toggle area created.");
             } else {
                 return null;
             }
+
 
             throw new ProcessedMechanismException();
         }
