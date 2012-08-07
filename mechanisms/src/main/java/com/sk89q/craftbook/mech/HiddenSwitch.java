@@ -36,9 +36,9 @@ public class HiddenSwitch extends AbstractMechanic {
 	    // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
 	    //FIXME In the future add a check here to test if you can actually build wall signs on this block.
 	    //World wrd = BukkitUtil.toWorld(pos);
-	    player.checkPermission("craftbook.mech.hiddenswitch");
 	    if (sign.getLine(1).equalsIgnoreCase("[X]")) {
 
+		player.checkPermission("craftbook.mech.hiddenswitch");
 		return new HiddenSwitch(BukkitUtil.toBlock(pos), plugin);
 	    }
 	    return null;
