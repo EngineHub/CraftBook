@@ -103,31 +103,31 @@ public class EntitySensor extends AbstractIC {
 
         for (char aCharacter : characters) {
             switch (aCharacter) {
-                case 'p':
+                case 'P':
                     types.add(Type.PLAYER);
                     break;
-                case 'i':
+                case 'I':
                     types.add(Type.ITEM);
                     break;
-                case 'h':
+                case 'H':
                     types.add(Type.MOB_HOSTILE);
                     break;
-                case 'a':
+                case 'A':
                     types.add(Type.MOB_PEACEFUL);
                     break;
-                case 'm':
+                case 'M':
                     types.add(Type.MOB_ANY);
                     break;
-                case 'l':
+                case 'L':
                     types.add(Type.ANY);
                     break;
-                case 'c':
+                case 'C':
                     types.add(Type.CART);
                     break;
-                case 's':
+                case 'S':
                     types.add(Type.CART_STORAGE);
                     break;
-                case 'e':
+                case 'E':
                     types.add(Type.CART_POWERED);
                     break;
                 default:
