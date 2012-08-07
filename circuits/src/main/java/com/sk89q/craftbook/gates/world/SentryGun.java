@@ -2,9 +2,7 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -82,6 +80,7 @@ public class SentryGun extends AbstractIC {
     public void shoot() {
 
         // add the offset to the location of the block connected to the sign
+        /*
         for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
@@ -89,8 +88,7 @@ public class SentryGun extends AbstractIC {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
                             // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(entity.getLocation(),
-                                    center.getLocation()) <= radius) {
+                            if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
                                 Block signBlock = getSign().getBlock();
                                 BlockFace face = SignUtil.getBack(signBlock);
                                 Block targetDir = signBlock.getRelative(face).getRelative(face);
@@ -102,6 +100,20 @@ public class SentryGun extends AbstractIC {
                         }
                     }
                 }
+            }
+        }
+        */
+
+        for (Entity aEntity : center.getWorld().getEntities()) {
+            if (!aEntity.isDead() && aEntity.isValid() && type.is(aEntity)
+                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
+                Block signBlock = getSign().getBlock();
+                BlockFace face = SignUtil.getBack(signBlock);
+                Block targetDir = signBlock.getRelative(face).getRelative(face);
+                center.getWorld().spawnArrow(targetDir.getLocation(),
+                        aEntity.getLocation().subtract(targetDir.getLocation()).add(0.5, 0.5,
+                                0.5).toVector(), 2.0f, 0.0f);
+                break;
             }
         }
     }

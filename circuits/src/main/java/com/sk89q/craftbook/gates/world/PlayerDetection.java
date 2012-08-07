@@ -2,16 +2,11 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
 
 /**
  * @author Silthus
@@ -19,7 +14,7 @@ import java.util.Set;
 public class PlayerDetection extends AbstractIC {
 
     private Block center;
-    private Set<Chunk> chunks;
+    //private Set<Chunk> chunks;
     private int radius;
     private String player = "";
     private String group = "";
@@ -48,15 +43,12 @@ public class PlayerDetection extends AbstractIC {
         // parse the group or player name
         String line = sign.getLine(3).trim();
         try {
-            if (line.contains("p:")) {
-                player = line.split(":")[1];
-            } else if (line.contains("g:")) {
-                group = line.split(":")[1];
-            }
+            if (line.contains("p:")) player = line.split(":")[1];
+            else if (line.contains("g:")) group = line.split(":")[1];
         } catch (Exception e) {
             // do nothing and use the defaults
         }
-        this.chunks = LocationUtil.getSurroundingChunks(center, radius);
+        //this.chunks = LocationUtil.getSurroundingChunks(center, radius);
     }
 
     @Override
@@ -81,6 +73,7 @@ public class PlayerDetection extends AbstractIC {
 
     protected boolean isDetected() {
 
+        /*
         for (Chunk chunk : this.chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
@@ -100,6 +93,21 @@ public class PlayerDetection extends AbstractIC {
                             }
                         }
                     }
+                }
+            }
+        }
+        */
+
+        // Bukkit doesn't currently list players in the Chunk Entity list
+        for (Player aPlayer : center.getWorld().getEntitiesByClass(Player.class)) {
+            if (!aPlayer.isDead() && aPlayer.isValid()
+                    && aPlayer.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
+                if (!player.equals("")) {
+                    return aPlayer.getName().equals(player);
+                } else if (!group.equals("")) {
+                    return CircuitsPlugin.getInst().isInGroup(aPlayer.getName(), group);
+                } else {
+                    return true;
                 }
             }
         }
