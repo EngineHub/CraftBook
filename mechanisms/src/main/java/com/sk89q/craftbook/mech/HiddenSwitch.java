@@ -56,11 +56,6 @@ public class HiddenSwitch extends AbstractMechanic {
 	    return s.getLine(1).equalsIgnoreCase("[X]");
 	}
 
-	//private boolean isValidWallSign(Block b) {
-	//
-	//    return isValidWallSign(b.getWorld(), new BlockVector(b.getX(), b.getY(), b.getZ()));
-	// }
-
 	@Override
 	public HiddenSwitch detect(BlockWorldVector pos) throws InvalidMechanismException {
 
