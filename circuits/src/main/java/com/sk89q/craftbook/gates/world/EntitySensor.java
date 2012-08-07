@@ -2,7 +2,6 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -185,7 +184,7 @@ public class EntitySensor extends AbstractIC {
         */
         for (Entity aEntity : center.getWorld().getEntities()) {
             if (!aEntity.isDead() && aEntity.isValid()
-                    && LocationUtil.getGreatestDistance(aEntity.getLocation(), center.getLocation()) <= radius) {
+                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
                 for (Type type : types) {
                     // Check Type
                     if (type.is(aEntity)) return true;

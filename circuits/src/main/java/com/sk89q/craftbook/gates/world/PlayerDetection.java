@@ -2,7 +2,6 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -102,7 +101,7 @@ public class PlayerDetection extends AbstractIC {
         // Bukkit doesn't currently list players in the Chunk Entity list
         for (Player aPlayer : center.getWorld().getEntitiesByClass(Player.class)) {
             if (!aPlayer.isDead() && aPlayer.isValid()
-                    && LocationUtil.getGreatestDistance(aPlayer.getLocation(), center.getLocation()) <= radius) {
+                    && aPlayer.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
                 if (!player.equals("")) {
                     return aPlayer.getName().equals(player);
                 } else if (!group.equals("")) {
