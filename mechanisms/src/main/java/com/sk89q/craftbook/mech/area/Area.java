@@ -58,6 +58,7 @@ public class Area extends AbstractMechanic {
                     player.checkPermission("craftbook.mech.area.sign.savearea");
                     sign.setLine(1, "[SaveArea]");
                 }
+                sign.update();
                 // check if the namespace and area exists
                 isValidArea(sign);
                 player.print("Toggle area created.");
@@ -95,6 +96,7 @@ public class Area extends AbstractMechanic {
                     if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
                         if (!sign.getLine(0).equalsIgnoreCase(""))
                             sign.setLine(0, "global");
+                        sign.update();
                         // check if the namespace and area exists
                         isValidArea(sign);
                         return new Area(pt, plugin);
