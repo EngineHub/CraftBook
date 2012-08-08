@@ -62,6 +62,7 @@ public class EntityTrap extends AbstractIC {
     private Collection<Chunk> chunks;
     private int radius;
     private Type type;
+    private int amount = -1;
 
     public EntityTrap(Server server, Sign sign) {
 
@@ -76,10 +77,18 @@ public class EntityTrap extends AbstractIC {
         radius = ICUtil.parseRadius(sign);
         chunks = LocationUtil.getSurroundingChunks(center, radius);
         // lets get the type to detect first
+        try {
+            amount = Integer.parseInt(sign.getLine(2).trim());
+        } catch (NumberFormatException e) {
+            // do nothing and use default
+        } catch (IndexOutOfBoundsException e) {
+            // do nothing and use default
+        }
         type = Type.fromString(sign.getLine(3).trim());
         // set the type to any if wrong format
         if (type == null) type = Type.ANY;
         // update the sign with correct upper case name
+        sign.setLine(2, amount + "");
         sign.setLine(3, type.name());
         sign.update();
     }
@@ -112,29 +121,32 @@ public class EntityTrap extends AbstractIC {
     protected boolean hurt() {
 
         int damage = 2;
+        int count = 0;
         // add the offset to the location of the block connected to the sign
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
-                    if (!entity.isDead()) {
-                        if (type.is(entity)) {
-                            // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(center.getLocation(), entity.getLocation()) <= radius) {
-                                if (entity instanceof LivingEntity)
-                                    ((LivingEntity) entity).damage(damage);
-                                else if (entity instanceof Minecart)
-                                    ((Minecart) entity).setDamage(((Minecart) entity).getDamage() + damage);
-                                else
-                                    entity.remove();
-                                return true;
+                    if (count <= amount) {
+                        if (!entity.isDead()) {
+                            if (type.is(entity)) {
+                                // at last check if the entity is within the radius
+                                if (LocationUtil.getGreatestDistance(center.getLocation(), entity.getLocation()) <= radius) {
+                                    if (entity instanceof LivingEntity)
+                                        ((LivingEntity) entity).damage(damage);
+                                    else if (entity instanceof Minecart)
+                                        ((Minecart) entity).setDamage(((Minecart) entity).getDamage() + damage);
+                                    else
+                                        entity.remove();
+                                    count++;
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        return false;
+        return count > 0;
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
