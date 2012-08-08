@@ -154,7 +154,7 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (LocationUtil.getGreatestDistance(center.getLocation(), entity.getLocation()) <= radius) {
+                                if (LocationUtil.getDistance(center.getLocation(), entity.getLocation()) <= radius) {
                                     return true;
                                 }
                                 break;
@@ -164,16 +164,6 @@ public class EntitySensor extends AbstractIC {
                 }
             }
         }
-        /*
-        for (Entity aEntity : center.getWorld().getEntities()) {
-            if (!aEntity.isDead() && aEntity.isValid()
-                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                for (Type type : types) {
-                    // Check Type
-                    if (type.is(aEntity)) return true;
-                }
-            }
-        }*/
         return false;
     }
 

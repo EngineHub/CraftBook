@@ -121,7 +121,7 @@ public class EntityTrap extends AbstractIC {
                     if (!entity.isDead()) {
                         if (type.is(entity)) {
                             // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(center.getLocation(), entity.getLocation()) <= radius) {
+                            if (LocationUtil.getDistance(center.getLocation(), entity.getLocation()) <= radius) {
                                 if (entity instanceof LivingEntity)
                                     ((LivingEntity) entity).damage(damage);
                                 else if (entity instanceof Minecart)

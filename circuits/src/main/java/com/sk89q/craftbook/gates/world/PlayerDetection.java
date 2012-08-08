@@ -85,7 +85,7 @@ public class PlayerDetection extends AbstractIC {
                     if (!entity.isDead() && entity.isValid()) {
                         if (entity instanceof Player) {
                             // at last check if the entity is within the radius
-                            if (LocationUtil.getGreatestDistance(entity.getLocation(),
+                            if (LocationUtil.getDistance(entity.getLocation(),
                                     center.getLocation()) <= radius) {
                                 if (!player.equals("")) {
                                     return ((Player) entity).getName().equals(player);

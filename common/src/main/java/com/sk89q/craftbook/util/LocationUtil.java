@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +21,13 @@ import java.util.Set;
  */
 public final class LocationUtil {
 
+    private static BaseBukkitPlugin plugin;
+
+    public static void init(BaseBukkitPlugin plugin) {
+
+        LocationUtil.plugin = plugin;
+    }
+
     /**
      * Gets the greatest distance between two locations. Only takes
      * int locations and does not check a round radius.
@@ -29,7 +37,16 @@ public final class LocationUtil {
      *
      * @return greatest distance
      */
-    public static int getGreatestDistance(Location l1, Location l2) {
+    public static double getDistance(Location l1, Location l2) {
+
+        if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
+            return getBlockDistance(l1, l2);
+        } else {
+            return l1.distanceSquared(l2);
+        }
+    }
+
+    public static int getBlockDistance(Location l1, Location l2) {
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
