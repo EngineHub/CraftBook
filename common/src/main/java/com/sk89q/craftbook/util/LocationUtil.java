@@ -34,12 +34,12 @@ public final class LocationUtil {
      * @param l2
      * @return
      */
-    public static double getDistance(Location l1, Location l2) {
+    public static int getDistance(Location l1, Location l2) {
 
         if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
             return getBlockDistance(l1, l2);
         } else {
-            return l1.distanceSquared(l2);
+            return (int) Math.ceil(l1.distanceSquared(l2));
         }
     }
 
