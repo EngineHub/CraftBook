@@ -266,33 +266,6 @@ public class Gate extends AbstractMechanic {
 
         int curBlocks = 0;
 
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                BukkitUtil.toLocation(pt));
-
-        Sign sign = null;
-        Sign otherSign = null;
-
-        if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-            BlockState state = block.getState();
-            if (state instanceof Sign)
-                sign = (Sign) state;
-        }
-
-        if (sign != null) {
-            otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
-        }
-
-        // lets grap the block id to toggle if it exists on the sign
-        String line3 = sign.getLine(2).trim();
-        int blockId = -1;
-        if (!line3.equals("")) {
-            try {
-                blockId = Integer.parseInt(line3);
-            } catch (NumberFormatException e) {
-                // do nothing and use default: -1
-            }
-        }
-
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
@@ -302,8 +275,22 @@ public class Gate extends AbstractMechanic {
             ID = world.getBlockAt(x, y, z).getTypeId();
         for (int y1 = y - 1; y1 >= minY; y1--) {
             int cur = world.getBlockTypeIdAt(x, y1, z);
-            // continue if blockId isnt the one we want
-            if (cur != blockId) continue;
+
+            Block block = BukkitUtil.toWorld(pt).getBlockAt(
+                    BukkitUtil.toLocation(pt));
+
+            Sign sign = null;
+            Sign otherSign = null;
+
+            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
+                BlockState state = block.getState();
+                if (state instanceof Sign)
+                    sign = (Sign) state;
+            }
+
+            if (sign != null) {
+                otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
+            }
 
             if (sign != null && sign.getLine(3).length() > 0) {
                 try {
@@ -559,7 +546,7 @@ public class Gate extends AbstractMechanic {
                         throw new InvalidMechanismException("Line 3 needs to be an item id.");
                     }
                 } else {
-                    player.print("If you want the gate to only toggle one item id write it on line 3.");
+                    player.print("If you want to toggle only a specific item write its id in line 3.");
                 }
                 sign.setLine(1, "[DGate]");
                 sign.setLine(3, "0");
