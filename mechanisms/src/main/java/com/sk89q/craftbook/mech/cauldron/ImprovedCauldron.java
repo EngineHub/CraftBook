@@ -108,6 +108,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                             ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
                                     .YELLOW + " recipe.");
                     block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+                    event.setCancelled(true);
                 } else { //Spoons
                     if (event.getPlayer().getItemInHand() == null) return;
                     if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
@@ -123,6 +124,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                                             ChatColor.YELLOW + " recipe.");
                             block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
                                     false);
+                            event.setCancelled(true);
                         } else {
                             event.getPlayer().sendMessage(
                                     ChatColor.YELLOW + "You stir the cauldron but nothing happens.");
