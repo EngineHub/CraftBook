@@ -29,7 +29,6 @@ public final class LocationUtil {
      *
      * @return greatest distance
      */
-    @Deprecated
     public static int getGreatestDistance(Location l1, Location l2) {
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
