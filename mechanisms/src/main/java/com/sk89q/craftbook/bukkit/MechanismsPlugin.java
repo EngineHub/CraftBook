@@ -170,6 +170,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         return config;
     }
 
+    public void reloadLocalConfiguration() {
+
+        config = new MechanismsConfiguration(getConfig(), getDataFolder());
+    }
+
     private boolean setupEconomy() {
 
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net

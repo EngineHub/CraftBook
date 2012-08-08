@@ -1,17 +1,12 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import java.io.IOException;
-
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.area.CuboidCopy;
 import com.sk89q.craftbook.mech.area.FlatCuboidCopy;
 import com.sk89q.craftbook.mech.area.MCEditCuboidCopy;
+import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -21,6 +16,14 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.data.DataException;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Silthus
@@ -125,5 +128,128 @@ public class AreaCommands {
 	} catch (NoClassDefFoundError e) {
 	    player.printError("WorldEdit.jar does not exist in plugins/.");
 	}
+    }
+
+    @Command(
+            aliases = {"list"},
+            desc = "Lists the areas of the given namespace or lists all areas.",
+            usage = "[page]",
+            flags = "na"
+    )
+    @CommandPermissions({"craftbook.mech.area.list"})
+    public void list(CommandContext context, CommandSender sender) throws CommandException {
+
+        if (!(sender instanceof Player)) return;
+        LocalPlayer player = plugin.wrap((Player) sender);
+
+        String namespace = "~" + player.getName();
+        // get the namespace from the flag (if set)
+        if (context.hasFlag('n')) {
+            if (!player.hasPermission("craftbook.mech.area.list.other")) {
+                throw new CommandException("You dont have permission to list other players areas.");
+            }
+            namespace = context.getFlag('n');
+        }
+        // list all areas
+        if (context.hasFlag('a')) {
+            if (!player.hasPermission("craftbook.mech.area.list.all")) {
+                throw new CommandException("You dont have permission to list all areas.");
+            }
+            namespace = null;
+        }
+
+        int page = 1;
+        try {
+            page = context.getInteger(0);
+        } catch (NumberFormatException e) {
+            // use default page: 1
+        }
+
+        // get the areas for the defined namespace
+        File areas = new File(plugin.getDataFolder(), "areas");
+        if (namespace != null && !namespace.equals("")) {
+            areas = new File(areas, namespace);
+        }
+        ArrayList<String> areaList = new ArrayList<String>();
+        // collect the areas from the subfolders
+        String currentNamespace;
+        for (File file : areas.listFiles()) {
+            if (file.isDirectory()) {
+                currentNamespace = file.getName();
+                for (File area : file.listFiles()) {
+                    String strArea = area.getName().replace(".cbcopy", "");
+                    strArea = strArea.replace(".schematic", "");
+                    areaList.add(ChatColor.AQUA + currentNamespace + ":" + ChatColor.YELLOW + strArea);
+                }
+            } else if (file.isFile()) {
+                String strArea = file.getName().replace(".cbcopy", "");
+                strArea = strArea.replace(".schematic", "");
+                areaList.add(ChatColor.YELLOW + strArea);
+            }
+        }
+
+        // now lets list the areas with a nice pagination
+        if (areaList.size() > 0) {
+            player.print(namespace == null || namespace.equals("") ? "All Areas " : "Areas for " + namespace +
+                    " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
+            // list the areas one by one
+            for (String str : ArrayUtil.getArrayPage(areaList, page)) {
+                player.print(str);
+            }
+        } else {
+            player.printError("You need to save an area first. Use /area save <id> on a selected region.");
+        }
+    }
+
+    @Command(
+            aliases = {"delete"},
+            desc = "Lists the areas of the given namespace or lists all areas.",
+            usage = "<area>",
+            min = 1,
+            flags = "na"
+    )
+    @CommandPermissions({"craftbook.mech.area.delete"})
+    public void delete(CommandContext context, CommandSender sender) throws CommandException {
+
+        if (!(sender instanceof Player)) return;
+        LocalPlayer player = plugin.wrap((Player) sender);
+
+        String namespace = player.getName();
+        String areaId = context.getString(0);
+        boolean deleteAll = false;
+
+        // get the namespace from the flag (if set)
+        if (context.hasFlag('n')) {
+            if (!player.hasPermission("craftbook.mech.area.delete.other")) {
+                throw new CommandException("You dont have permission to delete other players areas.");
+            }
+            namespace = context.getFlag('n');
+        }
+        // should we delete all areas of the given namespace?
+        if (context.hasFlag('a')) {
+            if (!player.hasPermission("craftbook.mech.area.delete.all")) {
+                throw new CommandException("You dont have permission to delete all areas of that namespace.");
+            }
+            deleteAll = true;
+        }
+
+        File areas = null;
+        try {
+            areas = new File(plugin.getDataFolder(), "areas/" + namespace);
+        } catch (Exception e) {
+        }
+        if (areas == null) {
+            throw new CommandException("The namespace " + namespace + " does not exist.");
+        }
+
+        if (deleteAll) {
+            for (File file : areas.listFiles()) {
+                file.delete();
+            }
+            player.print("All areas in the namespace: " + namespace + " have been deleted.");
+        } else {
+            new File(areas, areaId).delete();
+            player.print("Area " + namespace + ":" + areaId + " has been deleted.");
+        }
     }
 }
