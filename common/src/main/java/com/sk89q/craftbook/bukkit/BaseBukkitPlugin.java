@@ -68,7 +68,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public BaseBukkitPlugin() {
 
-        LocationUtil.init(this);
         commands = new CommandsManager<CommandSender>() {
 
             @Override
@@ -89,6 +88,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
 
+        LocationUtil.init(this);
     }
 
     /**
