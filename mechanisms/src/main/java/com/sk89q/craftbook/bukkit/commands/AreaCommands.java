@@ -174,11 +174,9 @@ public class AreaCommands {
         // collect the areas from the subfolders
         String currentNamespace;
         for (File file : areas.listFiles()) {
-            if (file == null || file.getName().equals("null")) continue;
             if (file.isDirectory()) {
                 currentNamespace = file.getName();
                 for (File area : file.listFiles()) {
-                    if (area == null || area.getName().equals("null")) continue;
                     String strArea = area.getName().replace(".cbcopy", "");
                     strArea = strArea.replace(".schematic", "");
                     areaList.add(ChatColor.AQUA + currentNamespace + ":" + ChatColor.YELLOW + strArea);
@@ -193,13 +191,15 @@ public class AreaCommands {
         // now lets list the areas with a nice pagination
         if (areaList.size() > 0) {
             String tmp = namespace == null || namespace.equals("") ? "All Areas " : "Areas for " + namespace;
-            player.print(tmp + " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
+            player.print(ChatColor.AQUA + tmp + " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page)) {
-                player.print(str);
+                if (str != null && !str.equals("")) {
+                    player.print(str);
+                }
             }
         } else {
-            player.printError("You need to save an area first. Use /area save <id> on a selected region.");
+            player.printError("There are no saved areas in the " + namespace + " namespace.");
         }
     }
 
@@ -225,7 +225,7 @@ public class AreaCommands {
         boolean deleteAll = false;
 
         // add the area suffix
-        areaId = areaId + "." + (plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy");
+        areaId = areaId + "." + (plugin.getLocalConfiguration().areaSettings.useSchematics ? "schematic" : "cbcopy");
 
         // get the namespace from the flag (if set)
         if (context.hasFlag('n')) {
