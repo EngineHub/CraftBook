@@ -34,35 +34,32 @@ public class CustomCrafting {
         recipes = new RecipeManager(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(),
                 "crafting-recipes.yml")), plugin.getDataFolder());
         Collection<Recipe> recipeCollection = recipes.getRecipes();
-        for(Recipe r : recipeCollection) {
-            if(r.getType() == RecipeType.SHAPELESS) {
+        for (Recipe r : recipeCollection) {
+            if (r.getType() == RecipeType.SHAPELESS) {
                 ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
-                for(CraftingItemStack is : r.getIngredients()) {
+                for (CraftingItemStack is : r.getIngredients()) {
                     sh.addIngredient(is.getMaterial(), is.getData());
                 }
                 plugin.getServer().addRecipe(sh);
-            }
-            else if(r.getType() == RecipeType.SHAPED2X2) {
+            } else if (r.getType() == RecipeType.SHAPED2X2) {
                 ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                sh.shape("ab","cd");
+                sh.shape("ab", "cd");
                 int ingredientNum = 0;
-                for(CraftingItemStack is : r.getIngredients()) {
+                for (CraftingItemStack is : r.getIngredients()) {
                     ingredientNum++;
                     sh.setIngredient(numberLetter.get(ingredientNum), is.getMaterial(), is.getData());
                 }
                 plugin.getServer().addRecipe(sh);
-            }
-            else if(r.getType() == RecipeType.SHAPED3X3) {
+            } else if (r.getType() == RecipeType.SHAPED3X3) {
                 ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                sh.shape("abc","def","ghi");
+                sh.shape("abc", "def", "ghi");
                 int ingredientNum = 0;
-                for(CraftingItemStack is : r.getIngredients()) {
+                for (CraftingItemStack is : r.getIngredients()) {
                     ingredientNum++;
                     sh.setIngredient(numberLetter.get(ingredientNum), is.getMaterial(), is.getData());
                 }
                 plugin.getServer().addRecipe(sh);
-            }
-            else if(r.getType() == RecipeType.FURNACE) {
+            } else if (r.getType() == RecipeType.FURNACE) {
                 FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
                 plugin.getServer().addRecipe(sh);
             }

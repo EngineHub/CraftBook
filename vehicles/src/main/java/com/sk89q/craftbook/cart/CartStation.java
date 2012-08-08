@@ -22,24 +22,24 @@ public class CartStation extends CartMechanism {
 
         // go
         switch (isActive(blocks.rail, blocks.base, blocks.sign)) {
-        case ON:
-            // standardize its speed and direction.
-            launch(cart, blocks.sign);
-            break;
-        case OFF:
-        case NA:
-            // park it.
-            stop(cart);
-            // recenter it
-            Location l = blocks.rail.getLocation();
-            l.setX(l.getX() + 0.5);
-            l.setY(l.getY() + 0.5);
-            l.setZ(l.getZ() + 0.5);
-            if (!cart.getLocation().equals(l))
-                cart.teleport(l);
-            // recentering and parking almost completely prevents more than one cart from getting onto the same
-            // station.
-            break;
+            case ON:
+                // standardize its speed and direction.
+                launch(cart, blocks.sign);
+                break;
+            case OFF:
+            case NA:
+                // park it.
+                stop(cart);
+                // recenter it
+                Location l = blocks.rail.getLocation();
+                l.setX(l.getX() + 0.5);
+                l.setY(l.getY() + 0.5);
+                l.setZ(l.getZ() + 0.5);
+                if (!cart.getLocation().equals(l))
+                    cart.teleport(l);
+                // recentering and parking almost completely prevents more than one cart from getting onto the same
+                // station.
+                break;
         }
     }
 
@@ -58,7 +58,7 @@ public class CartStation extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;
@@ -67,24 +67,24 @@ public class CartStation extends CartMechanism {
 
         // go
         switch (isActive(blocks.rail, blocks.base, blocks.sign)) {
-        case ON:
-            // standardize its speed and direction.
-            launch(cart, blocks.sign);
-            break;
-        case OFF:
-        case NA:
-            // park it.
-            stop(cart);
-            // recenter it
-            Location l = blocks.rail.getLocation();
-            l.setX(l.getX() + 0.5);
-            l.setY(l.getY() + 0.5);
-            l.setZ(l.getZ() + 0.5);
-            if (!cart.getLocation().equals(l))
-                cart.teleport(l);
-            // recentering and parking almost completely prevents more than one cart from getting onto the same
-            // station.
-            break;
+            case ON:
+                // standardize its speed and direction.
+                launch(cart, blocks.sign);
+                break;
+            case OFF:
+            case NA:
+                // park it.
+                stop(cart);
+                // recenter it
+                Location l = blocks.rail.getLocation();
+                l.setX(l.getX() + 0.5);
+                l.setY(l.getY() + 0.5);
+                l.setZ(l.getZ() + 0.5);
+                if (!cart.getLocation().equals(l))
+                    cart.teleport(l);
+                // recentering and parking almost completely prevents more than one cart from getting onto the same
+                // station.
+                break;
         }
     }
 }

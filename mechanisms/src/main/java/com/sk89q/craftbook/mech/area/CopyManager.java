@@ -81,7 +81,7 @@ public class CopyManager {
      *
      * @param plugin
      * @param namespace to check
-     * @param area to check
+     * @param area      to check
      */
     public static boolean isExistingArea(MechanismsPlugin plugin, String namespace, String area) {
 
