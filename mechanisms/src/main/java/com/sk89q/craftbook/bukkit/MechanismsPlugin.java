@@ -41,7 +41,6 @@ import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
-import com.sk89q.craftbook.mech.CustomCrafting;
 import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
@@ -55,6 +54,7 @@ import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
+import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 
 
@@ -134,6 +134,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             registerMechanic(new Cauldron.Factory(this));
         if (getLocalConfiguration().cauldronSettings.enableNew)
             registerMechanic(new ImprovedCauldron.Factory(this));
+        if (getLocalConfiguration().customCraftingSettings.enable)
+            new CustomCrafting(this);
 
         //Special mechanics.
         if (economy != null) registerMechanic(new Payment.Factory(this));
@@ -182,8 +184,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             getServer().getPluginManager().registerEvents(new Snow(this), this);
         if (getLocalConfiguration().customDropSettings.enable)
             getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
-        if (getLocalConfiguration().customCraftingSettings.enable)
-            getServer().getPluginManager().registerEvents(new CustomCrafting(this), this);
         if (getLocalConfiguration().aiSettings.enabled)
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
         if (getLocalConfiguration().chairSettings.enable)
