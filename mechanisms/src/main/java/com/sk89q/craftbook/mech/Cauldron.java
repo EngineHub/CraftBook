@@ -47,7 +47,10 @@ import java.util.Map.Entry;
  * Handler for cauldrons.
  *
  * @author sk89q
+ *
+ * @deprecated Use {@link com.sk89q.craftbook.mech.cauldron.ImprovedCauldron} instead
  */
+@Deprecated
 public class Cauldron extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Cauldron> {

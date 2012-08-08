@@ -52,7 +52,9 @@ public class RandomBit extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            for (short i = 0; i < chip.getOutputCount(); i++) chip.setOutput(i, random.nextBoolean());
+            for (short i = 0; i < chip.getOutputCount(); i++) {
+                chip.setOutput(i, random.nextBoolean());
+            }
         }
     }
 
