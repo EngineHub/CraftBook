@@ -88,7 +88,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
 
-        LocationUtil.init(this);
     }
 
     /**
@@ -106,6 +105,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
         config = new BaseConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+        LocationUtil.init(this);
 
         logger.info(getDescription().getName() + " "
                 + getDescription().getVersion() + " enabled.");
