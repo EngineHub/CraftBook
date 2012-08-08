@@ -41,10 +41,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  */
 public class MechanismsPlugin extends BaseBukkitPlugin {
 
-    public final CopyManager copyManager = new CopyManager();
-
     protected MechanismsConfiguration config;
 
+    private final CopyManager copyManager = new CopyManager();
     private MechanicManager manager;
     public static Economy economy = null;  //TODO this probably should be implemented differently
 
@@ -170,6 +169,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     public MechanismsConfiguration getLocalConfiguration() {
 
         return config;
+    }
+
+    public CopyManager getCopyManager() {
+
+        return copyManager;
     }
 
     public void reloadLocalConfiguration() {
