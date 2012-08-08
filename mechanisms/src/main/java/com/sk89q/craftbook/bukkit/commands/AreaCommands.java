@@ -40,7 +40,8 @@ public class AreaCommands {
     @Command(
 	    aliases = {"save"},
 	    desc = "Saves the selected area",
-	    usage = "<id> <namespace>",
+	    usage = "<id>",
+        flags = "n:",
 	    min = 1
 	    )
     @CommandPermissions({"craftbook.mech.area.save"})
@@ -55,13 +56,9 @@ public class AreaCommands {
 	}
 	String id;
 	String namespace = "~" + player.getName();
-	try {
-	    if (!context.getString(1).equals("")) {
-		namespace = context.getString(1);
-	    }
-	} catch (Exception e) {
-	    // do nothing and use player name as namespace
-	}
+        if (context.hasFlag('n')) {
+            namespace = context.getFlag('n');
+        }
 
 	id = context.getString(0);
 
@@ -134,7 +131,7 @@ public class AreaCommands {
             aliases = {"list"},
             desc = "Lists the areas of the given namespace or lists all areas.",
             usage = "[page]",
-            flags = "na"
+            flags = "an:"
     )
     @CommandPermissions({"craftbook.mech.area.list"})
     public void list(CommandContext context, CommandSender sender) throws CommandException {
@@ -191,7 +188,7 @@ public class AreaCommands {
         // now lets list the areas with a nice pagination
         if (areaList.size() > 0) {
             String tmp = namespace == null || namespace.equals("") ? "All Areas " : "Areas for " + namespace;
-            player.print(ChatColor.AQUA + tmp + " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
+            player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page)) {
                 if (str != null && !str.equals("")) {
@@ -207,7 +204,7 @@ public class AreaCommands {
             aliases = {"delete"},
             desc = "Lists the areas of the given namespace or lists all areas.",
             usage = "[area]",
-            flags = "na"
+            flags = "an:"
     )
     @CommandPermissions({"craftbook.mech.area.delete"})
     public void delete(CommandContext context, CommandSender sender) throws CommandException {
@@ -250,10 +247,8 @@ public class AreaCommands {
         }
 
         if (deleteAll) {
-            for (File file : areas.listFiles()) {
-                file.delete();
-            }
-            player.print("All areas in " + namespace + " have been deleted.");
+            areas.delete();
+            player.print("All areas in the namespace " + namespace + " have been deleted.");
         } else {
             File file = new File(areas, areaId);
             file.delete();
