@@ -34,7 +34,7 @@ import java.util.HashMap;
  */
 public class CopyManager {
 
-    public static final CopyManager INSTANCE = new CopyManager();
+    private static final CopyManager INSTANCE = new CopyManager();
 
     /**
      * Cache.
@@ -47,6 +47,16 @@ public class CopyManager {
      */
     private final HashMap<String, HistoryHashMap<String, Long>> missing =
             new HashMap<String, HistoryHashMap<String, Long>>();
+
+    /**
+     * Gets the copy manager instance
+     *
+     * @return The Copy Manager Instance
+     */
+    public static CopyManager getInstance() {
+
+        return INSTANCE;
+    }
 
     /**
      * Checks to see whether a name is a valid copy name.
@@ -81,7 +91,7 @@ public class CopyManager {
      *
      * @param plugin
      * @param namespace to check
-     * @param area to check
+     * @param area      to check
      */
     public static boolean isExistingArea(MechanismsPlugin plugin, String namespace, String area) {
 

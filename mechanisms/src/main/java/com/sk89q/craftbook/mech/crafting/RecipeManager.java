@@ -27,6 +27,7 @@ public class RecipeManager extends BaseConfiguration {
     }
 
     public Collection<Recipe> getRecipes() {
+
         return recipes;
     }
 
@@ -109,6 +110,7 @@ public class RecipeManager extends BaseConfiguration {
         }
 
         public Collection<CraftingItemStack> getIngredients() {
+
             return ingredients;
         }
 
@@ -116,8 +118,7 @@ public class RecipeManager extends BaseConfiguration {
 
             try {
                 return results.iterator().next();
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -128,16 +129,19 @@ public class RecipeManager extends BaseConfiguration {
             private String name;
 
             private RecipeType(String name) {
+
                 this.name = name;
             }
 
             public String getName() {
+
                 return name;
             }
 
             public static RecipeType getTypeFromName(String name) {
-                for(RecipeType t : RecipeType.values()) {
-                    if(t.getName().equalsIgnoreCase(name))
+
+                for (RecipeType t : RecipeType.values()) {
+                    if (t.getName().equalsIgnoreCase(name))
                         return t;
                 }
                 return SHAPELESS; //Default to shapeless

@@ -2,11 +2,10 @@ package com.sk89q.craftbook.mech.area;
 
 import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -84,12 +83,10 @@ public class Area extends AbstractMechanic {
         @Override
         public Area detect(BlockWorldVector pt) throws InvalidMechanismException {
 
-            if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
-                return null;
+            if (!plugin.getLocalConfiguration().areaSettings.enableRedstone) return null;
 
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                    BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.SIGN_POST || block.getTypeId() == BlockID.WALL_SIGN) {
+            Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+            if (SignUtil.isSign(block.getTypeId())) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
                     Sign sign = (Sign) state;
@@ -131,10 +128,13 @@ public class Area extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!event.getPlayer().hasPermission("craftbook.mech.area.use")) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You don't have permission to use areas.");
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+
+        if (player.hasPermission("craftbook.mech.area.use")) {
+            player.print("mech.use-permission");
             return;
         }
+
         // check if the sign still exists
         Sign sign = null;
         if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
@@ -154,8 +154,8 @@ public class Area extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (!plugin.getLocalConfiguration().areaSettings.enableRedstone)
-            return;
+        if (!plugin.getLocalConfiguration().areaSettings.enableRedstone) return;
+
         // check if the sign still exists
         Sign sign = null;
         if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
@@ -195,17 +195,17 @@ public class Area extends AbstractMechanic {
             String id = sign.getLine(2).replace("-", "");
             String inactiveID = sign.getLine(3).replace("-", "");
 
-            CuboidCopy copy = CopyManager.INSTANCE.load(world, namespace, id, plugin);
+            CuboidCopy copy = CopyManager.getInstance().load(world, namespace, id, plugin);
 
             if (isToggledOn()) {
                 // if this is a save area save it before toggling off
                 if (save) {
                     copy.copy();
-                    CopyManager.INSTANCE.save(world, namespace, id, copy, plugin);
+                    CopyManager.getInstance().save(world, namespace, id, copy, plugin);
                 }
                 // if we are toggling to the second area we dont clear the old area
                 if (inactiveID.length() > 0 && !inactiveID.equals("--")) {
-                    copy = CopyManager.INSTANCE.load(world, namespace, inactiveID, plugin);
+                    copy = CopyManager.getInstance().load(world, namespace, inactiveID, plugin);
                     copy.paste();
                 } else {
                     copy.clear();
