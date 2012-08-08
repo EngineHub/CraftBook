@@ -162,6 +162,8 @@ public final class LocationUtil {
             for (int z = radius; z >= 0; z--) {
                 chunks.add(world.getChunkAt(cX + x, cZ + z));
                 chunks.add(world.getChunkAt(cX - x, cZ - z));
+                chunks.add(world.getChunkAt(cX + x, cZ - z));
+                chunks.add(world.getChunkAt(cX - x, cZ + z));
             }
         }
         return chunks;
