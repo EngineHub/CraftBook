@@ -167,6 +167,9 @@ public class AreaCommands {
         if (namespace != null && !namespace.equals("")) {
             areas = new File(areas, namespace);
         }
+        if (!areas.exists()) {
+            throw new CommandException("The namespace " + namespace + " does not exist.");
+        }
         ArrayList<String> areaList = new ArrayList<String>();
         // collect the areas from the subfolders
         String currentNamespace;
@@ -239,10 +242,12 @@ public class AreaCommands {
             deleteAll = true;
         }
 
-        File areas;
+        File areas = null;
         try {
             areas = new File(plugin.getDataFolder(), "areas/" + namespace);
         } catch (Exception e) {
+        }
+        if (areas == null || !areas.exists()) {
             throw new CommandException("The namespace " + namespace + " does not exist.");
         }
 

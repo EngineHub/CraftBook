@@ -66,6 +66,7 @@ public class MechanismCommands {
         public void reload(CommandContext context, CommandSender sender) {
 
             plugin.reloadLocalConfiguration();
+            sender.sendMessage("Config has been reloaded successfully!");
         }
     }
 }
