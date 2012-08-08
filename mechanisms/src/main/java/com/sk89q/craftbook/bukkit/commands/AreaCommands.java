@@ -174,9 +174,11 @@ public class AreaCommands {
         // collect the areas from the subfolders
         String currentNamespace;
         for (File file : areas.listFiles()) {
+            if (file == null) continue;
             if (file.isDirectory()) {
                 currentNamespace = file.getName();
                 for (File area : file.listFiles()) {
+                    if (area == null) continue;
                     String strArea = area.getName().replace(".cbcopy", "");
                     strArea = strArea.replace(".schematic", "");
                     areaList.add(ChatColor.AQUA + currentNamespace + ":" + ChatColor.YELLOW + strArea);
@@ -190,8 +192,8 @@ public class AreaCommands {
 
         // now lets list the areas with a nice pagination
         if (areaList.size() > 0) {
-            player.print(namespace == null || namespace.equals("") ? "All Areas " : "Areas for " + namespace +
-                    " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
+            String tmp = namespace == null || namespace.equals("") ? "All Areas " : "Areas for " + namespace;
+            player.print(tmp + " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page)) {
                 player.print(str);
@@ -204,8 +206,7 @@ public class AreaCommands {
     @Command(
             aliases = {"delete"},
             desc = "Lists the areas of the given namespace or lists all areas.",
-            usage = "<area>",
-            min = 1,
+            usage = "[area]",
             flags = "na"
     )
     @CommandPermissions({"craftbook.mech.area.delete"})
@@ -215,7 +216,12 @@ public class AreaCommands {
         LocalPlayer player = plugin.wrap((Player) sender);
 
         String namespace = player.getName();
-        String areaId = context.getString(0);
+        String areaId = null;
+        if (context.argsLength() > 0 && !context.hasFlag('a')) {
+            areaId = context.getString(0);
+        } else if (!context.hasFlag('a')) {
+            throw new CommandException("You need to define an area or -a to delete all areas.");
+        }
         boolean deleteAll = false;
 
         // get the namespace from the flag (if set)
@@ -246,10 +252,11 @@ public class AreaCommands {
             for (File file : areas.listFiles()) {
                 file.delete();
             }
-            player.print("All areas in the namespace: " + namespace + " have been deleted.");
+            player.print("All areas in " + areas.getAbsolutePath() + " have been deleted.");
         } else {
-            new File(areas, areaId).delete();
-            player.print("Area " + namespace + ":" + areaId + " has been deleted.");
+            File file = new File(areas, areaId);
+            file.delete();
+            player.print(file.getAbsolutePath() + " has been deleted.");
         }
     }
 }
