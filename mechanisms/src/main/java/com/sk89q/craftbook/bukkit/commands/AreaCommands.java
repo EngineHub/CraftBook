@@ -174,11 +174,11 @@ public class AreaCommands {
         // collect the areas from the subfolders
         String currentNamespace;
         for (File file : areas.listFiles()) {
-            if (file == null) continue;
+            if (file == null || file.getName().equals("null")) continue;
             if (file.isDirectory()) {
                 currentNamespace = file.getName();
                 for (File area : file.listFiles()) {
-                    if (area == null) continue;
+                    if (area == null || area.getName().equals("null")) continue;
                     String strArea = area.getName().replace(".cbcopy", "");
                     strArea = strArea.replace(".schematic", "");
                     areaList.add(ChatColor.AQUA + currentNamespace + ":" + ChatColor.YELLOW + strArea);
@@ -215,7 +215,7 @@ public class AreaCommands {
         if (!(sender instanceof Player)) return;
         LocalPlayer player = plugin.wrap((Player) sender);
 
-        String namespace = player.getName();
+        String namespace = "~" + player.getName();
         String areaId = null;
         if (context.argsLength() > 0 && !context.hasFlag('a')) {
             areaId = context.getString(0);
@@ -223,6 +223,9 @@ public class AreaCommands {
             throw new CommandException("You need to define an area or -a to delete all areas.");
         }
         boolean deleteAll = false;
+
+        // add the area suffix
+        areaId = areaId + "." + (plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy");
 
         // get the namespace from the flag (if set)
         if (context.hasFlag('n')) {
@@ -239,12 +242,10 @@ public class AreaCommands {
             deleteAll = true;
         }
 
-        File areas = null;
+        File areas;
         try {
             areas = new File(plugin.getDataFolder(), "areas/" + namespace);
         } catch (Exception e) {
-        }
-        if (areas == null) {
             throw new CommandException("The namespace " + namespace + " does not exist.");
         }
 
@@ -252,11 +253,13 @@ public class AreaCommands {
             for (File file : areas.listFiles()) {
                 file.delete();
             }
-            player.print("All areas in " + areas.getAbsolutePath() + " have been deleted.");
+            player.print("All areas in " + namespace + " have been deleted.");
         } else {
             File file = new File(areas, areaId);
             file.delete();
-            player.print(file.getAbsolutePath() + " has been deleted.");
+            player.print("The area " +
+                    ChatColor.AQUA + namespace + ":" + ChatColor.YELLOW + areaId +
+                    ChatColor.GOLD + " has been deleted.");
         }
     }
 }
