@@ -31,12 +31,9 @@ public final class LocationUtil {
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
         double distance = getDistance(l1, l2);
-        plugin.getLogger().info("Distance is: " + distance);
         if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
-            plugin.getLogger().info("Checking against Block Radius: " + radius);
             return distance <= radius;
         } else {
-            plugin.getLogger().info("Checking against Absolute Radius: " + radius * radius);
             return distance <= radius * radius;
         }
     }
