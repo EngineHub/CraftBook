@@ -108,7 +108,7 @@ public class CopyManager {
 
         HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
 
-        CuboidCopy copy = cache.get(id);
+        CuboidCopy copy = cache.get(cacheKey);
 
         if (copy == null) {
             File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
@@ -144,7 +144,7 @@ public class CopyManager {
 
         copyFlat.save(new File(folder, id + getFileSuffix(plugin)));
         missing.remove(cacheKey);
-        cache.put(id, copyFlat);
+        cache.put(cacheKey, copyFlat);
     }
 
     /**
