@@ -387,39 +387,38 @@ public class Gate extends AbstractMechanic {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
+        Sign sign = null;
+
+        if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = event.getClickedBlock().getState();
+            if (state instanceof Sign) sign = (Sign) state;
+        }
+        if (sign == null) return;
+
         if (event.getPlayer().getItemInHand() != null) {
             if (isValidGateItem(event.getPlayer().getItemInHand())) {
 
-                Sign sign = null;
-
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
-                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-                    BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign) sign = (Sign) state;
+                try {
+                    int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
+                    sign.setLine(3, newBlocks + "");
+                    sign.update();
+                } catch (Exception e) {
+                    sign.setLine(3, "1");
+                    sign.update();
                 }
 
-                if (sign != null) {
-                    try {
-                        int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
-                        sign.setLine(3, newBlocks + "");
-                        sign.update();
-                    } catch (Exception e) {
-                        sign.setLine(3, "1");
-                        sign.update();
-                    }
-
-                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                        if (event.getPlayer().getItemInHand().getAmount() <= 1) {
-                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                        } else
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - 1);
-                    }
-
-                    player.print("Gate Restocked!");
-                    event.setCancelled(true);
-                    return;
+                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                        event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                    } else
+                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                                - 1);
                 }
+
+                player.print("Gate Restocked!");
+                event.setCancelled(true);
+                return;
             }
         }
 
@@ -521,7 +520,15 @@ public class Gate extends AbstractMechanic {
                 if (!player.hasPermission("craftbook.mech.gate")) {
                     throw new InsufficientPermissionsException();
                 }
-
+                // get the material that this gate should toggle and verify it
+                String line2 = sign.getLine(2).trim();
+                if (line2 != null && line2.equals("")) {
+                    try {
+                        Integer.parseInt(line2);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidMechanismException("Line 3 needs to be an item id.");
+                    }
+                }
                 sign.setLine(1, "[Gate]");
                 sign.setLine(3, "0");
                 sign.update();
@@ -530,7 +537,17 @@ public class Gate extends AbstractMechanic {
                 if (!player.hasPermission("craftbook.mech.gate")) {
                     throw new InsufficientPermissionsException();
                 }
-
+                // get the material that this gate should toggle and verify it
+                String line2 = sign.getLine(2).trim();
+                if (line2 != null && !line2.equals("")) {
+                    try {
+                        Integer.parseInt(line2);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidMechanismException("Line 3 needs to be an item id.");
+                    }
+                } else {
+                    player.print("If you want to toggle only a specific item write its id in line 3.");
+                }
                 sign.setLine(1, "[DGate]");
                 sign.setLine(3, "0");
                 sign.update();

@@ -77,6 +77,20 @@ public class CopyManager {
     }
 
     /**
+     * Checks if the area and namespace exists.
+     *
+     * @param plugin
+     * @param namespace to check
+     * @param area to check
+     */
+    public static boolean isExistingArea(MechanismsPlugin plugin, String namespace, String area) {
+
+        area = area.replace("-", "") + getFileSuffix(plugin);
+        File file = new File(plugin.getDataFolder(), "areas/" + namespace);
+        return new File(file, area).exists();
+    }
+
+    /**
      * Load a copy from disk. This may return a cached copy. If the copy is not
      * cached, the file will be loaded from disk if possible. If the copy does
      * not exist, an exception will be raised. An exception may be raised if the file
@@ -108,7 +122,7 @@ public class CopyManager {
 
         HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
 
-        CuboidCopy copy = cache.get(id);
+        CuboidCopy copy = cache.get(cacheKey);
 
         if (copy == null) {
             File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
@@ -144,7 +158,7 @@ public class CopyManager {
 
         copyFlat.save(new File(folder, id + getFileSuffix(plugin)));
         missing.remove(cacheKey);
-        cache.put(id, copyFlat);
+        cache.put(cacheKey, copyFlat);
     }
 
     /**
@@ -200,7 +214,7 @@ public class CopyManager {
         }
     }
 
-    private String getFileSuffix(MechanismsPlugin plugin) {
+    private static String getFileSuffix(MechanismsPlugin plugin) {
 
         return plugin.getLocalConfiguration().areaSettings.useSchematics ? ".schematic" : ".cbcopy";
     }
