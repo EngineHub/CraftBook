@@ -142,12 +142,14 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         public boolean checkIngredients(Collection<CauldronItemStack> items) {
 
             if (items.size() <= 0) return false;
+            int count = 0;
             for (CauldronItemStack item : items) {
                 if (!ingredients.contains(item)) {
                     return false;
                 }
+                count++;
             }
-            return true;
+            return count == ingredients.size();
         }
 
         public Collection<CauldronItemStack> getResults() {
