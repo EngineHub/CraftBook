@@ -53,9 +53,7 @@ public class RandomBit extends AbstractIC {
 
         if (chip.getInput(0)) {
             for (short i = 0; i < chip.getOutputCount(); i++) {
-                boolean b = random.nextBoolean();
-                System.out.println("Setting PIN " + i + ":" + b);
-                chip.setOutput(i, b);
+                chip.setOutput(i, random.nextBoolean());
             }
         }
     }
