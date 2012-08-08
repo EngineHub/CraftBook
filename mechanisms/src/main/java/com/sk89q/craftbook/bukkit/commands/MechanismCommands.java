@@ -49,7 +49,14 @@ public class MechanismCommands {
     }
 
 
-    public class NestedCommands {
+    public static class NestedCommands {
+
+        private final MechanismsPlugin plugin;
+
+        public NestedCommands(MechanismsPlugin plugin) {
+
+            this.plugin = plugin;
+        }
 
         @Command(
                 aliases = {"reload"},
