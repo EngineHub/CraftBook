@@ -1,15 +1,16 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import com.sk89q.craftbook.BaseConfiguration;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -24,6 +25,10 @@ public class RecipeManager extends BaseConfiguration {
         config = new File(dataFolder, "crafting-recipes.yml");
         load(cfg.getConfigurationSection("crafting-recipes"));
         INSTANCE = this;
+    }
+
+    public Collection<Recipe> getRecipes() {
+        return recipes;
     }
 
     public void reload() {
@@ -49,7 +54,7 @@ public class RecipeManager extends BaseConfiguration {
         private final ConfigurationSection config;
 
         private String name;
-        private String type;
+        private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
         private Collection<CraftingItemStack> results;
 
@@ -65,7 +70,7 @@ public class RecipeManager extends BaseConfiguration {
         private void load() {
 
             name = config.getString("name");
-            type = config.getString("type");
+            type = RecipeType.getTypeFromName(config.getString("type"));
             ingredients = getItems(config.getConfigurationSection("ingredients"));
             results = getItems(config.getConfigurationSection("results"));
         }
@@ -106,9 +111,13 @@ public class RecipeManager extends BaseConfiguration {
             return name;
         }
 
-        public String getType() {
+        public RecipeType getType() {
 
             return type;
+        }
+
+        public Collection<CraftingItemStack> getIngredients() {
+            return ingredients;
         }
 
         /**
@@ -129,9 +138,36 @@ public class RecipeManager extends BaseConfiguration {
             return true;
         }
 
-        public Collection<CraftingItemStack> getResults() {
+        public CraftingItemStack getResult() {
 
-            return results;
+            try {
+                return results.iterator().next();
+            }
+            catch(Exception e) {
+                return null;
+            }
+        }
+
+        public enum RecipeType {
+            SHAPELESS("Shapeless"), SHAPED3X3("Shaped3x3"), SHAPED2X2("Shaped2x2"), FURNACE("Furnace");
+
+            private String name;
+
+            private RecipeType(String name) {
+                this.name = name;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public static RecipeType getTypeFromName(String name) {
+                for(RecipeType t : RecipeType.values()) {
+                    if(t.getName().equalsIgnoreCase(name))
+                        return t;
+                }
+                return SHAPELESS; //Default to shapeless
+            }
         }
     }
 }
