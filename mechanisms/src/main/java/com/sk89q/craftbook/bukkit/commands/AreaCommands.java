@@ -161,7 +161,7 @@ public class AreaCommands {
         int page = 1;
         try {
             page = context.getInteger(0);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             // use default page: 1
         }
 
