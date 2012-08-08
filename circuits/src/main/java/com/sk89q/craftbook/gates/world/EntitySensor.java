@@ -2,13 +2,16 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -16,15 +19,15 @@ import java.util.HashSet;
 public class EntitySensor extends AbstractIC {
 
     private enum Type {
-        PLAYER,
-        ITEM,
-        MOB_HOSTILE,
-        MOB_PEACEFUL,
-        MOB_ANY,
-        ANY,
-        CART,
-        CART_STORAGE,
-        CART_POWERED;
+        PLAYER('p'),
+        ITEM('i'),
+        MOB_HOSTILE('h'),
+        MOB_PEACEFUL('a'),
+        MOB_ANY('m'),
+        ANY('l'),
+        CART('c'),
+        CART_STORAGE('s'),
+        CART_POWERED('e');
 
         public boolean is(Entity entity) {
 
@@ -51,17 +54,42 @@ public class EntitySensor extends AbstractIC {
             return false;
         }
 
-        @SuppressWarnings("unused")
-        public static Type fromString(String name) {
+        private final char shortName;
 
-            return EnumUtil.getEnumFromString(EntitySensor.Type.class, name);
+        private Type(char shortName) {
+            this.shortName = shortName;
+        }
+
+        public char getShortName() {
+            return shortName;
+        }
+
+        public static HashSet<Type> getDetected(String line) {
+
+            HashSet<Type> types = new HashSet<Type>();
+
+            if (line.length() == 1) {
+                for (Type type : Type.values()) {
+                    if (type.getShortName() == line.charAt(0)) {
+                        types.add(type);
+                    }
+                }
+            } else {
+                Type type = EnumUtil.getEnumFromString(Type.class, line);
+                if (type == null) {
+                    types.add(ANY);
+                } else {
+                    types.add(type);
+                }
+            }
+            return types;
         }
     }
 
     private HashSet<Type> types;
 
     private Block center;
-    //private Set<Chunk> chunks;
+    private Set<Chunk> chunks;
     private int radius;
 
     public EntitySensor(Server server, Sign block) {
@@ -73,9 +101,10 @@ public class EntitySensor extends AbstractIC {
     private void load() {
 
         Sign sign = getSign();
+        Block block = SignUtil.getBackBlock(sign.getBlock());
 
         // lets get the types to detect first
-        types = getDetected(sign.getLine(3).trim());
+        types = Type.getDetected(sign.getLine(3).trim());
 
         // Add all if no params are specified
         if (types.size() == 0) types.add(Type.ANY);
@@ -92,50 +121,7 @@ public class EntitySensor extends AbstractIC {
         } else {
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
-        //chunks = LocationUtil.getSurroundingChunks(block, radius);
-    }
-
-    private HashSet<Type> getDetected(String line) {
-
-        char[] characters = line.toCharArray();
-
-        HashSet<Type> types = new HashSet<Type>();
-
-        for (char aCharacter : characters) {
-            switch (aCharacter) {
-                case 'P':
-                    types.add(Type.PLAYER);
-                    break;
-                case 'I':
-                    types.add(Type.ITEM);
-                    break;
-                case 'H':
-                    types.add(Type.MOB_HOSTILE);
-                    break;
-                case 'A':
-                    types.add(Type.MOB_PEACEFUL);
-                    break;
-                case 'M':
-                    types.add(Type.MOB_ANY);
-                    break;
-                case 'L':
-                    types.add(Type.ANY);
-                    break;
-                case 'C':
-                    types.add(Type.CART);
-                    break;
-                case 'S':
-                    types.add(Type.CART_STORAGE);
-                    break;
-                case 'E':
-                    types.add(Type.CART_POWERED);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return types;
+        chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
     @Override
@@ -160,7 +146,6 @@ public class EntitySensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        /*
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // Get all entites from the chunks in the defined radius
@@ -178,16 +163,6 @@ public class EntitySensor extends AbstractIC {
                             }
                         }
                     }
-                }
-            }
-        }
-        */
-        for (Entity aEntity : center.getWorld().getEntities()) {
-            if (!aEntity.isDead() && aEntity.isValid()
-                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                for (Type type : types) {
-                    // Check Type
-                    if (type.is(aEntity)) return true;
                 }
             }
         }

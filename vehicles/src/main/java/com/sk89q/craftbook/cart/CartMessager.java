@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 
 public class CartMessager extends CartMechanism {
 
