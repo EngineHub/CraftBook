@@ -97,9 +97,7 @@ public class ItemSensor extends AbstractIC {
                         ItemStack itemStack = ((Item) entity).getItemStack();
                         if (itemStack.getTypeId() == item) {
                             if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                            if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                                return true;
-                            }
+                            return LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius);
                         }
                     }
                 }
