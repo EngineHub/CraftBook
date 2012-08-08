@@ -38,13 +38,27 @@ public class MechanismCommands {
 
     }
 
-    @Command(
-            aliases = {"cbmech reload"},
-            desc = "Reloads the craftbook mechanism config"
-    )
-    @CommandPermissions("craftbook.mech.reload")
-    public void reload(CommandContext context, CommandSender sender) {
 
-        plugin.reloadLocalConfiguration();
+    @Command(
+            aliases = {"cbmech"},
+            desc = "Handels the basic Craftbook Mechanism commands."
+    )
+    @NestedCommand(NestedCommands.class)
+    public void cbmech(CommandContext context, CommandSender sender) {
+
+    }
+
+
+    public class NestedCommands {
+
+        @Command(
+                aliases = {"reload"},
+                desc = "Reloads the craftbook mechanism config"
+        )
+        @CommandPermissions("craftbook.mech.reload")
+        public void reload(CommandContext context, CommandSender sender) {
+
+            plugin.reloadLocalConfiguration();
+        }
     }
 }
