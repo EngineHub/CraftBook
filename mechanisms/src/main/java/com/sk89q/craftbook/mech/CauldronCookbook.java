@@ -29,7 +29,10 @@ import java.util.logging.Logger;
  * Store of recipes.
  *
  * @author sk89q
+ *
+ * @deprecated Use {@link com.sk89q.craftbook.mech.cauldron.ImprovedCauldronCookbook} instead
  */
+@Deprecated
 public class CauldronCookbook {
 
     /**
