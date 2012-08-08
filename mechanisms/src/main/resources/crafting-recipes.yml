@@ -1,0 +1,15 @@
+crafting-recipes:
+  default:
+    type: shaped2x2
+    ingredients:
+      # light wooden plank
+      'wood:2': 1
+      # light wooden plank
+      'wood:2': 1
+      # brown wool
+      '35:12': 1
+      # brown wool
+      '35:12': 1
+    results:
+      #64 Endstone.
+      121: 64
