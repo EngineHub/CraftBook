@@ -522,7 +522,7 @@ public class Gate extends AbstractMechanic {
                 }
                 // get the material that this gate should toggle and verify it
                 String line2 = sign.getLine(2).trim();
-                if (line2 != null && line2.equals("")) {
+                if (line2 != null && !line2.equals("")) {
                     try {
                         Integer.parseInt(line2);
                     } catch (NumberFormatException e) {
