@@ -22,6 +22,7 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.minecraft.util.commands.*;
 import com.sk89q.wepif.PermissionsResolverManager;
 import org.bukkit.ChatColor;
@@ -67,6 +68,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public BaseBukkitPlugin() {
 
+        LocationUtil.init(this);
         commands = new CommandsManager<CommandSender>() {
 
             @Override

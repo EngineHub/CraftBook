@@ -29,13 +29,10 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets the greatest distance between two locations. Only takes
-     * int locations and does not check a round radius.
-     *
-     * @param l1 to compare
-     * @param l2 to compare
-     *
-     * @return greatest distance
+     * Gets the distance between to points.
+     * @param l1
+     * @param l2
+     * @return
      */
     public static double getDistance(Location l1, Location l2) {
 
@@ -46,6 +43,15 @@ public final class LocationUtil {
         }
     }
 
+    /**
+     * Gets the greatest distance between two locations. Only takes
+     * int locations and does not check a round radius.
+     *
+     * @param l1 to compare
+     * @param l2 to compare
+     *
+     * @return greatest distance
+     */
     public static int getBlockDistance(Location l1, Location l2) {
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
