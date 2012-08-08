@@ -266,6 +266,33 @@ public class Gate extends AbstractMechanic {
 
         int curBlocks = 0;
 
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(
+                BukkitUtil.toLocation(pt));
+
+        Sign sign = null;
+        Sign otherSign = null;
+
+        if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
+            BlockState state = block.getState();
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        }
+
+        if (sign != null) {
+            otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
+        }
+
+        // lets grap the block id to toggle if it exists on the sign
+        String line3 = sign.getLine(2).trim();
+        int blockId = -1;
+        if (!line3.equals("")) {
+            try {
+                blockId = Integer.parseInt(line3);
+            } catch (NumberFormatException e) {
+                // do nothing and use default: -1
+            }
+        }
+
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
@@ -275,22 +302,8 @@ public class Gate extends AbstractMechanic {
             ID = world.getBlockAt(x, y, z).getTypeId();
         for (int y1 = y - 1; y1 >= minY; y1--) {
             int cur = world.getBlockTypeIdAt(x, y1, z);
-
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                    BukkitUtil.toLocation(pt));
-
-            Sign sign = null;
-            Sign otherSign = null;
-
-            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-                BlockState state = block.getState();
-                if (state instanceof Sign)
-                    sign = (Sign) state;
-            }
-
-            if (sign != null) {
-                otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
-            }
+            // continue if blockId isnt the one we want
+            if (cur != blockId) continue;
 
             if (sign != null && sign.getLine(3).length() > 0) {
                 try {
@@ -387,39 +400,38 @@ public class Gate extends AbstractMechanic {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
+        Sign sign = null;
+
+        if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = event.getClickedBlock().getState();
+            if (state instanceof Sign) sign = (Sign) state;
+        }
+        if (sign == null) return;
+
         if (event.getPlayer().getItemInHand() != null) {
             if (isValidGateItem(event.getPlayer().getItemInHand())) {
 
-                Sign sign = null;
-
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
-                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-                    BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign) sign = (Sign) state;
+                try {
+                    int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
+                    sign.setLine(3, newBlocks + "");
+                    sign.update();
+                } catch (Exception e) {
+                    sign.setLine(3, "1");
+                    sign.update();
                 }
 
-                if (sign != null) {
-                    try {
-                        int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
-                        sign.setLine(3, newBlocks + "");
-                        sign.update();
-                    } catch (Exception e) {
-                        sign.setLine(3, "1");
-                        sign.update();
-                    }
-
-                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                        if (event.getPlayer().getItemInHand().getAmount() <= 1) {
-                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                        } else
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - 1);
-                    }
-
-                    player.print("Gate Restocked!");
-                    event.setCancelled(true);
-                    return;
+                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                        event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                    } else
+                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                                - 1);
                 }
+
+                player.print("Gate Restocked!");
+                event.setCancelled(true);
+                return;
             }
         }
 
@@ -521,7 +533,15 @@ public class Gate extends AbstractMechanic {
                 if (!player.hasPermission("craftbook.mech.gate")) {
                     throw new InsufficientPermissionsException();
                 }
-
+                // get the material that this gate should toggle and verify it
+                String line2 = sign.getLine(2).trim();
+                if (line2 != null && line2.equals("")) {
+                    try {
+                        Integer.parseInt(line2);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidMechanismException("Line 3 needs to be an item id.");
+                    }
+                }
                 sign.setLine(1, "[Gate]");
                 sign.setLine(3, "0");
                 sign.update();
@@ -530,7 +550,15 @@ public class Gate extends AbstractMechanic {
                 if (!player.hasPermission("craftbook.mech.gate")) {
                     throw new InsufficientPermissionsException();
                 }
-
+                // get the material that this gate should toggle and verify it
+                String line2 = sign.getLine(2).trim();
+                if (line2 != null && line2.equals("")) {
+                    try {
+                        Integer.parseInt(line2);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidMechanismException("Line 3 needs to be an item id.");
+                    }
+                }
                 sign.setLine(1, "[DGate]");
                 sign.setLine(3, "0");
                 sign.update();
