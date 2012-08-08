@@ -19,6 +19,7 @@
 package com.sk89q.craftbook.gates.logic;
 
 import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
@@ -42,6 +43,15 @@ public class Random3Bit extends RandomBit {
         return "3-BIT RANDOM";
     }
 
+    @Override
+    public void trigger(ChipState chip) {
+
+        if (chip.getInput(0)) {
+            chip.setOutput(0, random.nextBoolean());
+            chip.setOutput(1, random.nextBoolean());
+            chip.setOutput(2, random.nextBoolean());
+        }
+    }
 
     public static class Factory extends AbstractICFactory {
 
