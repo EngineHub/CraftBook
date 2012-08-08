@@ -2,8 +2,6 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -106,6 +104,7 @@ public class EntityTrap extends AbstractIC {
 
         int damage = 2;
         // add the offset to the location of the block connected to the sign
+        /*
         for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
@@ -125,6 +124,17 @@ public class EntityTrap extends AbstractIC {
                         }
                     }
                 }
+            }
+        }
+        */
+        for (Entity aEntity : center.getWorld().getEntities()) {
+            if (!aEntity.isDead() && aEntity.isValid()
+                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
+                if (aEntity instanceof LivingEntity) ((LivingEntity) aEntity).damage(damage);
+                else if (aEntity instanceof Minecart) ((Minecart) aEntity).setDamage(((Minecart) aEntity).getDamage()
+                        + damage);
+                else aEntity.remove();
+                return true;
             }
         }
         return false;
