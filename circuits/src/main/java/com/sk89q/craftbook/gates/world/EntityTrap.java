@@ -2,10 +2,14 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
+
+import java.util.Collection;
 
 /**
  * @author Me4502
@@ -18,11 +22,11 @@ public class EntityTrap extends AbstractIC {
         MOB_PEACEFUL,
         MOB_ANY,
         ANY,
+        ITEM,
         CART,
         CART_STORAGE,
         CART_POWERED;
 
-        @SuppressWarnings("unused")
         public boolean is(Entity entity) {
 
             switch (this) {
@@ -40,6 +44,8 @@ public class EntityTrap extends AbstractIC {
                     return entity instanceof StorageMinecart;
                 case CART_POWERED:
                     return entity instanceof PoweredMinecart;
+                case ITEM:
+                    return entity instanceof Item;
                 case ANY:
                     return true;
             }
@@ -53,6 +59,7 @@ public class EntityTrap extends AbstractIC {
     }
 
     private Block center;
+    private Collection<Chunk> chunks;
     private int radius;
     private Type type;
 
@@ -67,6 +74,7 @@ public class EntityTrap extends AbstractIC {
         Sign sign = getSign();
         center = ICUtil.parseBlockLocation(sign);
         radius = ICUtil.parseRadius(sign);
+        chunks = LocationUtil.getSurroundingChunks(center, radius);
         // lets get the type to detect first
         type = Type.fromString(sign.getLine(3).trim());
         // set the type to any if wrong format
@@ -79,13 +87,13 @@ public class EntityTrap extends AbstractIC {
     @Override
     public String getTitle() {
 
-        return "Entity Trap";
+	    return "Entity Trap";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ENTITY TRAP";
+	    return "ENTITY TRAP";
     }
 
     @Override
@@ -104,45 +112,33 @@ public class EntityTrap extends AbstractIC {
     protected boolean hurt() {
 
         int damage = 2;
+        boolean hurt = false;
         // add the offset to the location of the block connected to the sign
-        /*
-          for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) {
-              if (chunk.isLoaded()) {
-                  // get all entites from the chunks in the defined radius
-                  for (Entity entity : chunk.getEntities()) {
-                      if (!entity.isDead()) {
-                          if (type.is(entity)) {
-                              // at last check if the entity is within the radius
-                              if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                                  if (entity instanceof LivingEntity)
-                                      ((LivingEntity) entity).damage(damage);
-                                  else if (entity instanceof Minecart)
-                                      ((Minecart) entity).setDamage(((Minecart) entity).getDamage() + damage);
-                                  else
-                                      entity.remove();
-                                  return true;
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-       */
-        for (Entity aEntity : center.getWorld().getEntities()) {
-            if (!aEntity.isDead() && aEntity.isValid()
-                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                if (aEntity instanceof LivingEntity) ((LivingEntity) aEntity).damage(damage);
-                else if (aEntity instanceof Minecart) ((Minecart) aEntity).setDamage(((Minecart) aEntity).getDamage()
-                        + damage);
-                else aEntity.remove();
-                return true;
+        for (Chunk chunk : chunks) {
+            if (chunk.isLoaded()) {
+                // get all entites from the chunks in the defined radius
+                for (Entity entity : chunk.getEntities()) {
+                    if (!entity.isDead()) {
+                        if (type.is(entity)) {
+                            // at last check if the entity is within the radius
+                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
+                                if (entity instanceof LivingEntity)
+                                    ((LivingEntity) entity).damage(damage);
+                                else if (entity instanceof Minecart)
+                                    ((Minecart) entity).setDamage(((Minecart) entity).getDamage() + damage);
+                                else
+                                    entity.remove();
+                                hurt = true;
+                            }
+                        }
+                    }
+                }
             }
         }
-        return false;
+        return hurt;
     }
 
-    public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 
