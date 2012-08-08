@@ -85,7 +85,9 @@ public class CopyManager {
      */
     public static boolean isExistingArea(MechanismsPlugin plugin, String namespace, String area) {
 
-        return new File(plugin.getDataFolder(), namespace + "/" + area + getFileSuffix(plugin)).exists();
+        area = area + getFileSuffix(plugin);
+        File file = new File(plugin.getDataFolder(), namespace);
+        return new File(file, area).exists();
     }
 
     /**

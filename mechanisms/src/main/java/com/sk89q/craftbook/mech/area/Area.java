@@ -109,9 +109,11 @@ public class Area extends AbstractMechanic {
             String namespace = sign.getLine(0).trim();
             String areaOn = sign.getLine(2).trim();
             String areaOff = sign.getLine(3).trim();
-            if (CopyManager.isExistingArea(plugin, namespace, areaOn) &&
-                    CopyManager.isExistingArea(plugin, namespace, areaOff)) {
-                return;
+            if (CopyManager.isExistingArea(plugin, namespace, areaOn)) {
+                if (areaOff == null || areaOff.equals("")) {
+                    return;
+                }
+                if (CopyManager.isExistingArea(plugin, namespace, areaOff)) return;
             }
             throw new InvalidMechanismException("The area or namespace does not exist.");
         }
