@@ -45,7 +45,7 @@ public class CustomCrafting {
             }
             else if(r.getType() == RecipeType.SHAPED2X2) {
                 ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                sh.shape("a","b","c","d");
+                sh.shape("ab","cd");
                 int ingredientNum = 0;
                 for(CraftingItemStack is : r.getIngredients()) {
                     ingredientNum++;
@@ -55,7 +55,7 @@ public class CustomCrafting {
             }
             else if(r.getType() == RecipeType.SHAPED3X3) {
                 ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                sh.shape("a","b","c","d","e","f","g","h","i");
+                sh.shape("abc","def","ghi");
                 int ingredientNum = 0;
                 for(CraftingItemStack is : r.getIngredients()) {
                     ingredientNum++;
