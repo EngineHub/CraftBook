@@ -1,11 +1,26 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
 
 /**
  * @author Me4502
@@ -13,42 +28,43 @@ import org.bukkit.entity.*;
 public class EntityTrap extends AbstractIC {
 
     private enum Type {
-        PLAYER,
-        MOB_HOSTILE,
-        MOB_PEACEFUL,
-        MOB_ANY,
-        ANY,
-        CART,
-        CART_STORAGE,
-        CART_POWERED;
+	PLAYER,
+	MOB_HOSTILE,
+	MOB_PEACEFUL,
+	MOB_ANY,
+	ANY,
+	CART,
+	CART_STORAGE,
+	CART_POWERED;
 
-        public boolean is(Entity entity) {
+	@SuppressWarnings("unused")
+	public boolean is(Entity entity) {
 
-            switch (this) {
-                case PLAYER:
-                    return entity instanceof Player;
-                case MOB_HOSTILE:
-                    return entity instanceof Monster;
-                case MOB_PEACEFUL:
-                    return entity instanceof Animals;
-                case MOB_ANY:
-                    return entity instanceof Creature;
-                case CART:
-                    return entity instanceof Minecart;
-                case CART_STORAGE:
-                    return entity instanceof StorageMinecart;
-                case CART_POWERED:
-                    return entity instanceof PoweredMinecart;
-                case ANY:
-                    return true;
-            }
-            return false;
-        }
+	    switch (this) {
+	    case PLAYER:
+		return entity instanceof Player;
+	    case MOB_HOSTILE:
+		return entity instanceof Monster;
+	    case MOB_PEACEFUL:
+		return entity instanceof Animals;
+	    case MOB_ANY:
+		return entity instanceof Creature;
+	    case CART:
+		return entity instanceof Minecart;
+	    case CART_STORAGE:
+		return entity instanceof StorageMinecart;
+	    case CART_POWERED:
+		return entity instanceof PoweredMinecart;
+	    case ANY:
+		return true;
+	    }
+	    return false;
+	}
 
-        public static Type fromString(String name) {
+	public static Type fromString(String name) {
 
-            return EnumUtil.getEnumFromString(EntityTrap.Type.class, name);
-        }
+	    return EnumUtil.getEnumFromString(EntityTrap.Type.class, name);
+	}
     }
 
     private Block center;
@@ -57,42 +73,42 @@ public class EntityTrap extends AbstractIC {
 
     public EntityTrap(Server server, Sign sign) {
 
-        super(server, sign);
-        load();
+	super(server, sign);
+	load();
     }
 
     private void load() {
 
-        Sign sign = getSign();
-        this.center = ICUtil.parseBlockLocation(sign);
-        this.radius = ICUtil.parseRadius(sign);
-        // lets get the type to detect first
-        type = Type.fromString(sign.getLine(3).trim());
-        // set the type to any if wrong format
-        if (type == null) type = Type.ANY;
-        // update the sign with correct upper case name
-        sign.setLine(3, type.name());
-        sign.update();
+	Sign sign = getSign();
+	center = ICUtil.parseBlockLocation(sign);
+	radius = ICUtil.parseRadius(sign);
+	// lets get the type to detect first
+	type = Type.fromString(sign.getLine(3).trim());
+	// set the type to any if wrong format
+	if (type == null) type = Type.ANY;
+	// update the sign with correct upper case name
+	sign.setLine(3, type.name());
+	sign.update();
     }
 
     @Override
     public String getTitle() {
 
-        return "Entity Trap";
+	return "Entity Trap";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ENTITY TRAP";
+	return "ENTITY TRAP";
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            chip.setOutput(0, hurt());
-        }
+	if (chip.getInput(0)) {
+	    chip.setOutput(0, hurt());
+	}
     }
 
     /**
@@ -102,9 +118,9 @@ public class EntityTrap extends AbstractIC {
      */
     protected boolean hurt() {
 
-        int damage = 2;
-        // add the offset to the location of the block connected to the sign
-        /*
+	int damage = 2;
+	// add the offset to the location of the block connected to the sign
+	/*
         for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
@@ -126,38 +142,38 @@ public class EntityTrap extends AbstractIC {
                 }
             }
         }
-        */
-        for (Entity aEntity : center.getWorld().getEntities()) {
-            if (!aEntity.isDead() && aEntity.isValid()
-                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                if (aEntity instanceof LivingEntity) ((LivingEntity) aEntity).damage(damage);
-                else if (aEntity instanceof Minecart) ((Minecart) aEntity).setDamage(((Minecart) aEntity).getDamage()
-                        + damage);
-                else aEntity.remove();
-                return true;
-            }
-        }
-        return false;
+	 */
+	for (Entity aEntity : center.getWorld().getEntities()) {
+	    if (!aEntity.isDead() && aEntity.isValid()
+		    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
+		if (aEntity instanceof LivingEntity) ((LivingEntity) aEntity).damage(damage);
+		else if (aEntity instanceof Minecart) ((Minecart) aEntity).setDamage(((Minecart) aEntity).getDamage()
+			+ damage);
+		else aEntity.remove();
+		return true;
+	    }
+	}
+	return false;
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
-        public Factory(Server server) {
+	public Factory(Server server) {
 
-            super(server);
-        }
+	    super(server);
+	}
 
-        @Override
-        public IC create(Sign sign) {
+	@Override
+	public IC create(Sign sign) {
 
-            return new EntityTrap(getServer(), sign);
-        }
+	    return new EntityTrap(getServer(), sign);
+	}
 
-        @Override
-        public void verify(Sign sign) throws ICVerificationException {
+	@Override
+	public void verify(Sign sign) throws ICVerificationException {
 
-            ICUtil.verifySignSyntax(sign);
-        }
+	    ICUtil.verifySignSyntax(sign);
+	}
     }
 }
