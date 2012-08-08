@@ -53,7 +53,6 @@ public class RecipeManager extends BaseConfiguration {
         private final String id;
         private final ConfigurationSection config;
 
-        private String name;
         private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
         private Collection<CraftingItemStack> results;
@@ -69,7 +68,6 @@ public class RecipeManager extends BaseConfiguration {
 
         private void load() {
 
-            name = config.getString("name");
             type = RecipeType.getTypeFromName(config.getString("type"));
             ingredients = getItems(config.getConfigurationSection("ingredients"));
             results = getItems(config.getConfigurationSection("results"));
@@ -106,11 +104,6 @@ public class RecipeManager extends BaseConfiguration {
             return id;
         }
 
-        public String getName() {
-
-            return name;
-        }
-
         public RecipeType getType() {
 
             return type;
@@ -118,24 +111,6 @@ public class RecipeManager extends BaseConfiguration {
 
         public Collection<CraftingItemStack> getIngredients() {
             return ingredients;
-        }
-
-        /**
-         * Checks if the recipe
-         *
-         * @param items
-         *
-         * @return
-         */
-        public boolean checkIngredients(Collection<CraftingItemStack> items) {
-
-            if (items.size() <= 0) return false;
-            for (CraftingItemStack item : items) {
-                if (!ingredients.contains(item)) {
-                    return false;
-                }
-            }
-            return true;
         }
 
         public CraftingItemStack getResult() {
