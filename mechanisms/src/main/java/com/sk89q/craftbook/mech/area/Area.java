@@ -246,12 +246,7 @@ public class Area extends AbstractMechanic {
         String line4 = sign.getLine(3);
         if (pattern.matcher(line3).matches()) {
             toggledOn = true;
-            return;
-        } else if (line4.equals("--") || pattern.matcher(line4).matches()) {
-            toggledOn = false;
-        } else {
-            toggledOn = true;
-        }
+        } else toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
     private void setToggledState(Sign sign, boolean state) {

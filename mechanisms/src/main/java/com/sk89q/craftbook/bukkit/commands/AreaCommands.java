@@ -33,13 +33,11 @@ import java.util.ArrayList;
 public class AreaCommands {
 
     private final MechanismsPlugin plugin;
-    private MechanismsConfiguration.AreaSettings config;
     private CopyManager copyManager;
 
     public AreaCommands(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
-        config = plugin.getLocalConfiguration().areaSettings;
         copyManager = plugin.getCopyManager();
     }
 
@@ -51,6 +49,8 @@ public class AreaCommands {
             min = 1
     )
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
+
+        final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
 
         if (!(sender instanceof Player)) return;
         LocalPlayer player = plugin.wrap((Player) sender);
@@ -91,7 +91,7 @@ public class AreaCommands {
 
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
-            if (plugin.getLocalConfiguration().areaSettings.maxAreasPerUser >= 0 && !namespace.equals("global")) {
+            if (config.maxAreasPerUser >= 0 && !namespace.equals("global")) {
                 int count = copyManager.meetsQuota(world, namespace, id, config.maxAreasPerUser, plugin);
 
                 if (count > -1) {
@@ -132,6 +132,8 @@ public class AreaCommands {
             flags = "an:"
     )
     public void list(CommandContext context, CommandSender sender) throws CommandException {
+
+        final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
 
         if (!(sender instanceof Player)) return;
         LocalPlayer player = plugin.wrap((Player) sender);
@@ -211,6 +213,8 @@ public class AreaCommands {
     )
     public void delete(CommandContext context, CommandSender sender) throws CommandException {
 
+        final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
+
         if (!(sender instanceof Player)) return;
         LocalPlayer player = plugin.wrap((Player) sender);
 
@@ -260,6 +264,8 @@ public class AreaCommands {
     // Returns true if all deletions were successful.
     // If a deletion fails, the method stops attempting to delete and returns false.
     private boolean deleteDir(File dir) {
+
+        final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
 
         FilenameFilter fnf = new FilenameFilter() {
 
