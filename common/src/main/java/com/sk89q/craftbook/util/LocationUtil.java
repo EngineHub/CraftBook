@@ -28,6 +28,15 @@ public final class LocationUtil {
         LocationUtil.plugin = plugin;
     }
 
+    public static boolean isWithinRadius(Location l1, Location l2, int radius) {
+
+        if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
+            return getDistance(l1, l2) <= radius;
+        } else {
+            return getDistance(l1, l2) <= radius * radius;
+        }
+    }
+
     /**
      * Gets the distance between to points.
      * @param l1
