@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RailUtil;
 import com.sk89q.craftbook.RedstoneUtil.Power;
 import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -48,26 +49,28 @@ public class CartDispenser extends CartMechanism {
         // detect intentions
         Power pow = isActive(blocks.rail, blocks.base, blocks.sign);
         boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
-        Inventory inv = inf ? null : ((Chest) blocks.base.getState()).getInventory();
+        for(Chest c : RailUtil.getNearbyChests(blocks.base)) {
+            Inventory inv = inf ? null : c.getInventory();
 
-        CartType type = CartType.fromString(blocks.getSign().getLine(3));
+            CartType type = CartType.fromString(blocks.getSign().getLine(3));
 
-        // go
-        if (cart == null) {
-            switch (pow) {
+            // go
+            if (cart == null) {
+                switch (pow) {
                 case ON:
                     dispense(blocks, inv, type);
                     return;
                 case OFF:       // power going off doesn't eat a cart unless the cart moves.
                 case NA:
-            }
-        } else {
-            switch (pow) {
+                }
+            } else {
+                switch (pow) {
                 case ON:            // there's already a cart moving on the dispenser so don't spam.
                     return;
                 case OFF:
                 case NA:
                     collect(cart, inv);
+                }
             }
         }
     }
@@ -144,7 +147,7 @@ public class CartDispenser extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

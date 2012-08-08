@@ -19,10 +19,10 @@
 package com.sk89q.craftbook;
 
 
-import java.io.File;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -50,8 +50,8 @@ public class VehiclesConfiguration extends BaseConfiguration {
 	matSorter = Material.getMaterial(getInt(cfg, "sort-block", 87));
 	matEjector = Material.getMaterial(getInt(cfg, "eject-block", 42));
 	matDeposit = Material.getMaterial(getInt(cfg, "deposit-block", 15));
-	matTeleport = Material.getMaterial(getInt(cfg, "teleport-block", 89));
-	matDispenser = Material.getMaterial(54);     // this can't be configurable because we need it to be a chest!
+	matTeleport = Material.getMaterial(getInt(cfg, "teleport-block", 133));
+	matDispenser = Material.getMaterial(getInt(cfg, "dispenser-block", 129));
 	matMessager = Material.getMaterial(getInt(cfg, "messager-block", 121));
 
 	minecartEnterOnImpact = getBoolean(cfg, "minecart-enter-on-impact", true);

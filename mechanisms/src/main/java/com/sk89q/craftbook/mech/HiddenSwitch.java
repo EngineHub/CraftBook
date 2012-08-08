@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class HiddenSwitch extends AbstractMechanic {
@@ -29,13 +30,14 @@ public class HiddenSwitch extends AbstractMechanic {
         final MechanismsPlugin plugin;
 
         @Override
-        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer Player, Sign sign)
+        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
                 throws InvalidMechanismException {
             // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
             //FIXME In the future add a check here to test if you can actually build wall signs on this block.
             //World wrd = BukkitUtil.toWorld(pos);
             if (sign.getLine(1).equalsIgnoreCase("[X]")) {
 
+                player.checkPermission("craftbook.mech.hiddenswitch");
                 return new HiddenSwitch(BukkitUtil.toBlock(pos), plugin);
             }
             return null;
@@ -52,11 +54,6 @@ public class HiddenSwitch extends AbstractMechanic {
 
             return s.getLine(1).equalsIgnoreCase("[X]");
         }
-
-        //private boolean isValidWallSign(Block b) {
-        //
-        //    return isValidWallSign(b.getWorld(), new BlockVector(b.getX(), b.getY(), b.getZ()));
-        // }
 
         @Override
         public HiddenSwitch detect(BlockWorldVector pos) throws InvalidMechanismException {
@@ -82,8 +79,14 @@ public class HiddenSwitch extends AbstractMechanic {
     }
 
     @Override
-    public void onRightClick(org.bukkit.event.player.PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
+        try {
+            LocalPlayer player = plugin.wrap(event.getPlayer());
+            player.checkPermission("craftbook.mech.hiddenswitch.use");
+        } catch (Exception e) {
+            return;
+        }
         if (!(event.getBlockFace() == BlockFace.EAST
                 || event.getBlockFace() == BlockFace.WEST
                 || event.getBlockFace() == BlockFace.NORTH

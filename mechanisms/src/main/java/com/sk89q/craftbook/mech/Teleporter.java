@@ -1,5 +1,10 @@
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -8,18 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -32,66 +25,66 @@ public class Teleporter extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Teleporter> {
 
-	public Factory(MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
-	    this.plugin = plugin;
-	}
+            this.plugin = plugin;
+        }
 
-	private final MechanismsPlugin plugin;
+        private final MechanismsPlugin plugin;
 
-	/**
-	 * Explore around the trigger to find a functional elevator; throw if
-	 * things look funny.
-	 *
-	 * @param pt the trigger (should be a signpost)
-	 *
-	 * @return an Elevator if we could make a valid one, or null if this
-	 *         looked nothing like an elevator.
-	 *
-	 * @throws InvalidMechanismException if the area looked like it was intended to be an
-	 *                                   elevator, but it failed.
-	 */
-	@Override
-	public Teleporter detect(BlockWorldVector pt) throws InvalidMechanismException {
+        /**
+         * Explore around the trigger to find a functional elevator; throw if
+         * things look funny.
+         *
+         * @param pt the trigger (should be a signpost)
+         *
+         * @return an Elevator if we could make a valid one, or null if this
+         *         looked nothing like an elevator.
+         *
+         * @throws InvalidMechanismException if the area looked like it was intended to be an
+         *                                   elevator, but it failed.
+         */
+        @Override
+        public Teleporter detect(BlockWorldVector pt) throws InvalidMechanismException {
 
-	    Block block = BukkitUtil.toBlock(pt);
-	    // check if this looks at all like something we're interested in first
+            Block block = BukkitUtil.toBlock(pt);
+            // check if this looks at all like something we're interested in first
 
-	    if (block.getState() instanceof Sign) {
-		Sign s = (Sign) block.getState();
-		if (!s.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
-		String[] pos = s.getLine(2).split(":");
-		if (pos.length > 2)
-		    return new Teleporter(block, plugin);
-	    }
+            if (block.getState() instanceof Sign) {
+                Sign s = (Sign) block.getState();
+                if (!s.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
+                String[] pos = s.getLine(2).split(":");
+                if (pos.length > 2)
+                    return new Teleporter(block, plugin);
+            }
 
-	    return null;
-	}
+            return null;
+        }
 
-	/**
-	 * Detect the mechanic at a placed sign.
-	 *
-	 * @throws ProcessedMechanismException
-	 */
-	@Override
-	public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-		Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        /**
+         * Detect the mechanic at a placed sign.
+         *
+         * @throws ProcessedMechanismException
+         */
+        @Override
+        public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
+                                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
-	    if (!sign.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
+            if (!sign.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
 
-	    if (!player.hasPermission("craftbook.mech.teleporter")) {
-		throw new InsufficientPermissionsException();
-	    }
+            if (!player.hasPermission("craftbook.mech.teleporter")) {
+                throw new InsufficientPermissionsException();
+            }
 
-	    player.print("mech.teleport.create");
-	    sign.setLine(1, "[Teleport]");
+            player.print("mech.teleport.create");
+            sign.setLine(1, "[Teleport]");
 
-	    String[] pos = sign.getLine(2).split(":");
-	    if (!(pos.length > 2))
-		return null;
+            String[] pos = sign.getLine(2).split(":");
+            if (!(pos.length > 2))
+                return null;
 
-	    throw new ProcessedMechanismException();
-	}
+            throw new ProcessedMechanismException();
+        }
     }
 
     /**
@@ -103,9 +96,9 @@ public class Teleporter extends AbstractMechanic {
      */
     private Teleporter(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
 
-	super();
-	this.trigger = trigger;
-	this.plugin = plugin;
+        super();
+        this.trigger = trigger;
+        this.plugin = plugin;
     }
 
     private final MechanismsPlugin plugin;
@@ -115,108 +108,108 @@ public class Teleporter extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-	if (!plugin.getLocalConfiguration().teleporterSettings.enable) return;
+        if (!plugin.getLocalConfiguration().teleporterSettings.enable) return;
 
-	if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-	    return; //wth? our manager is insane. ikr.
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
+            return; //wth? our manager is insane. ikr.
 
-	LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
+        LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
-	if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
-	    localPlayer.printError("mech.use-permission");
-	    return;
-	}
+        if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
+            localPlayer.printError("mech.use-permission");
+            return;
+        }
 
-	makeItSo(event.getPlayer());
+        makeItSo(event.getPlayer());
 
-	event.setCancelled(true);
+        event.setCancelled(true);
     }
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-	/* we only affect players, so we don't care about redstone events */
+        /* we only affect players, so we don't care about redstone events */
     }
 
     private void makeItSo(Player p) {
-	// start with the block shifted vertically from the player
-	// to the destination sign's height (plus one).
-	// check if this looks at all like something we're interested in first
+        // start with the block shifted vertically from the player
+        // to the destination sign's height (plus one).
+        // check if this looks at all like something we're interested in first
 
-	LocalPlayer player = plugin.wrap(p);
+        LocalPlayer player = plugin.wrap(p);
 
-	double toX = 0;
-	double toY = 0;
-	double toZ = 0;
+        double toX = 0;
+        double toY = 0;
+        double toZ = 0;
 
-	if (trigger.getState() instanceof Sign) {
-	    Sign s = (Sign) trigger.getState();
-	    String[] pos = s.getLine(2).split(":");
-	    if (pos.length > 2) {
-		try {
-		    toX = Double.parseDouble(pos[0]);
-		    toY = Double.parseDouble(pos[1]);
-		    toZ = Double.parseDouble(pos[2]);
-		} catch (Exception e) {
-		    return;
-		}
-	    } else
-		return;
-	}
+        if (trigger.getState() instanceof Sign) {
+            Sign s = (Sign) trigger.getState();
+            String[] pos = s.getLine(2).split(":");
+            if (pos.length > 2) {
+                try {
+                    toX = Double.parseDouble(pos[0]);
+                    toY = Double.parseDouble(pos[1]);
+                    toZ = Double.parseDouble(pos[2]);
+                } catch (Exception e) {
+                    return;
+                }
+            } else
+                return;
+        }
 
-	Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
-		(int) Math.floor(toZ));
-	// well, unless that's already a ceiling.
-	if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
+        Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
+                (int) Math.floor(toZ));
+        // well, unless that's already a ceiling.
+        if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
 
-	// now iterate down until we find enough open space to stand in
-	// or until we're 5 blocks away, which we consider too far.
-	int foundFree = 0;
-	for (int i = 0; i < 5; i++) {
-	    if (occupiable(floor)) {
-		foundFree++;
-	    } else {
-		break;
-	    }
-	    if (floor.getY() == 0x0)        // hit the bottom of the world
-		break;
-	    floor = floor.getRelative(BlockFace.DOWN);
-	}
-	if (foundFree < 2) {
-	    player.printError("mech.lift.obstruct");
-	    return;
-	}
+        // now iterate down until we find enough open space to stand in
+        // or until we're 5 blocks away, which we consider too far.
+        int foundFree = 0;
+        for (int i = 0; i < 5; i++) {
+            if (occupiable(floor)) {
+                foundFree++;
+            } else {
+                break;
+            }
+            if (floor.getY() == 0x0)        // hit the bottom of the world
+                break;
+            floor = floor.getRelative(BlockFace.DOWN);
+        }
+        if (foundFree < 2) {
+            player.printError("mech.lift.obstruct");
+            return;
+        }
 
-	// Teleport!
-	Location subspaceRift = p.getLocation().clone();
-	subspaceRift.setY(floor.getY() + 1);
-	subspaceRift.setX(floor.getX());
-	subspaceRift.setZ(floor.getZ());
-	if (p.isInsideVehicle()) {
-	    subspaceRift = p.getVehicle().getLocation().clone();
-	    subspaceRift.setY(floor.getY() + 2);
-	    subspaceRift.setX(floor.getX());
-	    subspaceRift.setZ(floor.getZ());
-	    p.getVehicle().teleport(subspaceRift);
-	}
-	p.teleport(subspaceRift);
+        // Teleport!
+        Location subspaceRift = p.getLocation().clone();
+        subspaceRift.setY(floor.getY() + 1);
+        subspaceRift.setX(floor.getX());
+        subspaceRift.setZ(floor.getZ());
+        if (p.isInsideVehicle()) {
+            subspaceRift = p.getVehicle().getLocation().clone();
+            subspaceRift.setY(floor.getY() + 2);
+            subspaceRift.setX(floor.getX());
+            subspaceRift.setZ(floor.getZ());
+            p.getVehicle().teleport(subspaceRift);
+        }
+        p.teleport(subspaceRift);
 
-	player.print("mech.teleport.alert");
+        player.print("mech.teleport.alert");
     }
 
     private static boolean occupiable(Block block) {
 
-	return BlockType.canPassThrough(block.getTypeId());
+        return BlockType.canPassThrough(block.getTypeId());
     }
 
     @Override
     public void unload() {
-	/* we're not persistent */
+        /* we're not persistent */
     }
 
     @Override
     public boolean isActive() {
-	/* we're not persistent */
-	return false;
+        /* we're not persistent */
+        return false;
     }
 
     @Override

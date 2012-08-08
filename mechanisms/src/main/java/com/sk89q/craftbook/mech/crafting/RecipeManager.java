@@ -26,6 +26,10 @@ public class RecipeManager extends BaseConfiguration {
         INSTANCE = this;
     }
 
+    public Collection<Recipe> getRecipes() {
+        return recipes;
+    }
+
     public void reload() {
 
         recipes.clear();
@@ -48,8 +52,7 @@ public class RecipeManager extends BaseConfiguration {
         private final String id;
         private final ConfigurationSection config;
 
-        private String name;
-        private String type;
+        private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
         private Collection<CraftingItemStack> results;
 
@@ -64,8 +67,7 @@ public class RecipeManager extends BaseConfiguration {
 
         private void load() {
 
-            name = config.getString("name");
-            type = config.getString("type");
+            type = RecipeType.getTypeFromName(config.getString("type"));
             ingredients = getItems(config.getConfigurationSection("ingredients"));
             results = getItems(config.getConfigurationSection("results"));
         }
@@ -101,37 +103,45 @@ public class RecipeManager extends BaseConfiguration {
             return id;
         }
 
-        public String getName() {
-
-            return name;
-        }
-
-        public String getType() {
+        public RecipeType getType() {
 
             return type;
         }
 
-        /**
-         * Checks if the recipe
-         *
-         * @param items
-         *
-         * @return
-         */
-        public boolean checkIngredients(Collection<CraftingItemStack> items) {
-
-            if (items.size() <= 0) return false;
-            for (CraftingItemStack item : items) {
-                if (!ingredients.contains(item)) {
-                    return false;
-                }
-            }
-            return true;
+        public Collection<CraftingItemStack> getIngredients() {
+            return ingredients;
         }
 
-        public Collection<CraftingItemStack> getResults() {
+        public CraftingItemStack getResult() {
 
-            return results;
+            try {
+                return results.iterator().next();
+            }
+            catch(Exception e) {
+                return null;
+            }
+        }
+
+        public enum RecipeType {
+            SHAPELESS("Shapeless"), SHAPED3X3("Shaped3x3"), SHAPED2X2("Shaped2x2"), FURNACE("Furnace");
+
+            private String name;
+
+            private RecipeType(String name) {
+                this.name = name;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public static RecipeType getTypeFromName(String name) {
+                for(RecipeType t : RecipeType.values()) {
+                    if(t.getName().equalsIgnoreCase(name))
+                        return t;
+                }
+                return SHAPELESS; //Default to shapeless
+            }
         }
     }
 }

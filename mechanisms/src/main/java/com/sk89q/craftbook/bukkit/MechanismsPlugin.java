@@ -24,6 +24,7 @@ import com.sk89q.craftbook.mech.*;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
+import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
@@ -62,6 +63,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         createDefaultConfiguration("custom-block-drops.txt", false);
         createDefaultConfiguration("recipes.txt", false);
         createDefaultConfiguration("cauldron-recipes.yml", false);
+        createDefaultConfiguration("crafting-recipes.yml", false);
 
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();
@@ -108,6 +110,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             registerMechanic(new Cauldron.Factory(this));
         if (getLocalConfiguration().cauldronSettings.enableNew)
             registerMechanic(new ImprovedCauldron.Factory(this));
+        if (getLocalConfiguration().customCraftingSettings.enable)
+            new CustomCrafting(this);
 
         //Special mechanics.
         if (economy != null) registerMechanic(new Payment.Factory(this));
@@ -156,8 +160,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             getServer().getPluginManager().registerEvents(new Snow(this), this);
         if (getLocalConfiguration().customDropSettings.enable)
             getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
-        if (getLocalConfiguration().customCraftingSettings.enable)
-            getServer().getPluginManager().registerEvents(new CustomCrafting(this), this);
         if (getLocalConfiguration().aiSettings.enabled)
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
         if (getLocalConfiguration().chairSettings.enable)

@@ -55,6 +55,7 @@
                     <include>custom-block-drops.txt</include>
                     <include>custom-mob-drops.txt</include>
                     <include>cauldron-recipes.yml</include>
+                    <include>crafting-recipes.yml</include>
                 </includes>
             </resource>
         </resources>

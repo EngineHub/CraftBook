@@ -1,8 +1,7 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RailUtil;
 import com.sk89q.craftbook.RedstoneUtil.Power;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -35,33 +34,7 @@ public class CartDeposit extends CartMechanism {
         boolean collecting = blocks.matches("collect");
 
         // search for containers
-        ArrayList<Chest> containers = new ArrayList<Chest>();
-        Block body = blocks.base;
-        int x = body.getX();
-        int y = body.getY();
-        int z = body.getZ();
-        if (body.getWorld().getBlockAt(x, y, z).getType() == Material.CHEST)
-            containers.add((Chest) body.getWorld().getBlockAt(x, y, z).getState());
-        if (body.getWorld().getBlockAt(x - 1, y, z).getType() == Material.CHEST) {
-            containers.add((Chest) body.getWorld().getBlockAt(x - 1, y, z).getState());
-            if (body.getWorld().getBlockAt(x - 2, y, z).getType() == Material.CHEST)
-                containers.add((Chest) body.getWorld().getBlockAt(x - 2, y, z).getState());
-        }
-        if (body.getWorld().getBlockAt(x + 1, y, z).getType() == Material.CHEST) {
-            containers.add((Chest) body.getWorld().getBlockAt(x + 1, y, z).getState());
-            if (body.getWorld().getBlockAt(x + 2, y, z).getType() == Material.CHEST)
-                containers.add((Chest) body.getWorld().getBlockAt(x + 2, y, z).getState());
-        }
-        if (body.getWorld().getBlockAt(x, y, z - 1).getType() == Material.CHEST) {
-            containers.add((Chest) body.getWorld().getBlockAt(x, y, z - 1).getState());
-            if (body.getWorld().getBlockAt(x, y, z - 2).getType() == Material.CHEST)
-                containers.add((Chest) body.getWorld().getBlockAt(x, y, z - 2).getState());
-        }
-        if (body.getWorld().getBlockAt(x, y, z + 1).getType() == Material.CHEST) {
-            containers.add((Chest) body.getWorld().getBlockAt(x, y, z + 1).getState());
-            if (body.getWorld().getBlockAt(x, y, z + 2).getType() == Material.CHEST)
-                containers.add((Chest) body.getWorld().getBlockAt(x, y, z + 2).getState());
-        }
+        ArrayList<Chest> containers = RailUtil.getNearbyChests(blocks.base);
 
         // are there any containers?
         if (containers.isEmpty()) return;
@@ -99,7 +72,7 @@ public class CartDeposit extends CartMechanism {
                 if (transferitems.size() <= 0) break;
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem((ItemStack[]) transferitems.toArray(trivialstackarray))
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(trivialstackarray))
                         .values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);
@@ -110,7 +83,7 @@ public class CartDeposit extends CartMechanism {
 
             //System.out.println("collected items. " + transferitems.size() + " stacks left over.");
 
-            leftovers.addAll(cartinventory.addItem((ItemStack[]) transferitems.toArray(trivialstackarray)).values());
+            leftovers.addAll(cartinventory.addItem(transferitems.toArray(trivialstackarray)).values());
             transferitems.clear();
             transferitems.addAll(leftovers);
             leftovers.clear();
@@ -147,7 +120,7 @@ public class CartDeposit extends CartMechanism {
             //for (ItemStack stack: transferitems) System.out.println("depositing " + stack.getAmount() + " items of
             // type " + stack.getType().toString());
 
-            leftovers.addAll(cartinventory.addItem((ItemStack[]) transferitems.toArray(trivialstackarray)).values());
+            leftovers.addAll(cartinventory.addItem(transferitems.toArray(trivialstackarray)).values());
             transferitems.clear();
             transferitems.addAll(leftovers);
             leftovers.clear();
@@ -158,7 +131,7 @@ public class CartDeposit extends CartMechanism {
                 if (transferitems.size() <= 0) break;
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem((ItemStack[]) transferitems.toArray(trivialstackarray))
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(trivialstackarray))
                         .values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);
@@ -171,7 +144,7 @@ public class CartDeposit extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }
