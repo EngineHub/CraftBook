@@ -57,8 +57,9 @@ public class Area extends AbstractMechanic {
                 } else if (lines[1].equalsIgnoreCase("[SaveArea]")) {
                     player.checkPermission("craftbook.mech.area.sign.savearea");
                     sign.setLine(1, "[SaveArea]");
-
                 }
+                // check if the namespace and area exists
+                isValidArea(sign);
                 player.print("Toggle area created.");
             } else {
                 return null;
@@ -94,11 +95,25 @@ public class Area extends AbstractMechanic {
                     if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
                         if (!sign.getLine(0).equalsIgnoreCase(""))
                             sign.setLine(0, "global");
+                        // check if the namespace and area exists
+                        isValidArea(sign);
                         return new Area(pt, plugin);
                     }
                 }
             }
             return null;
+        }
+
+        private void isValidArea(Sign sign) throws InvalidMechanismException {
+
+            String namespace = sign.getLine(0).trim();
+            String areaOn = sign.getLine(2).trim();
+            String areaOff = sign.getLine(3).trim();
+            if (CopyManager.isExistingArea(plugin, namespace, areaOn) &&
+                    CopyManager.isExistingArea(plugin, namespace, areaOff)) {
+                return;
+            }
+            throw new InvalidMechanismException("The area or namespace does not exist.");
         }
     }
 
