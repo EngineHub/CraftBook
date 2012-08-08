@@ -154,7 +154,7 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
+                                if (LocationUtil.getGreatestDistance(center.getLocation(), entity.getLocation()) <= radius) {
                                     return true;
                                 }
                                 break;
