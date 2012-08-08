@@ -552,12 +552,14 @@ public class Gate extends AbstractMechanic {
                 }
                 // get the material that this gate should toggle and verify it
                 String line2 = sign.getLine(2).trim();
-                if (line2 != null && line2.equals("")) {
+                if (line2 != null && !line2.equals("")) {
                     try {
                         Integer.parseInt(line2);
                     } catch (NumberFormatException e) {
                         throw new InvalidMechanismException("Line 3 needs to be an item id.");
                     }
+                } else {
+                    player.print("If you want the gate to only toggle one item id write it on line 3.");
                 }
                 sign.setLine(1, "[DGate]");
                 sign.setLine(3, "0");
