@@ -116,7 +116,7 @@ public class AreaCommands {
 	    // Save
 	    try {
 		CopyManager.INSTANCE.save(world, namespace, id, copy, plugin);
-		player.print("Area saved as '" + id + "' under the specified namespace.");
+		player.print("Area saved as '" + id + "' under the " + namespace + " namespace.");
 	    } catch (IOException e) {
 		player.printError("Could not save area: " + e.getMessage());
 	    } catch (DataException e) {
@@ -176,7 +176,6 @@ public class AreaCommands {
         for (File file : areas.listFiles()) {
             if (file.isDirectory()) {
                 currentNamespace = file.getName();
-                player.print("Getting namespace: " + currentNamespace + " as " + file.getAbsolutePath());
                 for (File area : file.listFiles()) {
                     String strArea = area.getName().replace(".cbcopy", "");
                     strArea = strArea.replace(".schematic", "");
@@ -200,7 +199,8 @@ public class AreaCommands {
                 }
             }
         } else {
-            player.printError("There are no saved areas in the " + namespace + " namespace.");
+            player.printError("There are no saved areas" +
+                    (namespace == null ? "." :  " in the " +  namespace + " namespace."));
         }
     }
 
