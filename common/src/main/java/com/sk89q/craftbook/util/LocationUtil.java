@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,41 +20,6 @@ import java.util.Set;
  */
 public final class LocationUtil {
 
-    private static BaseBukkitPlugin plugin;
-
-    public static void init(BaseBukkitPlugin plugin) {
-
-        LocationUtil.plugin = plugin;
-    }
-
-    public static boolean isWithinRadius(Location l1, Location l2, int radius) {
-
-        double distance = getDistance(l1, l2);
-        plugin.getLogger().info("Distance is: " + distance);
-        if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
-            plugin.getLogger().info("Checking against Block Radius: " + radius);
-            return distance <= radius;
-        } else {
-            plugin.getLogger().info("Checking against Absolute Radius: " + radius * radius);
-            return distance <= radius * radius;
-        }
-    }
-
-    /**
-     * Gets the distance between to points.
-     * @param l1
-     * @param l2
-     * @return
-     */
-    public static double getDistance(Location l1, Location l2) {
-
-        if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
-            return getBlockDistance(l1, l2);
-        } else {
-            return l1.distanceSquared(l2);
-        }
-    }
-
     /**
      * Gets the greatest distance between two locations. Only takes
      * int locations and does not check a round radius.
@@ -65,7 +29,8 @@ public final class LocationUtil {
      *
      * @return greatest distance
      */
-    public static int getBlockDistance(Location l1, Location l2) {
+    @Deprecated
+    public static int getGreatestDistance(Location l1, Location l2) {
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
@@ -198,8 +163,6 @@ public final class LocationUtil {
             for (int z = radius; z >= 0; z--) {
                 chunks.add(world.getChunkAt(cX + x, cZ + z));
                 chunks.add(world.getChunkAt(cX - x, cZ - z));
-                chunks.add(world.getChunkAt(cX + x, cZ - z));
-                chunks.add(world.getChunkAt(cX - x, cZ + z));
             }
         }
         return chunks;
