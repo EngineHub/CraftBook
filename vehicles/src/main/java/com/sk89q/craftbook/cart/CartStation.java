@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.cart;
 
 
-import com.sk89q.craftbook.util.SignUtil;
+import static com.sk89q.craftbook.cart.CartUtils.stop;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -10,7 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import static com.sk89q.craftbook.cart.CartUtils.stop;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class CartStation extends CartMechanism {
 
@@ -22,24 +23,24 @@ public class CartStation extends CartMechanism {
 
         // go
         switch (isActive(blocks.rail, blocks.base, blocks.sign)) {
-            case ON:
-                // standardize its speed and direction.
-                launch(cart, blocks.sign);
-                break;
-            case OFF:
-            case NA:
-                // park it.
-                stop(cart);
-                // recenter it
-                Location l = blocks.rail.getLocation();
-                l.setX(l.getX() + 0.5);
-                l.setY(l.getY() + 0.5);
-                l.setZ(l.getZ() + 0.5);
-                if (!cart.getLocation().equals(l))
-                    cart.teleport(l);
-                // recentering and parking almost completely prevents more than one cart from getting onto the same
-                // station.
-                break;
+        case ON:
+            // standardize its speed and direction.
+            launch(cart, blocks.sign);
+            break;
+        case OFF:
+        case NA:
+            // park it.
+            stop(cart);
+            // recenter it
+            Location l = blocks.rail.getLocation();
+            l.setX(l.getX() + 0.5);
+            l.setY(l.getY() + 0.5);
+            l.setZ(l.getZ() + 0.5);
+            if (!cart.getLocation().equals(l))
+                cart.teleport(l);
+            // recentering and parking almost completely prevents more than one cart from getting onto the same
+            // station.
+            break;
         }
     }
 
@@ -58,7 +59,7 @@ public class CartStation extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;
@@ -67,24 +68,24 @@ public class CartStation extends CartMechanism {
 
         // go
         switch (isActive(blocks.rail, blocks.base, blocks.sign)) {
-            case ON:
-                // standardize its speed and direction.
-                launch(cart, blocks.sign);
-                break;
-            case OFF:
-            case NA:
-                // park it.
-                stop(cart);
-                // recenter it
-                Location l = blocks.rail.getLocation();
-                l.setX(l.getX() + 0.5);
-                l.setY(l.getY() + 0.5);
-                l.setZ(l.getZ() + 0.5);
-                if (!cart.getLocation().equals(l))
-                    cart.teleport(l);
-                // recentering and parking almost completely prevents more than one cart from getting onto the same
-                // station.
-                break;
+        case ON:
+            // standardize its speed and direction.
+            launch(cart, blocks.sign);
+            break;
+        case OFF:
+        case NA:
+            // park it.
+            stop(cart);
+            // recenter it
+            Location l = blocks.rail.getLocation();
+            l.setX(l.getX() + 0.5);
+            l.setY(l.getY() + 0.5);
+            l.setZ(l.getZ() + 0.5);
+            if (!cart.getLocation().equals(l))
+                cart.teleport(l);
+            // recentering and parking almost completely prevents more than one cart from getting onto the same
+            // station.
+            break;
         }
     }
 }

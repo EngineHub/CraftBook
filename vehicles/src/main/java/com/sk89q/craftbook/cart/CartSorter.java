@@ -1,13 +1,20 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.util.SignUtil;
 
 /*
  * @contributor LordEnki
@@ -25,12 +32,12 @@ public class CartSorter extends CartMechanism {
         if (!blocks.matches("sort")) return;
         Sign sign = (Sign) blocks.sign.getState();
 
-        // pick which sort conditions apply
+        // pi(sign)hich sort conditions apply
         //  (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
         if (isSortApplicable(sign.getLine(2), cart)) {
             dir = Hand.LEFT;
-        } else if (isSortApplicable((sign).getLine(3), cart)) {
+        } else if (isSortApplicable(sign.getLine(3), cart)) {
             dir = Hand.RIGHT;
         }
 
@@ -40,57 +47,57 @@ public class CartSorter extends CartMechanism {
         byte trackData;
         BlockFace next = SignUtil.getFacing(blocks.sign);
         switch (next) {
-            case WEST:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 9;
-                        break;
-                    case RIGHT:
-                        trackData = 8;
-                        break;
-                    default:
-                        trackData = 0;
-                }
+        case WEST:
+            switch (dir) {
+            case LEFT:
+                trackData = 9;
                 break;
-            case EAST:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 7;
-                        break;
-                    case RIGHT:
-                        trackData = 6;
-                        break;
-                    default:
-                        trackData = 0;
-                }
-                break;
-            case NORTH:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 6;
-                        break;
-                    case RIGHT:
-                        trackData = 9;
-                        break;
-                    default:
-                        trackData = 1;
-                }
-                break;
-            case SOUTH:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 8;
-                        break;
-                    case RIGHT:
-                        trackData = 7;
-                        break;
-                    default:
-                        trackData = 1;
-                }
+            case RIGHT:
+                trackData = 8;
                 break;
             default:
-                //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
-                return;
+                trackData = 0;
+            }
+            break;
+        case EAST:
+            switch (dir) {
+            case LEFT:
+                trackData = 7;
+                break;
+            case RIGHT:
+                trackData = 6;
+                break;
+            default:
+                trackData = 0;
+            }
+            break;
+        case NORTH:
+            switch (dir) {
+            case LEFT:
+                trackData = 6;
+                break;
+            case RIGHT:
+                trackData = 9;
+                break;
+            default:
+                trackData = 1;
+            }
+            break;
+        case SOUTH:
+            switch (dir) {
+            case LEFT:
+                trackData = 8;
+                break;
+            case RIGHT:
+                trackData = 7;
+                break;
+            default:
+                trackData = 1;
+            }
+            break;
+        default:
+            //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
+            return;
         }
         Block targetTrack = blocks.rail.getRelative(next);
 
@@ -201,7 +208,7 @@ public class CartSorter extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

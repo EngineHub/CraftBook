@@ -41,39 +41,39 @@ public class CartDispenser extends CartMechanism {
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
-	// care?
-	if (minor) return;
+        // care?
+        if (minor) return;
 
-	// validate
-	if (!blocks.matches("dispenser")) return;
+        // validate
+        if (!blocks.matches("dispenser")) return;
 
-	// detect intentions
-	Power pow = isActive(blocks.rail, blocks.base, blocks.sign);
-	boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
-	for(Chest c : RailUtil.getNearbyChests(blocks.base)) {
-	    Inventory inv = inf ? null : c.getInventory();
+        // detect intentions
+        Power pow = isActive(blocks.rail, blocks.base, blocks.sign);
+        boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
+        for(Chest c : RailUtil.getNearbyChests(blocks.base)) {
+            Inventory inv = inf ? null : c.getInventory();
 
-	    CartType type = CartType.fromString(blocks.getSign().getLine(3));
+            CartType type = CartType.fromString(blocks.getSign().getLine(3));
 
-	    // go
-	    if (cart == null) {
-		switch (pow) {
-		case ON:
-		    dispense(blocks, inv, type);
-		    return;
-		case OFF:       // power going off doesn't eat a cart unless the cart moves.
-		case NA:
-		}
-	    } else {
-		switch (pow) {
-		case ON:            // there's already a cart moving on the dispenser so don't spam.
-		    return;
-		case OFF:
-		case NA:
-		    collect(cart, inv);
-		}
-	    }
-	}
+            // go
+            if (cart == null) {
+                switch (pow) {
+                case ON:
+                    dispense(blocks, inv, type);
+                    return;
+                case OFF:       // power going off doesn't eat a cart unless the cart moves.
+                case NA:
+                }
+            } else {
+                switch (pow) {
+                case ON:            // there's already a cart moving on the dispenser so don't spam.
+                    return;
+                case OFF:
+                case NA:
+                    collect(cart, inv);
+                }
+            }
+        }
     }
 
     /**
@@ -82,15 +82,15 @@ public class CartDispenser extends CartMechanism {
      */
     private void collect(Minecart cart, Inventory inv) {
 
-	cart.eject();
-	cart.setDamage(9000);
-	cart.remove();
-	if (inv != null) {
-	    int cartType = ItemType.MINECART.getID();
-	    if (cart instanceof StorageMinecart) cartType = ItemType.STORAGE_MINECART.getID();
-	    else if (cart instanceof PoweredMinecart) cartType = ItemType.POWERED_MINECART.getID();
-	    inv.addItem(new ItemStack(cartType, 1));
-	}
+        cart.eject();
+        cart.setDamage(9000);
+        cart.remove();
+        if (inv != null) {
+            int cartType = ItemType.MINECART.getID();
+            if (cart instanceof StorageMinecart) cartType = ItemType.STORAGE_MINECART.getID();
+            else if (cart instanceof PoweredMinecart) cartType = ItemType.POWERED_MINECART.getID();
+            inv.addItem(new ItemStack(cartType, 1));
+        }
     }
 
     /**
@@ -100,55 +100,55 @@ public class CartDispenser extends CartMechanism {
     @SuppressWarnings("unchecked")
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
-	if (inv != null) {
-	    if (type.equals(CartType.Minecart)) {
-		if (!inv.contains(ItemType.MINECART.getID())) return;
-		inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
-	    } else if (type.equals(CartType.StorageMinecart)) {
-		if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
-		inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
-	    } else if (type.equals(CartType.PoweredMinecart)) {
-		if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
-		inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
-	    }
-	}
-	blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
+        if (inv != null) {
+            if (type.equals(CartType.Minecart)) {
+                if (!inv.contains(ItemType.MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
+            } else if (type.equals(CartType.StorageMinecart)) {
+                if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
+            } else if (type.equals(CartType.PoweredMinecart)) {
+                if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
+            }
+        }
+        blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
     }
 
     public enum CartType {
-	Minecart("Minecart", org.bukkit.entity.Minecart.class),
-	StorageMinecart("Storage", org.bukkit.entity.StorageMinecart.class),
-	PoweredMinecart("Powered", org.bukkit.entity.PoweredMinecart.class);
+        Minecart("Minecart", org.bukkit.entity.Minecart.class),
+        StorageMinecart("Storage", org.bukkit.entity.StorageMinecart.class),
+        PoweredMinecart("Powered", org.bukkit.entity.PoweredMinecart.class);
 
-	private final Class<?> cl;
-	private final String name;
+        private final Class<?> cl;
+        private final String name;
 
-	private CartType(String name, Class<?> cl) {
+        private CartType(String name, Class<?> cl) {
 
-	    this.name = name;
-	    this.cl = cl;
-	}
+            this.name = name;
+            this.cl = cl;
+        }
 
-	public static CartType fromString(String s) {
+        public static CartType fromString(String s) {
 
-	    for (CartType ct : CartType.values()) {
-		if (ct == null) continue;
-		if (ct.name.equalsIgnoreCase(s))
-		    return ct;
-	    }
-	    return Minecart; //Default to minecarts
-	}
+            for (CartType ct : CartType.values()) {
+                if (ct == null) continue;
+                if (ct.name.equalsIgnoreCase(s))
+                    return ct;
+            }
+            return Minecart; //Default to minecarts
+        }
 
-	@SuppressWarnings("rawtypes")
-	public Class toClass() {
+        @SuppressWarnings("rawtypes")
+        public Class toClass() {
 
-	    return cl;
-	}
+            return cl;
+        }
     }
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-	    boolean minor) {
+            boolean minor) {
 
     }
 }
