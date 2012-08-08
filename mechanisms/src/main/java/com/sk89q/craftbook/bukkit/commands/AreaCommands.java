@@ -176,7 +176,8 @@ public class AreaCommands {
         for (File file : areas.listFiles()) {
             if (file.isDirectory()) {
                 currentNamespace = file.getName();
-                for (File area : new File(file, currentNamespace).listFiles()) {
+                player.print("Getting namespace: " + currentNamespace + " as " + file.getAbsolutePath());
+                for (File area : file.listFiles()) {
                     String strArea = area.getName().replace(".cbcopy", "");
                     strArea = strArea.replace(".schematic", "");
                     areaList.add(ChatColor.AQUA + currentNamespace + ":" + ChatColor.YELLOW + strArea);
