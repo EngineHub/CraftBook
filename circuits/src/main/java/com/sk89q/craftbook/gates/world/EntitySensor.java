@@ -19,15 +19,15 @@ import java.util.Set;
 public class EntitySensor extends AbstractIC {
 
     private enum Type {
-        PLAYER,
-        ITEM,
-        MOB_HOSTILE,
-        MOB_PEACEFUL,
-        MOB_ANY,
-        ANY,
-        CART,
-        CART_STORAGE,
-        CART_POWERED;
+        PLAYER('p'),
+        ITEM('i'),
+        MOB_HOSTILE('h'),
+        MOB_PEACEFUL('a'),
+        MOB_ANY('m'),
+        ANY('l'),
+        CART('c'),
+        CART_STORAGE('s'),
+        CART_POWERED('e');
 
         public boolean is(Entity entity) {
 
@@ -54,10 +54,35 @@ public class EntitySensor extends AbstractIC {
             return false;
         }
 
-        @SuppressWarnings("unused")
-        public static Type fromString(String name) {
+        private final char shortName;
 
-            return EnumUtil.getEnumFromString(EntitySensor.Type.class, name);
+        private Type(char shortName) {
+            this.shortName = shortName;
+        }
+
+        public char getShortName() {
+            return shortName;
+        }
+
+        public static HashSet<Type> getDetected(String line) {
+
+            HashSet<Type> types = new HashSet<Type>();
+
+            if (line.length() == 1) {
+                for (Type type : Type.values()) {
+                    if (type.getShortName() == line.charAt(0)) {
+                        types.add(type);
+                    }
+                }
+            } else {
+                Type type = EnumUtil.getEnumFromString(Type.class, line);
+                if (type == null) {
+                    types.add(ANY);
+                } else {
+                    types.add(type);
+                }
+            }
+            return types;
         }
     }
 
@@ -79,7 +104,7 @@ public class EntitySensor extends AbstractIC {
         Block block = SignUtil.getBackBlock(sign.getBlock());
 
         // lets get the types to detect first
-        types = getDetected(sign.getLine(3).trim());
+        types = Type.getDetected(sign.getLine(3).trim());
 
         // Add all if no params are specified
         if (types.size() == 0) types.add(Type.ANY);
@@ -97,49 +122,6 @@ public class EntitySensor extends AbstractIC {
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
         chunks = LocationUtil.getSurroundingChunks(block, radius);
-    }
-
-    private HashSet<Type> getDetected(String line) {
-
-        char[] characters = line.toCharArray();
-
-        HashSet<Type> types = new HashSet<Type>();
-
-        for (char aCharacter : characters) {
-            switch (aCharacter) {
-                case 'p':
-                    types.add(Type.PLAYER);
-                    break;
-                case 'i':
-                    types.add(Type.ITEM);
-                    break;
-                case 'h':
-                    types.add(Type.MOB_HOSTILE);
-                    break;
-                case 'a':
-                    types.add(Type.MOB_PEACEFUL);
-                    break;
-                case 'm':
-                    types.add(Type.MOB_ANY);
-                    break;
-                case 'l':
-                    types.add(Type.ANY);
-                    break;
-                case 'c':
-                    types.add(Type.CART);
-                    break;
-                case 's':
-                    types.add(Type.CART_STORAGE);
-                    break;
-                case 'e':
-                    types.add(Type.CART_POWERED);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return types;
     }
 
     @Override
