@@ -24,8 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.material.Lever;
-import org.bukkit.material.PistonBaseMaterial;
+import org.bukkit.craftbukkit.CraftWorld;
 
 /**
  * IC utility functions.
@@ -41,14 +40,31 @@ public class ICUtil {
 
     }
 
-    /**
-     * Set an IC's output state at a block.
-     *
-     * @param block
-     * @param state
-     *
-     * @return whether something was changed
-     */
+	/**
+	 * Set an IC's output state at a block.
+	 *
+	 * @param block
+	 * @param state
+	 * @return whether something was changed
+	 */
+	public static boolean setState(Block block, boolean state) {
+
+		if (block.getType() != Material.LEVER) return false;
+
+		boolean wasOn = (block.getData() & 0x8) > 0;
+
+		if(wasOn != state) {
+
+			net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
+			net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+
+			// Note: The player argument isn't actually used by the method in BlockLever so we can pass null.
+			// This method takes care of all the necessary block updates and redstone events.
+			nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null, 0, 0, 0, 0);
+		}
+		return true;
+	}
+    /*
     public static boolean setState(Block block, boolean state) {
 
         if (block.getType() != Material.LEVER) return false;
@@ -105,6 +121,7 @@ public class ICUtil {
         }
         return false;
     }
+	*/
 
     public static Block parseBlockLocation(Sign sign, int lPos, boolean relative) {
 
