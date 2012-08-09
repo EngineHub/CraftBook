@@ -211,9 +211,11 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
 
-        if (!(sender instanceof Player))
-            return sender.isOp() && (config.commonSettings.opPerms || sender instanceof ConsoleCommandSender)
+        if (!(sender instanceof Player)) {
+            return sender.isOp() && sender instanceof ConsoleCommandSender
                     || perms.hasPermission(sender.getName(), perm);
+        }
+
         return hasPermission(sender, ((Player) sender).getWorld(), perm);
     }
 

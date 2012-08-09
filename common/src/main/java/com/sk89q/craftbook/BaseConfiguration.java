@@ -32,7 +32,7 @@ public class BaseConfiguration {
 
             language = getString(cfg, "language", "en_US");
             opPerms = getBoolean(cfg, "op-perms", true);
-            useBlockDistance = getBoolean(cfg, "use-block-radius", true);
+            useBlockDistance = getBoolean(cfg, "use-block-radius", false);
         }
     }
 
