@@ -76,7 +76,7 @@ public class ICUtil {
 				// I dont know what the params at the back mean, but the method works perfectly without them.
 				nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null, 0, 0, 0, 0);
 				return true;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// lets catch the exception if the method is not supported
 				block.setData((byte) newData, true);
 				// get the block the lever is attached to:
