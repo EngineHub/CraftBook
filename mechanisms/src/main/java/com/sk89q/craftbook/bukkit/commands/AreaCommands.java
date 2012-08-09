@@ -228,7 +228,7 @@ public class AreaCommands {
         // Get the namespace
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
-        } else if (!player.hasPermission("craftbook.mech.area.list.self")) {
+        } else if (!player.hasPermission("craftbook.mech.area.delete.self")) {
             throw new CommandPermissionsException();
         }
 
