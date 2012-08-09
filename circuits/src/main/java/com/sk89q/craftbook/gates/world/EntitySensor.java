@@ -2,13 +2,16 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -87,7 +90,7 @@ public class EntitySensor extends AbstractIC {
     private HashSet<Type> types;
 
     private Block center;
-    //private Set<Chunk> chunks;
+    private Set<Chunk> chunks;
     private int radius;
 
     public EntitySensor(Server server, Sign block) {
@@ -117,7 +120,7 @@ public class EntitySensor extends AbstractIC {
         } else {
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
-        //chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(sign.getBlock()), radius);
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(sign.getBlock()), radius);
     }
 
     @Override
@@ -142,7 +145,6 @@ public class EntitySensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        /*
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // Get all entites from the chunks in the defined radius
@@ -152,23 +154,13 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
+                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
                                     return true;
                                 }
                                 break;
                             }
                         }
                     }
-                }
-            }
-        }
-        */
-        for (Entity aEntity : center.getWorld().getEntities()) {
-            if (!aEntity.isDead() && aEntity.isValid()
-                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                for (Type type : types) {
-                    // Check Type
-                    if (type.is(aEntity)) return true;
                 }
             }
         }

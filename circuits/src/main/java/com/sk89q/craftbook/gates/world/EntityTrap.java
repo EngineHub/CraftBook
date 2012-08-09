@@ -2,10 +2,14 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
+
+import java.util.Collection;
 
 /**
  * @author Me4502
@@ -55,6 +59,7 @@ public class EntityTrap extends AbstractIC {
     private Block center;
     private int radius;
     private Type type;
+	private Collection<Chunk> chunks;
 
     public EntityTrap(Server server, Sign sign) {
 
@@ -74,6 +79,7 @@ public class EntityTrap extends AbstractIC {
         // update the sign with correct upper case name
         sign.setLine(3, type.name());
         sign.update();
+	    this.chunks = LocationUtil.getSurroundingChunks(center, radius);
     }
 
     @Override
@@ -103,42 +109,30 @@ public class EntityTrap extends AbstractIC {
      */
     protected boolean hurt() {
 
-        int damage = 2;
-        // add the offset to the location of the block connected to the sign
-        /*
-          for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) {
-              if (chunk.isLoaded()) {
-                  // get all entites from the chunks in the defined radius
-                  for (Entity entity : chunk.getEntities()) {
-                      if (!entity.isDead()) {
-                          if (type.is(entity)) {
-                              // at last check if the entity is within the radius
-                              if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                                  if (entity instanceof LivingEntity)
-                                      ((LivingEntity) entity).damage(damage);
-                                  else if (entity instanceof Minecart)
-                                      ((Minecart) entity).setDamage(((Minecart) entity).getDamage() + damage);
-                                  else
-                                      entity.remove();
-                                  return true;
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-       */
-        for (Entity aEntity : center.getWorld().getEntities()) {
-            if (!aEntity.isDead() && aEntity.isValid()
-                    && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                if (aEntity instanceof LivingEntity) ((LivingEntity) aEntity).damage(damage);
-                else if (aEntity instanceof Minecart) ((Minecart) aEntity).setDamage(((Minecart) aEntity).getDamage()
-                        + damage);
-                else aEntity.remove();
-                return true;
-            }
-        }
-        return false;
+	    int damage = 2;
+	    // add the offset to the location of the block connected to the sign
+	    for (Chunk chunk : chunks) {
+		    if (chunk.isLoaded()) {
+			    // get all entites from the chunks in the defined radius
+			    for (Entity entity : chunk.getEntities()) {
+				    if (!entity.isDead()) {
+					    if (type.is(entity)) {
+						    // at last check if the entity is within the radius
+						    if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
+							    if (entity instanceof LivingEntity)
+								    ((LivingEntity) entity).damage(damage);
+							    else if (entity instanceof Minecart)
+								    ((Minecart) entity).setDamage(((Minecart) entity).getDamage() + damage);
+							    else
+								    entity.remove();
+							    return true;
+						    }
+					    }
+				    }
+			    }
+		    }
+	    }
+	    return false;
     }
 
     public static class Factory extends AbstractICFactory implements
