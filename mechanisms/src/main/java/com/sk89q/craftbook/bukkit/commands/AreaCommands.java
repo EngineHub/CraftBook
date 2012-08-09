@@ -56,10 +56,12 @@ public class AreaCommands {
         LocalPlayer player = plugin.wrap((Player) sender);
 
         String id;
-        String namespace = "~" + player.getName();
+        String namespace = player.getName();
+        boolean personal = true;
 
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
+            personal = false;
         } else if (!player.hasPermission("craftbook.mech.area.save.self")) {
             throw new CommandPermissionsException();
         }
@@ -67,6 +69,8 @@ public class AreaCommands {
         if (!CopyManager.isValidNamespace(namespace)) {
             throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
         }
+
+        if (personal) namespace = "~" + namespace;
 
         id = context.getString(0);
 
