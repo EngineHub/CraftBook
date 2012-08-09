@@ -222,10 +222,15 @@ public class Gate extends AbstractMechanic {
                 sign = (Sign) state;
         }
 
-        int itemID = 0;
+	    // normal fence block
+        int itemID = 85;
 
         if (sign != null) {
-            itemID = Integer.parseInt(sign.getLine(0));
+	        try {
+		        itemID = Integer.parseInt(sign.getLine(0).trim());
+	        } catch (Exception e) {
+				// use defaults
+	        }
         }
 
         if (itemID == 0 && !isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
@@ -424,8 +429,16 @@ public class Gate extends AbstractMechanic {
         }
         if (sign == null) return;
 
-        if (event.getPlayer().getItemInHand() != null) {
-            if (event.getPlayer().getItemInHand().getTypeId() == Integer.parseInt(sign.getLine(0))) {
+	    // normal fence block
+	    int itemId = 85;
+	    try {
+		    itemId = Integer.parseInt(sign.getLine(0).trim());
+	    } catch (Exception e) {
+			// do nothing and use default
+	    }
+
+	    if (event.getPlayer().getItemInHand() != null) {
+            if (event.getPlayer().getItemInHand().getTypeId() == itemId) {
 
                 try {
                     int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
