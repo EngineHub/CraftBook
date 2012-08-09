@@ -13,12 +13,13 @@ import org.bukkit.command.CommandSender;
 public class MechanismCommands {
 
     public MechanismCommands(MechanismsPlugin plugin) {
+
     }
 
     @Command(
             aliases = {"area"},
             desc = "Commands to manage Craftbook Areas"
-            )
+    )
     @NestedCommand(AreaCommands.class)
     public void area(CommandContext context, CommandSender sender) {
 
@@ -28,7 +29,7 @@ public class MechanismCommands {
     @Command(
             aliases = {"cauldron"},
             desc = "Commands to manage the Craftbook Cauldron"
-            )
+    )
     @NestedCommand(CauldronCommands.class)
     public void cauldron(CommandContext context, CommandSender sender) {
 
@@ -38,7 +39,7 @@ public class MechanismCommands {
     @Command(
             aliases = {"cbmech"},
             desc = "Handels the basic Craftbook Mechanism commands."
-            )
+    )
     @NestedCommand(NestedCommands.class)
     public void cbmech(CommandContext context, CommandSender sender) {
 
@@ -57,7 +58,7 @@ public class MechanismCommands {
         @Command(
                 aliases = {"reload"},
                 desc = "Reloads the craftbook mechanism config"
-                )
+        )
         @CommandPermissions("craftbook.mech.reload")
         public void reload(CommandContext context, CommandSender sender) {
 

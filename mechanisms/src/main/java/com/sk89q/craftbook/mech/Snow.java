@@ -51,7 +51,7 @@ public class Snow implements Listener {
                     && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
                     .getTypeId() == 0) {
                 event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
-                .setTypeId(78);
+                        .setTypeId(78);
                 incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation()
                         .add(0, 1, 0)));
             }

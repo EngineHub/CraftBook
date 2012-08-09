@@ -105,8 +105,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
         config = new BaseConfiguration(getConfig(), getDataFolder());
         saveConfig();
-	    // init the util classes that need a plugin reference
-	    LocationUtil.init(this);
+        // init the util classes that need a plugin reference
+        LocationUtil.init(this);
 
         logger.info(getDescription().getName() + " "
                 + getDescription().getVersion() + " enabled.");

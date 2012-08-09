@@ -40,8 +40,10 @@ public final class LocationUtil {
 
     /**
      * Gets the distance between to points.
+     *
      * @param l1
      * @param l2
+     *
      * @return
      */
     public static double getDistance(Location l1, Location l2) {

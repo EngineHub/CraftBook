@@ -26,13 +26,13 @@ public class BaseConfiguration {
 
         public final String language;
         public final boolean opPerms;
-	    public final boolean useBlockDistance;
+        public final boolean useBlockDistance;
 
         private CommonSettings(FileConfiguration cfg) {
 
             language = getString(cfg, "language", "en_US");
             opPerms = getBoolean(cfg, "op-perms", true);
-	        useBlockDistance = getBoolean(cfg, "use-block-radius", true);
+            useBlockDistance = getBoolean(cfg, "use-block-radius", true);
         }
     }
 
