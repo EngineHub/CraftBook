@@ -20,10 +20,13 @@ package com.sk89q.craftbook.ic;
 
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import net.minecraft.server.WorldServer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
 /**
  * IC utility functions.
@@ -49,6 +52,13 @@ public class ICUtil {
 
 		boolean wasOn = (block.getData() & 0x8) > 0;
 
+		// lets get some coordinates
+		int x = block.getX();
+		int y = block.getY();
+		int z = block.getZ();
+		// block id
+		int id = block.getTypeId();
+		/*
 		if(wasOn != state) {
 
 			net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
@@ -57,8 +67,48 @@ public class ICUtil {
 			// Note: The player argument isn't actually used by the method in BlockLever so we can pass null.
 			// This method takes care of all the necessary block updates and redstone events.
 			// I dont know what the params at the back mean, but the method works perfectly without them.
-			nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null, 0, 0, 0, 0);
+			nmsBlock.interact(nmsWorld, x, y, z, null, 0, 0, 0, 0);
 		}
+		return true;*/
+
+		int data = block.getData();
+		int oldData = data & 7;
+		int newData = 8 - (data & 8);
+
+		// CraftBukkit World
+		WorldServer world = ((CraftWorld) block.getWorld()).getHandle();
+
+		// lets call the RedstoneChange event
+		int old = (newData != 8) ? 1 : 0;
+		int current = (newData == 8) ? 1 : 0;
+
+		BlockRedstoneEvent eventRedstone = new BlockRedstoneEvent(block, old, current);
+		Bukkit.getServer().getPluginManager().callEvent(eventRedstone);
+
+		if ((eventRedstone.getNewCurrent() > 0) != (newData == 8)) {
+			return true;
+		}
+
+		// start applying physics
+		world.setData(x, y, z, oldData + newData);
+		world.d(x, y, z, x, y, z);
+		world.applyPhysics(x, y, z, id);
+		if (oldData == 1) {
+			world.applyPhysics(x - 1, y, z, id);
+		} else if (oldData == 2) {
+			world.applyPhysics(x + 1, y, z, id);
+		} else if (oldData == 3) {
+			world.applyPhysics(x, y, z - 1, id);
+		} else if (oldData == 4) {
+			world.applyPhysics(x, y, z + 1, id);
+		} else if (oldData != 5 && oldData != 6) {
+			if (oldData == 0 || oldData == 7) {
+				world.applyPhysics(x, y + 1, z, id);
+			}
+		} else {
+			world.applyPhysics(x, y - 1, z, id);
+		}
+
 		return true;
 	}
 
