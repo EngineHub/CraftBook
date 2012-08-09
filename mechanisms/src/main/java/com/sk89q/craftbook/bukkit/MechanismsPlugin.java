@@ -39,6 +39,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  *
  * @author sk89q
  */
+@SuppressWarnings("deprecation")
 public class MechanismsPlugin extends BaseBukkitPlugin {
 
     protected MechanismsConfiguration config;

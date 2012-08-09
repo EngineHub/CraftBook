@@ -1,3 +1,2 @@
 language: en_US
 allow-indirect-redstone: false
-use-block-distance: false

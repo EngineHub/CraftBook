@@ -78,7 +78,7 @@ public class Gate extends AbstractMechanic {
      * @param smallSearchSize
      */
     public Gate(BlockWorldVector pt, MechanismsPlugin plugin,
-                boolean smallSearchSize) {
+            boolean smallSearchSize) {
 
         super();
         this.pt = pt;
@@ -148,7 +148,7 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     public boolean setGateState(LocalPlayer player, WorldVector pt, boolean close,
-                                boolean smallSearchSize) {
+            boolean smallSearchSize) {
 
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
@@ -201,7 +201,7 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     private boolean recurseColumn(LocalPlayer player, WorldVector pt,
-                                  Set<BlockVector> visitedColumns, Boolean close) {
+            Set<BlockVector> visitedColumns, Boolean close) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
         if (visitedColumns.size() > 14) {
@@ -210,7 +210,29 @@ public class Gate extends AbstractMechanic {
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
             return false;
         }
-        if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
+
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(
+                BukkitUtil.toLocation(pt));
+
+        Sign sign = null;
+
+        if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
+            BlockState state = block.getState();
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        }
+
+        int itemID = 0;
+
+        if (sign != null) {
+            itemID = Integer.parseInt(sign.getLine(0));
+        }
+
+        if (itemID == 0 && !isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
+            return false;
+        }
+
+        if(itemID != world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId()) {
             return false;
         }
 
@@ -222,7 +244,10 @@ public class Gate extends AbstractMechanic {
 
         // Find the top most fence
         for (int y1 = y + 1; y1 <= y + 12; y1++) {
-            if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
+            if (itemID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z))) {
+                y = y1;
+            }
+            else if(itemID != 0 && itemID != world.getBlockAt(x, y1, z).getTypeId()) {
                 y = y1;
             } else {
                 break;
@@ -239,7 +264,10 @@ public class Gate extends AbstractMechanic {
             // Close the gate if the block below does not exist as a fence
             // block, otherwise open the gate
 
-            close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
+            if(itemID == 0)
+                close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
+            else
+                close = !(itemID == world.getBlockAt(x, y - 1, z).getTypeId());
         }
 
         // Recursively go to connected fence blocks of the same level
@@ -257,7 +285,7 @@ public class Gate extends AbstractMechanic {
      * @param visitedColumns
      */
     private void toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
-                              Set<BlockVector> visitedColumns) {
+            Set<BlockVector> visitedColumns) {
 
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
         int x = topPoint.getBlockX();
@@ -397,7 +425,7 @@ public class Gate extends AbstractMechanic {
         if (sign == null) return;
 
         if (event.getPlayer().getItemInHand() != null) {
-            if (isValidGateItem(event.getPlayer().getItemInHand())) {
+            if (event.getPlayer().getItemInHand().getTypeId() == Integer.parseInt(sign.getLine(0))) {
 
                 try {
                     int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
@@ -449,15 +477,15 @@ public class Gate extends AbstractMechanic {
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         plugin.getServer().getScheduler()
-                .scheduleSyncDelayedTask(plugin, new Runnable() {
+        .scheduleSyncDelayedTask(plugin, new Runnable() {
 
-                    @Override
-                    public void run() {
+	        @Override
+	        public void run() {
 
-                        setGateState(null, pt, event.getNewCurrent() > 0,
-                                smallSearchSize);
-                    }
-                }, 2);
+		        setGateState(null, pt, event.getNewCurrent() > 0,
+				        smallSearchSize);
+	        }
+        }, 2);
     }
 
     @Override
@@ -517,36 +545,38 @@ public class Gate extends AbstractMechanic {
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
-                if (!player.hasPermission("craftbook.mech.gate")) {
-                    throw new InsufficientPermissionsException();
-                }
+                player.checkPermission("craftbook.mech.gate");
                 // get the material that this gate should toggle and verify it
-                String line2 = sign.getLine(2).trim();
-                if (line2 != null && !line2.equals("")) {
+                String line0 = sign.getLine(0).trim();
+                if (line0 != null && !line0.equals("")) {
                     try {
-                        Integer.parseInt(line2);
+                        if(!isValidGateBlock(Integer.parseInt(line0)))
+                            Integer.parseInt("Not A Number");
                     } catch (NumberFormatException e) {
-                        throw new InvalidMechanismException("Line 3 needs to be an item id.");
+                        throw new InvalidMechanismException("Line 1 needs to be a valid item id.");
                     }
+                } else {
+                    player.print("If you want to toggle only a specific item write its id in line 1.");
                 }
                 sign.setLine(1, "[Gate]");
                 sign.setLine(3, "0");
                 sign.update();
                 player.print("mech.gate.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
-                if (!player.hasPermission("craftbook.mech.gate")) {
+                if (!player.hasPermission("craftbook.mech.gate") && !player.hasPermission("craftbook.mech.dgate")) {
                     throw new InsufficientPermissionsException();
                 }
                 // get the material that this gate should toggle and verify it
-                String line2 = sign.getLine(2).trim();
-                if (line2 != null && !line2.equals("")) {
+                String line0 = sign.getLine(0).trim();
+                if (line0 != null && !line0.equals("")) {
                     try {
-                        Integer.parseInt(line2);
+                        if(!isValidGateBlock(Integer.parseInt(line0)))
+                            Integer.parseInt("Not A Number");
                     } catch (NumberFormatException e) {
-                        throw new InvalidMechanismException("Line 3 needs to be an item id.");
+                        throw new InvalidMechanismException("Line 1 needs to be a valid item id.");
                     }
                 } else {
-                    player.print("If you want to toggle only a specific item write its id in line 3.");
+                    player.print("If you want to toggle only a specific item write its id in line 1.");
                 }
                 sign.setLine(1, "[DGate]");
                 sign.setLine(3, "0");
@@ -559,6 +589,10 @@ public class Gate extends AbstractMechanic {
             throw new ProcessedMechanismException();
         }
 
+        public boolean isValidGateBlock(int block) {
+
+            return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+        }
     }
 
     public boolean isValidGateBlock(Block block) {
