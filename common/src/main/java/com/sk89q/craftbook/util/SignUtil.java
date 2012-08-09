@@ -410,9 +410,9 @@ public class SignUtil {
     }
 
     /**
-     * @param Sign    to change
-     * @param Line    to change
-     * @param Content to change line to
+     * @param sign    to change
+     * @param line    to change
+     * @param content to change line to
      */
     public void setLine(Sign sign, int line, String content) {
 

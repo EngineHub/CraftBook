@@ -2,10 +2,10 @@ package com.sk89q.craftbook.cart;
 
 import com.sk89q.craftbook.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.util.Vector;
 
 import static com.sk89q.craftbook.cart.CartUtils.reverse;
 
@@ -22,19 +22,31 @@ public class CartReverser extends CartMechanism {
         // enabled?
         if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
 
-        // go
-        if (blocks.sign == null) {
-            //reverse(cart);
-        } else {
-            if (!blocks.getSign().getLine(1).equalsIgnoreCase("[Reverse]") || !SignUtil.isCardinal(blocks.sign)) {
-                reverse(cart);
-            } else {
-                Block dir = blocks.sign.getRelative(BlockFace.SELF);
-
-                if (dir.getLocation().getDirection() != cart.getLocation().getDirection()) reverse(cart);
-            }
+        if (blocks.sign == null || !blocks.matches("reverse")) {
+            reverse(cart);
+            return;
         }
 
+        BlockFace dir = SignUtil.getFacing(blocks.sign);
+
+        Vector normalVelocity = cart.getVelocity().normalize();
+
+        switch (dir) {
+            case NORTH:
+                if (normalVelocity.getBlockX() != -1) reverse(cart);
+                break;
+            case SOUTH:
+                if (normalVelocity.getBlockX() != 1) reverse(cart);
+                break;
+            case EAST:
+                if (normalVelocity.getBlockZ() != -1) reverse(cart);
+                break;
+            case WEST:
+                if (normalVelocity.getBlockZ() != 1) reverse(cart);
+                break;
+            default:
+                reverse(cart);
+        }
     }
 
     @Override
