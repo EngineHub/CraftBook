@@ -19,9 +19,17 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -33,23 +41,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.regions.CuboidRegion;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or
@@ -229,10 +222,15 @@ public class Gate extends AbstractMechanic {
                 sign = (Sign) state;
         }
 
-        int itemID = 0;
+	    // normal fence block
+        int itemID = 85;
 
         if (sign != null) {
-            itemID = Integer.parseInt(sign.getLine(0));
+	        try {
+		        itemID = Integer.parseInt(sign.getLine(0).trim());
+	        } catch (Exception e) {
+				// use defaults
+	        }
         }
 
         if (itemID == 0 && !isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
@@ -431,8 +429,16 @@ public class Gate extends AbstractMechanic {
         }
         if (sign == null) return;
 
-        if (event.getPlayer().getItemInHand() != null) {
-            if (event.getPlayer().getItemInHand().getTypeId() == Integer.parseInt(sign.getLine(0))) {
+	    // normal fence block
+	    int itemId = 85;
+	    try {
+		    itemId = Integer.parseInt(sign.getLine(0).trim());
+	    } catch (Exception e) {
+			// do nothing and use default
+	    }
+
+	    if (event.getPlayer().getItemInHand() != null) {
+            if (event.getPlayer().getItemInHand().getTypeId() == itemId) {
 
                 try {
                     int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
@@ -486,12 +492,12 @@ public class Gate extends AbstractMechanic {
         plugin.getServer().getScheduler()
         .scheduleSyncDelayedTask(plugin, new Runnable() {
 
-            @Override
-            public void run() {
+	        @Override
+	        public void run() {
 
-                setGateState(null, pt, event.getNewCurrent() > 0,
-                        smallSearchSize);
-            }
+		        setGateState(null, pt, event.getNewCurrent() > 0,
+				        smallSearchSize);
+	        }
         }, 2);
     }
 
