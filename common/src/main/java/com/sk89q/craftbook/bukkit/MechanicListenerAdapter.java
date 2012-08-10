@@ -19,16 +19,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -42,6 +32,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.PluginManager;
+
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -185,34 +186,11 @@ public class MechanicListenerAdapter {
             // TODO: Fake data is for ICs
             try {
                 if (type == BlockID.LEVER) {
-                    // Fake data
-                    /*w.fakeData(x, y, z,
-           newLevel > 0
-               ? w.getData(x, y, z) | 0x8
-               : w.getData(x, y, z) & 0x7);*/
                 } else if (type == BlockID.STONE_PRESSURE_PLATE) {
-                    // Fake data
-                    /*w.fakeData(x, y, z,
-           newLevel > 0
-               ? w.getData(x, y, z) | 0x1
-               : w.getData(x, y, z) & 0x14);*/
                 } else if (type == BlockID.WOODEN_PRESSURE_PLATE) {
-                    // Fake data
-                    /*w.fakeData(x, y, z,
-           newLevel > 0
-               ? w.getData(x, y, z) | 0x1
-               : w.getData(x, y, z) & 0x14);*/
                 } else if (type == BlockID.STONE_BUTTON) {
-                    // Fake data
-                    /*w.fakeData(x, y, z,
-           newLevel > 0
-               ? w.getData(x, y, z) | 0x8
-               : w.getData(x, y, z) & 0x7);*/
                 } else if (type == BlockID.POWERED_RAIL) {
-                    // do nothing
                 } else if (type == BlockID.REDSTONE_WIRE) {
-                    // Fake data
-                    //w.fakeData(x, y, z, newLevel);
 
                     if (plugin.getConfig().getBoolean("allow-indirect-redstone", false)) {
                         handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
@@ -287,7 +265,6 @@ public class MechanicListenerAdapter {
                 // Can be triggered from below
                 handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
             } finally {
-                //w.destroyFake();
             }
         }
 
@@ -301,7 +278,7 @@ public class MechanicListenerAdapter {
          * @param newLevel
          */
         protected void handleDirectWireInput(WorldVector pt,
-                                             boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
+                boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
 
             Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
                     pt.getBlockZ());

@@ -1,17 +1,24 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.util.Arrays;
-import java.util.List;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class ChunkAnchor extends PersistentMechanic {
 
@@ -25,16 +32,14 @@ public class ChunkAnchor extends PersistentMechanic {
         private final MechanismsPlugin plugin;
 
         /**
-         * Explore around the trigger to find a functional command sign; throw if
+         * Explore around the trigger to find a functional chunk anchor sign; throw if
          * things look funny.
          *
          * @param pt the trigger (should be a signpost)
          *
-         * @return an Elevator if we could make a valid one, or null if this
-         *         looked nothing like an elevator.
+         * @return A chunk anchor if we could make a valid one
          *
-         * @throws InvalidMechanismException if the area looked like it was intended to be an
-         *                                   elevator, but it failed.
+         * @throws InvalidMechanismException if it failed to find the anchor, but it was similar to one
          */
         @Override
         public ChunkAnchor detect(BlockWorldVector pt) throws InvalidMechanismException {
