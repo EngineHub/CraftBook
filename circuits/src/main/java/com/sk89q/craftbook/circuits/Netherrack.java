@@ -73,8 +73,9 @@ public class Netherrack extends AbstractMechanic {
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         Block above = event.getBlock().getRelative(0, 1, 0);
+        if(above == null) return;
 
-        if (event.getNewCurrent() > 0 && (above == null || above.getTypeId() == BlockID.AIR)) above.setTypeId(BlockID.FIRE);
+        if (event.getNewCurrent() > 0 && above.getTypeId() == BlockID.AIR) above.setTypeId(BlockID.FIRE);
         else if (above.getTypeId() == BlockID.FIRE) above.setTypeId(BlockID.AIR);
     }
 
