@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -10,6 +7,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -45,16 +49,12 @@ public class SetBlockAboveChest extends AbstractIC {
         chip.setOutput(0, chip.getInput(0));
 
         int block = -1;
-        BlockType bt = BlockType.lookup(sblock, true);
-        if (bt != null) block = bt.getID();
 
-        //FIXME hack for broken WorldEdit <= 5.1
-        if (block == -1)
-            try {
-                block = Integer.parseInt(sblock);
-            } catch (Exception e) {
-                return;
-            }
+        try {
+            block = Integer.parseInt(sblock);
+        } catch (Exception e) {
+            return;
+        }
 
         byte meta = -1;
         try {
@@ -83,7 +83,7 @@ public class SetBlockAboveChest extends AbstractIC {
         boolean ret = false;
         Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         if (bl.getType() == Material.CHEST) {
-            Chest c = ((Chest) bl.getState());
+            Chest c = (Chest) bl.getState();
             ItemStack[] is = c.getInventory().getContents();
             for (short i = 0; i < is.length; i++) {
                 if (is[i] == null) continue;
@@ -103,7 +103,7 @@ public class SetBlockAboveChest extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 
