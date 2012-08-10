@@ -1,5 +1,14 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
@@ -9,14 +18,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class HiddenSwitch extends AbstractMechanic {
 
@@ -81,8 +82,8 @@ public class HiddenSwitch extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
+        LocalPlayer player = plugin.wrap(event.getPlayer());
         try {
-            LocalPlayer player = plugin.wrap(event.getPlayer());
             player.checkPermission("craftbook.mech.hiddenswitch.use");
         } catch (Exception e) {
             return;
@@ -98,7 +99,24 @@ public class HiddenSwitch extends AbstractMechanic {
         if (testBlock.getType() == Material.WALL_SIGN) {
             Sign s = (Sign) testBlock.getState();
             if (s.getLine(1).equalsIgnoreCase("[X]")) {
-                toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                int itemID = -1;
+                if(!s.getLine(0).equalsIgnoreCase("")) {
+                    try {
+                        itemID = Integer.parseInt(s.getLine(0));
+                    }
+                    catch(NumberFormatException e) {
+                    }
+                }
+                if(itemID == -1)
+                    toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                else if(event.getPlayer().getItemInHand() != null) {
+                    if(event.getPlayer().getItemInHand().getTypeId() == itemID)
+                        toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                    else
+                        player.printError("mech.hiddenswitch.key");
+                }
+                else
+                    player.printError("mech.hiddenswitch.key");
             }
         }
     }
@@ -110,15 +128,15 @@ public class HiddenSwitch extends AbstractMechanic {
         checkFaces[1] = BlockFace.DOWN;
 
         switch (direction) {
-            case EAST:
-            case WEST:
-                checkFaces[2] = BlockFace.NORTH;
-                checkFaces[3] = BlockFace.SOUTH;
-                break;
-            default:
-                checkFaces[2] = BlockFace.EAST;
-                checkFaces[3] = BlockFace.WEST;
-                break;
+        case EAST:
+        case WEST:
+            checkFaces[2] = BlockFace.NORTH;
+            checkFaces[3] = BlockFace.SOUTH;
+            break;
+        default:
+            checkFaces[2] = BlockFace.EAST;
+            checkFaces[3] = BlockFace.WEST;
+            break;
         }
 
 
