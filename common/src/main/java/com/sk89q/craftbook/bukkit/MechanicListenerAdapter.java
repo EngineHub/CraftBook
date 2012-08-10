@@ -183,7 +183,6 @@ public class MechanicListenerAdapter {
             // yet been updated, so we're going to do this very ugly thing of
             // faking the value with the new one whenever the data value of this
             // block is requested -- it is quite ugly
-            // TODO: Fake data is for ICs
             try {
                 if (type == BlockID.LEVER) {
                 } else if (type == BlockID.STONE_PRESSURE_PLATE) {

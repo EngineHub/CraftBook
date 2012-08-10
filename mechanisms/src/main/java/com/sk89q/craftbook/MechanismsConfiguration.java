@@ -288,7 +288,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableNew = getBoolean(cfg, "new-cauldron-enable", true);
             newSpoons = getBoolean(cfg, "new-cauldron-spoons", true);
         }
-        //TODO the recipes should probably go here
     }
 
     public class LightSwitchSettings {
