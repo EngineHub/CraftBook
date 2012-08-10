@@ -243,8 +243,7 @@ public class Gate extends AbstractMechanic {
         if (itemID == 0 && !isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
             return false;
         }
-
-        if (itemID != world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId()) {
+        else if (itemID != world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId()) {
             return false;
         }
 
