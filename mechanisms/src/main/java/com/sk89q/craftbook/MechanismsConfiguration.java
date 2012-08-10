@@ -18,16 +18,17 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import com.sk89q.craftbook.mech.CustomDropManager;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -366,7 +367,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableRedstone = getBoolean(cfg, "area-redstone", true);
             maxAreasPerUser = getInt(cfg, "max-areas-per-user", 30);
             maxSizePerArea = getInt(cfg, "max-size-per-area", 5000);
-            useSchematics = getBoolean(cfg, "area-use-schematic", false);
+            useSchematics = getBoolean(cfg, "area-use-schematic", true);
         }
     }
 
