@@ -109,8 +109,8 @@ public class HiddenSwitch extends AbstractMechanic {
                 }
                 if(itemID == -1)
                     toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                else if(event.getPlayer().getItemInHand() != null) {
-                    if(event.getPlayer().getItemInHand().getTypeId() == itemID)
+                else if(event.getPlayer().getItemInHand() != null || itemID == 0) {
+                    if(itemID == 0 && event.getPlayer().getItemInHand() == null || event.getPlayer().getItemInHand().getTypeId() == itemID)
                         toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
                     else
                         player.printError("mech.hiddenswitch.key");
