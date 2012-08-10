@@ -33,6 +33,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.vehicle.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -200,7 +201,11 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (!(event.getVehicle() instanceof Boat)) return;
 
             VehiclesConfiguration config = getLocalConfiguration();
-            if (config.boatBreakReturn && event.getAttacker() == null) {
+
+            if (config.boatNoCrash && event.getAttacker() == null) {
+                event.getVehicle().setVelocity(new Vector(0, 0, 0));
+                event.setCancelled(true);
+            } else if (config.boatBreakReturn && event.getAttacker() == null) {
                 Boat boat = (Boat) event.getVehicle();
                 boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), new ItemStack(ItemID.WOOD_BOAT));
                 boat.remove();

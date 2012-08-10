@@ -21,5 +21,6 @@ hinder-pressure-plate-slow: true
 minecart-enter-on-impact: true
 
 boat-break-return-boat: false
+boat-no-crash: false
 boat-remove-entities: false
 boat-remove-entities-otherboats: false
