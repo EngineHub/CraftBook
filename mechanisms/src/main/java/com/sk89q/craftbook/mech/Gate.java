@@ -258,7 +258,7 @@ public class Gate extends AbstractMechanic {
         for (int y1 = y + 1; y1 <= y + 12; y1++) {
             if (itemID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z))) {
                 y = y1;
-            } else if (itemID != 0 && itemID != world.getBlockAt(x, y1, z).getTypeId()) {
+            } else if (itemID != 0 && itemID == world.getBlockAt(x, y1, z).getTypeId()) {
                 y = y1;
             } else {
                 break;
@@ -278,7 +278,7 @@ public class Gate extends AbstractMechanic {
             if (itemID == 0)
                 close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
             else
-                close = !(itemID == world.getBlockAt(x, y - 1, z).getTypeId());
+                close = itemID != world.getBlockAt(x, y - 1, z).getTypeId();
         }
 
         // Recursively go to connected fence blocks of the same level
