@@ -25,3 +25,4 @@ mech.command.create:Command Sign Created!
 mech.cook.create:Cooking Pot Created!
 mech.cook.ouch:Ouch! That was hot!
 mech.hiddenswitch.key:The key did not fit!
+mech.group:You are not in the required group!

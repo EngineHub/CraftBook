@@ -107,6 +107,12 @@ public class HiddenSwitch extends AbstractMechanic {
                     catch(NumberFormatException e) {
                     }
                 }
+                if(!s.getLine(2).equalsIgnoreCase("")) {
+                    if(!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2))) {
+                        player.printError("mech.group");
+                        return;
+                    }
+                }
                 if(itemID == -1)
                     toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
                 else if(event.getPlayer().getItemInHand() != null || itemID == 0) {
