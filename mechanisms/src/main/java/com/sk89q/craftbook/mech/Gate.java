@@ -229,8 +229,8 @@ public class Gate extends AbstractMechanic {
                 sign = (Sign) state;
         }
 
-        // normal fence block
-        int itemID = 85;
+        // allow any
+        int itemID = 0;
 
         if (sign != null) {
             try {
@@ -441,6 +441,7 @@ public class Gate extends AbstractMechanic {
             itemId = Integer.parseInt(sign.getLine(0).trim());
         } catch (Exception e) {
             // do nothing and use default
+            itemId = 85;
         }
 
         if (event.getPlayer().getItemInHand() != null) {
@@ -575,7 +576,6 @@ public class Gate extends AbstractMechanic {
                         throw new InvalidMechanismException("Line 1 needs to be a valid item id.");
                     }
                 } else {
-                    player.print("If you want to toggle only a specific item write its id in line 1.");
                 }
                 sign.setLine(1, "[Gate]");
                 sign.setLine(3, "0");
@@ -595,7 +595,6 @@ public class Gate extends AbstractMechanic {
                         throw new InvalidMechanismException("Line 1 needs to be a valid item id.");
                     }
                 } else {
-                    player.print("If you want to toggle only a specific item write its id in line 1.");
                 }
                 sign.setLine(1, "[DGate]");
                 sign.setLine(3, "0");
