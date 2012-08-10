@@ -100,15 +100,15 @@ public class HiddenSwitch extends AbstractMechanic {
             Sign s = (Sign) testBlock.getState();
             if (s.getLine(1).equalsIgnoreCase("[X]")) {
                 int itemID = -1;
-                if(!s.getLine(0).equalsIgnoreCase("")) {
+                if(!s.getLine(0).trim().equalsIgnoreCase("")) {
                     try {
-                        itemID = Integer.parseInt(s.getLine(0));
+                        itemID = Integer.parseInt(s.getLine(0).trim());
                     }
                     catch(NumberFormatException e) {
                     }
                 }
-                if(!s.getLine(2).equalsIgnoreCase("")) {
-                    if(!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2))) {
+                if(!s.getLine(2).trim().equalsIgnoreCase("")) {
+                    if(!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
                         player.printError("mech.group");
                         return;
                     }
