@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -148,7 +149,7 @@ public class AreaCommands {
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
         } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all")) {
-            namespace = null;
+            namespace = "";
         } else if (!player.hasPermission("craftbook.mech.area.list.self")) {
             throw new CommandPermissionsException();
         }
@@ -162,17 +163,19 @@ public class AreaCommands {
 
         // get the areas for the defined namespace
         File areas = new File(plugin.getDataFolder(), "areas");
-        if (namespace != null && !namespace.equals("")) {
-            areas = new File(areas, namespace);
-        }
 
         if (!areas.exists()) {
-            throw new CommandException("The namespace " + namespace + " does not exist.");
+            throw new CommandException("There are no saved areas.");
         }
 
-        ArrayList<String> areaList = new ArrayList<String>();
-        // collect the areas from the subfolders
-        String currentNamespace;
+        File folder = null;
+        if (!namespace.equals("")) folder = new File(areas, namespace);
+
+        if (folder != null && !folder.exists()) {
+            throw new CommandException("The namespace '" + namespace + "' does not exist.");
+        }
+
+        List<String> areaList = new ArrayList<String>();
 
         FilenameFilter fnf = new FilenameFilter() {
 
@@ -183,20 +186,32 @@ public class AreaCommands {
             }
         };
 
-        for (File file : areas.listFiles()) {
-            if (file.isDirectory()) {
-                currentNamespace = file.getName();
-                for (File area : file.listFiles(fnf)) {
-                    areaList.add(ChatColor.AQUA + currentNamespace + ":"
-                            + ChatColor.YELLOW + area.getName().split(".")[0]);
+        if (folder != null && folder.exists()) {
+            for (File area : folder.listFiles(fnf)) {
+                String areaName = area.getName();
+                areaName.replace(".schematic", "");
+                areaName.replace(".cbcopy", "");
+                areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
+                        + ChatColor.YELLOW + areaName);
+            }
+        } else {
+            for (File file : areas.listFiles()) {
+                if (file.isDirectory()) {
+                    for (File area : file.listFiles(fnf)) {
+                        String areaName = area.getName();
+                        areaName.replace(".schematic", "");
+                        areaName.replace(".cbcopy", "");
+                        areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
+                                + ChatColor.YELLOW + areaName);
+                    }
                 }
             }
         }
 
         // now lets list the areas with a nice pagination
         if (areaList.size() > 0) {
-            String tmp = namespace == null || namespace.equals("") ? "All Areas " : "Areas for " + namespace;
-            player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " von " + ((areaList.size() / 8) + 1));
+            String tmp = namespace.equals("") ? "All Areas " : "Areas for " + namespace;
+            player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + ((areaList.size() / 8) + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page)) {
                 if (str != null && !str.equals("")) {
@@ -204,8 +219,7 @@ public class AreaCommands {
                 }
             }
         } else {
-            player.printError("There are no saved areas" +
-                    (namespace == null ? "." : " in the " + namespace + " namespace."));
+            player.printError("There are no saved areas in the '" + namespace + "' namespace.");
         }
     }
 

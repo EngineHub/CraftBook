@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -17,7 +17,7 @@ public final class ArrayUtil {
      *
      * @return array of size 8
      */
-    public static String[] getArrayPage(ArrayList<String> list, int page) {
+    public static String[] getArrayPage(List<String> list, int page) {
 
         if (list.size() < 1) return new String[0];
         page = Math.abs(page - 1);
