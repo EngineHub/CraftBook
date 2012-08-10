@@ -237,13 +237,14 @@ public class Gate extends AbstractMechanic {
                 itemID = Integer.parseInt(sign.getLine(0).trim());
             } catch (Exception e) {
                 // use defaults
+                itemID = 0;
             }
         }
 
         if (itemID == 0 && !isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
             return false;
         }
-        else if (itemID != world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId()) {
+        else if (itemID != 0 && itemID != world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId()) {
             return false;
         }
 
@@ -569,7 +570,7 @@ public class Gate extends AbstractMechanic {
                 String line0 = sign.getLine(0).trim();
                 if (line0 != null && !line0.equals("")) {
                     try {
-                        if (!isValidGateBlock(Integer.parseInt(line0)))
+                        if (Integer.parseInt(line0) != 0 && !isValidGateBlock(Integer.parseInt(line0)))
                             Integer.parseInt("Not A Number");
                     } catch (NumberFormatException e) {
                         throw new InvalidMechanismException("Line 1 needs to be a valid item id.");
