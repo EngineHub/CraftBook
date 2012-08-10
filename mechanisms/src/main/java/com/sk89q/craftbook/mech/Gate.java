@@ -19,17 +19,9 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.regions.CuboidRegion;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -41,8 +33,23 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.regions.CuboidRegion;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or
@@ -78,7 +85,7 @@ public class Gate extends AbstractMechanic {
      * @param smallSearchSize
      */
     public Gate(BlockWorldVector pt, MechanismsPlugin plugin,
-                boolean smallSearchSize) {
+            boolean smallSearchSize) {
 
         super();
         this.pt = pt;
@@ -148,7 +155,7 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     public boolean setGateState(LocalPlayer player, WorldVector pt, boolean close,
-                                boolean smallSearchSize) {
+            boolean smallSearchSize) {
 
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
@@ -201,7 +208,7 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     private boolean recurseColumn(LocalPlayer player, WorldVector pt,
-                                  Set<BlockVector> visitedColumns, Boolean close) {
+            Set<BlockVector> visitedColumns, Boolean close) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
         if (visitedColumns.size() > 14) {
@@ -289,7 +296,7 @@ public class Gate extends AbstractMechanic {
      * @param visitedColumns
      */
     private void toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
-                              Set<BlockVector> visitedColumns) {
+            Set<BlockVector> visitedColumns) {
 
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
         int x = topPoint.getBlockX();
@@ -456,7 +463,7 @@ public class Gate extends AbstractMechanic {
                                 - 1);
                 }
 
-                player.print("Gate Restocked!");
+                player.print("mech.restock");
                 event.setCancelled(true);
                 return;
             }
@@ -489,15 +496,15 @@ public class Gate extends AbstractMechanic {
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         plugin.getServer().getScheduler()
-                .scheduleSyncDelayedTask(plugin, new Runnable() {
+        .scheduleSyncDelayedTask(plugin, new Runnable() {
 
-                    @Override
-                    public void run() {
+            @Override
+            public void run() {
 
-                        setGateState(null, pt, event.getNewCurrent() > 0,
-                                smallSearchSize);
-                    }
-                }, 2);
+                setGateState(null, pt, event.getNewCurrent() > 0,
+                        smallSearchSize);
+            }
+        }, 2);
     }
 
     @Override
