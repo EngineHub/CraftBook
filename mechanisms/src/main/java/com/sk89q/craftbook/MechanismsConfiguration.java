@@ -18,16 +18,17 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import com.sk89q.craftbook.mech.CustomDropManager;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -47,29 +48,30 @@ public class MechanismsConfiguration extends BaseConfiguration {
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
 
-        mechSettings = new MechanismSettings(cfg);
-        ammeterSettings = new AmmeterSettings(cfg);
-        bookcaseSettings = new BookcaseSettings(cfg);
-        bridgeSettings = new BridgeSettings(cfg);
-        doorSettings = new DoorSettings(cfg);
-        gateSettings = new GateSettings(cfg);
-        elevatorSettings = new ElevatorSettings(cfg);
-        teleporterSettings = new TeleporterSettings(cfg);
-        cauldronSettings = new CauldronSettings(cfg);
-        lightStoneSettings = new LightStoneSettings(cfg);
-        lightSwitchSettings = new LightSwitchSettings(cfg);
-        hiddenSwitchSettings = new HiddenSwitchSettings(cfg);
-        snowSettings = new SnowSettings(cfg);
-        areaSettings = new AreaSettings(cfg);
-        commandSettings = new CommandSettings(cfg);
+        mechSettings = new MechanismSettings();
+        ammeterSettings = new AmmeterSettings();
+        bookcaseSettings = new BookcaseSettings();
+        bridgeSettings = new BridgeSettings();
+        doorSettings = new DoorSettings();
+        gateSettings = new GateSettings();
+        elevatorSettings = new ElevatorSettings();
+        teleporterSettings = new TeleporterSettings();
+        cauldronSettings = new CauldronSettings();
+        lightStoneSettings = new LightStoneSettings();
+        lightSwitchSettings = new LightSwitchSettings();
+        hiddenSwitchSettings = new HiddenSwitchSettings();
+        snowSettings = new SnowSettings();
+        areaSettings = new AreaSettings();
+        commandSettings = new CommandSettings();
         customDrops = new CustomDropManager(dataFolder);
-        customDropSettings = new CustomDropSettings(cfg);
-        dispenserSettings = new DispenserSettings(cfg);
-        chairSettings = new ChairSettings(cfg);
-        aiSettings = new AISettings(cfg);
-        anchorSettings = new AnchorSettings(cfg);
-        cookingPotSettings = new CookingPotSettings(cfg);
-        customCraftingSettings = new CustomCraftingSettings(cfg);
+        customDropSettings = new CustomDropSettings();
+        dispenserSettings = new DispenserSettings();
+        chairSettings = new ChairSettings();
+        aiSettings = new AISettings();
+        anchorSettings = new AnchorSettings();
+        cookingPotSettings = new CookingPotSettings();
+        customCraftingSettings = new CustomCraftingSettings();
+        paintingSettings = new PaintingSettings();
     }
 
     public final File dataFolder;
@@ -96,15 +98,16 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public final AnchorSettings anchorSettings;
     public final CookingPotSettings cookingPotSettings;
     public final CustomCraftingSettings customCraftingSettings;
+    public final PaintingSettings paintingSettings;
 
     //General settings
     public class MechanismSettings {
 
         public final boolean stopDestruction;
 
-        private MechanismSettings(FileConfiguration cfg) {
+        private MechanismSettings() {
 
-            stopDestruction = getBoolean(cfg, "stop-mechanism-dupe", false);
+            stopDestruction = getBoolean("stop-mechanism-dupe", false);
         }
     }
 
@@ -112,9 +115,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private DispenserSettings(FileConfiguration cfg) {
+        private DispenserSettings() {
 
-            enable = getBoolean(cfg, "dispenser-recipes-enable", true);
+            enable = getBoolean("dispenser-recipes-enable", true);
         }
     }
 
@@ -122,9 +125,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private AnchorSettings(FileConfiguration cfg) {
+        private AnchorSettings() {
 
-            enable = getBoolean(cfg, "chunk-anchor-enable", true);
+            enable = getBoolean("chunk-anchor-enable", true);
         }
     }
 
@@ -132,9 +135,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private CustomCraftingSettings(FileConfiguration cfg) {
+        private CustomCraftingSettings() {
 
-            enable = getBoolean(cfg, "custom-crafting-enable", true);
+            enable = getBoolean("custom-crafting-enable", true);
         }
     }
 
@@ -142,9 +145,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private CookingPotSettings(FileConfiguration cfg) {
+        private CookingPotSettings() {
 
-            enable = getBoolean(cfg, "cooking-pot-enable", true);
+            enable = getBoolean("cooking-pot-enable", true);
         }
     }
 
@@ -153,10 +156,10 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enable;
         public final String readLine;
 
-        private BookcaseSettings(FileConfiguration cfg) {
+        private BookcaseSettings() {
 
-            enable = getBoolean(cfg, "bookshelf-enable", true);
-            readLine = getString(cfg, "bookshelf-read-text", "You pick up a book...");
+            enable = getBoolean("bookshelf-enable", true);
+            readLine = getString("bookshelf-read-text", "You pick up a book...");
         }
     }
 
@@ -168,13 +171,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final int maxWidth;
         public final Set<Material> allowedBlocks;
 
-        private BridgeSettings(FileConfiguration cfg) {
+        private BridgeSettings() {
 
-            enable = getBoolean(cfg, "bridge-enable", true);
-            enableRedstone = getBoolean(cfg, "bridge-redstone", true);
-            maxLength = getInt(cfg, "bridge-max-length", 30);
-            maxWidth = getInt(cfg, "bridge-max-width", 5);
-            allowedBlocks = getMaterialSet(cfg, "bridge-blocks", Arrays.asList(4, 5, 20, 43));
+            enable = getBoolean("bridge-enable", true);
+            enableRedstone = getBoolean("bridge-redstone", true);
+            maxLength = getInt("bridge-max-length", 30);
+            maxWidth = getInt("bridge-max-width", 5);
+            allowedBlocks = getMaterialSet("bridge-blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
@@ -197,13 +200,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final int maxWidth;
         public final Set<Integer> allowedBlocks;
 
-        private DoorSettings(FileConfiguration cfg) {
+        private DoorSettings() {
 
-            enable = getBoolean(cfg, "door-enable", true);
-            enableRedstone = getBoolean(cfg, "door-redstone", true);
-            maxLength = getInt(cfg, "door-max-length", 30);
-            maxWidth = getInt(cfg, "door-max-width", 5);
-            allowedBlocks = getIntegerSet(cfg, "door-blocks", Arrays.asList(4, 5, 20, 43));
+            enable = getBoolean("door-enable", true);
+            enableRedstone = getBoolean("door-redstone", true);
+            maxLength = getInt("door-max-length", 30);
+            maxWidth = getInt("door-max-width", 5);
+            allowedBlocks = getIntegerSet("door-blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
@@ -224,11 +227,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableRedstone;
         public final Set<Integer> allowedBlocks;
 
-        private GateSettings(FileConfiguration cfg) {
+        private GateSettings() {
 
-            enable = getBoolean(cfg, "gate-enable", true);
-            enableRedstone = getBoolean(cfg, "gate-redstone", true);
-            allowedBlocks = getIntegerSet(cfg, "gate-blocks", Arrays.asList(85, 101, 102, 113));
+            enable = getBoolean("gate-enable", true);
+            enableRedstone = getBoolean("gate-redstone", true);
+            allowedBlocks = getIntegerSet("gate-blocks", Arrays.asList(85, 101, 102, 113));
         }
 
         /**
@@ -247,9 +250,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private CommandSettings(FileConfiguration cfg) {
+        private CommandSettings() {
 
-            enable = getBoolean(cfg, "command-sign-enable", true);
+            enable = getBoolean("command-sign-enable", true);
         }
     }
 
@@ -257,9 +260,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private ElevatorSettings(FileConfiguration cfg) {
+        private ElevatorSettings() {
 
-            enable = getBoolean(cfg, "elevators-enable", true);
+            enable = getBoolean("elevators-enable", true);
         }
     }
 
@@ -267,9 +270,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private TeleporterSettings(FileConfiguration cfg) {
+        private TeleporterSettings() {
 
-            enable = getBoolean(cfg, "teleporter-enable", true);
+            enable = getBoolean("teleporter-enable", true);
         }
     }
 
@@ -280,12 +283,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableNew;
         public final boolean newSpoons;
 
-        private CauldronSettings(FileConfiguration cfg) {
+        private CauldronSettings() {
 
-            enable = getBoolean(cfg, "cauldron-enable", false);
-            cauldronBlock = getInt(cfg, "cauldron-block", 1);
-            enableNew = getBoolean(cfg, "new-cauldron-enable", true);
-            newSpoons = getBoolean(cfg, "new-cauldron-spoons", true);
+            enable = getBoolean("cauldron-enable", false);
+            cauldronBlock = getInt("cauldron-block", 1);
+            enableNew = getBoolean("new-cauldron-enable", true);
+            newSpoons = getBoolean("new-cauldron-spoons", true);
         }
     }
 
@@ -295,11 +298,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final int maxRange;
         public final int maxMaximum;
 
-        private LightSwitchSettings(FileConfiguration cfg) {
+        private LightSwitchSettings() {
 
-            enable = getBoolean(cfg, "light-switch-enable", true);
-            maxRange = getInt(cfg, "light-switch-max-range", 10);
-            maxMaximum = getInt(cfg, "light-switch-max-lights", 20);
+            enable = getBoolean("light-switch-enable", true);
+            maxRange = getInt("light-switch-max-range", 10);
+            maxMaximum = getInt("light-switch-max-lights", 20);
         }
     }
 
@@ -307,9 +310,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private LightStoneSettings(FileConfiguration cfg) {
+        private LightStoneSettings() {
 
-            enable = getBoolean(cfg, "light-stone-enable", true);
+            enable = getBoolean("light-stone-enable", true);
         }
     }
 
@@ -317,9 +320,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private AmmeterSettings(FileConfiguration cfg) {
+        private AmmeterSettings() {
 
-            enable = getBoolean(cfg, "ammeter-enable", true);
+            enable = getBoolean("ammeter-enable", true);
         }
     }
 
@@ -327,9 +330,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
 
-        private HiddenSwitchSettings(FileConfiguration cfg) {
+        private HiddenSwitchSettings() {
 
-            enable = getBoolean(cfg, "hidden-switches-enable", true);
+            enable = getBoolean("hidden-switches-enable", true);
         }
     }
 
@@ -341,13 +344,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean jumpTrample;
         public final boolean piling;
 
-        private SnowSettings(FileConfiguration cfg) {
+        private SnowSettings() {
 
-            enable = getBoolean(cfg, "snow-piling-enable", true);
-            trample = getBoolean(cfg, "snow-trample-enable", true);
-            placeSnow = getBoolean(cfg, "placable-snow", true);
-            jumpTrample = getBoolean(cfg, "jump-trample-only", true);
-            piling = getBoolean(cfg, "snow-piles-high", false);
+            enable = getBoolean("snow-piling-enable", true);
+            trample = getBoolean("snow-trample-enable", true);
+            placeSnow = getBoolean("placable-snow", true);
+            jumpTrample = getBoolean("jump-trample-only", true);
+            piling = getBoolean("snow-piles-high", false);
         }
     }
 
@@ -359,13 +362,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final int maxSizePerArea;
         public final boolean useSchematics;
 
-        private AreaSettings(FileConfiguration cfg) {
+        private AreaSettings() {
 
-            enable = getBoolean(cfg, "area-enable", true);
-            enableRedstone = getBoolean(cfg, "area-redstone", true);
-            maxAreasPerUser = getInt(cfg, "max-areas-per-user", 30);
-            maxSizePerArea = getInt(cfg, "max-size-per-area", 5000);
-            useSchematics = getBoolean(cfg, "area-use-schematic", true);
+            enable = getBoolean("area-enable", true);
+            enableRedstone = getBoolean("area-redstone", true);
+            maxAreasPerUser = getInt("max-areas-per-user", 30);
+            maxSizePerArea = getInt("max-size-per-area", 5000);
+            useSchematics = getBoolean("area-use-schematic", true);
         }
     }
 
@@ -374,10 +377,10 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enable;
         public final boolean requirePermissions;
 
-        private CustomDropSettings(FileConfiguration cfg) {
+        private CustomDropSettings() {
 
-            enable = getBoolean(cfg, "custom-drops-enable", true);
-            requirePermissions = getBoolean(cfg, "custom-drops-require-permissions", false);
+            enable = getBoolean("custom-drops-enable", true);
+            requirePermissions = getBoolean("custom-drops-require-permissions", false);
         }
     }
 
@@ -388,11 +391,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final Set<Material> allowedBlocks;
         public Map<String, Block> chairs = new HashMap<String, Block>();
 
-        private ChairSettings(FileConfiguration cfg) {
+        private ChairSettings() {
 
-            enable = getBoolean(cfg, "chair-enable", true);
-            requireSneak = getBoolean(cfg, "chair-sneaking", true);
-            allowedBlocks = getMaterialSet(cfg, "chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
+            enable = getBoolean("chair-enable", true);
+            requireSneak = getBoolean("chair-sneaking", true);
+            allowedBlocks = getMaterialSet("chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
                     136));
         }
 
@@ -413,10 +416,20 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enabled;
         public final boolean zombieVision;
 
-        private AISettings(FileConfiguration cfg) {
+        private AISettings() {
 
-            enabled = getBoolean(cfg, "ai-mechanic-enable", true);
-            zombieVision = getBoolean(cfg, "realistic-zombie-vision", true);
+            enabled = getBoolean("ai-mechanic-enable", true);
+            zombieVision = getBoolean("realistic-zombie-vision", true);
+        }
+    }
+
+    public class PaintingSettings {
+
+        public final boolean enabled;
+
+        private PaintingSettings() {
+
+            enabled = getBoolean("painting-switch-enable", true);
         }
     }
 }

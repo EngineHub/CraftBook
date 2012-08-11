@@ -18,9 +18,9 @@
 
 package com.sk89q.craftbook;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * Configuration handler for CraftBook.
@@ -34,10 +34,10 @@ public class CircuitsConfiguration extends BaseConfiguration {
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
 
-        enableNetherstone = getBoolean(cfg, "redstone-netherstone", false);
-        enablePumpkins = getBoolean(cfg, "redstone-pumpkins", true);
-        enableICs = getBoolean(cfg, "redstone-ics", true);
-        enableGlowStone = getBoolean(cfg, "redstone-glowstone", false);
+        enableNetherstone = getBoolean("redstone-netherstone", false);
+        enablePumpkins = getBoolean("redstone-pumpkins", true);
+        enableICs = getBoolean("redstone-ics", true);
+        enableGlowStone = getBoolean("redstone-glowstone", false);
     }
 
     public final File dataFolder;

@@ -411,6 +411,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      *
      * @param factories
      */
+    @SuppressWarnings("unused")
     private void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
         for (MechanicFactory<? extends Mechanic> aFactory : factories) {

@@ -1,22 +1,25 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+
 /**
  * @author Me4502
  */
 public class BaseConfiguration {
 
+    public final FileConfiguration cfg;
+
     public BaseConfiguration(FileConfiguration cfg, File dataFolder) {
 
-        commonSettings = new CommonSettings(cfg);
+        this.cfg = cfg;
+        commonSettings = new CommonSettings();
     }
 
     public final CommonSettings commonSettings;
@@ -28,43 +31,43 @@ public class BaseConfiguration {
         public final boolean opPerms;
         public final boolean useBlockDistance;
 
-        private CommonSettings(FileConfiguration cfg) {
+        private CommonSettings() {
 
-            language = getString(cfg, "language", "en_US");
-            opPerms = getBoolean(cfg, "op-perms", true);
-            useBlockDistance = getBoolean(cfg, "use-block-radius", false);
+            language = getString("language", "en_US");
+            opPerms = getBoolean("op-perms", true);
+            useBlockDistance = getBoolean("use-block-radius", false);
         }
     }
 
-    public int getInt(FileConfiguration cfg, String name, int def) {
+    public int getInt(String name, int def) {
 
         int it = cfg.getInt(name, def);
         cfg.set(name, it);
         return it;
     }
 
-    public double getDouble(FileConfiguration cfg, String name, double def) {
+    public double getDouble(String name, double def) {
 
         double it = cfg.getDouble(name, def);
         cfg.set(name, it);
         return it;
     }
 
-    public boolean getBoolean(FileConfiguration cfg, String name, boolean def) {
+    public boolean getBoolean(String name, boolean def) {
 
         boolean it = cfg.getBoolean(name, def);
         cfg.set(name, it);
         return it;
     }
 
-    public String getString(FileConfiguration cfg, String name, String def) {
+    public String getString(String name, String def) {
 
         String it = cfg.getString(name, def);
         cfg.set(name, it);
         return it;
     }
 
-    public Set<Integer> getIntegerSet(FileConfiguration cfg, String name, List<Integer> def) {
+    public Set<Integer> getIntegerSet(String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
         if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
@@ -75,7 +78,7 @@ public class BaseConfiguration {
 
     }
 
-    public Set<Material> getMaterialSet(FileConfiguration cfg, String name, List<Integer> def) {
+    public Set<Material> getMaterialSet(String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
         if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
