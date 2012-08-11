@@ -378,7 +378,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      * @param factory
      * @param family
      */
-    public void registerIC(String name, ICFactory factory, ICFamily family) {
+    private void registerIC(String name, ICFactory factory, ICFamily family) {
 
         icManager.register(name, factory, family);
     }
@@ -391,7 +391,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      * @param family
      * @param family2
      */
-    public void registerIC(String name, ICFactory factory, ICFamily family, ICFamily family2) {
+    private void registerIC(String name, ICFactory factory, ICFamily family, ICFamily family2) {
 
         icManager.register(name, factory, family, family2);
     }
@@ -401,7 +401,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      *
      * @param factory
      */
-    public void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
+    private void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         manager.register(factory);
     }
@@ -411,7 +411,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      *
      * @param factories
      */
-    public void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
+    private void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
         for (MechanicFactory<? extends Mechanic> aFactory : factories) {
             registerMechanic(aFactory);
