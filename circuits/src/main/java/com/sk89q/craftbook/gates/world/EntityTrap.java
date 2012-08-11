@@ -1,30 +1,15 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.Collection;
-
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.*;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
+import java.util.Collection;
 
 /**
  * @author Me4502
@@ -44,22 +29,22 @@ public class EntityTrap extends AbstractIC {
         public boolean is(Entity entity) {
 
             switch (this) {
-            case PLAYER:
-                return entity instanceof Player;
-            case MOB_HOSTILE:
-                return entity instanceof Monster;
-            case MOB_PEACEFUL:
-                return entity instanceof Animals;
-            case MOB_ANY:
-                return entity instanceof Creature;
-            case CART:
-                return entity instanceof Minecart;
-            case CART_STORAGE:
-                return entity instanceof StorageMinecart;
-            case CART_POWERED:
-                return entity instanceof PoweredMinecart;
-            case ANY:
-                return true;
+                case PLAYER:
+                    return entity instanceof Player;
+                case MOB_HOSTILE:
+                    return entity instanceof Monster;
+                case MOB_PEACEFUL:
+                    return entity instanceof Animals;
+                case MOB_ANY:
+                    return entity instanceof Creature;
+                case CART:
+                    return entity instanceof Minecart;
+                case CART_STORAGE:
+                    return entity instanceof StorageMinecart;
+                case CART_POWERED:
+                    return entity instanceof PoweredMinecart;
+                case ANY:
+                    return true;
             }
             return false;
         }
@@ -150,7 +135,7 @@ public class EntityTrap extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 

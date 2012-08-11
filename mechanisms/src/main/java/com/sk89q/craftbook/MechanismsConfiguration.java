@@ -18,17 +18,16 @@
 
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.mech.CustomDropManager;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.sk89q.craftbook.mech.CustomDropManager;
 
 /**
  * FileConfiguration handler for CraftBook.
