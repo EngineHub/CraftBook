@@ -48,6 +48,7 @@ import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightStone;
 import com.sk89q.craftbook.mech.LightSwitch;
+import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Teleporter;
@@ -56,6 +57,7 @@ import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 
 /**
@@ -67,6 +69,8 @@ import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 public class MechanismsPlugin extends BaseBukkitPlugin {
 
     protected MechanismsConfiguration config;
+
+    public WorldEditPlugin worldEdit;
 
     private final CopyManager copyManager = new CopyManager();
     private MechanicManager manager;
@@ -96,6 +100,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         if (getServer().getPluginManager().isPluginEnabled("Vault"))
             setupEconomy();
+
+        try {
+            worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+        }
+        catch(Exception e) {}
 
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
@@ -188,6 +197,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
         if (getLocalConfiguration().chairSettings.enable)
             getServer().getPluginManager().registerEvents(new Chair(this), this);
+        if (getLocalConfiguration().paintingSettings.enabled)
+            getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
     }
 
     @Override
