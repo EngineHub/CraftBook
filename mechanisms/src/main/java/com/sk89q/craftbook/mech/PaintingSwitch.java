@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
@@ -36,29 +37,35 @@ public class PaintingSwitch implements Listener {
         else if(event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
         else return;
 
-        BukkitPlayer p = plugin.worldEdit.wrapPlayer(event.getPlayer());
-        Location loc = BukkitUtil.toLocation(p.getBlockTrace(8));
-        Location ploc = event.getPlayer().getLocation();
-        CraftWorld cWorld = (CraftWorld)event.getPlayer().getWorld();
-        double x1 = loc.getX() + 0.4D;
-        double y1 = loc.getY() + 0.4D;
-        double z1 = loc.getZ() + 0.4D;
-        double x2 = ploc.getX();
-        double y2 = loc.getY() + 0.6D;
-        double z2 = ploc.getZ();
+        try {
+            if(event.getPlayer().getItemInHand().getTypeId() != ItemType.PAINTING.getID()) return;
+            BukkitPlayer p = plugin.worldEdit.wrapPlayer(event.getPlayer());
+            Location loc = BukkitUtil.toLocation(p.getBlockTrace(8));
+            Location ploc = event.getPlayer().getLocation();
+            CraftWorld cWorld = (CraftWorld)event.getPlayer().getWorld();
+            double x1 = loc.getX() + 0.2D;
+            double y1 = loc.getY() + 0.2D;
+            double z1 = loc.getZ() + 0.2D;
+            double x2 = ploc.getX();
+            double y2 = loc.getY() + 0.3D;
+            double z2 = ploc.getZ();
 
-        AxisAlignedBB bb = AxisAlignedBB.a(Math.min(x1, x2), y1, Math.min(z1, z2), Math.max(x1, x2), y2, Math.max(z1, z2));
+            AxisAlignedBB bb = AxisAlignedBB.a(Math.min(x1, x2), y1, Math.min(z1, z2), Math.max(x1, x2), y2, Math.max(z1, z2));
 
-        List<?> entities = cWorld.getHandle().getEntities(((CraftPlayer)event.getPlayer()).getHandle(), bb);
-        if (entities.size() == 1 && entities.get(0) instanceof EntityPainting)
-        {
-            EntityPainting oldPainting = (EntityPainting)entities.get(0);
-            EntityPainting newPainting = new EntityPainting(cWorld.getHandle(), oldPainting.x, oldPainting.y, oldPainting.z, oldPainting.direction % 4);
+            List<?> entities = cWorld.getHandle().getEntities(((CraftPlayer)event.getPlayer()).getHandle(), bb);
+            if (entities.size() == 1 && entities.get(0) instanceof EntityPainting)
+            {
+                EntityPainting oldPainting = (EntityPainting)entities.get(0);
+                EntityPainting newPainting = new EntityPainting(cWorld.getHandle(), oldPainting.x, oldPainting.y, oldPainting.z, oldPainting.direction % 4);
 
-            newPainting.art = oldPainting.art;
-            oldPainting.dead = true;
+                newPainting.art = oldPainting.art;
+                oldPainting.dead = true;
 
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new PaintingRespawner(newPainting, isForwards), 1L);
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new PaintingRespawner(newPainting, isForwards), 1L);
+            }
+        }
+        catch(Exception e) {
+            return;
         }
     }
 
