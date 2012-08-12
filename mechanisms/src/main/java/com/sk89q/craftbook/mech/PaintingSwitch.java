@@ -40,7 +40,7 @@ public class PaintingSwitch implements Listener {
         try {
             if(event.getPlayer().getItemInHand().getTypeId() != ItemType.PAINTING.getID()) return;
             BukkitPlayer p = plugin.worldEdit.wrapPlayer(event.getPlayer());
-            Location loc = BukkitUtil.toLocation(p.getBlockTrace(8));
+            Location loc = BukkitUtil.toLocation(p.getBlockTrace(5));
             Location ploc = event.getPlayer().getLocation();
             CraftWorld cWorld = (CraftWorld)event.getPlayer().getWorld();
             double x1 = loc.getX() + 0.2D;
