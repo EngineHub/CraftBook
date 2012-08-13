@@ -174,7 +174,12 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         }
         // then give out the result items
         for (CauldronItemStack stack : recipe.getResults()) {
-            block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
+	        // here we need to reset the data value to 0 or problems will occur later on
+	        // when trying to remove items from the inventory for example
+	        if (stack.getData() < 0) {
+		        stack.setData((short) 0);
+	        }
+	        block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
         }
     }
 
