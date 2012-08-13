@@ -115,7 +115,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
     public boolean isSameType(CauldronItemStack stack) {
 
-        if (data == -1 || stack.getData() == -1) {
+        if (data < 0 || stack.getData() < 0) {
             return stack.getMaterial() == getMaterial();
         }
         return stack.getMaterial() == getMaterial() &&
