@@ -19,13 +19,13 @@ public class CartMessager extends CartMechanism {
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
-        if (cart == null) return;
+        if (cart == null || minor) return;
 
         // care?
         if (cart.getPassenger() == null) return;
         if (!(blocks.sign != null) && !(blocks.sign.getState() instanceof Sign)) return;
 
-        if (plugin.getLocalConfiguration().minecartTrackMessages == false) return;
+        if (!plugin.getLocalConfiguration().minecartTrackMessages) return;
 
         // enabled?
         if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
