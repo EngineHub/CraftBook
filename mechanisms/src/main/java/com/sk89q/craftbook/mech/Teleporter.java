@@ -1,10 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,6 +8,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -52,7 +59,7 @@ public class Teleporter extends AbstractMechanic {
 
             if (block.getState() instanceof Sign) {
                 Sign s = (Sign) block.getState();
-                if (!s.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
+                if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                 String[] pos = s.getLine(2).split(":");
                 if (pos.length > 2)
                     return new Teleporter(block, plugin);
@@ -68,16 +75,16 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
-            if (!sign.getLine(1).equalsIgnoreCase("[Teleport]")) return null;
+            if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 
             if (!player.hasPermission("craftbook.mech.teleporter")) {
                 throw new InsufficientPermissionsException();
             }
 
             player.print("mech.teleport.create");
-            sign.setLine(1, "[Teleport]");
+            sign.setLine(1, "[Teleporter]");
 
             String[] pos = sign.getLine(2).split(":");
             if (!(pos.length > 2))
