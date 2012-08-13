@@ -1,15 +1,16 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import com.sk89q.craftbook.BaseConfiguration;
 
 public class RecipeManager extends BaseConfiguration {
 

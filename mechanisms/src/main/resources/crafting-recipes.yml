@@ -1,7 +1,7 @@
 crafting-recipes:
   default:
     type: shaped2x2
-    ingredients:
+    ingredients: #mc only supports amount of 1 currently as ingredients.
       # light wooden plank
       'wood:2': 1
       # light wooden plank
