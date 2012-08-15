@@ -40,14 +40,14 @@ public class PaintingSwitch implements Listener {
                     event.getPlayer().sendMessage("You are now editing the painting!");
                     event.setCancelled(true);
                 }
-                else if(paintings.get(paint) != null && plugin.getServer().getPlayer(paintings.get(paint)) != null) {
-                    event.getPlayer().sendMessage("The painting is already being edited by " + paintings.get(paint) + "!");
-                    event.setCancelled(true);
-                }
                 else if(paintings.get(paint).equalsIgnoreCase(event.getPlayer().getName())) {
                     paintings.remove(paint);
                     players.remove(event.getPlayer().getName());
                     event.getPlayer().sendMessage("You are no longer editing the painting!");
+                    event.setCancelled(true);
+                }
+                else if(paintings.get(paint) != null && plugin.getServer().getPlayer(paintings.get(paint)) != null) {
+                    event.getPlayer().sendMessage("The painting is already being edited by " + paintings.get(paint) + "!");
                     event.setCancelled(true);
                 }
             }
@@ -59,16 +59,25 @@ public class PaintingSwitch implements Listener {
 
         if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
         if (!event.getPlayer().hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if(players.get(event.getPlayer().getName()) == null) return;
+        if(players.get(event.getPlayer().getName()) == null || players.get(event.getPlayer().getName()).isDead()) {
+            try {
+                paintings.remove(players.get(event.getPlayer().getName()));
+                players.remove(event.getPlayer().getName());
+            }
+            catch(Exception e) {}
+            return;
+        }
         boolean isForwards = false;
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
         else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
         else return;
         if(event.getPreviousSlot() < 2 && event.getNewSlot() > 7) isForwards = false;
         else if(event.getPreviousSlot() > 7 && event.getNewSlot() < 2) isForwards = true;
-        else return;
         Art[] art = Art.values();
         Painting paint = players.get(event.getPlayer().getName());
-        paint.setArt(art[paint.getArt().getId() + (isForwards ? -1 : 1)]);
+        int newID = paint.getArt().getId() + (isForwards ? -1 : 1);
+        if(newID < 0) newID = art.length;
+        if(newID > art.length) newID = 0;
+        paint.setArt(art[newID]);
     }
 }
