@@ -34,13 +34,13 @@ public class PaintingSwitch implements Listener {
             if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
             Painting paint = (Painting)event.getRightClicked();
             if(event.getPlayer().hasPermission("craftbook.mech.paintingswitch.use")) {
-                if(paintings.get(paint) == null || !plugin.getServer().getPlayer(paintings.get(paint)).isOnline()) {
+                if(paintings.get(paint) == null || plugin.getServer().getPlayer(paintings.get(paint)) == null) {
                     paintings.put(paint, event.getPlayer().getName());
                     players.put(event.getPlayer().getName(), paint);
                     event.getPlayer().sendMessage("You are now editing the painting!");
                     event.setCancelled(true);
                 }
-                else if(paintings.get(paint) != null) {
+                else if(paintings.get(paint) != null && plugin.getServer().getPlayer(paintings.get(paint)) != null) {
                     event.getPlayer().sendMessage("The painting is already being edited by " + paintings.get(paint) + "!");
                     event.setCancelled(true);
                 }
