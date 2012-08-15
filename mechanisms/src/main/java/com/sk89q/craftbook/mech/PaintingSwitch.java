@@ -45,6 +45,8 @@ public class PaintingSwitch implements Listener {
                     event.setCancelled(true);
                 }
                 else if(paintings.get(paint).equalsIgnoreCase(event.getPlayer().getName())) {
+                    paintings.remove(paint);
+                    players.remove(event.getPlayer().getName());
                     event.getPlayer().sendMessage("You are no longer editing the painting!");
                     event.setCancelled(true);
                 }
@@ -61,6 +63,9 @@ public class PaintingSwitch implements Listener {
         boolean isForwards = false;
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
         else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
+        else return;
+        if(event.getPreviousSlot() < 2 && event.getNewSlot() > 7) isForwards = false;
+        else if(event.getPreviousSlot() > 7 && event.getNewSlot() < 2) isForwards = true;
         else return;
         Art[] art = Art.values();
         Painting paint = players.get(event.getPlayer().getName());
