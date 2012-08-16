@@ -76,8 +76,8 @@ public class PaintingSwitch implements Listener {
         Art[] art = Art.values();
         Painting paint = players.get(event.getPlayer().getName());
         int newID = paint.getArt().getId() + (isForwards ? -1 : 1);
-        if(newID < 0) newID = art.length;
-        if(newID > art.length) newID = 0;
+        if(newID < 0) newID = art.length - 1;
+        if(newID >= art.length) newID = 0;
         paint.setArt(art[newID]);
     }
 }
