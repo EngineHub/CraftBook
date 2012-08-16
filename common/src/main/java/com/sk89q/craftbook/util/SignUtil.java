@@ -19,11 +19,12 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ public class SignUtil {
 
     public static boolean isSign(int typeid) {
 
-        return (typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN);
+        return typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN;
     }
 
     /**
@@ -262,9 +263,9 @@ public class SignUtil {
         else
             switch (sign.getData()) {
                 case 0x2:
-                    return BlockFace.NORTH;
-                case 0x3:
                     return BlockFace.SOUTH;
+                case 0x3:
+                    return BlockFace.NORTH;
                 case 0x4:
                     return BlockFace.EAST;
                 case 0x5:
@@ -323,9 +324,9 @@ public class SignUtil {
         else
             switch (sign.getData()) {
                 case 0x2:
-                    return BlockFace.SOUTH;
-                case 0x3:
                     return BlockFace.NORTH;
+                case 0x3:
+                    return BlockFace.SOUTH;
                 case 0x4:
                     return BlockFace.WEST;
                 case 0x5:
