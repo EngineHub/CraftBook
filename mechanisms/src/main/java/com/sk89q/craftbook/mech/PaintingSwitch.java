@@ -71,8 +71,8 @@ public class PaintingSwitch implements Listener {
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
         else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
         else return;
-        if(event.getPreviousSlot() < 2 && event.getNewSlot() > 7) isForwards = false;
-        else if(event.getPreviousSlot() > 7 && event.getNewSlot() < 2) isForwards = true;
+        if(event.getPreviousSlot() < 1 && event.getNewSlot() > 8) isForwards = false;
+        else if(event.getPreviousSlot() > 8 && event.getNewSlot() < 1) isForwards = true;
         Art[] art = Art.values();
         Painting paint = players.get(event.getPlayer().getName());
         int newID = paint.getArt().getId() + (isForwards ? -1 : 1);
