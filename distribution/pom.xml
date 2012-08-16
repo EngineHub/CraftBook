@@ -9,10 +9,10 @@
     <parent>
         <groupId>com.sk89q.craftbook</groupId>
         <artifactId>craftbook</artifactId>
-        <version>3.2</version>
+        <version>3.3-SNAPSHOT</version>
     </parent>
     <artifactId>distribution</artifactId>
-    <version>3.2</version>
+    <version>3.3-SNAPSHOT</version>
     <name>CraftBook Distribution</name>
 
     <dependencies>
