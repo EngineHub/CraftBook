@@ -14,14 +14,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.worldedit.BlockWorldVector;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through
@@ -36,11 +36,11 @@ public class ICManager {
      *
      * @see RegisteredICFactory
      */
-    protected final Map<String, RegisteredICFactory> registered
-            = new HashMap<String, RegisteredICFactory>();
+    public final Map<String, RegisteredICFactory> registered
+    = new HashMap<String, RegisteredICFactory>();
 
     private static final Map<BlockWorldVector, IC> cachedICs
-            = new HashMap<BlockWorldVector, IC>();
+    = new HashMap<BlockWorldVector, IC>();
 
     /**
      * Register an IC with the manager. The casing of the ID can be of any
@@ -56,7 +56,7 @@ public class ICManager {
         for (ICFamily family : families) {
             id = id.replace("MC", family.getModifier());
             RegisteredICFactory registration
-                    = new RegisteredICFactory(id, factory, family);
+            = new RegisteredICFactory(id, factory, family);
             // Lowercase the ID so that we can do case in-sensitive lookups
             registered.put(id.toLowerCase(), registration);
         }
