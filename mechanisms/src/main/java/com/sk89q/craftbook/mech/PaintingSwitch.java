@@ -34,7 +34,7 @@ public class PaintingSwitch implements Listener {
             if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
             Painting paint = (Painting)event.getRightClicked();
             if(event.getPlayer().hasPermission("craftbook.mech.paintingswitch.use")) {
-                if(paintings.get(paint) == null || plugin.getServer().getPlayer(paintings.get(paint)) == null) {
+                if(players.get(event.getPlayer().getName()) == null || paintings.get(paint) == null && !(players.get(event.getPlayer().getName()).getLocation().distance(paint.getLocation()) < 1) || plugin.getServer().getPlayer(paintings.get(paint)) == null) {
                     paintings.put(paint, event.getPlayer().getName());
                     players.put(event.getPlayer().getName(), paint);
                     event.getPlayer().sendMessage("You are now editing the painting!");
@@ -71,8 +71,8 @@ public class PaintingSwitch implements Listener {
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
         else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
         else return;
-        if(event.getPreviousSlot() < 1 && event.getNewSlot() > 8) isForwards = false;
-        else if(event.getPreviousSlot() > 8 && event.getNewSlot() < 1) isForwards = true;
+        if(event.getPreviousSlot() < 1 && event.getNewSlot() > 7) isForwards = false;
+        else if(event.getPreviousSlot() > 7 && event.getNewSlot() < 1) isForwards = true;
         Art[] art = Art.values();
         Painting paint = players.get(event.getPlayer().getName());
         int newID = paint.getArt().getId() + (isForwards ? -1 : 1);
