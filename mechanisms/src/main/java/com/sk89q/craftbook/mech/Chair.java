@@ -121,6 +121,7 @@ public class Chair implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
         if (chairs.containsKey(event.getPlayer().getName())) {
+            if(chairs.get(event.getPlayer().getName()).getLocation().getWorld() != event.getPlayer().getWorld()) return;
             if (chairs.get(event.getPlayer().getName()).getLocation().add(0.5, 0, 0.5).distance(event.getTo()) > 1.0D) {
                 Location loc = chairs.get(event.getPlayer().getName()).getLocation().add(0.5, 0, 0.5);
                 loc.setPitch(event.getPlayer().getLocation().getPitch());
