@@ -83,6 +83,7 @@ public class CartDispenser extends CartMechanism {
      */
     private void collect(Minecart cart, Inventory inv) {
 
+        if(cart == null || cart.isDead()) return;
         cart.eject();
         cart.setDamage(9000);
         cart.remove();
