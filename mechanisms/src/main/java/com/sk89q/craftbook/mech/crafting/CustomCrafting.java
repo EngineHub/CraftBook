@@ -25,29 +25,34 @@ public class CustomCrafting {
                 "crafting-recipes.yml")), plugin.getDataFolder());
         Collection<Recipe> recipeCollection = recipes.getRecipes();
         for (Recipe r : recipeCollection) {
-            if (r.getType() == RecipeType.SHAPELESS) {
-                ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
-                for (CraftingItemStack is : r.getIngredients()) {
-                    sh.addIngredient(is.getMaterial(), is.getData());
+            try {
+                if (r.getType() == RecipeType.SHAPELESS) {
+                    ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
+                    for (CraftingItemStack is : r.getIngredients()) {
+                        sh.addIngredient(is.getMaterial(), is.getData());
+                    }
+                    plugin.getServer().addRecipe(sh);
+                } else if (r.getType() == RecipeType.SHAPED2X2) {
+                    ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
+                    sh.shape((String[]) r.getShape().toArray());
+                    for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
+                        sh.setIngredient(is.getValue(), is.getKey().getMaterial(), is.getKey().getData());
+                    }
+                    plugin.getServer().addRecipe(sh);
+                } else if (r.getType() == RecipeType.SHAPED3X3) {
+                    ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
+                    sh.shape((String[]) r.getShape().toArray());
+                    for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
+                        sh.setIngredient(is.getValue(), is.getKey().getMaterial(), is.getKey().getData());
+                    }
+                    plugin.getServer().addRecipe(sh);
+                } else if (r.getType() == RecipeType.FURNACE) {
+                    FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
+                    plugin.getServer().addRecipe(sh);
                 }
-                plugin.getServer().addRecipe(sh);
-            } else if (r.getType() == RecipeType.SHAPED2X2) {
-                ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                sh.shape((String[]) r.getShape().toArray());
-                for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
-                    sh.setIngredient(is.getValue(), is.getKey().getMaterial(), is.getKey().getData());
-                }
-                plugin.getServer().addRecipe(sh);
-            } else if (r.getType() == RecipeType.SHAPED3X3) {
-                ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                sh.shape((String[]) r.getShape().toArray());
-                for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
-                    sh.setIngredient(is.getValue(), is.getKey().getMaterial(), is.getKey().getData());
-                }
-                plugin.getServer().addRecipe(sh);
-            } else if (r.getType() == RecipeType.FURNACE) {
-                FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
-                plugin.getServer().addRecipe(sh);
+            }
+            catch(Exception e) {
+                plugin.getLogger().severe("Failed to load recipe!");
             }
         }
     }
