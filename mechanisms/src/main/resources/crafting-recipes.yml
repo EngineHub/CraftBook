@@ -1,6 +1,6 @@
 crafting-recipes:
-  default:
-    type: shaped2x2
+  shapelessexample:
+    type: shapeless
     ingredients: #mc only supports amount of 1 currently as ingredients.
       # light wooden plank
       'wood:2': 1
@@ -10,6 +10,19 @@ crafting-recipes:
       '35:12': 1
       # brown wool
       '35:12': 1
+    results:
+      #64 Endstone.
+      121: 64
+  shapeexample:
+    type: shaped2x2
+    ingredients: #mc only supports amount of 1 currently as ingredients.
+      # light wooden plank
+      'wood:2': a
+      # brown wool
+      '35:12': b
+    shape: #two of a on top, 2 of b on bottom.
+      - "aa"
+      - "bb"
     results:
       #64 Endstone.
       121: 64
