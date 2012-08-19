@@ -30,6 +30,7 @@ import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
 import com.sk89q.craftbook.circuits.Netherrack;
@@ -165,6 +166,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         instance = this;
         server = getServer();
 
+        registerCommand(CircuitCommands.class);
+
         createDefaultConfiguration("config.yml", false);
         createDefaultConfiguration("custom-ics.txt", false);
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
@@ -203,8 +206,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     private void registerICs() {
 
         Server server = getServer();
-
-        registerCommand(CircuitsPlugin.class);
 
         // Let's register ICs!
         icManager = new ICManager();
