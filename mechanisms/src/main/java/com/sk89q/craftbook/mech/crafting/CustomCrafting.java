@@ -12,6 +12,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class CustomCrafting {
 
@@ -53,6 +54,7 @@ public class CustomCrafting {
             }
             catch(Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
+                plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
         }
     }
