@@ -44,7 +44,7 @@ public class MemorySetter extends AbstractIC {
                 else
                     pw.println("0");
             pw.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return false;

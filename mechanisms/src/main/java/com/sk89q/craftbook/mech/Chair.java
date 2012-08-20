@@ -1,14 +1,11 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.LocationUtil;
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.Packet40EntityMetadata;
 import net.minecraft.server.WatchableObject;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -16,15 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.event.player.PlayerToggleSprintEvent;
+import org.bukkit.event.player.*;
 
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.LocationUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**
@@ -87,9 +81,8 @@ public class Chair implements Listener {
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
 
         //Now everything looks good, continue;
-        if (player.getPlayer().getItemInHand() == null || player.getPlayer().getItemInHand().getType().isBlock() ==
-                false || player.getPlayer().getItemInHand().getTypeId() == 0) {
-            if (plugin.getLocalConfiguration().chairSettings.requireSneak == true)
+        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() || player.getPlayer().getItemInHand().getTypeId() == 0) {
+            if (plugin.getLocalConfiguration().chairSettings.requireSneak)
                 if (!player.getPlayer().isSneaking())
                     return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {

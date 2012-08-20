@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -153,7 +154,7 @@ public class CustomCrafting implements Listener {
                     String[] items = contents.split(",");
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]),
                             getShapeData(items[2].split(":")[0]) + getShapeData(items[3].split(":")[0]));
-                    plugin.getLogger().severe(r.getShape().toString());
+                    plugin.getLogger().severe(Arrays.toString(r.getShape()));
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];

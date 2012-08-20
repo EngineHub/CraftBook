@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.HashMap;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.Art;
 import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
@@ -10,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.util.HashMap;
 
 /**
  * 
@@ -64,10 +63,10 @@ public class PaintingSwitch implements Listener {
                 paintings.remove(players.get(event.getPlayer().getName()));
                 players.remove(event.getPlayer().getName());
             }
-            catch(Exception e) {}
+            catch(Exception ignored) {}
             return;
         }
-        boolean isForwards = false;
+        boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
         else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
         else return;

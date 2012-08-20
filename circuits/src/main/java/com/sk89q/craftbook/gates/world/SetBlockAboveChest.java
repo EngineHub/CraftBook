@@ -43,7 +43,7 @@ public class SetBlockAboveChest extends AbstractIC {
 
         chip.setOutput(0, chip.getInput(0));
 
-        int block = -1;
+        int block;
 
         try {
             block = Integer.parseInt(sblock);

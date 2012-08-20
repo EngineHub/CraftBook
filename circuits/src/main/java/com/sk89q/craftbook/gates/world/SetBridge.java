@@ -69,7 +69,7 @@ public class SetBridge extends AbstractIC {
         // parse the coordinates
         line = getSign().getLine(3);
         if (!line.equals("")) {
-            boolean relativeOffset = line.contains("!") ? false : true;
+            boolean relativeOffset = !line.contains("!");
             if (!relativeOffset) line.replace("!", "");
             String[] split = line.split(":");
             try {
