@@ -110,8 +110,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
                         items.add(itemStack);
                     }
                 }
-            }
-            catch(Exception ignored) {
+            } catch (Exception ignored) {
 
             }
             return items;

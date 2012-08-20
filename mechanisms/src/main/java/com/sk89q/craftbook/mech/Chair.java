@@ -75,13 +75,15 @@ public class Chair implements Listener {
     public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
-        if (event.getClickedBlock() == null || !plugin.getLocalConfiguration().chairSettings.canUseBlock(event.getClickedBlock().getType()))
+        if (event.getClickedBlock() == null || !plugin.getLocalConfiguration().chairSettings.canUseBlock(event
+                .getClickedBlock().getType()))
             return; //???
 
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
 
         //Now everything looks good, continue;
-        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() || player.getPlayer().getItemInHand().getTypeId() == 0) {
+        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() ||
+                player.getPlayer().getItemInHand().getTypeId() == 0) {
             if (plugin.getLocalConfiguration().chairSettings.requireSneak)
                 if (!player.getPlayer().isSneaking())
                     return;
@@ -114,7 +116,7 @@ public class Chair implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
         if (chairs.containsKey(event.getPlayer().getName())) {
-            if(chairs.get(event.getPlayer().getName()).getLocation().getWorld() != event.getPlayer().getWorld()) {
+            if (chairs.get(event.getPlayer().getName()).getLocation().getWorld() != event.getPlayer().getWorld()) {
                 chairs.remove(event.getPlayer().getName());
                 return;
             }

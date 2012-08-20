@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -8,13 +14,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -54,8 +53,8 @@ public class ChestCollector extends AbstractIC {
         Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         if (bl.getType() == Material.CHEST) {
             for (Entity en : getSign().getChunk().getEntities()) {
-                if(!(en instanceof Item)) continue;
-                Item item = (Item)en;
+                if (!(en instanceof Item)) continue;
+                Item item = (Item) en;
                 int ix = item.getLocation().getBlockX();
                 int iy = item.getLocation().getBlockY();
                 int iz = item.getLocation().getBlockZ();
@@ -66,7 +65,7 @@ public class ChestCollector extends AbstractIC {
                         try {
                             if (getSign().getLine(2).contains(":")) {
                                 id.setTypeId(Integer.parseInt(getSign().getLine(2).split(":")[0]));
-                                id.setDurability((short)Integer.parseInt(getSign().getLine(2).split(":")[1]));
+                                id.setDurability((short) Integer.parseInt(getSign().getLine(2).split(":")[1]));
                             } else
                                 id.setTypeId(Integer.parseInt(getSign().getLine(2)));
                         } catch (Exception ignored) {
@@ -74,19 +73,19 @@ public class ChestCollector extends AbstractIC {
                         try {
                             if (getSign().getLine(3).contains(":")) {
                                 ex.setTypeId(Integer.parseInt(getSign().getLine(3).split(":")[0]));
-                                ex.setDurability((short)Integer.parseInt(getSign().getLine(3).split(":")[1]));
+                                ex.setDurability((short) Integer.parseInt(getSign().getLine(3).split(":")[1]));
                             } else
                                 ex.setTypeId(Integer.parseInt(getSign().getLine(3)));
                         } catch (Exception ignored) {
                         }
 
-                        if(ex.getTypeId() != 0) {
-                            if(ItemUtil.areItemsIdentical(ex, item.getItemStack()))
+                        if (ex.getTypeId() != 0) {
+                            if (ItemUtil.areItemsIdentical(ex, item.getItemStack()))
                                 continue;
                         }
 
-                        if(id.getTypeId() != 0) {
-                            if(!ItemUtil.areItemsIdentical(id, item.getItemStack()))
+                        if (id.getTypeId() != 0) {
+                            if (!ItemUtil.areItemsIdentical(id, item.getItemStack()))
                                 continue;
                         }
 
