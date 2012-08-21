@@ -1,13 +1,18 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.*;
+import com.sk89q.craftbook.BaseConfiguration;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -72,10 +77,11 @@ public class RecipeManager extends BaseConfiguration {
             type = RecipeType.getTypeFromName(config.getString("type"));
             if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3)
                 ingredients = getItems(config.getConfigurationSection("ingredients"));
-            else
+            else {
                 items = getHashItems(config.getConfigurationSection("ingredients"));
+                shape = config.getStringList("shape");
+            }
             results = getItems(config.getConfigurationSection("results"));
-            shape = config.getStringList("shape");
         }
 
         private HashMap<CraftingItemStack, Character> getHashItems(ConfigurationSection section) {
@@ -145,9 +151,9 @@ public class RecipeManager extends BaseConfiguration {
             return ingredients;
         }
 
-        public List<String> getShape() {
+        public String[] getShape() {
 
-            return shape;
+            return shape.toArray(new String[shape.size()]);
         }
 
         public HashMap<CraftingItemStack, Character> getShapedIngredients() {
