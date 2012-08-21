@@ -6,10 +6,10 @@ import java.io.Writer;
 
 public class GeneralUtil {
 
-    public static String getStackTrace(Throwable throwable) {
-        final Writer result = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(result);
-        throwable.printStackTrace(printWriter);
-        return result.toString();
+    public static String getStackTrace(Throwable ex) {
+        Writer out = new StringWriter();
+        PrintWriter pw = new PrintWriter(out);
+        ex.printStackTrace(pw);
+        return out.toString();
     }
 }
