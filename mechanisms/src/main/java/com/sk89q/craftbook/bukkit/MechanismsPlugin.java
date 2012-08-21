@@ -26,7 +26,6 @@ import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -44,8 +43,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class MechanismsPlugin extends BaseBukkitPlugin {
 
     protected MechanismsConfiguration config;
-
-    public WorldEditPlugin worldEdit;
 
     private final CopyManager copyManager = new CopyManager();
     private MechanicManager manager;
@@ -73,13 +70,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-        if (getServer().getPluginManager().isPluginEnabled("Vault"))
-            setupEconomy();
-
-        try {
-            worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-        } catch (Exception e) {
-        }
+        if (getServer().getPluginManager().isPluginEnabled("Vault")) setupEconomy();
 
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
@@ -170,8 +161,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             getServer().getPluginManager().registerEvents(new CustomDrops(this), this);
         if (getLocalConfiguration().aiSettings.enabled)
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
-        if (getLocalConfiguration().chairSettings.enable)
-            getServer().getPluginManager().registerEvents(new Chair(this), this);
+        //if (getLocalConfiguration().chairSettings.enable)
+        //    getServer().getPluginManager().registerEvents(new Chair(this), this);
         if (getLocalConfiguration().paintingSettings.enabled)
             getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
     }

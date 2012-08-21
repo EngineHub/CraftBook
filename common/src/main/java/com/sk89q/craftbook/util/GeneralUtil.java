@@ -7,6 +7,7 @@ import java.io.Writer;
 public class GeneralUtil {
 
     public static String getStackTrace(Throwable ex) {
+
         Writer out = new StringWriter();
         PrintWriter pw = new PrintWriter(out);
         ex.printStackTrace(pw);

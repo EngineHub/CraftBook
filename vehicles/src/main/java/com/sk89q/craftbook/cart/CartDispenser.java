@@ -1,5 +1,9 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.worldedit.blocks.ItemType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -7,11 +11,6 @@ import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.worldedit.blocks.ItemType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * <p>
@@ -83,7 +82,7 @@ public class CartDispenser extends CartMechanism {
      */
     private void collect(Minecart cart, Inventory inv) {
 
-        if(cart == null || cart.isDead()) return;
+        if (cart == null || cart.isDead()) return;
         cart.eject();
         cart.setDamage(9000);
         cart.remove();
@@ -150,7 +149,7 @@ public class CartDispenser extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

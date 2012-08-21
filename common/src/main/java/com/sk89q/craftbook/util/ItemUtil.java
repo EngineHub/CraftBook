@@ -1,10 +1,9 @@
 package com.sk89q.craftbook.util;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemUtil {
 

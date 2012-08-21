@@ -1,18 +1,13 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.BaseConfiguration;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.*;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -75,7 +70,7 @@ public class RecipeManager extends BaseConfiguration {
         private void load() {
 
             type = RecipeType.getTypeFromName(config.getString("type"));
-            if(type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3)
+            if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3)
                 ingredients = getItems(config.getConfigurationSection("ingredients"));
             else
                 items = getHashItems(config.getConfigurationSection("ingredients"));

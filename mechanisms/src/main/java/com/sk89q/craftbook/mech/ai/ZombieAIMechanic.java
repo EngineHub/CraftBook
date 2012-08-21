@@ -34,7 +34,6 @@ public class ZombieAIMechanic implements BaseAIMechanic {
             if (((Player) event.getTarget()).isSneaking() && event.getTarget().getLocation().distance(zombie
                     .getLocation()) > 2) {
                 event.setCancelled(true);
-                return;
             }
         }
     }

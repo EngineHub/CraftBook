@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
+import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
+import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.io.File;
+import java.util.Collection;
+import java.util.Map.Entry;
 
 public class CustomCrafting {
 
@@ -51,8 +50,7 @@ public class CustomCrafting {
                     FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
                     plugin.getServer().addRecipe(sh);
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
                 plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
             }

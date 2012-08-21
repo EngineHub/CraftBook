@@ -50,7 +50,7 @@ public class MemoryAccess extends AbstractIC {
                 linenum++;
             }
             br.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return false;

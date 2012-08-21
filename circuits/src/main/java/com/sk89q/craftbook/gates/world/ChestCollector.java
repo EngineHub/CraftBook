@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -8,13 +14,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -54,40 +53,48 @@ public class ChestCollector extends AbstractIC {
         Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         if (bl.getType() == Material.CHEST) {
             for (Entity en : getSign().getChunk().getEntities()) {
-                if(!(en instanceof Item)) continue;
-                Item item = (Item)en;
+                if (!(en instanceof Item)) continue;
+                Item item = (Item) en;
                 int ix = item.getLocation().getBlockX();
                 int iy = item.getLocation().getBlockY();
                 int iz = item.getLocation().getBlockZ();
                 if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
                     if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
-                        ItemStack id = new ItemStack(0);
-                        ItemStack ex = new ItemStack(0);
+                        // Create two test stacks to check against
+                        ItemStack[] testStacks = new ItemStack[] {null, null};
+
+                        // Create test stack #1
                         try {
                             if (getSign().getLine(2).contains(":")) {
-                                id.setTypeId(Integer.parseInt(getSign().getLine(2).split(":")[0]));
-                                id.setDurability((short)Integer.parseInt(getSign().getLine(2).split(":")[1]));
-                            } else
-                                id.setTypeId(Integer.parseInt(getSign().getLine(2)));
+                                int id = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+                                int data = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+                                testStacks[0] = new ItemStack(id, 0, (short) 0, (byte) data);
+                            } else {
+                                int id = Integer.parseInt(getSign().getLine(2));
+                                testStacks[0] = new ItemStack(id);
+                            }
                         } catch (Exception ignored) {
                         }
+
+                        // Create test stack #2
                         try {
                             if (getSign().getLine(3).contains(":")) {
-                                ex.setTypeId(Integer.parseInt(getSign().getLine(3).split(":")[0]));
-                                ex.setDurability((short)Integer.parseInt(getSign().getLine(3).split(":")[1]));
-                            } else
-                                ex.setTypeId(Integer.parseInt(getSign().getLine(3)));
+                                int id = Integer.parseInt(getSign().getLine(3).split(":")[0]);
+                                int data = Integer.parseInt(getSign().getLine(3).split(":")[1]);
+                                testStacks[1] = new ItemStack(id, 0, (short) 0, (byte) data);
+                            } else {
+                                int id = Integer.parseInt(getSign().getLine(2));
+                                testStacks[1] = new ItemStack(id);
+                            }
                         } catch (Exception ignored) {
                         }
 
-                        if(ex.getTypeId() != 0) {
-                            if(ItemUtil.areItemsIdentical(ex, item.getItemStack()))
-                                continue;
+                        // Check to see if it matches either test stack, if mot stop
+                        if (testStacks[0] != null) {
+                            if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) continue;
                         }
-
-                        if(id.getTypeId() != 0) {
-                            if(!ItemUtil.areItemsIdentical(id, item.getItemStack()))
-                                continue;
+                        if (testStacks[1] != null) {
+                            if (!ItemUtil.areItemsIdentical(testStacks[1], item.getItemStack())) continue;
                         }
 
                         ((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
