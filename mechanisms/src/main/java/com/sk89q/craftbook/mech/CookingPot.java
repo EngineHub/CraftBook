@@ -186,7 +186,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             Block cb = sign.getWorld().getBlockAt(x, y, z);
             if (cb.getType() == Material.CHEST)
                 event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
-            think();
         }
     }
 
@@ -224,24 +223,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
         List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         bwv.add(pt);
-        if (block.getState() instanceof Sign) {
-            Sign sign = (Sign) block.getState();
-            Block b = SignUtil.getBackBlock(sign.getBlock());
-            int x = b.getX();
-            int y = b.getY() + 2;
-            int z = b.getZ();
-            bwv.add(BukkitUtil.toWorldVector(b));
-            Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getType() == Material.CHEST) {
-                bwv.add(BukkitUtil.toWorldVector(cb));
-                Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
-                if (fire.getType() == Material.FIRE)
-                    bwv.add(BukkitUtil.toWorldVector(fire));
-            }
-        }
-
         return bwv;
     }
 }
