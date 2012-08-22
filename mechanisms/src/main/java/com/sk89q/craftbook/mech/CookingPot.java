@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -10,11 +13,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -25,7 +28,7 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class CookingPot extends AbstractMechanic implements SelfTriggeringMechanic {
+public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
     /**
      * Plugin.
@@ -130,6 +133,7 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
                     multiplier = Integer.parseInt(sign.getLine(3));
                 }
                 catch(Exception e) {
+                    multiplier = 1;
                 }
             } catch (Exception e) {
                 sign.setLine(2, lastTick + "");
@@ -215,5 +219,29 @@ public class CookingPot extends AbstractMechanic implements SelfTriggeringMechan
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
 
+    }
+
+    @Override
+    public List<BlockWorldVector> getWatchedPositions() {
+        List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        bwv.add(pt);
+        if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            Block b = SignUtil.getBackBlock(sign.getBlock());
+            int x = b.getX();
+            int y = b.getY() + 2;
+            int z = b.getZ();
+            bwv.add(BukkitUtil.toWorldVector(b));
+            Block cb = sign.getWorld().getBlockAt(x, y, z);
+            if (cb.getType() == Material.CHEST) {
+                bwv.add(BukkitUtil.toWorldVector(cb));
+                Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
+                if (fire.getType() == Material.FIRE)
+                    bwv.add(BukkitUtil.toWorldVector(fire));
+            }
+        }
+
+        return bwv;
     }
 }
