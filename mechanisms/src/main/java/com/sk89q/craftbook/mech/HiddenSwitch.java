@@ -1,9 +1,6 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
@@ -82,9 +79,10 @@ public class HiddenSwitch extends AbstractMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
+
         try {
             player.checkPermission("craftbook.mech.hiddenswitch.use");
-        } catch (Exception e) {
+        } catch (InsufficientPermissionsException e) {
             return;
         }
         if (!(event.getBlockFace() == BlockFace.EAST
@@ -98,29 +96,35 @@ public class HiddenSwitch extends AbstractMechanic {
         if (testBlock.getType() == Material.WALL_SIGN) {
             Sign s = (Sign) testBlock.getState();
             if (s.getLine(1).equalsIgnoreCase("[X]")) {
+
                 int itemID = -1;
+
                 if (!s.getLine(0).trim().equalsIgnoreCase("")) {
                     try {
                         itemID = Integer.parseInt(s.getLine(0).trim());
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException ignored) {
                     }
                 }
+
                 if (!s.getLine(2).trim().equalsIgnoreCase("")) {
                     if (!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
                         player.printError("mech.group");
                         return;
                     }
                 }
-                if (itemID == -1)
+
+                if (itemID == -1) {
                     toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
-                    if (itemID == 0 && event.getPlayer().getItemInHand() == null || event.getPlayer().getItemInHand()
-                            .getTypeId() == itemID)
+                } else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
+                    if (itemID == 0 && event.getPlayer().getItemInHand() == null
+                            || event.getPlayer().getItemInHand().getTypeId() == itemID) {
                         toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                    else
+                    } else {
                         player.printError("mech.hiddenswitch.key");
-                } else
+                    }
+                } else {
                     player.printError("mech.hiddenswitch.key");
+                }
             }
         }
     }

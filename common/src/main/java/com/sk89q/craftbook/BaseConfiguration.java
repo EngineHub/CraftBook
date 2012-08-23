@@ -30,12 +30,14 @@ public class BaseConfiguration {
         public final String language;
         public final boolean opPerms;
         public final boolean useBlockDistance;
+        public final boolean checkWGRegions;
 
         private CommonSettings() {
 
             language = getString("language", "en_US");
             opPerms = getBoolean("op-perms", true);
             useBlockDistance = getBoolean("use-block-radius", false);
+            checkWGRegions = getBoolean("check-worldguard-flags", true);
         }
     }
 

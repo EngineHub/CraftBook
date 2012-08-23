@@ -66,7 +66,7 @@ public class MultipleSetBlock extends AbstractIC {
         if (coords.length != 4)
             return;
 
-        int block = -1;
+        int block;
         try {
             block = Integer.parseInt(coords[3]);
         } catch (Exception e) {

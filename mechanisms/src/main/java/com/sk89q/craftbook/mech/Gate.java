@@ -210,34 +210,7 @@ public class Gate extends AbstractMechanic {
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) {
             return false;
         }
-
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                BukkitUtil.toLocation(pt));
-
-        Sign sign = null;
-
-        if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-            BlockState state = block.getState();
-            if (state instanceof Sign)
-                sign = (Sign) state;
-        }
-
-        // allow any
-        int itemID = 0;
-
-        if (sign != null) {
-            try {
-                itemID = Integer.parseInt(sign.getLine(0).trim());
-            } catch (Exception e) {
-                // use defaults
-                itemID = 0;
-            }
-        }
-
-        if (itemID == 0 && !isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
-            return false;
-        } else if (itemID != 0 && itemID != world.getBlockAt(pt.getBlockX(), pt.getBlockY(),
-                pt.getBlockZ()).getTypeId()) {
+        if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
             return false;
         }
 
@@ -249,9 +222,7 @@ public class Gate extends AbstractMechanic {
 
         // Find the top most fence
         for (int y1 = y + 1; y1 <= y + 12; y1++) {
-            if (itemID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z))) {
-                y = y1;
-            } else if (itemID != 0 && itemID == world.getBlockAt(x, y1, z).getTypeId()) {
+            if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
                 y = y1;
             } else {
                 break;
@@ -268,10 +239,7 @@ public class Gate extends AbstractMechanic {
             // Close the gate if the block below does not exist as a fence
             // block, otherwise open the gate
 
-            if (itemID == 0)
-                close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
-            else
-                close = itemID != world.getBlockAt(x, y - 1, z).getTypeId();
+            close = !isValidGateBlock(world.getBlockAt(x, y - 1, z));
         }
 
         // Recursively go to connected fence blocks of the same level
@@ -428,17 +396,8 @@ public class Gate extends AbstractMechanic {
         }
         if (sign == null) return;
 
-        // normal fence block
-        int itemId = 85;
-        try {
-            itemId = Integer.parseInt(sign.getLine(0).trim());
-        } catch (Exception e) {
-            // do nothing and use default
-            itemId = 85;
-        }
-
         if (event.getPlayer().getItemInHand() != null) {
-            if (event.getPlayer().getItemInHand().getTypeId() == itemId) {
+            if (isValidGateItem(event.getPlayer().getItemInHand())) {
 
                 try {
                     int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
@@ -457,7 +416,7 @@ public class Gate extends AbstractMechanic {
                                 - 1);
                 }
 
-                player.print("mech.restock");
+                player.print("Gate Restocked!");
                 event.setCancelled(true);
                 return;
             }
@@ -613,7 +572,25 @@ public class Gate extends AbstractMechanic {
 
     public boolean isValidGateBlock(int block) {
 
-        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+        Block b = BukkitUtil.toWorld(pt).getBlockAt(
+                BukkitUtil.toLocation(pt));
+
+        Sign sign = null;
+
+        if (b.getTypeId() == BlockID.WALL_SIGN || b.getTypeId() == BlockID.SIGN_POST) {
+            BlockState state = b.getState();
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        }
+        if (sign != null && sign.getLine(0).length() > 0) {
+            try {
+                int id = Integer.parseInt(sign.getLine(0));
+                return block == id;
+            } catch (Exception e) {
+                return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+            }
+        } else
+            return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
     }
 
     public boolean isValidGateItem(ItemStack block) {
@@ -623,7 +600,25 @@ public class Gate extends AbstractMechanic {
 
     public boolean isValidGateItem(int block) {
 
-        return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+        Block b = BukkitUtil.toWorld(pt).getBlockAt(
+                BukkitUtil.toLocation(pt));
+
+        Sign sign = null;
+
+        if (b.getTypeId() == BlockID.WALL_SIGN || b.getTypeId() == BlockID.SIGN_POST) {
+            BlockState state = b.getState();
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        }
+        if (sign != null && sign.getLine(0).length() > 0) {
+            try {
+                int id = Integer.parseInt(sign.getLine(0));
+                return block == id;
+            } catch (Exception e) {
+                return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
+            }
+        } else
+            return plugin.getLocalConfiguration().gateSettings.canUseBlock(block);
     }
 
     @Override

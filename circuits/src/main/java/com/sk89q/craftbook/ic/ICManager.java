@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
@@ -36,7 +36,7 @@ public class ICManager {
      *
      * @see RegisteredICFactory
      */
-    protected final Map<String, RegisteredICFactory> registered
+    public final Map<String, RegisteredICFactory> registered
             = new HashMap<String, RegisteredICFactory>();
 
     private static final Map<BlockWorldVector, IC> cachedICs

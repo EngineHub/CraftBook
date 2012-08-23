@@ -1,9 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.Random;
+import java.util.logging.Level;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -15,8 +14,10 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.Random;
-import java.util.logging.Level;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -36,6 +37,8 @@ public class Snow implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
+        if(!plugin.canBuildInArea(event.getClickedBlock().getLocation(), event.getPlayer()))
+            return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.place")) return;
@@ -51,7 +54,7 @@ public class Snow implements Listener {
                     && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
                     .getTypeId() == 0) {
                 event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
-                        .setTypeId(78);
+                .setTypeId(78);
                 incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation()
                         .add(0, 1, 0)));
             }
@@ -67,17 +70,20 @@ public class Snow implements Listener {
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.trample")) return;
 
+        if(!plugin.canBuildInArea(event.getPlayer().getLocation(), event.getPlayer()))
+            return;
+
         Random random = new Random();
         if (plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() >= 0D)
             return;
         if (random.nextInt(10) == 6) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
-            if (b.getTypeId() == 78 || b.getTypeId() == 80) {
+            if (b.getTypeId() == 78) {
                 lowerData(b);
             }
 
             b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
-            if (b.getTypeId() == 78 || b.getTypeId() == 80) {
+            if (b.getTypeId() == 78) {
                 lowerData(b);
             }
         }

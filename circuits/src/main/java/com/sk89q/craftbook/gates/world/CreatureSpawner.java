@@ -83,7 +83,8 @@ public class CreatureSpawner extends AbstractIC {
                 } else {
                     // spawn amount of mobs
                     for (int i = 0; i < amount; i++) {
-                        center.getWorld().spawnEntity(center, entityType);
+                        Entity entity = center.getWorld().spawnEntity(center, entityType);
+                        setEntityData(entity, data);
                     }
                 }
             }

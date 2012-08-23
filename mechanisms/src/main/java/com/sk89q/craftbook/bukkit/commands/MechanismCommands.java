@@ -38,7 +38,7 @@ public class MechanismCommands {
 
     @Command(
             aliases = {"cbmech"},
-            desc = "Handels the basic Craftbook Mechanism commands."
+            desc = "Handles the basic Craftbook Mechanism commands."
     )
     @NestedCommand(NestedCommands.class)
     public void cbmech(CommandContext context, CommandSender sender) {

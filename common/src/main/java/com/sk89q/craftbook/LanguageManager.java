@@ -30,7 +30,7 @@ public class LanguageManager {
         File f = new File(plugin.getDataFolder(), language + ".txt");
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
-            String line = "";
+            String line;
             while ((line = br.readLine()) != null) {
                 if (line.split(":").length != 2) continue;
                 languageData.put(line.split(":")[0], line.split(":")[1]);

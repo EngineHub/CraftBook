@@ -89,25 +89,29 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         private Collection<CauldronItemStack> getItems(ConfigurationSection section) {
 
             Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
-            for (String item : section.getKeys(false)) {
-                String[] split = item.split(":");
-                Material material;
-                try {
-                    material = Material.getMaterial(Integer.parseInt(split[0]));
-                } catch (NumberFormatException e) {
-                    // use the name
-                    material = Material.getMaterial(split[0].toUpperCase());
-                }
-                if (material != null) {
-                    CauldronItemStack itemStack = new CauldronItemStack(material);
-                    if (split.length > 1) {
-                        itemStack.setData(Short.parseShort(split[1]));
-                    } else {
-                        itemStack.setData((short) -1);
+            try {
+                for (String item : section.getKeys(false)) {
+                    String[] split = item.split(":");
+                    Material material;
+                    try {
+                        material = Material.getMaterial(Integer.parseInt(split[0]));
+                    } catch (NumberFormatException e) {
+                        // use the name
+                        material = Material.getMaterial(split[0].toUpperCase());
                     }
-                    itemStack.setAmount(section.getInt(item, 1));
-                    items.add(itemStack);
+                    if (material != null) {
+                        CauldronItemStack itemStack = new CauldronItemStack(material);
+                        if (split.length > 1) {
+                            itemStack.setData(Short.parseShort(split[1]));
+                        } else {
+                            itemStack.setData((short) -1);
+                        }
+                        itemStack.setAmount(section.getInt(item, 1));
+                        items.add(itemStack);
+                    }
                 }
+            } catch (Exception ignored) {
+
             }
             return items;
         }

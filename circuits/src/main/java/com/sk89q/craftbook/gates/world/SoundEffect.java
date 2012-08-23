@@ -1,13 +1,16 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import net.minecraft.server.Packet62NamedSoundEffect;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.CraftWorld;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class SoundEffect extends AbstractIC {
 
@@ -49,10 +52,9 @@ public class SoundEffect extends AbstractIC {
             }
             Block b = SignUtil.getBackBlock(getSign().getBlock());
             String soundName = getSign().getLine(3).trim();
-            if (soundName.length() > 0)
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), 50,
-                        ((CraftWorld) getSign().getWorld()).getHandle().dimension,
-                        new Packet62NamedSoundEffect(soundName, b.getX(), b.getY() + 1, b.getZ(), volume, pitch));
+            if (soundName.length() > 0) {
+                b.getWorld().playSound(b.getLocation(), Sound.getSound(soundName), volume, pitch);
+            }
         } catch (Exception ignored) {
         }
     }

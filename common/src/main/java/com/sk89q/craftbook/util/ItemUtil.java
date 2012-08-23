@@ -4,7 +4,6 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 public class ItemUtil {
 
@@ -16,7 +15,7 @@ public class ItemUtil {
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         if (item.getTypeId() == item2.getTypeId()) {
-            if (item.getData() == item2.getData()) {
+            if (item.getDurability() == item2.getDurability()) {
                 return true;
             }
         }
@@ -28,20 +27,20 @@ public class ItemUtil {
         return item.getTypeId() == type;
     }
 
-    public static boolean isItemIdenticalTo(ItemStack item, int type, byte data) {
+    public static boolean isItemIdenticalTo(ItemStack item, int type, short data) {
 
         if (item.getTypeId() == type) {
-            if (item.getData().getData() == data) {
+            if (item.getDurability() == data) {
                 return true;
             }
         }
         return false;
     }
 
-    public static void setItemTypeAndData(ItemStack item, int type, byte data) {
+    public static void setItemTypeAndData(ItemStack item, int type, short data) {
 
         item.setTypeId(type);
-        item.setData(new MaterialData(type, data));
+        item.setDurability(data);
     }
 
     public static boolean isStackValid(ItemStack item) {
@@ -118,8 +117,8 @@ public class ItemUtil {
             item.setTypeId(ItemID.BOWL); //Get your bowl back
         else if (item.getTypeId() == ItemID.POTION)
             item.setTypeId(ItemID.GLASS_BOTTLE); //Get your bottle back
-        else if (item.getTypeId() == ItemID.LAVA_BUCKET || item.getTypeId() == ItemID.WATER_BUCKET || item.getTypeId
-                () == ItemID.MILK_BUCKET)
+        else if (item.getTypeId() == ItemID.LAVA_BUCKET || item.getTypeId() == ItemID.WATER_BUCKET ||
+                item.getTypeId() == ItemID.MILK_BUCKET)
             item.setTypeId(ItemID.BUCKET); //Get your bucket back
         else if (item.getAmount() == 1)
             item.setTypeId(0);

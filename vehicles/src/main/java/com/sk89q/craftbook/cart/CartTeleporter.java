@@ -25,9 +25,9 @@ public class CartTeleporter extends CartMechanism {
             world = cart.getServer().getWorld(blocks.getSign().getLine(3));
         }
 
-        Double x = 0D;
-        Double y = 0D;
-        Double z = 0D;
+        Double x;
+        Double y;
+        Double z;
         try {
             x = Double.parseDouble(pts[0]);
             y = Double.parseDouble(pts[1]);

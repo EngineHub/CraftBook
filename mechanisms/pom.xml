@@ -9,17 +9,17 @@
     <parent>
         <groupId>com.sk89q.craftbook</groupId>
         <artifactId>craftbook</artifactId>
-        <version>3.2-SNAPSHOT</version>
+        <version>3.3-SNAPSHOT</version>
     </parent>
     <artifactId>mechanisms</artifactId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.3-SNAPSHOT</version>
     <name>CraftBook Mechanisms</name>
 
     <dependencies>
         <dependency>
             <groupId>com.sk89q.craftbook</groupId>
             <artifactId>common</artifactId>
-            <version>3.2-SNAPSHOT</version>
+            <version>3.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
