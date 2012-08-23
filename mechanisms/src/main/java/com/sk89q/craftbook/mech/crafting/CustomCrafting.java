@@ -49,6 +49,8 @@ public class CustomCrafting {
                     plugin.getServer().addRecipe(sh);
                 } else if (r.getType() == RecipeType.FURNACE) {
                     FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
+                    for (CraftingItemStack is : r.getIngredients())
+                        sh.setInput(is.getMaterial(), is.getData());
                     plugin.getServer().addRecipe(sh);
                 }
             } catch (Exception e) {
