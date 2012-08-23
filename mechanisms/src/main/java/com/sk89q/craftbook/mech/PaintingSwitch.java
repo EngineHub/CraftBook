@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.util.HashMap;
+
 import org.bukkit.Art;
 import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
@@ -9,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 /**
  * @author Me4502
@@ -31,6 +32,8 @@ public class PaintingSwitch implements Listener {
         if (event.getRightClicked() instanceof Painting) {
             if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
             Painting paint = (Painting) event.getRightClicked();
+            if(!plugin.canUseInArea(paint.getLocation(), event.getPlayer()))
+                return;
             if (event.getPlayer().hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (players.get(event.getPlayer().getName()) == null || paintings.get(paint) == null && !(players.get
                         (event.getPlayer().getName()).getLocation().distance(paint.getLocation()) < 1) || plugin

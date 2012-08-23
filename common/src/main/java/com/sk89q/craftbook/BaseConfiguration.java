@@ -1,13 +1,13 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -30,12 +30,14 @@ public class BaseConfiguration {
         public final String language;
         public final boolean opPerms;
         public final boolean useBlockDistance;
+        public final boolean checkWGRegions;
 
         private CommonSettings() {
 
             language = getString("language", "en_US");
             opPerms = getBoolean("op-perms", true);
             useBlockDistance = getBoolean("use-block-radius", false);
+            checkWGRegions = getBoolean("check-worldguard-flags", true);
         }
     }
 
