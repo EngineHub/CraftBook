@@ -40,7 +40,7 @@ public class LightningSummon extends AbstractIC {
 
         String line = getSign().getLine(2);
         if (line.length() > 0) {
-            center = SignUtil.getBackBlock(getSign().getBlock().getRelative(BlockFace.UP, Integer.parseInt(line)));
+	        center = ICUtil.parseBlockLocation(getSign());
         }
     }
 
