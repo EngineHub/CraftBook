@@ -313,11 +313,7 @@ public class Door extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        if (event.getNewCurrent() == 0) {
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
-        } else {
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(null), 2);
-        }
+        flipState(null);
     }
 
     private void flipState(LocalPlayer player) {
