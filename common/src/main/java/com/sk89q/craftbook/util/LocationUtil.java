@@ -188,13 +188,15 @@ public final class LocationUtil {
         World world = chunk.getWorld();
         int cX = chunk.getX();
         int cZ = chunk.getZ();
-        for (int x = radius; x >= 0; x--) {
-            for (int z = radius; z >= 0; z--) {
-                chunks.add(world.getChunkAt(cX + x, cZ + z));
-                chunks.add(world.getChunkAt(cX - x, cZ - z));
-                chunks.add(world.getChunkAt(cX + x, cZ - z));
-                chunks.add(world.getChunkAt(cX - x, cZ + z));
-            }
+        for (int r = radius; r >= 0; r--) {
+            chunks.add(world.getChunkAt(cX + r, cZ + r));
+            chunks.add(world.getChunkAt(cX - r, cZ - r));
+            chunks.add(world.getChunkAt(cX + r, cZ - r));
+            chunks.add(world.getChunkAt(cX - r, cZ + r));
+            chunks.add(world.getChunkAt(cX + r, cZ));
+            chunks.add(world.getChunkAt(cX - r, cZ));
+            chunks.add(world.getChunkAt(cX, cZ + r));
+            chunks.add(world.getChunkAt(cX, cZ - r));
         }
         return chunks;
     }
