@@ -30,12 +30,7 @@ public final class LocationUtil {
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
-        double distance = getDistance(l1, l2);
-        if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
-            return distance <= radius;
-        } else {
-            return distance <= radius * radius;
-        }
+        return getDistance(l1, l2) <= radius;
     }
 
     /**
@@ -51,7 +46,7 @@ public final class LocationUtil {
         if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
             return getBlockDistance(l1, l2);
         } else {
-            return l1.distanceSquared(l2);
+            return Math.sqrt(l1.distanceSquared(l2));
         }
     }
 
