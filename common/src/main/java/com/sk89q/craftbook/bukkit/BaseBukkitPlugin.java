@@ -72,7 +72,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     private final CommandsManagerRegistration commandManager;
 
     protected WorldGuardPlugin worldguard;
-    protected StateFlag useFlag = new StateFlag("use",true);
+    protected StateFlag useFlag = null;
 
     /**
      * Logger for messages.
@@ -103,6 +103,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public boolean canUseInArea(Location loc, Player p) {
         if(getLocalConfiguration().commonSettings.checkWGRegions == false || getWorldGuard() == null) return true;
+        if(useFlag == null) useFlag = new StateFlag("use",true);
         return getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc).allows(useFlag, getWorldGuard().wrapPlayer(p));
     }
 
