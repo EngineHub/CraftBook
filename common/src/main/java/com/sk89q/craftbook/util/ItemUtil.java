@@ -8,29 +8,44 @@ import org.bukkit.material.MaterialData;
 
 public class ItemUtil {
 
+    public static boolean areItemsSimilar(ItemStack item, int type) {
+
+        return areItemsSimilar(item, new MaterialData(type, (byte) 0));
+    }
+
+    public static boolean areItemsSimilar(ItemStack item, MaterialData data) {
+
+        return areItemsSimilar(item.getData(), data);
+    }
+
     public static boolean areItemsSimilar(ItemStack item, ItemStack item2) {
 
-        return item.getTypeId() == item2.getTypeId();
+        return areItemsSimilar(item.getData(), item2.getData());
+    }
+
+    public static boolean areItemsSimilar(MaterialData data, MaterialData comparedData) {
+
+        return data.getItemTypeId() == comparedData.getItemTypeId();
+    }
+
+    public static boolean areItemsIdentical(ItemStack item, int type, byte data) {
+
+        return areItemsIdentical(item, new MaterialData(type, data));
+    }
+
+    public static boolean areItemsIdentical(ItemStack item, MaterialData data) {
+
+        return areItemsIdentical(item.getData(), data);
     }
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
-        return item.getData() == item2.getData();
+        return areItemsIdentical(item.getData(), item2.getData());
     }
 
-    public static boolean isItemSimilarTo(ItemStack item, int type) {
+    public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {
 
-        return item.getTypeId() == type;
-    }
-
-    public static boolean isItemIdenticalTo(ItemStack item, int type, byte data) {
-
-        if (item.getTypeId() == type) {
-            if (item.getData().getData() == data) {
-                return true;
-            }
-        }
-        return false;
+        return data.getItemTypeId() == comparedData.getItemTypeId() && data.getData() == data.getData();
     }
 
     public static void setItemTypeAndData(ItemStack item, int type, byte data) {
