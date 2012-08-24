@@ -103,7 +103,7 @@ public class RecipeManager extends BaseConfiguration {
                     } else {
                         itemStack.setData((short) -1);
                     }
-                    itemStack.setAmount(section.getInt(item, 1));
+                    itemStack.setAmount(1);
                     items.put(itemStack, section.getString(item).toCharArray()[0]);
                 }
             }

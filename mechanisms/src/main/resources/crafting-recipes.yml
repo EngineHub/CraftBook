@@ -17,12 +17,12 @@ crafting-recipes:
     type: shaped2x2
     ingredients: #mc only supports amount of 1 currently as ingredients.
       # light wooden plank
-      'wood:2': a
+      'wood:2': 'a'
       # brown wool
-      '35:12': b
+      '35:12': 'b'
     shape: #two of a on top, 2 of b on bottom.
-      - "aa"
-      - "bb"
+      - 'aa'
+      - 'bb'
     results:
       #64 Endstone.
       121: 64
