@@ -76,16 +76,10 @@ public class CreatureSpawner extends AbstractIC {
             if (entityType != null && entityType.isAlive()) {
                 Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
                         BlockFace.UP));
-                if (!data.equals("")) {
-                    // spawn the entity plus rider
+                // spawn amount of mobs
+                for (int i = 0; i < amount; i++) {
                     Entity entity = center.getWorld().spawnEntity(center, entityType);
                     setEntityData(entity, data);
-                } else {
-                    // spawn amount of mobs
-                    for (int i = 0; i < amount; i++) {
-                        Entity entity = center.getWorld().spawnEntity(center, entityType);
-                        setEntityData(entity, data);
-                    }
                 }
             }
         }
