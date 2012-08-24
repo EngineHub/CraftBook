@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,6 +25,9 @@ import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.material.Lever;
 import org.bukkit.material.PistonBaseMaterial;
+
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * IC utility functions.
@@ -36,7 +37,7 @@ import org.bukkit.material.PistonBaseMaterial;
 public class ICUtil {
 
     private static BlockFace[] REDSTONE_CONTACT_FACES =
-            {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
+        {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
 
     private ICUtil() {
 
@@ -197,7 +198,7 @@ public class ICUtil {
     public static int parseRadius(Sign sign, int lPos) {
 
         String line = sign.getLine(lPos);
-        int radius = 0;
+        int radius = 10; //default radius is 10.
         try {
             return Integer.parseInt(line.split("=")[0]);
         } catch (NumberFormatException e) {

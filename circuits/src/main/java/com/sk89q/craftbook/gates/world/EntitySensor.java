@@ -1,17 +1,32 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -109,17 +124,19 @@ public class EntitySensor extends AbstractIC {
         if (types.size() == 0) types.add(Type.ANY);
 
         sign.setLine(3, sign.getLine(3).toUpperCase());
-        sign.update();
 
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         if (getSign().getLine(2).contains("=")) {
+            getSign().setLine(2, radius + "=" + getSign().getLine(2).split("=")[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
+            getSign().setLine(2, radius + "");
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
+        sign.update();
         chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(sign.getBlock()), radius);
     }
 

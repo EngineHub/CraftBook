@@ -1,9 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -11,7 +9,16 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -39,12 +46,15 @@ public class PlayerDetection extends AbstractIC {
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
+        radius = ICUtil.parseRadius(sign);
+
         if (getSign().getLine(2).contains("=")) {
+            getSign().setLine(2, radius + "=" + getSign().getLine(2).split("=")[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
+            getSign().setLine(2, radius + "");
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
-        this.radius = ICUtil.parseRadius(sign);
         // parse the group or player name
         String line = sign.getLine(3).trim();
         try {
@@ -53,7 +63,8 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception e) {
             // do nothing and use the defaults
         }
-        this.chunks = LocationUtil.getSurroundingChunks(center, radius);
+        chunks = LocationUtil.getSurroundingChunks(center, radius);
+        sign.update();
     }
 
     @Override
@@ -78,7 +89,7 @@ public class PlayerDetection extends AbstractIC {
 
     protected boolean isDetected() {
 
-        for (Chunk chunk : this.chunks) {
+        for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
@@ -87,7 +98,7 @@ public class PlayerDetection extends AbstractIC {
                             // at last check if the entity is within the radius
                             if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
                                 if (!player.equals("")) {
-                                    return ((Player) entity).getName().equals(player);
+                                    return ((Player) entity).getName().equalsIgnoreCase(player);
                                 } else if (!group.equals("")) {
                                     return CircuitsPlugin.getInst().isInGroup(((Player) entity).getName(), group);
                                 } else {
