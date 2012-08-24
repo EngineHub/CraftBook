@@ -4,6 +4,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 public class ItemUtil {
 
@@ -14,12 +15,7 @@ public class ItemUtil {
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
-        if (item.getTypeId() == item2.getTypeId()) {
-            if (item.getDurability() == item2.getDurability()) {
-                return true;
-            }
-        }
-        return false;
+        return item.getData() == item2.getData();
     }
 
     public static boolean isItemSimilarTo(ItemStack item, int type) {
@@ -27,20 +23,19 @@ public class ItemUtil {
         return item.getTypeId() == type;
     }
 
-    public static boolean isItemIdenticalTo(ItemStack item, int type, short data) {
+    public static boolean isItemIdenticalTo(ItemStack item, int type, byte data) {
 
         if (item.getTypeId() == type) {
-            if (item.getDurability() == data) {
+            if (item.getData().getData() == data) {
                 return true;
             }
         }
         return false;
     }
 
-    public static void setItemTypeAndData(ItemStack item, int type, short data) {
+    public static void setItemTypeAndData(ItemStack item, int type, byte data) {
 
-        item.setTypeId(type);
-        item.setDurability(data);
+        item.setData(new MaterialData(type, data));
     }
 
     public static boolean isStackValid(ItemStack item) {
