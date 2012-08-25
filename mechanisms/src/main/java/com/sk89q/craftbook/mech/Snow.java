@@ -158,7 +158,7 @@ public class Snow implements Listener {
             newData = (byte) 7;
         }
         if (newData > (byte) 7)
-            newData = (byte) 7;
+            newData = (byte) 0;
         setBlockDataWithNotify(block, newData);
     }
 
@@ -169,6 +169,8 @@ public class Snow implements Listener {
             block.setTypeId(BlockID.SNOW_BLOCK);
             newData = (byte) 0;
         }
+        else if(newData > 7)
+            newData = 7;
         setBlockDataWithNotify(block, newData);
     }
 

@@ -34,24 +34,29 @@ public class PaintingSwitch implements Listener {
             Painting paint = (Painting) event.getRightClicked();
             if(!plugin.canUseInArea(paint.getLocation(), event.getPlayer()))
                 return;
-            if (event.getPlayer().hasPermission("craftbook.mech.paintingswitch.use")) {
-                if (players.get(event.getPlayer().getName()) == null || paintings.get(paint) == null && !(players.get
-                        (event.getPlayer().getName()).getLocation().distance(paint.getLocation()) < 1) || plugin
-                        .getServer().getPlayer(paintings.get(paint)) == null) {
-                    paintings.put(paint, event.getPlayer().getName());
-                    players.put(event.getPlayer().getName(), paint);
-                    event.getPlayer().sendMessage("You are now editing the painting!");
-                    event.setCancelled(true);
-                } else if (paintings.get(paint).equalsIgnoreCase(event.getPlayer().getName())) {
-                    paintings.remove(paint);
-                    players.remove(event.getPlayer().getName());
-                    event.getPlayer().sendMessage("You are no longer editing the painting!");
-                    event.setCancelled(true);
-                } else if (paintings.get(paint) != null && plugin.getServer().getPlayer(paintings.get(paint)) != null) {
-                    event.getPlayer().sendMessage("The painting is already being edited by " + paintings.get(paint) +
-                            "!");
-                    event.setCancelled(true);
+            try {
+                if (event.getPlayer().hasPermission("craftbook.mech.paintingswitch.use")) {
+                    if (players.get(event.getPlayer().getName()) == null || paintings.get(paint) == null && !(players.get
+                            (event.getPlayer().getName()).getLocation().distance(paint.getLocation()) < 1) || plugin
+                            .getServer().getPlayer(paintings.get(paint)) == null) {
+                        paintings.put(paint, event.getPlayer().getName());
+                        players.put(event.getPlayer().getName(), paint);
+                        event.getPlayer().sendMessage("You are now editing the painting!");
+                        event.setCancelled(true);
+                    } else if (paintings.get(paint).equalsIgnoreCase(event.getPlayer().getName())) {
+                        paintings.remove(paint);
+                        players.remove(event.getPlayer().getName());
+                        event.getPlayer().sendMessage("You are no longer editing the painting!");
+                        event.setCancelled(true);
+                    } else if (paintings.get(paint) != null && plugin.getServer().getPlayer(paintings.get(paint)) != null) {
+                        event.getPlayer().sendMessage("The painting is already being edited by " + paintings.get(paint) +
+                                "!");
+                        event.setCancelled(true);
+                    }
                 }
+            }
+            catch(Exception e) {
+
             }
         }
     }
