@@ -36,6 +36,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -304,13 +305,12 @@ public class Bridge extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(BlockPhysicsEvent event) {
 
-        if (!plugin.getLocalConfiguration().bridgeSettings.enableRedstone) return;
+        if (!settings.enableRedstone) return;
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
-        if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        if (event.getNewCurrent() == 0)
+        if (!event.getBlock().isBlockIndirectlyPowered())
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
         else
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(null), 2);

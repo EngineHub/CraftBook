@@ -37,6 +37,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -442,11 +443,9 @@ public class Gate extends AbstractMechanic {
      * @param event
      */
     @Override
-    public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(final BlockPhysicsEvent event) {
 
         if (!plugin.getLocalConfiguration().gateSettings.enableRedstone) return;
-
-        if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         plugin.getServer().getScheduler()
                 .scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -454,7 +453,7 @@ public class Gate extends AbstractMechanic {
                     @Override
                     public void run() {
 
-                        setGateState(null, pt, event.getNewCurrent() > 0,
+                        setGateState(null, pt, event.getBlock().isBlockIndirectlyPowered(),
                                 smallSearchSize);
                     }
                 }, 2);

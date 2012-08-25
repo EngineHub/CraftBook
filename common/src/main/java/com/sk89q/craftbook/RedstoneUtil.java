@@ -1,5 +1,6 @@
 package com.sk89q.craftbook;
 
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -51,16 +52,22 @@ public abstract class RedstoneUtil {
         return Power.NA;
     }
 
+
     /**
-     * @param pow
+     * @param typeId
      *
-     * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be
-     *         wires).
+     * @return true if the pow block is a power conductor
      */
+    public static boolean isPotentialPowerSource(int typeId) {
+
+        return typeId == BlockID.REDSTONE_WIRE || typeId == BlockID.REDSTONE_REPEATER_ON
+                || typeId == BlockID.REDSTONE_REPEATER_OFF;
+        //return BlockType.isRedstoneBlock(pow.getTypeId());
+    }
+
     public static boolean isPotentialPowerSource(Block pow) {
 
-        return (pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE);
-        //return BlockType.isRedstoneBlock(pow.getTypeId());
+        return isPotentialPowerSource(pow.getTypeId());
     }
 
     /**

@@ -30,6 +30,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -274,7 +275,7 @@ public class MechanicManager {
      *
      * @return the number of mechanics to processed
      */
-    public short dispatchBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public short dispatchBlockRedstoneChange(BlockPhysicsEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
         if (!passesFilter(event)) return 0;
 

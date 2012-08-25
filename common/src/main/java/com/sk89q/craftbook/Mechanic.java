@@ -19,6 +19,7 @@
 package com.sk89q.craftbook;
 
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -90,6 +91,6 @@ public interface Mechanic {
      *
      * @param event
      */
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event);
+    public void onBlockRedstoneChange(BlockPhysicsEvent event);
 
 }
