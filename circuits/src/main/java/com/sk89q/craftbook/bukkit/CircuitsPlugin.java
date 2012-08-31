@@ -190,7 +190,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         // Let's register mechanics!
         if (config.enableNetherstone) registerMechanic(new Netherrack.Factory());
         if (config.enablePumpkins) registerMechanic(new JackOLantern.Factory());
-        if (config.enableGlowStone) registerMechanic(new GlowStone.Factory());
+        if (config.enableGlowStone) registerMechanic(new GlowStone.Factory(this));
         if (config.enableICs) {
             registerMechanic(new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
