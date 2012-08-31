@@ -1,18 +1,24 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.util.Arrays;
-import java.util.List;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class ChunkAnchor extends PersistentMechanic {
 
@@ -87,13 +93,12 @@ public class ChunkAnchor extends PersistentMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(BlockPhysicsEvent event) {
-
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         Block block = event.getBlock();
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             try {
-                sign.setLine(3, event.getBlock().isBlockIndirectlyPowered() ? "1" : "0");
+                sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "1" : "0");
                 sign.update();
             } catch (Exception e) {
             }

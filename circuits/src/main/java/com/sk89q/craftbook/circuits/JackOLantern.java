@@ -21,11 +21,11 @@ package com.sk89q.craftbook.circuits;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
@@ -66,9 +66,9 @@ public class JackOLantern extends AbstractMechanic {
      * Raised when an input redstone current changes.
      */
     @Override
-    public void onBlockRedstoneChange(BlockPhysicsEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (event.getBlock().isBlockIndirectlyPowered()) event.getBlock().setTypeId(BlockID.JACKOLANTERN);
+        if (event.getNewCurrent() > 0) event.getBlock().setTypeId(BlockID.JACKOLANTERN);
         else event.getBlock().setTypeId(BlockID.PUMPKIN);
 
         event.getBlock().setData(event.getBlock().getData(), false);

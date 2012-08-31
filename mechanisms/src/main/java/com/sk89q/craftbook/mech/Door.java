@@ -35,7 +35,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -307,10 +306,12 @@ public class Door extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(BlockPhysicsEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (!settings.enableRedstone) return;
+        if (!plugin.getLocalConfiguration().doorSettings.enableRedstone) return;
+
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
+        if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         flipState(null);
     }
