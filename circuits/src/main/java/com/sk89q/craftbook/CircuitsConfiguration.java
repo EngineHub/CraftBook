@@ -18,9 +18,12 @@
 
 package com.sk89q.craftbook;
 
+import java.io.File;
+
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Configuration handler for CraftBook.
@@ -38,6 +41,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
         enablePumpkins = getBoolean("redstone-pumpkins", true);
         enableICs = getBoolean("redstone-ics", true);
         enableGlowStone = getBoolean("redstone-glowstone", false);
+        glowstoneOffBlock = Material.getMaterial(getInt("glowstone-off-material", BlockID.GLASS));
     }
 
     public final File dataFolder;
@@ -48,4 +52,5 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public final boolean enablePumpkins;
     public final boolean enableICs;
     public final boolean enableGlowStone;
+    public final Material glowstoneOffBlock;
 }

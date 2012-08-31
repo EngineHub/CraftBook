@@ -20,15 +20,17 @@
 
 package com.sk89q.craftbook.circuits;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -39,8 +41,10 @@ public class GlowStone extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
 
-        public Factory() {
+        CircuitsPlugin plugin;
 
+        public Factory(CircuitsPlugin plugin) {
+            this.plugin = plugin;
         }
 
         @Override
@@ -48,20 +52,23 @@ public class GlowStone extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.GLASS || type == BlockID.LIGHTSTONE) return new GlowStone(pt);
+            if (type == plugin.getLocalConfiguration().glowstoneOffBlock.getId() || type == BlockID.LIGHTSTONE) return new GlowStone(pt, plugin);
 
             return null;
         }
     }
+
+    CircuitsPlugin plugin;
 
     /**
      * Construct the mechanic for a location.
      *
      * @param pt
      */
-    private GlowStone(BlockWorldVector pt) {
+    private GlowStone(BlockWorldVector pt, CircuitsPlugin plugin) {
 
         super();
+        this.plugin = plugin;
     }
 
     /**
@@ -71,7 +78,7 @@ public class GlowStone extends AbstractMechanic {
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if (event.getNewCurrent() > 0) event.getBlock().setTypeId(BlockID.LIGHTSTONE);
-        else event.getBlock().setTypeId(BlockID.GLASS);
+        else event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock.getId());
 
         event.getBlock().setData(event.getBlock().getData(), false);
     }
