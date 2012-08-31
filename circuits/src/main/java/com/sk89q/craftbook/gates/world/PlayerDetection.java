@@ -63,7 +63,6 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception e) {
             // do nothing and use the defaults
         }
-        chunks = LocationUtil.getSurroundingChunks(center, radius);
         sign.update();
     }
 
@@ -82,6 +81,7 @@ public class PlayerDetection extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        chunks = LocationUtil.getSurroundingChunks(center, radius); //Update chunks, so new players are detected
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
