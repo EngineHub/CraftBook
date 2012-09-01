@@ -154,7 +154,6 @@ public class EntitySensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()), radius); //Update chunks
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
@@ -162,6 +161,7 @@ public class EntitySensor extends AbstractIC {
 
     protected boolean isDetected() {
 
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()), radius); //Update chunks
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // Get all entites from the chunks in the defined radius

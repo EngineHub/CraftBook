@@ -81,7 +81,6 @@ public class PlayerDetection extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        chunks = LocationUtil.getSurroundingChunks(center, radius); //Update chunks, so new players are detected
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
@@ -89,6 +88,7 @@ public class PlayerDetection extends AbstractIC {
 
     protected boolean isDetected() {
 
+        chunks = LocationUtil.getSurroundingChunks(center, radius); //Update chunks, so new players are detected
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
