@@ -61,14 +61,27 @@ public class DaySensor extends AbstractIC {
     protected boolean isDay() {
 
         long night = 13000l;
+        if(getSign().getLine(3).length() > 0) {
+            try {
+                night = Long.parseLong(getSign().getLine(3));
+            }
+            catch(Exception e){}
+        }
+        long day = 0l;
         if(getSign().getLine(2).length() > 0) {
             try {
-                night = Long.parseLong(getSign().getLine(2));
+                day = Long.parseLong(getSign().getLine(2));
             }
             catch(Exception e){}
         }
         long time = getSign().getBlock().getWorld().getTime() % 24000;
         if (time < 0) time += 24000;
+
+        if (day <= night) {
+            return time >= day && time <= night;
+        } else if (day <= night) {
+            return time >= day || time <= night;
+        }
         return time < night;
     }
 
