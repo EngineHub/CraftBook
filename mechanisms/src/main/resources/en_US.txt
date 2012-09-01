@@ -28,3 +28,4 @@ mech.cook.ouch:Ouch! That was hot!
 mech.hiddenswitch.key:The key did not fit!
 mech.group:You are not in the required group!
 mech.restock:Mechanism Restocked!
+area.permissions:You don't have permissions to use mechanics in this area!

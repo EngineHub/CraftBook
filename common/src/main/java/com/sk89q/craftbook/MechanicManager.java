@@ -183,6 +183,13 @@ public class MechanicManager {
         if (!passesFilter(event)) return 0;
 
         short returnValue = 0;
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+
+        if(!plugin.canBuildInArea(event.getBlock().getLocation(), event.getPlayer())) {
+            player.printError("area.permissions");
+            return 0;
+        }
+
         // Announce the event to anyone who considers it to be on one of their defining blocks
         watchBlockManager.notify(event);
 
@@ -201,7 +208,6 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                LocalPlayer player = plugin.wrap(event.getPlayer());
                 player.printError(e.getMessage());
             }
         }
@@ -220,6 +226,12 @@ public class MechanicManager {
         if (!passesFilter(event)) return 0;
 
         short returnValue = 0;
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+
+        if(!plugin.canUseInArea(event.getClickedBlock().getLocation(), event.getPlayer())) {
+            player.printError("area.permissions");
+            return 0;
+        }
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -236,7 +248,6 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                LocalPlayer player = plugin.wrap(event.getPlayer());
                 player.printError(e.getMessage());
             }
         }
@@ -255,6 +266,12 @@ public class MechanicManager {
         if (!passesFilter(event)) return 0;
 
         short returnValue = 0;
+        LocalPlayer player = plugin.wrap(event.getPlayer());
+
+        if(!plugin.canUseInArea(event.getClickedBlock().getLocation(), event.getPlayer())) {
+            player.printError("area.permissions");
+            return 0;
+        }
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -270,7 +287,6 @@ public class MechanicManager {
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
-                LocalPlayer player = plugin.wrap(event.getPlayer());
                 player.printError(e.getMessage());
             }
         }
