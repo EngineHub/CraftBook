@@ -63,6 +63,7 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception e) {
             // do nothing and use the defaults
         }
+        chunks = LocationUtil.getSurroundingChunks(center, radius); //Update chunks, so new players are detected
         sign.update();
     }
 
@@ -88,7 +89,7 @@ public class PlayerDetection extends AbstractIC {
 
     protected boolean isDetected() {
 
-        chunks = LocationUtil.getSurroundingChunks(center, radius); //Update chunks, so new players are detected
+        load();
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
