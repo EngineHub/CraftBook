@@ -307,7 +307,7 @@ public class Bridge extends AbstractMechanic {
 
         event.setCancelled(true);
 
-        player.print("Bridge Toggled!");
+        player.print("mech.bridge.toggle");
     }
 
     @Override

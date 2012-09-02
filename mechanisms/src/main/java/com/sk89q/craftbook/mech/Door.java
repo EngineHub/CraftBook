@@ -311,7 +311,7 @@ public class Door extends AbstractMechanic {
 
         event.setCancelled(true);
 
-        player.print("Bridge Toggled!");
+        player.print("mech.door.toggle");
     }
 
     @Override
