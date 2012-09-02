@@ -310,6 +310,8 @@ public class Door extends AbstractMechanic {
         flipState(player);
 
         event.setCancelled(true);
+
+        player.print("Bridge Toggled!");
     }
 
     @Override
