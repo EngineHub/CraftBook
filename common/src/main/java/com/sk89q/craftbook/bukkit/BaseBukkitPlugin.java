@@ -72,6 +72,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     private final CommandsManagerRegistration commandManager;
 
     protected WorldGuardPlugin worldguard;
+    protected boolean useWorldGuard = false;
     protected StateFlag useFlag = null;
 
     /**
@@ -96,18 +97,21 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     }
 
     public WorldGuardPlugin getWorldGuard() {
+        if(!useWorldGuard) return null;
         if(worldguard == null)
             worldguard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
         return worldguard;
     }
 
     public boolean canUseInArea(Location loc, Player p) {
+        if(useWorldGuard == false) return true;
         if(getLocalConfiguration().commonSettings.checkWGRegions == false || getWorldGuard() == null) return true;
         if(useFlag == null) useFlag = new StateFlag("use",true);
         return getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc).allows(useFlag, getWorldGuard().wrapPlayer(p));
     }
 
     public boolean canBuildInArea(Location loc, Player p) {
+        if(useWorldGuard == false) return true;
         if(getLocalConfiguration().commonSettings.checkWGRegions == false || getWorldGuard() == null) return true;
         return getWorldGuard().canBuild(p, loc);
     }
@@ -145,6 +149,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         // Prepare permissions
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();
+
+        if(getServer().getPluginManager().isPluginEnabled("WorldGuard"))
+            useWorldGuard = true;
     }
 
     /**

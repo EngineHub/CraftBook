@@ -18,14 +18,18 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
@@ -57,9 +61,9 @@ public class ItemDispenser extends AbstractIC {
                         Math.max(-1, Integer.parseInt(getSign().getLine(3))));
             } catch (NumberFormatException ignored) {
             }
-            byte data = 0;
+            short data = 0;
             if (item.contains(":")) {
-                data = Byte.parseByte(item.split(":")[1]);
+                data = Short.parseShort(item.split(":")[1]);
                 item = item.split(":")[0];
             }
             Material mat = Material.matchMaterial(item);
@@ -76,7 +80,7 @@ public class ItemDispenser extends AbstractIC {
                             .getBlockTypeIdAt(x, y, z))) {
 
                         ItemStack stack = new ItemStack(id, amount, data);
-                        stack.setData(new MaterialData(id, data));
+                        stack.setDurability(data);
 
                         getSign().getWorld().dropItemNaturally(
                                 new Location(getSign().getWorld(), x, y, z),
@@ -89,7 +93,7 @@ public class ItemDispenser extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 

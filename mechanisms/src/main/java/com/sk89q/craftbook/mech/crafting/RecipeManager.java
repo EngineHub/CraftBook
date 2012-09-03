@@ -101,7 +101,7 @@ public class RecipeManager extends BaseConfiguration {
                     if (split.length > 1) {
                         itemStack.setData(Short.parseShort(split[1]));
                     } else {
-                        itemStack.setData((short) -1);
+                        itemStack.setData((short) 0);
                     }
                     itemStack.setAmount(1);
                     items.put(itemStack, section.getString(item).toCharArray()[0]);
@@ -127,7 +127,7 @@ public class RecipeManager extends BaseConfiguration {
                     if (split.length > 1) {
                         itemStack.setData(Short.parseShort(split[1]));
                     } else {
-                        itemStack.setData((short) -1);
+                        itemStack.setData((short) 0);
                     }
                     itemStack.setAmount(section.getInt(item, 1));
                     items.add(itemStack);

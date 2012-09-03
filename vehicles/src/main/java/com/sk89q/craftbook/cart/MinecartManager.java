@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
-import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
@@ -84,7 +84,7 @@ public class MinecartManager {
         }
     }
 
-    public void impact(BlockPhysicsEvent event) {
+    public void impact(BlockRedstoneEvent event) {
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DelayedImpact(event));
     }
@@ -97,7 +97,7 @@ public class MinecartManager {
      */
     private class DelayedImpact implements Runnable {
 
-        public DelayedImpact(BlockPhysicsEvent event) {
+        public DelayedImpact(BlockRedstoneEvent event) {
 
             huh = event.getBlock();
         }

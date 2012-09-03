@@ -48,7 +48,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
         this.material = material;
         this.amount = amount;
-        data = -1;
+        data = 0;
     }
 
     public CraftingItemStack(Material material, short data) {

@@ -1,12 +1,17 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -37,8 +42,8 @@ public class SetDoor extends AbstractIC {
 
     private void load() {
 
-        this.center = SignUtil.getBackBlock(getSign().getBlock());
-        this.faceing = SignUtil.getFacing(getSign().getBlock());
+        center = SignUtil.getBackBlock(getSign().getBlock());
+        faceing = SignUtil.getFacing(getSign().getBlock());
         String line = getSign().getLine(2);
         if (!line.equals("")) {
             try {
@@ -94,9 +99,9 @@ public class SetDoor extends AbstractIC {
                 // do nothing and use the defaults
             }
             if (relativeOffset) {
-                this.center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
+                center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
             } else {
-                this.center = LocationUtil.getOffset(this.center, offsetX, offsetY, offsetZ);
+                center = LocationUtil.getOffset(center, offsetX, offsetY, offsetZ);
             }
         } else {
             center = center.getRelative(BlockFace.UP);
@@ -118,6 +123,7 @@ public class SetDoor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        load();
         if (chip.getInput(0)) {
             setDoor(true);
         } else {

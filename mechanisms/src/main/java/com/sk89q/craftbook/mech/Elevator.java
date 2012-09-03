@@ -31,7 +31,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -187,7 +186,7 @@ public class Elevator extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(BlockPhysicsEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         /* we only affect players, so we don't care about redstone events */
     }
 

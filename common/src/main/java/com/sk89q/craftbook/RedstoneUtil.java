@@ -53,11 +53,11 @@ public abstract class RedstoneUtil {
         return Power.NA;
     }
 
-
     /**
-     * @param typeId
+     * @param pow
      *
-     * @return true if the pow block is a power conductor
+     * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be
+     *         wires).
      */
     public static boolean isPotentialPowerSource(int typeId) {
 
@@ -70,7 +70,8 @@ public abstract class RedstoneUtil {
 
     public static boolean isPotentialPowerSource(Block pow) {
 
-        return isPotentialPowerSource(pow.getTypeId());
+        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE_BLOCK_OFF || pow.getType() == Material.DIODE_BLOCK_ON;
+        //return BlockType.isRedstoneBlock(pow.getTypeId());
     }
 
     /**

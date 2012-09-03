@@ -37,13 +37,13 @@ public class Snow implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
+        if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+
         if(!plugin.canBuildInArea(event.getClickedBlock().getLocation(), event.getPlayer()))
             return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.place")) return;
-        if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
-
         try {
             if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
                     && event.getClickedBlock().getTypeId() == 78) {

@@ -136,8 +136,8 @@ public class EntitySensor extends AbstractIC {
             getSign().setLine(2, radius + "");
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()), radius); //Update chunks
         sign.update();
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(sign.getBlock()), radius);
     }
 
     @Override
@@ -162,6 +162,7 @@ public class EntitySensor extends AbstractIC {
 
     protected boolean isDetected() {
 
+        load();
         for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // Get all entites from the chunks in the defined radius

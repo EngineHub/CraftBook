@@ -190,7 +190,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         // Let's register mechanics!
         if (config.enableNetherstone) registerMechanic(new Netherrack.Factory());
         if (config.enablePumpkins) registerMechanic(new JackOLantern.Factory());
-        if (config.enableGlowStone) registerMechanic(new GlowStone.Factory());
+        if (config.enableGlowStone) registerMechanic(new GlowStone.Factory(this));
         if (config.enableICs) {
             registerMechanic(new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
@@ -259,7 +259,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1270", new Melody.Factory(server), familySISO, familyAISO);
         registerIC("MC1271", new EntitySensor.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1272", new PlayerDetection.Factory(server), familySISO, familyAISO);     // Restricted
-        //TODO Why was this here? registerIC("MC1299", new ParticleEffect.Factory(server), familySISO, familyAISO);      // Restricted
         registerIC("MC1420", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1510", new MessageSender.Factory(server), familySISO, familyAISO);
         registerIC("MC2100", new Delayer.Factory(server), familySISO, familyAISO);
