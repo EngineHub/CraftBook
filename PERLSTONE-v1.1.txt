@@ -1,4 +1,4 @@
-Perlstone Specification v1.0
+Perlstone Specification v1.1
 (See http://wiki.sk89q.com/wiki/CraftBook/PerlStone for a up-to-date version,
  and examples)
 
@@ -26,7 +26,9 @@ containing an arbitrary number of opcodes, and are separated by the character
 take arguments (which are pushed onto the function's stack when it is called)
 or return a single boolean value. When a function is called, a new function
 local variable table is created, pre-filled with all 'false' values and used
-for the duration of the function. 
+for the duration of the function. The shift variable rotates the indexes of
+the variable tables when used with certain opcodes. It is reset whenever the
+temporary variable table is reset.
 
 Opcodes
 -------
@@ -93,7 +95,7 @@ r (v->) - pops the top value of the stack, and pushes that value onto the stack
           of the calling function and returns from the current function
 
 Changelog
-----------------
+---------
 
 Version 1.1: Added the >, < and, e opcodes, and the P/R/L modifiers for the S,
              and L opcodes
