@@ -7,16 +7,18 @@ Introduction
 
 Perlstone, named for Perl of which which is often compared to line noise, is a
 small scripting language that can be used in CraftBook to program programmable
-logic chips. The language was designed and the interpreter written by Lymia.
+logic chips.
 
-Features of Perlstone are:
+The state of Perlstone is defined by:
 
     * A stack
     * A 32-cell persistent variable table (indexed with 0-9 and a-v)
     * A 32-cell temporary variable table (indexed with 0-9 and a-v)
     * A 32-cell local variable table (for functions, and indexed with 0-9 and
       a-v)
-    * Three input registers 
+    * A 'shift' variable modifying which cell the store and load opcodes
+      access.
+    * Three input registers
 
 A script is grouped into up to one hundred functions. Functions are strings
 containing an arbitrary number of opcodes, and are separated by the character
@@ -40,9 +42,20 @@ A (->a) - pushes contents the A input register onto the stack
 B (->b) - pushes contents the B input register onto the stack
 C (->c) - pushes contents the C input register onto the stack
 
+> (->) - shifts all variables to the right one cell (so that 0 becomes 1,
+         1 becomes 2, etc), when accessed with the p, t, or l modifiers
+         to S.
+< (->) - shifts all variables to the left one cell, as in the > opcode.
+         (so that 1 becomes 0, 2 becomes 1, etc)
+e (->) - resets the shift done by the >, and < opcodes (so that indexing
+         will match the indexing done by the P, T, and L modifiers until
+         one of >, or < is used again)
+
 Srn (v->) - pops the top value of the stack, and stores it to slot n in the
-            table r (p for presistant, t for temp, l for local) 
-Lrn (->v) - pushes the value n in the table r (defined as in the >rn opcode)
+            table r (p for presistant, t for temp, l for local. Upper case
+            versions of these modifiers ignore the shift defined by the >,
+            >, and e opcodes)
+Lrn (->v) - pushes the value n in the table r (defined as in the S opcode)
             onto the stack
 
 Stack fuctions:
@@ -79,9 +92,8 @@ s - returns from the current function
 r (v->) - pops the top value of the stack, and pushes that value onto the stack
           of the calling function and returns from the current function
 
-Planned Features
+Changelog
 ----------------
 
-Version 2: Functional style programming, with changes including combinators,
-           and other unlambda styled antics. (Effectively making the types
-           boolean and function)
+Version 1.1: Added the >, < and, e opcodes, and the P/R/L modifiers for the S,
+             and L opcodes
