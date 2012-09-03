@@ -35,6 +35,7 @@ public class PlcIC<StateT extends PlcState, CodeT, Lang extends PlcLanguage<Stat
     private Sign sign;
 
     PlcIC(Sign s, Lang l) throws ICVerificationException {
+        sign = s;
         String codeString = getCode();
         if(codeString == null)
             throw new ICVerificationException("Code block not found.");
