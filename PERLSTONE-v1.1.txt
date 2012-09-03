@@ -43,10 +43,10 @@ B (->b) - pushes contents the B input register onto the stack
 C (->c) - pushes contents the C input register onto the stack
 
 > (->) - shifts all variables to the right one cell (so that 0 becomes 1,
-         1 becomes 2, etc), when accessed with the p, t, or l modifiers
+         9 becomes a, etc), when accessed with the p, t, or l modifiers
          to S.
 < (->) - shifts all variables to the left one cell, as in the > opcode.
-         (so that 1 becomes 0, 2 becomes 1, etc)
+         (so that 1 becomes 0, a becomes 9, etc)
 e (->) - resets the shift done by the >, and < opcodes (so that indexing
          will match the indexing done by the P, T, and L modifiers until
          one of >, or < is used again)
