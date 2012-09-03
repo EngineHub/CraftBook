@@ -39,7 +39,7 @@ public class PlcIC<StateT extends PlcState, CodeT, Lang extends PlcLanguage<Stat
         String codeString = getCode();
         if(codeString == null)
             throw new ICVerificationException("Code block not found.");
-        lang.compile(codeString);
+        l.compile(codeString);
     }
     public PlcIC(Server sv, Sign s, Lang l) {
         lang = l;
@@ -62,17 +62,17 @@ public class PlcIC<StateT extends PlcState, CodeT, Lang extends PlcLanguage<Stat
 
         for(int y=0;y<w.getMaxHeight();y++) {
             if(y!=l.getBlockY())
-                if(w.getBlockAt(x,y,z) instanceof Sign) {
-                    Sign s = (Sign) w.getBlockAt(x,y,z);
+                if(w.getBlockAt(x,y,z).getState() instanceof Sign) {
+                    Sign s = (Sign) w.getBlockAt(x,y,z).getState();
                     if(s.getLine(1).equalsIgnoreCase("[Code Block]")) {
                         y--;
-                        Block b = w.getBlockAt(x, y, z);
+                        BlockState b = w.getBlockAt(x, y, z).getState();
                         String code = "";
                         while(b instanceof Sign) {
                             s = (Sign) b;
-                            for(int li=0;li<4;li++)
+                            for(int li=0;li<4 && y!=l.getBlockY();li++)
                                 code += s.getLine(li)+"\n";
-                            b = w.getBlockAt(x, --y, z);
+                            b = w.getBlockAt(x, --y, z).getState();
                         }
                         return code;
                     }
@@ -88,7 +88,7 @@ public class PlcIC<StateT extends PlcState, CodeT, Lang extends PlcLanguage<Stat
 
     @Override
     public String getSignTitle() {
-        return "PLC:"+lang.getName().toUpperCase();
+        return lang.getName().toUpperCase();
     }
 
     @Override

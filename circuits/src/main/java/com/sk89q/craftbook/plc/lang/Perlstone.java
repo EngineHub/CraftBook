@@ -29,7 +29,7 @@ import java.io.IOException;
 public class Perlstone implements PlcLanguage<Perlstone.State, Perlstone.Code> {
     @Override
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "Perlstone-1.1";
     }
 
     @Override
