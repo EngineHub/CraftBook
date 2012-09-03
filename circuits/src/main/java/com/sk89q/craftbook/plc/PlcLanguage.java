@@ -28,6 +28,8 @@ public interface PlcLanguage<StateT, CodeT> {
     StateT initState();
     CodeT compile(String code) throws ICVerificationException;
 
+    boolean supports(String lang);
+
     void writeState(StateT t, DataOutputStream out) throws IOException;
     void loadState(StateT t, DataInputStream in) throws IOException;
 

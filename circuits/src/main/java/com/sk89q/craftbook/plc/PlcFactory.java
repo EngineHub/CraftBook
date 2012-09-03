@@ -25,7 +25,11 @@ import com.sk89q.craftbook.ic.ICVerificationException;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
+import java.util.Random;
+
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
+    private static Random RNG = new Random();
+
     private Lang lang;
     private boolean selfTriggered;
     private Server s;
@@ -43,6 +47,8 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public void verify(Sign sign) throws ICVerificationException {
         new PlcIC<StateT, CodeT, Lang>(sign, lang); //Huge ugly hack!!
+        sign.setLine(2, "id:"+Math.abs(RNG.nextInt()));
+        sign.update();
     }
 
     @Override

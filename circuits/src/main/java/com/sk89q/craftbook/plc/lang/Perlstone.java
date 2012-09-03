@@ -30,6 +30,7 @@ import java.util.Stack;
 
 public class Perlstone implements PlcLanguage<boolean[], String[]> {
     private static final int MAX_INSTRUCTION_COUNT = 100000;
+    private static final int PERLSTONE_STORE_VERSION = 0;
 
     @Override
     public String getName() {
@@ -48,12 +49,14 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
 
     @Override
     public void writeState(boolean[] state, DataOutputStream out) throws IOException {
+        out.writeInt(PERLSTONE_STORE_VERSION);
         out.writeInt(state.length);
         for(int i=0;i<state.length;i++) out.writeBoolean(state[i]);
     }
 
     @Override
     public void loadState(boolean[] state, DataInputStream in) throws IOException {
+        if(in.readInt()!=PERLSTONE_STORE_VERSION) throw new IOException("incompatible save version");
         if(state.length!=in.readInt()) throw new IOException("size mismatch!");
         for(int i=0;i<state.length;i++) state[i] = in.readBoolean();
     }
@@ -79,7 +82,14 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
             }
         } catch(EmptyStackException e) {
             throw new PlcException("empty stack");
+        } catch(StackOverflowError e) {
+            throw new PlcException("stack overflow");
         }
+    }
+
+    @Override
+    public boolean supports(String lang) {
+        return false;
     }
 
     private int mod(int a, int b) {
