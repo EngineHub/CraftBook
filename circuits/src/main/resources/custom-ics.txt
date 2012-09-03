@@ -15,10 +15,11 @@
 // Languages
 // ---------
 //
-// (More may me added at a later date)
-// perlstone_v1.0: Perlstone v1.0
+// (More may be added at a later date)
+// perlstone_v1.0: Perlstone v1.0 (Retained for backwards compatibility)
+// perlstone_v1.x: Perlstone v1.x (Identical to perlstone_v1.0, as, all v1.x version will be backwards compatible)
 // perlstone32_v1: Perlstone32 v1
 
-3iso/perlstone_v1.0 MC3041:MY-MULTIPLEXER = begin
+3iso/perlstone_v1.x MC3041:MY-MULTIPLEXER = begin
 Cd[Ar]![Br]
 end
