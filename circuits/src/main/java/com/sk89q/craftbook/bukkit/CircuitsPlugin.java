@@ -213,6 +213,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familySI3O = new FamilySI3O();
         ICFamily familyAISO = new FamilyAISO();
         ICFamily family3I3O = new Family3I3O();
+        ICFamily familyVIVO = new FamilyVIVO();
 
         //SISOs
         registerIC("MC1000", new Repeater.Factory(server), familySISO, familyAISO);
@@ -297,6 +298,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 4110
         //Missing: 4200
 
+        //PLCs
+        registerIC("MC5000", PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
         registerIC("MC5001", PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
 
         //Self triggered
