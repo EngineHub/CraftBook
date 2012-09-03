@@ -48,10 +48,9 @@ table, 't' for the temp table, and 'l' for the local table. Uppercase versions
 of the index characters can also be used. When applicable, the uppercase
 versions ignore the shift register.
 
-Each variable table has a shift register which acts as a filter to variable
-table indexes. When a lowercase table indexer is used, the contents of the
-shift register is added, modulo 32, to the index before accessing/storing a
-value.
+Each variable table has a shift register which acts as a filter to its cell
+indexes. When a lowercase table indexer is used, the contents of the shift
+register is added, modulo 32, to the index before accessing/storing a value.
 
 Input Registers
 ---------------
