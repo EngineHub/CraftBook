@@ -21,6 +21,9 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 import java.util.Map.Entry;
 
+import com.sk89q.craftbook.ic.families.*;
+import com.sk89q.craftbook.plc.PlcFactory;
+import com.sk89q.craftbook.plc.lang.Perlstone;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -131,10 +134,6 @@ import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
-import com.sk89q.craftbook.ic.families.Family3ISO;
-import com.sk89q.craftbook.ic.families.FamilyAISO;
-import com.sk89q.craftbook.ic.families.FamilySI3O;
-import com.sk89q.craftbook.ic.families.FamilySISO;
 import com.sk89q.wepif.PermissionsResolverManager;
 // import com.sk89q.bukkit.migration.*;
 
@@ -213,7 +212,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily family3ISO = new Family3ISO();
         ICFamily familySI3O = new FamilySI3O();
         ICFamily familyAISO = new FamilyAISO();
-        //ICFamily family3I3O = new Family3I3O();
+        ICFamily family3I3O = new Family3I3O();
 
         //SISOs
         registerIC("MC1000", new Repeater.Factory(server), familySISO, familyAISO);
@@ -297,6 +296,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Missing: 4100
         //Missing: 4110
         //Missing: 4200
+
+        registerIC("MC5001", PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
 
         //Self triggered
         registerIC("MC0111", new WirelessReceiverST.Factory(server), familySISO);
