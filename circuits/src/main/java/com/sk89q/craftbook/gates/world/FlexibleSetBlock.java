@@ -25,7 +25,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 public class FlexibleSetBlock extends AbstractIC {
-
     public FlexibleSetBlock(Server server, Sign sign) {
 
         super(server, sign);
@@ -51,23 +50,35 @@ public class FlexibleSetBlock extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        // Valid Line 3:
+        // [axis][sign][distance]:[blockTypeId]:[blockData]
+        // axis is one of X, Y, Z
+        // sign is optional or one of "+" or "-"
+        // blockData is optional (along with its preceding colon
         String line3 = getSign().getLine(2).toUpperCase();
+        
         String line4 = getSign().getLine(3);
 
         chip.setOutput(0, chip.getInput(0));
 
-        if (line3.length() < 5) return;
-
+        String[] params = line3.split(":");
+        if (params.length < 2) return;
+        if (params[0].length() < 2) return;
+        
         // Get and validate axis
-        String axis = line3.substring(0, 1);
+        String axis = params[0].substring(0, 1);
         if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) return;
 
-        // Get and validate operator
-        String op = line3.substring(1, 2);
-        if (!op.equals("+") && !op.equals("-")) return;
+        // Get and validate operator (default +)
+        String op = params[0].substring(1, 2);
+        int distStart = 2;
+        if (!op.equals("+") && !op.equals("-")) {
+            op = "+";
+            distStart = 1; // no op so distance starts after axis
+        }
 
         // Get and validate distance
-        String sdist = line3.substring(2, 3);
+        String sdist = params[0].substring(distStart);
         int dist;
         try {
             dist = Integer.parseInt(sdist);
@@ -78,15 +89,21 @@ public class FlexibleSetBlock extends AbstractIC {
         if (op.equals("-"))
             dist = -dist;
 
-        // Syntax requires a : at idx 3
-        if (!line3.substring(3, 4).equals(":")) return;
-
-        String sblock = line3.substring(4);
         int block;
         try {
-            block = Integer.parseInt(sblock);
+            block = Integer.parseInt(params[1]);
         } catch (Exception e) {
             return;
+        }
+        
+        // default block data is 0
+        byte data = 0;
+        if (params.length > 2) {
+            try {
+                data = Byte.parseByte(params[2]);
+            } catch (Exception e) {
+                return;
+            }
         }
 
         boolean hold = line4.toUpperCase().contains("H");
@@ -102,9 +119,8 @@ public class FlexibleSetBlock extends AbstractIC {
         else if (axis.equals("Y")) y += dist;
         else z += dist;
 
-        if (inp) body.getWorld().getBlockAt(x, y, z).setTypeId(block);
+        if (inp) body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
         else if (hold) body.getWorld().getBlockAt(x, y, z).setTypeId(0);
-
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

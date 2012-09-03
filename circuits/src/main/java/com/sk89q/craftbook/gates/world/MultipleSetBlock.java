@@ -63,7 +63,7 @@ public class MultipleSetBlock extends AbstractIC {
         String[] coords;
         coords = line3.replaceAll("\\+", "").split(":");
 
-        if (coords.length != 4)
+        if (coords.length < 4)
             return;
 
         int block;
@@ -71,6 +71,15 @@ public class MultipleSetBlock extends AbstractIC {
             block = Integer.parseInt(coords[3]);
         } catch (Exception e) {
             return;
+        }
+        
+        byte data = 0;
+        if (coords.length == 5) {
+            try {
+                data = Byte.parseByte(coords[4]);
+            } catch (Exception e) {
+                return;
+            }
         }
 
         x += Integer.parseInt(coords[0]);
@@ -85,12 +94,12 @@ public class MultipleSetBlock extends AbstractIC {
             for (int lx = 0; lx < (Integer.parseInt(dim[0])); lx++) {
                 for (int ly = 0; ly < (Integer.parseInt(dim[1])); ly++) {
                     for (int lz = 0; lz < (Integer.parseInt(dim[2])); lz++) {
-                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeId(block);
+                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(block, data, true);
                     }
                 }
             }
         } else {
-            body.getWorld().getBlockAt(x, y, z).setTypeId(block);
+            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
         }
     }
 
