@@ -20,11 +20,16 @@ package com.sk89q.craftbook.plc;
 
 import com.sk89q.craftbook.ic.*;
 
-public interface PlcLanguage<StateT extends PlcState, CodeT> {
+import java.io.*;
+
+public interface PlcLanguage<StateT, CodeT> {
     String getName();
 
     StateT initState();
     CodeT compile(String code) throws ICVerificationException;
+
+    void writeState(StateT t, DataOutputStream out) throws IOException;
+    void loadState(StateT t, DataInputStream in) throws IOException;
 
     void execute(ChipState chip, StateT state, CodeT code) throws PlcException;
 }

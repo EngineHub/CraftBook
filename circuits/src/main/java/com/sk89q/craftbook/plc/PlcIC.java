@@ -25,7 +25,7 @@ import org.bukkit.block.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PlcIC<StateT extends PlcState, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
+public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
     private Lang lang;
@@ -96,15 +96,15 @@ public class PlcIC<StateT extends PlcState, CodeT, Lang extends PlcLanguage<Stat
         try {
             lang.execute(chip, state, code);
         } catch(PlcException e) {
-            sign.setLine(1, ChatColor.RED+sign.getLine(1));
-            sign.setLine(2, "error encountered");
+            sign.setLine(1, ChatColor.DARK_RED+sign.getLine(1));
+            sign.setLine(2, "Error!");
             sign.setLine(3, e.getMessage());
             sign.update();
         } catch(Exception e) {
             logger.log(Level.SEVERE, "Internal error while executing PLC", e);
 
-            sign.setLine(1, ChatColor.RED+sign.getLine(1));
-            sign.setLine(2, "error encountered");
+            sign.setLine(1, ChatColor.DARK_RED+sign.getLine(1));
+            sign.setLine(2, "Error!");
             sign.setLine(3, e.getClass().getName());
             sign.update();
         }

@@ -25,7 +25,7 @@ import com.sk89q.craftbook.ic.ICVerificationException;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-public class PlcFactory<StateT extends PlcState, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
+public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
     private Lang lang;
     private boolean selfTriggered;
     private Server s;
@@ -50,7 +50,7 @@ public class PlcFactory<StateT extends PlcState, CodeT, Lang extends PlcLanguage
         // Do nothing
     }
 
-    public static <StateT extends PlcState, CodeT, Lang extends PlcLanguage<StateT, CodeT>>
+    public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>>
                   PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered){
         return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered);
     }

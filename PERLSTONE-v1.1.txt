@@ -19,7 +19,7 @@ The state of Perlstone is defined by:
     * A 32-cell temporary variable table
     * A 32-cell local variable table
     * A 'shift register' modifying which cell the store and load opcodes
-      access.
+      access for each variable table.
     * Three input registers
 
 Functions
@@ -48,9 +48,10 @@ table, 't' for the temp table, and 'l' for the local table. Uppercase versions
 of the index characters can also be used. When applicable, the uppercase
 versions ignore the shift register.
 
-The shift register acts as a filter to variable table indexes. When a
-lowercase table indexer is used, the contents of the shift register is added,
-modulo 32, to the index before accessing/storing a value.
+Each variable table has a shift register which acts as a filter to variable
+table indexes. When a lowercase table indexer is used, the contents of the
+shift register is added, modulo 32, to the index before accessing/storing a
+value.
 
 Input Registers
 ---------------
@@ -94,9 +95,9 @@ B (->b) - pushes contents of the input register B onto the stack
 C (->c) - pushes contents of the input register C onto the stack
 
 Memory manipulation operations:
->r (->) - increments the shift register by 1
-<r (->) - decrements the shift register by 1
-er (->) - resets the shift register to 0
+>r (->) - increments the shift register for table r by 1
+<r (->) - decrements the shift register for table r by 1
+er (->) - resets the shift register for table r to 0
 
 Srn (v->) - pops the top value of the stack, and stores it to slot n in the
             table r
@@ -105,7 +106,9 @@ Lrn (->v) - pushes the value n in the table r onto the stack
 Stack operations:
 d (a->aa) - duplicates the top value of the stack
 p (a->) - pops the top value of the stack, and discards it
-vn (v(...)->v) - copies the value n values down in the stack onto the top
+vn (v(...)->v) - copies the value n values down in the stack onto the top,
+                 where 0 is the top of the stack. (i.e. v0 = d)
+x (xy->yx) - swaps the top two values of the stack
 
 Logical operations:
 ! (a->r) - pops the top value of the stack, and pushes it's inverse
@@ -140,4 +143,4 @@ Changelog
 ---------
 
 Version 1.1: Added the >, < and, e opcodes, and the P/R/L modifiers for table
-             affecting opcodes.
+             affecting opcodes. Added the x opcode.
