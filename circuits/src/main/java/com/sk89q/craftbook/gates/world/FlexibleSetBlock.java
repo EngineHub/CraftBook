@@ -25,7 +25,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 public class FlexibleSetBlock extends AbstractIC {
-
     public FlexibleSetBlock(Server server, Sign sign) {
 
         super(server, sign);
@@ -71,11 +70,11 @@ public class FlexibleSetBlock extends AbstractIC {
         if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) return;
 
         // Get and validate operator (default +)
-        String op = params[0].substring(1, 2); 
-        int distStart = 3;
+        String op = params[0].substring(1, 2);
+        int distStart = 2;
         if (!op.equals("+") && !op.equals("-")) {
             op = "+";
-            distStart = 2; // no op so distance starts at 2
+            distStart = 1; // no op so distance starts after axis
         }
 
         // Get and validate distance
@@ -92,16 +91,16 @@ public class FlexibleSetBlock extends AbstractIC {
 
         int block;
         try {
-            block = Integer.parseInt(params[2]);
+            block = Integer.parseInt(params[1]);
         } catch (Exception e) {
             return;
         }
         
         // default block data is 0
         byte data = 0;
-        if (params.length > 3) {
+        if (params.length > 2) {
             try {
-                data = Byte.parseByte(params[3]);
+                data = Byte.parseByte(params[2]);
             } catch (Exception e) {
                 return;
             }
