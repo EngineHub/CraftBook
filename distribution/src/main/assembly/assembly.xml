@@ -56,6 +56,7 @@
             <directory>${basedir}/../</directory>
             <includes>
                 <include>LICENSE.txt</include>
+                <include>PERLSTONE-v1.1.txt</include>
                 <include>CHANGELOG.txt</include>
             </includes>
         </fileSet>
