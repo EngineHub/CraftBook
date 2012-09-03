@@ -97,7 +97,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     }
 
     public WorldGuardPlugin getWorldGuard() {
-        if(useWorldGuard == false) return null;
+        if(!useWorldGuard) return null;
         if(worldguard == null)
             worldguard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
         return worldguard;
