@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.plc;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -58,28 +59,28 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
             throw new RuntimeException("inconsistent compile check!", e);
         }
         state = lang.initState();
+        tryLoadState();
+    }
 
-        try {
-            loadState();
-        } catch(IOException e) {
-            logger.log(Level.SEVERE, "Failed to load PLC state", e);
-            state = lang.initState();
-        }
+    private boolean isShared() {
+        return !sign.getLine(3).isEmpty();
     }
 
     private String getID() {
         return sign.getLine(2);
     }
-
     private String getFileName() {
-        Location l = sign.getLocation();
-        return l.getBlockX()+"_"+l.getBlockY()+"_"+l.getBlockZ();
+        if(!isShared()) {
+            Location l = sign.getLocation();
+            return lang.getName()+"$$"+l.getBlockX()+"_"+l.getBlockY()+"_"+l.getBlockZ();
+        } else return lang.getName()+"$"+sign.getLine(3);
     }
     private File getStorageLocation() {
         World w = sign.getWorld();
         File worldDir = w.getWorldFolder();
-        new File(worldDir, "craftbook-plcs").mkdirs();
-        return new File(new File(worldDir, "craftbook-plcs"), getFileName());
+        File targetDir = new File(worldDir, "craftbook-plcs");
+        targetDir.mkdirs();
+        return new File(targetDir, getFileName());
     }
 
     private String hashCode(String code) {
@@ -100,6 +101,16 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         }
     }
 
+    private void tryLoadState() {
+        try {
+            loadState();
+        } catch(IOException e) {
+            logger.log(Level.SEVERE, "Failed to load PLC state", e);
+            state = lang.initState();
+            getStorageLocation().delete();
+        }
+    }
+
     private void loadState() throws IOException {
         if(!getStorageLocation().exists()) return; // Prevent error spam
 
@@ -111,7 +122,7 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
             if(lang.getName().equals(langName) || lang.supports(langName)) {
                 String id = in.readUTF();
                 String code = hashCode(in.readUTF());
-                if(id.equals(getID()) && hashCode(codeString).equals(code)) {
+                if(isShared() || (id.equals(getID()) && hashCode(codeString).equals(code))) {
                     lang.loadState(state, in);
                 }
             }
@@ -173,7 +184,10 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
     @Override
     public void trigger(ChipState chip) {
         try {
+            if(isShared()) tryLoadState();
+
             lang.execute(chip, state, code);
+
             try {
                 saveState();
             } catch(IOException e) {

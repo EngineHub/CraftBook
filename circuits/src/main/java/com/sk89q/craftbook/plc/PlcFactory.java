@@ -48,6 +48,11 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     public void verify(Sign sign) throws ICVerificationException {
         new PlcIC<StateT, CodeT, Lang>(sign, lang); //Huge ugly hack!!
         sign.setLine(2, "id:"+Math.abs(RNG.nextInt()));
+        if(!sign.getLine(3).isEmpty()) {
+            String line = sign.getLine(3);
+            if(!line.matches("[-_a-zA-Z0-9]+"))
+                throw new ICVerificationException("illegal storage name");
+        }
         sign.update();
     }
 
