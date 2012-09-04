@@ -203,8 +203,6 @@ public class MechanicManager {
                     aMechanic.onBlockBreak(event);
                     returnValue++;
                 }
-                if(event.isCancelled())
-                    break;
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
@@ -243,8 +241,6 @@ public class MechanicManager {
                     aMechanic.onRightClick(event);
                     returnValue++;
                 }
-                if(event.isCancelled())
-                    break;
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
@@ -282,8 +278,6 @@ public class MechanicManager {
                     aMechanic.onLeftClick(event);
                     returnValue++;
                 }
-                if(event.isCancelled())
-                    break;
             }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
