@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.ChangedSign;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 
@@ -208,6 +209,7 @@ public class MechanicManager {
             if (e.getMessage() != null) {
                 player.printError(e.getMessage());
             }
+            plugin.getServer().getLogger().log(Level.SEVERE, "A Severe Error Occured In CraftBook Block Break Event\n" + GeneralUtil.getStackTrace(e));
         }
         return returnValue;
     }
