@@ -224,10 +224,6 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         sign.setLine(3, shortMessage);
         sign.update();
 
-        logger.info(shortMessage);
-        logger.info(detailedMessage);
-        logger.log(Level.INFO, "Stack trace", new Exception());
-
         error = true;
         errorString = detailedMessage;
 
