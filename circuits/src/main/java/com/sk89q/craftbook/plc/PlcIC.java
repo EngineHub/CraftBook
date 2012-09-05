@@ -30,11 +30,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.ChipState;
@@ -42,8 +41,11 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
-public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
+class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
     private static final int PLC_STORE_VERSION = 1;
@@ -60,17 +62,24 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
 
     PlcIC(Sign s, Lang l) throws ICVerificationException {
         sign = s;
-        codeString = getCode();
-        if(codeString == null)
-            throw new ICVerificationException("Code block not found.");
+        try {
+            codeString = getCode();
+        } catch(CodeNotFoundException e) {
+            throw new ICVerificationException("Error retrieving code: "+e.getMessage());
+        }
         l.compile(codeString);
     }
     public PlcIC(Server sv, Sign s, Lang l) {
         lang = l;
         sign = s;
-        codeString = getCode();
         try {
-            code = lang.compile(codeString);
+            codeString = getCode();
+        } catch(CodeNotFoundException e) {
+            error("code missing", "Code went missing!!");
+        }
+        try {
+            if(codeString!=null)
+                code = lang.compile(codeString);
         } catch(ICVerificationException e) {
             throw new RuntimeException("inconsistent compile check!", e);
         }
@@ -181,7 +190,40 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         }
     }
 
-    private String getCode() {
+    private String getBookCode(Block chestBlock) throws CodeNotFoundException {
+        Chest c = (Chest) chestBlock.getState();
+        Inventory i = c.getBlockInventory();
+        ItemStack book = null;
+        for(ItemStack s : i.getContents()) {
+            if((s != null &&
+                s.getAmount() > 0) &&
+               (s.getType() == Material.BOOK_AND_QUILL ||
+                s.getType() == Material.WRITTEN_BOOK)) {
+                if(book != null)
+                    throw new CodeNotFoundException("More than one written book found in chest!!");
+                book = s;
+            }
+        }
+        if(book==null)
+            throw new CodeNotFoundException("No written books found in chest.");
+        BookItem data = new BookItem(book);
+        String code = "";
+        for(String s:data.getPages()) {
+            code += s+"\n";
+        }
+        System.out.println(code);
+        return code;
+    }
+    private String getCode() throws CodeNotFoundException {
+        Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
+        if(above.getType() == Material.CHEST) {
+            return getBookCode(above);
+        }
+        Block below = sign.getLocation().add(new Vector(0, -1, 0)).getBlock();
+        if(below.getType() == Material.CHEST) {
+            return getBookCode(below);
+        }
+
         Location l = sign.getLocation();
         World w = l.getWorld();
 
@@ -206,7 +248,7 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
                     }
                 }
         }
-        return null;
+        throw new CodeNotFoundException("No code source found.");
     }
 
     @Override
@@ -220,7 +262,7 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
     }
 
     public void error(String shortMessage, String detailedMessage) {
-        sign.setLine(2, ChatColor.RED+"!Error!");
+        sign.setLine(2, ChatColor.RED + "!Error!");
         sign.setLine(3, shortMessage);
         sign.update();
 
