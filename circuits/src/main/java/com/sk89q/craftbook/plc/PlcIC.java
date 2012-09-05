@@ -41,11 +41,12 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import org.bukkit.entity.Player;
 
 public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
-    private static final int PLC_STORE_VERSION = 0;
+    private static final int PLC_STORE_VERSION = 1;
 
     private Lang lang;
     private StateT state;
@@ -53,6 +54,9 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
     private CodeT code;
 
     private Sign sign;
+
+    private boolean error = false;
+    private String errorString = null;
 
     PlcIC(Sign s, Lang l) throws ICVerificationException {
         sign = s;
@@ -248,8 +252,32 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
             }
 
             @Override
+            public void onRightClick(Player p) {
+                self.onRightClick(p);
+            }
+
+            @Override
             public void unload() {}
         };
+    }
+
+    @Override
+    public void onRightClick(Player p) {
+        if(p.hasPermission("craftbook.plc.debug")) {
+            p.sendMessage(ChatColor.GREEN+"Programmable Logic Controller debug information");
+            Location l = sign.getLocation();
+            p.sendMessage(ChatColor.RED+"Status:"+ChatColor.RESET+" "+(error?"Error Encountered":"OK"));
+            p.sendMessage(ChatColor.RED+"Location:"+ChatColor.RESET+
+                    " ("+l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ()+")");
+            p.sendMessage(ChatColor.RED+"Language:"+ChatColor.RESET+" "+lang.getName());
+            p.sendMessage(ChatColor.RED+"Full Storage Name:"+ChatColor.RESET+" "+getFileName());
+            p.sendMessage(lang.dumpState(state));
+            if(error) {
+                p.sendMessage(ChatColor.RED+"Detailed Error Message:"+ChatColor.RESET+" "+errorString);
+            }
+        } else {
+            p.sendMessage(ChatColor.RED+"You do not have the necessary permissions to do that.");
+        }
     }
 
     @Override

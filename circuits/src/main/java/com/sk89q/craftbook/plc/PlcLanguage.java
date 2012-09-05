@@ -33,5 +33,7 @@ public interface PlcLanguage<StateT, CodeT> {
     void writeState(StateT t, DataOutputStream out) throws IOException;
     void loadState(StateT t, DataInputStream in) throws IOException;
 
+    String dumpState(StateT t);
+
     void execute(ChipState chip, StateT state, CodeT code) throws PlcException;
 }

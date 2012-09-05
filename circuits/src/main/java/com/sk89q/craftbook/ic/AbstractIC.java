@@ -20,6 +20,7 @@ package com.sk89q.craftbook.ic;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 /**
  * A base abstract IC that all ICs can inherit from.
@@ -45,6 +46,11 @@ public abstract class AbstractIC implements IC {
     protected Sign getSign() {
 
         return sign;
+    }
+
+    @Override
+    public void onRightClick(Player p) {
+
     }
 
     @Override

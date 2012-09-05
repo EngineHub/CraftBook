@@ -21,6 +21,7 @@ package com.sk89q.craftbook.plc.lang;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.plc.*;
+import org.bukkit.ChatColor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -271,5 +272,17 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
             }
             return null;
         }
+    }
+
+    private String dumpStateText(boolean[] state) {
+        char[] c = new char[state.length];
+        for(int i=0;i<state.length;i++)
+            c[i] = state[i] ? '1' : '0';
+        return new String(c);
+    }
+
+    @Override
+    public String dumpState(boolean[] state) {
+        return ChatColor.RED+"Persistent Variable Table: "+ChatColor.RESET+dumpStateText(state);
     }
 }

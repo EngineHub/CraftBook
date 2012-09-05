@@ -29,6 +29,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import java.util.ArrayList;
@@ -93,6 +94,12 @@ public class ICMechanic extends PersistentMechanic {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(
                     plugin, runnable, 2);
         }
+    }
+
+    @Override
+    public void onRightClick(PlayerInteractEvent event) {
+
+        ic.onRightClick(event.getPlayer());
     }
 
     @Override

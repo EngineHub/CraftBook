@@ -19,6 +19,8 @@
 
 package com.sk89q.craftbook.ic;
 
+import org.bukkit.entity.Player;
+
 /**
  * Integrated circuits are represented by this interface. For self-triggered
  * ICs, see {@link SelfTriggeredIC}.
@@ -36,6 +38,11 @@ public interface IC {
      * @return the title that is shown on the sign.
      */
     public String getSignTitle();
+
+    /**
+     * Called when the sign is right clicked.
+     */
+    public void onRightClick(Player p);
 
     /**
      * Recieve a new state to process on.
