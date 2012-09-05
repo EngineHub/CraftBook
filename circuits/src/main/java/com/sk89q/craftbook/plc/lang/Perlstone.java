@@ -26,10 +26,11 @@ import org.bukkit.ChatColor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-public class Perlstone implements PlcLanguage<boolean[], String[]> {
+public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String[]>> {
     private static final int MAX_INSTRUCTION_COUNT = 100000;
     private static final int PERLSTONE_STORE_VERSION = 0;
 
@@ -44,8 +45,138 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
     }
 
     @Override
-    public String[] compile(String code) throws ICVerificationException {
-        return code.replace("\n","").replace(" ","").split(":");
+    public WithLineInfo<String[]> compile(String code) throws ICVerificationException {
+        char[] chars = code.toCharArray();
+        ArrayList<String> funcs = new ArrayList<String>();
+        ArrayList<LineInfo[]> infos = new ArrayList<LineInfo[]>();
+        String current = "";
+        ArrayList<LineInfo> currentLineInfo = new ArrayList<LineInfo>();
+        int line = 1;
+        int col  = 1;
+        int bracketCount = 0;
+        for(int i=0;i<chars.length;i++) {
+            char c = chars[i];
+            switch(c) {
+                case ':':
+                    if(bracketCount!=0)
+                        throw new ICVerificationException("Missing closing braces in function ending on "+line);
+                    funcs.add(current);
+                    infos.add(currentLineInfo.toArray(new LineInfo[0]));
+
+                    funcs.clear();
+                    infos.clear();
+                    break;
+                case '\n':
+                    line++;
+                    col=0;
+                    break;
+                case '[':
+                    bracketCount++;
+                    break;
+                case ']':
+                    if(bracketCount==0)
+                        throw new ICVerificationException("Too many closing braces on line "+line+" at column "+col);
+                    bracketCount--;
+                    break;
+                case '+':case '-':
+                case 'A':case 'B':case 'C':
+                case 'd':case 'p':case 'x':
+                case '!':case '|':case '=':case '&':case '^':
+                case 's':case 'r':
+                    break;
+
+                case '<':case '>':case 'e':case 'S':case 'L':
+                    current += chars[i];
+                    currentLineInfo.add(new LineInfo(line, col));
+                    col++;
+                    switch(chars[++i]) {
+                        case 'p':case 'r':case 'l':
+                        case 'P':case 'R':case 'L':
+                            break;
+                        default:
+                            throw new ICVerificationException(
+                                    "Unknown modifier "+chars[i]+" to opcode "+c+" on line "+line+" at column "+col);
+                    }
+                    if(c == 'S' || c == 'L') {
+                        current += chars[i];
+                        currentLineInfo.add(new LineInfo(line, col));
+                        col++;
+                        char p = chars[++i];
+                        if(!(p>='0' || p<='9') &&
+                           !(p>='a' || p<='v'))
+                            throw new ICVerificationException(
+                                    "Bad table index "+chars[i]+" for opcode "+c+" on line "+line+" at column "+col);
+                    }
+                    break;
+
+                case 'v':
+                    {
+                        current += chars[i];
+                        currentLineInfo.add(new LineInfo(line, col));
+                        col++;
+                        char n = chars[++i];
+                        if(!(n>='0' || n<='9'))
+                            throw new ICVerificationException(
+                                    "Bad peek depth "+chars[i]+" on line "+line+" at column "+col);
+                    }
+                    break;
+
+                case '.':
+                    for(int j=0;j<4;j++) {
+                        current += chars[i];
+                        currentLineInfo.add(new LineInfo(line, col));
+                        col++;
+                        switch(chars[++i]) {
+                            case '+':case '-':
+                            case '1':case '0':
+                                break;
+
+                            default:
+                                throw new ICVerificationException(
+                                        "Bad logic table value "+chars[i]+" on line "+line+" at column "+col);
+                        }
+                    }
+                    break;
+
+                case 'c':case 't':
+                    for(int j=0;j<4;j++) {
+                        current += chars[i];
+                        currentLineInfo.add(new LineInfo(line, col));
+                        col++;
+                        char n = chars[++i];
+                        if(!(n>='0' || n<='9'))
+                            throw new ICVerificationException(
+                                    "Invalid character "+chars[i]+" in function number "+
+                                    "on line "+line+" at column "+col);
+                    }
+                    {
+                        current += chars[i];
+                        currentLineInfo.add(new LineInfo(line, col));
+                        col++;
+                        char n = chars[++i];
+                        if(!(n>='0' || n<='9'))
+                            throw new ICVerificationException(
+                                    "Invalid character "+chars[i]+" in argument count "+
+                                    "on line "+line+" at column "+col);
+                    }
+                    break;
+
+                default:
+                    throw new ICVerificationException("Unknown opcode "+c+" on line "+line+" at column "+col);
+            }
+            if(c!=':' && c!='\n') {
+                current += chars[i];
+                currentLineInfo.add(new LineInfo(line, col));
+            }
+            col++;
+        }
+
+        if(bracketCount!=0)
+            throw new ICVerificationException("Missing closing braces in function ending on "+line);
+        funcs.add(current);
+        infos.add(currentLineInfo.toArray(new LineInfo[0]));
+
+        return new WithLineInfo<String[]>(infos.toArray(new LineInfo[0][0]), funcs.toArray(new String[0]));
     }
 
     @Override
@@ -63,28 +194,22 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
     }
 
     @Override
-    public void execute(ChipState chip, boolean[] state, String[] code) throws PlcException {
-        try {
-            boolean[] tt = new boolean[32];
-            boolean a = chip.getInputCount()>0 && chip.getInput(0);
-            boolean b = chip.getInputCount()>1 && chip.getInput(1);
-            boolean c = chip.getInputCount()>2 && chip.getInput(2);
+    public void execute(ChipState chip, boolean[] state, WithLineInfo<String[]> code) throws PlcException {
+        boolean[] tt = new boolean[32];
+        boolean a = chip.getInputCount()>0 && chip.getInput(0);
+        boolean b = chip.getInputCount()>1 && chip.getInput(1);
+        boolean c = chip.getInputCount()>2 && chip.getInput(2);
 
-            for(int i=0;i<chip.getOutputCount();i++) {
-                if(i<code.length) {
-                    Boolean r = executeFunction(i, state, tt, code,
-                                                a, b, c, new boolean[0],
-                                                new int[1]);
-                    if(r==null) chip.setOutput(i, false);
-                    else        chip.setOutput(i, r);
-                } else {
-                    chip.setOutput(i, false);
-                }
+        for(int i=0;i<chip.getOutputCount();i++) {
+            if(i<code.code.length) {
+                Boolean r = executeFunction(i, state, tt, code,
+                                            a, b, c, new boolean[0],
+                                            new int[1]);
+                if(r==null) chip.setOutput(i, false);
+                else        chip.setOutput(i, r);
+            } else {
+                chip.setOutput(i, false);
             }
-        } catch(EmptyStackException e) {
-            throw new PlcException("empty stack");
-        } catch(StackOverflowError e) {
-            throw new PlcException("stack overflow");
         }
     }
 
@@ -96,14 +221,12 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
     private int mod(int a, int b) {
         return ((a%b)+b)%b;
     }
-    private int decodeAddress(char c, int shift) throws PlcException {
+    private int decodeAddress(char c, int shift) {
         if(c >= '0' && c <= '9') return mod(c-'0'+shift, 32);
-        if(c >= 'a' && c <= 'v') return mod(c-'a'+10+shift, 32);
-        throw new PlcException("invalid address");
+        else                     return mod(c-'a'+10+shift, 32);
     }
-    private int parseNumber(char c) throws PlcException {
-        if(c >= '0' && c <= '9') return c-'0';
-        else throw new PlcException("not a number");
+    private int parseNumber(char c) {
+        return c-'0';
     }
     private boolean parseTableChar(char c) throws PlcException {
         switch(c) {
@@ -111,18 +234,39 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
             case '-': return false;
             case '1': return true;
             case '0': return false;
-            default: throw new PlcException("invalid table");
+
+            // Shouldn't happen because of validation.
+            default: throw new PlcException("invalid table", "Invalid character in logic table.");
         }
     }
 
+    private String errmsg(String err,
+                          int fno, char opcode, LineInfo li,
+                          boolean[] pt, boolean[] tt, boolean[] lt,
+                          int pshift, int tshift, int lshift,
+                          Stack<Boolean> stack) {
+        String errm = "";
+        errm += ChatColor.RED+"Detailed Error Message: "+ChatColor.RESET+err+"\n";
+        errm += ChatColor.RED+"Error Location: "+ChatColor.RESET+"Line "+li.line+", column "+li.col+"\n";
+        errm += ChatColor.RED+"Executing Opcode: "+ChatColor.RESET+opcode+"\n";
+        errm += ChatColor.RED+"Persistent Variable Table: \n "+ChatColor.RESET+dumpStateText(pt)+"\n";
+        errm += ChatColor.RED+" - Shift: "+ChatColor.RESET+pshift+"\n";
+        errm += ChatColor.RED+"Temp Variable Table: \n "+ChatColor.RESET+dumpStateText(tt)+"\n";
+        errm += ChatColor.RED+" - Shift: "+ChatColor.RESET+tshift+"\n";
+        errm += ChatColor.RED+"Local Variable Table: \n "+ChatColor.RESET+dumpStateText(lt)+"\n";
+        errm += ChatColor.RED+" - Shift: "+ChatColor.RESET+lshift+"\n";
+        errm += ChatColor.RED+"Current Stack: "+ChatColor.RESET+dumpStateText(stack.toArray(new Boolean[0]));
+        return errm;
+    }
+
     // Use wrapper type to be able to express "no return" as null
-    private Boolean executeFunction(int fno, boolean[] pt, boolean[] tt, String[] funs,
+    private Boolean executeFunction(int fno, boolean[] pt, boolean[] tt, WithLineInfo<String[]> funs,
                                     boolean a, boolean b, boolean c, boolean[] args,
                                     int[] opc) throws PlcException {
         // Wrap in an while(true) to allow the t opcode to be a tail call.
         outer: while(true) {
-            if(fno<0 || fno>=funs.length) throw new PlcException("func not found");
-            String fn = funs[fno];
+            String fn = funs.code[fno];
+            LineInfo[] lis = funs.lineInfo[fno];
             char[] code = fn.toCharArray();
             int[] jt = new int[code.length]; // Jump table so that [ and ] aren't that messy
             /* scope */ {
@@ -132,14 +276,11 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
                     if(ch=='[') {
                         bracketStack.push(i);
                     } else if (ch==']') {
-                        if(bracketStack.size()==0) throw new PlcException("mismatched []");
-
                         int j = bracketStack.pop();
                         jt[i] = j;
                         jt[j] = i;
                     }
                 }
-                if(bracketStack.size()!=0) throw new PlcException("mismatched []");
             }
 
             int ip = 0;
@@ -150,125 +291,140 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
             int pshift = 0;
             int tshift = 0;
             int lshift = 0;
-            while(ip<code.length) {
-                opc[0]++;
-                if(opc[0]==MAX_INSTRUCTION_COUNT) throw new PlcException("ran too long");
-                switch(code[ip]) {
-                    case '+': executionStack.push(true); break;
-                    case '-': executionStack.push(false); break;
+            char op = '?';
+            LineInfo li = new LineInfo(0, 0);
+            try {
+                try {
+                    while(ip<code.length) {
+                        opc[0]++;
+                        if(opc[0]==MAX_INSTRUCTION_COUNT) throw new PlcException("ran too long",
+                                "Aborted due to running too many instructions");
+                        op = code[ip];
+                        li = lis[ip];
+                        switch(op) {
+                            case '+': executionStack.push(true); break;
+                            case '-': executionStack.push(false); break;
 
-                    case 'A': executionStack.push(a); break;
-                    case 'B': executionStack.push(b); break;
-                    case 'C': executionStack.push(c); break;
+                            case 'A': executionStack.push(a); break;
+                            case 'B': executionStack.push(b); break;
+                            case 'C': executionStack.push(c); break;
 
-                    case '<':case '>':case 'e': {
-                        int mul = 1;
-                        int add = 0;
-                        switch(code[ip]) {
-                            case '<': add = -1; break;
-                            case '>': add = +1; break;
-                            case 'e': mul =  0; break;
+                            case '<':case '>':case 'e': {
+                                int mul = 1;
+                                int add = 0;
+                                switch(code[ip]) {
+                                    case '<': add = -1; break;
+                                    case '>': add = +1; break;
+                                    case 'e': mul =  0; break;
+                                }
 
-                            default: throw new PlcException("internal error");
-                        }
+                                switch(code[++ip]) {
+                                    case 'p':case 'P': pshift = mul * pshift + add; break;
+                                    case 't':case 'T': tshift = mul * tshift + add; break;
+                                    case 'l':case 'L': lshift = mul * lshift + add; break;
+                                }
+                            } break;
 
-                        switch(code[++ip]) {
-                            case 'p':case 'P': pshift = mul * pshift + add; break;
-                            case 't':case 'T': tshift = mul * tshift + add; break;
-                            case 'l':case 'L': lshift = mul * lshift + add; break;
+                            case 'S':case 'L': {
+                                boolean[] table = null;
+                                int shift = 0;
 
-                            default: throw new PlcException("bad modifier "+code[ip]);
-                        }
-                    } break;
+                                switch(code[++ip]) {
+                                    case 'p': shift = pshift; case 'P': table = pt; break;
+                                    case 't': shift = tshift; case 'T': table = tt; break;
+                                    case 'l': shift = lshift; case 'L': table = lt; break;
+                                }
 
-                    case 'S':case 'L': {
-                        boolean store = code[ip] == 'S';
+                                int add = decodeAddress(code[++ip], shift);
+                                if(op == 'S') {
+                                    table[add] = executionStack.pop();
+                                } else {
+                                    executionStack.push(table[add]);
+                                }
+                            } break;
 
-                        boolean[] table = null;
-                        int shift = 0;
-
-                        switch(code[++ip]) {
-                            case 'p': shift = pshift; case 'P': table = pt; break;
-                            case 't': shift = tshift; case 'T': table = tt; break;
-                            case 'l': shift = lshift; case 'L': table = lt; break;
-
-                            default: throw new PlcException("bad modifier "+code[ip]);
-                        }
-
-                        int add = decodeAddress(code[++ip], shift);
-                        if(store) {
-                            table[add] = executionStack.pop();
-                        } else {
-                            executionStack.push(table[add]);
-                        }
-                    } break;
-
-                    case 'd': executionStack.push(executionStack.peek()); break;
-                    case 'p': executionStack.pop(); break;
-                    case 'v': {
-                        int level = parseNumber(code[++ip]);
-                        executionStack.push(executionStack.get(executionStack.size()-1-level));
-                    } break;
-                    case 'x': {
-                        boolean x = executionStack.pop();
-                        boolean y = executionStack.pop();
-                        executionStack.push(x);
-                        executionStack.push(y);
-                    } break;
-
-                    case '!': executionStack.push(!executionStack.pop()); break;
-
-                    // Using the short-circuiting versions would cause it to sometimes pop one less
-                    // value than it should.
-                    case '^': executionStack.push(executionStack.pop()^ executionStack.pop()); break;
-                    case '&': executionStack.push(executionStack.pop()& executionStack.pop()); break;
-                    case '|': executionStack.push(executionStack.pop()| executionStack.pop()); break;
-                    case '=': executionStack.push(executionStack.pop()==executionStack.pop()); break;
-
-                    case '.': {
-                        boolean ta = parseTableChar(code[++ip]);
-                        boolean tb = parseTableChar(code[++ip]);
-                        boolean tc = parseTableChar(code[++ip]);
-                        boolean td = parseTableChar(code[++ip]);
-
-                        boolean e = executionStack.pop();
-                        boolean f = executionStack.pop();
-
-                        if(!e&&!f)     executionStack.push(ta);
-                        else if(!e&&f) executionStack.push(tb);
-                        else if(e&&!f) executionStack.push(tc);
-                        else           executionStack.push(td);
-                    } break;
-
-                    case 'c':case 't': {
-                        char op = code[ip];
-                        int n = parseNumber(code[++ip])*10 + parseNumber(code[++ip]);
-                        int nArgs = parseNumber(code[++ip]);
-                        boolean[] arg = new boolean[nArgs];
-
-                        if(op=='c') {
-                            for(int i=nArgs-1;i>=0;i--)
-                                arg[i] = executionStack.pop();
-                            Boolean v = executeFunction(n, pt, tt, funs, a, b, c, arg, opc);
-                            if(v!=null)
-                                executionStack.push(v);
+                            case 'd': executionStack.push(executionStack.peek()); break;
+                            case 'p': executionStack.pop(); break;
+                            case 'v': try {
+                                int level = parseNumber(code[++ip]);
+                                executionStack.push(executionStack.get(executionStack.size()-1-level));
+                            } catch(ArrayIndexOutOfBoundsException e) {
+                                throw new PlcException("bad stack pos",
+                                        "Attempted to call peek on too small a stack.");
+                            }
                             break;
-                        } else {
-                            fno  = n;
-                            args = arg;
-                            continue outer;
+                            case 'x': {
+                                boolean x = executionStack.pop();
+                                boolean y = executionStack.pop();
+                                executionStack.push(x);
+                                executionStack.push(y);
+                            } break;
+
+                            case '!': executionStack.push(!executionStack.pop()); break;
+
+                            // Using the short-circuiting versions would cause it to sometimes pop one less
+                            // value than it should.
+                            case '^': executionStack.push(executionStack.pop()^ executionStack.pop()); break;
+                            case '&': executionStack.push(executionStack.pop()& executionStack.pop()); break;
+                            case '|': executionStack.push(executionStack.pop()| executionStack.pop()); break;
+                            case '=': executionStack.push(executionStack.pop()==executionStack.pop()); break;
+
+                            case '.': {
+                                boolean ta = parseTableChar(code[++ip]);
+                                boolean tb = parseTableChar(code[++ip]);
+                                boolean tc = parseTableChar(code[++ip]);
+                                boolean td = parseTableChar(code[++ip]);
+
+                                boolean e = executionStack.pop();
+                                boolean f = executionStack.pop();
+
+                                if(!e&&!f)     executionStack.push(ta);
+                                else if(!e&&f) executionStack.push(tb);
+                                else if(e&&!f) executionStack.push(tc);
+                                else           executionStack.push(td);
+                            } break;
+
+                            case 'c':case 't': {
+                                int n = parseNumber(code[++ip])*10 + parseNumber(code[++ip]);
+                                int nArgs = parseNumber(code[++ip]);
+                                boolean[] arg = new boolean[nArgs];
+
+                                if(n<0 || n>=funs.code.length) throw new PlcException("func not found",
+                                        "Attempted to call nonexistent function");
+
+                                if(op=='c') {
+                                    for(int i=nArgs-1;i>=0;i--)
+                                        arg[i] = executionStack.pop();
+                                    Boolean v = executeFunction(n, pt, tt, funs, a, b, c, arg, opc);
+                                    if(v!=null)
+                                        executionStack.push(v);
+                                    break;
+                                } else {
+                                    fno  = n;
+                                    args = arg;
+                                    continue outer;
+                                }
+                            }
+
+                            case '[': if(!executionStack.pop()) ip = jt[ip]; break;
+                            case ']': if( executionStack.pop()) ip = jt[ip]; break;
+
+                            case 's': return null;
+                            case 'r': return executionStack.pop();
                         }
+                        ip++;
                     }
-
-                    case '[': if(!executionStack.pop()) ip = jt[ip]; break;
-                    case ']': if( executionStack.pop()) ip = jt[ip]; break;
-
-                    case 's': return null;
-                    case 'r': return executionStack.pop();
-
-                    default: throw new PlcException("invalid op "+code[ip]);
+                } catch(EmptyStackException e) {
+                    throw new PlcException("empty stack", "Popped while stack was empty.");
+                } catch(StackOverflowError e) {
+                    throw new PlcException("stack overflow", "Java stack overflow.");
                 }
-                ip++;
+            } catch(PlcException e) {
+                throw new PlcException(e.getMessage(), errmsg(e.detailedMessage,
+                        fno, op, li,
+                        pt, tt, lt,
+                        pshift, tshift, lshift,
+                        executionStack));
             }
             return null;
         }
@@ -280,9 +436,15 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
             c[i] = state[i] ? '1' : '0';
         return new String(c);
     }
+    private String dumpStateText(Boolean[] state) {
+        char[] c = new char[state.length];
+        for(int i=0;i<state.length;i++)
+            c[i] = state[i] ? '1' : '0';
+        return new String(c);
+    }
 
     @Override
     public String dumpState(boolean[] state) {
-        return ChatColor.RED+"Persistent Variable Table: "+ChatColor.RESET+dumpStateText(state);
+        return ChatColor.RED+"Persistent Variable Table: \n "+ChatColor.RESET+dumpStateText(state);
     }
 }

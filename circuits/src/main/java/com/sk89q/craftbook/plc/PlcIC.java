@@ -56,7 +56,7 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
     private Sign sign;
 
     private boolean error = false;
-    private String errorString = null;
+    private String errorString = "no error";
 
     PlcIC(Sign s, Lang l) throws ICVerificationException {
         sign = s;
@@ -134,18 +134,19 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         try {
             switch(in.readInt()) {
                 case 1:
-                    if(in.readBoolean()) {
-                        error = true;
-                        errorString = in.readUTF();
-                    }
+                    error = in.readBoolean();
+                    errorString = in.readUTF();
                 case 0:
                     String langName = in.readUTF();
-                    if(lang.getName().equals(langName) || lang.supports(langName)) {
-                        String id = in.readUTF();
-                        String code = hashCode(in.readUTF());
-                        if(isShared() || id.equals(getID()) && hashCode(codeString).equals(code)) {
-                            lang.loadState(state, in);
-                        }
+                    String id = in.readUTF();
+                    String code = hashCode(in.readUTF());
+                    if((lang.getName().equals(langName) || lang.supports(langName)) &&
+                       (isShared() || (id.equals(getID()) && hashCode(codeString).equals(code)))) {
+                        lang.loadState(state, in);
+                    } else {
+                        // Prevent errors from different ICs from affecting this one.
+                        error = false;
+                        errorString = "no error";
                     }
                     break;
                 default:
@@ -170,9 +171,9 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         try {
             out.writeInt(PLC_STORE_VERSION);
             out.writeBoolean(error);
-            if(error) out.writeUTF(errorString);
+            out.writeUTF(errorString);
             out.writeUTF(lang.getName());
-            out.writeUTF(getID());
+            out.writeUTF(error?"(error)":getID());
             out.writeUTF(hashCode(codeString));
             lang.writeState(state, out);
         } finally {
@@ -222,6 +223,10 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         sign.setLine(2, ChatColor.RED+"!Error!");
         sign.setLine(3, shortMessage);
         sign.update();
+
+        logger.info(shortMessage);
+        logger.info(detailedMessage);
+        logger.log(Level.INFO, "Stack trace", new Exception());
 
         error = true;
         errorString = detailedMessage;
@@ -291,9 +296,10 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
                     " ("+l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ()+")");
             p.sendMessage(ChatColor.RED+"Language:"+ChatColor.RESET+" "+lang.getName());
             p.sendMessage(ChatColor.RED+"Full Storage Name:"+ChatColor.RESET+" "+getFileName());
-            p.sendMessage(lang.dumpState(state));
             if(error) {
-                p.sendMessage(ChatColor.RED+"Detailed Error Message:"+ChatColor.RESET+" "+errorString);
+                p.sendMessage(errorString);
+            } else {
+                p.sendMessage(lang.dumpState(state));
             }
         } else {
             p.sendMessage(ChatColor.RED+"You do not have the necessary permissions to do that.");
