@@ -41,6 +41,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
         enablePumpkins = getBoolean("redstone-pumpkins", true);
         enableICs = getBoolean("redstone-ics", true);
         enableGlowStone = getBoolean("redstone-glowstone", false);
+        enableShorthandIcs = getBoolean("enable-shorthand-ics", false);
         glowstoneOffBlock = Material.getMaterial(getInt("glowstone-off-material", BlockID.GLASS));
     }
 
@@ -52,5 +53,6 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public final boolean enablePumpkins;
     public final boolean enableICs;
     public final boolean enableGlowStone;
+    public final boolean enableShorthandIcs;
     public final Material glowstoneOffBlock;
 }

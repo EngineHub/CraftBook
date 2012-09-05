@@ -39,6 +39,14 @@ public class ICManager {
     public final Map<String, RegisteredICFactory> registered
             = new HashMap<String, RegisteredICFactory>();
 
+    /**
+     * Holds a map of long IDs to short IDs
+     *
+     * @see RegisteredICFactory
+     */
+    public final Map<String, String> longRegistered
+            = new HashMap<String, String>();
+
     private static final Map<BlockWorldVector, IC> cachedICs
             = new HashMap<BlockWorldVector, IC>();
 
@@ -53,13 +61,30 @@ public class ICManager {
      */
     public void register(String id, ICFactory factory, ICFamily... families) {
 
+        register(id, null, factory, families);
+    }
+
+    /**
+     * Register an IC with the manager. The casing of the ID can be of any
+     * case because IC IDs are case-insensitive. Re-using an already
+     * registered name will override the previous registration.
+     *
+     * @param id       case-insensitive ID (such as MC1001)
+     * @param longId   case-insensitive long name (such as inverter)
+     * @param factory  factory to create ICs
+     * @param families families for the ic
+     */
+    public void register(String id, String longId, ICFactory factory, ICFamily... families) {
+
         for (ICFamily family : families) {
-            id = id.replace("MC", family.getModifier());
+            String id2 = id.replace("MC", family.getModifier());
             RegisteredICFactory registration
-                    = new RegisteredICFactory(id, factory, family);
+                    = new RegisteredICFactory(id2, factory, family);
             // Lowercase the ID so that we can do case in-sensitive lookups
-            registered.put(id.toLowerCase(), registration);
+            registered.put(id2.toLowerCase(), registration);
         }
+        if(longId!=null)
+            longRegistered.put(longId.toLowerCase(), id);
 
     }
 

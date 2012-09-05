@@ -112,77 +112,99 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
     }
 
+
     /**
      * Detect the mechanic at a placed sign.
      */
-    @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+            throws InvalidMechanismException {
+        return detect(pt, player, sign, false);
+    }
+
+    private ICMechanic detect(BlockWorldVector pt, LocalPlayer player, Sign sign, boolean shortHand)
             throws InvalidMechanismException {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         Matcher matcher = codePattern.matcher(sign.getLine(1));
-        if (!matcher.matches()) return null;
-        String id = matcher.group(1);
-        String suffix = "";
-        String[] str = sign.getLine(1).split("]");
-        if (str.length > 1)
-            suffix = str[1];
+        if (matcher.matches()) {
+            String id = matcher.group(1);
+            String suffix = "";
+            String[] str = sign.getLine(1).split("]");
+            if (str.length > 1)
+                suffix = str[1];
 
-        if (block.getTypeId() != BlockID.WALL_SIGN) {
-            throw new InvalidMechanismException("Only wall signs are used for ICs.");
-        }
-
-        RegisteredICFactory registration = manager.get(id);
-        if (registration == null)
-            throw new InvalidMechanismException("Unknown IC detected: " + id);
-
-        ICFactory factory = registration.getFactory();
-
-        if (factory instanceof RestrictedIC) {
-            if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) {
-                throw new ICVerificationException("You don't have permission to use "
-                        + registration.getId() + ".");
+            if (block.getTypeId() != BlockID.WALL_SIGN) {
+                throw new InvalidMechanismException("Only wall signs are used for ICs.");
             }
-        } else {
-            if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) {
-                throw new ICVerificationException("You don't have permission to use "
-                        + registration.getId() + ".");
+
+            RegisteredICFactory registration = manager.get(id);
+            if (registration == null)
+                throw new InvalidMechanismException("Unknown IC detected: " + id);
+
+            ICFactory factory = registration.getFactory();
+
+            if (factory instanceof RestrictedIC) {
+                if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) {
+                    throw new ICVerificationException("You don't have permission to use "
+                            + registration.getId() + ".");
+                }
+            } else {
+                if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) {
+                    throw new ICVerificationException("You don't have permission to use "
+                            + registration.getId() + ".");
+                }
             }
-        }
 
-        factory.verify(sign);
+            factory.verify(sign);
 
-        factory.checkPlayer(sign, player);
+            factory.checkPlayer(sign, player);
 
-        IC ic = registration.getFactory().create(sign);
+            IC ic = registration.getFactory().create(sign);
 
-        sign.setLine(1, "[" + registration.getId() + "]" + suffix);
+            sign.setLine(1, "[" + registration.getId() + "]" + suffix);
 
-        ICMechanic mechanic;
+            ICMechanic mechanic;
 
-        if (ic instanceof SelfTriggeredIC) {
-            mechanic = new SelfTriggeredICMechanic(
-                    plugin,
-                    id,
-                    (SelfTriggeredIC) ic,
-                    registration.getFamily(),
-                    pt
-            );
-        } else {
-            mechanic = new ICMechanic(
-                    plugin,
-                    id,
-                    ic,
-                    registration.getFamily(),
-                    pt
-            );
-        }
+            if (ic instanceof SelfTriggeredIC) {
+                mechanic = new SelfTriggeredICMechanic(
+                        plugin,
+                        id,
+                        (SelfTriggeredIC) ic,
+                        registration.getFamily(),
+                        pt
+                );
+            } else {
+                mechanic = new ICMechanic(
+                        plugin,
+                        id,
+                        ic,
+                        registration.getFamily(),
+                        pt
+                );
+            }
 
-        sign.setLine(0, ic.getSignTitle());
+            if(!shortHand)
+                sign.setLine(0, ic.getSignTitle());
 
-        player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
+            player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
 
-        return mechanic;
+            return mechanic;
+        } else if(plugin.getLocalConfiguration().enableShorthandIcs &&
+                  sign.getLine(0).startsWith("=")) {
+           String id = sign.getLine(0).substring(1);
+
+            if (block.getTypeId() != BlockID.WALL_SIGN) {
+                throw new InvalidMechanismException("Only wall signs are used for ICs.");
+            }
+
+            String shortId = manager.longRegistered.get(id.toLowerCase());
+            if (shortId == null)
+                throw new InvalidMechanismException("Unknown IC detected: " + id);
+
+            sign.setLine(1, "["+shortId+"]");
+
+            detect(pt, player, sign, true);
+        } return null;
     }
 }
