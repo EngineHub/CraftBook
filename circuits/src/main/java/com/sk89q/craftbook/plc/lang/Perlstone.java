@@ -204,7 +204,10 @@ public class Perlstone implements PlcLanguage<boolean[], String[]> {
 
                     case 'd': executionStack.push(executionStack.peek()); break;
                     case 'p': executionStack.pop(); break;
-                    case 'v': executionStack.push(executionStack.peek()); break;
+                    case 'v': {
+                        int level = parseNumber(code[++ip]);
+                        executionStack.push(executionStack.get(executionStack.size()-1-level));
+                    } break;
                     case 'x': {
                         boolean x = executionStack.pop();
                         boolean y = executionStack.pop();
