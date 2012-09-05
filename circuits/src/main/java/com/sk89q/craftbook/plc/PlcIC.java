@@ -18,17 +18,29 @@
 
 package com.sk89q.craftbook.plc;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import org.bukkit.*;
-import org.bukkit.block.*;
-
-import java.io.*;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
@@ -122,7 +134,7 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
             if(lang.getName().equals(langName) || lang.supports(langName)) {
                 String id = in.readUTF();
                 String code = hashCode(in.readUTF());
-                if(isShared() || (id.equals(getID()) && hashCode(codeString).equals(code))) {
+                if(isShared() || id.equals(getID()) && hashCode(codeString).equals(code)) {
                     lang.loadState(state, in);
                 }
             }

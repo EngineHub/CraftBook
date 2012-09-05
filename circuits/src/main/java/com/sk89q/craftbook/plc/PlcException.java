@@ -1,6 +1,11 @@
 package com.sk89q.craftbook.plc;
 
 public class PlcException extends Exception {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3541787352186665688L;
+
     public PlcException() {
     }
 

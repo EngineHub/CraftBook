@@ -53,6 +53,9 @@ public class CustomCrafting {
                         sh.setInput(is.getMaterial(), is.getData());
                     plugin.getServer().addRecipe(sh);
                 }
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().severe("Corrupt or invalid recipe!");
+                plugin.getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
                 plugin.getLogger().severe(GeneralUtil.getStackTrace(e));

@@ -18,14 +18,15 @@
 
 package com.sk89q.craftbook.plc;
 
+import java.util.Random;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
-import java.util.Random;
 
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
     private static Random RNG = new Random();
@@ -39,6 +40,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
         this.selfTriggered = selfTriggered;
     }
 
+    @Override
     public IC create(Sign sign) {
         PlcIC<StateT, CodeT, Lang> i = new PlcIC<StateT, CodeT, Lang>(s, sign, lang);
         return selfTriggered ? i.selfTriggered() : i;
@@ -62,7 +64,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>>
-                  PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered){
+    PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered){
         return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered);
     }
 }
