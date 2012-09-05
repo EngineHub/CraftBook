@@ -79,7 +79,7 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
     }
 
     private boolean isShared() {
-        return !sign.getLine(3).isEmpty();
+        return !sign.getLine(3).isEmpty() && sign.getLine(3).startsWith("id:");
     }
 
     private String getID() {
@@ -132,24 +132,45 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
 
         DataInputStream in = new DataInputStream(new FileInputStream(getStorageLocation()));
         try {
-            if(PLC_STORE_VERSION!=in.readInt()) throw new IOException("incompatible save version");
-
-            String langName = in.readUTF();
-            if(lang.getName().equals(langName) || lang.supports(langName)) {
-                String id = in.readUTF();
-                String code = hashCode(in.readUTF());
-                if(isShared() || id.equals(getID()) && hashCode(codeString).equals(code)) {
-                    lang.loadState(state, in);
-                }
+            switch(in.readInt()) {
+                case 1:
+                    if(in.readBoolean()) {
+                        error = true;
+                        errorString = in.readUTF();
+                    }
+                case 0:
+                    String langName = in.readUTF();
+                    if(lang.getName().equals(langName) || lang.supports(langName)) {
+                        String id = in.readUTF();
+                        String code = hashCode(in.readUTF());
+                        if(isShared() || id.equals(getID()) && hashCode(codeString).equals(code)) {
+                            lang.loadState(state, in);
+                        }
+                    }
+                    break;
+                default:
+                    throw new IOException("incompatible version");
             }
         } finally {
             in.close();
         }
     }
+
+    private void trySaveState() {
+        try {
+            saveState();
+        } catch(IOException e) {
+            logger.log(Level.SEVERE, "Failed to save PLC state",e);
+            state = lang.initState();
+        }
+    }
+
     private void saveState() throws IOException {
         DataOutputStream out = new DataOutputStream(new FileOutputStream(getStorageLocation()));
         try {
             out.writeInt(PLC_STORE_VERSION);
+            out.writeBoolean(error);
+            if(error) out.writeUTF(errorString);
             out.writeUTF(lang.getName());
             out.writeUTF(getID());
             out.writeUTF(hashCode(codeString));
@@ -197,6 +218,17 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
         return lang.getName().toUpperCase();
     }
 
+    public void error(String shortMessage, String detailedMessage) {
+        sign.setLine(2, ChatColor.RED+"!Error!");
+        sign.setLine(3, shortMessage);
+        sign.update();
+
+        error = true;
+        errorString = detailedMessage;
+
+        trySaveState();
+    }
+
     @Override
     public void trigger(ChipState chip) {
         try {
@@ -204,24 +236,12 @@ public class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> imple
 
             lang.execute(chip, state, code);
 
-            try {
-                saveState();
-            } catch(IOException e) {
-                logger.log(Level.SEVERE, "Failed to save PLC state",e);
-                state = lang.initState();
-            }
+            trySaveState();
         } catch(PlcException e) {
-            sign.setLine(1, ChatColor.DARK_RED+sign.getLine(1));
-            sign.setLine(2, "Error!");
-            sign.setLine(3, e.getMessage());
-            sign.update();
+            error(e.getMessage(), e.detailedMessage);
         } catch(Exception e) {
             logger.log(Level.SEVERE, "Internal error while executing PLC", e);
-
-            sign.setLine(1, ChatColor.DARK_RED+sign.getLine(1));
-            sign.setLine(2, "Error!");
-            sign.setLine(3, e.getClass().getName());
-            sign.update();
+            error(e.getClass().getName(), "Internal error encountered: "+e.getClass().getName());
         }
     }
 
