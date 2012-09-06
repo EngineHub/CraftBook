@@ -19,20 +19,25 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that
@@ -180,7 +185,7 @@ public class Elevator extends AbstractMechanic {
             return;
         }
 
-        makeItSo(event.getPlayer());
+        makeItSo(plugin.wrap(event.getPlayer()));
 
         event.setCancelled(true);
     }
@@ -190,18 +195,12 @@ public class Elevator extends AbstractMechanic {
         /* we only affect players, so we don't care about redstone events */
     }
 
-    private void makeItSo(Player player) {
+    private void makeItSo(LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt(
-                (int) Math.floor(player.getLocation().getX()),
-                destination.getY() + 1,
-                (int) Math.floor(player.getLocation().getZ())
-        );
+        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getLocation().getPosition().getX()),destination.getY() + 1,(int) Math.floor(player.getLocation().getPosition().getZ()));
         // well, unless that's already a ceiling.
         if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
-
-        LocalPlayer local = plugin.wrap(player);
 
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
@@ -219,20 +218,20 @@ public class Elevator extends AbstractMechanic {
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (!foundGround) {
-            local.printError("mech.lift.no-floor");
+            player.printError("mech.lift.no-floor");
             return;
         }
         if (foundFree < 2) {
-            local.printError("mech.lift.obstruct");
+            player.printError("mech.lift.obstruct");
             return;
         }
 
         // Teleport!
-        Location subspaceRift = player.getLocation().clone();
-        subspaceRift.setY(floor.getY() + 1);
+        Location subspaceRift = player.getLocation();
+        subspaceRift.setPosition(player.getLocation().getPosition().setY(floor.getY() + 1));
         if (player.isInsideVehicle()) {
-            subspaceRift = player.getVehicle().getLocation().clone();
-            subspaceRift.setY(floor.getY() + 2);
+            subspaceRift = player.getVehicle().getLocation();
+            subspaceRift.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() + 2));
             player.getVehicle().teleport(subspaceRift);
         }
         player.teleport(subspaceRift);
@@ -242,9 +241,9 @@ public class Elevator extends AbstractMechanic {
         // just print a generic message
         String title = ((Sign) destination.getState()).getLines()[0];
         if (title.length() != 0) {
-            player.sendMessage("Floor: " + title);
+            player.print("Floor: " + title);
         } else {
-            player.sendMessage("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
+            player.print("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
         }
     }
 
@@ -294,7 +293,7 @@ public class Elevator extends AbstractMechanic {
     }
 
     private static class InvalidConstructionException extends
-            InvalidMechanismException {
+    InvalidMechanismException {
 
         private static final long serialVersionUID = 2306504048848430689L;
 
