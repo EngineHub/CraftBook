@@ -46,4 +46,8 @@ public interface LocalPlayer {
     public boolean isInsideVehicle();
 
     public Vehicle getVehicle();
+
+    public int getTypeInHand();
+
+    public boolean isHoldingBlock();
 }

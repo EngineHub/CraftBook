@@ -19,6 +19,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.InsufficientPermissionsException;
@@ -96,5 +97,17 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public Vehicle getVehicle() {
         return BukkitUtil.toVehicle((org.bukkit.entity.Vehicle)player.getVehicle());
+    }
+
+    @Override
+    public int getTypeInHand() {
+        if(player.getItemInHand() == null)
+            return 0;
+        return player.getItemInHand().getTypeId();
+    }
+
+    @Override
+    public boolean isHoldingBlock() {
+        return Material.getMaterial(getTypeInHand()).isBlock();
     }
 }
