@@ -1,18 +1,25 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -68,7 +75,7 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 
@@ -120,7 +127,7 @@ public class Teleporter extends AbstractMechanic {
             return;
         }
 
-        makeItSo(event.getPlayer());
+        makeItSo(plugin.wrap(event.getPlayer()));
 
         event.setCancelled(true);
     }
@@ -130,12 +137,10 @@ public class Teleporter extends AbstractMechanic {
         /* we only affect players, so we don't care about redstone events */
     }
 
-    private void makeItSo(Player p) {
+    private void makeItSo(LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         // check if this looks at all like something we're interested in first
-
-        LocalPlayer player = plugin.wrap(p);
 
         double toX = 0;
         double toY = 0;
@@ -180,18 +185,14 @@ public class Teleporter extends AbstractMechanic {
         }
 
         // Teleport!
-        Location subspaceRift = p.getLocation().clone();
-        subspaceRift.setY(floor.getY() + 1);
-        subspaceRift.setX(floor.getX());
-        subspaceRift.setZ(floor.getZ());
-        if (p.isInsideVehicle()) {
-            subspaceRift = p.getVehicle().getLocation().clone();
-            subspaceRift.setY(floor.getY() + 2);
-            subspaceRift.setX(floor.getX());
-            subspaceRift.setZ(floor.getZ());
-            p.getVehicle().teleport(subspaceRift);
+        Location subspaceRift = player.getLocation();
+        subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 1, floor.getZ()));
+        if (player.isInsideVehicle()) {
+            subspaceRift = player.getVehicle().getLocation();
+            subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 2, floor.getZ()));
+            player.getVehicle().teleport(subspaceRift);
         }
-        p.teleport(subspaceRift);
+        player.teleport(subspaceRift);
 
         player.print("mech.teleport.alert");
     }

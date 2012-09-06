@@ -18,10 +18,13 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.Vehicle;
+import com.sk89q.worldedit.Location;
 
 public class BukkitPlayer implements LocalPlayer {
 
@@ -75,4 +78,23 @@ public class BukkitPlayer implements LocalPlayer {
         return player.getName();
     }
 
+    @Override
+    public Location getLocation() {
+        return BukkitUtil.toLocation(player.getLocation());
+    }
+
+    @Override
+    public void teleport(Location location) {
+        player.teleport(BukkitUtil.toLocation(location));
+    }
+
+    @Override
+    public boolean isInsideVehicle() {
+        return player.isInsideVehicle();
+    }
+
+    @Override
+    public Vehicle getVehicle() {
+        return BukkitUtil.toVehicle((org.bukkit.entity.Vehicle)player.getVehicle());
+    }
 }

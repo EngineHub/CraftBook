@@ -14,9 +14,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
+
+import com.sk89q.worldedit.Location;
 
 /**
  * Holds an abstraction for players.
@@ -36,4 +38,12 @@ public interface LocalPlayer {
     public boolean hasPermission(String perm);
 
     public String getName();
+
+    public Location getLocation();
+
+    public void teleport(Location location);
+
+    public boolean isInsideVehicle();
+
+    public Vehicle getVehicle();
 }
