@@ -19,17 +19,18 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
@@ -73,7 +74,7 @@ public class Netherrack extends AbstractMechanic {
 
         Block above = event.getBlock().getRelative(0, 1, 0);
 
-        if (event.getNewCurrent() > 0 && above != null && above.getTypeId() == BlockID.AIR)
+        if (event.getNewCurrent() > 0 && above != null && canPassThrough(above.getTypeId()))
             above.setTypeId(BlockID.FIRE, false);
         else if (above.getTypeId() == BlockID.FIRE) above.setTypeId(BlockID.AIR, false);
     }
@@ -126,4 +127,23 @@ public class Netherrack extends AbstractMechanic {
 
     }
 
+    private boolean canPassThrough(int t) {
+
+        int[] passableBlocks = new int[9];
+        passableBlocks[0] = BlockID.WATER;
+        passableBlocks[1] = BlockID.STATIONARY_WATER;
+        passableBlocks[2] = BlockID.LAVA;
+        passableBlocks[3] = BlockID.STATIONARY_LAVA;
+        passableBlocks[4] = BlockID.SNOW;
+        passableBlocks[5] = BlockID.LONG_GRASS;
+        passableBlocks[6] = BlockID.VINE;
+        passableBlocks[7] = BlockID.DEAD_BUSH;
+        passableBlocks[8] = BlockID.AIR;
+
+        for (int aPassableBlock : passableBlocks) {
+            if (aPassableBlock == t) return true;
+        }
+
+        return false;
+    }
 }

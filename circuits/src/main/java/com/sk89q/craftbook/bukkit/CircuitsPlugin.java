@@ -227,20 +227,20 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1025", "server time"   , new ServerTimeModulus.Factory(server), familySISO, familyAISO);
         registerIC("MC1110", "transmitter"   , new WirelessTransmitter.Factory(server), familySISO, familyAISO);
         registerIC("MC1111", "receiver"      , new WirelessReceiver.Factory(server), familySISO, familyAISO);
-        registerIC("MC1200", null            , new CreatureSpawner.Factory(server), familySISO, familyAISO);     // Restricted
-        registerIC("MC1201", null            , new ItemDispenser.Factory(server), familySISO, familyAISO);       // Restricted
-        registerIC("MC1202", null            , new ChestDispenser.Factory(server), familySISO, familyAISO);      // Restricted
-        registerIC("MC1203", null            , new LightningSummon.Factory(server), familySISO, familyAISO);     // Restricted
-        registerIC("MC1204", null            , new EntityTrap.Factory(server), familySISO, familyAISO);          // Restricted
-        registerIC("MC1205", null            , new SetBlockAbove.Factory(server), familySISO, familyAISO);       // Restricted
-        registerIC("MC1206", null            , new SetBlockBelow.Factory(server), familySISO, familyAISO);       // Restricted
+        registerIC("MC1200", "spawner"       , new CreatureSpawner.Factory(server), familySISO, familyAISO);     // Restricted
+        registerIC("MC1201", "dispenser"     , new ItemDispenser.Factory(server), familySISO, familyAISO);       // Restricted
+        registerIC("MC1202", "c dispense"    , new ChestDispenser.Factory(server), familySISO, familyAISO);      // Restricted
+        registerIC("MC1203", "strike"        , new LightningSummon.Factory(server), familySISO, familyAISO);     // Restricted
+        registerIC("MC1204", "trap"          , new EntityTrap.Factory(server), familySISO, familyAISO);          // Restricted
+        registerIC("MC1205", "set above"     , new SetBlockAbove.Factory(server), familySISO, familyAISO);       // Restricted
+        registerIC("MC1206", "set below"     , new SetBlockBelow.Factory(server), familySISO, familyAISO);       // Restricted
         registerIC("MC1207", null            , new FlexibleSetBlock.Factory(server), familySISO, familyAISO);    // Restricted
         registerIC("MC1208", null            , new MultipleSetBlock.Factory(server), familySISO, familyAISO);
         registerIC("MC1209", "collector"     , new ChestCollector.Factory(server), familySISO, familyAISO);
         registerIC("MC1210", "emitter"       , new ParticleEffect.Factory(server), familySISO, familyAISO);      // Restricted
         registerIC("MC1211", null            , new SetBridge.Factory(server), familySISO, familyAISO);           // Restricted
         registerIC("MC1212", null            , new SetDoor.Factory(server), familySISO, familyAISO);             // Restricted
-        registerIC("MC1213", null            , new SoundEffect.Factory(server), familySISO, familyAISO);         // Restricted
+        registerIC("MC1213", "sound"         , new SoundEffect.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1215", null            , new SetBlockAboveChest.Factory(server), familySISO, familyAISO);  // Restricted
         registerIC("MC1216", null            , new SetBlockBelowChest.Factory(server), familySISO, familyAISO);  // Restricted
         registerIC("MC1217", null            , new PotionInducer.Factory(server), familySISO, familyAISO);
@@ -259,7 +259,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1264", "sense item"    , new ItemSensor.Factory(server), familySISO, familyAISO);          // Restricted
         registerIC("MC1265", "inv sense item", new ItemNotSensor.Factory(server), familySISO, familyAISO);       // Restricted
         registerIC("MC1266", "sense power"   , new PowerSensor.Factory(server), familySISO, familyAISO);         // Restricted
-        registerIC("MC1270", null            , new Melody.Factory(server), familySISO, familyAISO);
+        registerIC("MC1270", "melody"        , new Melody.Factory(server), familySISO, familyAISO);
         registerIC("MC1271", "sense entity"  , new EntitySensor.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1272", "sense player"  , new PlayerDetection.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1420", "divide clock"  , new ClockDivider.Factory(server), familySISO, familyAISO);
@@ -289,7 +289,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC3034", "edge df flip"  , new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
         registerIC("MC3036", "level df flip" , new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         registerIC("MC3040", "multiplexer"   , new Multiplexer.Factory(server), family3ISO);
-        registerIC("MC3050", null            , new CombinationLock.Factory(server), family3ISO);
+        registerIC("MC3050", "combo"         , new CombinationLock.Factory(server), family3ISO);
         registerIC("MC3101", null            , new DownCounter.Factory(server), family3ISO);
         registerIC("MC3102", null            , new Counter.Factory(server), family3ISO);
         registerIC("MC3231", null            , new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
@@ -307,7 +307,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         //Self triggered
         registerIC("MC0111", "receiver st"   , new WirelessReceiverST.Factory(server), familySISO);
-        registerIC("MC0204", null            , new EntityTrapST.Factory(server), familySISO);                    // Restricted
+        registerIC("MC0204", "trap st"       , new EntityTrapST.Factory(server), familySISO);                    // Restricted
         registerIC("MC0209", "collector st"  , new ChestCollectorST.Factory(server), familySISO);
         registerIC("MC0210", "emitter st"    , new ParticleEffectST.Factory(server), familySISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO);
