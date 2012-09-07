@@ -21,12 +21,7 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 import java.util.Map.Entry;
 
-import com.sk89q.craftbook.ic.families.*;
-import com.sk89q.craftbook.plc.PlcFactory;
-import com.sk89q.craftbook.plc.lang.Perlstone;
-import org.bukkit.Chunk;
 import org.bukkit.Server;
-import org.bukkit.World;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.LanguageManager;
@@ -134,6 +129,14 @@ import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
+import com.sk89q.craftbook.ic.families.Family3I3O;
+import com.sk89q.craftbook.ic.families.Family3ISO;
+import com.sk89q.craftbook.ic.families.FamilyAISO;
+import com.sk89q.craftbook.ic.families.FamilySI3O;
+import com.sk89q.craftbook.ic.families.FamilySISO;
+import com.sk89q.craftbook.ic.families.FamilyVIVO;
+import com.sk89q.craftbook.plc.PlcFactory;
+import com.sk89q.craftbook.plc.lang.Perlstone;
 import com.sk89q.wepif.PermissionsResolverManager;
 // import com.sk89q.bukkit.migration.*;
 
@@ -345,18 +348,19 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         int numWorlds = 0;
         int numChunks = 0;
 
-        for (World world : getServer().getWorlds()) {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                manager.enumerate(chunk);
-                numChunks++;
-            }
+        //TODO work out why this was here in the first place.
+        //for (World world : getServer().getWorlds()) {
+        //    for (Chunk chunk : world.getLoadedChunks()) {
+        //         manager.enumerate(chunk);
+        //         numChunks++;
+        //     }
 
-            numWorlds++;
-        }
+        //    numWorlds++;
+        //}
 
         long time = System.currentTimeMillis() - start;
 
-        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
+        logger.info("CraftBook Circuits: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed "
                 + "(" + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
 
         // Set up the clock for self-triggered ICs.

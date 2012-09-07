@@ -19,17 +19,9 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.regions.CuboidRegion;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -41,8 +33,23 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.regions.CuboidRegion;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or
@@ -78,7 +85,7 @@ public class Gate extends AbstractMechanic {
      * @param smallSearchSize
      */
     public Gate(BlockWorldVector pt, MechanismsPlugin plugin,
-                boolean smallSearchSize) {
+            boolean smallSearchSize) {
 
         super();
         this.pt = pt;
@@ -148,7 +155,7 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     public boolean setGateState(LocalPlayer player, WorldVector pt, boolean close,
-                                boolean smallSearchSize) {
+            boolean smallSearchSize) {
 
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
@@ -201,7 +208,7 @@ public class Gate extends AbstractMechanic {
      *         otherwise.
      */
     private boolean recurseColumn(LocalPlayer player, WorldVector pt,
-                                  Set<BlockVector> visitedColumns, Boolean close) {
+            Set<BlockVector> visitedColumns, Boolean close) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
         if (visitedColumns.size() > 14) {
@@ -244,9 +251,7 @@ public class Gate extends AbstractMechanic {
 
         // Recursively go to connected fence blocks of the same level
         // and 'close' or 'open' them
-        toggleColumn(player, new BlockWorldVector(pt, x, y, z), close, visitedColumns);
-
-        return true;
+        return toggleColumn(player, new BlockWorldVector(pt, x, y, z), close, visitedColumns);
     }
 
     /**
@@ -256,8 +261,8 @@ public class Gate extends AbstractMechanic {
      * @param close
      * @param visitedColumns
      */
-    private void toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
-                              Set<BlockVector> visitedColumns) {
+    private boolean toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
+            Set<BlockVector> visitedColumns) {
 
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
         int x = topPoint.getBlockX();
@@ -339,7 +344,7 @@ public class Gate extends AbstractMechanic {
                 } else if (curBlocks == 0 && isValidGateItem(new ItemStack(ID, 1))) {
                     if (player != null) {
                         player.printError("Not enough blocks to trigger mechanic!");
-                        break;
+                        return false;
                     }
                 }
             } else
@@ -373,6 +378,7 @@ public class Gate extends AbstractMechanic {
                 visitedColumns, close);
         recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(0, 1, -1)),
                 visitedColumns, close);
+        return true;
     }
 
     /**
@@ -396,30 +402,27 @@ public class Gate extends AbstractMechanic {
         }
         if (sign == null) return;
 
-        if (event.getPlayer().getItemInHand() != null) {
-            if (isValidGateItem(event.getPlayer().getItemInHand())) {
+        if (isValidGateItem(player.getTypeInHand())) {
 
-                try {
-                    int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
-                    sign.setLine(3, newBlocks + "");
-                    sign.update();
-                } catch (Exception e) {
-                    sign.setLine(3, "1");
-                    sign.update();
-                }
-
-                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                    } else
-                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                - 1);
-                }
-
-                player.print("Gate Restocked!");
-                event.setCancelled(true);
-                return;
+            try {
+                int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
+                sign.setLine(3, newBlocks + "");
+                sign.update();
+            } catch (Exception e) {
+                sign.setLine(3, "1");
+                sign.update();
             }
+
+            if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+                if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                } else
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+            }
+
+            player.print("Gate Restocked!");
+            event.setCancelled(true);
+            return;
         }
 
         if (!player.hasPermission("craftbook.mech.gate.use")) {
@@ -449,15 +452,15 @@ public class Gate extends AbstractMechanic {
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         plugin.getServer().getScheduler()
-                .scheduleSyncDelayedTask(plugin, new Runnable() {
+        .scheduleSyncDelayedTask(plugin, new Runnable() {
 
-                    @Override
-                    public void run() {
+            @Override
+            public void run() {
 
-                        setGateState(null, pt, event.getNewCurrent() > 0,
-                                smallSearchSize);
-                    }
-                }, 2);
+                setGateState(null, pt, event.getNewCurrent() > 0,
+                        smallSearchSize);
+            }
+        }, 2);
     }
 
     @Override
