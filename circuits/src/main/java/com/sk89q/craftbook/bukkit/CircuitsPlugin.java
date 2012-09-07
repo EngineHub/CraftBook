@@ -21,7 +21,9 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 import java.util.Map.Entry;
 
+import org.bukkit.Chunk;
 import org.bukkit.Server;
+import org.bukkit.World;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.LanguageManager;
@@ -348,15 +350,14 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         int numWorlds = 0;
         int numChunks = 0;
 
-        //TODO work out why this was here in the first place.
-        //for (World world : getServer().getWorlds()) {
-        //    for (Chunk chunk : world.getLoadedChunks()) {
-        //         manager.enumerate(chunk);
-        //         numChunks++;
-        //     }
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                manager.enumerate(chunk);
+                numChunks++;
+            }
 
-        //    numWorlds++;
-        //}
+            numWorlds++;
+        }
 
         long time = System.currentTimeMillis() - start;
 

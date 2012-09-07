@@ -21,6 +21,8 @@ package com.sk89q.craftbook.bukkit;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -154,14 +156,14 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         int numWorlds = 0;
         int numChunks = 0;
 
-        //for (World world : getServer().getWorlds()) {
-        //    for (Chunk chunk : world.getLoadedChunks()) {
-        //        manager.enumerate(chunk);
-        //        numChunks++;
-        //    }
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                manager.enumerate(chunk);
+                numChunks++;
+            }
 
-        //    numWorlds++;
-        //}
+            numWorlds++;
+        }
 
         long time = System.currentTimeMillis() - start;
 
