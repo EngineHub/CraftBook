@@ -198,7 +198,7 @@ public class Elevator extends AbstractMechanic {
     private void makeItSo(LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getLocation().getPosition().getX()),destination.getY() + 1,(int) Math.floor(player.getLocation().getPosition().getZ()));
+        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()),destination.getY() + 1,(int) Math.floor(player.getPosition().getPosition().getZ()));
         // well, unless that's already a ceiling.
         if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
 
@@ -227,14 +227,14 @@ public class Elevator extends AbstractMechanic {
         }
 
         // Teleport!
-        Location newLocation = player.getLocation();
-        newLocation.setPosition(player.getLocation().getPosition().setY(floor.getY() + 1));
+        Location newLocation = player.getPosition();
+        newLocation.setPosition(player.getPosition().getPosition().setY(floor.getY() + 1));
         if (player.isInsideVehicle()) {
             newLocation = player.getVehicle().getLocation();
             newLocation.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() + 2));
             player.getVehicle().teleport(newLocation);
         }
-        player.teleport(newLocation);
+        player.setPosition(newLocation.getPosition(),newLocation.getPitch(),newLocation.getYaw());
 
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can

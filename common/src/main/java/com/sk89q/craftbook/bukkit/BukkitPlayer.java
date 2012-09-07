@@ -26,6 +26,7 @@ import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Vehicle;
 import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
 
 public class BukkitPlayer implements LocalPlayer {
 
@@ -80,13 +81,18 @@ public class BukkitPlayer implements LocalPlayer {
     }
 
     @Override
-    public Location getLocation() {
+    public Location getPosition() {
         return BukkitUtil.toLocation(player.getLocation());
     }
 
     @Override
     public void teleport(Location location) {
         player.teleport(BukkitUtil.toLocation(location));
+    }
+
+    @Override
+    public void setPosition(Vector pos, float pitch, float yaw) {
+        player.teleport(new org.bukkit.Location(player.getWorld(), pos.getX(), pos.getY(),pos.getZ(), yaw, pitch));
     }
 
     @Override

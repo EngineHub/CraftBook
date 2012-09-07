@@ -19,6 +19,7 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
 
 /**
  * Holds an abstraction for players.
@@ -39,7 +40,9 @@ public interface LocalPlayer {
 
     public String getName();
 
-    public Location getLocation();
+    public Location getPosition();
+
+    public void setPosition(Vector pos, float pitch, float yaw);
 
     public void teleport(Location location);
 
