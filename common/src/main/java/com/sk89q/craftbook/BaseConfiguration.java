@@ -1,6 +1,8 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,14 +29,14 @@ public class BaseConfiguration {
     //General settings
     public class CommonSettings {
 
-        public final String language;
+        public final List<String> languages;
         public final boolean opPerms;
         public final boolean useBlockDistance;
         public final boolean checkWGRegions;
 
         private CommonSettings() {
 
-            language = getString("language", "en_US");
+            languages = getStringList("languages", new ArrayList<String>(Arrays.asList("en_US")));
             opPerms = getBoolean("op-perms", true);
             useBlockDistance = getBoolean("use-block-radius", false);
             checkWGRegions = getBoolean("check-worldguard-flags", true);
@@ -69,6 +71,17 @@ public class BaseConfiguration {
         return it;
     }
 
+    public List<String> getStringList(String name, List<String> def) {
+
+        List<String> it = cfg.getStringList(name);
+        if(it == null || it.size() == 0) {
+            it = new ArrayList<String>();
+            it.add("en_US");
+        }
+        cfg.set(name, it);
+        return it;
+    }
+
     public Set<Integer> getIntegerSet(String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
@@ -77,7 +90,6 @@ public class BaseConfiguration {
         for (Integer tid : tids) allowedBlocks.add(tid);
         cfg.set(name, tids);
         return allowedBlocks;
-
     }
 
     public Set<Material> getMaterialSet(String name, List<Integer> def) {

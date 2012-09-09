@@ -1,13 +1,20 @@
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import org.bukkit.ChatColor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
+
+import net.minecraft.server.LocaleLanguage;
+
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
 /**
  * @author Me4502
@@ -16,7 +23,8 @@ public class LanguageManager {
 
     final BaseBukkitPlugin plugin;
 
-    final HashMap<String, String> languageData = new HashMap<String, String>();
+    //final HashMap<String, String> languageData = new HashMap<String, String>();
+    HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
     public LanguageManager(BaseBukkitPlugin plugin) {
 
@@ -26,25 +34,52 @@ public class LanguageManager {
 
     public void checkForLanguages() {
 
-        String language = plugin.getLocalConfiguration().commonSettings.language;
-        File f = new File(plugin.getDataFolder(), language + ".txt");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.split(":").length != 2) continue;
-                languageData.put(line.split(":")[0], line.split(":")[1]);
+        List<String> languages = plugin.getLocalConfiguration().commonSettings.languages;
+        for(String language : languages) {
+            HashMap<String, String> languageData = new HashMap<String, String>();
+            File f = new File(plugin.getDataFolder(), language + ".txt");
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.split(":").length != 2) continue;
+                    languageData.put(line.split(":")[0], line.split(":")[1]);
+                }
+                br.close();
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + plugin.getDataFolder().getName() +
+                        File.pathSeparator + language + ".txt");
             }
-            br.close();
-        } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + plugin.getDataFolder().getName
-                    () + File.pathSeparator + language + ".txt");
+            languageMap.put(language, languageData);
         }
     }
 
-    public String getString(String s) {
+    @Deprecated
+    public String getString(String message) {
 
-        if (languageData.get(ChatColor.stripColor(s)) == null) return s;
-        return languageData.get(ChatColor.stripColor(s));
+        HashMap<String, String> languageData = languageMap.get("en_US");
+        if(languageData == null)
+            return "Missing Language File!";
+        if (languageData.get(ChatColor.stripColor(message)) == null) return message;
+        return languageData.get(ChatColor.stripColor(message));
+    }
+
+    public String getString(String message, String language) {
+
+        HashMap<String, String> languageData = languageMap.get(language);
+        if(languageData == null)
+            return getString(message);
+        if (languageData.get(ChatColor.stripColor(message)) == null) return message;
+        return languageData.get(ChatColor.stripColor(message));
+    }
+
+    public static String getPlayersLanguage(Player p) {
+        try {
+            Field d = LocaleLanguage.class.getField("d");
+            return (String) d.get(((CraftPlayer)p).getHandle().getLocale());
+        }
+        catch(Exception e) {
+            return "en_US";
+        }
     }
 }
