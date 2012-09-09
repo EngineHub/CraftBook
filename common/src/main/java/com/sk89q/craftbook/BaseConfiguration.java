@@ -75,8 +75,7 @@ public class BaseConfiguration {
 
         List<String> it = cfg.getStringList(name);
         if(it == null || it.size() == 0) {
-            it = new ArrayList<String>();
-            it.add("en_US");
+            it = def;
         }
         cfg.set(name, it);
         return it;

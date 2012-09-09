@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
-public class CustomDrops extends MechanismsPlugin implements Listener {
+public class CustomDrops implements Listener {
 
     final MechanismsPlugin plugin;
 

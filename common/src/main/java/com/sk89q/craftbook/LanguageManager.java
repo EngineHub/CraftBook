@@ -36,6 +36,7 @@ public class LanguageManager {
 
         List<String> languages = plugin.getLocalConfiguration().commonSettings.languages;
         for(String language : languages) {
+            language = language.trim();
             HashMap<String, String> languageData = new HashMap<String, String>();
             File f = new File(plugin.getDataFolder(), language + ".txt");
             try {

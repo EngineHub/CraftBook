@@ -71,7 +71,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     protected final CommandsManager<CommandSender> commands;
     private final CommandsManagerRegistration commandManager;
 
-    protected WorldGuardPlugin worldguard;
+    protected WorldGuardPlugin worldguard = null;
     protected boolean useWorldGuard = false;
     protected StateFlag useFlag = null;
 
