@@ -75,7 +75,8 @@ public class LanguageManager {
 
     public static String getPlayersLanguage(Player p) {
         try {
-            Field d = LocaleLanguage.class.getField("d");
+            Field d = LocaleLanguage.class.getDeclaredField("d");
+            d.setAccessible(true);
             return (String) d.get(((CraftPlayer)p).getHandle().getLocale());
         }
         catch(Exception e) {
