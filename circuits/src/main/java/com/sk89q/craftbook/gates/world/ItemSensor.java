@@ -1,9 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -13,7 +11,16 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Set;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Silthus
@@ -58,13 +65,13 @@ public class ItemSensor extends AbstractIC {
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
-        this.radius = ICUtil.parseRadius(getSign());
+        radius = ICUtil.parseRadius(getSign());
         if (getSign().getLine(2).contains("=")) {
             center = ICUtil.parseBlockLocation(getSign());
         } else {
             center = SignUtil.getBackBlock(getSign().getBlock());
         }
-        this.chunks = LocationUtil.getSurroundingChunks(block, radius);
+        chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
     @Override
@@ -89,7 +96,8 @@ public class ItemSensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        for (Chunk chunk : this.chunks) {
+        load();
+        for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 // get all entites from the chunks in the defined radius
                 for (Entity entity : chunk.getEntities()) {
