@@ -228,10 +228,10 @@ public class Elevator extends AbstractMechanic {
 
         // Teleport!
         Location newLocation = player.getPosition();
-        newLocation.setPosition(player.getPosition().getPosition().setY(floor.getY() + 1));
+        newLocation = newLocation.setPosition(player.getPosition().getPosition().setY(floor.getY() + 1));
         if (player.isInsideVehicle()) {
             newLocation = player.getVehicle().getLocation();
-            newLocation.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() + 2));
+            newLocation = newLocation.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() + 2));
             player.getVehicle().teleport(newLocation);
         }
         player.setPosition(newLocation.getPosition(),newLocation.getPitch(),newLocation.getYaw());

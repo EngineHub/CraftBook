@@ -186,10 +186,10 @@ public class Teleporter extends AbstractMechanic {
 
         // Teleport!
         Location subspaceRift = player.getPosition();
-        subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 1, floor.getZ()));
+        subspaceRift = subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 1, floor.getZ()));
         if (player.isInsideVehicle()) {
             subspaceRift = player.getVehicle().getLocation();
-            subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 2, floor.getZ()));
+            subspaceRift = subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 2, floor.getZ()));
             player.getVehicle().teleport(subspaceRift);
         }
         player.teleport(subspaceRift);
