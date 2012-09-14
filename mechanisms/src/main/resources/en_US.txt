@@ -11,10 +11,12 @@ mech.gate.not-found:Failed to find a gate!
 mech.door.create:Door Created!
 mech.door.toggle:Door Toggled!
 mech.door.other-sign:Door sign required on other side (or it was too far away).
+mech.door.unusable:Material not usable for a door!
 mech.door.material:Door must be made entirely out of the same material!
 mech.bridge.create:Bridge Created!
 mech.bridge.toggle:Bridge Toggled!
 mech.bridge.end-create:Bridge End Created!
+mech.bridge.unusable:Material not usable for a bridge!
 mech.bridge.material:Bridge must be made entirely out of the same material!
 mech.bridge.other-sign:Bridge sign required on other side (or it was too far away).
 mech.pay.create:Pay Created!

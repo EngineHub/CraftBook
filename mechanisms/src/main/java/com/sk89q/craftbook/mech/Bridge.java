@@ -156,7 +156,7 @@ public class Bridge extends AbstractMechanic {
                 if (isValidBridge(proximalBaseCenter, mat, s)) break findBase; // it's below
                 else throw new InvalidConstructionException("mech.bridge.material");
             } else {
-                throw new UnacceptableMaterialException();
+                throw new UnacceptableMaterialException("mech.bridge.unusable");
             }
         }
 
@@ -482,6 +482,11 @@ public class Bridge extends AbstractMechanic {
      * Thrown when the bridge type is unacceptable.
      */
     private static class UnacceptableMaterialException extends InvalidMechanismException {
+
+        public UnacceptableMaterialException(String msg) {
+
+            super(msg);
+        }
 
         private static final long serialVersionUID = -2856504362189922160L;
     }

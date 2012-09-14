@@ -168,7 +168,7 @@ public class Door extends AbstractMechanic {
                     break findBase;
                 throw new InvalidConstructionException("mech.door.material");
             } else {
-                throw new UnacceptableMaterialException();
+                throw new UnacceptableMaterialException("mech.door.unusable");
             }
         }
         // Find the other side
@@ -502,6 +502,11 @@ public class Door extends AbstractMechanic {
      * Thrown when the door type is unacceptable.
      */
     private static class UnacceptableMaterialException extends InvalidMechanismException {
+
+        public UnacceptableMaterialException(String msg) {
+
+            super(msg);
+        }
 
         private static final long serialVersionUID = 8340723004466483212L;
     }
