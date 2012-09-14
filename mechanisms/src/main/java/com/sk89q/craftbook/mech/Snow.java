@@ -37,7 +37,9 @@ public class Snow implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
+        if (event == null || event.getAction() == null) return;
         if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+        if (event.getPlayer() == null || event.getClickedBlock() == null || event.getClickedBlock().getTypeId() == 0) return;
 
         if(!plugin.canBuildInArea(event.getClickedBlock().getLocation(), event.getPlayer()))
             return;
