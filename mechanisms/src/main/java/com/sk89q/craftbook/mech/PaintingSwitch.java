@@ -70,25 +70,26 @@ public class PaintingSwitch implements Listener {
         if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null) {
-            try {
-                paintings.remove(players.get(event.getPlayer().getName()));
-                players.remove(event.getPlayer().getName());
-            } catch (Exception ignored) {
-            }
+        if (players.get(player.getName()) == null)
             return;
-        }
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
         else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
         else return;
         if (event.getPreviousSlot() == 0 && event.getNewSlot() == 8) isForwards = false;
         else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) isForwards = true;
-        Art[] art = Art.values();
-        Painting paint = players.get(event.getPlayer().getName());
-        int newID = paint.getArt().getId() + (isForwards ? -1 : 1);
+        Art[] art = Art.values().clone();
+        Painting paint = players.get(player.getName());
+        int newID = paint.getArt().getId() + (isForwards ? 1 : -1);
         if (newID < 0) newID = art.length - 1;
-        if (newID >= art.length) newID = 0;
-        paint.setArt(art[newID]);
+        else if (newID > art.length - 1) newID = 0;
+        while(!paint.setArt(art[newID])) {
+            if(newID > 0)
+                newID --;
+            else
+                break;
+        }
+        paintings.put(paint, player.getName());
+        players.put(player.getName(), paint);
     }
 }
