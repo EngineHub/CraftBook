@@ -1,17 +1,18 @@
 package com.sk89q.craftbook.mech.area;
 
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.data.DataException;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.data.DataException;
 
 /**
  * Represents a cuboid copy that can be saved to disk and
@@ -34,9 +35,9 @@ public abstract class CuboidCopy {
         this.origin = origin;
         this.size = size;
         this.world = world;
-        this.width = size.getBlockX();
-        this.height = size.getBlockY();
-        this.length = size.getBlockZ();
+        width = size.getBlockX();
+        height = size.getBlockY();
+        length = size.getBlockZ();
     }
 
     protected CuboidCopy() {
@@ -86,12 +87,14 @@ public abstract class CuboidCopy {
      */
     public void clear() {
 
+        if(world == null || origin == null) return;
         List<Vector> queued = new ArrayList<Vector>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     Vector pt = origin.add(x, y, z);
+                    if(pt == null) continue;
                     if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
                         Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));
                         if (block instanceof InventoryHolder) {
