@@ -117,4 +117,9 @@ public class BukkitPlayer implements LocalPlayer {
     public boolean isHoldingBlock() {
         return Material.getMaterial(getTypeInHand()).isBlock();
     }
+
+    @Override
+    public String translate(String message) {
+        return plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player));
+    }
 }

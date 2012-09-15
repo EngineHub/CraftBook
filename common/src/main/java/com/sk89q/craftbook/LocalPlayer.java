@@ -53,4 +53,6 @@ public interface LocalPlayer {
     public int getTypeInHand();
 
     public boolean isHoldingBlock();
+
+    public String translate(String message);
 }

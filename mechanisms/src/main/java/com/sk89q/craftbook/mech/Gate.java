@@ -420,7 +420,7 @@ public class Gate extends AbstractMechanic {
                     event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
             }
 
-            player.print("Gate Restocked!");
+            player.print("mech.restock");
             event.setCancelled(true);
             return;
         }

@@ -65,7 +65,7 @@ public class ChunkAnchor extends PersistentMechanic {
             if (!sign.getLine(1).equalsIgnoreCase("[Chunk]")) return null;
             if (!player.hasPermission("craftbook.mech.chunk")) throw new InsufficientPermissionsException();
 
-            player.print("Chunk Anchor created.");
+            player.print("mech.anchor.create");
             sign.setLine(1, "[Chunk]");
 
             throw new ProcessedMechanismException();

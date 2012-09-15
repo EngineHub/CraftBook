@@ -50,13 +50,13 @@ public class PaintingSwitch implements Listener {
                 if (!isBeingEdited(paint)) {
                     paintings.put(paint, player.getName());
                     players.put(player.getName(), paint);
-                    player.print("You are now editing the painting!");
+                    player.print("mech.painting.editing");
                 } else if (paintings.get(paint).equalsIgnoreCase(player.getName())) {
                     paintings.remove(paint);
                     players.remove(player.getName());
-                    player.print("You are no longer editing the painting!");
+                    player.print("mech.painting.stop");
                 } else if (isBeingEdited(paint))
-                    player.print("The painting is already being edited by " + paintings.get(paint) + "!");
+                    player.print(player.translate("mech.painting.used") + " " + paintings.get(paint));
                 else
                     return;
                 event.setCancelled(true);

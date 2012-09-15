@@ -4,6 +4,7 @@ mech.lift.down-sign-created:Elevator down sign created.
 mech.lift.up-sign-created:Elevator up sign created.
 mech.lift.obstruct:Your destination is obstructed!
 mech.lift.no-floor:There is no floor at your destination!
+mech.lift.floor:Floor
 mech.gate.create:Gate Created!
 mech.dgate.create:Small Gate Created!
 mech.gate.toggle:Gate Toggled!
@@ -32,4 +33,9 @@ mech.cook.ouch:Ouch! That was hot!
 mech.hiddenswitch.key:The key did not fit!
 mech.group:You are not in the required group!
 mech.restock:Mechanism Restocked!
+mech.anchor.create:Chunk Anchor Created!
+mech.lightswitch.create:Light Switch Created!
+mech.painting.editing:You are now editing this painting!
+mech.painting.stop:You are no longer editing this painting!
+mech.painting.used:This painting is already being edited by
 area.permissions:You don't have permissions to use mechanics in this area!

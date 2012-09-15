@@ -241,7 +241,7 @@ public class Elevator extends AbstractMechanic {
         // just print a generic message
         String title = ((Sign) destination.getState()).getLines()[0];
         if (title.length() != 0) {
-            player.print("Floor: " + title);
+            player.print(player.translate("mech.lift.floor") + ": " + title);
         } else {
             player.print("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
         }
