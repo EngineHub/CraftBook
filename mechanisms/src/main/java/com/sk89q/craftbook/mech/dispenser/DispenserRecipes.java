@@ -1,15 +1,17 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
+import java.util.ArrayList;
+
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 
 /**
  * @author Me4502
@@ -29,12 +31,12 @@ public class DispenserRecipes implements Listener {
         addRecipe(new Fan());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockDispense(BlockDispenseEvent event) {
 
-        if (event.isCancelled()) return;
-        if (event.getBlock().getState() instanceof Dispenser && plugin.getLocalConfiguration().dispenserSettings
-                .enable) {
+        if (plugin.getLocalConfiguration().dispenserSettings.enable) {
+            if(!(event.getBlock().getState() instanceof Dispenser))
+                return; //Heh? Isn't this just for dispensers?
             Dispenser dis = (Dispenser) event.getBlock().getState();
             if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
                 event.setCancelled(true);
@@ -50,7 +52,7 @@ public class DispenserRecipes implements Listener {
         try {
             for (Recipe r : recipes) {
                 if (r == null) {
-                    recipes.remove(r); //Invalid recipe (save CPU cycles a little)
+                    recipes.remove(r); //Invalid recipe (save CPU cycles a little) (Should never occur)
                     continue;
                 }
                 current:
