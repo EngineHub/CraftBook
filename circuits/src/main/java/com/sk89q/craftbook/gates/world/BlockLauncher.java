@@ -47,12 +47,14 @@ public class BlockLauncher extends AbstractIC {
             data = Byte.parseByte(getSign().getLine(2).split(":")[1]);
         }
         catch(Exception e) {}
-        FallingBlock block = getSign().getWorld().spawnFallingBlock(new Location(getSign().getWorld(), above.getX() + 0.5D,above.getY() + 0.5D,above.getZ() + 0.5D), id, data);
+        FallingBlock block = getSign().getWorld().spawnFallingBlock(new Location(getSign().getWorld(), above.getX() + 0.5D,above.getY() - 0.99D,above.getZ() + 0.5D), id, data);
         Vector velocity = new Vector(0,0.5,0);
         try {
             velocity.setX(Double.parseDouble(getSign().getLine(3).split(":")[0]));
             velocity.setY(Double.parseDouble(getSign().getLine(3).split(":")[1]));
             velocity.setZ(Double.parseDouble(getSign().getLine(3).split(":")[2]));
+            if(velocity.getY() < 0)
+                block.getLocation().setY(above.getY() - 2.99);
         }
         catch(Exception e){}
         block.setVelocity(velocity);
