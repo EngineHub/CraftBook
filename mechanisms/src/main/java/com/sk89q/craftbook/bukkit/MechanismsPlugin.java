@@ -56,6 +56,7 @@ import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
+import com.sk89q.craftbook.mech.dispenser.Recipe;
 
 
 /**
@@ -71,6 +72,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     private final CopyManager copyManager = new CopyManager();
     private MechanicManager manager;
     public static Economy economy = null;  //TODO this probably should be implemented differently
+
+    private DispenserRecipes dRecipes = null;
 
     @Override
     public void onEnable() {
@@ -178,7 +181,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     protected void registerEvents() {
 
         if (getLocalConfiguration().dispenserSettings.enable)
-            getServer().getPluginManager().registerEvents(new DispenserRecipes(this), this);
+            getServer().getPluginManager().registerEvents(dRecipes = new DispenserRecipes(this), this);
         if (getLocalConfiguration().snowSettings.enable)
             getServer().getPluginManager().registerEvents(new Snow(this), this);
         if (getLocalConfiguration().customDropSettings.enable)
@@ -263,5 +266,19 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     private boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         return manager.unregister(factory);
+    }
+
+    /**
+     * Register a Dispenser Recipe
+     *
+     * @param recipe
+     * 
+     * @return if successfully added.
+     */
+    public boolean registerDispenserRecipe(Recipe recipe) {
+        if (getLocalConfiguration().dispenserSettings.enable) {
+            return dRecipes.addRecipe(recipe);
+        }
+        return false;
     }
 }

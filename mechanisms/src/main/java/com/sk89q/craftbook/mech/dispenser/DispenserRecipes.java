@@ -88,9 +88,10 @@ public class DispenserRecipes implements Listener {
      *
      * @param recipe
      */
-    public void addRecipe(Recipe recipe) {
+    public boolean addRecipe(Recipe recipe) {
 
-        if (recipes.contains(recipe)) return;
+        if (recipes.contains(recipe)) return false;
         recipes.add(recipe);
+        return true;
     }
 }
