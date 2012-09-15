@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,11 +22,13 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * @author Silthus
@@ -45,7 +46,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
             recipes = new ImprovedCauldronCookbook(
                     YamlConfiguration.loadConfiguration(
                             new File(plugin.getDataFolder(), "cauldron-recipes.yml")
-                    ), plugin.getDataFolder());
+                            ), plugin.getDataFolder());
         }
 
         @Override
@@ -106,9 +107,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                 ImprovedCauldronCookbook.Recipe recipe = cookbook.getRecipe(CauldronItemStack.convert(items));
                 if (!plugin.getLocalConfiguration().cauldronSettings.newSpoons) {
                     cook(recipe, items);
-                    event.getPlayer().sendMessage(
-                            ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
-                                    .YELLOW + " recipe.");
+                    player.print(
+                            "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
+                            .YELLOW + " recipe.");
                     block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
                     event.setCancelled(true);
                 } else { //Spoons
@@ -121,9 +122,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                                 .getDurability() - (short) 1));
                         if (chance <= ran) {
                             cook(recipe, items);
-                            event.getPlayer().sendMessage(
-                                    ChatColor.YELLOW + "You have cooked the " + ChatColor.AQUA + recipe.getName() +
-                                            ChatColor.YELLOW + " recipe.");
+                            player.print(
+                                    "You have cooked the " + ChatColor.AQUA + recipe.getName() +
+                                    ChatColor.YELLOW + " recipe.");
                             block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
                                     false);
                             event.setCancelled(true);
@@ -133,7 +134,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                     }
                 }
             } catch (UnknownRecipeException e) {
-                event.getPlayer().sendMessage(ChatColor.RED + e.getMessage());
+                player.printError(e.getMessage());
             }
         }
     }
