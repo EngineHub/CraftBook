@@ -111,9 +111,13 @@ public class ICUtil {
                         }
                     } else if (type == Material.DIODE_BLOCK_ON || type == Material.DIODE_BLOCK_OFF) {
                         if (state) {
+                            byte oldData = relative.getData();
                             relative.setType(Material.DIODE_BLOCK_OFF);
+                            relative.setData(oldData);
                         } else {
+                            byte oldData = relative.getData();
                             relative.setType(Material.DIODE_BLOCK_ON);
+                            relative.setData(oldData);
                         }
                     } else if (type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE) {
                         ((PistonBaseMaterial) relative.getState().getData()).setPowered(state);
