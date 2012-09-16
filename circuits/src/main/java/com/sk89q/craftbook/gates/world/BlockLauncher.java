@@ -40,8 +40,10 @@ public class BlockLauncher extends AbstractIC {
 
     public void launch() {
         Block above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
-        while(above.getTypeId() != 0) {
+        int timeout = 12;
+        while(above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() >= 255) {
             above = above.getRelative(0, 1, 0);
+            timeout --;
         }
         int id = 12;
         byte data = 0;
@@ -59,8 +61,10 @@ public class BlockLauncher extends AbstractIC {
         catch(Exception e){}
         if(velocity.getY() < 0) {
             above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
-            while(above.getTypeId() != 0) {
+            timeout = 12;
+            while(above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() <= 1) {
                 above = above.getRelative(0, -1, 0);
+                timeout --;
             }
         }
         double y = above.getY() - 0.99D;
