@@ -89,9 +89,7 @@ public class ICUtil {
                     return true;
                 }
                 else {
-                    byte oldData = block.getData();
-                    block.setType(state ? Material.REDSTONE_TORCH_OFF : Material.REDSTONE_TORCH_ON);
-                    block.setData(oldData);
+                    block.setTypeId(state ? Material.REDSTONE_TORCH_OFF.getId() : Material.REDSTONE_TORCH_ON.getId(), false);
                 }
             } catch (Throwable e) {
                 // lets catch the exception if the method is not supported
