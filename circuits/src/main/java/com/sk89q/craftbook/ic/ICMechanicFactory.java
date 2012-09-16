@@ -18,6 +18,12 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -25,11 +31,6 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
@@ -100,7 +101,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                     (SelfTriggeredIC) ic,
                     registration.getFamily(),
                     pt
-            );
+                    );
         } else {
             return new ICMechanic(
                     plugin,
@@ -108,7 +109,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                     ic,
                     registration.getFamily(),
                     pt
-            );
+                    );
         }
     }
 
@@ -116,6 +117,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     /**
      * Detect the mechanic at a placed sign.
      */
+    @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
         return detect(pt, player, sign, false);
@@ -164,6 +166,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
 
+            if(ICManager.isCachedIC(pt))
+                ICManager.removeCachedIC(pt);
+
             ICMechanic mechanic;
 
             if (ic instanceof SelfTriggeredIC) {
@@ -173,7 +178,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                         (SelfTriggeredIC) ic,
                         registration.getFamily(),
                         pt
-                );
+                        );
             } else {
                 mechanic = new ICMechanic(
                         plugin,
@@ -181,7 +186,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                         ic,
                         registration.getFamily(),
                         pt
-                );
+                        );
             }
 
             if(!shortHand)
@@ -191,8 +196,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             return mechanic;
         } else if(plugin.getLocalConfiguration().enableShorthandIcs &&
-                  sign.getLine(0).startsWith("=")) {
-           String id = sign.getLine(0).substring(1);
+                sign.getLine(0).startsWith("=")) {
+            String id = sign.getLine(0).substring(1);
 
             if (block.getTypeId() != BlockID.WALL_SIGN) {
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
