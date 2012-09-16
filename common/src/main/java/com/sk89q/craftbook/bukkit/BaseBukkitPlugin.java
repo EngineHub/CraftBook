@@ -47,6 +47,7 @@ import com.sk89q.minecraft.util.commands.SimpleInjector;
 import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 /**
@@ -107,11 +108,15 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         if(useWorldGuard == false) return true;
         if(getLocalConfiguration().commonSettings.checkWGRegions == false || getWorldGuard() == null) return true;
         if(useFlag == null) useFlag = new StateFlag("use",true);
-        return getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc).allows(useFlag, getWorldGuard().wrapPlayer(p));
+        if(loc == null || p == null) return true;
+        ApplicableRegionSet rset = getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc);
+        if(rset == null) return true;
+        return rset.allows(useFlag, getWorldGuard().wrapPlayer(p));
     }
 
     public boolean canBuildInArea(Location loc, Player p) {
         if(useWorldGuard == false) return true;
+        if(loc == null || p == null) return true;
         if(getLocalConfiguration().commonSettings.checkWGRegions == false || getWorldGuard() == null) return true;
         return getWorldGuard().canBuild(p, loc);
     }
