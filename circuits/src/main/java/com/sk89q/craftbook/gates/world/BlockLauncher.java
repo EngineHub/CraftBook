@@ -40,6 +40,9 @@ public class BlockLauncher extends AbstractIC {
 
     public void launch() {
         Block above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
+        while(above.getTypeId() != 0) {
+            above = above.getRelative(0, 1, 0);
+        }
         int id = 12;
         byte data = 0;
         try {
@@ -54,9 +57,13 @@ public class BlockLauncher extends AbstractIC {
             velocity.setZ(Double.parseDouble(getSign().getLine(3).split(":")[2]));
         }
         catch(Exception e){}
+        if(velocity.getY() < 0) {
+            above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
+            while(above.getTypeId() != 0) {
+                above = above.getRelative(0, -1, 0);
+            }
+        }
         double y = above.getY() - 0.99D;
-        if(velocity.getY() < 0)
-            y = above.getY() - 2.99;
         FallingBlock block = getSign().getWorld().spawnFallingBlock(new Location(getSign().getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), id, data);
         block.setVelocity(velocity);
     }
