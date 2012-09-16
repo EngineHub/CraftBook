@@ -40,6 +40,7 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -75,21 +76,30 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Down]");
-                sign.setLine(0, "0");
+                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite"))
+                    sign.setLine(0, "0");
+                else if(!sign.getLine(0).equalsIgnoreCase("infinite"))
+                    sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Up]");
-                sign.setLine(0, "0");
+                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite"))
+                    sign.setLine(0, "0");
+                else if(!sign.getLine(0).equalsIgnoreCase("infinite"))
+                    sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door]")) {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door]");
-                sign.setLine(0, "0");
+                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite"))
+                    sign.setLine(0, "0");
+                else if(!sign.getLine(0).equalsIgnoreCase("infinite"))
+                    sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.door.create");
             } else {
@@ -283,21 +293,17 @@ public class Door extends AbstractMechanic {
                 }
 
                 if (sign != null) {
-                    try {
-                        int newBlocks = Integer.parseInt(sign.getLine(0)) + 1;
-                        sign.setLine(0, newBlocks + "");
-                        sign.update();
-                    } catch (Exception e) {
-                        sign.setLine(0, "1");
-                        sign.update();
-                    }
+                    int amount = 1;
+                    if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
+                        amount = 5;
+                    addBlocks(sign,amount);
 
                     if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                        if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
                             event.getPlayer().setItemInHand(new ItemStack(0, 0));
                         } else
                             event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - 1);
+                                    - amount);
                     }
 
                     player.print("mech.restock");
@@ -351,8 +357,7 @@ public class Door extends AbstractMechanic {
         @Override
         public void run() {
 
-            for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that
-                // needs to be fixed in the overall scheme
+            for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 int oldType = 0;
                 if (b != null) oldType = b.getTypeId();
@@ -360,15 +365,8 @@ public class Door extends AbstractMechanic {
                     b.setType(Material.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
-                        int curBlocks;
-                        try {
-                            curBlocks = Integer.parseInt(s.getLine(0));
-                        } catch (NumberFormatException e) {
-                            curBlocks = 0;
-                        }
-                        if (oldType != 0) curBlocks++;
-                        s.setLine(0, curBlocks + "");
-                        s.update();
+                        if (oldType != 0)
+                            addBlocks(s,1);
                     }
                 }
             }
@@ -387,24 +385,15 @@ public class Door extends AbstractMechanic {
         @Override
         public void run() {
 
-            for (com.sk89q.worldedit.BlockVector bv : toggle) {     // this package specification is something that
-                // needs to be fixed in the overall scheme
+            for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId())) {
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
-                        int curBlocks;
-                        try {
-                            curBlocks = Integer.parseInt(s.getLine(0));
-                        } catch (NumberFormatException e) {
-                            curBlocks = 0;
-                        }
-                        if (curBlocks > 0) {
+                        if (hasEnoughBlocks(s)) {
                             b.setType(getDoorMaterial());
                             b.setData(getDoorData());
-                            curBlocks--;
-                            s.setLine(0, curBlocks + "");
-                            s.update();
+                            removeBlocks(s,1);
                         } else {
                             if (player != null) player.printError("Not enough blocks for mechanic to function!");
                             return;
@@ -539,28 +528,50 @@ public class Door extends AbstractMechanic {
             if (state instanceof Sign) sign = (Sign) state;
         }
 
-        int curBlocks = 0;
-
-        if (sign != null && sign.getLine(0).length() > 0) {
-            try {
-                curBlocks = Integer.parseInt(sign.getLine(0));
-            } catch (Exception e) {
-                curBlocks = 0;
-                sign.setLine(0, "0");
-                sign.update();
-            }
-        }
-
-        if (curBlocks > 0) {
-            ItemStack toDrop = new ItemStack(getDoorMaterial(), curBlocks, getDoorData());
-            if (sign != null) {
+        if (hasEnoughBlocks(sign)) {
+            ItemStack toDrop = new ItemStack(getDoorMaterial(), getBlocks(sign), getDoorData());
+            if (sign != null)
                 sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
-            }
         }
     }
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
 
+    }
+
+    public boolean removeBlocks(Sign s, int amount) {
+        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+        int curBlocks = getBlocks(s) - amount;
+        s.setLine(0, curBlocks + "");
+        s.update();
+        if(curBlocks >= 0) return true;
+        else return false;
+    }
+
+    public boolean addBlocks(Sign s, int amount) {
+        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+        int curBlocks = getBlocks(s) + amount;
+        s.setLine(0, curBlocks + "");
+        s.update();
+        if(curBlocks >= 0) return true;
+        else return false;
+    }
+
+    public int getBlocks(Sign s) {
+        if(s.getLine(0).equalsIgnoreCase("infinite")) return 100000;
+        int curBlocks;
+        try {
+            curBlocks = Integer.parseInt(s.getLine(0));
+        } catch (NumberFormatException e) {
+            curBlocks = 0;
+        }
+        return curBlocks;
+    }
+
+    public boolean hasEnoughBlocks(Sign s) {
+        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+        if(getBlocks(s) > 0) return true;
+        return false;
     }
 }

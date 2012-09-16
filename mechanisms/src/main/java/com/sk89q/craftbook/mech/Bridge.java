@@ -502,19 +502,10 @@ public class Bridge extends AbstractMechanic {
             if (state instanceof Sign) sign = (Sign) state;
         }
 
-        int curBlocks = 0;
+        if(sign == null) return;
 
-        if (sign != null && sign.getLine(0).length() > 0)
-            try {
-                curBlocks = Integer.parseInt(sign.getLine(0));
-            } catch (Exception e) {
-                curBlocks = 0;
-                sign.setLine(0, "0");
-                sign.update();
-            }
-
-        if (curBlocks > 0) {
-            ItemStack toDrop = new ItemStack(getBridgeMaterial(), curBlocks, getBridgeData());
+        if (hasEnoughBlocks(sign)) {
+            ItemStack toDrop = new ItemStack(getBridgeMaterial(), getBlocks(sign), getBridgeData());
             if (sign != null)
                 sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
         }
@@ -544,7 +535,7 @@ public class Bridge extends AbstractMechanic {
     }
 
     public int getBlocks(Sign s) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return 100000;
+        if(s.getLine(0).equalsIgnoreCase("infinite")) return 0;
         int curBlocks;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
