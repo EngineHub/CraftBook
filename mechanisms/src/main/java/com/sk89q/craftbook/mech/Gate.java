@@ -506,7 +506,10 @@ public class Gate extends AbstractMechanic {
                 } else {
                 }
                 sign.setLine(1, "[Gate]");
-                sign.setLine(3, "0");
+                if(sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
+                    sign.setLine(3, "0");
+                else if(!sign.getLine(3).equalsIgnoreCase("infinite"))
+                    sign.setLine(3, "0");
                 sign.update();
                 player.print("mech.gate.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
@@ -525,7 +528,10 @@ public class Gate extends AbstractMechanic {
                 } else {
                 }
                 sign.setLine(1, "[DGate]");
-                sign.setLine(3, "0");
+                if(sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
+                    sign.setLine(3, "0");
+                else if(!sign.getLine(3).equalsIgnoreCase("infinite"))
+                    sign.setLine(3, "0");
                 sign.update();
                 player.print("mech.dgate.create");
             } else {
