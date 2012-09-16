@@ -269,8 +269,6 @@ public class Gate extends AbstractMechanic {
         int y = topPoint.getBlockY();
         int z = topPoint.getBlockZ();
 
-        int curBlocks = 0;
-
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
@@ -297,10 +295,6 @@ public class Gate extends AbstractMechanic {
                 otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
             }
 
-            if (sign != null && sign.getLine(3).length() > 0) {
-                curBlocks = getBlocks(sign,otherSign);
-            }
-
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
                 if (cur != 0 && !isValidGateBlock(cur)) {
@@ -323,7 +317,7 @@ public class Gate extends AbstractMechanic {
                         removeBlocks(sign,1);
                     world.getBlockAt(x, y1, z).setTypeId(ID);
 
-                    setBlocks(sign, curBlocks);
+                    setBlocks(sign, getBlocks(sign,otherSign));
                 } else if (!hasEnoughBlocks(sign,otherSign) && isValidGateItem(new ItemStack(ID, 1))) {
                     if (player != null) {
                         player.printError("Not enough blocks to trigger mechanic!");
