@@ -18,15 +18,25 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.material.Lever;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.material.RedstoneTorch;
 
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -40,8 +50,50 @@ public class ICUtil {
     private static BlockFace[] REDSTONE_CONTACT_FACES =
         {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
 
-    private ICUtil() {
+    public ICUtil() {
+    }
 
+    private static HashMap<Location, Boolean> torchStatus = new HashMap<Location, Boolean>();
+
+    public class ICListener implements Listener {
+
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        public void onBlockPhysics(BlockPhysicsEvent event) {
+            if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) {
+                if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
+                    byte data = event.getBlock().getData();
+                    if(ICUtil.getTorchStatus(event.getBlock().getLocation()).booleanValue()) {
+                        if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_OFF.getId())
+                            event.getBlock().setTypeId(Material.REDSTONE_TORCH_OFF.getId());
+                    }
+                    else
+                        if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_ON.getId())
+                            event.getBlock().setTypeId(Material.REDSTONE_TORCH_ON.getId());
+                    event.getBlock().setData(data, false);
+                }
+            }
+        }
+
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        public void onBlockBreak(BlockBreakEvent event) {
+            if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) {
+                if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
+                    ICUtil.removeTorch(event.getBlock().getLocation());
+                }
+            }
+        }
+    }
+
+    public static Boolean getTorchStatus(Location loc) {
+        return torchStatus.get(loc);
+    }
+
+    public static void removeTorch(Location loc) {
+        torchStatus.remove(loc);
+    }
+
+    public static void setTorch(Location loc, Boolean value) {
+        torchStatus.put(loc, value);
     }
 
     /**
@@ -76,6 +128,18 @@ public class ICUtil {
             newData = data | 0x8;
         }
         // #END legacy code
+        if(block.getType() == Material.REDSTONE_TORCH_OFF || block.getType() == Material.REDSTONE_TORCH_ON) {
+            byte oldData = block.getData();
+            setTorch(block.getLocation(), state);
+            if(state) {
+                if(block.getTypeId() != Material.REDSTONE_TORCH_OFF.getId())
+                    block.setTypeId(Material.REDSTONE_TORCH_OFF.getId());
+            }
+            else
+                if(block.getTypeId() != Material.REDSTONE_TORCH_ON.getId())
+                    block.setTypeId(Material.REDSTONE_TORCH_ON.getId());
+            block.setData(oldData, false);
+        }
         if (wasOn != state) {
             try {
                 if(block.getType() == Material.LEVER) {
@@ -88,12 +152,8 @@ public class ICUtil {
                     nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null, 0, 0, 0, 0);
                     return true;
                 }
-                else {
-                    byte oldData = block.getData();
-                    block.setTypeId(state ? Material.REDSTONE_TORCH_OFF.getId() : Material.REDSTONE_TORCH_ON.getId(), false);
-                    block.setData(oldData, false);
-                }
             } catch (Throwable e) {
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                 // lets catch the exception if the method is not supported
                 block.setData((byte) newData, true);
                 // get the block the lever is attached to:
@@ -124,9 +184,13 @@ public class ICUtil {
                         }
                     } else if (type == Material.REDSTONE_TORCH_ON || type == Material.REDSTONE_TORCH_OFF) {
                         if (state) {
-                            relative.setType(Material.REDSTONE_TORCH_OFF);
+                            byte oldData = relative.getData();
+                            relative.setTypeId(Material.REDSTONE_TORCH_OFF.getId(), false);
+                            relative.setData(oldData, false);
                         } else {
-                            relative.setType(Material.REDSTONE_TORCH_ON);
+                            byte oldData = relative.getData();
+                            relative.setTypeId(Material.REDSTONE_TORCH_ON.getId(), false);
+                            relative.setData(oldData, false);
                         }
                     } else if (type == Material.DIODE_BLOCK_ON || type == Material.DIODE_BLOCK_OFF) {
                         if (state) {
