@@ -140,6 +140,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
             }
 
+            if(ICManager.isCachedIC(pt))
+                ICManager.removeCachedIC(pt);
+
             RegisteredICFactory registration = manager.get(id);
             if (registration == null)
                 throw new InvalidMechanismException("Unknown IC detected: " + id);
@@ -165,9 +168,6 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             IC ic = registration.getFactory().create(sign);
 
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
-
-            if(ICManager.isCachedIC(pt))
-                ICManager.removeCachedIC(pt);
 
             ICMechanic mechanic;
 

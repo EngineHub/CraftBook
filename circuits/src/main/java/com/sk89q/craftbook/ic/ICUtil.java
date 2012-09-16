@@ -109,6 +109,12 @@ public class ICUtil {
                         } else {
                             relative.setType(Material.REDSTONE_TORCH_ON);
                         }
+                    } else if (type == Material.DIODE_BLOCK_ON || type == Material.DIODE_BLOCK_OFF) {
+                        if (state) {
+                            relative.setType(Material.DIODE_BLOCK_OFF);
+                        } else {
+                            relative.setType(Material.DIODE_BLOCK_ON);
+                        }
                     } else if (type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE) {
                         ((PistonBaseMaterial) relative.getState().getData()).setPowered(state);
                         relative.getState().update();
