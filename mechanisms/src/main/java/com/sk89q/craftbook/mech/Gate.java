@@ -298,19 +298,7 @@ public class Gate extends AbstractMechanic {
             }
 
             if (sign != null && sign.getLine(3).length() > 0) {
-                try {
-                    curBlocks = Integer.parseInt(sign.getLine(3));
-                    if (otherSign != null)
-                        curBlocks += Integer.parseInt(otherSign.getLine(3));
-                } catch (Exception e) {
-                    curBlocks = 0;
-                    sign.setLine(3, "0");
-                    sign.update();
-                    if (otherSign != null) {
-                        otherSign.setLine(3, "0");
-                        otherSign.update();
-                    }
-                }
+                curBlocks = getBlocks(sign,otherSign);
             }
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
@@ -327,21 +315,16 @@ public class Gate extends AbstractMechanic {
 
             // bag.setBlockID(w, x, y1, z, ID);
             if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                if (ID == 0 || curBlocks > 0) {
+                if (ID == 0 || hasEnoughBlocks(sign,otherSign)) {
                     if (ID == 0 && isValidGateBlock(world.getBlockAt(x, y1, z)))
-                        curBlocks++;
+                        addBlocks(sign,1);
                     else if (ID != 0 && canPassThrough(world.getBlockAt(x, y1, z).getTypeId())
                             && isValidGateItem(new ItemStack(ID, 1)))
-                        curBlocks--;
+                        removeBlocks(sign,1);
                     world.getBlockAt(x, y1, z).setTypeId(ID);
 
-                    sign.setLine(3, curBlocks + "");
-                    sign.update();
-                    if (otherSign != null) {
-                        otherSign.setLine(3, "0");
-                        otherSign.update();
-                    }
-                } else if (curBlocks == 0 && isValidGateItem(new ItemStack(ID, 1))) {
+                    setBlocks(sign, curBlocks);
+                } else if (!hasEnoughBlocks(sign,otherSign) && isValidGateItem(new ItemStack(ID, 1))) {
                     if (player != null) {
                         player.printError("Not enough blocks to trigger mechanic!");
                         return false;
@@ -404,20 +387,16 @@ public class Gate extends AbstractMechanic {
 
         if (isValidGateItem(player.getTypeInHand())) {
 
-            try {
-                int newBlocks = Integer.parseInt(sign.getLine(3)) + 1;
-                sign.setLine(3, newBlocks + "");
-                sign.update();
-            } catch (Exception e) {
-                sign.setLine(3, "1");
-                sign.update();
-            }
+            int amount = 1;
+            if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
+                amount = 5;
+            addBlocks(sign,amount);
 
             if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                if (event.getPlayer().getItemInHand().getAmount() <= amount) {
                     event.getPlayer().setItemInHand(new ItemStack(0, 0));
                 } else
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
             }
 
             player.print("mech.restock");
@@ -635,20 +614,10 @@ public class Gate extends AbstractMechanic {
                 sign = (Sign) state;
         }
 
-        int curBlocks = 0;
+        if(sign == null) return;
 
-        if (sign != null && sign.getLine(3).length() > 0) {
-            try {
-                curBlocks = Integer.parseInt(sign.getLine(3));
-            } catch (Exception e) {
-                curBlocks = 0;
-                sign.setLine(3, "0");
-                sign.update();
-            }
-        }
-
-        if (curBlocks > 0) {
-            ItemStack toDrop = new ItemStack(Material.FENCE, curBlocks);
+        if (hasEnoughBlocks(sign)) {
+            ItemStack toDrop = new ItemStack(Material.FENCE, getBlocks(sign));
             if (sign != null) {
                 sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
             }
@@ -680,6 +649,65 @@ public class Gate extends AbstractMechanic {
         return isValidGateBlock(t);
     }
 
+    public boolean removeBlocks(Sign s, int amount) {
+        if(s.getLine(3).equalsIgnoreCase("infinite")) return true;
+        int curBlocks = getBlocks(s) - amount;
+        s.setLine(3, curBlocks + "");
+        s.update();
+        if(curBlocks >= 3) return true;
+        else return false;
+    }
+
+    public boolean addBlocks(Sign s, int amount) {
+        if(s.getLine(3).equalsIgnoreCase("infinite")) return true;
+        int curBlocks = getBlocks(s) + amount;
+        s.setLine(3, curBlocks + "");
+        s.update();
+        if(curBlocks >= 0) return true;
+        else return false;
+    }
+
+    public void setBlocks(Sign s, int amount) {
+        if(s.getLine(3).equalsIgnoreCase("infinite")) return;
+        int curBlocks = amount;
+        s.setLine(3, curBlocks + "");
+        s.update();
+        return;
+    }
+
+    public int getBlocks(Sign s) {
+        if(s.getLine(3).equalsIgnoreCase("infinite")) return 0;
+        return getBlocks(s,null);
+    }
+
+    public int getBlocks(Sign s, Sign other) {
+        if(s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3).equalsIgnoreCase("infinite")) return 0;
+        int curBlocks = 0;
+        try {
+            curBlocks = Integer.parseInt(s.getLine(3));
+            try {
+                curBlocks += Integer.parseInt(other.getLine(3));
+                setBlocks(s, curBlocks);
+                setBlocks(other, 0);
+            } catch (Exception e) {
+            }
+        } catch (Exception e) {
+            curBlocks = 0;
+        }
+        return curBlocks;
+    }
+
+    public boolean hasEnoughBlocks(Sign s) {
+        if(s.getLine(3).equalsIgnoreCase("infinite")) return true;
+        if(getBlocks(s) > 0) return true;
+        return false;
+    }
+
+    public boolean hasEnoughBlocks(Sign s, Sign other) {
+        if(s.getLine(3).equalsIgnoreCase("infinite") || other.getLine(3).equalsIgnoreCase("infinite")) return true;
+        if(getBlocks(s,other) > 0) return true;
+        return false;
+    }
 
     // TODO Use this to clean this mech up
     protected class GateColumn {
