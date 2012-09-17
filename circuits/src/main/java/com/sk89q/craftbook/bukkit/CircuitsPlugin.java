@@ -369,12 +369,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new MechanicClock(manager), 0, 2);
-        getServer().getPluginManager().registerEvents(new ICUtil().new ICListener(), this);
     }
 
     @Override
     protected void registerEvents() {
-
+        if(getLocalConfiguration().enableICs)
+            getServer().getPluginManager().registerEvents(new ICUtil().new ICListener(), this);
     }
 
     @Override
