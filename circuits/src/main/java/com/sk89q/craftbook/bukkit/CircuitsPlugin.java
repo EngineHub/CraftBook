@@ -39,8 +39,13 @@ import com.sk89q.craftbook.gates.logic.Clock;
 import com.sk89q.craftbook.gates.logic.ClockDivider;
 import com.sk89q.craftbook.gates.logic.Counter;
 import com.sk89q.craftbook.gates.logic.Delayer;
+import com.sk89q.craftbook.gates.logic.Dispatcher;
 import com.sk89q.craftbook.gates.logic.DownCounter;
 import com.sk89q.craftbook.gates.logic.EdgeTriggerDFlipFlop;
+import com.sk89q.craftbook.gates.logic.FullAdder;
+import com.sk89q.craftbook.gates.logic.FullSubtractor;
+import com.sk89q.craftbook.gates.logic.HalfAdder;
+import com.sk89q.craftbook.gates.logic.HalfSubtractor;
 import com.sk89q.craftbook.gates.logic.InvertedRsNandLatch;
 import com.sk89q.craftbook.gates.logic.Inverter;
 import com.sk89q.craftbook.gates.logic.JkFlipFlop;
@@ -60,6 +65,7 @@ import com.sk89q.craftbook.gates.logic.NotPulser;
 import com.sk89q.craftbook.gates.logic.Pulser;
 import com.sk89q.craftbook.gates.logic.Random3Bit;
 import com.sk89q.craftbook.gates.logic.RandomBit;
+import com.sk89q.craftbook.gates.logic.RandomBitST;
 import com.sk89q.craftbook.gates.logic.Repeater;
 import com.sk89q.craftbook.gates.logic.RsNandLatch;
 import com.sk89q.craftbook.gates.logic.RsNorFlipFlop;
@@ -281,7 +287,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC2511", "inv fe pulser" , new LowNotPulser.Factory(server), familySISO, familyAISO);
 
         //SI3Os
-        registerIC("MC2020", "random"        , new Random3Bit.Factory(server), familySI3O);
+        registerIC("MC2020", "random 3"      , new Random3Bit.Factory(server), familySI3O);
         registerIC("MC2999", "marquee"       , new Marquee.Factory(server), familySI3O);
 
         //3ISOs
@@ -300,21 +306,21 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC3101", "down counter"  , new DownCounter.Factory(server), family3ISO);
         registerIC("MC3102", "counter"       , new Counter.Factory(server), family3ISO);
         registerIC("MC3231", null            , new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
-        //Missing: 3231                                                                                // Restricted
-        registerIC("MC3300", null            , new MemorySetter.Factory(server), family3ISO);          // Restricted
-        registerIC("MC3301", null            , new MemoryAccess.Factory(server), familySI3O);          // Restricted
+        registerIC("MC3300", "ROM set"       , new MemorySetter.Factory(server), family3ISO);          // Restricted
+        registerIC("MC3301", "ROM get"       , new MemoryAccess.Factory(server), familySI3O);          // Restricted
         //3I3Os
-        //Missing: 4000
-        //Missing: 4010
-        //Missing: 4100
-        //Missing: 4110
-        //Missing: 4200
+        registerIC("MC4000", "full adder"    , new FullAdder.Factory(server), family3I3O);
+        registerIC("MC4010", "half adder"    , new HalfAdder.Factory(server), family3I3O);
+        registerIC("MC4100", "full subtr"    , new FullSubtractor.Factory(server), family3I3O);
+        registerIC("MC4110", "half subtr"    , new HalfSubtractor.Factory(server), family3I3O);
+        registerIC("MC4200", "dispatcher"    , new Dispatcher.Factory(server), family3I3O);
 
         //PLCs
         registerIC("MC5000", "perlstone"     , PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
         registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
 
         //Self triggered
+        registerIC("MC0020", "random 1 st"   , new RandomBitST.Factory(server), familySISO);                     //Restricted
         registerIC("MC0111", "receiver st"   , new WirelessReceiverST.Factory(server), familySISO);
         registerIC("MC0204", "trap st"       , new EntityTrapST.Factory(server), familySISO);                    // Restricted
         registerIC("MC0209", "collector st"  , new ChestCollectorST.Factory(server), familySISO);
@@ -333,7 +339,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0420", "clock"         , new Clock.Factory(server), familySISO);
         registerIC("MC0421", "monostable"    , new Monostable.Factory(server), familySISO);
         registerIC("MC0500", null            , new RangedOutput.Factory(server), familySISO);
-        //Missing: 0020 self-triggered RNG (may cause server load issues)
         //Xtra ICs
         //SISOs
         registerIC("MCX230", null            , new RainSensor.Factory(server), familySISO);
