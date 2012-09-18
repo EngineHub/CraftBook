@@ -704,7 +704,7 @@ public class Gate extends AbstractMechanic {
     }
 
     public boolean hasEnoughBlocks(Sign s, Sign other) {
-        if(s.getLine(3).equalsIgnoreCase("infinite") || other.getLine(3).equalsIgnoreCase("infinite")) return true;
+        if(s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3).equalsIgnoreCase("infinite")) return true;
         if(getBlocks(s,other) > 0) return true;
         return false;
     }

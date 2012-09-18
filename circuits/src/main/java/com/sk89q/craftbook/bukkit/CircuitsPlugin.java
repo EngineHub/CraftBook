@@ -280,7 +280,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         //SI3Os
         registerIC("MC2020", "random"        , new Random3Bit.Factory(server), familySI3O);
-        registerIC("MC2999", null            , new Marquee.Factory(server), familySI3O);
+        registerIC("MC2999", "marquee"       , new Marquee.Factory(server), familySI3O);
 
         //3ISOs
         registerIC("MC3002", "and"           , new AndGate.Factory(server), family3ISO);
@@ -295,8 +295,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC3036", "level df flip" , new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         registerIC("MC3040", "multiplexer"   , new Multiplexer.Factory(server), family3ISO);
         registerIC("MC3050", "combo"         , new CombinationLock.Factory(server), family3ISO);
-        registerIC("MC3101", null            , new DownCounter.Factory(server), family3ISO);
-        registerIC("MC3102", null            , new Counter.Factory(server), family3ISO);
+        registerIC("MC3101", "down counter"  , new DownCounter.Factory(server), family3ISO);
+        registerIC("MC3102", "counter"       , new Counter.Factory(server), family3ISO);
         registerIC("MC3231", null            , new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
         //Missing: 3231                                                                                // Restricted
         //3I3Os
