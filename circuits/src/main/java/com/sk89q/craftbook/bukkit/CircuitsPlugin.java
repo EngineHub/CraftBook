@@ -81,6 +81,7 @@ import com.sk89q.craftbook.gates.weather.WeatherControlAdvanced;
 import com.sk89q.craftbook.gates.weather.WeatherFaker;
 import com.sk89q.craftbook.gates.world.ArrowBarrage;
 import com.sk89q.craftbook.gates.world.ArrowShooter;
+import com.sk89q.craftbook.gates.world.AutomaticCrafter;
 import com.sk89q.craftbook.gates.world.BlockLauncher;
 import com.sk89q.craftbook.gates.world.BlockSensor;
 import com.sk89q.craftbook.gates.world.BlockSensorST;
@@ -257,6 +258,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1216", null            , new SetBlockBelowChest.Factory(server), familySISO, familyAISO);  // Restricted
         registerIC("MC1217", null            , new PotionInducer.Factory(server), familySISO, familyAISO);
         registerIC("MC1218", "block launch"  , new BlockLauncher.Factory(server), familySISO, familyAISO);
+        registerIC("MC1219", "auto craft"    , new AutomaticCrafter.Factory(server), familySISO, familyAISO);
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", null            , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1236", null            , new WeatherFaker.Factory(server), familySISO, familyAISO);        // Restricted
