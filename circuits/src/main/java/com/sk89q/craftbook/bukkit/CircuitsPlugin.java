@@ -49,6 +49,8 @@ import com.sk89q.craftbook.gates.logic.LowDelayer;
 import com.sk89q.craftbook.gates.logic.LowNotPulser;
 import com.sk89q.craftbook.gates.logic.LowPulser;
 import com.sk89q.craftbook.gates.logic.Marquee;
+import com.sk89q.craftbook.gates.logic.MemoryAccess;
+import com.sk89q.craftbook.gates.logic.MemorySetter;
 import com.sk89q.craftbook.gates.logic.Monostable;
 import com.sk89q.craftbook.gates.logic.Multiplexer;
 import com.sk89q.craftbook.gates.logic.NandGate;
@@ -299,6 +301,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC3102", "counter"       , new Counter.Factory(server), family3ISO);
         registerIC("MC3231", null            , new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
         //Missing: 3231                                                                                // Restricted
+        registerIC("MC3300", null            , new MemorySetter.Factory(server), family3ISO);          // Restricted
+        registerIC("MC3301", null            , new MemoryAccess.Factory(server), familySI3O);          // Restricted
         //3I3Os
         //Missing: 4000
         //Missing: 4010
