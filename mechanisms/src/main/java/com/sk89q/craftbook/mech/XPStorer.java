@@ -52,6 +52,7 @@ public class XPStorer extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
+        if(!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.xpstore.use")) return;
         Inventory store = Bukkit.createInventory(event.getPlayer(), 9, "Experience Points");
         ItemStack XP = new ItemStack(ItemID.BOTTLE_O_ENCHANTING, 0);
         while(event.getPlayer().getTotalExperience() > 15) {
