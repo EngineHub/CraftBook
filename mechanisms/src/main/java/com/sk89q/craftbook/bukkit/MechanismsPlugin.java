@@ -137,10 +137,10 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             registerMechanic(new Cauldron.Factory(this));
         if (getLocalConfiguration().cauldronSettings.enableNew)
             registerMechanic(new ImprovedCauldron.Factory(this));
+        if(getLocalConfiguration().xpStorerSettings.enabled)
+            registerMechanic(new XPStorer.Factory(this));
         if (getLocalConfiguration().customCraftingSettings.enable)
             new CustomCrafting(this);
-
-        registerMechanic(new XPStorer.Factory(this));
 
         //Special mechanics.
         if (economy != null) registerMechanic(new Payment.Factory(this));

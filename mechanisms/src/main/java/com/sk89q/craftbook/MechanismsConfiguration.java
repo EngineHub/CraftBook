@@ -18,16 +18,17 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import com.sk89q.craftbook.mech.CustomDropManager;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -71,6 +72,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         cookingPotSettings = new CookingPotSettings();
         customCraftingSettings = new CustomCraftingSettings();
         paintingSettings = new PaintingSettings();
+        xpStorerSettings = new XPStorerSettings();
     }
 
     public final File dataFolder;
@@ -98,6 +100,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public final CookingPotSettings cookingPotSettings;
     public final CustomCraftingSettings customCraftingSettings;
     public final PaintingSettings paintingSettings;
+    public final XPStorerSettings xpStorerSettings;
 
     //General settings
     public class MechanismSettings {
@@ -429,6 +432,16 @@ public class MechanismsConfiguration extends BaseConfiguration {
         private PaintingSettings() {
 
             enabled = getBoolean("painting-switch-enable", true);
+        }
+    }
+
+    public class XPStorerSettings {
+
+        public final boolean enabled;
+
+        private XPStorerSettings() {
+
+            enabled = getBoolean("xp-storer-enable", true);
         }
     }
 }
