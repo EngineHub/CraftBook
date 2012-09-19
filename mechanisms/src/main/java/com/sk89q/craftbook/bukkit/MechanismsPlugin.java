@@ -51,6 +51,7 @@ import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Teleporter;
+import com.sk89q.craftbook.mech.XPStorer;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
@@ -138,6 +139,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             registerMechanic(new ImprovedCauldron.Factory(this));
         if (getLocalConfiguration().customCraftingSettings.enable)
             new CustomCrafting(this);
+
+        registerMechanic(new XPStorer.Factory(this));
 
         //Special mechanics.
         if (economy != null) registerMechanic(new Payment.Factory(this));
