@@ -95,7 +95,7 @@ public class GlowStone extends PersistentMechanic {
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
-        if (event.getClickedBlock().isBlockPowered()
+        if (event.getClickedBlock().isBlockIndirectlyPowered()
                 && event.getClickedBlock().getTypeId() == BlockID.LIGHTSTONE) {
             event.setCancelled(true);
         }
@@ -136,7 +136,7 @@ public class GlowStone extends PersistentMechanic {
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
         if(evt instanceof BlockBreakEvent) {
-            if(evt.getBlock().getTypeId() == BlockID.LIGHTSTONE)
+            if(evt.getBlock().getTypeId() == BlockID.LIGHTSTONE && evt.getBlock().isBlockIndirectlyPowered())
                 ((BlockBreakEvent) evt).setCancelled(true);
         }
     }
