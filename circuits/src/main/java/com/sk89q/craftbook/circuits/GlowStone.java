@@ -20,12 +20,16 @@
 
 package com.sk89q.craftbook.circuits;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -37,7 +41,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  *
  * @author sk89q
  */
-public class GlowStone extends AbstractMechanic {
+public class GlowStone extends PersistentMechanic {
 
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
 
@@ -59,6 +63,7 @@ public class GlowStone extends AbstractMechanic {
     }
 
     CircuitsPlugin plugin;
+    BlockWorldVector pt;
 
     /**
      * Construct the mechanic for a location.
@@ -69,6 +74,7 @@ public class GlowStone extends AbstractMechanic {
 
         super();
         this.plugin = plugin;
+        this.pt = pt;
     }
 
     /**
@@ -109,7 +115,7 @@ public class GlowStone extends AbstractMechanic {
     @Override
     public boolean isActive() {
 
-        return false;
+        return BukkitUtil.toBlock(pt).getTypeId() == BlockID.LIGHTSTONE;
     }
 
     @Override
@@ -120,5 +126,18 @@ public class GlowStone extends AbstractMechanic {
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
 
+    }
+
+    @Override
+    public List<BlockWorldVector> getWatchedPositions() {
+        return Arrays.asList(pt);
+    }
+
+    @Override
+    public void onWatchBlockNotification(BlockEvent evt) {
+        if(evt instanceof BlockBreakEvent) {
+            if(evt.getBlock().getTypeId() == BlockID.LIGHTSTONE)
+                ((BlockBreakEvent) evt).setCancelled(true);
+        }
     }
 }

@@ -15,7 +15,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -73,7 +72,7 @@ public class AutomaticCrafter extends AbstractIC {
                                         else
                                             break thisRecipe;
                                     else
-                                        if(require.getTypeId() == it.getTypeId())
+                                        if(require.getTypeId() == it.getTypeId() && require.getDurability() == it.getDurability())
                                             continue;
                                         else
                                             break thisRecipe;
@@ -91,7 +90,7 @@ public class AutomaticCrafter extends AbstractIC {
                                 if(it == null) continue;
                                 for(ItemStack stack : ing) {
                                     if(stack == null) continue;
-                                    if(it.getTypeId() == stack.getTypeId()) {
+                                    if(it.getTypeId() == stack.getTypeId() && it.getDurability() == stack.getDurability()) {
                                         ing.remove(stack);
                                         break;
                                     }
@@ -131,11 +130,6 @@ public class AutomaticCrafter extends AbstractIC {
         public IC create(Sign sign) {
 
             return new AutomaticCrafter(getServer(), sign);
-        }
-
-        @Override
-        public void checkPlayer(Sign sign, LocalPlayer player) {
-            player.printError("WARNING! IC IS LAGGY!");
         }
     }
 }
