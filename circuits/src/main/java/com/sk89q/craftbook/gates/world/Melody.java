@@ -58,7 +58,7 @@ public class Melody extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1].equalsIgnoreCase("START"))
+        if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).equalsIgnoreCase("START"))
             return;
 
         try {
@@ -72,7 +72,7 @@ public class Melody extends AbstractIC {
 
                 int radius = 0;
                 try {
-                    radius = Integer.parseInt(getSign().getLine(3).split(":")[0]);
+                    radius = Integer.parseInt(getSign().getLine(3));
                 } catch (Exception ignored) {
                 }
 
