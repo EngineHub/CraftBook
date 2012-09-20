@@ -108,14 +108,18 @@ public class Melody extends AbstractIC {
                     if (radius > 0 && player.getLocation().getWorld().getName().equals(getSign().getLocation().getWorld().getName())) {
                         if (player.getLocation().distance(getSign().getLocation()) > radius) continue;
                     }
+                    else if(radius > 0)
+                        continue;
                     jNote.getJingleNoteManager().play(player, sequencer, 0);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
+                return;
             } else if (sequencer != null && chip.getInput(0)) {
                 for (Player player : getServer().getOnlinePlayers()) {
                     jNote.getJingleNoteManager().stop(player);
                 }
                 jNote.getJingleNoteManager().stopAll();
+                return;
             }
         } catch (Exception e) {
             getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
