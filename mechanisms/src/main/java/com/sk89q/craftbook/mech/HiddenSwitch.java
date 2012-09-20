@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -8,7 +9,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.material.Button;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -155,14 +155,20 @@ public class HiddenSwitch extends AbstractMechanic {
 
 
         for (BlockFace blockFace : checkFaces) {
-            Block checkBlock = sign.getRelative(blockFace);
+            final Block checkBlock = sign.getRelative(blockFace);
 
             if (checkBlock.getTypeId() == BlockID.LEVER) {
                 checkBlock.setData((byte) (checkBlock.getData() ^ 0x8));
             }
             else if (checkBlock.getTypeId() == BlockID.STONE_BUTTON) {
-                Button b = (Button)checkBlock.getState().getData();
-                b.setPowered(true);
+                checkBlock.setData((byte) (checkBlock.getData() | 0x8));
+                Runnable turnOff = new Runnable() {
+                    @Override
+                    public void run() {
+                        checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
+                    }
+                };
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, turnOff, 2 * 20L);
             }
         }
     }
