@@ -23,7 +23,7 @@ import com.sk89q.jinglenote.MidiJingleSequencer;
 public class Melody extends AbstractIC {
 
     MidiJingleSequencer sequencer;
-    JingleNoteComponent jNote = new JingleNoteComponent();
+    JingleNoteComponent jNote;
 
     public Melody(Server server, Sign block) {
 
@@ -47,7 +47,10 @@ public class Melody extends AbstractIC {
     public void unload() {
 
         try {
-            if (jNote != null) jNote.getJingleNoteManager().stopAll();
+            if (jNote != null) {
+                jNote.getJingleNoteManager().stopAll();
+                jNote = null;
+            }
         } catch (Exception ignored) {
 
         }
@@ -56,16 +59,21 @@ public class Melody extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        try {
-            if (jNote == null) jNote = new JingleNoteComponent();
-            jNote.enable();
+        if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1].equalsIgnoreCase("START"))
+            return;
 
-            if (chip.getInput(0) && (sequencer == null || getSign().getLine(3).equalsIgnoreCase("START"))) {
+        try {
+            if (jNote == null) {
+                jNote = new JingleNoteComponent();
+                jNote.enable();
+            }
+
+            if (chip.getInput(0) && sequencer == null) {
                 String midiName = getSign().getLine(2);
 
                 int radius = 0;
                 try {
-                    radius = Integer.parseInt(getSign().getLine(3));
+                    radius = Integer.parseInt(getSign().getLine(3).split(":")[0]);
                 } catch (Exception ignored) {
                 }
 
@@ -90,19 +98,10 @@ public class Melody extends AbstractIC {
                 }
 
                 if (file == null) {
-                    getServer().getLogger().log(Level.SEVERE,
-                            "Midi file not found!");
+                    getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
                     return;
                 }
 
-                if (sequencer != null && jNote != null) {
-                    for (Player player : getServer().getOnlinePlayers()) {
-                        if (getSign().getLine(3).equalsIgnoreCase("START")) break;
-                        jNote.getJingleNoteManager().stop(player);
-                    }
-                    if (!getSign().getLine(3).equalsIgnoreCase("START"))
-                        jNote.getJingleNoteManager().stopAll();
-                }
                 sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (player == null)
@@ -113,8 +112,7 @@ public class Melody extends AbstractIC {
                     jNote.getJingleNoteManager().play(player, sequencer, 0);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
-            } else if (sequencer != null && chip.getInput(0) && !getSign().getLine(3).equalsIgnoreCase("START")) {
-                if (getSign().getLine(3).equalsIgnoreCase("START")) return;
+            } else if (sequencer != null && chip.getInput(0)) {
                 sequencer.stop();
                 sequencer = null;
                 for (Player player : getServer().getOnlinePlayers()) {
