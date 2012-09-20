@@ -14,6 +14,13 @@ import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
 import com.sk89q.craftbook.util.GeneralUtil;
 
+/**
+ * 
+ * Custom Crafting Recipe Handler
+ * 
+ * @author Me4502
+ *
+ */
 public class CustomCrafting {
 
     protected final RecipeManager recipes;
@@ -30,7 +37,7 @@ public class CustomCrafting {
                 if (r.getType() == RecipeType.SHAPELESS) {
                     ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
                     for (CraftingItemStack is : r.getIngredients()) {
-                        sh.addIngredient(is.getMaterial(), is.getData());
+                        sh.addIngredient(is.getAmount(), is.getMaterial(), is.getData());
                     }
                     plugin.getServer().addRecipe(sh);
                 } else if (r.getType() == RecipeType.SHAPED2X2) {

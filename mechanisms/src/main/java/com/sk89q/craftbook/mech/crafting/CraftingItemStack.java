@@ -1,10 +1,14 @@
 package com.sk89q.craftbook.mech.crafting;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.*;
 
 /**
  * @author Silthus
@@ -73,6 +77,8 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
     public int getAmount() {
 
+        if(amount < 1)
+            return 1;
         return amount;
     }
 
