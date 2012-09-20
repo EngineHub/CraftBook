@@ -113,8 +113,6 @@ public class Melody extends AbstractIC {
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
             } else if (sequencer != null && chip.getInput(0)) {
-                sequencer.stop();
-                sequencer = null;
                 for (Player player : getServer().getOnlinePlayers()) {
                     jNote.getJingleNoteManager().stop(player);
                 }
