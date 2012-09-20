@@ -168,7 +168,7 @@ public class HiddenSwitch extends AbstractMechanic {
                         checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                     }
                 };
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, turnOff, 2 * 20L);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, turnOff, 1 * 20L);
             }
         }
     }
