@@ -109,7 +109,9 @@ public class Melody extends AbstractIC {
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (player == null)
                         continue;
-                    if (radius > 0 && player.getLocation().distance(getSign().getLocation()) > radius) continue;
+                    if (radius > 0 && player.getLocation().getWorld().getName().equals(getSign().getLocation().getWorld().getName())) {
+                        if (player.getLocation().distance(getSign().getLocation()) > radius) continue;
+                    }
                     jNote.getJingleNoteManager().play(player, sequencer, 0);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
