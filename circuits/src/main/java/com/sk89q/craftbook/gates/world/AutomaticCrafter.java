@@ -75,8 +75,11 @@ public class AutomaticCrafter extends AbstractIC {
 
                 if(recipe == null) break craft;
 
-                if(!isValidRecipe(recipe, inv))
-                    break craft;
+                if(!isValidRecipe(recipe, inv)) {
+                    recipe = null;
+                    trigger(chip);
+                    return;
+                }
 
                 Inventory replace = disp.getInventory();
                 disp.getInventory().clear();
