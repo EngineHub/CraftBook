@@ -70,7 +70,7 @@ public class PaintingSwitch implements Listener {
         if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null)
+        if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player.getName()).isValid())
             return;
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
