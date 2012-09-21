@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -87,18 +86,6 @@ public class GlowStone extends PersistentMechanic {
         else event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock.getId());
 
         event.getBlock().setData(event.getBlock().getData(), false);
-    }
-
-    /**
-     * Raised when clicked.
-     */
-    @Override
-    public void onLeftClick(PlayerInteractEvent event) {
-
-        if (event.getClickedBlock().isBlockIndirectlyPowered()
-                && event.getClickedBlock().getTypeId() == BlockID.LIGHTSTONE) {
-            event.setCancelled(true);
-        }
     }
 
     /**

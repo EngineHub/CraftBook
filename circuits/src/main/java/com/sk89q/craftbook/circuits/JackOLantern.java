@@ -19,26 +19,34 @@
 
 package com.sk89q.craftbook.circuits;
 
-import com.sk89q.craftbook.AbstractMechanic;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
  *
  * @author sk89q
  */
-public class JackOLantern extends AbstractMechanic {
+public class JackOLantern extends PersistentMechanic {
 
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
 
-        public Factory() {
+        CircuitsPlugin plugin;
 
+        public Factory(CircuitsPlugin plugin) {
+            this.plugin = plugin;
         }
 
         @Override
@@ -46,20 +54,25 @@ public class JackOLantern extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) return new JackOLantern(pt);
+            if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) return new JackOLantern(plugin, pt);
 
             return null;
         }
     }
+
+    CircuitsPlugin plugin;
+    BlockWorldVector pt;
 
     /**
      * Construct the mechanic for a location.
      *
      * @param pt
      */
-    private JackOLantern(BlockWorldVector pt) {
+    private JackOLantern(CircuitsPlugin plugin, BlockWorldVector pt) {
 
         super();
+        this.plugin = plugin;
+        this.pt = pt;
     }
 
     /**
@@ -88,7 +101,7 @@ public class JackOLantern extends AbstractMechanic {
     @Override
     public boolean isActive() {
 
-        return false;
+        return BukkitUtil.toBlock(pt).getTypeId() == BlockID.JACKOLANTERN;
     }
 
     @Override
@@ -99,5 +112,18 @@ public class JackOLantern extends AbstractMechanic {
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
 
+    }
+
+    @Override
+    public List<BlockWorldVector> getWatchedPositions() {
+        return Arrays.asList(pt);
+    }
+
+    @Override
+    public void onWatchBlockNotification(BlockEvent evt) {
+        if(evt instanceof BlockBreakEvent) {
+            if(evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && evt.getBlock().isBlockIndirectlyPowered())
+                ((BlockBreakEvent) evt).setCancelled(true);
+        }
     }
 }
