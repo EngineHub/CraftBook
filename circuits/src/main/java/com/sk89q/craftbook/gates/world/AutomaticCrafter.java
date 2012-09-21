@@ -42,6 +42,9 @@ public class AutomaticCrafter extends AbstractIC {
         return "AUTO CRAFT";
     }
 
+    //Cache the recipe - makes it faster
+    private Recipe recipe = null;
+
     @Override
     public void trigger(ChipState chip) {
         Block crafter = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
@@ -53,75 +56,34 @@ public class AutomaticCrafter extends AbstractIC {
                     if(it == null || it.getTypeId() == 0) continue;
                     if(it.getAmount() < 2) break craft;
                 }
-                Iterator<Recipe> recipes = Bukkit.recipeIterator();
-                try {
-                    while(recipes.hasNext()) { //Mega laggy loop - TODO optimize someday
-                        thisRecipe: {
-                        Recipe recipe = recipes.next();
-                        if(recipe instanceof ShapedRecipe) {
-                            ShapedRecipe shape = (ShapedRecipe)recipe;
-                            boolean large = shape.getShape().length == 3;
-                            int c = -1, in = 0;
-                            for(int i = 0; i < inv.getContents().length; i++) {
-                                try {
-                                    c++;
-                                    if(c > (large ? 2 : 1)) {
-                                        c = 0;
-                                        in++;
-                                    }
-                                    ItemStack it = inv.getContents()[i];
-                                    String shapeSection = shape.getShape()[in];
-                                    Character item = shapeSection.charAt(c);
-                                    ItemStack require = shape.getIngredientMap().get(item);
-                                    if(require == null) require = new ItemStack(0,0);
-                                    if(it == null || it.getTypeId() == 0)
-                                        if(require.getTypeId() == 0)
-                                            continue;
-                                        else
-                                            break thisRecipe;
-                                    else
-                                        if(require.getTypeId() == it.getTypeId() && require.getDurability() == it.getDurability())
-                                            continue;
-                                        else
-                                            break thisRecipe;
-                                }
-                                catch(Exception e){
-                                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
-                                }
-                            }
+
+                if(recipe == null) {
+
+                    Iterator<Recipe> recipes = Bukkit.recipeIterator();
+                    try {
+                        while(recipes.hasNext()) {
+                            Recipe temprecipe = recipes.next();
+                            if(isValidRecipe(temprecipe,inv))
+                                recipe = temprecipe;
                         }
-                        else if(recipe instanceof ShapelessRecipe) {
-                            ShapelessRecipe shape = (ShapelessRecipe)recipe;
-                            List<ItemStack> ing = shape.getIngredientList();
-                            for(int i = 0; i < inv.getContents().length; i++) {
-                                ItemStack it = inv.getContents()[i];
-                                if(it == null) continue;
-                                for(ItemStack stack : ing) {
-                                    if(stack == null) continue;
-                                    if(it.getTypeId() == stack.getTypeId() && it.getDurability() == stack.getDurability()) {
-                                        ing.remove(stack);
-                                        break;
-                                    }
-                                }
-                            }
-                            if(ing.size() != 0)
-                                break thisRecipe;
-                        }
-                        else
-                            continue;
-                        Inventory replace = disp.getInventory();
-                        disp.getInventory().clear();
-                        disp.getInventory().addItem(recipe.getResult());
-                        disp.dispense();
-                        disp.getInventory().setContents(replace.getContents());
-                        break craft;
                     }
+                    catch(Exception e){
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                        disp.getInventory().setContents(inv.getContents());
                     }
                 }
-                catch(Exception e){
-                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
-                    disp.getInventory().setContents(inv.getContents());
-                }
+
+                if(recipe == null) break craft;
+
+                if(!isValidRecipe(recipe, inv))
+                    break craft;
+
+                Inventory replace = disp.getInventory();
+                disp.getInventory().clear();
+                disp.getInventory().addItem(recipe.getResult());
+                disp.dispense();
+                disp.getInventory().setContents(replace.getContents());
+                break craft;
             }
 
             collect: {
@@ -146,6 +108,64 @@ public class AutomaticCrafter extends AbstractIC {
                 }
             }
         }
+    }
+
+    public boolean isValidRecipe(Recipe r, Inventory inv) {
+        if(r instanceof ShapedRecipe) {
+            ShapedRecipe shape = (ShapedRecipe)r;
+            boolean large = shape.getShape().length == 3;
+            int c = -1, in = 0;
+            for(int i = 0; i < inv.getContents().length; i++) {
+                try {
+                    c++;
+                    if(c > (large ? 2 : 1)) {
+                        c = 0;
+                        in++;
+                    }
+                    ItemStack it = inv.getContents()[i];
+                    String shapeSection = shape.getShape()[in];
+                    Character item = shapeSection.charAt(c);
+                    ItemStack require = shape.getIngredientMap().get(item);
+                    if(require == null) require = new ItemStack(0,0);
+                    if(it == null || it.getTypeId() == 0)
+                        if(require.getTypeId() == 0)
+                            continue;
+                        else
+                            return false;
+                    else
+                        if(require.getTypeId() == it.getTypeId() && require.getDurability() == it.getDurability())
+                            continue;
+                        else
+                            return false;
+                }
+                catch(Exception e){
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                    return false;
+                }
+            }
+            return true;
+        }
+        else if(r instanceof ShapelessRecipe) {
+            ShapelessRecipe shape = (ShapelessRecipe)r;
+            List<ItemStack> ing = shape.getIngredientList();
+            for(int i = 0; i < inv.getContents().length; i++) {
+                ItemStack it = inv.getContents()[i];
+                if(it == null) continue;
+                for(ItemStack stack : ing) {
+                    if(stack == null) continue;
+                    if(it.getTypeId() == stack.getTypeId() && it.getDurability() == stack.getDurability()) {
+                        ing.remove(stack);
+                        break;
+                    }
+                }
+            }
+            if(ing.size() != 0)
+                return false;
+
+            return true;
+        }
+        else
+            return false;
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC { //Temporatily Restricted... until it gets unlaggy
