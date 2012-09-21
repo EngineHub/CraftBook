@@ -91,6 +91,7 @@ public class AutomaticCrafter extends AbstractIC {
                 for(int i = 0; i < disp.getInventory().getContents().length; i++) {
                     if(disp.getInventory().getContents()[i] == null) continue;
                     replace[i] = new ItemStack(disp.getInventory().getContents()[i]);
+                    replace[i].setAmount(replace[i].getAmount() - 1);
                 }
                 disp.getInventory().clear();
                 disp.getInventory().addItem(recipe.getResult());
