@@ -129,8 +129,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             int lastTick = 0, oldTick;
-            if(random.nextBoolean())
-                decreaseMultiplier(sign, 1);
             int multiplier = getMultiplier(sign);
             try {
                 lastTick = Integer.parseInt(sign.getLine(2));
@@ -147,6 +145,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             if (cb.getType() == Material.CHEST) {
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())) {
                     lastTick += multiplier;
+                    if(random.nextInt(4) == 1)
+                        decreaseMultiplier(sign, 1);
                 }
                 if (lastTick >= 50) {
                     Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
@@ -187,12 +187,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             if (cb.getType() == Material.CHEST) {
                 if(event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer().getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
                     increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
-                    if(event.getPlayer().getItemInHand().getAmount() <= 0) {
+                    if(event.getPlayer().getItemInHand().getAmount() <= 1) {
                         event.getPlayer().getItemInHand().setTypeId(0);
                         event.getPlayer().setItemInHand(null);
-                        event.getPlayer().sendMessage("You give the pot fuel!");
                     }
+                    else
+                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                    event.getPlayer().sendMessage("You give the pot fuel!");
                 }
                 else
                     event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
