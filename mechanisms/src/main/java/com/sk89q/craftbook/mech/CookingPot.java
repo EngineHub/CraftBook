@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -125,11 +124,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     public void think() {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        Random random = new Random();
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             int lastTick = 0, oldTick;
-            int multiplier = getMultiplier(sign);
             try {
                 lastTick = Integer.parseInt(sign.getLine(2));
             } catch (Exception e) {
@@ -144,26 +141,23 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             Block cb = sign.getWorld().getBlockAt(x, y, z);
             if (cb.getType() == Material.CHEST) {
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())) {
-                    lastTick += multiplier;
-                    if(random.nextInt(4) == 1)
-                        decreaseMultiplier(sign, 1);
+                    decreaseMultiplier(sign, 1);
+                    lastTick += getMultiplier(sign);
                 }
                 if (lastTick >= 50) {
                     Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
                     if (fire.getType() == Material.FIRE) {
-                        if (cb.getState() instanceof Chest) {
-                            Chest chest = (Chest) cb.getState();
-                            for (ItemStack i : chest.getInventory().getContents()) {
-                                if (i == null) continue;
-                                ItemStack cooked = ItemUtil.getCookedResult(i);
-                                if (cooked == null) continue;
-                                chest.getInventory().addItem(new ItemStack(cooked.getType(), 1));
-                                chest.getInventory().removeItem(new ItemStack(i.getType(), 1));
-                                chest.update();
-                                break;
-                            }
-                            lastTick = 0;
+                        Chest chest = (Chest) cb.getState();
+                        for (ItemStack i : chest.getInventory().getContents()) {
+                            if (i == null) continue;
+                            ItemStack cooked = ItemUtil.getCookedResult(i);
+                            if (cooked == null) continue;
+                            chest.getInventory().addItem(new ItemStack(cooked.getType(), 1));
+                            chest.getInventory().removeItem(new ItemStack(i.getType(), 1));
+                            chest.update();
+                            break;
                         }
+                        lastTick = 0;
                     }
                 }
             }
@@ -224,7 +218,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     public void setMultiplier(Sign sign, int amount) {
-        if(amount < 0) amount = 0;
+        if(amount < 1) amount = 1;
         sign.setLine(3, amount + "");
         sign.update();
     }
@@ -244,6 +238,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         }
         catch(Exception e) {
             multiplier = 1;
+            setMultiplier(sign,1);
         }
         return multiplier;
     }
