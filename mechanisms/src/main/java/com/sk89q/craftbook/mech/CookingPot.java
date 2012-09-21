@@ -162,7 +162,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                                 chest.update();
                                 break;
                             }
-                            lastTick -= 50;
+                            lastTick = 0;
                         }
                     }
                 }
