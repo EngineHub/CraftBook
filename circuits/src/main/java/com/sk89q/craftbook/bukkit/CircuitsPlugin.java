@@ -82,6 +82,7 @@ import com.sk89q.craftbook.gates.weather.WeatherFaker;
 import com.sk89q.craftbook.gates.world.ArrowBarrage;
 import com.sk89q.craftbook.gates.world.ArrowShooter;
 import com.sk89q.craftbook.gates.world.AutomaticCrafter;
+import com.sk89q.craftbook.gates.world.AutomaticCrafterST;
 import com.sk89q.craftbook.gates.world.BlockLauncher;
 import com.sk89q.craftbook.gates.world.BlockSensor;
 import com.sk89q.craftbook.gates.world.BlockSensorST;
@@ -327,6 +328,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0204", "trap st"       , new EntityTrapST.Factory(server), familySISO);                    // Restricted
         registerIC("MC0209", "collector st"  , new ChestCollectorST.Factory(server), familySISO);
         registerIC("MC0210", "emitter st"    , new ParticleEffectST.Factory(server), familySISO);
+        registerIC("MC0219", "auto craft st" , new AutomaticCrafterST.Factory(server), familySISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO);
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO);
         registerIC("MC0261", "sense lava st" , new LavaSensorST.Factory(server), familySISO);
