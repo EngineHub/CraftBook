@@ -16,13 +16,28 @@ public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggere
     }
 
     @Override
+    public String getTitle() {
+        return "Automatic Crafter ST";
+    }
+
+    @Override
+    public String getSignTitle() {
+        return "AUTO CRAFT ST";
+    }
+
+    @Override
     public boolean isActive() {
         return false;
     }
 
     @Override
+    public void trigger(ChipState state) {
+        state.setOutput(0, doStuff(true, true));
+    }
+
+    @Override
     public void think(ChipState state) {
-        state.setOutput(0, doStuff());
+        state.setOutput(0, doStuff(false, true));
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC { //Temporatily Restricted... until it gets unlaggy

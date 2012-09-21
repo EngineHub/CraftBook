@@ -48,80 +48,91 @@ public class AutomaticCrafter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         if(chip.getInput(0))
-            chip.setOutput(0, doStuff());
+            chip.setOutput(0, doStuff(true,true));
     }
 
-    public boolean doStuff() {
+    public boolean craft(Dispenser disp) {
+        Inventory inv = disp.getInventory();
+        for(ItemStack it : inv.getContents()) {
+            if(it == null || it.getTypeId() == 0) continue;
+            if(it.getAmount() < 2) return false;
+        }
+
+        if(recipe == null) {
+
+            Iterator<Recipe> recipes = Bukkit.recipeIterator();
+            try {
+                while(recipes.hasNext()) {
+                    Recipe temprecipe = recipes.next();
+                    if(isValidRecipe(temprecipe,inv))
+                        recipe = temprecipe;
+                }
+            }
+            catch(Exception e){
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                disp.getInventory().setContents(inv.getContents());
+            }
+        }
+
+        if(recipe == null) return false;
+
+        if(!isValidRecipe(recipe, inv)) {
+            recipe = null;
+            craft(disp);
+            return false;
+        }
+
+        ItemStack[] replace = new ItemStack[9];
+        for(int i = 0; i < disp.getInventory().getContents().length; i++) {
+            if(disp.getInventory().getContents()[i] == null) continue;
+            replace[i] = new ItemStack(disp.getInventory().getContents()[i]);
+            replace[i].setAmount(replace[i].getAmount() - 1);
+        }
+        disp.getInventory().clear();
+        disp.getInventory().addItem(recipe.getResult());
+        disp.dispense();
+        disp.getInventory().setContents(replace);
+        return true;
+    }
+
+    public boolean collect(Dispenser disp) {
+        for (Entity en : getSign().getChunk().getEntities()) {
+            if (!(en instanceof Item)) continue;
+            Item item = (Item) en;
+            if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) continue;
+            int ix = item.getLocation().getBlockX();
+            int iy = item.getLocation().getBlockY();
+            int iz = item.getLocation().getBlockZ();
+            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+                for(ItemStack it : disp.getInventory().getContents()) {
+                    if(!ItemUtil.isStackValid(it))
+                        continue;
+                    if(ItemUtil.areItemsIdentical(it,item.getItemStack())) {
+                        it.setAmount(it.getAmount() + item.getItemStack().getAmount());
+                        item.remove();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param craft
+     * @param collect
+     * @return
+     */
+    public boolean doStuff(boolean craft, boolean collect) {
         boolean ret = false;
         Block crafter = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
         if(crafter.getType() == Material.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();
-            craft: {
-                Inventory inv = disp.getInventory();
-                for(ItemStack it : inv.getContents()) {
-                    if(it == null || it.getTypeId() == 0) continue;
-                    if(it.getAmount() < 2) break craft;
-                }
-
-                if(recipe == null) {
-
-                    Iterator<Recipe> recipes = Bukkit.recipeIterator();
-                    try {
-                        while(recipes.hasNext()) {
-                            Recipe temprecipe = recipes.next();
-                            if(isValidRecipe(temprecipe,inv))
-                                recipe = temprecipe;
-                        }
-                    }
-                    catch(Exception e){
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
-                        disp.getInventory().setContents(inv.getContents());
-                    }
-                }
-
-                if(recipe == null) break craft;
-
-                if(!isValidRecipe(recipe, inv)) {
-                    recipe = null;
-                    doStuff();
-                    return false;
-                }
-
-                ItemStack[] replace = new ItemStack[9];
-                for(int i = 0; i < disp.getInventory().getContents().length; i++) {
-                    if(disp.getInventory().getContents()[i] == null) continue;
-                    replace[i] = new ItemStack(disp.getInventory().getContents()[i]);
-                    replace[i].setAmount(replace[i].getAmount() - 1);
-                }
-                disp.getInventory().clear();
-                disp.getInventory().addItem(recipe.getResult());
-                disp.dispense();
-                disp.getInventory().setContents(replace);
-                ret = true;
-                break craft;
-            }
-
-            collect: {
-                for (Entity en : getSign().getChunk().getEntities()) {
-                    if (!(en instanceof Item)) continue;
-                    Item item = (Item) en;
-                    if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) continue;
-                    int ix = item.getLocation().getBlockX();
-                    int iy = item.getLocation().getBlockY();
-                    int iz = item.getLocation().getBlockZ();
-                    if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                        for(ItemStack it : disp.getInventory().getContents()) {
-                            if(!ItemUtil.isStackValid(it))
-                                continue;
-                            if(ItemUtil.areItemsIdentical(it,item.getItemStack())) {
-                                it.setAmount(it.getAmount() + item.getItemStack().getAmount());
-                                item.remove();
-                                break collect;
-                            }
-                        }
-                    }
-                }
-            }
+            if(craft)
+                craft(disp);
+            if(collect)
+                collect(disp);
         }
         return ret;
     }
