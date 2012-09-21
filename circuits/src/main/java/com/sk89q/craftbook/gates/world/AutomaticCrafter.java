@@ -47,6 +47,12 @@ public class AutomaticCrafter extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
+        if(chip.getInput(0))
+            chip.setOutput(0, doStuff());
+    }
+
+    public boolean doStuff() {
+        boolean ret = false;
         Block crafter = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
         if(crafter.getType() == Material.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();
@@ -77,15 +83,20 @@ public class AutomaticCrafter extends AbstractIC {
 
                 if(!isValidRecipe(recipe, inv)) {
                     recipe = null;
-                    trigger(chip);
-                    return;
+                    doStuff();
+                    return false;
                 }
 
-                Inventory replace = disp.getInventory();
+                ItemStack[] replace = new ItemStack[9];
+                for(int i = 0; i < disp.getInventory().getContents().length; i++) {
+                    if(disp.getInventory().getContents()[i] == null) continue;
+                    replace[i] = new ItemStack(disp.getInventory().getContents()[i]);
+                }
                 disp.getInventory().clear();
                 disp.getInventory().addItem(recipe.getResult());
                 disp.dispense();
-                disp.getInventory().setContents(replace.getContents());
+                disp.getInventory().setContents(replace);
+                ret = true;
                 break craft;
             }
 
@@ -111,6 +122,7 @@ public class AutomaticCrafter extends AbstractIC {
                 }
             }
         }
+        return ret;
     }
 
     public boolean isValidRecipe(Recipe r, Inventory inv) {
@@ -124,6 +136,8 @@ public class AutomaticCrafter extends AbstractIC {
                     if(c > (large ? 2 : 1)) {
                         c = 0;
                         in++;
+                        if(in > (large ? 2 : 1))
+                            break;
                     }
                     ItemStack it = inv.getContents()[i];
                     String shapeSection = shape.getShape()[in];
