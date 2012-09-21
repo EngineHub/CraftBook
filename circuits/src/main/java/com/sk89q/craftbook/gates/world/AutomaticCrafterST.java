@@ -27,7 +27,7 @@ public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggere
 
     @Override
     public boolean isActive() {
-        return false;
+        return true;
     }
 
     @Override
