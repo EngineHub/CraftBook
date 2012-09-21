@@ -9,6 +9,8 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -21,9 +23,9 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
-//XXX Not fully implemented.
 public class AutomaticCrafter extends AbstractIC {
 
     public AutomaticCrafter(Server server, Sign block) {
@@ -56,14 +58,20 @@ public class AutomaticCrafter extends AbstractIC {
                     while(recipes.hasNext()) { //Mega laggy loop - TODO optimize someday
                         thisRecipe: {
                         Recipe recipe = recipes.next();
-                        if(recipe instanceof ShapedRecipe) { //XXX Shaped don't work.
+                        if(recipe instanceof ShapedRecipe) {
                             ShapedRecipe shape = (ShapedRecipe)recipe;
+                            boolean large = shape.getShape().length == 3;
+                            int c = -1, in = 0;
                             for(int i = 0; i < inv.getContents().length; i++) {
                                 try {
+                                    c++;
+                                    if(c > (large ? 2 : 1)) {
+                                        c = 0;
+                                        in++;
+                                    }
                                     ItemStack it = inv.getContents()[i];
-                                    int index = (int) Math.ceil(i/shape.getShape().length);
-                                    String shapeSection = shape.getShape()[index];
-                                    Character item = shapeSection.charAt(Math.round(i/3));
+                                    String shapeSection = shape.getShape()[in];
+                                    Character item = shapeSection.charAt(c);
                                     ItemStack require = shape.getIngredientMap().get(item);
                                     if(require == null) require = new ItemStack(0,0);
                                     if(it == null || it.getTypeId() == 0)
@@ -115,7 +123,28 @@ public class AutomaticCrafter extends AbstractIC {
                     disp.getInventory().setContents(inv.getContents());
                 }
             }
-            //TODO pick up items for recipe at sign.
+
+            collect: {
+                for (Entity en : getSign().getChunk().getEntities()) {
+                    if (!(en instanceof Item)) continue;
+                    Item item = (Item) en;
+                    if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) continue;
+                    int ix = item.getLocation().getBlockX();
+                    int iy = item.getLocation().getBlockY();
+                    int iz = item.getLocation().getBlockZ();
+                    if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+                        for(ItemStack it : disp.getInventory().getContents()) {
+                            if(!ItemUtil.isStackValid(it))
+                                continue;
+                            if(ItemUtil.areItemsIdentical(it,item.getItemStack())) {
+                                it.setAmount(it.getAmount() + item.getItemStack().getAmount());
+                                item.remove();
+                                break collect;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

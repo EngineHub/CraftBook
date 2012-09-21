@@ -91,7 +91,7 @@ public class ChestCollector extends AbstractIC {
                         } catch (Exception ignored) {
                         }
 
-                        // Check to see if it matches either test stack, if mot stop
+                        // Check to see if it matches either test stack, if not stop
                         if (testStacks[0] != null) {
                             if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) continue;
                         }
