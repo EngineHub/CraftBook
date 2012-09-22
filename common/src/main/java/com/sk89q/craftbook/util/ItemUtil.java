@@ -1,10 +1,11 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class ItemUtil {
 
@@ -135,5 +136,21 @@ public class ItemUtil {
         else
             item.setAmount(item.getAmount() - 1);
         return item;
+    }
+
+    public static ItemStack getSmallestStackOfType(ItemStack[] stacks, ItemStack item) {
+        ItemStack smallest = null;
+        for(ItemStack it : stacks) {
+            if(!ItemUtil.isStackValid(it))
+                continue;
+            if(ItemUtil.areItemsIdentical(it, item)) {
+                if(smallest == null)
+                    smallest = it;
+                if(it.getAmount() < smallest.getAmount())
+                    smallest = it;
+            }
+        }
+
+        return smallest;
     }
 }

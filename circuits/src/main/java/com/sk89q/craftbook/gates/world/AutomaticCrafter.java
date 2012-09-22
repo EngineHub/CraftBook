@@ -104,7 +104,7 @@ public class AutomaticCrafter extends AbstractIC {
             int iy = item.getLocation().getBlockY();
             int iz = item.getLocation().getBlockZ();
             if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                ItemStack it = getSmallestStackOfType(disp.getInventory().getContents(), item.getItemStack());
+                ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), item.getItemStack());
                 if(it == null) continue;
                 it.setAmount(it.getAmount() + item.getItemStack().getAmount());
                 item.remove();
@@ -112,22 +112,6 @@ public class AutomaticCrafter extends AbstractIC {
             }
         }
         return false;
-    }
-
-    public ItemStack getSmallestStackOfType(ItemStack[] stacks, ItemStack item) {
-        ItemStack smallest = null;
-        for(ItemStack it : stacks) {
-            if(!ItemUtil.isStackValid(it))
-                continue;
-            if(ItemUtil.areItemsIdentical(it, item)) {
-                if(smallest == null)
-                    smallest = it;
-                if(it.getAmount() < smallest.getAmount())
-                    smallest = it;
-            }
-        }
-
-        return smallest;
     }
 
     /**
