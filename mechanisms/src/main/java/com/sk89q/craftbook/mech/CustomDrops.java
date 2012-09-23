@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 
 public class CustomDrops implements Listener {
 
@@ -38,7 +39,8 @@ public class CustomDrops implements Listener {
                 World w = event.getBlock().getWorld();
                 // Add the custom drops
                 for (CustomDropManager.DropDefinition dropDefinition : drops) {
-                    w.dropItemNaturally(l, dropDefinition.getItemStack());
+                    if(ItemUtil.isStackValid(dropDefinition.getItemStack()))
+                        w.dropItemNaturally(l, dropDefinition.getItemStack());
                 }
 
                 event.getBlock().breakNaturally(null);
