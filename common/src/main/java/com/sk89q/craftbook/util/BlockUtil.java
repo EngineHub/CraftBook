@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 public class BlockUtil {
@@ -37,5 +38,9 @@ public class BlockUtil {
     public static void setBlockTypeAndData(Block block, int type, byte data) {
 
         block.setTypeIdAndData(type, data, true);
+    }
+
+    public static Location getBlockCentre(Block block) {
+        return block.getLocation().add(0.5,0.5,0.5);
     }
 }

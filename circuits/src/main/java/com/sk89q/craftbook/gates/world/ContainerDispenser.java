@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -15,6 +14,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -113,8 +113,7 @@ public class ContainerDispenser extends AbstractIC {
         if(curA < a)
             a = curA;
         ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
-        getSign().getWorld().dropItem(new Location(getSign().getWorld(), getSign().getX(),
-                getSign().getY(), getSign().getZ()), stack);
+        getSign().getWorld().dropItem(BlockUtil.getBlockCentre(getSign().getBlock()), stack);
         item.setAmount(curA - a);
         if(item.getAmount() <= 1) {
             item = null;
