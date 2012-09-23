@@ -132,6 +132,8 @@ import com.sk89q.craftbook.gates.world.SoundEffect;
 import com.sk89q.craftbook.gates.world.TimeControl;
 import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
 import com.sk89q.craftbook.gates.world.TimeFaker;
+import com.sk89q.craftbook.gates.world.TimeSet;
+import com.sk89q.craftbook.gates.world.TimeSetST;
 import com.sk89q.craftbook.gates.world.WaterSensor;
 import com.sk89q.craftbook.gates.world.WaterSensorST;
 import com.sk89q.craftbook.gates.world.WirelessReceiver;
@@ -262,6 +264,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1219", "auto craft"    , new AutomaticCrafter.Factory(server), familySISO, familyAISO);
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", null            , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
+        registerIC("MC1232", null            , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1236", null            , new WeatherFaker.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1237", null            , new TimeFaker.Factory(server), familySISO, familyAISO);           // Restricted
         registerIC("MC1240", "shoot arrow"   , new ArrowShooter.Factory(server), familySISO, familyAISO);        // Restricted
@@ -330,6 +333,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0210", "emitter st"    , new ParticleEffectST.Factory(server), familySISO, familyAISO);
         registerIC("MC0219", "auto craft st" , new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0232", null            , new TimeSetST.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0261", "sense lava st" , new LavaSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0262", "sense light st", new LightSensorST.Factory(server), familySISO, familyAISO);
