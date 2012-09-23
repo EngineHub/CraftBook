@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -77,6 +76,8 @@ public class Gate extends AbstractMechanic {
      */
     protected final boolean smallSearchSize;
 
+    protected Sign sign;
+
     /**
      * Construct a gate for a location.
      *
@@ -91,6 +92,11 @@ public class Gate extends AbstractMechanic {
         this.pt = pt;
         this.plugin = plugin;
         this.smallSearchSize = smallSearchSize;
+
+        if (BukkitUtil.toBlock(pt).getTypeId() == BlockID.SIGN_POST || BukkitUtil.toBlock(pt).getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = BukkitUtil.toBlock(pt).getState();
+            if (state instanceof Sign) sign = (Sign) state;
+        }
     }
 
     /**
@@ -379,7 +385,7 @@ public class Gate extends AbstractMechanic {
         }
         if (sign == null) return;
 
-        if (isValidGateItem(player.getTypeInHand())) {
+        if (getGateBlock() == player.getTypeInHand()) {
 
             int amount = 1;
             if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
@@ -616,7 +622,7 @@ public class Gate extends AbstractMechanic {
         if(sign == null) return;
 
         if (hasEnoughBlocks(sign)) {
-            ItemStack toDrop = new ItemStack(Material.FENCE, getBlocks(sign));
+            ItemStack toDrop = new ItemStack(getGateBlock(), getBlocks(sign));
             if (sign != null) {
                 sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
             }
@@ -646,6 +652,52 @@ public class Gate extends AbstractMechanic {
         }
 
         return isValidGateBlock(t);
+    }
+
+    public int getGateBlock() {
+
+        if(!sign.getLine(0).equalsIgnoreCase("")) {
+            try {
+                return Integer.parseInt(sign.getLine(0));
+            }
+            catch(Exception e){}
+        }
+        LocalWorld world = pt.getWorld();
+        int x = pt.getBlockX();
+        int y = pt.getBlockY();
+        int z = pt.getBlockZ();
+
+        if (smallSearchSize) {
+            for (int x1 = x - 1; x1 <= x + 1; x1++) {
+                for (int y1 = y - 2; y1 <= y + 1; y1++) {
+                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
+                        if (getFirstBlock(new WorldVector(world, x1, y1, z1)) != 0) {
+                            return getFirstBlock(new WorldVector(world, x1, y1, z1));
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int x1 = x - 3; x1 <= x + 3; x1++) {
+                for (int y1 = y - 3; y1 <= y + 6; y1++) {
+                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+                        if (getFirstBlock(new WorldVector(world, x1, y1, z1)) != 0) {
+                            return getFirstBlock(new WorldVector(world, x1, y1, z1));
+                        }
+                    }
+                }
+            }
+        }
+        return BlockID.FENCE;
+    }
+
+    public int getFirstBlock(WorldVector pt) {
+        World world = ((BukkitWorld) pt.getWorld()).getWorld();
+        if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) {
+            return 0;
+        }
+
+        return world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
     }
 
     public boolean removeBlocks(Sign s, int amount) {
