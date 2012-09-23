@@ -21,6 +21,16 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
     }
 
     @Override
+    public String getTitle() {
+        return "Time Set ST";
+    }
+
+    @Override
+    public String getSignTitle() {
+        return "TIME SET ST";
+    }
+
+    @Override
     public void think(ChipState chip) {
         try {
             if(chip.getInput(0))
