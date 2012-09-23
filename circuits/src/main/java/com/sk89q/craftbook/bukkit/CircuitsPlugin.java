@@ -88,7 +88,7 @@ import com.sk89q.craftbook.gates.world.BlockSensor;
 import com.sk89q.craftbook.gates.world.BlockSensorST;
 import com.sk89q.craftbook.gates.world.ChestCollector;
 import com.sk89q.craftbook.gates.world.ChestCollectorST;
-import com.sk89q.craftbook.gates.world.ChestDispenser;
+import com.sk89q.craftbook.gates.world.ContainerDispenser;
 import com.sk89q.craftbook.gates.world.CombinationLock;
 import com.sk89q.craftbook.gates.world.CreatureSpawner;
 import com.sk89q.craftbook.gates.world.DaySensor;
@@ -243,7 +243,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1111", "receiver"      , new WirelessReceiver.Factory(server), familySISO, familyAISO);
         registerIC("MC1200", "spawner"       , new CreatureSpawner.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1201", "dispenser"     , new ItemDispenser.Factory(server), familySISO, familyAISO);       // Restricted
-        registerIC("MC1202", "c dispense"    , new ChestDispenser.Factory(server), familySISO, familyAISO);      // Restricted
+        registerIC("MC1202", "c dispense"    , new ContainerDispenser.Factory(server), familySISO, familyAISO);      // Restricted
         registerIC("MC1203", "strike"        , new LightningSummon.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1204", "trap"          , new EntityTrap.Factory(server), familySISO, familyAISO);          // Restricted
         registerIC("MC1205", "set above"     , new SetBlockAbove.Factory(server), familySISO, familyAISO);       // Restricted
