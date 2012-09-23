@@ -7,13 +7,11 @@
 
 package com.sk89q.jinglenote;
 
-import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * A manager of play instances.
@@ -30,22 +28,17 @@ public class JingleNoteManager {
      * List of instances.
      */
     protected final Map<String, JingleNotePlayer> instances
-            = new HashMap<String, JingleNotePlayer>();
+    = new HashMap<String, JingleNotePlayer>();
 
-    public void play(Player player, MidiJingleSequencer sequencer, int delay) {
+    public void play(Player player, MidiJingleSequencer sequencer, int delay, Location loc) {
 
         String name = player.getName();
-        Location loc = findLocation(player);
 
         // Existing player found!
         if (instances.containsKey(name)) {
             JingleNotePlayer existing = instances.get(name);
-            Location existingLoc = existing.getLocation();
 
-            existing.stop(
-                    existingLoc.getBlockX() == loc.getBlockX()
-                            && existingLoc.getBlockY() == loc.getBlockY()
-                            && existingLoc.getBlockZ() == loc.getBlockZ());
+            existing.stop();
 
             instances.remove(name);
         }
@@ -65,7 +58,7 @@ public class JingleNoteManager {
         // Existing player found!
         if (instances.containsKey(name)) {
             JingleNotePlayer existing = instances.get(name);
-            existing.stop(false);
+            existing.stop();
             instances.remove(name);
             return true;
         }
@@ -74,21 +67,8 @@ public class JingleNoteManager {
 
     public void stopAll() {
 
-        for (JingleNotePlayer notePlayer : instances.values()) notePlayer.stop(false);
+        for (JingleNotePlayer notePlayer : instances.values()) notePlayer.stop();
 
         instances.clear();
-    }
-
-    private Location findLocation(Player player) {
-
-        World world = player.getWorld();
-        Location loc = player.getLocation();
-        loc.setY(loc.getY() - 2);
-
-        if (!BlockType.canPassThrough(world.getBlockTypeIdAt(loc))) return loc;
-
-        loc.setY(loc.getY() + 4);
-
-        return loc;
     }
 }
