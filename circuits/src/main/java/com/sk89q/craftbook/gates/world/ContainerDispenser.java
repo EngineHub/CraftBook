@@ -105,7 +105,7 @@ public class ContainerDispenser extends AbstractIC {
         return true;
     }
 
-    public void dispenseItem(ItemStack item) {
+    public ItemStack dispenseItem(ItemStack item) {
         int curA = item.getAmount();
         int a = amount;
         if(curA < a)
@@ -114,9 +114,10 @@ public class ContainerDispenser extends AbstractIC {
         getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(),
                 getSign().getY(), getSign().getZ()), stack);
         if(item.getAmount() <= 1)
-            item = null;
+            item = new ItemStack(0,0);
         else
             item.setAmount(curA - a);
+        return item;
     }
 
     public static class Factory extends AbstractICFactory {
