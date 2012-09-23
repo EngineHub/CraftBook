@@ -103,11 +103,11 @@ public class ContainerDispenser extends AbstractIC {
         }
 
         if(stack == null) return false;
-        dispenseItem(stack, bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE);
+        dispenseItem(stack);
         return true;
     }
 
-    public ItemStack dispenseItem(ItemStack item, boolean furnace) {
+    public ItemStack dispenseItem(ItemStack item) {
         int curA = item.getAmount();
         int a = amount;
         if(curA < a)
@@ -119,7 +119,7 @@ public class ContainerDispenser extends AbstractIC {
         if(item.getAmount() <= 1) {
             item = null;
         }
-        if(furnace)
+        if(bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE)
             ((Furnace)bl.getState()).getInventory().setResult(item);
         return item;
     }
