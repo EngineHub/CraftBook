@@ -1,6 +1,10 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,10 +15,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
 /**
  * @author Silthus, Me4502
@@ -30,6 +31,8 @@ public final class LocationUtil {
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
+        if(!l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()))
+            return false;
         return getDistance(l1, l2) <= radius;
     }
 
