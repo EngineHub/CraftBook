@@ -113,7 +113,7 @@ public class ContainerDispenser extends AbstractIC {
         if(curA < a)
             a = curA;
         ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
-        getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(),
+        getSign().getWorld().dropItem(new Location(getSign().getWorld(), getSign().getX(),
                 getSign().getY(), getSign().getZ()), stack);
         item.setAmount(curA - a);
         if(item.getAmount() <= 1) {
