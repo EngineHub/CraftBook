@@ -57,6 +57,8 @@ public class ContainerDispenser extends AbstractIC {
         }
     }
 
+    Block bl;
+
     /**
      * Returns true if the sign has water at the specified location.
      *
@@ -69,7 +71,7 @@ public class ContainerDispenser extends AbstractIC {
         int x = b.getX();
         int y = b.getY() + 1;
         int z = b.getZ();
-        Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+        bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         ItemStack stack = null;
         if (bl.getType() == Material.CHEST) {
             Chest c = (Chest) bl.getState();
@@ -101,11 +103,11 @@ public class ContainerDispenser extends AbstractIC {
         }
 
         if(stack == null) return false;
-        dispenseItem(stack);
+        dispenseItem(stack, bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE);
         return true;
     }
 
-    public ItemStack dispenseItem(ItemStack item) {
+    public ItemStack dispenseItem(ItemStack item, boolean furnace) {
         int curA = item.getAmount();
         int a = amount;
         if(curA < a)
@@ -113,10 +115,12 @@ public class ContainerDispenser extends AbstractIC {
         ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
         getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), getSign().getX(),
                 getSign().getY(), getSign().getZ()), stack);
-        if(item.getAmount() <= 1)
-            item = new ItemStack(0,0);
-        else
-            item.setAmount(curA - a);
+        item.setAmount(curA - a);
+        if(item.getAmount() <= 1) {
+            item = null;
+        }
+        if(furnace)
+            ((Furnace)bl.getState()).getInventory().setResult(item);
         return item;
     }
 

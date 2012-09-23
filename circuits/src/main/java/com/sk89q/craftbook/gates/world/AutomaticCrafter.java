@@ -146,6 +146,7 @@ public class AutomaticCrafter extends AbstractIC {
                         in++;
                         if(in > (large ? 2 : 1))
                             break;
+                        if(!large) continue;
                     }
                     ItemStack it = inv.getContents()[i];
                     String shapeSection = shape.getShape()[in];
@@ -164,7 +165,6 @@ public class AutomaticCrafter extends AbstractIC {
                             return false;
                 }
                 catch(Exception e){
-                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                     return false;
                 }
             }
