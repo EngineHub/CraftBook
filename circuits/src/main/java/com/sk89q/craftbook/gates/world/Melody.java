@@ -44,15 +44,6 @@ public class Melody extends AbstractIC {
 
     @Override
     public void unload() {
-
-        try {
-            if (jNote != null) {
-                jNote.getJingleNoteManager().stopAll();
-                jNote = null;
-            }
-        } catch (Exception ignored) {
-
-        }
     }
 
     @Override
