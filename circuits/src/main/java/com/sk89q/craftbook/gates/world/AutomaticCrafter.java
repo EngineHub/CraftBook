@@ -97,6 +97,7 @@ public class AutomaticCrafter extends AbstractIC {
 
     public boolean collect(Dispenser disp) {
         for (Entity en : getSign().getChunk().getEntities()) {
+            check: {
             if (!(en instanceof Item)) continue;
             Item item = (Item) en;
             if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) continue;
@@ -104,12 +105,15 @@ public class AutomaticCrafter extends AbstractIC {
             int iy = item.getLocation().getBlockY();
             int iz = item.getLocation().getBlockZ();
             if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), item.getItemStack());
-                if(it == null) continue;
-                it.setAmount(it.getAmount() + item.getItemStack().getAmount());
+                for(int i = 0; i < item.getItemStack().getAmount(); i++) {
+                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), item.getItemStack());
+                    if(it == null) break check;
+                    it.setAmount(it.getAmount() + 1);
+                }
                 item.remove();
                 continue;
             }
+        }
         }
         return false;
     }
