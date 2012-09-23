@@ -13,15 +13,15 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 
 public class JingleNotePlayer implements Runnable {
-
     protected final Player player;
     protected final Location loc;
-    protected MidiJingleSequencer sequencer;
+    protected JingleSequencer sequencer;
     protected final int delay;
 
-    public JingleNotePlayer(Player player,
-            Location loc, MidiJingleSequencer seq, int delay) {
+    protected boolean keepMusicBlock = false;
 
+    public JingleNotePlayer(Player player,
+            Location loc, JingleSequencer seq,  int delay) {
         this.player = player;
         this.loc = loc;
         sequencer = seq;
@@ -30,16 +30,34 @@ public class JingleNotePlayer implements Runnable {
 
     @Override
     public void run() {
-
         try {
             if (delay > 0) {
                 Thread.sleep(delay);
             }
 
+            // Create a fake note block
+            player.sendBlockChange(loc, 25, (byte) 0);
+            Thread.sleep(100);
+
             try {
                 sequencer.run(this);
             } catch (Throwable t) {
                 t.printStackTrace();
+            }
+
+            Thread.sleep(500);
+
+            if (!keepMusicBlock) {
+                // Restore music block
+                CircuitsPlugin.server.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+
+                    @Override
+                    public void run() {
+                        int prevId = player.getWorld().getBlockTypeIdAt(loc);
+                        byte prevData = player.getWorld().getBlockAt(loc).getData();
+                        player.sendBlockChange(loc, prevId, prevData);
+                    }
+                });
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -50,40 +68,26 @@ public class JingleNotePlayer implements Runnable {
     }
 
     public boolean isActive() {
-
         return player.isOnline();
     }
 
     public Player getPlayer() {
-
         return player;
     }
 
     public Location getLocation() {
-
         return loc;
     }
 
-    public void stop() {
+    public void stop(boolean keepMusicBlock) {
+        this.keepMusicBlock = keepMusicBlock;
 
         if (sequencer != null) {
             sequencer.stop();
         }
-
-        CircuitsPlugin.server.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
-
-            @Override
-            public void run() {
-
-                int prevId = player.getWorld().getBlockTypeIdAt(loc);
-                byte prevData = player.getWorld().getBlockAt(loc).getData();
-                player.sendBlockChange(loc, prevId, prevData);
-            }
-        });
     }
 
     public void play(byte instrument, byte note) {
-
         if (!player.isOnline()) {
             return;
         }

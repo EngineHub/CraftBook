@@ -23,12 +23,12 @@ import javax.sound.midi.ShortMessage;
 
 /**
  * A sequencer that reads MIDI files.
- *
+ * 
  * @author sk89q
  */
 public class MidiJingleSequencer implements JingleSequencer {
 
-    private static final int[] instruments = { //Is this right? TODO check.
+    private static final int[] instruments = {
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,7 +61,6 @@ public class MidiJingleSequencer implements JingleSequencer {
 
     public MidiJingleSequencer(File midiFile) throws MidiUnavailableException,
     InvalidMidiDataException, IOException {
-
         this.midiFile = midiFile;
 
         try {
@@ -70,19 +69,18 @@ public class MidiJingleSequencer implements JingleSequencer {
             Sequence seq = MidiSystem.getSequence(midiFile);
             sequencer.setSequence(seq);
         } catch (MidiUnavailableException e) {
-            sequencer.close();
+            if(sequencer.isOpen())
+                sequencer.close();
             throw e;
         } catch (InvalidMidiDataException e) {
-            sequencer.close();
+            if(sequencer.isOpen())
+                sequencer.close();
             throw e;
         } catch (IOException e) {
-            sequencer.close();
+            if(sequencer.isOpen())
+                sequencer.close();
             throw e;
         }
-    }
-
-    public boolean isSongPlaying() {
-        return sequencer.isOpen();
     }
 
     @Override
@@ -93,10 +91,8 @@ public class MidiJingleSequencer implements JingleSequencer {
 
         try {
             sequencer.getTransmitter().setReceiver(new Receiver() {
-
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
-
                     if ((message.getStatus() & 0xF0) == ShortMessage.PROGRAM_CHANGE) {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
@@ -108,7 +104,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         int n = msg.getData1();
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
-                            //notePlayer.play(toMCPercussion(patches.get(chan)), toMCNote(n));
+                            //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                         } else {
                             notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         }
@@ -117,7 +113,6 @@ public class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void close() {
-
                 }
             });
 
@@ -127,40 +122,34 @@ public class MidiJingleSequencer implements JingleSequencer {
                 Thread.sleep(1000);
             }
 
-            if (sequencer.isOpen())
+            if(sequencer.isOpen())
                 sequencer.stop();
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         } finally {
-            if (sequencer.isOpen())
+            if(sequencer.isOpen())
                 sequencer.close();
         }
     }
 
     @Override
     public void stop() {
-
-        try {
-            if (sequencer != null && sequencer.isOpen()) {
-                sequencer.close();
-            }
-        } catch (Exception ignored) {
+        if (sequencer != null && sequencer.isOpen()) {
+            sequencer.close();
         }
     }
 
     private static byte toMCNote(int n) {
-
         if (n < 54) {
             return (byte) ((n - 6) % (18 - 6));
         } else if (n > 78) {
-            return (byte) ((n - 6) % (18 - 6) + 12);
+            return (byte) ((n - 6) % (18-6) + 12);
         } else {
             return (byte) (n - 54);
         }
     }
 
     private static byte toMCInstrument(Integer patch) {
-
         if (patch == null) {
             return 0;
         }
@@ -172,12 +161,16 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) instruments[patch];
     }
 
-    /*private static byte toMCPercussion(int note) {
+    /*private static int toMCPercussion(int note) {
         int i = note - 35;
         if (i < 0 || i >= percussion.length) {
             return 1;
         }
 
-        return (byte) percussion[i];
+        return percussion[i];
     }*/
+
+    public boolean isSongPlaying() {
+        return sequencer.isRunning();
+    }
 }
