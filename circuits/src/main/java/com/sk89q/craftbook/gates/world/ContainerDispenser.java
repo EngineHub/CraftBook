@@ -78,7 +78,7 @@ public class ContainerDispenser extends AbstractIC {
                     stack = it;
             }
         }
-        else if (bl.getType() == Material.FURNACE) {
+        else if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
             stack = c.getInventory().getResult();
         }
