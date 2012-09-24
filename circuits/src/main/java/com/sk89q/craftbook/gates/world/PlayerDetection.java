@@ -60,13 +60,16 @@ public class PlayerDetection extends AbstractIC {
         }
         catch(Exception e){}
 
-        if(getSign().getLine(3).length() == 0) return false;
-        boolean isGroup = getSign().getLine(3).startsWith("g:");
+        Boolean isGroup = getSign().getLine(3).startsWith("g:");
+        if(getSign().getLine(3).length() == 0)
+            isGroup = null;
         String argument = getSign().getLine(3).split(":")[1];
 
         for(Entity e : LocationUtil.getNearbyEntities(location, radius)) {
             if(!(e instanceof Player)) continue;
             if(e.isDead() || !e.isValid()) continue;
+            if(isGroup == null)
+                return true;
             if(!isGroup)//player
                 return ((Player)e).getName().equalsIgnoreCase(argument);
             else
