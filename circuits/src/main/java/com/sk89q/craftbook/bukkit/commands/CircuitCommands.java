@@ -1,12 +1,5 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -14,6 +7,12 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CircuitCommands {
 
@@ -49,9 +48,14 @@ public class CircuitCommands {
             IC ic = ric.getFactory().create(null);
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
             player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
-            player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
-            player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
-
+            if(ric.getFactory().getLineHelp()[0] != null)
+                player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
+            else
+                player.sendMessage(ChatColor.YELLOW + "Line 3: Nothing.");
+            if(ric.getFactory().getLineHelp()[1] != null)
+                player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
+            else
+                player.sendMessage(ChatColor.YELLOW + "Line 4: Nothing.");
         }
         catch(Exception e){}
     }

@@ -1,13 +1,8 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeSet extends AbstractIC {
 
@@ -46,6 +41,20 @@ public class TimeSet extends AbstractIC {
         public IC create(Sign sign) {
 
             return new TimeSet(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Set time when triggered.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "time to set",
+                    null
+            };
+            return lines;
         }
     }
 }

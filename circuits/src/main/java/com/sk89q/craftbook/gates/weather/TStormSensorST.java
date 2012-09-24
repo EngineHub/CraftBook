@@ -53,6 +53,19 @@ public class TStormSensorST extends AbstractIC implements SelfTriggeredIC {
 
             return new TStormSensorST(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if it is storming.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

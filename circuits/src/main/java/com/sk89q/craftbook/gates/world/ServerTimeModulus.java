@@ -59,7 +59,7 @@ public class ServerTimeModulus extends AbstractIC {
 
         long time = getSign().getBlock().getWorld().getTime() % 2;
         if (time < 0) time += 2;
-        return (time == 1);
+        return time == 1;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -74,6 +74,19 @@ public class ServerTimeModulus extends AbstractIC {
 
             return new ServerTimeModulus(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if time is odd.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

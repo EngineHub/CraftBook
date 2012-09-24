@@ -43,6 +43,20 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
 
             return new WeatherFaker(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Fakes a players weather in radius.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "radius",
+                    null
+            };
+            return lines;
+        }
     }
 
     @Override

@@ -52,7 +52,7 @@ public class ArrowBarrage extends ArrowShooter {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 
@@ -63,6 +63,20 @@ public class ArrowBarrage extends ArrowShooter {
         public IC create(Sign sign) {
 
             return new ArrowBarrage(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Shoots a barrage of arrows.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "speed:spread",
+                    "vertical gain"
+            };
+            return lines;
         }
     }
 }

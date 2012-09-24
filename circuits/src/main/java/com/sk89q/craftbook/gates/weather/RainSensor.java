@@ -46,6 +46,19 @@ public class RainSensor extends AbstractIC {
 
             return new RainSensor(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if it is raining.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

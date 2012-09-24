@@ -58,7 +58,7 @@ public class AndGate extends AbstractIC {
         }
 
         // Condition; all valid must be ON, at least one valid.
-        chip.setOutput(0, (on == valid && valid > 0));
+        chip.setOutput(0, on == valid && valid > 0);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -73,6 +73,19 @@ public class AndGate extends AbstractIC {
 
             return new AndGate(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if both inputs are hight.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

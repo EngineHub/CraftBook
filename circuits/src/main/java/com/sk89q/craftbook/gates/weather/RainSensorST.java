@@ -54,6 +54,19 @@ public class RainSensorST extends AbstractIC implements SelfTriggeredIC {
 
             return new RainSensorST(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if it is raining.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

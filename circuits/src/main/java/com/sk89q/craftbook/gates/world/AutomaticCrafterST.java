@@ -1,13 +1,10 @@
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggeredIC{
 
@@ -40,7 +37,7 @@ public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggere
         state.setOutput(0, doStuff(false, true));
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC { //Temporatily Restricted... until it gets unlaggy
+    public static class Factory extends AutomaticCrafter.Factory {
 
         public Factory(Server server) {
 

@@ -91,6 +91,20 @@ public class ClockST extends Clock implements SelfTriggeredIC {
             sign.setLine(3, "0");
             sign.update();
         }
+
+	    @Override
+	    public String getDescription() {
+		    return "Outputs hight every X ticks.";
+	    }
+
+	    @Override
+	    public String[] getLineHelp() {
+		    String[] lines = new String[] {
+				    "ticks required",
+				    "current ticks"
+		    };
+		    return lines;
+	    }
     }
 
 }

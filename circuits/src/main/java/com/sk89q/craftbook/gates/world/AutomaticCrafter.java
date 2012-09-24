@@ -1,8 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -11,20 +15,10 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Iterator;
+import java.util.List;
 
 public class AutomaticCrafter extends AbstractIC {
 
@@ -197,7 +191,7 @@ public class AutomaticCrafter extends AbstractIC {
             return false;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC { //Temporatily Restricted... until it gets unlaggy
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 
@@ -208,6 +202,20 @@ public class AutomaticCrafter extends AbstractIC {
         public IC create(Sign sign) {
 
             return new AutomaticCrafter(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Auto-crafts recipes in the above dispenser.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
         }
     }
 }

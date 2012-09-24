@@ -1,18 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockLauncher extends AbstractIC {
 
@@ -84,6 +79,20 @@ public class BlockLauncher extends AbstractIC {
         public IC create(Sign sign) {
 
             return new BlockLauncher(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Launches set block with set velocity.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "id:data",
+                    "velocity x:y:z"
+            };
+            return lines;
         }
     }
 }

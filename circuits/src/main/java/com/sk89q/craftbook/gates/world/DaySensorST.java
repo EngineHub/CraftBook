@@ -18,7 +18,6 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
@@ -53,7 +52,7 @@ public class DaySensorST extends DaySensor implements SelfTriggeredIC {
     }
 
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends DaySensor.Factory {
 
         public Factory(Server server) {
 

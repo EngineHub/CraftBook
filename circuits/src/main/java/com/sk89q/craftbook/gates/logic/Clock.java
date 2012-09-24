@@ -107,6 +107,19 @@ public class Clock extends AbstractIC {
             sign.setLine(3, "0");
             sign.update();
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs hight every X ticks when input is high.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "ticks required",
+                    "current ticks"
+            };
+            return lines;
+        }
+    }
 }

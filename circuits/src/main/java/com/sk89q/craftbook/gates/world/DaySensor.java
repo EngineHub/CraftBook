@@ -18,13 +18,12 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 public class DaySensor extends AbstractIC {
 
@@ -96,6 +95,20 @@ public class DaySensor extends AbstractIC {
         public IC create(Sign sign) {
 
             return new DaySensor(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Outputs high if it is day.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "custom day start",
+                    "custom day end"
+            };
+            return lines;
         }
     }
 
