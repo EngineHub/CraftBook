@@ -71,7 +71,7 @@ public class PlayerDetection extends AbstractIC {
                 if(isGroup == null)
                     return true;
                 if(!isGroup)//player
-                    return ((Player)e).getName().equalsIgnoreCase(getSign().getLine(3).split(":")[1]);
+                    return ((Player)e).getName().startsWith(getSign().getLine(3).split(":")[1]);
                 else
                     return CircuitsPlugin.getInst().isInGroup(((Player) e).getName(), getSign().getLine(3).split(":")[1]);
             }
