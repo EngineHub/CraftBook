@@ -19,6 +19,8 @@
 package com.sk89q.craftbook.bukkit;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Chunk;
@@ -166,7 +168,7 @@ import com.sk89q.wepif.PermissionsResolverManager;
 public class CircuitsPlugin extends BaseBukkitPlugin {
 
     protected CircuitsConfiguration config;
-    private ICManager icManager;
+    public ICManager icManager;
     private PermissionsResolverManager perms;
     private MechanicManager manager;
     private static CircuitsPlugin instance;
@@ -411,16 +413,13 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         return perms;
     }
 
-    public String getICList() {
+    public List<RegisteredICFactory> getICList() {
 
-        String list = "";
+        List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
         for (Entry<String, RegisteredICFactory> e : icManager.registered.entrySet()) {
-            if (list.equalsIgnoreCase(""))
-                list = e.getKey();
-            else
-                list = list + ", " + e.getKey();
+            ics.add(e.getValue());
         }
-        return list;
+        return ics;
     }
 
     /**

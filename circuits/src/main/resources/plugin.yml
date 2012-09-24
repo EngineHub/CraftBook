@@ -3,10 +3,3 @@ main: com.sk89q.craftbook.bukkit.CircuitsPlugin
 version: "${project.version}"
 depend: [CraftBookCommon]
 dev-url: http://dev.bukkit.org/server-mods/craftbook/
-commands:
-    ic:
-        description: IC-related commands
-        usage: /<command>
-    listics:
-        description: List the ICs available
-        usage: /<command>

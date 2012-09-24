@@ -67,4 +67,17 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered){
         return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered);
     }
+
+    @Override
+    public String getDescription() {
+        return "Programmable Logic Chip";
+    }
+
+    @Override
+    public String[] getLineHelp() {
+        return new String[] {
+                "",
+                ""
+        };
+    }
 }

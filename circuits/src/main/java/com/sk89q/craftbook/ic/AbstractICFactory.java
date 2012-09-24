@@ -18,9 +18,10 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.LocalPlayer;
 
 /**
  * Abstract IC factory.
@@ -53,5 +54,19 @@ public abstract class AbstractICFactory implements ICFactory {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
         //TODO Use this to make some restricted IC's allowed to normal users, but limited.
+    }
+
+    @Override
+    public String getDescription() {
+        return "No Description.";
+    }
+
+    @Override
+    public String[] getLineHelp() {
+        String[] lines = new String[] {
+                "",
+                ""
+        };
+        return lines;
     }
 }
