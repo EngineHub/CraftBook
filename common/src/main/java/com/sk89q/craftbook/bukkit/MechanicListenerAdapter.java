@@ -32,6 +32,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.material.Diode;
 import org.bukkit.plugin.PluginManager;
 
 import com.sk89q.craftbook.MechanicManager;
@@ -274,6 +275,24 @@ public class MechanicListenerAdapter {
             if(!plugin.getLocalConfiguration().commonSettings.experimentalRepeaters) return;
             int type = event.getChangedTypeId();
             if(type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON) {
+
+                boolean foundRepeater = false;
+                //Search for the repeater.
+                for(int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++)
+                    for(int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++)
+                        for(int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++) {
+                            if(event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
+                                //Found a repeater.
+                                Block repeater = event.getBlock().getWorld().getBlockAt(x, y, z);
+                                Diode rep = (Diode) repeater.getState().getData();
+                                if(repeater.getRelative(rep.getFacing()).equals(event.getBlock())) {
+                                    foundRepeater = true;
+                                    break;
+                                }
+                            }
+                        }
+                if(!foundRepeater) return;
+
                 manager.dispatchBlockRedstoneChange(
                         new SourcedBlockRedstoneEvent(event.getBlock(), event.getBlock(), type == BlockID.REDSTONE_REPEATER_ON ? 0 : 15, type == BlockID.REDSTONE_REPEATER_ON ? 15 : 0));
             }
