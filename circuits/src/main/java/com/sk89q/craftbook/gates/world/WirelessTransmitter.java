@@ -14,22 +14,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.world;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class WirelessTransmitter extends AbstractIC {
 
     protected static final HistoryHashMap<String, Boolean> memory
-            = new HistoryHashMap<String, Boolean>(100);
+    = new HistoryHashMap<String, Boolean>(100);
 
     protected final String band;
 
@@ -82,5 +83,4 @@ public class WirelessTransmitter extends AbstractIC {
             return new WirelessTransmitter(getServer(), sign);
         }
     }
-
 }
