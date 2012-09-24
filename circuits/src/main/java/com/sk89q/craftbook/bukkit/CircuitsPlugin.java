@@ -64,6 +64,7 @@ import com.sk89q.craftbook.gates.logic.NotLowDelayer;
 import com.sk89q.craftbook.gates.logic.NotPulser;
 import com.sk89q.craftbook.gates.logic.Pulser;
 import com.sk89q.craftbook.gates.logic.Random3Bit;
+import com.sk89q.craftbook.gates.logic.Random5Bit;
 import com.sk89q.craftbook.gates.logic.RandomBit;
 import com.sk89q.craftbook.gates.logic.RandomBitST;
 import com.sk89q.craftbook.gates.logic.Repeater;
@@ -234,7 +235,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familyAISO = new FamilyAISO();
         ICFamily family3I3O = new Family3I3O();
         ICFamily familyVIVO = new FamilyVIVO();
-        ICFamily familySI50 = new FamilySI5O();
+        ICFamily familySI5O = new FamilySI5O();
 
         //SISOs
         registerIC("MC1000", "repeater"      , new Repeater.Factory(server), familySISO, familyAISO);
@@ -322,6 +323,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC4100", "full subtr"    , new FullSubtractor.Factory(server), family3I3O);
         registerIC("MC4110", "half subtr"    , new HalfSubtractor.Factory(server), family3I3O);
         registerIC("MC4200", "dispatcher"    , new Dispatcher.Factory(server), family3I3O);
+
+        //SI5O's
+        registerIC("MC2021", "random 5"      , new Random5Bit.Factory(server), familySI5O);
 
         //PLCs
         registerIC("MC5000", "perlstone"     , PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);

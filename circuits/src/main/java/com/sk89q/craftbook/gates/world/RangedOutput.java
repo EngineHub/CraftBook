@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
@@ -44,7 +49,7 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
         if (chip.getInput(0)) {
             int min = Integer.parseInt(getSign().getLine(2).split("-")[0]);
             int max = Integer.parseInt(getSign().getLine(2).split("-")[1]);
-            maxAmount = min + (int) (Math.random() * ((max - min) + 1));
+            maxAmount = min + (int) (Math.random() * (max - min + 1));
             amountDone = 0;
             ticks = 0;
 
@@ -81,7 +86,7 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
 
     @Override
     public void trigger(ChipState chip) {
-        // self triggered only
+        // non-self triggered only
     }
 
     public static class Factory extends AbstractICFactory {
