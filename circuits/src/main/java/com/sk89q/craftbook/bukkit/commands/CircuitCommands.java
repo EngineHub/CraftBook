@@ -1,12 +1,5 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -14,6 +7,12 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CircuitCommands {
 
