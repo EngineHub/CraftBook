@@ -83,8 +83,12 @@ public class ICManager {
             // Lowercase the ID so that we can do case in-sensitive lookups
             registered.put(id2.toLowerCase(), registration);
         }
-        if(longId!=null)
-            longRegistered.put(longId.toLowerCase().substring(0, 15), id);
+        if(longId!=null) {
+            String toRegister = longId.toLowerCase();
+            if(toRegister.length() > 15)
+                toRegister = toRegister.substring(0, 15);
+            longRegistered.put(toRegister, id);
+        }
 
     }
 
