@@ -3,7 +3,6 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RestrictedIC;
@@ -39,7 +38,7 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
         catch(Exception e){}
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends TimeSet.Factory implements RestrictedIC {
 
         public Factory(Server server) {
 
@@ -50,6 +49,11 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
         public IC create(Sign sign) {
 
             return new TimeSetST(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Sets time continuously.";
         }
     }
 }

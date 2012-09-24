@@ -18,12 +18,13 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class ServerTimeModulus extends AbstractIC {
 
@@ -59,7 +60,7 @@ public class ServerTimeModulus extends AbstractIC {
 
         long time = getSign().getBlock().getWorld().getTime() % 2;
         if (time < 0) time += 2;
-        return (time == 1);
+        return time == 1;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -74,6 +75,19 @@ public class ServerTimeModulus extends AbstractIC {
 
             return new ServerTimeModulus(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if time is odd.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

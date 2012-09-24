@@ -21,7 +21,6 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -197,7 +196,7 @@ public class AutomaticCrafter extends AbstractIC {
             return false;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC { //Temporatily Restricted... until it gets unlaggy
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 
@@ -208,6 +207,20 @@ public class AutomaticCrafter extends AbstractIC {
         public IC create(Sign sign) {
 
             return new AutomaticCrafter(getServer(), sign);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Auto-crafts recipes in the above dispenser.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
         }
     }
 }

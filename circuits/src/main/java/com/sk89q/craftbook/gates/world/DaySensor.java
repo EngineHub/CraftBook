@@ -97,6 +97,20 @@ public class DaySensor extends AbstractIC {
 
             return new DaySensor(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Outputs high if it is day.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "custom day start",
+                    "custom day end"
+            };
+            return lines;
+        }
     }
 
 }

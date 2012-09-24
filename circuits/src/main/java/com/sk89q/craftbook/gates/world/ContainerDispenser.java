@@ -135,5 +135,19 @@ public class ContainerDispenser extends AbstractIC {
 
             return new ContainerDispenser(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Dispenses items out of containers.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
     }
 }

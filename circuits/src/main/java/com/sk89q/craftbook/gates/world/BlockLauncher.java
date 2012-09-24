@@ -85,5 +85,19 @@ public class BlockLauncher extends AbstractIC {
 
             return new BlockLauncher(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Launches set block with set velocity.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "id:data",
+                    "velocity x:y:z"
+            };
+            return lines;
+        }
     }
 }

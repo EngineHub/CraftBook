@@ -47,5 +47,19 @@ public class TimeSet extends AbstractIC {
 
             return new TimeSet(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Set time when triggered.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "time to set",
+                    null
+            };
+            return lines;
+        }
     }
 }

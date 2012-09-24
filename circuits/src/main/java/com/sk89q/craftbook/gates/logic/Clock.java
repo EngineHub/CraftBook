@@ -18,9 +18,15 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class Clock extends AbstractIC implements SelfTriggeredIC {
 
@@ -112,6 +118,19 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
             sign.setLine(3, "0");
             sign.update();
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs hight every X ticks.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "ticks required",
+                    "current ticks"
+            };
+            return lines;
+        }
+    }
 }

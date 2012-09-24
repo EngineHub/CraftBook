@@ -18,12 +18,13 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class AndGate extends AbstractIC {
 
@@ -58,7 +59,7 @@ public class AndGate extends AbstractIC {
         }
 
         // Condition; all valid must be ON, at least one valid.
-        chip.setOutput(0, (on == valid && valid > 0));
+        chip.setOutput(0, on == valid && valid > 0);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -73,6 +74,19 @@ public class AndGate extends AbstractIC {
 
             return new AndGate(getServer(), sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+            return "Outputs high if both inputs are hight.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }
