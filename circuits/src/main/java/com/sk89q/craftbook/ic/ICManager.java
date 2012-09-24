@@ -18,10 +18,10 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.worldedit.BlockWorldVector;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through
@@ -37,7 +37,7 @@ public class ICManager {
      * @see RegisteredICFactory
      */
     public final Map<String, RegisteredICFactory> registered
-            = new HashMap<String, RegisteredICFactory>();
+    = new HashMap<String, RegisteredICFactory>();
 
     /**
      * Holds a map of long IDs to short IDs
@@ -45,10 +45,10 @@ public class ICManager {
      * @see RegisteredICFactory
      */
     public final Map<String, String> longRegistered
-            = new HashMap<String, String>();
+    = new HashMap<String, String>();
 
     private static final Map<BlockWorldVector, IC> cachedICs
-            = new HashMap<BlockWorldVector, IC>();
+    = new HashMap<BlockWorldVector, IC>();
 
     /**
      * Register an IC with the manager. The casing of the ID can be of any
@@ -79,12 +79,12 @@ public class ICManager {
         for (ICFamily family : families) {
             String id2 = id.replace("MC", family.getModifier());
             RegisteredICFactory registration
-                    = new RegisteredICFactory(id2, factory, family);
+            = new RegisteredICFactory(id2, factory, family);
             // Lowercase the ID so that we can do case in-sensitive lookups
             registered.put(id2.toLowerCase(), registration);
         }
         if(longId!=null)
-            longRegistered.put(longId.toLowerCase(), id);
+            longRegistered.put(longId.toLowerCase().substring(0, 15), id);
 
     }
 
