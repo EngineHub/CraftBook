@@ -49,9 +49,14 @@ public class CircuitCommands {
             IC ic = ric.getFactory().create(null);
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
             player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
-            player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
-            player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
-
+            if(ric.getFactory().getLineHelp()[0] != null)
+                player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
+            else
+                player.sendMessage(ChatColor.YELLOW + "Line 3: Nothing.");
+            if(ric.getFactory().getLineHelp()[1] != null)
+                player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
+            else
+                player.sendMessage(ChatColor.YELLOW + "Line 4: Nothing.");
         }
         catch(Exception e){}
     }
