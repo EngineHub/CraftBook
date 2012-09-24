@@ -325,7 +325,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC4200", "dispatcher"    , new Dispatcher.Factory(server), family3I3O);
 
         //SI5O's
-        registerIC("MC2021", "random 5"      , new Random5Bit.Factory(server), familySI5O);
+        registerIC("MC6020", "random 5"      , new Random5Bit.Factory(server), familySI5O);
 
         //PLCs
         registerIC("MC5000", "perlstone"     , PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
