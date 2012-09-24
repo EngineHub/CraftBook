@@ -83,7 +83,7 @@ public abstract class RedstoneUtil {
      */
     public static boolean isPotentialPowerSource(Block mech, Block pow) {
 
-        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE;
+        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE_BLOCK_OFF || pow.getType() == Material.DIODE_BLOCK_ON;
     }
 
 

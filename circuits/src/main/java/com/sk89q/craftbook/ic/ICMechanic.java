@@ -76,7 +76,7 @@ public class ICMechanic extends PersistentMechanic {
             final Block source = event.getSource();
             final BlockState state = block.getState();
             // abort if the sign is the source or the block the sign is attached to
-            if (SignUtil.getBackBlock(block).equals(source)/* || block.equals(source)*/) {
+            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) {
                 return;
             }
 
