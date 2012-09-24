@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,13 +23,11 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Silthus
@@ -105,34 +104,42 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
             try {
                 Collection<Item> items = getItems();
                 ImprovedCauldronCookbook.Recipe recipe = cookbook.getRecipe(CauldronItemStack.convert(items));
-                if (!plugin.getLocalConfiguration().cauldronSettings.newSpoons) {
-                    cook(recipe, items);
-                    player.print(
-                            "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
-                            .YELLOW + " recipe.");
-                    block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-                    event.setCancelled(true);
-                } else { //Spoons
-                    if (event.getPlayer().getItemInHand() == null) return;
-                    if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
-                        double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
-                        Random r = new Random();
-                        double ran = r.nextDouble();
-                        event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
-                                .getDurability() - (short) 1));
-                        if (chance <= ran) {
-                            cook(recipe, items);
-                            player.print(
-                                    "You have cooked the " + ChatColor.AQUA + recipe.getName() +
-                                    ChatColor.YELLOW + " recipe.");
-                            block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
-                                    false);
-                            event.setCancelled(true);
-                        } else {
-                            player.print("mech.cauldron.stir");
-                        }
-                    }
-                }
+
+	            // lets check permissions for that recipe
+	            if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
+			            && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
+		            player.printError("You dont have permission to cook this recipe.");
+		            return;
+	            }
+
+	            if (!plugin.getLocalConfiguration().cauldronSettings.newSpoons) {
+	                cook(recipe, items);
+	                player.print(
+	                        "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
+	                        .YELLOW + " recipe.");
+	                block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+	                event.setCancelled(true);
+	            } else { //Spoons
+	                if (event.getPlayer().getItemInHand() == null) return;
+	                if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
+	                    double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
+	                    Random r = new Random();
+	                    double ran = r.nextDouble();
+	                    event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
+	                            .getDurability() - (short) 1));
+	                    if (chance <= ran) {
+	                        cook(recipe, items);
+	                        player.print(
+	                                "You have cooked the " + ChatColor.AQUA + recipe.getName() +
+	                                ChatColor.YELLOW + " recipe.");
+	                        block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
+	                                false);
+	                        event.setCancelled(true);
+	                    } else {
+	                        player.print("mech.cauldron.stir");
+	                    }
+	                }
+	            }
             } catch (UnknownRecipeException e) {
                 player.printError(e.getMessage());
             }
