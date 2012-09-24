@@ -43,13 +43,28 @@ public class CartDeposit extends CartMechanism {
         ItemStack[] trivialstackarray = {};
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-        if (collecting) {
+	    // process the line on the sign and split for durability and item id
+	    int itemId = 0;
+	    int itemData = -1;
+	    String line = ((Sign) blocks.sign.getState()).getLine(2);
+	    try {
+		    String[] split = line.split(":");
+		    if (split.length > 1) {
+			    // we have durability value
+			    itemData = Integer.parseInt(split[1]);
+		    }
+		    itemId = Integer.parseInt(split[0]);
+	    } catch (NumberFormatException e) {
+			return;
+	    }
+
+	    if (collecting) {
             // collecting
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
-            if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
+            if (line.length() > 0) {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (item == null) continue;
-                    if (Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
+                    if (itemId == item.getTypeId() && (itemData > -1 ? itemData == item.getDurability() : true)) {
                         transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                         cartinventory.remove(item);
                     }
@@ -95,10 +110,10 @@ public class CartDeposit extends CartMechanism {
 
             for (Chest container : containers) {
                 Inventory containerinventory = container.getInventory();
-                if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
+                if (line.length() > 0) {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (item == null) continue;
-                        if (Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2)) == item.getTypeId()) {
+                        if (itemId == item.getTypeId() && (itemData > -1 ? itemData == item.getDurability() : true)) {
                             transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             containerinventory.remove(item);
                         }
