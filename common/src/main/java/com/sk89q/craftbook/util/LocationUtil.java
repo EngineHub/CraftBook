@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +35,20 @@ public final class LocationUtil {
         if(!l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()))
             return false;
         return getDistance(l1, l2) <= radius;
+    }
+
+    public static Entity[] getNearbyEntities(Location l, int radius){
+        int chunkRadius = radius < 16 ? 1 : (radius - radius % 16)/16;
+        HashSet<Entity> radiusEntities = new HashSet<Entity>();
+        for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
+            for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
+                int x=(int) l.getX(),y=(int) l.getY(),z=(int) l.getZ();
+                for (Entity e : new Location(l.getWorld(),x+chX*16,y,z+chZ*16).getChunk().getEntities()){
+                    if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock()) radiusEntities.add(e);
+                }
+            }
+        }
+        return radiusEntities.toArray(new Entity[radiusEntities.size()]);
     }
 
     /**
