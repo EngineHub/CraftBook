@@ -149,6 +149,7 @@ import com.sk89q.craftbook.ic.families.Family3I3O;
 import com.sk89q.craftbook.ic.families.Family3ISO;
 import com.sk89q.craftbook.ic.families.FamilyAISO;
 import com.sk89q.craftbook.ic.families.FamilySI3O;
+import com.sk89q.craftbook.ic.families.FamilySI5O;
 import com.sk89q.craftbook.ic.families.FamilySISO;
 import com.sk89q.craftbook.ic.families.FamilyVIVO;
 import com.sk89q.craftbook.plc.PlcFactory;
@@ -233,6 +234,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         ICFamily familyAISO = new FamilyAISO();
         ICFamily family3I3O = new Family3I3O();
         ICFamily familyVIVO = new FamilyVIVO();
+        ICFamily familySI50 = new FamilySI5O();
 
         //SISOs
         registerIC("MC1000", "repeater"      , new Repeater.Factory(server), familySISO, familyAISO);
