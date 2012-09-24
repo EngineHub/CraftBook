@@ -19,6 +19,21 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.plugin.PluginManager;
+
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -29,19 +44,6 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.plugin.PluginManager;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -266,6 +268,17 @@ public class MechanicListenerAdapter {
             }
         }
 
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        public void onPhysicsUpdate(BlockPhysicsEvent event) {
+
+            if(!plugin.getLocalConfiguration().commonSettings.experimentalRepeaters) return;
+            int type = event.getChangedTypeId();
+            if(type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON) {
+                manager.dispatchBlockRedstoneChange(
+                        new SourcedBlockRedstoneEvent(event.getBlock(), event.getBlock(), type == BlockID.REDSTONE_REPEATER_ON ? 0 : 15, type == BlockID.REDSTONE_REPEATER_ON ? 15 : 0));
+            }
+        }
+
         /**
          * Handle the direct wire input.
          *
@@ -276,7 +289,7 @@ public class MechanicListenerAdapter {
          * @param newLevel
          */
         protected void handleDirectWireInput(WorldVector pt,
-                                             boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
+                boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
 
             Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
                     pt.getBlockZ());

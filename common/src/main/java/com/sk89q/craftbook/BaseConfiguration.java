@@ -33,6 +33,7 @@ public class BaseConfiguration {
         public final boolean opPerms;
         public final boolean useBlockDistance;
         public final boolean checkWGRegions;
+        public final boolean experimentalRepeaters;
 
         private CommonSettings() {
 
@@ -40,6 +41,7 @@ public class BaseConfiguration {
             opPerms = getBoolean("op-perms", true);
             useBlockDistance = getBoolean("use-block-radius", false);
             checkWGRegions = getBoolean("check-worldguard-flags", true);
+            experimentalRepeaters = getBoolean("experimental-repeater-support", false);
         }
     }
 
