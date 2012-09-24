@@ -22,11 +22,11 @@ import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-public class Clock extends AbstractIC {
+public class ClockST extends Clock implements SelfTriggeredIC {
 
     final Sign sign;
 
-    public Clock(Server server, Sign psign) {
+    public ClockST(Server server, Sign psign) {
 
         super(server, psign);
         sign = psign;
@@ -35,47 +35,31 @@ public class Clock extends AbstractIC {
     @Override
     public String getTitle() {
 
-        return "Clock";
+        return "ClockST";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "CLOCK";
+        return "CLOCK ST";
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-	    if (chip.isTriggered(0)) {
-		    triggerClock(chip);
-	    }
     }
 
-	protected void triggerClock(ChipState chip) {
-		short tick, reset;
-		try {
-			reset = Short.parseShort(sign.getLine(2));
-		} catch (NumberFormatException e) {
-			return;
-		}
+    @Override
+    public void think(ChipState chip) {
 
-		try {
-			tick = Short.parseShort(sign.getLine(3));
-		} catch (NumberFormatException e) {
-			tick = 0;
-		}
+        triggerClock(chip);
+    }
 
-		tick++;
+    @Override
+    public boolean isActive() {
 
-		if (tick == reset) {
-			tick = 0;
-			chip.setOutput(0, !chip.getOutput(0));
-		}
-
-		// don't update, would cause lag!
-		sign.setLine(3, Short.toString(tick));
-	}
+        return true;
+    }
 
     public static class Factory extends AbstractICFactory {
 
@@ -87,7 +71,7 @@ public class Clock extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Clock(getServer(), sign);
+            return new ClockST(getServer(), sign);
         }
 
         @Override
