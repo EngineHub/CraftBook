@@ -64,19 +64,16 @@ public class PlayerDetection extends AbstractIC {
         if(getSign().getLine(3).length() == 0)
             isGroup = null;
 
-        try {
-            for(Entity e : LocationUtil.getNearbyEntities(location, radius)) {
-                if(!(e instanceof Player)) continue;
-                if(e.isDead() || !e.isValid()) continue;
-                if(isGroup == null)
-                    return true;
-                if(!isGroup)//player
-                    return ((Player)e).getName().startsWith(getSign().getLine(3).split(":")[1]);
-                else
-                    return CircuitsPlugin.getInst().isInGroup(((Player) e).getName(), getSign().getLine(3).split(":")[1]);
-            }
+        for(Entity e : LocationUtil.getNearbyEntities(location, radius)) {
+            if(!(e instanceof Player)) continue;
+            if(e.isDead() || !e.isValid()) continue;
+            if(isGroup == null)
+                return true;
+            if(!isGroup)//player
+                return ((Player)e).getName().startsWith(getSign().getLine(3).split(":")[1]);
+            else
+                return CircuitsPlugin.getInst().isInGroup(((Player) e).getName(), getSign().getLine(3).split(":")[1]);
         }
-        catch(Exception e){}
 
         return false;
     }
