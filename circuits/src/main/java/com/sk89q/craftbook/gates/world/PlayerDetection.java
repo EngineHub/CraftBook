@@ -3,7 +3,6 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
@@ -64,15 +63,17 @@ public class PlayerDetection extends AbstractIC {
         if(getSign().getLine(3).length() == 0)
             isGroup = null;
 
-        for(Entity e : LocationUtil.getNearbyEntities(location, radius)) {
-            if(!(e instanceof Player)) continue;
+        for(Player e : getServer().getOnlinePlayers()) {
+            if(e == null) continue;
+            if(!LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius))
+                continue;
             if(e.isDead() || !e.isValid()) continue;
             if(isGroup == null)
                 return true;
             if(!isGroup)//player
-                return ((Player)e).getName().startsWith(getSign().getLine(3).split(":")[1]);
+                return e.getName().startsWith(getSign().getLine(3).split(":")[1]);
             else
-                return CircuitsPlugin.getInst().isInGroup(((Player) e).getName(), getSign().getLine(3).split(":")[1]);
+                return CircuitsPlugin.getInst().isInGroup(e.getName(), getSign().getLine(3).split(":")[1]);
         }
 
         return false;
