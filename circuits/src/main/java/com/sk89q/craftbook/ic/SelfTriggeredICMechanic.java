@@ -14,27 +14,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 
 public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
 
     private final SelfTriggeredIC selfTrigIC;
 
     public SelfTriggeredICMechanic(CircuitsPlugin plugin, String id, SelfTriggeredIC ic,
-                                   ICFamily family, BlockWorldVector pos) {
+            ICFamily family, BlockWorldVector pos) {
 
         super(plugin, id, ic, family, pos);
-        this.selfTrigIC = ic;
+        selfTrigIC = ic;
     }
 
     @Override

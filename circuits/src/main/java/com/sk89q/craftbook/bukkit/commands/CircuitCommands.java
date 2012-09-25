@@ -1,5 +1,12 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -7,12 +14,6 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class CircuitCommands {
 
@@ -56,6 +57,7 @@ public class CircuitCommands {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
             else
                 player.sendMessage(ChatColor.YELLOW + "Line 4: Nothing.");
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId().toUpperCase());
         }
         catch(Exception e){}
     }
