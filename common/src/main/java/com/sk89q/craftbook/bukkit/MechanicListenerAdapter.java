@@ -142,6 +142,11 @@ public class MechanicListenerAdapter {
             this.plugin = plugin;
         }
 
+        //@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+        //public void onEvent(Event event) {
+        //
+        //}
+
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSignChange(SignChangeEvent event) {
 
