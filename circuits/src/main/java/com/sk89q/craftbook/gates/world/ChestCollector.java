@@ -121,5 +121,19 @@ public class ChestCollector extends AbstractIC {
 
             return new ChestCollector(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Collects items into above chest.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "included id:data",
+                    "excluded id:data"
+            };
+            return lines;
+        }
     }
 }

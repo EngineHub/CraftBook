@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractICFactory;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 /**
  * @author Me4502
@@ -36,7 +36,7 @@ public class ChestCollectorST extends ChestCollector implements SelfTriggeredIC 
     }
 
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends ChestCollector.Factory {
 
         public Factory(Server server) {
 

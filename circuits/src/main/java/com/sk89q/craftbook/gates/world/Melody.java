@@ -134,6 +134,20 @@ public class Melody extends AbstractIC {
             }
             return new Melody(getServer(), sign);
         }
+
+        @Override
+        public String getDescription() {
+            return "Plays a MIDI.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "MIDI name",
+                    "Radius"
+            };
+            return lines;
+        }
     }
 
 }

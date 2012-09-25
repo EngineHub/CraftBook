@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
 
@@ -35,7 +40,7 @@ public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
         return true;
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends BlockSensor.Factory {
 
         public Factory(Server server) {
 

@@ -1,9 +1,15 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
@@ -77,6 +83,20 @@ public class CombinationLock extends AbstractIC implements SelfTriggeredIC {
             if (sign.getLine(2) == null && sign.getLine(2).equals("")) {
                 throw new ICVerificationException("Line three needs to be a combination");
             }
+        }
+
+        @Override
+        public String getDescription() {
+            return "Checks combination on sign against inputs.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "Combination. X = On, O = Off (XOX)",
+                    null
+            };
+            return lines;
         }
     }
 }
