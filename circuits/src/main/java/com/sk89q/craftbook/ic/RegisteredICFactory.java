@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
@@ -26,7 +26,7 @@ package com.sk89q.craftbook.ic;
  */
 public class RegisteredICFactory {
 
-    protected final String id;
+    protected final String id, longId;
     protected final ICFactory factory;
     protected final ICFamily family;
 
@@ -37,9 +37,10 @@ public class RegisteredICFactory {
      * @param factory
      * @param family
      */
-    public RegisteredICFactory(String id, ICFactory factory, ICFamily family) {
+    public RegisteredICFactory(String id, String longId, ICFactory factory, ICFamily family) {
 
         this.id = id;
+        this.longId = longId;
         this.factory = factory;
         this.family = family;
     }
@@ -59,4 +60,7 @@ public class RegisteredICFactory {
         return family;
     }
 
+    public String getShorthand() {
+        return longId;
+    }
 }

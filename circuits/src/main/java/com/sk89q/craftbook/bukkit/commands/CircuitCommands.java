@@ -48,6 +48,8 @@ public class CircuitCommands {
         try {
             IC ic = ric.getFactory().create(null);
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
+            if(plugin.getLocalConfiguration().enableShorthandIcs)
+                player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
             player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
             if(ric.getFactory().getLineHelp()[0] != null)
                 player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);

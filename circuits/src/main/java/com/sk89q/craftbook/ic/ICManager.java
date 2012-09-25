@@ -80,7 +80,7 @@ public class ICManager {
         for (ICFamily family : families) {
             String id2 = id.replace("MC", family.getModifier());
             RegisteredICFactory registration
-            = new RegisteredICFactory(id2, factory, family);
+            = new RegisteredICFactory(id2, longId, factory, family);
             // Lowercase the ID so that we can do case in-sensitive lookups
             registered.put(id2.toLowerCase(), registration);
         }
