@@ -88,6 +88,10 @@ public class ItemUtil {
     public static ItemStack getSmeletedResult(ItemStack item) {
 
         switch (item.getTypeId()) {
+            case BlockID.COBBLESTONE:
+                return new ItemStack(BlockID.STONE);
+            case BlockID.CACTUS:
+                return new ItemStack(ItemID.INK_SACK, 1, (short) 2);
             case BlockID.IRON_ORE:
                 return new ItemStack(ItemID.IRON_BAR);
             case BlockID.GOLD_ORE:
@@ -103,6 +107,17 @@ public class ItemUtil {
         }
     }
 
+    public static boolean isAFuel(ItemStack item) {
+        int i = item.getTypeId();
+        return i == ItemID.COAL || i == BlockID.LOG || i == BlockID.WOOD || i == BlockID.WOODEN_STEP
+                || i == BlockID.SAPLING || i == ItemID.WOOD_AXE || i == ItemID.WOOD_HOE || i == ItemID.WOOD_PICKAXE
+                || i == ItemID.WOOD_SHOVEL || i == ItemID.WOOD_SWORD || i == BlockID.WOODEN_PRESSURE_PLATE
+                || i == ItemID.STICK || i == BlockID.FENCE || i == BlockID.WOODEN_STAIRS || i == BlockID.TRAP_DOOR
+                || i == BlockID.WORKBENCH || i == BlockID.CHEST || i == BlockID.JUKEBOX || i == BlockID.NOTE_BLOCK
+                || i == BlockID.BROWN_MUSHROOM_CAP || i == BlockID.RED_MUSHROOM_CAP || i == ItemID.BLAZE_ROD
+                || i == ItemID.LAVA_BUCKET;
+    }
+
     public static boolean containsRawFood(Inventory inv) {
 
         for (ItemStack it : inv.getContents())
@@ -115,6 +130,10 @@ public class ItemUtil {
         for (ItemStack it : inv.getContents())
             if (it != null && isSmeltable(it)) return true;
         return false;
+    }
+
+    public static boolean isFurnacable(ItemStack item) {
+        return isCookable(item) || isSmeltable(item);
     }
 
     public static boolean isItemEdible(ItemStack item) {
