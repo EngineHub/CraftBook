@@ -21,6 +21,7 @@ package com.sk89q.craftbook.ic;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 
 /**
@@ -116,6 +117,8 @@ public class ICManager {
      */
     public static boolean isCachedIC(BlockWorldVector pt) {
 
+        if(!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
+            return false;
         return cachedICs.containsKey(pt);
     }
 
@@ -140,6 +143,8 @@ public class ICManager {
      */
     public static void addCachedIC(BlockWorldVector pt, IC ic) {
 
+        if(!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
+            return;
         cachedICs.put(pt, ic);
     }
 

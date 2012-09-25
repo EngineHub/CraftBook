@@ -14,13 +14,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
 
@@ -33,7 +38,10 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
         super(server, sign);
 
         iSign = sign;
-        band = sign.getLine(2);
+        if(sign != null)
+            band = sign.getLine(2);
+        else
+            band = "";
     }
 
     @Override

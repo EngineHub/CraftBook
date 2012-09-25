@@ -43,6 +43,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
         enableGlowStone = getBoolean("redstone-glowstone", false);
         enableShorthandIcs = getBoolean("enable-shorthand-ics", false);
         glowstoneOffBlock = Material.getMaterial(getInt("glowstone-off-material", BlockID.GLASS));
+        cacheICs = getBoolean("cache-ics", false);
     }
 
     public final File dataFolder;
@@ -55,4 +56,5 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public final boolean enableGlowStone;
     public final boolean enableShorthandIcs;
     public final Material glowstoneOffBlock;
+    public final boolean cacheICs;
 }
