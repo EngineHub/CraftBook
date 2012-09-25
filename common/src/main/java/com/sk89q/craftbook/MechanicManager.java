@@ -22,6 +22,7 @@ package com.sk89q.craftbook;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,6 +96,8 @@ public class MechanicManager {
      * List of mechanics that think on a routine basis.
      */
     private final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
+
+    protected HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>> eventRegistration = new HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>>();
 
     /**
      * Construct the manager.
@@ -632,5 +635,12 @@ public class MechanicManager {
             }
         }
     }
-}
 
+    public void registerEvent(Class<?> event, MechanicFactory<? extends Mechanic> mechanic) {
+        ArrayList<MechanicFactory<? extends Mechanic>> list = eventRegistration.get(event);
+        if(list == null)
+            list = new ArrayList<MechanicFactory<? extends Mechanic>>();
+        list.add(mechanic);
+        eventRegistration.put(event, list);
+    }
+}
