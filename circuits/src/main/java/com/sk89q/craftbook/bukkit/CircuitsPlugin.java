@@ -90,8 +90,8 @@ import com.sk89q.craftbook.gates.world.AutomaticCrafterST;
 import com.sk89q.craftbook.gates.world.BlockLauncher;
 import com.sk89q.craftbook.gates.world.BlockSensor;
 import com.sk89q.craftbook.gates.world.BlockSensorST;
-import com.sk89q.craftbook.gates.world.ChestCollector;
-import com.sk89q.craftbook.gates.world.ChestCollectorST;
+import com.sk89q.craftbook.gates.world.ContainerCollector;
+import com.sk89q.craftbook.gates.world.ContainerCollectorST;
 import com.sk89q.craftbook.gates.world.CombinationLock;
 import com.sk89q.craftbook.gates.world.ContainerDispenser;
 import com.sk89q.craftbook.gates.world.CreatureSpawner;
@@ -258,7 +258,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1206", "set below"     , new SetBlockBelow.Factory(server), familySISO, familyAISO);       // Restricted
         registerIC("MC1207", "flex set"      , new FlexibleSetBlock.Factory(server), familySISO, familyAISO);    // Restricted
         registerIC("MC1208", "mult set"      , new MultipleSetBlock.Factory(server), familySISO, familyAISO);
-        registerIC("MC1209", "collector"     , new ChestCollector.Factory(server), familySISO, familyAISO);
+        registerIC("MC1209", "collector"     , new ContainerCollector.Factory(server), familySISO, familyAISO);
         registerIC("MC1210", "emitter"       , new ParticleEffect.Factory(server), familySISO, familyAISO);      // Restricted
         registerIC("MC1211", "set bridge"    , new SetBridge.Factory(server), familySISO, familyAISO);           // Restricted
         registerIC("MC1212", "set door"      , new SetDoor.Factory(server), familySISO, familyAISO);             // Restricted
@@ -339,7 +339,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0020", "random 1 st"   , new RandomBitST.Factory(server), familySISO, familyAISO);                     //Restricted
         registerIC("MC0111", "receiver st"   , new WirelessReceiverST.Factory(server), familySISO, familyAISO);
         registerIC("MC0204", "trap st"       , new EntityTrapST.Factory(server), familySISO, familyAISO);                    // Restricted
-        registerIC("MC0209", "collector st"  , new ChestCollectorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0209", "collector st"  , new ContainerCollectorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0210", "emitter st"    , new ParticleEffectST.Factory(server), familySISO, familyAISO);
         registerIC("MC0219", "auto craft st" , new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO, familyAISO);
