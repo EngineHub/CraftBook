@@ -94,6 +94,10 @@ public class ItemUtil {
                 return new ItemStack(ItemID.INK_SACK, 1, (short) 2);
             case BlockID.IRON_ORE:
                 return new ItemStack(ItemID.IRON_BAR);
+            case BlockID.REDSTONE_ORE:
+                return new ItemStack(ItemID.REDSTONE_DUST);
+            case BlockID.EMERALD_ORE:
+                return new ItemStack(ItemID.EMERALD);
             case BlockID.GOLD_ORE:
                 return new ItemStack(ItemID.GOLD_BAR);
             case BlockID.DIAMOND_ORE:

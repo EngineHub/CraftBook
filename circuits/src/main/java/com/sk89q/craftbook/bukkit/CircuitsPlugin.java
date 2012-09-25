@@ -18,27 +18,147 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
-import com.sk89q.craftbook.circuits.GlowStone;
-import com.sk89q.craftbook.circuits.JackOLantern;
-import com.sk89q.craftbook.circuits.Netherrack;
-import com.sk89q.craftbook.gates.logic.*;
-import com.sk89q.craftbook.gates.weather.*;
-import com.sk89q.craftbook.gates.world.*;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.ic.families.*;
-import com.sk89q.craftbook.plc.PlcFactory;
-import com.sk89q.craftbook.plc.lang.Perlstone;
-import com.sk89q.wepif.PermissionsResolverManager;
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.World;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+
+import org.bukkit.Chunk;
+import org.bukkit.Server;
+import org.bukkit.World;
+
+import com.sk89q.craftbook.CircuitsConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.MechanicFactory;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
+import com.sk89q.craftbook.circuits.GlowStone;
+import com.sk89q.craftbook.circuits.JackOLantern;
+import com.sk89q.craftbook.circuits.Netherrack;
+import com.sk89q.craftbook.gates.logic.AndGate;
+import com.sk89q.craftbook.gates.logic.Clock;
+import com.sk89q.craftbook.gates.logic.ClockDivider;
+import com.sk89q.craftbook.gates.logic.ClockST;
+import com.sk89q.craftbook.gates.logic.Counter;
+import com.sk89q.craftbook.gates.logic.Delayer;
+import com.sk89q.craftbook.gates.logic.Dispatcher;
+import com.sk89q.craftbook.gates.logic.DownCounter;
+import com.sk89q.craftbook.gates.logic.EdgeTriggerDFlipFlop;
+import com.sk89q.craftbook.gates.logic.FullAdder;
+import com.sk89q.craftbook.gates.logic.FullSubtractor;
+import com.sk89q.craftbook.gates.logic.HalfAdder;
+import com.sk89q.craftbook.gates.logic.HalfSubtractor;
+import com.sk89q.craftbook.gates.logic.InvertedRsNandLatch;
+import com.sk89q.craftbook.gates.logic.Inverter;
+import com.sk89q.craftbook.gates.logic.JkFlipFlop;
+import com.sk89q.craftbook.gates.logic.LevelTriggeredDFlipFlop;
+import com.sk89q.craftbook.gates.logic.LowDelayer;
+import com.sk89q.craftbook.gates.logic.LowNotPulser;
+import com.sk89q.craftbook.gates.logic.LowPulser;
+import com.sk89q.craftbook.gates.logic.Marquee;
+import com.sk89q.craftbook.gates.logic.MemoryAccess;
+import com.sk89q.craftbook.gates.logic.MemorySetter;
+import com.sk89q.craftbook.gates.logic.Monostable;
+import com.sk89q.craftbook.gates.logic.Multiplexer;
+import com.sk89q.craftbook.gates.logic.NandGate;
+import com.sk89q.craftbook.gates.logic.NotDelayer;
+import com.sk89q.craftbook.gates.logic.NotLowDelayer;
+import com.sk89q.craftbook.gates.logic.NotPulser;
+import com.sk89q.craftbook.gates.logic.Pulser;
+import com.sk89q.craftbook.gates.logic.Random3Bit;
+import com.sk89q.craftbook.gates.logic.Random5Bit;
+import com.sk89q.craftbook.gates.logic.RandomBit;
+import com.sk89q.craftbook.gates.logic.RandomBitST;
+import com.sk89q.craftbook.gates.logic.Repeater;
+import com.sk89q.craftbook.gates.logic.RsNandLatch;
+import com.sk89q.craftbook.gates.logic.RsNorFlipFlop;
+import com.sk89q.craftbook.gates.logic.ToggleFlipFlop;
+import com.sk89q.craftbook.gates.logic.XnorGate;
+import com.sk89q.craftbook.gates.logic.XorGate;
+import com.sk89q.craftbook.gates.weather.RainSensor;
+import com.sk89q.craftbook.gates.weather.RainSensorST;
+import com.sk89q.craftbook.gates.weather.TStormSensor;
+import com.sk89q.craftbook.gates.weather.TStormSensorST;
+import com.sk89q.craftbook.gates.weather.WeatherControl;
+import com.sk89q.craftbook.gates.weather.WeatherControlAdvanced;
+import com.sk89q.craftbook.gates.weather.WeatherFaker;
+import com.sk89q.craftbook.gates.world.ArrowBarrage;
+import com.sk89q.craftbook.gates.world.ArrowShooter;
+import com.sk89q.craftbook.gates.world.AutomaticCrafter;
+import com.sk89q.craftbook.gates.world.AutomaticCrafterST;
+import com.sk89q.craftbook.gates.world.BlockLauncher;
+import com.sk89q.craftbook.gates.world.BlockSensor;
+import com.sk89q.craftbook.gates.world.BlockSensorST;
+import com.sk89q.craftbook.gates.world.ChestCollector;
+import com.sk89q.craftbook.gates.world.ChestCollectorST;
+import com.sk89q.craftbook.gates.world.CombinationLock;
+import com.sk89q.craftbook.gates.world.ContainerDispenser;
+import com.sk89q.craftbook.gates.world.CreatureSpawner;
+import com.sk89q.craftbook.gates.world.DaySensor;
+import com.sk89q.craftbook.gates.world.DaySensorST;
+import com.sk89q.craftbook.gates.world.EntitySensor;
+import com.sk89q.craftbook.gates.world.EntitySensorST;
+import com.sk89q.craftbook.gates.world.EntityTrap;
+import com.sk89q.craftbook.gates.world.EntityTrapST;
+import com.sk89q.craftbook.gates.world.FireBarrage;
+import com.sk89q.craftbook.gates.world.FireShooter;
+import com.sk89q.craftbook.gates.world.FlexibleSetBlock;
+import com.sk89q.craftbook.gates.world.ItemDispenser;
+import com.sk89q.craftbook.gates.world.ItemNotSensor;
+import com.sk89q.craftbook.gates.world.ItemNotSensorST;
+import com.sk89q.craftbook.gates.world.ItemSensor;
+import com.sk89q.craftbook.gates.world.ItemSensorST;
+import com.sk89q.craftbook.gates.world.LavaSensor;
+import com.sk89q.craftbook.gates.world.LavaSensorST;
+import com.sk89q.craftbook.gates.world.LightSensor;
+import com.sk89q.craftbook.gates.world.LightSensorST;
+import com.sk89q.craftbook.gates.world.LightningSummon;
+import com.sk89q.craftbook.gates.world.Melody;
+import com.sk89q.craftbook.gates.world.MessageSender;
+import com.sk89q.craftbook.gates.world.MultipleSetBlock;
+import com.sk89q.craftbook.gates.world.ParticleEffect;
+import com.sk89q.craftbook.gates.world.ParticleEffectST;
+import com.sk89q.craftbook.gates.world.PlayerDetection;
+import com.sk89q.craftbook.gates.world.PlayerDetectionST;
+import com.sk89q.craftbook.gates.world.PotionInducer;
+import com.sk89q.craftbook.gates.world.PowerSensor;
+import com.sk89q.craftbook.gates.world.PowerSensorST;
+import com.sk89q.craftbook.gates.world.RangedOutput;
+import com.sk89q.craftbook.gates.world.ServerTimeModulus;
+import com.sk89q.craftbook.gates.world.SetBlockAbove;
+import com.sk89q.craftbook.gates.world.SetBlockAboveChest;
+import com.sk89q.craftbook.gates.world.SetBlockBelow;
+import com.sk89q.craftbook.gates.world.SetBlockBelowChest;
+import com.sk89q.craftbook.gates.world.SetBridge;
+import com.sk89q.craftbook.gates.world.SetDoor;
+import com.sk89q.craftbook.gates.world.SoundEffect;
+import com.sk89q.craftbook.gates.world.TimeControl;
+import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
+import com.sk89q.craftbook.gates.world.TimeFaker;
+import com.sk89q.craftbook.gates.world.TimeSet;
+import com.sk89q.craftbook.gates.world.TimeSetST;
+import com.sk89q.craftbook.gates.world.WaterSensor;
+import com.sk89q.craftbook.gates.world.WaterSensorST;
+import com.sk89q.craftbook.gates.world.WirelessReceiver;
+import com.sk89q.craftbook.gates.world.WirelessReceiverST;
+import com.sk89q.craftbook.gates.world.WirelessTransmitter;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICFamily;
+import com.sk89q.craftbook.ic.ICManager;
+import com.sk89q.craftbook.ic.ICMechanicFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.RegisteredICFactory;
+import com.sk89q.craftbook.ic.families.Family3I3O;
+import com.sk89q.craftbook.ic.families.Family3ISO;
+import com.sk89q.craftbook.ic.families.FamilyAISO;
+import com.sk89q.craftbook.ic.families.FamilySI3O;
+import com.sk89q.craftbook.ic.families.FamilySI5O;
+import com.sk89q.craftbook.ic.families.FamilySISO;
+import com.sk89q.craftbook.ic.families.FamilyVIVO;
+import com.sk89q.craftbook.plc.PlcFactory;
+import com.sk89q.craftbook.plc.lang.Perlstone;
+import com.sk89q.wepif.PermissionsResolverManager;
 // import com.sk89q.bukkit.migration.*;
 
 /**
@@ -143,16 +263,16 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1211", "set bridge"    , new SetBridge.Factory(server), familySISO, familyAISO);           // Restricted
         registerIC("MC1212", "set door"      , new SetDoor.Factory(server), familySISO, familyAISO);             // Restricted
         registerIC("MC1213", "sound"         , new SoundEffect.Factory(server), familySISO, familyAISO);         // Restricted
-        registerIC("MC1215", null            , new SetBlockAboveChest.Factory(server), familySISO, familyAISO);  // Restricted
-        registerIC("MC1216", null            , new SetBlockBelowChest.Factory(server), familySISO, familyAISO);  // Restricted
+        registerIC("MC1215", "set above ches", new SetBlockAboveChest.Factory(server), familySISO, familyAISO);  // Restricted
+        registerIC("MC1216", "set below ches", new SetBlockBelowChest.Factory(server), familySISO, familyAISO);  // Restricted
         registerIC("MC1217", "pot induce"    , new PotionInducer.Factory(server), familySISO, familyAISO);
         registerIC("MC1218", "block launch"  , new BlockLauncher.Factory(server), familySISO, familyAISO);
         registerIC("MC1219", "auto craft"    , new AutomaticCrafter.Factory(server), familySISO, familyAISO);
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
-        registerIC("MC1231", null            , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
+        registerIC("MC1231", "t control"     , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set"      , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted
-        registerIC("MC1236", null            , new WeatherFaker.Factory(server), familySISO, familyAISO);        // Restricted
-        registerIC("MC1237", null            , new TimeFaker.Factory(server), familySISO, familyAISO);           // Restricted
+        registerIC("MC1236", "fake weather"  , new WeatherFaker.Factory(server), familySISO, familyAISO);        // Restricted
+        registerIC("MC1237", "fake time"     , new TimeFaker.Factory(server), familySISO, familyAISO);           // Restricted
         registerIC("MC1240", "shoot arrow"   , new ArrowShooter.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1241", "shoot arrows"  , new ArrowBarrage.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1250", "shoot fire"    , new FireShooter.Factory(server), familySISO, familyAISO);         // Restricted
@@ -168,7 +288,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1271", "sense entity"  , new EntitySensor.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1272", "sense player"  , new PlayerDetection.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1420", "divide clock"  , new ClockDivider.Factory(server), familySISO, familyAISO);
-	    registerIC("MC1421", "clock"         , new Clock.Factory(server), familySISO, familyAISO);
+        registerIC("MC1421", "clock"         , new Clock.Factory(server), familySISO, familyAISO);
         registerIC("MC1510", "send message"  , new MessageSender.Factory(server), familySISO, familyAISO);
         registerIC("MC2100", "delayer"       , new Delayer.Factory(server), familySISO, familyAISO);
         registerIC("MC2101", "inv delayer"   , new NotDelayer.Factory(server), familySISO, familyAISO);
@@ -198,7 +318,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC3050", "combo"         , new CombinationLock.Factory(server), family3ISO);
         registerIC("MC3101", "down counter"  , new DownCounter.Factory(server), family3ISO);
         registerIC("MC3102", "counter"       , new Counter.Factory(server), family3ISO);
-        registerIC("MC3231", null            , new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
+        registerIC("MC3231", "t control adva", new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
         registerIC("MC3300", "ROM set"       , new MemorySetter.Factory(server), family3ISO);          // Restricted
         registerIC("MC3301", "ROM get"       , new MemoryAccess.Factory(server), familySI3O);          // Restricted
         //3I3Os
@@ -229,7 +349,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0262", "sense light st", new LightSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0263", "sense block st", new BlockSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0264", "sense item st" , new ItemSensorST.Factory(server), familySISO, familyAISO);                    // Restricted
-        registerIC("MC0265", null            , new ItemNotSensorST.Factory(server), familySISO, familyAISO);                 // Restricted
+        registerIC("MC0265", "sense n item s", new ItemNotSensorST.Factory(server), familySISO, familyAISO);                 // Restricted
         registerIC("MC0266", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);                   // Restricted
         registerIC("MC0270", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO, familyAISO);                  // Restricted
