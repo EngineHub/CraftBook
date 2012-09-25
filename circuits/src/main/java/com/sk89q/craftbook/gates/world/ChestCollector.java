@@ -3,7 +3,9 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -110,6 +112,29 @@ public class ChestCollector extends AbstractIC {
                     }
                 }
 
+                if (bl.getType() == Material.DISPENSER) {
+
+                    if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
+
+                        ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
+                        item.remove();
+                        return true;
+                    }
+                }
+
+                if (bl.getType() == Material.BREWING_STAND) {
+
+                    if(!ItemUtil.isAPotionIngredient(item.getItemStack()))
+                        return false;
+                    if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
+                            || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack())) {
+
+                        ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack());
+                        item.remove();
+                        return true;
+                    }
+                }
+
                 if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
 
                     Furnace fur = (Furnace) bl.getState();
@@ -117,13 +142,13 @@ public class ChestCollector extends AbstractIC {
                     if(ItemUtil.isFurnacable(item.getItemStack()) && fur.getInventory().getItem(0) == null
                             || fur.getInventory().getItem(0).getTypeId() == 0
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getItem(0))) {
-                        fur.getInventory().setItem(0, item.getItemStack());
+                        ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getItem(0), item.getItemStack());
                         item.remove();
                         return true;
                     }
                     else if (ItemUtil.isAFuel(item.getItemStack()) && fur.getInventory().getFuel().getTypeId() == 0
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel())){
-                        fur.getInventory().setFuel(item.getItemStack());
+                        ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(), item.getItemStack());
                         item.remove();
                         return true;
                     }

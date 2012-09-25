@@ -118,6 +118,22 @@ public class ItemUtil {
                 || i == ItemID.LAVA_BUCKET;
     }
 
+    public static boolean isAPotionIngredient(ItemStack item) {
+        int i = item.getTypeId();
+        return i == ItemID.NETHER_WART_SEED || i == ItemID.LIGHTSTONE_DUST || i == ItemID.REDSTONE_DUST
+                || i == ItemID.SPIDER_EYE || i == ItemID.MAGMA_CREAM || i == ItemID.SUGAR
+                || i == ItemID.GLISTERING_MELON || i == ItemID.GHAST_TEAR || i == ItemID.BLAZE_POWDER
+                || i == ItemID.FERMENTED_SPIDER_EYE || i == ItemID.SULPHUR;
+    }
+
+    public static void addToStack(ItemStack stack, ItemStack to) {
+        if(areItemsIdentical(stack, to)) {
+            stack.setAmount(stack.getAmount() + to.getAmount());
+        }
+        else if(stack == null)
+            stack = to;
+    }
+
     public static boolean containsRawFood(Inventory inv) {
 
         for (ItemStack it : inv.getContents())
