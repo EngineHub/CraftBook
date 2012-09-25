@@ -204,8 +204,10 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             }
 
             String shortId = manager.longRegistered.get(id.toLowerCase());
-            if (shortId == null)
-                throw new InvalidMechanismException("Unknown IC detected: " + id);
+            if (shortId == null) {
+                player.printError("Warning: Unknown IC");
+                return null;
+            }
 
             sign.setLine(1, "["+shortId+"]");
 
