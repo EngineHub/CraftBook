@@ -76,7 +76,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
         }
 
         sign.setLine(3, Short.toString(tick));
-        sign.update();
+        //sign.update(); Laggggy
     }
 
     public static class Factory extends AbstractICFactory {
