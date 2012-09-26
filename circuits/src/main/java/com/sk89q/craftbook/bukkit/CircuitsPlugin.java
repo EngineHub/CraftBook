@@ -92,6 +92,8 @@ import com.sk89q.craftbook.gates.world.BlockBreakerST;
 import com.sk89q.craftbook.gates.world.BlockLauncher;
 import com.sk89q.craftbook.gates.world.BlockSensor;
 import com.sk89q.craftbook.gates.world.BlockSensorST;
+import com.sk89q.craftbook.gates.world.BonemealTerraformer;
+import com.sk89q.craftbook.gates.world.BonemealTerraformerST;
 import com.sk89q.craftbook.gates.world.CombinationLock;
 import com.sk89q.craftbook.gates.world.ContainerCollector;
 import com.sk89q.craftbook.gates.world.ContainerCollectorST;
@@ -276,6 +278,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1220", "a b break"     , new BlockBreaker.Factory(server, false), familySISO, familyAISO);
         registerIC("MC1221", "b b break"     , new BlockBreaker.Factory(server, true), familySISO, familyAISO);
         registerIC("MC1222", "liquid flood"  , new LiquidFlood.Factory(server), familySISO, familyAISO);    //Restricted
+        registerIC("MC1223", "terraform"     , new BonemealTerraformer.Factory(server), familySISO, familyAISO);
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", "t control"     , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set"      , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted
@@ -354,6 +357,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0220", "a bl break st" , new BlockBreakerST.Factory(server,false), familySISO, familyAISO);
         registerIC("MC0221", "b bl break st" , new BlockBreakerST.Factory(server,true), familySISO, familyAISO);
         registerIC("MC0222", "liq flood st"  , new LiquidFloodST.Factory(server), familySISO, familyAISO);    //Restricted
+        registerIC("MC0223", "terraform st"  , new BonemealTerraformerST.Factory(server), familySISO, familyAISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0232", "time set st"   , new TimeSetST.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
