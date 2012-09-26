@@ -147,7 +147,8 @@ public class ContainerCollector extends AbstractIC {
                         return true;
                     }
 
-                    if (ItemUtil.isAFuel(item.getItemStack()) && (fur.getInventory().getFuel().getTypeId() == 0
+                    if (ItemUtil.isAFuel(item.getItemStack()) && (fur.getInventory().getFuel() == null
+                            || fur.getInventory().getFuel().getTypeId() == 0
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel()))){
                         ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(), item.getItemStack());
                         item.remove();

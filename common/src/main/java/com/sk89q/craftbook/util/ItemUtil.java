@@ -131,11 +131,11 @@ public class ItemUtil {
     }
 
     public static void addToStack(ItemStack stack, ItemStack to) {
-        if(areItemsIdentical(stack, to)) {
+        if(stack == null)
+            stack = to;
+        else if(areItemsIdentical(stack, to)) {
             stack.setAmount(stack.getAmount() + to.getAmount());
         }
-        else if(stack == null)
-            stack = to;
     }
 
     public static boolean containsRawFood(Inventory inv) {
