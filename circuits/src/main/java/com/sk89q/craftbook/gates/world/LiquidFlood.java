@@ -47,8 +47,7 @@ public class LiquidFlood extends AbstractIC {
         liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
     }
 
-    @Override
-    public void trigger(ChipState chip) {
+    public void doStuff(ChipState chip) {
         if(chip.getInput(0)) {
             for(int x = -radius; x < radius; x++)
                 for(int y = -radius; y < radius; y++)
@@ -75,6 +74,11 @@ public class LiquidFlood extends AbstractIC {
                         }
                     }
         }
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+        doStuff(chip);
     }
 
     public static class Factory extends AbstractICFactory implements
