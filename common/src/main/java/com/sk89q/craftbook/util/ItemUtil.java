@@ -131,8 +131,9 @@ public class ItemUtil {
     }
 
     public static void addToStack(ItemStack stack, ItemStack to) {
-        if(stack == null)
-            stack = to;
+        if(stack == null) {
+            stack = new ItemStack(to.getTypeId(), to.getAmount(), to.getDurability());
+        }
         else if(areItemsIdentical(stack, to)) {
             stack.setAmount(stack.getAmount() + to.getAmount());
         }
