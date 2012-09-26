@@ -129,7 +129,10 @@ public class ContainerCollector extends AbstractIC {
                     if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
                             || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack())) {
 
-                        ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack());
+                        if(((BrewingStand) bl.getState()).getInventory().getIngredient() == null)
+                            ((BrewingStand) bl.getState()).getInventory().setIngredient(item.getItemStack());
+                        else
+                            ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack());
                         item.remove();
                         return true;
                     }
@@ -140,17 +143,21 @@ public class ContainerCollector extends AbstractIC {
                     Furnace fur = (Furnace) bl.getState();
 
                     if(ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getSmelting() == null
-                            || fur.getInventory().getSmelting().getTypeId() == 0
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getSmelting()))) {
-                        ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(), item.getItemStack());
+                        if(fur.getInventory().getSmelting() == null)
+                            fur.getInventory().setSmelting(item.getItemStack());
+                        else
+                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(), item.getItemStack());
                         item.remove();
                         return true;
                     }
 
                     if (ItemUtil.isAFuel(item.getItemStack()) && (fur.getInventory().getFuel() == null
-                            || fur.getInventory().getFuel().getTypeId() == 0
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel()))){
-                        ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(), item.getItemStack());
+                        if(fur.getInventory().getFuel() == null)
+                            fur.getInventory().setFuel(item.getItemStack());
+                        else
+                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(), item.getItemStack());
                         item.remove();
                         return true;
                     }
