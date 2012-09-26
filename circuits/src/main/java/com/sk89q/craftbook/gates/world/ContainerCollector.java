@@ -139,10 +139,10 @@ public class ContainerCollector extends AbstractIC {
 
                     Furnace fur = (Furnace) bl.getState();
 
-                    if(ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getItem(0) == null
-                            || fur.getInventory().getItem(0).getTypeId() == 0
-                            || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getItem(0)))) {
-                        ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getItem(0), item.getItemStack());
+                    if(ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getSmelting() == null
+                            || fur.getInventory().getSmelting().getTypeId() == 0
+                            || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getSmelting()))) {
+                        ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(), item.getItemStack());
                         item.remove();
                         return true;
                     }
