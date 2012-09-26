@@ -58,7 +58,7 @@ public class LiquidFlood extends AbstractIC {
                         int rz = getSign().getLocation().getBlockZ() - z;
                         Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
                         if(b.getTypeId() == 0) {
-                            b.setType(liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA);
+                            b.setType(liquid.equalsIgnoreCase("water") ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA);
                         }
                     }
         }
@@ -70,7 +70,7 @@ public class LiquidFlood extends AbstractIC {
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
                         Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
-                        if(b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) {
+                        if(b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA) || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA)) {
                             b.setType(Material.AIR);
                         }
                     }
