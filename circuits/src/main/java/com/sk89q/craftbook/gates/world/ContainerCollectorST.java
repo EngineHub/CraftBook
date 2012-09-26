@@ -20,13 +20,13 @@ public class ContainerCollectorST extends ContainerCollector implements SelfTrig
     @Override
     public String getTitle() {
 
-        return "Self-triggered Chest Collector";
+        return "Self-triggered Container Collector";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ST CHEST COLLECT";
+        return "ST CONT COLLECT";
     }
 
     @Override
