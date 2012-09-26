@@ -353,7 +353,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0219", "auto craft st" , new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0220", "a bl break st" , new BlockBreakerST.Factory(server,false), familySISO, familyAISO);
         registerIC("MC0221", "b bl break st" , new BlockBreakerST.Factory(server,true), familySISO, familyAISO);
-        registerIC("MC0222", "liquid flood"  , new LiquidFloodST.Factory(server), familySISO, familyAISO);    //Restricted
+        registerIC("MC0222", "liq flood st"  , new LiquidFloodST.Factory(server), familySISO, familyAISO);    //Restricted
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0232", "time set st"   , new TimeSetST.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
