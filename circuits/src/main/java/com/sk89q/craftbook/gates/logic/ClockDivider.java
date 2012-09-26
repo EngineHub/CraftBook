@@ -14,18 +14,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.logic;
+
+import java.util.Random;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
-import java.util.Random;
 
 public class ClockDivider extends AbstractIC {
 
@@ -74,7 +75,7 @@ public class ClockDivider extends AbstractIC {
             return;
         }
         // if time to reset, toggle state
-        chip.setOutput(0, !(chip.getOutput(0)));
+        chip.setOutput(0, !chip.getOutput(0));
         // reset count
         count = 0;
         getSign().setLine(3, Integer.toString(count));

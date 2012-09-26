@@ -117,6 +117,7 @@ import com.sk89q.craftbook.gates.world.LavaSensorST;
 import com.sk89q.craftbook.gates.world.LightSensor;
 import com.sk89q.craftbook.gates.world.LightSensorST;
 import com.sk89q.craftbook.gates.world.LightningSummon;
+import com.sk89q.craftbook.gates.world.LiquidFlood;
 import com.sk89q.craftbook.gates.world.Melody;
 import com.sk89q.craftbook.gates.world.MessageSender;
 import com.sk89q.craftbook.gates.world.MultipleSetBlock;
@@ -273,6 +274,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1219", "auto craft"    , new AutomaticCrafter.Factory(server), familySISO, familyAISO);
         registerIC("MC1220", "a b break"     , new BlockBreaker.Factory(server, false), familySISO, familyAISO);
         registerIC("MC1221", "b b break"     , new BlockBreaker.Factory(server, true), familySISO, familyAISO);
+        registerIC("MC1222", "liquid flood"  , new LiquidFlood.Factory(server), familySISO, familyAISO);    //Restricted
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", "t control"     , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set"      , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted

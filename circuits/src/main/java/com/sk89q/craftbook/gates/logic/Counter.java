@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class Counter extends AbstractIC {
 
@@ -65,7 +66,7 @@ public class Counter extends AbstractIC {
         int oldVal = curVal;
         try {
             // If clock input triggered
-            if (chip.isTriggered(0) && chip.get(0)) {
+            if (chip.getInput(0)) {
                 if (curVal == resetVal) { // If we've gotten to 0, reset if infinite mode
                     if (inf)
                         curVal = 0;
@@ -74,9 +75,9 @@ public class Counter extends AbstractIC {
                 }
 
                 // Set output to high if we're at 0, otherwise low
-                chip.setOutput(0, (curVal == resetVal));
+                chip.setOutput(0, curVal == resetVal);
                 // If reset input triggered, reset counter value
-            } else if (chip.isTriggered(1) && chip.get(1)) {
+            } else if (chip.getInput(1)) {
                 curVal = 0;
                 chip.setOutput(0, false);
             }

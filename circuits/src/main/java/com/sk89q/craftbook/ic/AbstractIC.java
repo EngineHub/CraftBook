@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
@@ -35,7 +35,7 @@ public abstract class AbstractIC implements IC {
     public AbstractIC(Server server, Sign block) {
 
         this.server = server;
-        this.sign = block;
+        sign = block;
     }
 
     protected Server getServer() {
