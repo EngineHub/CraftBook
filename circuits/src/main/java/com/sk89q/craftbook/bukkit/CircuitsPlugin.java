@@ -87,12 +87,14 @@ import com.sk89q.craftbook.gates.world.ArrowBarrage;
 import com.sk89q.craftbook.gates.world.ArrowShooter;
 import com.sk89q.craftbook.gates.world.AutomaticCrafter;
 import com.sk89q.craftbook.gates.world.AutomaticCrafterST;
+import com.sk89q.craftbook.gates.world.BlockBreaker;
+import com.sk89q.craftbook.gates.world.BlockBreakerST;
 import com.sk89q.craftbook.gates.world.BlockLauncher;
 import com.sk89q.craftbook.gates.world.BlockSensor;
 import com.sk89q.craftbook.gates.world.BlockSensorST;
+import com.sk89q.craftbook.gates.world.CombinationLock;
 import com.sk89q.craftbook.gates.world.ContainerCollector;
 import com.sk89q.craftbook.gates.world.ContainerCollectorST;
-import com.sk89q.craftbook.gates.world.CombinationLock;
 import com.sk89q.craftbook.gates.world.ContainerDispenser;
 import com.sk89q.craftbook.gates.world.CreatureSpawner;
 import com.sk89q.craftbook.gates.world.DaySensor;
@@ -268,6 +270,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1217", "pot induce"    , new PotionInducer.Factory(server), familySISO, familyAISO);
         registerIC("MC1218", "block launch"  , new BlockLauncher.Factory(server), familySISO, familyAISO);
         registerIC("MC1219", "auto craft"    , new AutomaticCrafter.Factory(server), familySISO, familyAISO);
+        registerIC("MC1220", "a b break"     , new BlockBreaker.Factory(server, true), familySISO, familyAISO);
+        registerIC("MC1221", "b b break"     , new BlockBreaker.Factory(server, false), familySISO, familyAISO);
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", "t control"     , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set"      , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted
@@ -342,6 +346,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0209", "collector st"  , new ContainerCollectorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0210", "emitter st"    , new ParticleEffectST.Factory(server), familySISO, familyAISO);
         registerIC("MC0219", "auto craft st" , new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0220", "a bl break st" , new BlockBreakerST.Factory(server,true), familySISO, familyAISO);
+        registerIC("MC0221", "b bl break st" , new BlockBreakerST.Factory(server,false), familySISO, familyAISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0232", "time set st"   , new TimeSetST.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
