@@ -105,6 +105,7 @@ import com.sk89q.craftbook.gates.world.EntityTrap;
 import com.sk89q.craftbook.gates.world.EntityTrapST;
 import com.sk89q.craftbook.gates.world.FireBarrage;
 import com.sk89q.craftbook.gates.world.FireShooter;
+import com.sk89q.craftbook.gates.world.FlameThrower;
 import com.sk89q.craftbook.gates.world.FlexibleSetBlock;
 import com.sk89q.craftbook.gates.world.ItemDispenser;
 import com.sk89q.craftbook.gates.world.ItemNotSensor;
@@ -281,6 +282,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1241", "shoot arrows"  , new ArrowBarrage.Factory(server), familySISO, familyAISO);        // Restricted
         registerIC("MC1250", "shoot fire"    , new FireShooter.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1251", "shoot fires"   , new FireBarrage.Factory(server), familySISO, familyAISO);         // Restricted
+        registerIC("MC1252", "flame thower"  , new FlameThrower.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1260", "sense water"   , new WaterSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1261", "sense lava"    , new LavaSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1262", "sense light"   , new LightSensor.Factory(server), familySISO, familyAISO);
