@@ -49,9 +49,9 @@ public class LiquidFlood extends AbstractIC {
 
     public void doStuff(ChipState chip) {
         if(chip.getInput(0)) {
-            for(int x = -radius; x < radius; x++)
-                for(int y = -radius; y < radius; y++)
-                    for(int z = -radius; z < radius; z++) {
+            for(int x = -radius + 1; x < radius; x++)
+                for(int y = -radius + 1; y < radius; y++)
+                    for(int z = -radius + 1; z < radius; z++) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
@@ -62,9 +62,9 @@ public class LiquidFlood extends AbstractIC {
                     }
         }
         else if(!chip.getInput(0)) {
-            for(int x = -radius; x < radius; x++)
-                for(int y = -radius; y < radius; y++)
-                    for(int z = -radius; z < radius; z++) {
+            for(int x = -radius + 1; x < radius; x++)
+                for(int y = -radius + 1; y < radius; y++)
+                    for(int z = -radius + 1; z < radius; z++) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;

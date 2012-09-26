@@ -56,15 +56,16 @@ public class BonemealTerraformer extends AbstractIC {
     }
 
     public void terraform() {
+
         Random random = new Random();
-        for(int x = -radius; x < radius; x++)
-            for(int y = -radius; y < radius; y++)
-                for(int z = -radius; z < radius; z++) {
-                    int rx = getSign().getLocation().getBlockX() - x;
-                    int ry = getSign().getLocation().getBlockY() - y;
-                    int rz = getSign().getLocation().getBlockZ() - z;
-                    Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
-                    if(random.nextInt(30) == 1) {
+        if(random.nextInt(30) == 1) {
+            for(int x = -radius + 1; x < radius; x++)
+                for(int y = -radius + 1; y < radius; y++)
+                    for(int z = -radius + 1; z < radius; z++) {
+                        int rx = getSign().getLocation().getBlockX() - x;
+                        int ry = getSign().getLocation().getBlockY() - y;
+                        int rz = getSign().getLocation().getBlockZ() - z;
+                        Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
                         if(b.getType() == Material.DIRT) {
                             if(consumeBonemeal())
                                 b.setType(Material.GRASS);
@@ -85,7 +86,7 @@ public class BonemealTerraformer extends AbstractIC {
                             return;
                         }
                     }
-                }
+        }
     }
 
     public boolean consumeBonemeal() {
