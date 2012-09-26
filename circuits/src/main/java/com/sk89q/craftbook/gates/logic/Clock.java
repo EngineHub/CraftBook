@@ -18,11 +18,17 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-public class Clock extends AbstractIC {
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+
+public class Clock extends AbstractIC implements SelfTriggeredIC {
 
     final Sign sign;
 
@@ -46,36 +52,32 @@ public class Clock extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-
-	    if (chip.isTriggered(0)) {
-		    triggerClock(chip);
-	    }
     }
 
-	protected void triggerClock(ChipState chip) {
-		short tick, reset;
-		try {
-			reset = Short.parseShort(sign.getLine(2));
-		} catch (NumberFormatException e) {
-			return;
-		}
+    protected void triggerClock(ChipState chip) {
+        short tick, reset;
+        try {
+            reset = Short.parseShort(sign.getLine(2));
+        } catch (NumberFormatException e) {
+            return;
+        }
 
-		try {
-			tick = Short.parseShort(sign.getLine(3));
-		} catch (NumberFormatException e) {
-			tick = 0;
-		}
+        try {
+            tick = Short.parseShort(sign.getLine(3));
+        } catch (NumberFormatException e) {
+            tick = 0;
+        }
 
-		tick++;
+        tick++;
 
-		if (tick == reset) {
-			tick = 0;
-			chip.setOutput(0, !chip.getOutput(0));
-		}
+        if (tick == reset) {
+            tick = 0;
+            chip.setOutput(0, !chip.getOutput(0));
+        }
 
-		// don't update, would cause lag!
-		sign.setLine(3, Short.toString(tick));
-	}
+        sign.setLine(3, Short.toString(tick));
+        sign.update();
+    }
 
     public static class Factory extends AbstractICFactory {
 
@@ -120,6 +122,18 @@ public class Clock extends AbstractIC {
                     "current ticks"
             };
             return lines;
+        }
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
+    @Override
+    public void think(ChipState chip) {
+        if (chip.isTriggered(0)) {
+            triggerClock(chip);
         }
     }
 }
