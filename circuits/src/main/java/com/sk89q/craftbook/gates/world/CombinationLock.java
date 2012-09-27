@@ -9,12 +9,11 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
  */
-public class CombinationLock extends AbstractIC implements SelfTriggeredIC {
+public class CombinationLock extends AbstractIC {
 
     public CombinationLock(Server server, Sign block) {
 
@@ -34,26 +33,17 @@ public class CombinationLock extends AbstractIC implements SelfTriggeredIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
-
-    @Override
-    public void think(ChipState state) {
-
+    public void trigger(ChipState state) {
         try {
             Character[] data = ArrayUtils.toObject(getSign().getLine(2).toCharArray());
             checkCombo:
             {
-                for (short s = 0; s < state.getInputCount(); s++) {
-                    if (!state.get(s) == data[s].equals('X')) break checkCombo;
-                }
+                if(state.getInput(0) != (data[1] == 'X'))
+                    break checkCombo;
+                if(state.getInput(1) != (data[2] == 'X'))
+                    break checkCombo;
+                if(state.getInput(2) != (data[0] == 'X'))
+                    break checkCombo;
 
                 state.setOutput(0, true);
                 return;
