@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -47,17 +48,25 @@ public class FlameThrower  extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) sendFlames();
+        sendFlames(chip.getInput(0));
     }
 
-    public void sendFlames() {
+    public void sendFlames(boolean make) {
 
         BlockFace direction = SignUtil.getBack(getSign().getBlock());
         Block fire = getSign().getBlock().getRelative(direction).getRelative(direction);
         for(int i = 0; i < distance; i++) {
-            if(fire == null) {}
-            else if(fire.getTypeId() == 0) {
-                fire.setTypeId(BlockID.FIRE);
+            if(make) {
+                if(fire == null) {}
+                else if(fire.getTypeId() == 0 || fire.getType() == Material.LONG_GRASS) {
+                    fire.setTypeId(BlockID.FIRE);
+                }
+            }
+            else {
+                if(fire == null) {}
+                else if(fire.getTypeId() == BlockID.FIRE) {
+                    fire.setTypeId(BlockID.AIR);
+                }
             }
             fire = fire.getRelative(direction);
         }
