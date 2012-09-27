@@ -1,10 +1,15 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -49,7 +54,6 @@ public class Pulser extends AbstractIC {
                 // defaults will be used
             }
         }
-        if(pulseLength == 0) pulseLength = 1;
         sign.setLine(2, pulseLength + ":" + startDelay);
         sign.setLine(3, pulseCount + ":" + pulseLength);
         sign.update();
@@ -124,6 +128,9 @@ public class Pulser extends AbstractIC {
             this.pulseLength = pulseLength;
             this.pulseCount = pulseCount;
             this.pauseLength = pauseLength;
+
+            if(pulseLength == 0) pulseLength = 1;
+            if(pauseLength == 0) pauseLength = 1;
         }
 
         @Override
