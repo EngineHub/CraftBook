@@ -49,6 +49,7 @@ public class Pulser extends AbstractIC {
                 // defaults will be used
             }
         }
+        if(pulseLength == 0) pulseLength = 1;
         sign.setLine(2, pulseLength + ":" + startDelay);
         sign.setLine(3, pulseCount + ":" + pulseLength);
         sign.update();
