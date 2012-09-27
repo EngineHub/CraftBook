@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -41,7 +42,7 @@ public class BonemealTerraformer extends AbstractIC {
 
     @Override
     public String getTitle() {
-        return "Bonemeal Cultivator";
+        return "Bonemeal Terraformer";
     }
 
     @Override
@@ -58,10 +59,10 @@ public class BonemealTerraformer extends AbstractIC {
     public void terraform() {
 
         Random random = new Random();
-        if(random.nextInt(30) == 1) {
-            for(int x = -radius + 1; x < radius; x++)
-                for(int y = -radius + 1; y < radius; y++)
-                    for(int z = -radius + 1; z < radius; z++) {
+        for(int x = -radius + 1; x < radius; x++)
+            for(int y = -radius + 1; y < radius; y++)
+                for(int z = -radius + 1; z < radius; z++) {
+                    if(random.nextInt(30) == 0) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
@@ -71,32 +72,35 @@ public class BonemealTerraformer extends AbstractIC {
                                 b.setType(Material.GRASS);
                             return;
                         }
-                        if(b.getType() == Material.GRASS && b.getRelative(0,1,0).getType() == Material.AIR) {
+                        if(b.getType() == Material.GRASS && b.getRelative(0,1,0).getType() == Material.AIR && random.nextInt(15) == 0) {
                             if(consumeBonemeal()) {
-                                int t = random.nextInt(3);
-                                if(t == 0)
+                                int t = random.nextInt(6);
+                                if(t == 0) {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
+                                    b.getRelative(0, 1, 0).setData((byte)1);
+                                }
                                 else if(t == 1)
                                     b.getRelative(0, 1, 0).setType(Material.YELLOW_FLOWER);
                                 else if(t == 2)
                                     b.getRelative(0, 1, 0).setType(Material.RED_ROSE);
-                                else
+                                else {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
+                                    b.getRelative(0, 1, 0).setData((byte)1);
+                                }
                             }
                             return;
                         }
                     }
-        }
+                }
     }
 
     public boolean consumeBonemeal() {
         Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0,1,0);
         if(chest.getType() == Material.CHEST) {
             Chest c = (Chest)chest.getState();
-            if(c.getInventory().contains(new ItemStack(ItemID.INK_SACK, 1, (short) 15))) {
-                c.getInventory().remove(new ItemStack(ItemID.INK_SACK, 1, (short) 15));
+            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.INK_SACK, 1, (short) 15));
+            if(over.size() == 0)
                 return true;
-            }
         }
 
         return false;

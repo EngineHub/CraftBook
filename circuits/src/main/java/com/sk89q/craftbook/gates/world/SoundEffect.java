@@ -53,7 +53,7 @@ public class SoundEffect extends AbstractIC {
             Block b = SignUtil.getBackBlock(getSign().getBlock());
             String soundName = getSign().getLine(3).trim();
             if (soundName.length() > 0) {
-                b.getWorld().playSound(b.getLocation(), Sound.getSound(soundName), volume, pitch);
+                b.getWorld().playSound(b.getLocation(), Sound.valueOf(soundName), volume, pitch);
             }
         } catch (Exception ignored) {
         }
