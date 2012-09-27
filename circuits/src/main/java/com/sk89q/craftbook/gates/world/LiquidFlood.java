@@ -34,9 +34,9 @@ public class LiquidFlood extends AbstractIC {
     private void load() {
         try {
             radius = Integer.parseInt(getSign().getLine(3));
-            if(radius > 30) {
-                radius = 30;
-                getSign().setLine(3, "30");
+            if(radius > 15) {
+                radius = 15;
+                getSign().setLine(3, "15");
                 getSign().update();
             }
         }

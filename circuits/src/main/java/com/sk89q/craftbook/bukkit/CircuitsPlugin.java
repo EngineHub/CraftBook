@@ -145,6 +145,7 @@ import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
 import com.sk89q.craftbook.gates.world.TimeFaker;
 import com.sk89q.craftbook.gates.world.TimeSet;
 import com.sk89q.craftbook.gates.world.TimeSetST;
+import com.sk89q.craftbook.gates.world.TimedExplosion;
 import com.sk89q.craftbook.gates.world.WaterSensor;
 import com.sk89q.craftbook.gates.world.WaterSensorST;
 import com.sk89q.craftbook.gates.world.WirelessReceiver;
@@ -279,6 +280,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1221", "b b break"     , new BlockBreaker.Factory(server, true), familySISO, familyAISO);
         registerIC("MC1222", "liquid flood"  , new LiquidFlood.Factory(server), familySISO, familyAISO);    //Restricted
         registerIC("MC1223", "terraform"     , new BonemealTerraformer.Factory(server), familySISO, familyAISO);
+        registerIC("MC1224", "time bomb"     , new TimedExplosion.Factory(server), familySISO, familyAISO); //Restricted
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", "t control"     , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set"      , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted

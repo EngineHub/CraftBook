@@ -28,10 +28,10 @@ public class BonemealTerraformer extends AbstractIC {
 
     private void load() {
         try {
-            radius = Integer.parseInt(getSign().getLine(2));
-            if(radius > 20) {
-                radius = 20;
-                getSign().setLine(2, "20");
+            radius = Integer.parseInt(getSign().getLine(3));
+            if(radius > 15) {
+                radius = 15;
+                getSign().setLine(3, "15");
                 getSign().update();
             }
         }
