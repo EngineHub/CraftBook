@@ -140,7 +140,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         try {
             MetricsLite metrics = new MetricsLite(this);
             metrics.start();
-        } catch (IOException e) {
+        } catch (Exception e) {
         }
 
         // Make the data folder for the plugin where configuration files
