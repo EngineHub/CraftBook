@@ -80,7 +80,7 @@ public class LanguageManager {
             d.setAccessible(true);
             return (String) d.get(((CraftPlayer)p).getHandle().getLocale());
         }
-        catch(Exception e) {
+        catch(Throwable e) {
             return "en_US";
         }
     }
