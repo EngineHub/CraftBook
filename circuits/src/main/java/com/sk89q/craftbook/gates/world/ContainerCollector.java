@@ -75,7 +75,7 @@ public class ContainerCollector extends AbstractIC {
                         testStacks[0] = new ItemStack(id, 0, (short) 0, (byte) data);
                     } else {
                         int id = Integer.parseInt(getSign().getLine(2));
-                        testStacks[0] = new ItemStack(id);
+                        testStacks[1] = new ItemStack(id, 1, (short)0, (byte)0);
                     }
                 } catch (Exception ignored) {
                 }
@@ -88,7 +88,7 @@ public class ContainerCollector extends AbstractIC {
                         testStacks[1] = new ItemStack(id, 0, (short) 0, (byte) data);
                     } else {
                         int id = Integer.parseInt(getSign().getLine(2));
-                        testStacks[1] = new ItemStack(id);
+                        testStacks[1] = new ItemStack(id, 1, (short)0, (byte)0);
                     }
                 } catch (Exception ignored) {
                 }
