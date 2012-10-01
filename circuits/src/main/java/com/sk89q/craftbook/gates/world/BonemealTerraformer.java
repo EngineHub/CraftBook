@@ -15,6 +15,7 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
 public class BonemealTerraformer extends AbstractIC {
@@ -35,7 +36,7 @@ public class BonemealTerraformer extends AbstractIC {
                 getSign().update();
             }
         }
-        catch(NumberFormatException e) {
+        catch(Exception e) {
             radius = 10;
         }
     }
@@ -67,14 +68,14 @@ public class BonemealTerraformer extends AbstractIC {
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
                         Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
-                        if(b.getType() == Material.DIRT) {
+                        if(b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getTypeId() == 0) {
                             if(consumeBonemeal())
                                 b.setType(Material.GRASS);
                             return;
                         }
                         if(b.getType() == Material.GRASS && b.getRelative(0,1,0).getType() == Material.AIR && random.nextInt(15) == 0) {
                             if(consumeBonemeal()) {
-                                int t = random.nextInt(6);
+                                int t = random.nextInt(7);
                                 if(t == 0) {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
                                     b.getRelative(0, 1, 0).setData((byte)1);
@@ -83,6 +84,8 @@ public class BonemealTerraformer extends AbstractIC {
                                     b.getRelative(0, 1, 0).setType(Material.YELLOW_FLOWER);
                                 else if(t == 2)
                                     b.getRelative(0, 1, 0).setType(Material.RED_ROSE);
+                                else if(t == 3)
+                                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 2, true);
                                 else {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
                                     b.getRelative(0, 1, 0).setData((byte)1);
