@@ -142,14 +142,31 @@ public class Elevator extends AbstractMechanic {
         destination = trigger;
         if (destination.getY() == f)             // heading up from top or down from bottom
             throw new InvalidConstructionException();
+        boolean loopd = false;
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
             if (derp != Direction.NONE) break;   // found it!
-            if (destination.getY() == trigger.getWorld().getMaxHeight())       // hit the top of the world
-                throw new InvalidConstructionException();
-            if (destination.getY() == 0)         // hit the bottom of the world
-                throw new InvalidConstructionException();
+            if(plugin.getLocalConfiguration().elevatorSettings.loop && !loopd) {
+                if (destination.getY() == trigger.getWorld().getMaxHeight()) {      // hit the top of the world
+                    org.bukkit.Location low = destination.getLocation();
+                    low.setY(0);
+                    destination = destination.getWorld().getBlockAt(low);
+                    loopd = true;
+                }
+                else if (destination.getY() == 0) {        // hit the bottom of the world
+                    org.bukkit.Location low = destination.getLocation();
+                    low.setY(trigger.getWorld().getMaxHeight());
+                    destination = destination.getWorld().getBlockAt(low);
+                    loopd = true;
+                }
+            }
+            else {
+                if (destination.getY() == trigger.getWorld().getMaxHeight())       // hit the top of the world
+                    throw new InvalidConstructionException();
+                if (destination.getY() == 0)         // hit the bottom of the world
+                    throw new InvalidConstructionException();
+            }
         }
         // and if we made it here without exceptions, destination is set.
 
@@ -181,6 +198,7 @@ public class Elevator extends AbstractMechanic {
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
+            event.setCancelled(true);
             localPlayer.printError("mech.use-permission");
             return;
         }

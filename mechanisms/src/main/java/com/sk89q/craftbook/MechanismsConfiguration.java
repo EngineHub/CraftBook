@@ -261,10 +261,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class ElevatorSettings {
 
         public final boolean enable;
+        public final boolean loop;
 
         private ElevatorSettings() {
 
             enable = getBoolean("elevators-enable", true);
+            loop = getBoolean("lift-loop-top-bottom", false);
         }
     }
 
