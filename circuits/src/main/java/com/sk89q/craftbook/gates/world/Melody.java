@@ -127,11 +127,14 @@ public class Melody extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
-                sign.setLine(1, "[MC1266]");
-                sign.update();
-                return new PowerSensor(getServer(), sign);
+            try {
+                if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
+                    sign.setLine(1, "[MC1266]");
+                    sign.update();
+                    return new PowerSensor(getServer(), sign);
+                }
             }
+            catch(Exception e){}
             return new Melody(getServer(), sign);
         }
 

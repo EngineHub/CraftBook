@@ -40,11 +40,14 @@ public class LiquidFlood extends AbstractIC {
                 getSign().update();
             }
         }
-        catch(NumberFormatException e) {
+        catch(Exception e) {
             radius = 10;
         }
 
-        liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
+        try {
+            liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
+        }
+        catch(Exception e){}
     }
 
     public void doStuff(ChipState chip) {

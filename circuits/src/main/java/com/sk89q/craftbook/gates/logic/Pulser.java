@@ -33,30 +33,33 @@ public class Pulser extends AbstractIC {
 
     private void load() {
 
-        Sign sign = getSign();
-        String line2 = sign.getLine(2);
-        String line3 = sign.getLine(3);
-        if (!(line2 == null) && !line2.equals("")) {
-            try {
-                String[] split = line2.split(":");
-                pulseLength = Integer.parseInt(split[0]);
-                startDelay = Integer.parseInt(split[1]);
-            } catch (Exception e) {
-                // defaults will be used
+        try {
+            Sign sign = getSign();
+            String line2 = sign.getLine(2);
+            String line3 = sign.getLine(3);
+            if (!(line2 == null) && !line2.equals("")) {
+                try {
+                    String[] split = line2.split(":");
+                    pulseLength = Integer.parseInt(split[0]);
+                    startDelay = Integer.parseInt(split[1]);
+                } catch (Exception e) {
+                    // defaults will be used
+                }
             }
-        }
-        if (!(line3 == null) && !line3.equals("")) {
-            try {
-                String[] split = line3.split(":");
-                pulseCount = Integer.parseInt(split[0]);
-                pauseLength = Integer.parseInt(split[1]);
-            } catch (Exception e) {
-                // defaults will be used
+            if (!(line3 == null) && !line3.equals("")) {
+                try {
+                    String[] split = line3.split(":");
+                    pulseCount = Integer.parseInt(split[0]);
+                    pauseLength = Integer.parseInt(split[1]);
+                } catch (Exception e) {
+                    // defaults will be used
+                }
             }
+            sign.setLine(2, pulseLength + ":" + startDelay);
+            sign.setLine(3, pulseCount + ":" + pulseLength);
+            sign.update();
         }
-        sign.setLine(2, pulseLength + ":" + startDelay);
-        sign.setLine(3, pulseCount + ":" + pulseLength);
-        sign.update();
+        catch(Exception e){}
     }
 
     @Override

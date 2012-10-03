@@ -18,10 +18,16 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 public class LavaSensor extends AbstractIC {
 
@@ -30,7 +36,10 @@ public class LavaSensor extends AbstractIC {
     public LavaSensor(Server server, Sign sign) {
 
         super(server, sign);
-        center = ICUtil.parseBlockLocation(sign);
+        try {
+            center = ICUtil.parseBlockLocation(sign);
+        }
+        catch(Exception e){}
     }
 
     @Override
@@ -60,7 +69,7 @@ public class LavaSensor extends AbstractIC {
 
         int blockID = center.getTypeId();
 
-        return (blockID == 10 || blockID == 11);
+        return blockID == 10 || blockID == 11;
     }
 
     public static class Factory extends AbstractICFactory {

@@ -42,36 +42,39 @@ public class ItemSensor extends AbstractIC {
 
     private void load() {
 
-        Sign sign = getSign();
-        Block block = SignUtil.getBackBlock(sign.getBlock());
-        String[] split = sign.getLine(3).trim().split(":");
-        // lets get the type to detect first
         try {
-            item = Integer.parseInt(split[0]);
-        } catch (NumberFormatException e) {
-            // seems to be the name of the item
-            Material material = Material.getMaterial(split[0]);
-            if (material != null) {
-                item = material.getId();
+            Sign sign = getSign();
+            Block block = SignUtil.getBackBlock(sign.getBlock());
+            String[] split = sign.getLine(3).trim().split(":");
+            // lets get the type to detect first
+            try {
+                item = Integer.parseInt(split[0]);
+            } catch (NumberFormatException e) {
+                // seems to be the name of the item
+                Material material = Material.getMaterial(split[0]);
+                if (material != null) {
+                    item = material.getId();
+                }
             }
-        }
 
-        if (item == 0) item = BlockID.STONE;
+            if (item == 0) item = BlockID.STONE;
 
-        if (split.length > 1) {
-            data = Short.parseShort(split[1]);
-        }
+            if (split.length > 1) {
+                data = Short.parseShort(split[1]);
+            }
 
-        // if the line contains a = the offset is given
-        // the given string should look something like that:
-        // radius=x:y:z or radius, e.g. 1=-2:5:11
-        radius = ICUtil.parseRadius(getSign());
-        if (getSign().getLine(2).contains("=")) {
-            center = ICUtil.parseBlockLocation(getSign());
-        } else {
-            center = SignUtil.getBackBlock(getSign().getBlock());
+            // if the line contains a = the offset is given
+            // the given string should look something like that:
+            // radius=x:y:z or radius, e.g. 1=-2:5:11
+            radius = ICUtil.parseRadius(getSign());
+            if (getSign().getLine(2).contains("=")) {
+                center = ICUtil.parseBlockLocation(getSign());
+            } else {
+                center = SignUtil.getBackBlock(getSign().getBlock());
+            }
+            chunks = LocationUtil.getSurroundingChunks(block, radius);
         }
-        chunks = LocationUtil.getSurroundingChunks(block, radius);
+        catch(Exception e){}
     }
 
     @Override

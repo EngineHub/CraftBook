@@ -29,18 +29,21 @@ public class TimedExplosion extends AbstractIC {
         try {
             ticks = Integer.parseInt(getSign().getLine(2));
         }
-        catch(NumberFormatException e) {
+        catch(Exception e) {
             ticks = -1;
         }
 
         try {
             yield = Float.parseFloat(getSign().getLine(3).replace("!", ""));
         }
-        catch(NumberFormatException e) {
+        catch(Exception e) {
             yield = -1;
         }
 
-        flamey = getSign().getLine(3).endsWith("!");
+        try {
+            flamey = getSign().getLine(3).endsWith("!");
+        }
+        catch(Exception e){}
     }
 
     @Override

@@ -14,26 +14,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.world;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class WirelessReceiver extends AbstractIC {
 
-    protected final String band;
+    protected String band;
 
     public WirelessReceiver(Server server, Sign sign) {
 
         super(server, sign);
 
-        band = sign.getLine(2);
+        try {
+            band = sign.getLine(2);
+        }
+        catch(Exception e){
+            band = "test";
+        }
     }
 
     @Override

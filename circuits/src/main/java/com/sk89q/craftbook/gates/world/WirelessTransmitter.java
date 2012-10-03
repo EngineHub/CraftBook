@@ -32,13 +32,17 @@ public class WirelessTransmitter extends AbstractIC {
     protected static final HistoryHashMap<String, Boolean> memory
     = new HistoryHashMap<String, Boolean>(100);
 
-    protected final String band;
+    protected String band;
 
     public WirelessTransmitter(Server server, Sign sign) {
 
         super(server, sign);
-
-        band = sign.getLine(2);
+        try {
+            band = sign.getLine(2);
+        }
+        catch(Exception e){
+            band = "test";
+        }
     }
 
     @Override

@@ -1,10 +1,15 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 /**
  * @author Silthus
@@ -16,7 +21,10 @@ public class Delayer extends AbstractIC {
     public Delayer(Server server, Sign block) {
 
         super(server, block);
-        delay = Integer.parseInt(getSign().getLine(2));
+        try {
+            delay = Integer.parseInt(getSign().getLine(2));
+        }
+        catch(Exception e){}
     }
 
     @Override

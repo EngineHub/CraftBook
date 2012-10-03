@@ -24,10 +24,9 @@ public class BlockSensor extends AbstractIC {
     }
 
     private void load() {
-
-        center = ICUtil.parseBlockLocation(getSign());
-        String ids = getSign().getLine(3);
         try {
+            center = ICUtil.parseBlockLocation(getSign());
+            String ids = getSign().getLine(3);
             id = Integer.parseInt(ids.split(":")[0]);
             data = Byte.parseByte(ids.split(":")[1]);
         } catch (Exception ignored) {

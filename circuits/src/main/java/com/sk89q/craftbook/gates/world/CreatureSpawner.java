@@ -58,17 +58,20 @@ public class CreatureSpawner extends AbstractIC {
 
     private void load() {
 
-        entityType = EntityType.fromName(getSign().getLine(2).trim());
-        String line = getSign().getLine(3).trim();
-        // parse the amount or rider type
         try {
-            String[] entityInf = line.split(":");
-            data = entityInf[0];
-            amount = Integer.parseInt(entityInf[1]);
-        } catch (Exception e) {
-            data = line;
+            entityType = EntityType.fromName(getSign().getLine(2).trim());
+            String line = getSign().getLine(3).trim();
+            // parse the amount or rider type
+            try {
+                String[] entityInf = line.split(":");
+                data = entityInf[0];
+                amount = Integer.parseInt(entityInf[1]);
+            } catch (Exception e) {
+                data = line;
+            }
+            center = SignUtil.getBackBlock(getSign().getBlock());
         }
-        center = SignUtil.getBackBlock(getSign().getBlock());
+        catch(Exception e){}
     }
 
     @Override

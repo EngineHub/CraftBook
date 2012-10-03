@@ -18,10 +18,16 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 public class WaterSensor extends AbstractIC {
 
@@ -30,7 +36,10 @@ public class WaterSensor extends AbstractIC {
     public WaterSensor(Server server, Sign sign) {
 
         super(server, sign);
-        center = ICUtil.parseBlockLocation(sign);
+        try {
+            center = ICUtil.parseBlockLocation(sign);
+        }
+        catch(Exception e){}
     }
 
     @Override
@@ -62,7 +71,7 @@ public class WaterSensor extends AbstractIC {
 
         int blockID = center.getTypeId();
 
-        return (blockID == 8 || blockID == 9);
+        return blockID == 8 || blockID == 9;
     }
 
     public static class Factory extends AbstractICFactory {

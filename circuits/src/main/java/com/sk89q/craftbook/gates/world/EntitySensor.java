@@ -116,28 +116,31 @@ public class EntitySensor extends AbstractIC {
 
     private void load() {
 
-        Sign sign = getSign();
-        // lets get the types to detect first
-        types = Type.getDetected(sign.getLine(3).trim());
+        try {
+            Sign sign = getSign();
+            // lets get the types to detect first
+            types = Type.getDetected(sign.getLine(3).trim());
 
-        // Add all if no params are specified
-        if (types.size() == 0) types.add(Type.ANY);
+            // Add all if no params are specified
+            if (types.size() == 0) types.add(Type.ANY);
 
-        sign.setLine(3, sign.getLine(3).toUpperCase());
+            sign.setLine(3, sign.getLine(3).toUpperCase());
 
-        // if the line contains a = the offset is given
-        // the given string should look something like that:
-        // radius=x:y:z or radius, e.g. 1=-2:5:11
-        radius = ICUtil.parseRadius(getSign());
-        if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radius + "=" + getSign().getLine(2).split("=")[1]);
-            center = ICUtil.parseBlockLocation(getSign());
-        } else {
-            getSign().setLine(2, radius + "");
-            center = SignUtil.getBackBlock(getSign().getBlock());
+            // if the line contains a = the offset is given
+            // the given string should look something like that:
+            // radius=x:y:z or radius, e.g. 1=-2:5:11
+            radius = ICUtil.parseRadius(getSign());
+            if (getSign().getLine(2).contains("=")) {
+                getSign().setLine(2, radius + "=" + getSign().getLine(2).split("=")[1]);
+                center = ICUtil.parseBlockLocation(getSign());
+            } else {
+                getSign().setLine(2, radius + "");
+                center = SignUtil.getBackBlock(getSign().getBlock());
+            }
+            chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()), radius); //Update chunks
+            sign.update();
         }
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()), radius); //Update chunks
-        sign.update();
+        catch(Exception e){}
     }
 
     @Override
