@@ -147,6 +147,8 @@ public class Elevator extends AbstractMechanic {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
             if (derp != Direction.NONE) break;   // found it!
+            if(destination.getY() == trigger.getY())
+                throw new InvalidConstructionException();
             if(plugin.getLocalConfiguration().elevatorSettings.loop && !loopd) {
                 if (destination.getY() == trigger.getWorld().getMaxHeight()) {      // hit the top of the world
                     org.bukkit.Location low = destination.getLocation();
