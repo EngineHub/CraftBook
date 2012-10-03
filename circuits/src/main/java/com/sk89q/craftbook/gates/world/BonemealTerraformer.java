@@ -84,7 +84,7 @@ public class BonemealTerraformer extends AbstractIC {
                                 b.setData((byte) (b.getData() + 0x1));
                             return;
                         }
-                        if((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x15) {
+                        if((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getTypeId() == 0) {
                             if(consumeBonemeal())
                                 b.setData((byte) (b.getData() + 0x1));
                             return;
