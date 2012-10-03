@@ -3,6 +3,7 @@ package com.sk89q.craftbook.bukkit.commands;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -122,7 +123,9 @@ public class CircuitCommands {
                 IC tic = ric.getFactory().create(null);
                 strings.add((col ? ChatColor.YELLOW : ChatColor.GOLD) + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
             }
-            catch(Exception e){}
+            catch(Exception e){
+                Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report it to Me4502");
+            }
         }
 
         return strings.toArray(new String[0]);

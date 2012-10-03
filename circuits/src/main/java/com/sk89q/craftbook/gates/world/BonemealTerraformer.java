@@ -64,7 +64,7 @@ public class BonemealTerraformer extends AbstractIC {
         for(int x = -radius + 1; x < radius; x++)
             for(int y = -radius + 1; y < radius; y++)
                 for(int z = -radius + 1; z < radius; z++) {
-                    if(random.nextInt(30) == 0) {
+                    if(random.nextInt(40) == 0) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
