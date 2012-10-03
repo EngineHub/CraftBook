@@ -5,6 +5,7 @@ import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -68,9 +69,29 @@ public class BonemealTerraformer extends AbstractIC {
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
                         Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
+                        if(b.getType() == Material.CROPS && b.getData() < 0x7) {
+                            if(consumeBonemeal())
+                                b.setData((byte) (b.getData() + 0x1));
+                            return;
+                        }
+                        if((b.getType() == Material.CROPS || b.getType() == Material.MELON_STEM || b.getType() == Material.PUMPKIN_STEM) && b.getData() < 0x7) {
+                            if(consumeBonemeal())
+                                b.setData((byte) (b.getData() + 0x1));
+                            return;
+                        }
+                        if(b.getType() == Material.NETHER_STALK && b.getData() < 0x3) {
+                            if(consumeBonemeal())
+                                b.setData((byte) (b.getData() + 0x1));
+                            return;
+                        }
+                        if((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x15) {
+                            if(consumeBonemeal())
+                                b.setData((byte) (b.getData() + 0x1));
+                            return;
+                        }
                         if(b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getTypeId() == 0) {
                             if(consumeBonemeal())
-                                b.setType(Material.GRASS);
+                                b.setType(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome.MUSHROOM_SHORE ? Material.MYCEL : Material.GRASS);
                             return;
                         }
                         if(b.getType() == Material.GRASS && b.getRelative(0,1,0).getType() == Material.AIR && random.nextInt(15) == 0) {
@@ -90,6 +111,16 @@ public class BonemealTerraformer extends AbstractIC {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
                                     b.getRelative(0, 1, 0).setData((byte)1);
                                 }
+                            }
+                            return;
+                        }
+                        if(b.getType() == Material.MYCEL && b.getRelative(0,1,0).getType() == Material.AIR && random.nextInt(15) == 0) {
+                            if(consumeBonemeal()) {
+                                int t = random.nextInt(2);
+                                if(t == 0)
+                                    b.getRelative(0, 1, 0).setType(Material.RED_MUSHROOM);
+                                else if(t == 1)
+                                    b.getRelative(0, 1, 0).setType(Material.BROWN_MUSHROOM);
                             }
                             return;
                         }
