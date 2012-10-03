@@ -1,8 +1,15 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Silthus
@@ -48,10 +55,13 @@ public class PowerSensorST extends PowerSensor implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            if (sign.getLine(1).equalsIgnoreCase("[MC0270]")) {
-                sign.setLine(1, "[MC0266]");
-                sign.update();
+            try {
+                if (sign.getLine(1).equalsIgnoreCase("[MC0270]")) {
+                    sign.setLine(1, "[MC0266]");
+                    sign.update();
+                }
             }
+            catch(Exception e){}
             return new PowerSensorST(getServer(), sign);
         }
 

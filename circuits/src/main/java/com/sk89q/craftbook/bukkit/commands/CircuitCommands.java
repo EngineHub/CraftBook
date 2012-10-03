@@ -124,7 +124,11 @@ public class CircuitCommands {
                 strings.add((col ? ChatColor.YELLOW : ChatColor.GOLD) + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
             }
             catch(Exception e){
-                Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report it to Me4502");
+                if(ic.endsWith("5001") || ic.endsWith("5000")) {
+                    //Stuff
+                }
+                else
+                    Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report it to Me4502");
             }
         }
 
