@@ -48,6 +48,15 @@ public class Melody extends AbstractIC {
 
     @Override
     public void unload() {
+        try {
+            sequencer.stop();
+            for (Player player : getServer().getOnlinePlayers())
+            {
+                jNote.getJingleNoteManager().stop(player);
+            }
+            jNote.getJingleNoteManager().stopAll();
+        }
+        catch(Exception e){}
     }
 
     @Override
