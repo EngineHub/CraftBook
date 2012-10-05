@@ -60,13 +60,13 @@ public class Pump extends AbstractIC {
     public boolean searchNear(Chest c, Block block, int depth) {
         if(depth > 5)
             return false;
-        if(check(c,block.getRelative(0, 0, 1),0))
+        if(check(c,block.getRelative(0, 0, 1), depth))
             return true;
-        if(check(c,block.getRelative(0, 0, -1),0))
+        if(check(c,block.getRelative(0, 0, -1), depth))
             return true;
-        if(check(c,block.getRelative(1, 0, 0),0))
+        if(check(c,block.getRelative(1, 0, 0), depth))
             return true;
-        if(check(c,block.getRelative(-1, 0, 0),0))
+        if(check(c,block.getRelative(-1, 0, 0), depth))
             return true;
         return false;
     }
