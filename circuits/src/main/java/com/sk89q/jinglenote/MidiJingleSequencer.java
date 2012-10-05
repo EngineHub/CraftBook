@@ -116,7 +116,6 @@ public class MidiJingleSequencer implements JingleSequencer {
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
-                            Bukkit.getLogger().severe(msg.getData2() + "");
                             notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
                         }
                     }
