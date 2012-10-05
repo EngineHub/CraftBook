@@ -34,22 +34,24 @@ import com.sk89q.craftbook.util.GeneralUtil;
 public class MidiJingleSequencer implements JingleSequencer {
 
     private static final int[] instruments = {
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 2,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 2, 4, 3,
+        0, 0, 0, 0, 0, 0, 0, 0, //8
+        0, 0, 0, 0, 0, 0, 0, 0, //16
+        0, 0, 0, 0, 0, 0, 0, 5, //24
+        5, 5, 5, 5, 5, 5, 5, 1, //32
+        1, 1, 1, 1, 1, 1, 1, 0, //40
+        0, 0, 0, 0, 0, 0, 0, 2, //48
+        0, 0, 0, 0, 0, 0, 0, 0, //56
+        0, 0, 0, 0, 0, 0, 0, 0, //64
+        0, 0, 0, 0, 0, 0, 0, 0, //72
+        0, 0, 0, 0, 0, 0, 0, 0, //80
+        0, 0, 0, 0, 0, 0, 0, 0, //88
+        0, 0, 0, 0, 0, 0, 0, 0, //96
+        0, 0, 0, 0, 0, 0, 0, 0, //104
+        0, 0, 0, 0, 0, 0, 0, 0, //112
+        1, 1, 1, 1, 1, 1, 1, 5, //120
+        1, 1, 1, 1, 1, 2, 4, 3, //128
+
+        //16
     };
 
     /*private static int[] percussion = {
@@ -114,7 +116,8 @@ public class MidiJingleSequencer implements JingleSequencer {
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
-                            notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n));
+                            Bukkit.getLogger().severe(msg.getData2() + "");
+                            notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
                         }
                     }
                 }
