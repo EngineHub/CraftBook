@@ -17,6 +17,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
@@ -54,10 +55,16 @@ public class Melody extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).equalsIgnoreCase("START"))
+        if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1].equalsIgnoreCase("START"))
             return;
 
         Block noteblock = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0,1,0);
+
+        int radius = -1;
+        try {
+            radius = Integer.parseInt(getSign().getLine(3).split(":")[0]);
+        }
+        catch(Exception e){}
 
         try {
             if(chip.getInput(0))
@@ -98,6 +105,8 @@ public class Melody extends AbstractIC {
                 sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
                     if(player==null)continue;
+                    if(radius > 0 && !LocationUtil.isWithinRadius(getSign().getLocation(), player.getLocation(), radius))
+                        continue;
                     jNote.getJingleNoteManager().play(player, sequencer, 0, noteblock.getLocation());
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }

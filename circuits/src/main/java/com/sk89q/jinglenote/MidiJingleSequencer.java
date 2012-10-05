@@ -109,7 +109,6 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        Bukkit.getLogger().severe(toMCInstrument(patches.get(chan)) + "  " + toMCNote(n) + "");
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
@@ -181,6 +180,8 @@ public class MidiJingleSequencer implements JingleSequencer {
             return Sound.NOTE_STICKS;
         else if(instrument == 4)
             return Sound.NOTE_BASS_DRUM;
+        else if(instrument == 5)
+            return Sound.NOTE_PLING;
         else
             return null;
     }
