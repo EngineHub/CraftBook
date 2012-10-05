@@ -8,17 +8,14 @@
 package com.sk89q.jinglenote;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 
 public class JingleNotePlayer implements Runnable {
     protected final Player player;
     protected final Location loc;
     protected JingleSequencer sequencer;
     protected final int delay;
-
-    protected boolean keepMusicBlock = false;
 
     public JingleNotePlayer(Player player,
             Location loc, JingleSequencer seq,  int delay) {
@@ -35,10 +32,6 @@ public class JingleNotePlayer implements Runnable {
                 Thread.sleep(delay);
             }
 
-            // Create a fake note block
-            player.sendBlockChange(loc, 25, (byte) 0);
-            Thread.sleep(100);
-
             try {
                 sequencer.run(this);
             } catch (Throwable t) {
@@ -46,19 +39,6 @@ public class JingleNotePlayer implements Runnable {
             }
 
             Thread.sleep(500);
-
-            if (!keepMusicBlock) {
-                // Restore music block
-                CircuitsPlugin.server.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
-
-                    @Override
-                    public void run() {
-                        int prevId = player.getWorld().getBlockTypeIdAt(loc);
-                        byte prevData = player.getWorld().getBlockAt(loc).getData();
-                        player.sendBlockChange(loc, prevId, prevData);
-                    }
-                });
-            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -80,18 +60,23 @@ public class JingleNotePlayer implements Runnable {
     }
 
     public void stop(boolean keepMusicBlock) {
-        this.keepMusicBlock = keepMusicBlock;
 
         if (sequencer != null) {
             sequencer.stop();
         }
     }
 
-    public void play(byte instrument, byte note) {
+    /*public void play(byte instrument, byte note) {
         if (!player.isOnline()) {
             return;
         }
-
         player.playNote(loc, instrument, note);
+    }*/
+
+    public void play(Sound instrument, int pitch) {
+        if (!player.isOnline() || instrument == null) {
+            return;
+        }
+        player.playSound(loc, instrument, pitch, 30f);
     }
 }

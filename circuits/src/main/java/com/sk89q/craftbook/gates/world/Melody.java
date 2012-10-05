@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
 
@@ -54,6 +56,8 @@ public class Melody extends AbstractIC {
 
         if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).equalsIgnoreCase("START"))
             return;
+
+        Block noteblock = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0,1,0);
 
         try {
             if(chip.getInput(0))
@@ -94,7 +98,7 @@ public class Melody extends AbstractIC {
                 sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
                     if(player==null)continue;
-                    jNote.getJingleNoteManager().play(player, sequencer, 0);
+                    jNote.getJingleNoteManager().play(player, sequencer, 0, noteblock.getLocation());
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
             }

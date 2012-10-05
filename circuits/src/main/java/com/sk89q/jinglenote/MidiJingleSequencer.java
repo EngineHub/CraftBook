@@ -21,6 +21,11 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+
+import com.sk89q.craftbook.util.GeneralUtil;
+
 /**
  * A sequencer that reads MIDI files.
  * 
@@ -90,6 +95,8 @@ public class MidiJingleSequencer implements JingleSequencer {
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
         try {
+            if(!sequencer.isOpen())
+                sequencer.open();
             sequencer.getTransmitter().setReceiver(new Receiver() {
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
@@ -102,11 +109,13 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
+                        Bukkit.getLogger().severe(toMCInstrument(patches.get(chan)) + "  " + toMCNote(n) + "");
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
+                            //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
-                            notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
+                            notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n));
                         }
                     }
                 }
@@ -125,7 +134,7 @@ public class MidiJingleSequencer implements JingleSequencer {
             if(sequencer.isOpen())
                 sequencer.stop();
         } catch (MidiUnavailableException e) {
-            e.printStackTrace();
+            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         } finally {
             if(sequencer.isOpen())
                 sequencer.close();
@@ -159,6 +168,21 @@ public class MidiJingleSequencer implements JingleSequencer {
         }
 
         return (byte) instruments[patch];
+    }
+
+    private static Sound toMCSound(byte instrument) {
+        if(instrument == 0)
+            return Sound.NOTE_PIANO;
+        else if(instrument == 1)
+            return Sound.NOTE_BASS_GUITAR;
+        else if(instrument == 2)
+            return Sound.NOTE_SNARE_DRUM;
+        else if(instrument == 3)
+            return Sound.NOTE_STICKS;
+        else if(instrument == 4)
+            return Sound.NOTE_BASS_DRUM;
+        else
+            return null;
     }
 
     /*private static int toMCPercussion(int note) {

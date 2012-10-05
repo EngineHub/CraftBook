@@ -11,10 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * A manager of play instances.
@@ -28,9 +25,8 @@ public class JingleNoteManager {
     protected final Map<String, JingleNotePlayer> instances
     = new HashMap<String, JingleNotePlayer>();
 
-    public void play(Player player, JingleSequencer sequencer, int delay) {
+    public void play(Player player, JingleSequencer sequencer, int delay, Location loc) {
         String name = player.getName();
-        Location loc = findLocation(player);
 
         // Existing player found!
         if (instances.containsKey(name)) {
@@ -72,19 +68,5 @@ public class JingleNoteManager {
         }
 
         instances.clear();
-    }
-
-    private Location findLocation(Player player) {
-        World world = player.getWorld();
-        Location loc = player.getLocation();
-        loc.setY(loc.getY() - 2);
-
-        if (!BlockType.canPassThrough(world.getBlockTypeIdAt(loc))) {
-            return loc;
-        }
-
-        loc.setY(loc.getY() + 4);
-
-        return loc;
     }
 }
