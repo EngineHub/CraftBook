@@ -1,3 +1,25 @@
+3.3.1:
+- Chest Collector renamed to Container Collector
+    - Can now collect into many containers.
+    - Containers intelligently place items into slots, fuels go into fuel slot etc.
+- All IC's have a shorthand.
+- Clock IC has been fixed.
+- Added Block Breaker IC's.
+- Added FlameThrower IC.
+- Added Liquid Flood IC.
+- Bonemeal terraformer IC.
+- Timed explosion IC.
+- Improved Combo Lock IC.
+- Added Plugin Metrics support.
+- IC's work on MC 1.2 and lower
+- Pumpkin/JackOLantern mechanic keeps direction.
+- Lift Looping.
+- Fixed documentation of IC's missing.
+- Massie reconstructure of MIDI IC.
+
+3.0 - 3.3: 
+- Unknown
+
 3.0alpha2:
 - New stuff was added. Not sure what...
 - ICs are implemented, but not all yet. Here's a summary of what is available:
