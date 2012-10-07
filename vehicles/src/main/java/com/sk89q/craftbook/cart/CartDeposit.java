@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -10,10 +11,8 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
 public class CartDeposit extends CartMechanism {
 
@@ -45,37 +44,37 @@ public class CartDeposit extends CartMechanism {
         ItemStack[] trivialstackarray = {};
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-	    // process the line on the sign and split for durability and item id
-	    Map<Integer, Short> items = new HashMap<Integer, Short>();
-	    String[] lines = ((Sign) blocks.sign.getState()).getLine(2).split(",");
-	    try {
-		    for (String line : lines) {
-			    int itemId;
-			    short itemData = -1;
-			    String[] split = line.split(":");
-			    if (split.length > 1) {
-				    // we have durability value
-				    itemData = Short.parseShort(split[1]);
-			    }
-			    itemId = Integer.parseInt(split[0]);
-			    items.put(itemId, itemData);
-		    }
-	    } catch (NumberFormatException e) {
-			return;
-	    }
+        // process the line on the sign and split for durability and item id
+        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        String[] lines = ((Sign) blocks.sign.getState()).getLine(2).split(",");
+        try {
+            for (String line : lines) {
+                int itemId;
+                short itemData = -1;
+                String[] split = line.split(":");
+                if (split.length > 1) {
+                    // we have durability value
+                    itemData = Short.parseShort(split[1]);
+                }
+                itemId = Integer.parseInt(split[0]);
+                items.add(new ItemStack(itemId, 1, itemData));
+            }
+        } catch (NumberFormatException e) {
+            return;
+        }
 
-	    if (collecting) {
+        if (collecting) {
             // collecting
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
             if (items.size() > 0) {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (item == null) continue;
-                    if (items.containsKey(item.getTypeId())) {
-	                    short data = items.get(item.getTypeId());
-	                    if (data > -1 ? data == item.getDurability() : true) {
-	                        transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-	                        cartinventory.remove(item);
-	                    }
+                    if(items.contains(new ItemStack(item.getTypeId(), 1, item.getDurability()))) {
+                        short data = items.get(items.indexOf(new ItemStack(item.getTypeId(), 1, item.getDurability()))).getDurability();
+                        if (data > -1 ? data == item.getDurability() : true) {
+                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                            cartinventory.remove(item);
+                        }
                     }
                 }
             } else {
@@ -122,12 +121,12 @@ public class CartDeposit extends CartMechanism {
                 if (items.size() > 0) {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (item == null) continue;
-                        if (items.containsKey(item.getTypeId())) {
-	                        short data = items.get(item.getTypeId());
-	                        if (data > -1 ? data == item.getDurability() : true) {
-	                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-	                            containerinventory.remove(item);
-	                        }
+                        if(items.contains(new ItemStack(item.getTypeId(), 1, item.getDurability()))) {
+                            short data = items.get(items.indexOf(new ItemStack(item.getTypeId(), 1, item.getDurability()))).getDurability();
+                            if (data > -1 ? data == item.getDurability() : true) {
+                                transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                                containerinventory.remove(item);
+                            }
                         }
                     }
                 } else {
@@ -171,7 +170,7 @@ public class CartDeposit extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }
