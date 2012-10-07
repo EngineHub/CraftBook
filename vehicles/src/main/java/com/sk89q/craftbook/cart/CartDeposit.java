@@ -2,6 +2,8 @@ package com.sk89q.craftbook.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -45,7 +47,7 @@ public class CartDeposit extends CartMechanism {
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         // process the line on the sign and split for durability and item id
-        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        Map<Integer, Short> items = new HashMap<Integer, Short>();
         String[] lines = ((Sign) blocks.sign.getState()).getLine(2).split(",");
         try {
             for (String line : lines) {
@@ -57,7 +59,7 @@ public class CartDeposit extends CartMechanism {
                     itemData = Short.parseShort(split[1]);
                 }
                 itemId = Integer.parseInt(split[0]);
-                items.add(new ItemStack(itemId, 1, itemData));
+                items.put(itemId, itemData);
             }
         } catch (NumberFormatException e) {
             return;
@@ -69,8 +71,8 @@ public class CartDeposit extends CartMechanism {
             if (items.size() > 0) {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (item == null) continue;
-                    if(items.contains(new ItemStack(item.getTypeId(), 1, item.getDurability()))) {
-                        short data = items.get(items.indexOf(new ItemStack(item.getTypeId(), 1, item.getDurability()))).getDurability();
+                    if (items.containsKey(item.getTypeId())) {
+                        short data = items.get(item.getTypeId());
                         if (data > -1 ? data == item.getDurability() : true) {
                             transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             cartinventory.remove(item);
@@ -121,8 +123,8 @@ public class CartDeposit extends CartMechanism {
                 if (items.size() > 0) {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (item == null) continue;
-                        if(items.contains(new ItemStack(item.getTypeId(), 1, item.getDurability()))) {
-                            short data = items.get(items.indexOf(new ItemStack(item.getTypeId(), 1, item.getDurability()))).getDurability();
+                        if (items.containsKey(item.getTypeId())) {
+                            short data = items.get(item.getTypeId());
                             if (data > -1 ? data == item.getDurability() : true) {
                                 transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                                 containerinventory.remove(item);
