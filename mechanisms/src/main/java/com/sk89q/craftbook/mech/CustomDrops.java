@@ -43,7 +43,7 @@ public class CustomDrops implements Listener {
                         w.dropItemNaturally(l, dropDefinition.getItemStack());
                 }
 
-                event.getBlock().breakNaturally(null);
+                event.getBlock().setTypeId(0);
                 event.setCancelled(true);
             }
         }
