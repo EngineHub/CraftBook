@@ -2,8 +2,6 @@ package com.sk89q.craftbook.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -46,37 +44,24 @@ public class CartDeposit extends CartMechanism {
         ItemStack[] trivialstackarray = {};
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-        // process the line on the sign and split for durability and item id
-        Map<Integer, Short> items = new HashMap<Integer, Short>();
-        String[] lines = ((Sign) blocks.sign.getState()).getLine(2).split(",");
+        int itemID = -1;
         try {
-            for (String line : lines) {
-                int itemId;
-                short itemData = -1;
-                String[] split = line.split(":");
-                if (split.length > 1) {
-                    // we have durability value
-                    itemData = Short.parseShort(split[1]);
-                }
-                itemId = Integer.parseInt(split[0]);
-                items.put(itemId, itemData);
-            }
-        } catch (NumberFormatException e) {
-            return;
+            itemID = Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2));
         }
+        catch(Exception e){}
+
+        if(itemID < 0)
+            return;
 
         if (collecting) {
             // collecting
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
-            if (items.size() > 0) {
+            if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (item == null) continue;
-                    if (items.containsKey(item.getTypeId())) {
-                        short data = items.get(item.getTypeId());
-                        if (data > -1 ? data == item.getDurability() : true) {
-                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                            cartinventory.remove(item);
-                        }
+                    if (itemID == item.getTypeId()) {
+                        transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                        cartinventory.remove(item);
                     }
                 }
             } else {
@@ -120,15 +105,12 @@ public class CartDeposit extends CartMechanism {
 
             for (Chest container : containers) {
                 Inventory containerinventory = container.getInventory();
-                if (items.size() > 0) {
+                if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (item == null) continue;
-                        if (items.containsKey(item.getTypeId())) {
-                            short data = items.get(item.getTypeId());
-                            if (data > -1 ? data == item.getDurability() : true) {
-                                transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                                containerinventory.remove(item);
-                            }
+                        if (itemID == item.getTypeId()) {
+                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                            containerinventory.remove(item);
                         }
                     }
                 } else {
