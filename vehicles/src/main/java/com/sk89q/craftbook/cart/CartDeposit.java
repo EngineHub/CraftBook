@@ -45,8 +45,10 @@ public class CartDeposit extends CartMechanism {
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         int itemID = -1;
+        byte itemData = -1;
         try {
-            itemID = Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2));
+            itemID = Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2).split(":")[0]);
+            itemData = Byte.parseByte(((Sign) blocks.sign.getState()).getLine(2).split(":")[1]);
         }
         catch(Exception e){}
 
@@ -60,8 +62,10 @@ public class CartDeposit extends CartMechanism {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (item == null) continue;
                     if (itemID == item.getTypeId()) {
-                        transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                        cartinventory.remove(item);
+                        if(itemData < 0 || itemData == item.getDurability()) {
+                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                            cartinventory.remove(item);
+                        }
                     }
                 }
             } else {
@@ -109,8 +113,10 @@ public class CartDeposit extends CartMechanism {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (item == null) continue;
                         if (itemID == item.getTypeId()) {
-                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                            containerinventory.remove(item);
+                            if(itemData < 0 || itemData == item.getDurability()) {
+                                transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                                containerinventory.remove(item);
+                            }
                         }
                     }
                 } else {
