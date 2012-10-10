@@ -90,11 +90,9 @@ public class CircuitCommands {
             return;
         }
 
-        player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page "
-                + (accessedPage + 1) + " of " + pages + "):");
+        player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page " + (accessedPage + 1) + " of " + pages + "):");
 
-        for (int i = accessedPage * 9; i < lines.length
-                && i < (accessedPage + 1) * 9; i++) {
+        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
             player.sendMessage(lines[i]);
         }
         //sender.sendMessage(plugin.getICList());
@@ -121,7 +119,18 @@ public class CircuitCommands {
                 col = !col;
                 RegisteredICFactory ric = plugin.icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
-                strings.add((col ? ChatColor.YELLOW : ChatColor.GOLD) + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
+                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
+
+                if (ric.getFactory() instanceof RestrictedIC) {
+                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
+                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                    }
+                } else {
+                    if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                    }
+                }
+                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
             }
             catch(Exception e){
                 if(ic.endsWith("5001") || ic.endsWith("5000")) {
