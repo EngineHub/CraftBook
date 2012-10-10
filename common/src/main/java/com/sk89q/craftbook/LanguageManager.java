@@ -58,7 +58,7 @@ public class LanguageManager {
     @Deprecated
     public String getString(String message) {
 
-        HashMap<String, String> languageData = languageMap.get("en_US");
+        HashMap<String, String> languageData = languageMap.get(plugin.getLocalConfiguration().commonSettings.language);
         if(languageData == null)
             return "Missing Language File!";
         if (languageData.get(ChatColor.stripColor(message)) == null) return message;
@@ -74,14 +74,14 @@ public class LanguageManager {
         return languageData.get(ChatColor.stripColor(message));
     }
 
-    public static String getPlayersLanguage(Player p) {
+    public String getPlayersLanguage(Player p) {
         try {
             Field d = LocaleLanguage.class.getDeclaredField("d");
             d.setAccessible(true);
             return (String) d.get(((CraftPlayer)p).getHandle().getLocale());
         }
         catch(Throwable e) {
-            return "en_US";
+            return plugin.getLocalConfiguration().commonSettings.language;
         }
     }
 }

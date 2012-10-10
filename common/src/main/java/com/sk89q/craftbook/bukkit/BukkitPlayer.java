@@ -23,7 +23,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Vehicle;
 import com.sk89q.worldedit.Location;
@@ -48,19 +47,19 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public void print(String message) {
 
-        player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player)));
+        player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
     @Override
     public void printError(String message) {
 
-        player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player)));
+        player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
     @Override
     public void printRaw(String message) {
 
-        player.sendMessage(plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player)));
+        player.sendMessage(plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
     @Override
@@ -120,6 +119,6 @@ public class BukkitPlayer implements LocalPlayer {
 
     @Override
     public String translate(String message) {
-        return plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player));
+        return plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player));
     }
 }

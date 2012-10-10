@@ -30,6 +30,7 @@ public class BaseConfiguration {
     public class CommonSettings {
 
         public final List<String> languages;
+        public final String language;
         public final boolean opPerms;
         public final boolean useBlockDistance;
         public final boolean checkWGRegions;
@@ -38,6 +39,7 @@ public class BaseConfiguration {
         private CommonSettings() {
 
             languages = getStringList("languages", new ArrayList<String>(Arrays.asList("en_US")));
+            language = getString("language", "en_US");
             opPerms = getBoolean("op-perms", true);
             useBlockDistance = getBoolean("use-block-radius", false);
             checkWGRegions = getBoolean("check-worldguard-flags", true);
