@@ -191,5 +191,19 @@ public class Planter extends AbstractIC {
 
             return new Planter(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+            return "Plants plantable things at set offset.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "Item to plant id:data",
+                    "Y Offset"
+            };
+            return lines;
+        }
     }
 }

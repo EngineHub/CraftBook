@@ -146,6 +146,7 @@ import com.sk89q.craftbook.gates.world.SetBlockBelowChest;
 import com.sk89q.craftbook.gates.world.SetBridge;
 import com.sk89q.craftbook.gates.world.SetDoor;
 import com.sk89q.craftbook.gates.world.SoundEffect;
+import com.sk89q.craftbook.gates.world.Spigot;
 import com.sk89q.craftbook.gates.world.TimeControl;
 import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
 import com.sk89q.craftbook.gates.world.TimeFaker;
@@ -298,6 +299,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1223", "terraform"     , new BonemealTerraformer.Factory(server), familySISO, familyAISO);
         registerIC("MC1224", "time bomb"     , new TimedExplosion.Factory(server), familySISO, familyAISO); //Restricted
         registerIC("MC1225", "pump"          , new Pump.Factory(server), familySISO, familyAISO);
+        registerIC("MC1226", "spigot"        , new Spigot.Factory(server), familySISO, familyAISO);
         registerIC("MC1230", "sense day"     , new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", "t control"     , new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set"      , new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted

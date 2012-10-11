@@ -4,7 +4,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -81,7 +80,7 @@ public class PlanterST extends Planter implements SelfTriggeredIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends Planter.Factory {
 
         public Factory(Server server) {
 
