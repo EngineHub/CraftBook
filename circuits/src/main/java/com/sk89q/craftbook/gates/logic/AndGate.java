@@ -18,18 +18,20 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class AndGate extends AbstractIC {
 
-    public AndGate(Server server, Sign sign) {
+    public AndGate(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class AndGate extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new AndGate(getServer(), sign);
+            return new AndGate(getServer(), sign, this);
         }
 
         @Override

@@ -19,15 +19,19 @@
 package com.sk89q.craftbook.bukkit;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
+import com.sk89q.craftbook.ICConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicFactory;
@@ -178,6 +182,7 @@ import com.sk89q.wepif.PermissionsResolverManager;
 public class CircuitsPlugin extends BaseBukkitPlugin {
 
     protected CircuitsConfiguration config;
+    protected ICConfiguration icConfig;
     public ICManager icManager;
     private PermissionsResolverManager perms;
     private MechanicManager manager;
@@ -201,6 +206,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerCommand(CircuitCommands.class);
 
         createDefaultConfiguration("config.yml", false);
+        createDefaultConfiguration("ic-config.yml", false);
         createDefaultConfiguration("custom-ics.txt", false);
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
         saveConfig();
@@ -217,7 +223,15 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         File midi = new File(getDataFolder(), "midi/");
         if (!midi.exists()) midi.mkdir();
 
-        registerICs();
+        if (config.enableICs) {
+            registerICs();
+            icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "ic-config.yml")), getDataFolder());
+            try {
+                icConfig.cfg.save(new File(getDataFolder(), "ic-config.yml"));
+            } catch (IOException ex) {
+                getLogger().log(Level.SEVERE, "Could not save IC Config", ex);
+            }
+        }
 
         // Let's register mechanics!
         if (config.enableNetherstone) registerMechanic(new Netherrack.Factory());

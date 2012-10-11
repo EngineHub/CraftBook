@@ -18,18 +18,20 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class NandGate extends AbstractIC {
 
-    public NandGate(Server server, Sign sign) {
+    public NandGate(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class NandGate extends AbstractIC {
         }
 
         // Condition; all valid must NOT be ON, at least one valid.
-        chip.setOutput(0, (on != valid && valid > 0));
+        chip.setOutput(0, on != valid && valid > 0);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -70,7 +72,7 @@ public class NandGate extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new NandGate(getServer(), sign);
+            return new NandGate(getServer(), sign, this);
         }
     }
 

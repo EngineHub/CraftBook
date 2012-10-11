@@ -22,6 +22,7 @@ import java.util.Random;
 
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ic.IC;
@@ -79,5 +80,9 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
                 "",
                 ""
         };
+    }
+
+    @Override
+    public void addConfiguration(ConfigurationSection section) {
     }
 }

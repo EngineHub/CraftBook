@@ -9,6 +9,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
@@ -25,9 +26,9 @@ public class Pulser extends AbstractIC {
     private int taskId;
     private boolean running;
 
-    public Pulser(Server server, Sign block) {
+    public Pulser(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         load();
     }
 
@@ -187,7 +188,7 @@ public class Pulser extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Pulser(getServer(), sign);
+            return new Pulser(getServer(), sign, this);
         }
     }
 }

@@ -27,14 +27,15 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class ClockDivider extends AbstractIC {
 
     protected Random random = new Random();
 
-    public ClockDivider(Server server, Sign sign) {
+    public ClockDivider(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class ClockDivider extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ClockDivider(getServer(), sign);
+            return new ClockDivider(getServer(), sign, this);
         }
     }
 

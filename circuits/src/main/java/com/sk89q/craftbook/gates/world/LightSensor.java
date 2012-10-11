@@ -18,20 +18,22 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+
 public class LightSensor extends AbstractIC {
 
-    public LightSensor(Server server, Sign sign) {
+    public LightSensor(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -89,12 +91,12 @@ public class LightSensor extends AbstractIC {
 
         Block signBlock = getSign().getBlock();
         Block backBlock = signBlock.getRelative(SignUtil.getBack(signBlock));
-        int lightLevel = (int) getSign()
+        int lightLevel = getSign()
                 .getWorld()
                 .getBlockAt(backBlock.getX() + x,
                         backBlock.getY() + y,
                         backBlock.getZ() + z)
-                .getLightLevel();
+                        .getLightLevel();
 
         return lightLevel >= specifiedLevel;
     }
@@ -109,7 +111,7 @@ public class LightSensor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LightSensor(getServer(), sign);
+            return new LightSensor(getServer(), sign, this);
         }
     }
 

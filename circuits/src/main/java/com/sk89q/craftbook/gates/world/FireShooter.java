@@ -14,6 +14,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -26,9 +27,9 @@ public class FireShooter extends AbstractIC {
     private float spread = 4;
     private float vert = 0;
 
-    public FireShooter(Server server, Sign sign) {
+    public FireShooter(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         load();
     }
 
@@ -108,7 +109,7 @@ public class FireShooter extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new FireShooter(getServer(), sign);
+            return new FireShooter(getServer(), sign, this);
         }
 
         @Override

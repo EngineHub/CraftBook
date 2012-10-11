@@ -1,14 +1,20 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+
 public class TimeSet extends AbstractIC {
 
-    public TimeSet(Server server, Sign sign) {
+    public TimeSet(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -40,7 +46,7 @@ public class TimeSet extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new TimeSet(getServer(), sign);
+            return new TimeSet(getServer(), sign, this);
         }
 
         @Override

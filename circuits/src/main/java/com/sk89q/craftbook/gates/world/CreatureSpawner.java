@@ -39,6 +39,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -50,9 +51,9 @@ public class CreatureSpawner extends AbstractIC {
     private int amount = 1;
     private Block center;
 
-    public CreatureSpawner(Server server, Sign sign) {
+    public CreatureSpawner(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         load();
     }
 
@@ -170,7 +171,7 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new CreatureSpawner(getServer(), sign);
+            return new CreatureSpawner(getServer(), sign, this);
         }
 
         @Override

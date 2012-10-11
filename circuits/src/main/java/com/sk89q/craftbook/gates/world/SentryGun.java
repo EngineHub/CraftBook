@@ -1,13 +1,24 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class SentryGun extends AbstractIC {
 
@@ -46,9 +57,9 @@ public class SentryGun extends AbstractIC {
     private Block center;
     private int radius = 10;
 
-    public SentryGun(Server server, Sign block) {
+    public SentryGun(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         load();
     }
 
@@ -102,7 +113,7 @@ public class SentryGun extends AbstractIC {
                 }
             }
         }
-        */
+         */
 
         for (Entity aEntity : center.getWorld().getEntities()) {
             if (!aEntity.isDead() && aEntity.isValid() && type.is(aEntity)
@@ -128,7 +139,7 @@ public class SentryGun extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new SentryGun(getServer(), sign);
+            return new SentryGun(getServer(), sign, this);
         }
 
         @Override

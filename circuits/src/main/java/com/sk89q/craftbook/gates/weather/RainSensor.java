@@ -1,18 +1,20 @@
 package com.sk89q.craftbook.gates.weather;
 
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class RainSensor extends AbstractIC {
 
-    public RainSensor(Server server, Sign sign) {
+    public RainSensor(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class RainSensor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new RainSensor(getServer(), sign);
+            return new RainSensor(getServer(), sign, this);
         }
 
         @Override

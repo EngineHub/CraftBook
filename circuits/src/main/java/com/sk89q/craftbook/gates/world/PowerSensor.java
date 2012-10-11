@@ -8,6 +8,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
@@ -20,9 +21,9 @@ public class PowerSensor extends AbstractIC {
 
     private Block center;
 
-    public PowerSensor(Server server, Sign block) {
+    public PowerSensor(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         load();
     }
 
@@ -69,7 +70,7 @@ public class PowerSensor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new PowerSensor(getServer(), sign);
+            return new PowerSensor(getServer(), sign, this);
         }
 
         @Override

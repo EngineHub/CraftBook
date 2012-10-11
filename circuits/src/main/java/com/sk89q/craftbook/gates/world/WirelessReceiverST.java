@@ -25,6 +25,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
@@ -33,9 +34,9 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
 
     protected final Sign iSign;
 
-    public WirelessReceiverST(Server server, Sign sign) {
+    public WirelessReceiverST(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
 
         iSign = sign;
         if(sign != null)
@@ -76,7 +77,7 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new WirelessReceiverST(getServer(), sign);
+            return new WirelessReceiverST(getServer(), sign, this);
         }
     }
 

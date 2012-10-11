@@ -10,6 +10,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 
@@ -18,9 +19,9 @@ import com.sk89q.craftbook.util.LocationUtil;
  */
 public class PlayerDetection extends AbstractIC {
 
-    public PlayerDetection(Server server, Sign block) {
+    public PlayerDetection(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
     }
 
 
@@ -89,7 +90,7 @@ public class PlayerDetection extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new PlayerDetection(getServer(), sign);
+            return new PlayerDetection(getServer(), sign, this);
         }
     }
 }

@@ -9,6 +9,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class LiquidFlood extends AbstractIC {
@@ -16,8 +17,8 @@ public class LiquidFlood extends AbstractIC {
     int radius;
     String liquid;
 
-    public LiquidFlood(Server server, Sign block) {
-        super(server, block);
+    public LiquidFlood(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
         load();
     }
 
@@ -95,7 +96,7 @@ public class LiquidFlood extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LiquidFlood(getServer(), sign);
+            return new LiquidFlood(getServer(), sign, this);
         }
 
         @Override

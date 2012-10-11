@@ -10,6 +10,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -18,9 +19,9 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class ParticleEffect extends AbstractIC {
 
-    public ParticleEffect(Server server, Sign sign) {
+    public ParticleEffect(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -83,11 +84,11 @@ public class ParticleEffect extends AbstractIC {
                 if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
                     sign.setLine(1, "[MC1212]");
                     sign.update();
-                    return new SetDoor(getServer(), sign);
+                    return new SetDoor(getServer(), sign, this);
                 }
             }
             catch(Exception e){}
-            return new ParticleEffect(getServer(), sign);
+            return new ParticleEffect(getServer(), sign, this);
         }
     }
 }

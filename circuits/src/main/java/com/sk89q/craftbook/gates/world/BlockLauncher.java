@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -9,10 +7,18 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
+
 public class BlockLauncher extends AbstractIC {
 
-    public BlockLauncher(Server server, Sign block) {
-        super(server, block);
+    public BlockLauncher(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
     }
 
     @Override
@@ -78,7 +84,7 @@ public class BlockLauncher extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new BlockLauncher(getServer(), sign);
+            return new BlockLauncher(getServer(), sign, this);
         }
 
         @Override

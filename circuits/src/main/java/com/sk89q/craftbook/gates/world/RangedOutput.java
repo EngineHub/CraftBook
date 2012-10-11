@@ -7,6 +7,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
@@ -20,9 +21,9 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     int amountDone = 0;
     int maxAmount = 0;
 
-    public RangedOutput(Server server, Sign sign) {
+    public RangedOutput(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new RangedOutput(getServer(), sign);
+            return new RangedOutput(getServer(), sign, this);
         }
     }
 }

@@ -1,20 +1,22 @@
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 /**
  * Sets output based on D input while clock input is high.
  */
 public class LevelTriggeredDFlipFlop extends AbstractIC {
 
-    public LevelTriggeredDFlipFlop(Server server, Sign sign) {
+    public LevelTriggeredDFlipFlop(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LevelTriggeredDFlipFlop(getServer(), sign);
+            return new LevelTriggeredDFlipFlop(getServer(), sign, this);
         }
     }
 }

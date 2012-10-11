@@ -28,14 +28,15 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
-    public ItemDispenser(Server server, Sign sign) {
+    public ItemDispenser(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class ItemDispenser extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ItemDispenser(getServer(), sign);
+            return new ItemDispenser(getServer(), sign, this);
         }
     }
 }

@@ -18,18 +18,20 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class ServerTimeModulus extends AbstractIC {
 
-    public ServerTimeModulus(Server server, Sign sign) {
+    public ServerTimeModulus(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class ServerTimeModulus extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ServerTimeModulus(getServer(), sign);
+            return new ServerTimeModulus(getServer(), sign, this);
         }
 
         @Override

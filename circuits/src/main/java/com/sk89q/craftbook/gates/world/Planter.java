@@ -1,18 +1,20 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Collection;
+
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Item;
 
-import java.util.Collection;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Sapling planter
@@ -23,9 +25,9 @@ import java.util.Collection;
  */
 public class Planter extends AbstractIC {
 
-    public Planter(Server server, Sign block) {
+    public Planter(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
     }
 
     @Override
@@ -70,9 +72,9 @@ public class Planter extends AbstractIC {
         if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(),
                 target.getBlockZ()) == 0
                 && itemPlantableOnBlock(
-                info[0],
-                world.getBlockTypeIdAt(target.getBlockX(),
-                        target.getBlockY() - 1, target.getBlockZ()))) {
+                        info[0],
+                        world.getBlockTypeIdAt(target.getBlockX(),
+                                target.getBlockY() - 1, target.getBlockZ()))) {
 
             saplingPlanter sp = new saplingPlanter(world, target, info[0],
                     info[1]);
@@ -134,9 +136,9 @@ public class Planter extends AbstractIC {
                 for (Item itemEnt : items) {
                     if (!itemEnt.isDead()
                             && itemEnt.getItemStack().getAmount() > 0
-                            && itemEnt.getItemStack().getTypeId() == this.itemId
-                            && (this.damVal == -1 || (this.damVal == -1 || itemEnt
-                            .getItemStack().getDurability() == this.damVal))) {
+                            && itemEnt.getItemStack().getTypeId() == itemId
+                            && (damVal == -1 || damVal == -1 || itemEnt
+                            .getItemStack().getDurability() == damVal)) {
                         double diffX = target.getBlockX()
                                 - itemEnt.getLocation().getX();
                         double diffY = target.getBlockY()
@@ -144,17 +146,17 @@ public class Planter extends AbstractIC {
                         double diffZ = target.getBlockZ()
                                 - itemEnt.getLocation().getZ();
 
-                        if ((diffX * diffX + diffY * diffY + diffZ * diffZ) < 6) {
+                        if (diffX * diffX + diffY * diffY + diffZ * diffZ < 6) {
                             itemEnt.remove();
 
                             world.getBlockAt(target.getBlockX(),
                                     target.getBlockY(), target.getBlockZ())
-                                    .setTypeId(getBlockByItem(this.itemId));
+                                    .setTypeId(getBlockByItem(itemId));
                             world.getBlockAt(target.getBlockX(),
                                     target.getBlockY(), target.getBlockZ())
                                     .setData(
-                                            (byte) (this.damVal == -1 ? 0
-                                                    : this.damVal));
+                                            (byte) (damVal == -1 ? 0
+                                                    : damVal));
 
                             break;
                         }
@@ -189,7 +191,7 @@ public class Planter extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Planter(getServer(), sign);
+            return new Planter(getServer(), sign, this);
         }
     }
 }

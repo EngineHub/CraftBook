@@ -18,17 +18,23 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+
 public class MessageSender extends AbstractIC {
 
-    public MessageSender(Server server, Sign sign) {
+    public MessageSender(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -83,7 +89,7 @@ public class MessageSender extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new MessageSender(getServer(), sign);
+            return new MessageSender(getServer(), sign, this);
         }
 
         @Override

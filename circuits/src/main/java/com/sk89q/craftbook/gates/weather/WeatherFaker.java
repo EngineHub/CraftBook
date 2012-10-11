@@ -1,22 +1,30 @@
 package com.sk89q.craftbook.gates.weather;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import net.minecraft.server.Packet70Bed;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.SignUtil;
+
 /**
  * @author Me4502
  */
 public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
 
-    public WeatherFaker(Server server, Sign sign) {
+    public WeatherFaker(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -41,7 +49,7 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new WeatherFaker(getServer(), sign);
+            return new WeatherFaker(getServer(), sign, this);
         }
 
         @Override

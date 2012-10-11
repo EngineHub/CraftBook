@@ -1,18 +1,24 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+
 public class MemoryAccess extends AbstractIC {
 
-    public MemoryAccess(Server server, Sign block) {
+    public MemoryAccess(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
     }
 
     @Override
@@ -57,7 +63,7 @@ public class MemoryAccess extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 
@@ -67,7 +73,7 @@ public class MemoryAccess extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new MemoryAccess(getServer(), sign);
+            return new MemoryAccess(getServer(), sign, this);
         }
     }
 }

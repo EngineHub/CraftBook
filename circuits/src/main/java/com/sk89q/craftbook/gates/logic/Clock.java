@@ -25,6 +25,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
@@ -32,9 +33,9 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
     final Sign sign;
 
-    public Clock(Server server, Sign psign) {
+    public Clock(Server server, Sign psign, ICFactory factory) {
 
-        super(server, psign);
+        super(server, psign, factory);
         sign = psign;
     }
 
@@ -89,7 +90,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Clock(getServer(), sign);
+            return new Clock(getServer(), sign, this);
         }
 
         @Override

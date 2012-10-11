@@ -10,6 +10,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
@@ -19,9 +20,9 @@ public class FlameThrower  extends AbstractIC {
 
     int distance = 5;
 
-    public FlameThrower(Server server, Sign sign) {
+    public FlameThrower(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         load();
     }
 
@@ -83,7 +84,7 @@ public class FlameThrower  extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new FlameThrower(getServer(), sign);
+            return new FlameThrower(getServer(), sign, this);
         }
 
         @Override

@@ -1,11 +1,13 @@
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 /**
  * A JK flip flop.
@@ -16,9 +18,9 @@ import org.bukkit.block.Sign;
  */
 public class JkFlipFlop extends AbstractIC {
 
-    public JkFlipFlop(Server server, Sign sign) {
+    public JkFlipFlop(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class JkFlipFlop extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new JkFlipFlop(getServer(), sign);
+            return new JkFlipFlop(getServer(), sign, this);
         }
     }
 }

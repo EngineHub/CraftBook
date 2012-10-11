@@ -6,6 +6,7 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
@@ -13,9 +14,9 @@ import com.sk89q.craftbook.ic.RestrictedIC;
  */
 public class FireBarrage extends FireShooter {
 
-    public FireBarrage(Server server, Sign sign) {
+    public FireBarrage(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class FireBarrage extends FireShooter {
         @Override
         public IC create(Sign sign) {
 
-            return new FireBarrage(getServer(), sign);
+            return new FireBarrage(getServer(), sign, this);
         }
 
         @Override

@@ -9,6 +9,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
 
 /**
@@ -18,9 +19,9 @@ public class Delayer extends AbstractIC {
 
     private int delay = 1;
 
-    public Delayer(Server server, Sign block) {
+    public Delayer(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         try {
             delay = Integer.parseInt(getSign().getLine(2));
         }
@@ -68,7 +69,7 @@ public class Delayer extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Delayer(getServer(), sign);
+            return new Delayer(getServer(), sign, this);
         }
 
         @Override

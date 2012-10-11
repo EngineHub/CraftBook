@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -10,14 +8,22 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
+
 /**
  * @author Me4502
  */
 public class SetBlockAboveChest extends AbstractIC {
 
-    public SetBlockAboveChest(Server server, Sign sign) {
+    public SetBlockAboveChest(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -98,7 +104,7 @@ public class SetBlockAboveChest extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 
@@ -108,7 +114,7 @@ public class SetBlockAboveChest extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new SetBlockAboveChest(getServer(), sign);
+            return new SetBlockAboveChest(getServer(), sign, this);
         }
     }
 }

@@ -5,12 +5,13 @@ import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class BlockBreakerST extends BlockBreaker implements SelfTriggeredIC {
 
-    public BlockBreakerST(Server server, Sign block, boolean above) {
-        super(server, block, above);
+    public BlockBreakerST(Server server, Sign block, boolean above, ICFactory factory) {
+        super(server, block, above, factory);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class BlockBreakerST extends BlockBreaker implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new BlockBreakerST(getServer(), sign, above);
+            return new BlockBreakerST(getServer(), sign, above, this);
         }
     }
 }

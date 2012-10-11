@@ -14,22 +14,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.logic;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class XnorGate extends AbstractIC {
 
-    public XnorGate(Server server, Sign sign) {
+    public XnorGate(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class XnorGate extends AbstractIC {
 
         if (a == null || b == null) return;
 
-        chip.setOutput(0, (a && b) || (!a && !b));
+        chip.setOutput(0, a && b || !a && !b);
 
     }
 
@@ -77,8 +79,7 @@ public class XnorGate extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new XnorGate(getServer(), sign);
+            return new XnorGate(getServer(), sign, this);
         }
     }
-
 }

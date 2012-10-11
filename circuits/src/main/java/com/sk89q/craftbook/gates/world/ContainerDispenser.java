@@ -14,6 +14,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -25,9 +26,9 @@ public class ContainerDispenser extends AbstractIC {
 
     private int amount = 1;
 
-    public ContainerDispenser(Server server, Sign sign) {
+    public ContainerDispenser(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         try {
             amount = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
@@ -131,7 +132,7 @@ public class ContainerDispenser extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ContainerDispenser(getServer(), sign);
+            return new ContainerDispenser(getServer(), sign, this);
         }
 
         @Override

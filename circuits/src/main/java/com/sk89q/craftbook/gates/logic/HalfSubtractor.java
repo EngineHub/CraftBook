@@ -7,11 +7,12 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class HalfSubtractor extends AbstractIC {
 
-    public HalfSubtractor(Server server, Sign block) {
-        super(server, block);
+    public HalfSubtractor(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class HalfSubtractor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new HalfSubtractor(getServer(), sign);
+            return new HalfSubtractor(getServer(), sign, this);
         }
     }
 }

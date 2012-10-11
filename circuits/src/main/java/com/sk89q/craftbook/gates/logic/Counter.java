@@ -7,15 +7,16 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class Counter extends AbstractIC {
 
     private int resetVal;
     private boolean inf;
 
-    public Counter(Server server, Sign block) {
+    public Counter(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         load();
     }
 
@@ -104,7 +105,7 @@ public class Counter extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Counter(getServer(), sign);
+            return new Counter(getServer(), sign, this);
         }
     }
 }

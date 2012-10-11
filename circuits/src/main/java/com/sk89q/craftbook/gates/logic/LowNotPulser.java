@@ -1,20 +1,22 @@
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 /**
  * @author Silthus
  */
 public class LowNotPulser extends NotPulser {
 
-    public LowNotPulser(Server server, Sign block) {
+    public LowNotPulser(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class LowNotPulser extends NotPulser {
         @Override
         public IC create(Sign sign) {
 
-            return new LowNotPulser(getServer(), sign);
+            return new LowNotPulser(getServer(), sign, this);
         }
     }
 }

@@ -14,6 +14,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -21,8 +22,8 @@ public class BlockBreaker extends AbstractIC {
 
     boolean above;
 
-    public BlockBreaker(Server server, Sign block, boolean above) {
-        super(server, block);
+    public BlockBreaker(Server server, Sign block, boolean above, ICFactory factory) {
+        super(server, block, factory);
         this.above = above;
     }
 
@@ -97,7 +98,7 @@ public class BlockBreaker extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new BlockBreaker(getServer(), sign, above);
+            return new BlockBreaker(getServer(), sign, above, this);
         }
 
         @Override

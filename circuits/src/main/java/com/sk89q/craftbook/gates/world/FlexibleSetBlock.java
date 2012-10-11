@@ -18,16 +18,22 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-public class FlexibleSetBlock extends AbstractIC {
-    public FlexibleSetBlock(Server server, Sign sign) {
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
-        super(server, sign);
+public class FlexibleSetBlock extends AbstractIC {
+    public FlexibleSetBlock(Server server, Sign sign, ICFactory factory) {
+
+        super(server, sign, factory);
         load();
     }
 
@@ -56,7 +62,7 @@ public class FlexibleSetBlock extends AbstractIC {
         // sign is optional or one of "+" or "-"
         // blockData is optional (along with its preceding colon
         String line3 = getSign().getLine(2).toUpperCase();
-        
+
         String line4 = getSign().getLine(3);
 
         chip.setOutput(0, chip.getInput(0));
@@ -64,7 +70,7 @@ public class FlexibleSetBlock extends AbstractIC {
         String[] params = line3.split(":");
         if (params.length < 2) return;
         if (params[0].length() < 2) return;
-        
+
         // Get and validate axis
         String axis = params[0].substring(0, 1);
         if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) return;
@@ -95,7 +101,7 @@ public class FlexibleSetBlock extends AbstractIC {
         } catch (Exception e) {
             return;
         }
-        
+
         // default block data is 0
         byte data = 0;
         if (params.length > 2) {
@@ -133,7 +139,7 @@ public class FlexibleSetBlock extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new FlexibleSetBlock(getServer(), sign);
+            return new FlexibleSetBlock(getServer(), sign, this);
         }
     }
 

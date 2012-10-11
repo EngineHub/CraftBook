@@ -25,14 +25,15 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class WirelessReceiver extends AbstractIC {
 
     protected String band;
 
-    public WirelessReceiver(Server server, Sign sign) {
+    public WirelessReceiver(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
 
         try {
             band = sign.getLine(2);
@@ -75,7 +76,7 @@ public class WirelessReceiver extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new WirelessReceiver(getServer(), sign);
+            return new WirelessReceiver(getServer(), sign, this);
         }
     }
 

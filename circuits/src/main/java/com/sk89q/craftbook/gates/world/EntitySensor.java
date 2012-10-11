@@ -21,6 +21,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
@@ -108,9 +109,9 @@ public class EntitySensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public EntitySensor(Server server, Sign block) {
+    public EntitySensor(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         load();
     }
 
@@ -198,7 +199,7 @@ public class EntitySensor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new EntitySensor(getServer(), sign);
+            return new EntitySensor(getServer(), sign, this);
         }
 
         @Override

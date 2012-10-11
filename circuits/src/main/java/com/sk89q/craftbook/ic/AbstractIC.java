@@ -22,6 +22,8 @@ import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+
 /**
  * A base abstract IC that all ICs can inherit from.
  *
@@ -31,9 +33,11 @@ public abstract class AbstractIC implements IC {
 
     private final Server server;
     private final Sign sign;
+    private final ICFactory factory;
 
-    public AbstractIC(Server server, Sign block) {
+    public AbstractIC(Server server, Sign block, ICFactory factory) {
 
+        this.factory = factory;
         this.server = server;
         sign = block;
     }
@@ -48,6 +52,16 @@ public abstract class AbstractIC implements IC {
         return sign;
     }
 
+    protected ICFactory getFactory() {
+
+        return factory;
+    }
+
+    protected CircuitsPlugin getPlugin() {
+
+        return CircuitsPlugin.getInst();
+    }
+
     @Override
     public void onRightClick(Player p) {
 
@@ -57,5 +71,4 @@ public abstract class AbstractIC implements IC {
     public void unload() {
 
     }
-
 }

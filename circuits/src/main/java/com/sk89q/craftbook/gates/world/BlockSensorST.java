@@ -5,15 +5,16 @@ import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
 
-    public BlockSensorST(Server server, Sign sign) {
+    public BlockSensorST(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new BlockSensorST(getServer(), sign);
+            return new BlockSensorST(getServer(), sign, this);
         }
 
         @Override

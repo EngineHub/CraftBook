@@ -18,18 +18,25 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
     final Sign sign;
     //"Temp docs": nn:[HL] nn - time for pulse (1 = 2t) H: trigger on high 	L: trigger on low
 
-    public Monostable(Server server, Sign psign) {
+    public Monostable(Server server, Sign psign, ICFactory factory) {
 
-        super(server, psign);
+        super(server, psign, factory);
         sign = psign;
     }
 
@@ -49,7 +56,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         String setting = sign.getLine(2).toUpperCase();
-        if ((chip.getInput(0) && setting.contains("H")) || (!chip.getInput(0) && setting.contains("L"))) {
+        if (chip.getInput(0) && setting.contains("H") || !chip.getInput(0) && setting.contains("L")) {
             //Trigger condition!
             if (setting.indexOf(":") <= 0) return;
 
@@ -94,7 +101,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Monostable(getServer(), sign);
+            return new Monostable(getServer(), sign, this);
         }
 
         @Override

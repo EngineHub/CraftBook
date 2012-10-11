@@ -1,20 +1,22 @@
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 /**
  * Simulates the function of a SR latch made from NAND gates.
  */
 public class RsNandLatch extends AbstractIC {
 
-    public RsNandLatch(Server server, Sign sign) {
+    public RsNandLatch(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class RsNandLatch extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new RsNandLatch(getServer(), sign);
+            return new RsNandLatch(getServer(), sign, this);
         }
     }
 }

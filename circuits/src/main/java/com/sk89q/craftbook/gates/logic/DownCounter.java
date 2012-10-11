@@ -7,6 +7,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 /**
  * Counter counts down each time clock input toggles from low to high, it starts
@@ -29,9 +30,9 @@ public class DownCounter extends AbstractIC {
     private int resetVal;
     private boolean inf;
 
-    public DownCounter(Server server, Sign sign) {
+    public DownCounter(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         load();
     }
 
@@ -119,7 +120,7 @@ public class DownCounter extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new DownCounter(getServer(), sign);
+            return new DownCounter(getServer(), sign, this);
         }
     }
 }

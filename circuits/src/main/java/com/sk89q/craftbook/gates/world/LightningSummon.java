@@ -27,6 +27,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -36,9 +37,9 @@ public class LightningSummon extends AbstractIC {
 
     private Block center;
 
-    public LightningSummon(Server server, Sign sign) {
+    public LightningSummon(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         load();
     }
 
@@ -87,7 +88,7 @@ public class LightningSummon extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LightningSummon(getServer(), sign);
+            return new LightningSummon(getServer(), sign, this);
         }
     }
 }

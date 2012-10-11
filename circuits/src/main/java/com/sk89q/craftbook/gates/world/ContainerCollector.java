@@ -16,6 +16,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -24,9 +25,9 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class ContainerCollector extends AbstractIC {
 
-    public ContainerCollector(Server server, Sign sign) {
+    public ContainerCollector(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -177,7 +178,7 @@ public class ContainerCollector extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ContainerCollector(getServer(), sign);
+            return new ContainerCollector(getServer(), sign, this);
         }
 
         @Override

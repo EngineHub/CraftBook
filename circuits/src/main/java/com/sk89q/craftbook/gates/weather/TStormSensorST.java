@@ -1,15 +1,21 @@
 package com.sk89q.craftbook.gates.weather;
 
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+
 public class TStormSensorST extends AbstractIC implements SelfTriggeredIC {
 
-    public TStormSensorST(Server server, Sign sign) {
+    public TStormSensorST(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -51,7 +57,7 @@ public class TStormSensorST extends AbstractIC implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new TStormSensorST(getServer(), sign);
+            return new TStormSensorST(getServer(), sign, this);
         }
 
         @Override

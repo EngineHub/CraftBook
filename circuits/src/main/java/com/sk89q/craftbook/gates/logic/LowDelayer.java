@@ -1,19 +1,25 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 /**
  * @author Silthus
  */
 public class LowDelayer extends AbstractIC {
 
-    public LowDelayer(Server server, Sign block) {
+    public LowDelayer(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
     }
 
     @Override
@@ -58,7 +64,7 @@ public class LowDelayer extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LowDelayer(getServer(), sign);
+            return new LowDelayer(getServer(), sign, this);
         }
 
         @Override

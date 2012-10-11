@@ -6,6 +6,7 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
@@ -14,9 +15,9 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
  */
 public class PlayerDetectionST extends PlayerDetection implements SelfTriggeredIC {
 
-    public PlayerDetectionST(Server server, Sign block) {
+    public PlayerDetectionST(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class PlayerDetectionST extends PlayerDetection implements SelfTriggeredI
         @Override
         public IC create(Sign sign) {
 
-            return new PlayerDetectionST(getServer(), sign);
+            return new PlayerDetectionST(getServer(), sign, this);
         }
     }
 }

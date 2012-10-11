@@ -9,12 +9,14 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -22,18 +24,21 @@ import com.sk89q.worldedit.blocks.ItemID;
 public class BonemealTerraformer extends AbstractIC {
 
     int radius;
+    Integer maxradius;
 
-    public BonemealTerraformer(Server server, Sign block) {
-        super(server, block);
+    public BonemealTerraformer(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
         load();
     }
 
     private void load() {
+        if(maxradius == null)
+            maxradius = ((Factory)getFactory()).maxradius;
         try {
             radius = Integer.parseInt(getSign().getLine(3));
-            if(radius > 15) {
-                radius = 15;
-                getSign().setLine(3, "15");
+            if(radius > maxradius) {
+                radius = maxradius;
+                getSign().setLine(3, maxradius + "");
                 getSign().update();
             }
         }
@@ -142,6 +147,8 @@ public class BonemealTerraformer extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
+        int maxradius;
+
         public Factory(Server server) {
 
             super(server);
@@ -150,7 +157,7 @@ public class BonemealTerraformer extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new BonemealTerraformer(getServer(), sign);
+            return new BonemealTerraformer(getServer(), sign, this);
         }
 
         @Override
@@ -165,6 +172,12 @@ public class BonemealTerraformer extends AbstractIC {
                     null
             };
             return lines;
+        }
+
+        @Override
+        public void addConfiguration(ConfigurationSection section) {
+
+            maxradius = getInt(section, "max-radius", 15);
         }
     }
 }

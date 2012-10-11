@@ -14,22 +14,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.logic;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class EdgeTriggerDFlipFlop extends AbstractIC {
 
-    public EdgeTriggerDFlipFlop(Server server, Sign sign) {
+    public EdgeTriggerDFlipFlop(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -62,7 +64,7 @@ public class EdgeTriggerDFlipFlop extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new EdgeTriggerDFlipFlop(getServer(), sign);
+            return new EdgeTriggerDFlipFlop(getServer(), sign, this);
         }
     }
 }

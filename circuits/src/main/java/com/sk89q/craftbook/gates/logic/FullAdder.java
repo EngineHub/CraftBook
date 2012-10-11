@@ -7,11 +7,12 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class FullAdder extends AbstractIC {
 
-    public FullAdder(Server server, Sign block) {
-        super(server, block);
+    public FullAdder(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class FullAdder extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new FullAdder(getServer(), sign);
+            return new FullAdder(getServer(), sign, this);
         }
     }
 }

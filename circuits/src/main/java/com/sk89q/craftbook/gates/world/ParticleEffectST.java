@@ -1,20 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 /**
  * @author Me4502
  */
 public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC {
 
-    public ParticleEffectST(Server server, Sign sign) {
+    public ParticleEffectST(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC 
         @Override
         public IC create(Sign sign) {
 
-            return new ParticleEffectST(getServer(), sign);
+            return new ParticleEffectST(getServer(), sign, this);
         }
     }
 }

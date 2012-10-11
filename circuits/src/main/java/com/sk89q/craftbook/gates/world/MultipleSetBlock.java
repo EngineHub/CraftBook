@@ -18,17 +18,23 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
+
 public class MultipleSetBlock extends AbstractIC {
 
-    public MultipleSetBlock(Server server, Sign sign) {
+    public MultipleSetBlock(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -72,7 +78,7 @@ public class MultipleSetBlock extends AbstractIC {
         } catch (Exception e) {
             return;
         }
-        
+
         byte data = 0;
         if (coords.length == 5) {
             try {
@@ -91,9 +97,9 @@ public class MultipleSetBlock extends AbstractIC {
         }
 
         if (dim.length == 3) {
-            for (int lx = 0; lx < (Integer.parseInt(dim[0])); lx++) {
-                for (int ly = 0; ly < (Integer.parseInt(dim[1])); ly++) {
-                    for (int lz = 0; lz < (Integer.parseInt(dim[2])); lz++) {
+            for (int lx = 0; lx < Integer.parseInt(dim[0]); lx++) {
+                for (int ly = 0; ly < Integer.parseInt(dim[1]); ly++) {
+                    for (int lz = 0; lz < Integer.parseInt(dim[2]); lz++) {
                         body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(block, data, true);
                     }
                 }
@@ -104,7 +110,7 @@ public class MultipleSetBlock extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 
@@ -114,7 +120,7 @@ public class MultipleSetBlock extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new MultipleSetBlock(getServer(), sign);
+            return new MultipleSetBlock(getServer(), sign, this);
         }
     }
 

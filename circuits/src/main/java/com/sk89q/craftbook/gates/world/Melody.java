@@ -16,6 +16,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.jinglenote.JingleNoteComponent;
 import com.sk89q.jinglenote.MidiJingleSequencer;
@@ -28,9 +29,9 @@ public class Melody extends AbstractIC {
     MidiJingleSequencer sequencer;
     JingleNoteComponent jNote = new JingleNoteComponent();
 
-    public Melody(Server server, Sign block) {
+    public Melody(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         jNote.enable();
     }
 
@@ -152,11 +153,11 @@ public class Melody extends AbstractIC {
                 if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
                     sign.setLine(1, "[MC1266]");
                     sign.update();
-                    return new PowerSensor(getServer(), sign);
+                    return new PowerSensor(getServer(), sign, this);
                 }
             }
             catch(Exception e){}
-            return new Melody(getServer(), sign);
+            return new Melody(getServer(), sign, this);
         }
 
         @Override

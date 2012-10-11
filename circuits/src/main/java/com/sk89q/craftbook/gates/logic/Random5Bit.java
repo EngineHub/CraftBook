@@ -5,12 +5,13 @@ import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class Random5Bit extends RandomBit {
 
-    public Random5Bit(Server server, Sign sign) {
+    public Random5Bit(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class Random5Bit extends RandomBit {
         @Override
         public IC create(Sign sign) {
 
-            return new Random5Bit(getServer(), sign);
+            return new Random5Bit(getServer(), sign, this);
         }
     }
 

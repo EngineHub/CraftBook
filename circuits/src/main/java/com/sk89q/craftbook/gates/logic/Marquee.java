@@ -18,18 +18,20 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class Marquee extends AbstractIC {
 
-    public Marquee(Server server, Sign sign) {
+    public Marquee(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class Marquee extends AbstractIC {
         }
 
         if (next == 0) {
-            next = (reverse) ? 3 : 1;
+            next = reverse ? 3 : 1;
         }
         for (short i = 0; i < chip.getOutputCount(); i++)
             chip.setOutput(i, false); // Clear all pins
@@ -99,7 +101,7 @@ public class Marquee extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new Marquee(getServer(), sign);
+            return new Marquee(getServer(), sign, this);
         }
     }
 

@@ -6,13 +6,14 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
 
-    public LiquidFloodST(Server server, Sign block) {
-        super(server, block);
+    public LiquidFloodST(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LiquidFloodST(getServer(), sign);
+            return new LiquidFloodST(getServer(), sign, this);
         }
 
         @Override

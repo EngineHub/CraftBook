@@ -18,17 +18,23 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class ClockST extends Clock implements SelfTriggeredIC {
 
     final Sign sign;
 
-    public ClockST(Server server, Sign psign) {
+    public ClockST(Server server, Sign psign, ICFactory factory) {
 
-        super(server, psign);
+        super(server, psign, factory);
         sign = psign;
     }
 
@@ -71,7 +77,7 @@ public class ClockST extends Clock implements SelfTriggeredIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ClockST(getServer(), sign);
+            return new ClockST(getServer(), sign, this);
         }
 
         @Override
@@ -92,19 +98,19 @@ public class ClockST extends Clock implements SelfTriggeredIC {
             sign.update();
         }
 
-	    @Override
-	    public String getDescription() {
-		    return "Outputs hight every X ticks.";
-	    }
+        @Override
+        public String getDescription() {
+            return "Outputs hight every X ticks.";
+        }
 
-	    @Override
-	    public String[] getLineHelp() {
-		    String[] lines = new String[] {
-				    "ticks required",
-				    "current ticks"
-		    };
-		    return lines;
-	    }
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "ticks required",
+                    "current ticks"
+            };
+            return lines;
+        }
     }
 
 }

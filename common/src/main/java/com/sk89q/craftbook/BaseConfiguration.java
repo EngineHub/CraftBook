@@ -17,14 +17,24 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class BaseConfiguration {
 
     public final FileConfiguration cfg;
+    public final File folder;
+
+    public BaseConfiguration(FileConfiguration cfg, File dataFolder, boolean common) {
+
+        this.cfg = cfg;
+        folder = dataFolder;
+        if(common)
+            commonSettings = new CommonSettings();
+    }
 
     public BaseConfiguration(FileConfiguration cfg, File dataFolder) {
 
         this.cfg = cfg;
+        folder = dataFolder;
         commonSettings = new CommonSettings();
     }
 
-    public final CommonSettings commonSettings;
+    public CommonSettings commonSettings;
 
     //General settings
     public class CommonSettings {

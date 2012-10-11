@@ -9,6 +9,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -34,9 +35,9 @@ public class SetBridge extends AbstractIC {
     private Block center;
     private BlockFace faceing;
 
-    public SetBridge(Server server, Sign block) {
+    public SetBridge(Server server, Sign block, ICFactory factory) {
 
-        super(server, block);
+        super(server, block, factory);
         load();
     }
 
@@ -158,7 +159,7 @@ public class SetBridge extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new SetBridge(getServer(), sign);
+            return new SetBridge(getServer(), sign, this);
         }
     }
 }

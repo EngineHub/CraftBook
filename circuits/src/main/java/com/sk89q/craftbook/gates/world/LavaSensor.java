@@ -26,6 +26,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 
@@ -33,9 +34,9 @@ public class LavaSensor extends AbstractIC {
 
     private Block center;
 
-    public LavaSensor(Server server, Sign sign) {
+    public LavaSensor(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         try {
             center = ICUtil.parseBlockLocation(sign);
         }
@@ -82,7 +83,7 @@ public class LavaSensor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new LavaSensor(getServer(), sign);
+            return new LavaSensor(getServer(), sign, this);
         }
 
         @Override

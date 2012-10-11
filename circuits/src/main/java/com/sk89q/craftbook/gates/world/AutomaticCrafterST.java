@@ -1,15 +1,17 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+
 public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggeredIC{
 
-    public AutomaticCrafterST(Server server, Sign block) {
-        super(server, block);
+    public AutomaticCrafterST(Server server, Sign block, ICFactory factory) {
+        super(server, block, factory);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggere
         @Override
         public IC create(Sign sign) {
 
-            return new AutomaticCrafterST(getServer(), sign);
+            return new AutomaticCrafterST(getServer(), sign, this);
         }
     }
 }

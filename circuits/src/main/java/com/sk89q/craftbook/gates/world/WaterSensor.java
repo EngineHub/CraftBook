@@ -26,6 +26,7 @@ import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 
@@ -33,9 +34,9 @@ public class WaterSensor extends AbstractIC {
 
     Block center;
 
-    public WaterSensor(Server server, Sign sign) {
+    public WaterSensor(Server server, Sign sign, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         try {
             center = ICUtil.parseBlockLocation(sign);
         }
@@ -84,7 +85,7 @@ public class WaterSensor extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new WaterSensor(getServer(), sign);
+            return new WaterSensor(getServer(), sign, this);
         }
 
         @Override

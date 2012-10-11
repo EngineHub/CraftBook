@@ -14,24 +14,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.gates.logic;
+
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class ToggleFlipFlop extends AbstractIC {
 
     protected final boolean risingEdge;
 
-    public ToggleFlipFlop(Server server, Sign sign, boolean risingEdge) {
+    public ToggleFlipFlop(Server server, Sign sign, boolean risingEdge, ICFactory factory) {
 
-        super(server, sign);
+        super(server, sign, factory);
         this.risingEdge = risingEdge;
     }
 
@@ -50,8 +52,8 @@ public class ToggleFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if ((risingEdge && chip.getInput(0))
-                || (!risingEdge && !chip.getInput(0))) {
+        if (risingEdge && chip.getInput(0)
+                || !risingEdge && !chip.getInput(0)) {
             chip.setOutput(0, !chip.getOutput(0));
         }
     }
@@ -69,7 +71,7 @@ public class ToggleFlipFlop extends AbstractIC {
         @Override
         public IC create(Sign sign) {
 
-            return new ToggleFlipFlop(getServer(), sign, risingEdge);
+            return new ToggleFlipFlop(getServer(), sign, risingEdge, this);
         }
     }
 
