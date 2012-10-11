@@ -62,7 +62,6 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
             return false;
         } else if (hasStarted) {
             if (ticks >= maxTicks) {
-                ticks = 0;
                 amountDone++;
                 if (amountDone >= maxAmount) {
                     hasStarted = false;
