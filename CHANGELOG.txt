@@ -15,7 +15,7 @@
 - Pumpkin/JackOLantern mechanic keeps direction.
 - Lift Looping.
 - Fixed documentation of IC's missing.
-- Massie reconstructure of MIDI IC.
+- Massive reconstruction of MIDI IC.
 
 3.0 - 3.3: 
 - Unknown

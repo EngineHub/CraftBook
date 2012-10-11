@@ -14,6 +14,8 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -54,8 +56,7 @@ public class Planter extends AbstractIC {
 
         if (getSign().getLine(2).length() != 0) {
             String[] lineParts = getSign().getLine(2).split(":");
-            info = new int[] {Integer.parseInt(lineParts[0]),
-                    Integer.parseInt(lineParts[1])};
+            info = new int[] {Integer.parseInt(lineParts[0]), Integer.parseInt(lineParts[1])};
         }
 
         if (info == null || !plantableItem(info[0])) return;
@@ -71,53 +72,44 @@ public class Planter extends AbstractIC {
 
         if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(),
                 target.getBlockZ()) == 0
-                && itemPlantableOnBlock(
-                        info[0],
-                        world.getBlockTypeIdAt(target.getBlockX(),
-                                target.getBlockY() - 1, target.getBlockZ()))) {
+                && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1,
+                        target.getBlockZ()))) {
 
-            saplingPlanter sp = new saplingPlanter(world, target, info[0],
-                    info[1]);
-            sp.run();
+            BlockPlanter run = new BlockPlanter(world, target, info[0], info[1]);
+            run.run();
         }
     }
 
     protected boolean plantableItem(int itemId) {
 
-        boolean isPlantable = false;
-
-        if (itemId == 6 || itemId == 295 || itemId == 372)
-            isPlantable = true;
-
-        return isPlantable;
+        return itemId == BlockID.SAPLING || itemId == ItemID.SEEDS || itemId == ItemID.NETHER_WART_SEED
+                || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS || itemId == BlockID.CACTUS;
     }
 
     protected boolean itemPlantableOnBlock(int itemId, int blockId) {
 
         boolean isPlantable = false;
 
-        if (itemId == 6 && (blockId == 2 || blockId == 3)) {
-            // Saplings can go on Dirt or Grass
+        if (itemId == BlockID.SAPLING && (blockId == BlockID.DIRT || blockId == BlockID.GRASS))
             isPlantable = true;
-        } else if (itemId == 295 && blockId == 60) {
-            // Seeds can only go on farmland
+        else if ((itemId == ItemID.SEEDS || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS) && blockId == BlockID.SOIL)
             isPlantable = true;
-        } else if (itemId == 372 && blockId == 88) {
-            // Netherwart on soulsand
+        else if (itemId == ItemID.NETHER_WART_SEED && blockId == BlockID.SLOW_SAND)
             isPlantable = true;
-        }
+        else if (itemId == BlockID.CACTUS && blockId == BlockID.SAND)
+            isPlantable = true;
 
         return isPlantable;
     }
 
-    protected class saplingPlanter implements Runnable {
+    protected class BlockPlanter implements Runnable {
 
         private final World world;
         private final Vector target;
         private final int itemId;
         private final int damVal;
 
-        public saplingPlanter(World world, Vector target, int itemId, int damVal) {
+        public BlockPlanter(World world, Vector target, int itemId, int damVal) {
 
             this.world = world;
             this.target = target;
@@ -169,14 +161,20 @@ public class Planter extends AbstractIC {
         private int getBlockByItem(int itemId) {
 
             switch (itemId) {
-                case 295:
-                    return 59;
-                case 6:
-                    return 6;
-                case 372:
-                    return 115;
+                case ItemID.SEEDS:
+                    return BlockID.CROPS;
+                case ItemID.MELON_SEEDS:
+                    return BlockID.MELON_STEM;
+                case ItemID.PUMPKIN_SEEDS:
+                    return BlockID.PUMPKIN_STEM;
+                case BlockID.SAPLING:
+                    return BlockID.SAPLING;
+                case ItemID.NETHER_WART_SEED:
+                    return BlockID.NETHER_WART;
+                case BlockID.CACTUS:
+                    return BlockID.CACTUS;
                 default:
-                    return 0;
+                    return BlockID.AIR;
             }
         }
     }
