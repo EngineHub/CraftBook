@@ -136,6 +136,7 @@ import com.sk89q.craftbook.gates.world.PotionInducer;
 import com.sk89q.craftbook.gates.world.PowerSensor;
 import com.sk89q.craftbook.gates.world.PowerSensorST;
 import com.sk89q.craftbook.gates.world.Pump;
+import com.sk89q.craftbook.gates.world.PumpST;
 import com.sk89q.craftbook.gates.world.RangedOutput;
 import com.sk89q.craftbook.gates.world.ServerTimeModulus;
 import com.sk89q.craftbook.gates.world.SetBlockAbove;
@@ -376,6 +377,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0221", "b bl break st" , new BlockBreakerST.Factory(server,true), familySISO, familyAISO);
         registerIC("MC0222", "liq flood st"  , new LiquidFloodST.Factory(server), familySISO, familyAISO);    //Restricted
         registerIC("MC0223", "terraform st"  , new BonemealTerraformerST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0225", "pump st"       , new PumpST.Factory(server), familySISO, familyAISO);
         registerIC("MC0230", "sense day st"  , new DaySensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0232", "time set st"   , new TimeSetST.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
