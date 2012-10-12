@@ -18,47 +18,21 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.RegisteredServiceProvider;
-
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
-import com.sk89q.craftbook.mech.AIMechanic;
-import com.sk89q.craftbook.mech.Ammeter;
-import com.sk89q.craftbook.mech.Bookcase;
-import com.sk89q.craftbook.mech.Bridge;
-import com.sk89q.craftbook.mech.Cauldron;
-import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.Command;
-import com.sk89q.craftbook.mech.CookingPot;
-import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.Door;
-import com.sk89q.craftbook.mech.Elevator;
-import com.sk89q.craftbook.mech.Gate;
-import com.sk89q.craftbook.mech.HiddenSwitch;
-import com.sk89q.craftbook.mech.LightStone;
-import com.sk89q.craftbook.mech.LightSwitch;
-import com.sk89q.craftbook.mech.MapChanger;
-import com.sk89q.craftbook.mech.PaintingSwitch;
-import com.sk89q.craftbook.mech.Payment;
-import com.sk89q.craftbook.mech.Snow;
-import com.sk89q.craftbook.mech.Teleporter;
-import com.sk89q.craftbook.mech.XPStorer;
+import com.sk89q.craftbook.mech.*;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mech.dispenser.Recipe;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 
 /**
@@ -96,8 +70,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();
-
-        languageManager = new LanguageManager(this);
 
         if (getServer().getPluginManager().isPluginEnabled("Vault")) setupEconomy();
 
@@ -152,6 +124,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         // Register events
         registerEvents();
+
+	    languageManager = new LanguageManager(this);
     }
 
     /**

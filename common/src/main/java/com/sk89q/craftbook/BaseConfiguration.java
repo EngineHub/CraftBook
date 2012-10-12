@@ -1,15 +1,13 @@
 package com.sk89q.craftbook;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -19,42 +17,10 @@ public class BaseConfiguration {
     public final FileConfiguration cfg;
     public final File folder;
 
-    public BaseConfiguration(FileConfiguration cfg, File dataFolder, boolean common) {
-
-        this.cfg = cfg;
-        folder = dataFolder;
-        if(common)
-            commonSettings = new CommonSettings();
-    }
-
     public BaseConfiguration(FileConfiguration cfg, File dataFolder) {
 
         this.cfg = cfg;
         folder = dataFolder;
-        commonSettings = new CommonSettings();
-    }
-
-    public CommonSettings commonSettings;
-
-    //General settings
-    public class CommonSettings {
-
-        public final List<String> languages;
-        public final String language;
-        public final boolean opPerms;
-        public final boolean useBlockDistance;
-        public final boolean checkWGRegions;
-        public final boolean experimentalRepeaters;
-
-        private CommonSettings() {
-
-            languages = getStringList("languages", new ArrayList<String>(Arrays.asList("en_US")));
-            language = getString("language", "en_US");
-            opPerms = getBoolean("op-perms", true);
-            useBlockDistance = getBoolean("use-block-radius", false);
-            checkWGRegions = getBoolean("check-worldguard-flags", true);
-            experimentalRepeaters = getBoolean("experimental-repeater-support", false);
-        }
     }
 
     public int getInt(String name, int def) {
