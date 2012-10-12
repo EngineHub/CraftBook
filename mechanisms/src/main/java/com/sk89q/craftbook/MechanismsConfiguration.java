@@ -73,6 +73,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         customCraftingSettings = new CustomCraftingSettings();
         paintingSettings = new PaintingSettings();
         xpStorerSettings = new XPStorerSettings();
+        mapChangerSettings = new MapChangerSettings();
     }
 
     public final File dataFolder;
@@ -101,6 +102,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public final CustomCraftingSettings customCraftingSettings;
     public final PaintingSettings paintingSettings;
     public final XPStorerSettings xpStorerSettings;
+    public final MapChangerSettings mapChangerSettings;
 
     //General settings
     public class MechanismSettings {
@@ -444,6 +446,16 @@ public class MechanismsConfiguration extends BaseConfiguration {
         private XPStorerSettings() {
 
             enabled = getBoolean("xp-storer-enable", true);
+        }
+    }
+
+    public class MapChangerSettings {
+
+        public final boolean enabled;
+
+        private MapChangerSettings() {
+
+            enabled = getBoolean("map-changer-enable", true);
         }
     }
 }

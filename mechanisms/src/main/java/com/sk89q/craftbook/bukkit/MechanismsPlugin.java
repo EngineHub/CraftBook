@@ -47,6 +47,7 @@ import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightStone;
 import com.sk89q.craftbook.mech.LightSwitch;
+import com.sk89q.craftbook.mech.MapChanger;
 import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.Snow;
@@ -139,6 +140,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             registerMechanic(new ImprovedCauldron.Factory(this));
         if(getLocalConfiguration().xpStorerSettings.enabled)
             registerMechanic(new XPStorer.Factory(this));
+        if(getLocalConfiguration().mapChangerSettings.enabled)
+            registerMechanic(new MapChanger.Factory(this));
         if (getLocalConfiguration().customCraftingSettings.enable)
             new CustomCrafting(this);
 
