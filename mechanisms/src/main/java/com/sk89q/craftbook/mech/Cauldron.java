@@ -40,6 +40,7 @@ import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -197,7 +198,7 @@ public class Cauldron extends AbstractMechanic {
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 
         // Used to store cauldron blocks -- walls are counted
-        Map<BlockWorldVector, Integer> visited = new HashMap<BlockWorldVector, Integer>();
+        Map<BlockWorldVector, Tuple2<Integer, Short>> visited = new HashMap<BlockWorldVector, Tuple2<Integer, Short>>();
 
         try {
             // The following attempts to recursively find adjacent blocks so
@@ -210,19 +211,19 @@ public class Cauldron extends AbstractMechanic {
             if (visited.size() != 24) throw new NotACauldronException("mech.cauldron.too-small");
 
             // Key is the block ID and the value is the amount
-            Map<Integer, Integer> contents = new HashMap<Integer, Integer>();
+            Map<Tuple2<Integer, Short>, Integer> contents = new HashMap<Tuple2<Integer, Short>, Integer>();
 
             // Now we have to ignore cauldron blocks so that we get the real
             // contents of the cauldron
-            for (Map.Entry<BlockWorldVector, Integer> entry : visited
-                    .entrySet())
-                if (entry.getValue() != blockID) if (!contents.containsKey(entry.getValue())) {
-                    contents.put(entry.getValue(), 1);
-                }
-                else {
-                    contents.put(entry.getValue(),
-                            contents.get(entry.getValue()) + 1);
-                }
+            for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
+                if (entry.getValue().a != blockID)
+                    if (!contents.containsKey(entry.getValue())) {
+                        contents.put(entry.getValue(), 1);
+                    }
+                    else {
+                        contents.put(entry.getValue(),
+                                contents.get(entry.getValue()) + 1);
+                    }
 
             // Find the recipe
             CauldronCookbook.Recipe recipe = recipes.find(contents);
@@ -254,14 +255,13 @@ public class Cauldron extends AbstractMechanic {
                         + "In a poof of smoke, you've made " + recipe.getName()
                         + ".");
 
-                List<Integer> ingredients = new ArrayList<Integer>(
+                List<Tuple2<Integer, Short>> ingredients = new ArrayList<Tuple2<Integer, Short>>(
                         recipe.getIngredients());
 
                 List<BlockWorldVector> removeQueue = new ArrayList<BlockWorldVector>();
 
                 // Get rid of the blocks in world
-                for (Map.Entry<BlockWorldVector, Integer> entry : visited
-                        .entrySet())
+                for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
                     // This is not a fast operation, but we should not have
                     // too many ingredients
                     if (ingredients.contains(entry.getValue())) {
@@ -285,9 +285,9 @@ public class Cauldron extends AbstractMechanic {
                 }
 
                 // Give results
-                for (Integer id : recipe.getResults()) {
+                for (Tuple2<Integer, Short> id : recipe.getResults()) {
                     HashMap<Integer, ItemStack> map = player.getInventory()
-                            .addItem(new ItemStack(id, 1));
+                            .addItem(new ItemStack(id.a, 1, id.b));
                     for (Entry<Integer, ItemStack> i : map.entrySet()) {
                         world.dropItem(player.getLocation(), i.getValue());
                     }
@@ -319,7 +319,7 @@ public class Cauldron extends AbstractMechanic {
      * @throws Cauldron.NotACauldronException
      */
     public void findCauldronContents(World world, BlockWorldVector pt,
-            int minY, int maxY, Map<BlockWorldVector, Integer> visited)
+            int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
                     throws NotACauldronException {
 
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
@@ -347,7 +347,7 @@ public class Cauldron extends AbstractMechanic {
             type = 10;
         }
 
-        visited.put(pt, type);
+        visited.put(pt, new Tuple2<Integer, Short>(type,(short) world.getBlockAt(pt.getBlockX(),pt.getBlockY(),pt.getBlockZ()).getData()));
 
         // It's a wall -- we only needed to remember that we visited it but
         // we don't need to recurse
