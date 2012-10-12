@@ -35,12 +35,22 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
 
 	private CommonConfiguration config;
 
-    @Override
+	public CraftBookPlugin() {
+
+		instance = this;
+	}
+
+	@Override
+	public void onEnable() {
+
+		super.onEnable();
+		config = new CommonConfiguration(getConfig(), getDataFolder());
+		saveConfig();
+	}
+
+	@Override
     protected void registerEvents() {
 
-	    instance = this;
-	    config = new CommonConfiguration(getConfig(), getDataFolder());
-	    saveConfig();
     }
 
 	@Override
