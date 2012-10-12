@@ -48,7 +48,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
 
-        mechSettings = new MechanismSettings();
         ammeterSettings = new AmmeterSettings(new BaseConfigurationSection("Ammeter"));
         bookcaseSettings = new BookcaseSettings(new BaseConfigurationSection("Bookcase"));
         bridgeSettings = new BridgeSettings(new BaseConfigurationSection("Bridge"));
@@ -74,6 +73,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
         paintingSettings = new PaintingSettings(new BaseConfigurationSection("Painting Settings"));
         xpStorerSettings = new XPStorerSettings(new BaseConfigurationSection("XP Storer"));
         mapChangerSettings = new MapChangerSettings(new BaseConfigurationSection("Map Changer"));
+
+        //Do this last, so it shows first.
+        mechSettings = new MechanismSettings(new BaseConfigurationSection("Mechanisms"));
     }
 
     public final File dataFolder;
@@ -109,9 +111,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean stopDestruction;
 
-        private MechanismSettings() {
+        private MechanismSettings(BaseConfigurationSection section) {
 
-            stopDestruction = getBoolean("stop-mechanism-dupe", false);
+            stopDestruction = section.getBoolean("stop-mechanism-dupe", false);
         }
     }
 
