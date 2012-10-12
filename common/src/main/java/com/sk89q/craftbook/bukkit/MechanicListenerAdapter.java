@@ -193,7 +193,7 @@ public class MechanicListenerAdapter {
                 } else if (type == BlockID.POWERED_RAIL) {
                 } else if (type == BlockID.REDSTONE_WIRE) {
 
-                    if (plugin.getLocalConfiguration().commonSettings.indirectRedstone) {
+                    if (CraftBookPlugin.getInstance().getLocalConfiguration().indirectRedstone) {
 	                    // Possible blocks north / south
 	                    handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
 	                    handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
@@ -278,7 +278,7 @@ public class MechanicListenerAdapter {
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
-            if(!plugin.getLocalConfiguration().commonSettings.experimentalRepeaters) return;
+            if(!CraftBookPlugin.getInstance().getLocalConfiguration().experimentalRepeaters) return;
             int type = event.getChangedTypeId();
             if(type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON) {
 

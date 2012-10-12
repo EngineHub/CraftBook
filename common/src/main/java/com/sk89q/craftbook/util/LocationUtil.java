@@ -1,11 +1,7 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +12,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import java.util.*;
 
 /**
  * @author Silthus, Me4502
@@ -61,7 +57,7 @@ public final class LocationUtil {
      */
     public static double getDistance(Location l1, Location l2) {
 
-        if (plugin.getLocalConfiguration().commonSettings.useBlockDistance) {
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance) {
             return getBlockDistance(l1, l2);
         } else {
             return Math.sqrt(l1.distanceSquared(l2));
