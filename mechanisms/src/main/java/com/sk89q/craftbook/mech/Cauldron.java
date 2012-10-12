@@ -235,13 +235,12 @@ public class Cauldron extends AbstractMechanic {
                 if (groups != null) {
                     boolean found = false;
 
-                    for (@SuppressWarnings("unused") String group : groups) {
-                        found = true;
-                        break;
-                        // TODO: Add an isInGroup method
-                        /*
-                         * if (player.isInGroup(group)) { found = true; break; }
-                         */
+                    for (String group : groups) {
+
+                        if (plugin.isInGroup(player.getName(), group)) {
+                            found = true;
+                            break;
+                        }
                     }
 
                     if (!found) {
