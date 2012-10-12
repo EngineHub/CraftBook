@@ -1,15 +1,10 @@
 package com.sk89q.craftbook;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
+import java.util.*;
 
 /**
  * @author Me4502
@@ -45,6 +40,7 @@ public class BaseConfiguration {
         public final boolean useBlockDistance;
         public final boolean checkWGRegions;
         public final boolean experimentalRepeaters;
+	    public final boolean indirectRedstone;
 
         private CommonSettings() {
 
@@ -54,6 +50,7 @@ public class BaseConfiguration {
             useBlockDistance = getBoolean("use-block-radius", false);
             checkWGRegions = getBoolean("check-worldguard-flags", true);
             experimentalRepeaters = getBoolean("experimental-repeater-support", false);
+	        indirectRedstone = getBoolean("indirect-redstone-support", false);
         }
     }
 

@@ -193,7 +193,7 @@ public class MechanicListenerAdapter {
                 } else if (type == BlockID.POWERED_RAIL) {
                 } else if (type == BlockID.REDSTONE_WIRE) {
 
-                    if (plugin.getConfig().getBoolean("allow-indirect-redstone", false)) {
+                    if (plugin.getLocalConfiguration().commonSettings.indirectRedstone) {
 	                    // Possible blocks north / south
 	                    handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
 	                    handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
