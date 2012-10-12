@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
@@ -56,18 +56,12 @@ class TriggerBlockManager {
      */
     public void register(PersistentMechanic m) {
         // Debugging code
-        if (MechanicManager.DEBUG) {
-            for (BlockWorldVector p : m.getTriggerPositions()) {
-                if (triggers.get(p) != null) {
-                    throw new CraftbookRuntimeException(new IllegalStateException(
-                            p + " has already been claimed by another Mechanic"));
-                }
-            }
-        }
+        if (MechanicManager.DEBUG) for (BlockWorldVector p : m.getTriggerPositions())
+            if (triggers.get(p) != null) throw new CraftbookRuntimeException(new IllegalStateException(
+                    p + " has already been claimed by another Mechanic"));
 
-        for (BlockWorldVector p : m.getTriggerPositions()) {
+        for (BlockWorldVector p : m.getTriggerPositions())
             triggers.put(p, m);
-        }
     }
 
     /**
@@ -77,18 +71,12 @@ class TriggerBlockManager {
      */
     public void deregister(PersistentMechanic m) {
         // Debugging code
-        if (MechanicManager.DEBUG) {
-            for (BlockWorldVector p : m.getTriggerPositions()) {
-                if (triggers.get(p) != m) {
-                    throw new CraftbookRuntimeException(new IllegalStateException(
-                            p + " was occupied by another Mechanic"));
-                }
-            }
-        }
+        if (MechanicManager.DEBUG) for (BlockWorldVector p : m.getTriggerPositions())
+            if (triggers.get(p) != m) throw new CraftbookRuntimeException(new IllegalStateException(
+                    p + " was occupied by another Mechanic"));
 
-        for (BlockWorldVector p : m.getTriggerPositions()) {
+        for (BlockWorldVector p : m.getTriggerPositions())
             triggers.put(p, null);
-        }
     }
 
     /**
@@ -131,9 +119,7 @@ class TriggerBlockManager {
             int curChunkX = (int) Math.floor(pos.getBlockX() / 16.0);
             int curChunkZ = (int) Math.floor(pos.getBlockZ() / 16.0);
             // Not involved in this chunk!
-            if (curChunkX != chunkX || curChunkZ != chunkZ) {
-                continue;
-            }
+            if (curChunkX != chunkX || curChunkZ != chunkZ) continue;
 
             PersistentMechanic pMechanic = entry.getValue();
 

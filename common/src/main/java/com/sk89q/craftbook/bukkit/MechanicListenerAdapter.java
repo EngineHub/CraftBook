@@ -105,13 +105,9 @@ public class MechanicListenerAdapter {
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onPlayerInteract(PlayerInteractEvent event) {
 
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                manager.dispatchBlockRightClick(event);
-            }
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) manager.dispatchBlockRightClick(event);
 
-            if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                manager.dispatchBlockLeftClick(event);
-            }
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK) manager.dispatchBlockLeftClick(event);
         }
     }
 
@@ -170,9 +166,7 @@ public class MechanicListenerAdapter {
 
             // For efficiency reasons, we're only going to consider changes between
             // off and on state, and ignore simple current changes (i.e. 15->13)
-            if (!wasChange) {
-                return;
-            }
+            if (!wasChange) return;
 
             LocalWorld w = BukkitUtil.getLocalWorld(world);
             int x = v.getBlockX();
@@ -194,16 +188,16 @@ public class MechanicListenerAdapter {
                 } else if (type == BlockID.REDSTONE_WIRE) {
 
                     if (CraftBookPlugin.getInstance().getLocalConfiguration().indirectRedstone) {
-	                    // Possible blocks north / south
-	                    handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
-	                    handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
-	                    handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
-	                    handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
-	                    // Possible blocks west / east
-	                    handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
-	                    handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
-	                    handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
-	                    handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
+                        // Possible blocks north / south
+                        handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
+                        // Possible blocks west / east
+                        handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
                     } else {
 
                         int above = world.getBlockTypeIdAt(x, y + 1, z);
@@ -287,7 +281,7 @@ public class MechanicListenerAdapter {
                 //Search for the repeater.
                 for(int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++)
                     for(int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++)
-                        for(int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++) {
+                        for(int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++)
                             if(event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
                                 //Found a repeater.
                                 repeater = event.getBlock().getWorld().getBlockAt(x, y, z);
@@ -297,7 +291,6 @@ public class MechanicListenerAdapter {
                                     break;
                                 }
                             }
-                        }
                 if(!foundRepeater || repeater == null) return;
 
                 manager.dispatchBlockRedstoneChange(

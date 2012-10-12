@@ -104,12 +104,10 @@ public class FlexibleSetBlock extends AbstractIC {
 
         // default block data is 0
         byte data = 0;
-        if (params.length > 2) {
-            try {
-                data = Byte.parseByte(params[2]);
-            } catch (Exception e) {
-                return;
-            }
+        if (params.length > 2) try {
+            data = Byte.parseByte(params[2]);
+        } catch (Exception e) {
+            return;
         }
 
         boolean hold = line4.toUpperCase().contains("H");

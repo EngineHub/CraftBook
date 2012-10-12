@@ -115,9 +115,9 @@ public class MidiJingleSequencer implements JingleSequencer {
                             // Sounds like utter crap
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
-                        } else {
-                            notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
                         }
+                        else
+                            notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
                     }
                 }
 
@@ -128,9 +128,8 @@ public class MidiJingleSequencer implements JingleSequencer {
 
             sequencer.start();
 
-            while (sequencer.isRunning() && notePlayer.isActive()) {
+            while (sequencer.isRunning() && notePlayer.isActive())
                 Thread.sleep(1000);
-            }
 
             if(sequencer.isOpen())
                 sequencer.stop();
@@ -144,29 +143,21 @@ public class MidiJingleSequencer implements JingleSequencer {
 
     @Override
     public void stop() {
-        if (sequencer != null && sequencer.isOpen()) {
-            sequencer.close();
-        }
+        if (sequencer != null && sequencer.isOpen()) sequencer.close();
     }
 
     private static byte toMCNote(int n) {
-        if (n < 54) {
+        if (n < 54)
             return (byte) ((n - 6) % (18 - 6));
-        } else if (n > 78) {
-            return (byte) ((n - 6) % (18-6) + 12);
-        } else {
+        else if (n > 78) return (byte) ((n - 6) % (18-6) + 12);
+        else
             return (byte) (n - 54);
-        }
     }
 
     private static byte toMCInstrument(Integer patch) {
-        if (patch == null) {
-            return 0;
-        }
+        if (patch == null) return 0;
 
-        if (patch < 0 || patch >= instruments.length) {
-            return 0;
-        }
+        if (patch < 0 || patch >= instruments.length) return 0;
 
         return (byte) instruments[patch];
     }

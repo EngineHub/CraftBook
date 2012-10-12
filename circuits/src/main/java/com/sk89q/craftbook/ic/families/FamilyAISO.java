@@ -54,6 +54,7 @@ public class FamilyAISO extends AbstractICFamily {
             super(source, sign);
         }
 
+        @Override
         protected Block getBlock(int pin) {
 
             switch (pin) {
@@ -89,13 +90,8 @@ public class FamilyAISO extends AbstractICFamily {
         @Override
         public boolean getInput(int inputIndex) {
 
-            for (int i = 0; i < getInputCount(); i++) {
-                if (isValid(i)) {
-                    if (get(i)) {
-                        return true;
-                    }
-                }
-            }
+            for (int i = 0; i < getInputCount(); i++)
+                if (isValid(i)) if (get(i)) return true;
             return false;
         }
 

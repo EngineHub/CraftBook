@@ -40,9 +40,7 @@ public class PlayerDetection extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            chip.setOutput(0, isDetected());
-        }
+        if (chip.getInput(0)) chip.setOutput(0, isDetected());
     }
 
     protected boolean isDetected() {

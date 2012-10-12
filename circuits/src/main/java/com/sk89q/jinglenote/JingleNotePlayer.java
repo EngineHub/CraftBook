@@ -28,9 +28,7 @@ public class JingleNotePlayer implements Runnable {
     @Override
     public void run() {
         try {
-            if (delay > 0) {
-                Thread.sleep(delay);
-            }
+            if (delay > 0) Thread.sleep(delay);
 
             try {
                 sequencer.run(this);
@@ -61,9 +59,7 @@ public class JingleNotePlayer implements Runnable {
 
     public void stop(boolean keepMusicBlock) {
 
-        if (sequencer != null) {
-            sequencer.stop();
-        }
+        if (sequencer != null) sequencer.stop();
     }
 
     /*public void play(byte instrument, byte note) {
@@ -74,17 +70,13 @@ public class JingleNotePlayer implements Runnable {
     }*/
 
     public void play(Sound instrument, int pitch) {
-        if (!player.isOnline() || instrument == null) {
-            return;
-        }
+        if (!player.isOnline() || instrument == null) return;
         float np = (float)Math.pow(2.0D, (pitch - 12) / 12.0D);
         player.playSound(loc, instrument, 30f, np);
     }
 
     public void play(Sound instrument, int pitch, float velocity) {
-        if (!player.isOnline() || instrument == null) {
-            return;
-        }
+        if (!player.isOnline() || instrument == null) return;
         float np = (float)Math.pow(2.0D, (pitch - 12) / 12.0D);
         player.playSound(player.getLocation(), instrument, velocity/64, np);
     }

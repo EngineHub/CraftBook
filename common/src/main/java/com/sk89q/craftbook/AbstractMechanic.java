@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
@@ -23,14 +23,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public abstract class AbstractMechanic implements Mechanic {
 
+    @Override
     public void onRightClick(PlayerInteractEvent event) {
 
     }
 
+    @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
     }
 
+    @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
     }

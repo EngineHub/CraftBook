@@ -36,11 +36,8 @@ public class RandomBitST extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            for (short i = 0; i < chip.getOutputCount(); i++) {
-                chip.setOutput(i, random.nextBoolean());
-            }
-        }
+        if (chip.getInput(0)) for (short i = 0; i < chip.getOutputCount(); i++)
+            chip.setOutput(i, random.nextBoolean());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC { //Restricted as could lag

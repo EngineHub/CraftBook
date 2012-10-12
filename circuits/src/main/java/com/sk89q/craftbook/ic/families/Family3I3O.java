@@ -48,6 +48,7 @@ public class Family3I3O extends AbstractICFamily {
             super(source, sign);
         }
 
+        @Override
         protected Block getBlock(int pin) {
 
             BlockFace fback = SignUtil.getBack(sign.getBlock());

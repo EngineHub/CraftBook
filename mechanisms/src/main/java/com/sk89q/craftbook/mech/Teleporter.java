@@ -79,9 +79,7 @@ public class Teleporter extends AbstractMechanic {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 
-            if (!player.hasPermission("craftbook.mech.teleporter")) {
-                throw new InsufficientPermissionsException();
-            }
+            if (!player.hasPermission("craftbook.mech.teleporter")) throw new InsufficientPermissionsException();
 
             player.print("mech.teleport.create");
             sign.setLine(1, "[Teleporter]");
@@ -149,7 +147,7 @@ public class Teleporter extends AbstractMechanic {
         if (trigger.getState() instanceof Sign) {
             Sign s = (Sign) trigger.getState();
             String[] pos = s.getLine(2).split(":");
-            if (pos.length > 2) {
+            if (pos.length > 2)
                 try {
                     toX = Double.parseDouble(pos[0]);
                     toY = Double.parseDouble(pos[1]);
@@ -157,7 +155,7 @@ public class Teleporter extends AbstractMechanic {
                 } catch (Exception e) {
                     return;
                 }
-            } else
+            else
                 return;
         }
 
@@ -170,11 +168,9 @@ public class Teleporter extends AbstractMechanic {
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
         for (int i = 0; i < 5; i++) {
-            if (occupiable(floor)) {
-                foundFree++;
-            } else {
+            if (occupiable(floor)) foundFree++;
+            else
                 break;
-            }
             if (floor.getY() == 0x0)        // hit the bottom of the world
                 break;
             floor = floor.getRelative(BlockFace.DOWN);

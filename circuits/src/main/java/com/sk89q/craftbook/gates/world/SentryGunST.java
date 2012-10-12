@@ -64,9 +64,7 @@ public class SentryGunST extends SentryGun implements SelfTriggeredIC {
 
             try {
                 String line = sign.getLine(3);
-                if (line != null && !line.contains("")) {
-                    Integer.parseInt(line);
-                }
+                if (line != null && !line.contains("")) Integer.parseInt(line);
             } catch (Exception e) {
                 throw new ICVerificationException("You need to give a radius in line four.");
             }

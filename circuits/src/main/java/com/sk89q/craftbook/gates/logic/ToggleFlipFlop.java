@@ -53,9 +53,7 @@ public class ToggleFlipFlop extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (risingEdge && chip.getInput(0)
-                || !risingEdge && !chip.getInput(0)) {
-            chip.setOutput(0, !chip.getOutput(0));
-        }
+                || !risingEdge && !chip.getInput(0)) chip.setOutput(0, !chip.getOutput(0));
     }
 
     public static class Factory extends AbstractICFactory {

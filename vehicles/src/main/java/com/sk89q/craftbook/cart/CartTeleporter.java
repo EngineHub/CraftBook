@@ -21,9 +21,7 @@ public class CartTeleporter extends CartMechanism {
         String line = blocks.getSign().getLine(2);
         String[] pts = line.split(",");
         if (pts.length != 3) return;
-        if (!blocks.getSign().getLine(3).equals("")) {
-            world = cart.getServer().getWorld(blocks.getSign().getLine(3));
-        }
+        if (!blocks.getSign().getLine(3).equals("")) world = cart.getServer().getWorld(blocks.getSign().getLine(3));
 
         Double x;
         Double y;
@@ -51,9 +49,9 @@ public class CartTeleporter extends CartMechanism {
         });
         if (!loc.getChunk().isLoaded())
             loc.getChunk().load(true);
-        if (cart.getWorld() == world) {
+        if (cart.getWorld() == world)
             cart.teleport(loc);
-        } else {
+        else {
             Minecart toCart = world.spawn(loc, Minecart.class);
             Entity passenger = cart.getPassenger();
             if (passenger != null) {
@@ -69,7 +67,7 @@ public class CartTeleporter extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

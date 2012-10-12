@@ -54,9 +54,7 @@ public class PlanterST extends Planter implements SelfTriggeredIC {
                     Integer.parseInt(lineParts[1])};
         }
 
-        if (info == null || !plantableItem(info[0])) {
-            return;
-        }
+        if (info == null || !plantableItem(info[0])) return;
 
         try {
             yOffset = Integer.parseInt(getSign().getLine(3));

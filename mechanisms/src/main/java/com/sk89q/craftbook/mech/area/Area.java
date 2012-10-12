@@ -67,9 +67,9 @@ public class Area extends AbstractMechanic {
                 // check if the namespace and area exists
                 isValidArea(sign);
                 player.print("Toggle area created.");
-            } else {
-                return null;
             }
+            else
+                return null;
 
 
             throw new ProcessedMechanismException();
@@ -114,9 +114,7 @@ public class Area extends AbstractMechanic {
             String areaOn = sign.getLine(2).trim();
             String areaOff = sign.getLine(3).trim();
             if (CopyManager.isExistingArea(plugin, namespace, areaOn)) {
-                if (areaOff == null || areaOff.equals("") || areaOff.equals("--")) {
-                    return;
-                }
+                if (areaOff == null || areaOff.equals("") || areaOff.equals("--")) return;
                 if (CopyManager.isExistingArea(plugin, namespace, areaOff)) return;
             }
             throw new InvalidMechanismException("The area or namespace does not exist.");
@@ -216,9 +214,9 @@ public class Area extends AbstractMechanic {
                 if (inactiveID.length() > 0 && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(world, namespace, inactiveID, plugin);
                     copy.paste();
-                } else {
-                    copy.clear();
                 }
+                else
+                    copy.clear();
                 setToggledState(sign, false);
             } else {
                 // toggle the area on
@@ -253,9 +251,9 @@ public class Area extends AbstractMechanic {
 
         String line3 = sign.getLine(2);
         String line4 = sign.getLine(3);
-        if (pattern.matcher(line3).matches()) {
+        if (pattern.matcher(line3).matches())
             toggledOn = true;
-        } else toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
+        else toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
     private void setToggledState(Sign sign, boolean state) {

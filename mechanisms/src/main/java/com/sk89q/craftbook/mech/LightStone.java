@@ -59,32 +59,30 @@ public class LightStone extends AbstractMechanic {
             String lightLevelLine = getLightLine(block.getLightLevel());
             player.print(
                     ChatColor.YELLOW + "LightStone: [" + lightLevelLine
-                            + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
+                    + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
         }
     }
 
     private String getLightLine(int data) {
 
         String line = "";
-        if (data >= 9) {
-            line = line + ChatColor.GREEN;
-        } else {
+        if (data >= 9) line = line + ChatColor.GREEN;
+        else
             line = line + ChatColor.DARK_RED;
-        }
-        for (int i = 0; i < data; i++) {
+        for (int i = 0; i < data; i++)
             line = line + "|";
-        }
         line = line + ChatColor.BLACK;
-        for (int i = data; i < 15; i++) {
+        for (int i = data; i < 15; i++)
             line = line + "|";
-        }
         return line;
     }
 
+    @Override
     public void unload() {
 
     }
 
+    @Override
     public boolean isActive() {
 
         return false; // this isn't a persistent mechanic, so the manager will
@@ -100,12 +98,11 @@ public class LightStone extends AbstractMechanic {
             this.plugin = plugin;
         }
 
+        @Override
         public LightStone detect(BlockWorldVector pt) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block != null) {
-                return new LightStone(plugin);
-            }
+            if (block != null) return new LightStone(plugin);
 
             return null;
         }

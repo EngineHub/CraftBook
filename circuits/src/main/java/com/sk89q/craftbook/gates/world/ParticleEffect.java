@@ -39,9 +39,7 @@ public class ParticleEffect extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            doEffect();
-        }
+        if (chip.getInput(0)) doEffect();
     }
 
     public void doEffect() {

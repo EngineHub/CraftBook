@@ -127,9 +127,7 @@ public class JackOLantern extends PersistentMechanic {
 
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
-        if(evt instanceof BlockBreakEvent) {
-            if(evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
-                ((BlockBreakEvent) evt).setCancelled(true);
-        }
+        if(evt instanceof BlockBreakEvent) if(evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
+            ((BlockBreakEvent) evt).setCancelled(true);
     }
 }

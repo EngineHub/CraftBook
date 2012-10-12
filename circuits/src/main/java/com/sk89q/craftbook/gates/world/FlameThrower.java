@@ -59,16 +59,10 @@ public class FlameThrower  extends AbstractIC {
         for(int i = 0; i < distance; i++) {
             if(make) {
                 if(fire == null) {}
-                else if(fire.getTypeId() == 0 || fire.getType() == Material.LONG_GRASS) {
-                    fire.setTypeId(BlockID.FIRE);
-                }
+                else if(fire.getTypeId() == 0 || fire.getType() == Material.LONG_GRASS) fire.setTypeId(BlockID.FIRE);
             }
-            else {
-                if(fire == null) {}
-                else if(fire.getTypeId() == BlockID.FIRE) {
-                    fire.setTypeId(BlockID.AIR);
-                }
-            }
+            else if(fire == null) {}
+            else if(fire.getTypeId() == BlockID.FIRE) fire.setTypeId(BlockID.AIR);
             fire = fire.getRelative(direction);
         }
     }

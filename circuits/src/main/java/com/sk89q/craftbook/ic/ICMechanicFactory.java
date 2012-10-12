@@ -85,24 +85,23 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         IC ic;
         // check if the ic is cached and get that single instance instead of creating a new one
-        if (ICManager.isCachedIC(pt)) {
+        if (ICManager.isCachedIC(pt))
             ic = ICManager.getCachedIC(pt);
-        } else {
+        else {
             ic = registration.getFactory().create(sign);
             // add the created ic to the cache
             ICManager.addCachedIC(pt, ic);
         }
 
         // okay, everything checked out.  we can finally make it.
-        if (ic instanceof SelfTriggeredIC) {
-            return new SelfTriggeredICMechanic(
-                    plugin,
-                    id,
-                    (SelfTriggeredIC) ic,
-                    registration.getFamily(),
-                    pt
-                    );
-        } else {
+        if (ic instanceof SelfTriggeredIC) return new SelfTriggeredICMechanic(
+                plugin,
+                id,
+                (SelfTriggeredIC) ic,
+                registration.getFamily(),
+                pt
+                );
+        else
             return new ICMechanic(
                     plugin,
                     id,
@@ -110,7 +109,6 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                     registration.getFamily(),
                     pt
                     );
-        }
     }
 
 
@@ -136,9 +134,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             if (str.length > 1)
                 suffix = str[1];
 
-            if (block.getTypeId() != BlockID.WALL_SIGN) {
-                throw new InvalidMechanismException("Only wall signs are used for ICs.");
-            }
+            if (block.getTypeId() != BlockID.WALL_SIGN) throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             if(ICManager.isCachedIC(pt))
                 ICManager.removeCachedIC(pt);
@@ -150,16 +146,11 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             ICFactory factory = registration.getFactory();
 
             if (factory instanceof RestrictedIC) {
-                if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) {
-                    throw new ICVerificationException("You don't have permission to use "
-                            + registration.getId() + ".");
-                }
-            } else {
-                if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) {
-                    throw new ICVerificationException("You don't have permission to use "
-                            + registration.getId() + ".");
-                }
+                if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
+                        + registration.getId() + ".");
             }
+            else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
+                    + registration.getId() + ".");
 
             factory.verify(sign);
 
@@ -171,15 +162,14 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             ICMechanic mechanic;
 
-            if (ic instanceof SelfTriggeredIC) {
-                mechanic = new SelfTriggeredICMechanic(
-                        plugin,
-                        id,
-                        (SelfTriggeredIC) ic,
-                        registration.getFamily(),
-                        pt
-                        );
-            } else {
+            if (ic instanceof SelfTriggeredIC) mechanic = new SelfTriggeredICMechanic(
+                    plugin,
+                    id,
+                    (SelfTriggeredIC) ic,
+                    registration.getFamily(),
+                    pt
+                    );
+            else
                 mechanic = new ICMechanic(
                         plugin,
                         id,
@@ -187,7 +177,6 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                         registration.getFamily(),
                         pt
                         );
-            }
 
             if(!shortHand)
                 sign.setLine(0, ic.getSignTitle());
@@ -199,9 +188,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 sign.getLine(0).startsWith("=")) {
             String id = sign.getLine(0).substring(1);
 
-            if (block.getTypeId() != BlockID.WALL_SIGN) {
-                throw new InvalidMechanismException("Only wall signs are used for ICs.");
-            }
+            if (block.getTypeId() != BlockID.WALL_SIGN) throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             String shortId = manager.longRegistered.get(id.toLowerCase());
             if (shortId == null) {

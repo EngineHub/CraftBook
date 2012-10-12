@@ -100,9 +100,7 @@ public class MetricsLite {
     private volatile int taskId = -1;
 
     public MetricsLite(Plugin plugin) throws IOException {
-        if (plugin == null) {
-            throw new IllegalArgumentException("Plugin cannot be null");
-        }
+        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
 
         this.plugin = plugin;
 
@@ -134,14 +132,10 @@ public class MetricsLite {
     public boolean start() {
         synchronized (optOutLock) {
             // Did we opt out?
-            if (isOptOut()) {
-                return false;
-            }
+            if (isOptOut()) return false;
 
             // Is metrics already running?
-            if (taskId >= 0) {
-                return true;
-            }
+            if (taskId >= 0) return true;
 
             // Begin hitting the server with glorious data
             taskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
@@ -214,9 +208,7 @@ public class MetricsLite {
             }
 
             // Enable Task, if it is not running
-            if (taskId < 0) {
-                start();
-            }
+            if (taskId < 0) start();
         }
     }
 
@@ -275,9 +267,7 @@ public class MetricsLite {
         encodeDataPair(data, "revision", String.valueOf(REVISION));
 
         // If we're pinging, append it
-        if (isPing) {
-            encodeDataPair(data, "ping", "true");
-        }
+        if (isPing) encodeDataPair(data, "ping", "true");
 
         // Create the url
         URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(plugin.getDescription().getName())));
@@ -287,11 +277,9 @@ public class MetricsLite {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if (isMineshafterPresent()) {
-            connection = url.openConnection(Proxy.NO_PROXY);
-        } else {
+        if (isMineshafterPresent()) connection = url.openConnection(Proxy.NO_PROXY);
+        else
             connection = url.openConnection();
-        }
 
         connection.setDoOutput(true);
 
@@ -308,10 +296,8 @@ public class MetricsLite {
         writer.close();
         reader.close();
 
-        if (response == null || response.startsWith("ERR")) {
-            throw new IOException(response); //Throw the exception
-        }
-        //if (response.startsWith("OK")) - We should get "OK" followed by an optional description if everything goes right
+        if (response == null || response.startsWith("ERR"))
+         throw new IOException(response); //Throw the exception
     }
 
     /**

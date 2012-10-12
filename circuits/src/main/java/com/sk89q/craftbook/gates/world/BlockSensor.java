@@ -50,9 +50,7 @@ public class BlockSensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            chip.setOutput(0, hasBlock());
-        }
+        if (chip.getInput(0)) chip.setOutput(0, hasBlock());
     }
 
     /**
@@ -64,10 +62,8 @@ public class BlockSensor extends AbstractIC {
 
         int blockID = center.getTypeId();
 
-        if (data != (byte) -1) {
-            if (blockID == id)
-                return data == center.getData();
-        }
+        if (data != (byte) -1) if (blockID == id)
+            return data == center.getData();
         return blockID == id;
     }
 

@@ -48,6 +48,7 @@ public class FamilySISO extends AbstractICFamily {
             super(source, sign);
         }
 
+        @Override
         protected Block getBlock(int pin) {
 
             switch (pin) {

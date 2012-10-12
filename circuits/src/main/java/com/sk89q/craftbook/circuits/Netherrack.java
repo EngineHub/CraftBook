@@ -95,9 +95,7 @@ public class Netherrack extends AbstractMechanic {
         }
 
         block = block.getRelative(0, -1, 0);
-        if (block.isBlockIndirectlyPowered()) {
-            event.setCancelled(true);
-        }
+        if (block.isBlockIndirectlyPowered()) event.setCancelled(true);
     }
 
     /**
@@ -140,9 +138,8 @@ public class Netherrack extends AbstractMechanic {
         passableBlocks[7] = BlockID.DEAD_BUSH;
         passableBlocks[8] = BlockID.AIR;
 
-        for (int aPassableBlock : passableBlocks) {
+        for (int aPassableBlock : passableBlocks)
             if (aPassableBlock == t) return true;
-        }
 
         return false;
     }

@@ -102,18 +102,16 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                if (!player.hasPermission("craftbook.mech.cook")) {
-                    throw new InsufficientPermissionsException();
-                }
+                if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
 
                 sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
                 sign.setLine(3, "1");
                 sign.update();
                 player.print("mech.cook.create");
-            } else {
-                return null;
             }
+            else
+                return null;
 
             throw new ProcessedMechanismException();
         }
@@ -178,20 +176,18 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int y = b.getY() + 2;
             int z = b.getZ();
             Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getType() == Material.CHEST) {
-                if(event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer().getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
-                    increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));
-                    if(event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().getItemInHand().setTypeId(0);
-                        event.getPlayer().setItemInHand(null);
-                    }
-                    else
-                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
-                    event.getPlayer().sendMessage("You give the pot fuel!");
+            if (cb.getType() == Material.CHEST) if(event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer().getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
+                increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));
+                if(event.getPlayer().getItemInHand().getAmount() <= 1) {
+                    event.getPlayer().getItemInHand().setTypeId(0);
+                    event.getPlayer().setItemInHand(null);
                 }
                 else
-                    event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                event.getPlayer().sendMessage("You give the pot fuel!");
             }
+            else
+                event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
         }
     }
 
@@ -273,18 +269,16 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         }
 
         public static boolean isIngredient(int id) {
-            for(Ingredients in : values()) {
+            for(Ingredients in : values())
                 if(in.id == id)
                     return true;
-            }
             return false;
         }
 
         public static int getTime(int id) {
-            for(Ingredients in : values()) {
+            for(Ingredients in : values())
                 if(in.id == id)
                     return in.mult;
-            }
             return 0;
         }
     }

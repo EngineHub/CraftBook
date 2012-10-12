@@ -80,24 +80,22 @@ public class CartMechanismBlocks {
 
         if (!BlockType.isRailBlock(rail.getTypeId()))
             throw new InvalidMechanismException("rail argument must be a rail!");
-        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2).getTypeId())) {
+        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2).getTypeId()))
             return new CartMechanismBlocks(
                     rail,
                     rail.getRelative(BlockFace.DOWN, 1),
                     rail.getRelative(BlockFace.DOWN, 2)
-            );
-        } else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3).getTypeId())) {
-            return new CartMechanismBlocks(
-                    rail,
-                    rail.getRelative(BlockFace.DOWN, 1),
-                    rail.getRelative(BlockFace.DOWN, 3)
-            );
-        }
+                    );
+        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3).getTypeId())) return new CartMechanismBlocks(
+                rail,
+                rail.getRelative(BlockFace.DOWN, 1),
+                rail.getRelative(BlockFace.DOWN, 3)
+                );
         return new CartMechanismBlocks(
                 rail,
                 rail.getRelative(BlockFace.DOWN, 1),
                 null
-        );
+                );
     }
 
     /**
@@ -113,24 +111,22 @@ public class CartMechanismBlocks {
 
         if (!BlockType.isRailBlock(base.getRelative(BlockFace.UP, 1).getTypeId()))
             throw new InvalidMechanismException("could not find rails.");
-        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1).getTypeId())) {
+        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1).getTypeId()))
             return new CartMechanismBlocks(
                     base.getRelative(BlockFace.UP, 1),
                     base,
                     base.getRelative(BlockFace.DOWN, 1)
-            );
-        } else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2).getTypeId())) {
-            return new CartMechanismBlocks(
-                    base.getRelative(BlockFace.UP, 1),
-                    base,
-                    base.getRelative(BlockFace.DOWN, 2)
-            );
-        }
+                    );
+        else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2).getTypeId())) return new CartMechanismBlocks(
+                base.getRelative(BlockFace.UP, 1),
+                base,
+                base.getRelative(BlockFace.DOWN, 2)
+                );
         return new CartMechanismBlocks(
                 base.getRelative(BlockFace.UP, 1),
                 base,
                 null
-        );
+                );
     }
 
     /**
@@ -145,19 +141,17 @@ public class CartMechanismBlocks {
     public static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
 
         if (!SignUtil.isSign(sign)) throw new InvalidMechanismException("sign argument must be a sign!");
-        if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 2).getTypeId())) {
+        if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 2).getTypeId()))
             return new CartMechanismBlocks(
                     sign.getRelative(BlockFace.UP, 2),
                     sign.getRelative(BlockFace.UP, 1),
                     sign
-            );
-        } else if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 3).getTypeId())) {
-            return new CartMechanismBlocks(
-                    sign.getRelative(BlockFace.UP, 3),
-                    sign.getRelative(BlockFace.UP, 2),
-                    sign
-            );
-        }
+                    );
+        else if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 3).getTypeId())) return new CartMechanismBlocks(
+                sign.getRelative(BlockFace.UP, 3),
+                sign.getRelative(BlockFace.UP, 2),
+                sign
+                );
         throw new InvalidMechanismException("could not find rails.");
     }
 
@@ -173,7 +167,7 @@ public class CartMechanismBlocks {
      */
     public void setFromBlock(Block block) {
 
-        this.from = block;
+        from = block;
     }
 
     /**

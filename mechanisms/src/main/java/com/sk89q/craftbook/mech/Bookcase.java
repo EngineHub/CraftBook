@@ -83,9 +83,9 @@ public class Bookcase extends AbstractMechanic {
             if (text != null) {
                 player.print(bookReadLine);
                 player.printRaw(text);
-            } else {
-                player.printError("Failed to fetch a line from the books file.");
             }
+            else
+                player.printError("Failed to fetch a line from the books file.");
         } catch (IOException e) {
             player.printError("Failed to read the books file.");
         }
@@ -163,9 +163,7 @@ public class Bookcase extends AbstractMechanic {
         @Override
         public Bookcase detect(BlockWorldVector pt) {
 
-            if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE) {
-                return new Bookcase(pt, plugin);
-            }
+            if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE) return new Bookcase(pt, plugin);
 
             return null;
         }

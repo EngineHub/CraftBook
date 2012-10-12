@@ -71,9 +71,7 @@ public class CombinationLock extends AbstractIC {
         @Override
         public void verify(Sign sign) throws ICVerificationException {
 
-            if (sign.getLine(2) == null && sign.getLine(2).equals("")) {
-                throw new ICVerificationException("Line three needs to be a combination");
-            }
+            if (sign.getLine(2) == null && sign.getLine(2).equals("")) throw new ICVerificationException("Line three needs to be a combination");
         }
 
         @Override

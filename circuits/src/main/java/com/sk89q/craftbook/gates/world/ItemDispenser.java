@@ -76,7 +76,7 @@ public class ItemDispenser extends AbstractIC {
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
 
-                for (int y = loc.getBlockY() + 1; y <= maxY; y++) {
+                for (int y = loc.getBlockY() + 1; y <= maxY; y++)
                     if (BlockType.canPassThrough(getSign().getWorld()
                             .getBlockTypeIdAt(x, y, z))) {
 
@@ -88,7 +88,6 @@ public class ItemDispenser extends AbstractIC {
                                 stack);
                         return;
                     }
-                }
             }
         }
     }

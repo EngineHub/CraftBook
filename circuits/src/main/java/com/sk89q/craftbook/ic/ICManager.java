@@ -158,9 +158,7 @@ public class ICManager {
      */
     public static IC removeCachedIC(BlockWorldVector pt) {
 
-        if (cachedICs.containsKey(pt)) {
-            return cachedICs.remove(pt);
-        }
+        if (cachedICs.containsKey(pt)) return cachedICs.remove(pt);
         return null;
     }
 

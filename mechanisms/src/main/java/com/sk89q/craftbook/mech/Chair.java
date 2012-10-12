@@ -39,18 +39,16 @@ public class Chair implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
 
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
-        if (chairs.containsValue(event.getBlock())) { //Stand
-            for (Entry<String, Block> e : chairs.entrySet())
-                if (e.getValue() == event.getBlock()) {
-                    Player p = plugin.getServer().getPlayer(e.getKey());
-                    Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
-                            new ChairWatcher((byte) 0));
-                    for (Player play : LocationUtil.getNearbyPlayers(event.getBlock(),
-                            plugin.getServer().getViewDistance() * 16))
-                        ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
-                    chairs.remove(p.getName());
-                }
-        }
+        if (chairs.containsValue(event.getBlock())) for (Entry<String, Block> e : chairs.entrySet())
+            if (e.getValue() == event.getBlock()) {
+                Player p = plugin.getServer().getPlayer(e.getKey());
+                Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
+                        new ChairWatcher((byte) 0));
+                for (Player play : LocationUtil.getNearbyPlayers(event.getBlock(),
+                        plugin.getServer().getViewDistance() * 16))
+                    ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                chairs.remove(p.getName());
+            }
     }
 
     @EventHandler(ignoreCancelled = true)

@@ -73,9 +73,7 @@ public class MessageSender extends AbstractIC {
         if (player != null) {
             player.sendMessage(message.replace("&", "\u00A7"));
             sent = true;
-        } else if (name.equalsIgnoreCase("BROADCAST")) {
-            getServer().broadcastMessage(message);
-        }
+        } else if (name.equalsIgnoreCase("BROADCAST")) getServer().broadcastMessage(message);
         return sent;
     }
 

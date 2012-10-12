@@ -77,28 +77,26 @@ public class Spigot extends AbstractIC {
             off.setType(m);
             return true;
         }
-        else if(off.isLiquid()) {
-            if(off.getData() != 0x0) { //Moving
+        else if(off.isLiquid()) if(off.getData() != 0x0) { //Moving
 
-                Material m = getFromChest(off.getType());
-                if(m == Material.AIR)
-                    return false;
-                off.setType(m);
+            Material m = getFromChest(off.getType());
+            if(m == Material.AIR)
+                return false;
+            off.setType(m);
+            return true;
+        }
+        else { //Still
+
+            if(searchAt(searched, off.getRelative(1, 0, 0)))
                 return true;
-            }
-            else { //Still
-
-                if(searchAt(searched, off.getRelative(1, 0, 0)))
-                    return true;
-                if(searchAt(searched, off.getRelative(-1, 0, 0)))
-                    return true;
-                if(searchAt(searched, off.getRelative(0, 0, 1)))
-                    return true;
-                if(searchAt(searched, off.getRelative(0, 0, -1)))
-                    return true;
-                if(searchAt(searched, off.getRelative(0, 1, 0)))
-                    return true;
-            }
+            if(searchAt(searched, off.getRelative(-1, 0, 0)))
+                return true;
+            if(searchAt(searched, off.getRelative(0, 0, 1)))
+                return true;
+            if(searchAt(searched, off.getRelative(0, 0, -1)))
+                return true;
+            if(searchAt(searched, off.getRelative(0, 1, 0)))
+                return true;
         }
 
         return false;

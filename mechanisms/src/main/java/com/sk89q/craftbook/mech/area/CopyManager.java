@@ -16,7 +16,7 @@ package com.sk89q.craftbook.mech.area;
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
@@ -125,9 +125,7 @@ public class CopyManager {
 
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
-            if (lastCheck > System.currentTimeMillis()) {
-                throw new MissingCuboidCopyException(id);
-            }
+            if (lastCheck > System.currentTimeMillis()) throw new MissingCuboidCopyException(id);
         }
 
         HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
@@ -185,17 +183,15 @@ public class CopyManager {
 
         String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
-        if (files == null) {
+        if (files == null)
             return quota > 0 ? -1 : 0;
-        } else if (ignore == null) {
+        else if (ignore == null)
             return files.length < quota ? -1 : files.length;
-        } else {
+        else {
             int count = 0;
 
             for (String f : files) {
-                if (f.equals(ignoreFilename)) {
-                    return -1;
-                }
+                if (f.equals(ignoreFilename)) return -1;
 
                 count++;
             }

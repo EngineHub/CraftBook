@@ -55,15 +55,14 @@ public class CartDispenser extends CartMechanism {
             CartType type = CartType.fromString(blocks.getSign().getLine(3));
 
             // go
-            if (cart == null) {
-                switch (pow) {
-                    case ON:
-                        dispense(blocks, inv, type);
-                        return;
-                    case OFF:       // power going off doesn't eat a cart unless the cart moves.
-                    case NA:
-                }
-            } else {
+            if (cart == null) switch (pow) {
+                case ON:
+                    dispense(blocks, inv, type);
+                    return;
+                case OFF:       // power going off doesn't eat a cart unless the cart moves.
+                case NA:
+            }
+            else
                 switch (pow) {
                     case ON:            // there's already a cart moving on the dispenser so don't spam.
                         return;
@@ -72,7 +71,6 @@ public class CartDispenser extends CartMechanism {
                         collect(cart, inv);
                         return;
                 }
-            }
         }
     }
 
@@ -101,17 +99,15 @@ public class CartDispenser extends CartMechanism {
     @SuppressWarnings("unchecked")
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
-        if (inv != null) {
-            if (type.equals(CartType.Minecart)) {
-                if (!inv.contains(ItemType.MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
-            } else if (type.equals(CartType.StorageMinecart)) {
-                if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
-            } else if (type.equals(CartType.PoweredMinecart)) {
-                if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
-            }
+        if (inv != null) if (type.equals(CartType.Minecart)) {
+            if (!inv.contains(ItemType.MINECART.getID())) return;
+            inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
+        } else if (type.equals(CartType.StorageMinecart)) {
+            if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
+            inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
+        } else if (type.equals(CartType.PoweredMinecart)) {
+            if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
+            inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
         }
         blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
     }
@@ -149,7 +145,7 @@ public class CartDispenser extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

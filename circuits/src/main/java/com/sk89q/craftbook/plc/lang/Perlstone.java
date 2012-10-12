@@ -155,7 +155,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                     break;
 
                     case '.':
-                        for(int j=0;j<4;j++) {
+                        for(int j=0;j<4;j++)
                             switch(chars[++i]) {
                                 case '+':case '-':
                                 case '1':case '0':
@@ -166,7 +166,6 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                             "Bad logic table value "+chars[i]+" "+
                                                     "on line "+li[i].line+" at column "+li[i].col);
                             }
-                        }
                         break;
 
                     case 'c':case 't':
@@ -225,17 +224,16 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         boolean b = chip.getInputCount()>1 && chip.getInput(1);
         boolean c = chip.getInputCount()>2 && chip.getInput(2);
 
-        for(int i=0;i<chip.getOutputCount();i++) {
+        for(int i=0;i<chip.getOutputCount();i++)
             if(i<code.length) {
                 Boolean r = executeFunction(i, state, tt, code,
                         a, b, c, new boolean[0],
                         new int[1], 0);
                 if(r==null) chip.setOutput(i, false);
                 else        chip.setOutput(i, r);
-            } else {
-                chip.setOutput(i, false);
             }
-        }
+            else
+                chip.setOutput(i, false);
     }
 
     @Override
@@ -277,9 +275,9 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
             errm += ChatColor.RED+" - Shift: "+ChatColor.RESET+pshift+"\n";
             errm += ChatColor.RED+"Temp Variable Table: \n "+ChatColor.RESET+dumpStateText(tt)+"\n";
             errm += ChatColor.RED+" - Shift: "+ChatColor.RESET+tshift+"\n";
-        } else {
-            errm += err+"\n";
         }
+        else
+            errm += err+"\n";
         errm += ChatColor.RED+"====\n";
         if(tc > 0)
             errm += "("+tc+" tail call"+(tc > 1 ? "s" : "")+" omitted)\n====\n";
@@ -308,9 +306,9 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                 Stack<Integer> bracketStack = new Stack<Integer>();
                 for(int i=0;i<code.length;i++) {
                     char ch = code[i];
-                    if(ch=='[') {
+                    if(ch=='[')
                         bracketStack.push(i);
-                    } else if (ch==']') {
+                    else if (ch==']') {
                         int j = bracketStack.pop();
                         jt[i] = j;
                         jt[j] = i;
@@ -379,11 +377,9 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                 }
 
                                 int add = decodeAddress(code[++ip], shift);
-                                if(op == 'S') {
-                                    table[add] = executionStack.pop();
-                                } else {
+                                if(op == 'S') table[add] = executionStack.pop();
+                                else
                                     executionStack.push(table[add]);
-                                }
                             } break;
 
                             case 'd': executionStack.push(executionStack.peek()); break;

@@ -96,7 +96,7 @@ public class AutomaticCrafter extends AbstractIC {
     }
 
     public boolean collect(Dispenser disp) {
-        for (Entity en : getSign().getChunk().getEntities()) {
+        for (Entity en : getSign().getChunk().getEntities())
             check: {
             if (!(en instanceof Item)) continue;
             Item item = (Item) en;
@@ -113,7 +113,6 @@ public class AutomaticCrafter extends AbstractIC {
                 item.remove();
                 continue;
             }
-        }
         }
         return false;
     }
@@ -142,7 +141,7 @@ public class AutomaticCrafter extends AbstractIC {
             ShapedRecipe shape = (ShapedRecipe)r;
             boolean large = shape.getShape().length == 3;
             int c = -1, in = 0;
-            for(int i = 0; i < inv.getContents().length; i++) {
+            for(int i = 0; i < inv.getContents().length; i++)
                 try {
                     c++;
                     if(c > (large ? 2 : 1)) {
@@ -171,7 +170,6 @@ public class AutomaticCrafter extends AbstractIC {
                 catch(Exception e){
                     return false;
                 }
-            }
             return true;
         }
         else if(r instanceof ShapelessRecipe) {

@@ -69,9 +69,8 @@ public class BlockBreaker extends AbstractIC {
             if(overflow.size() == 0)
                 return true;
             else {
-                for(Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
+                for(Map.Entry<Integer, ItemStack> bit : overflow.entrySet())
                     dropItem(bit.getValue());
-                }
                 return true;
             }
         }

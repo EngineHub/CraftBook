@@ -36,14 +36,12 @@ public final class LocationUtil {
     public static Entity[] getNearbyEntities(Location l, int radius){
         int chunkRadius = radius < 16 ? 1 : (radius - radius % 16)/16;
         HashSet<Entity> radiusEntities = new HashSet<Entity>();
-        for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
+        for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++)
             for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
                 int x=(int) l.getX(),y=(int) l.getY(),z=(int) l.getZ();
-                for (Entity e : new Location(l.getWorld(),x+chX*16,y,z+chZ*16).getChunk().getEntities()){
+                for (Entity e : new Location(l.getWorld(),x+chX*16,y,z+chZ*16).getChunk().getEntities())
                     if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock()) radiusEntities.add(e);
-                }
             }
-        }
         return radiusEntities.toArray(new Entity[radiusEntities.size()]);
     }
 
@@ -57,11 +55,9 @@ public final class LocationUtil {
      */
     public static double getDistance(Location l1, Location l2) {
 
-        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance) {
-            return getBlockDistance(l1, l2);
-        } else {
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance) return getBlockDistance(l1, l2);
+        else
             return Math.sqrt(l1.distanceSquared(l2));
-        }
     }
 
     /**
@@ -78,15 +74,13 @@ public final class LocationUtil {
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
         int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-        if (x >= y && x >= z) {
+        if (x >= y && x >= z)
             return x;
-        } else if (y >= x && y >= z) {
+        else if (y >= x && y >= z)
             return y;
-        } else if (z >= x && z >= y) {
-            return z;
-        } else {
+        else if (z >= x && z >= y) return z;
+        else
             return x;
-        }
     }
 
     /**
@@ -164,25 +158,19 @@ public final class LocationUtil {
         }
 
         // apply left and right offset
-        if (offsetX > 0) {
+        if (offsetX > 0)
             block = getRelativeBlock(block, right, offsetX);
-        } else if (offsetX < 0) {
-            block = getRelativeBlock(block, left, offsetX);
-        }
+        else if (offsetX < 0) block = getRelativeBlock(block, left, offsetX);
 
         // apply front and back offset
-        if (offsetZ > 0) {
+        if (offsetZ > 0)
             block = getRelativeBlock(block, front, offsetZ);
-        } else if (offsetZ < 0) {
-            block = getRelativeBlock(block, back, offsetZ);
-        }
+        else if (offsetZ < 0) block = getRelativeBlock(block, back, offsetZ);
 
         // apply up and down offset
-        if (offsetY > 0) {
+        if (offsetY > 0)
             block = getRelativeBlock(block, BlockFace.UP, offsetY);
-        } else if (offsetY < 0) {
-            block = getRelativeBlock(block, BlockFace.DOWN, offsetY);
-        }
+        else if (offsetY < 0) block = getRelativeBlock(block, BlockFace.DOWN, offsetY);
         return block;
     }
 
@@ -202,7 +190,7 @@ public final class LocationUtil {
         World world = chunk.getWorld();
         int cX = chunk.getX();
         int cZ = chunk.getZ();
-        for (int x = radius; x >= 0; x--) {
+        for (int x = radius; x >= 0; x--)
             for (int z = radius; z >= 0; z--) {
                 chunks.add(world.getChunkAt(cX + x, cZ + z));
                 chunks.add(world.getChunkAt(cX - x, cZ - z));
@@ -213,7 +201,6 @@ public final class LocationUtil {
                 chunks.add(world.getChunkAt(cX, cZ + z));
                 chunks.add(world.getChunkAt(cX, cZ - z));
             }
-        }
         return chunks;
     }
 
@@ -229,9 +216,8 @@ public final class LocationUtil {
     private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
 
         amount = Math.abs(amount);
-        for (int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++)
             block = block.getRelative(facing);
-        }
         return block;
     }
 
@@ -246,9 +232,7 @@ public final class LocationUtil {
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
 
         while (block.getType() != Material.AIR && block.getRelative(direction).getType() != Material.AIR) {
-            if (!(block.getY() < block.getWorld().getMaxHeight())) {
-                break;
-            }
+            if (!(block.getY() < block.getWorld().getMaxHeight())) break;
             block = block.getRelative(direction);
         }
         return block;

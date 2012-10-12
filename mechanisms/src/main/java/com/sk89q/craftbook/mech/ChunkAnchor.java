@@ -136,8 +136,6 @@ public class ChunkAnchor extends PersistentMechanic {
             isOn = !sign.getLine(3).equalsIgnoreCase("0");
         }
 
-        if (event.getChunk().equals(trigger.getWorld().getChunkAt(trigger))) {
-            event.setCancelled(isOn);
-        }
+        if (event.getChunk().equals(trigger.getWorld().getChunkAt(trigger))) event.setCancelled(isOn);
     }
 }

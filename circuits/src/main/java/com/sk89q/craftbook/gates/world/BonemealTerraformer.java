@@ -68,7 +68,7 @@ public class BonemealTerraformer extends AbstractIC {
         Random random = new Random();
         for(int x = -radius + 1; x < radius; x++)
             for(int y = -radius + 1; y < radius; y++)
-                for(int z = -radius + 1; z < radius; z++) {
+                for(int z = -radius + 1; z < radius; z++)
                     if(random.nextInt(40) == 0) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
@@ -130,7 +130,6 @@ public class BonemealTerraformer extends AbstractIC {
                             return;
                         }
                     }
-                }
     }
 
     public boolean consumeBonemeal() {

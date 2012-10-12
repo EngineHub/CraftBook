@@ -83,7 +83,7 @@ public class FireShooter extends AbstractIC {
         Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
                 targetDir.getZ() + 0.5);
 
-        if (n != 1) {
+        if (n != 1)
             for (short i = 0; i < n; i++) {
                 Random rand = new Random();
                 velocity = new Vector(x + (rand.nextInt((int) spread) - spread / 2),
@@ -92,7 +92,7 @@ public class FireShooter extends AbstractIC {
                 SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
                 f.setVelocity(velocity);
             }
-        } else {
+        else {
             SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
             f.setVelocity(velocity);
         }

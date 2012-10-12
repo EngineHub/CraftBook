@@ -68,6 +68,7 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @throws OutOfBlocksException
      */
+    @Override
     public void fetchBlock(int id) throws BlockBagException {
 
         try {
@@ -75,25 +76,20 @@ public class NearbyChestBlockBag extends BlockBag {
                 ItemStack[] itemArray = chest.getInventory().getContents();
 
                 // Find the item
-                for (int i = 0; itemArray.length > i; i++) {
-                    if (itemArray[i] != null) {
-                        // Found an item
-                        if (itemArray[i].getTypeId() == id &&
-                                itemArray[i].getAmount() >= 1) {
-                            int newAmount = itemArray[i].getAmount() - 1;
+                for (int i = 0; itemArray.length > i; i++)
+                    if (itemArray[i] != null) // Found an item
+                    if (itemArray[i].getTypeId() == id &&
+                            itemArray[i].getAmount() >= 1) {
+                        int newAmount = itemArray[i].getAmount() - 1;
 
-                            if (newAmount > 0) {
-                                itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
-                            } else {
-                                itemArray[i] = null;
-                            }
+                        if (newAmount > 0) itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
+                        else
+                            itemArray[i] = null;
 
-                            chest.getInventory().setContents(itemArray);
+                        chest.getInventory().setContents(itemArray);
 
-                            return;
-                        }
+                        return;
                     }
-                }
             }
 
             throw new OutOfBlocksException();
@@ -112,6 +108,7 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @throws OutOfSpaceException
      */
+    @Override
     public void storeBlock(int id) throws BlockBagException {
 
         try {
@@ -120,7 +117,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 int emptySlot = -1;
 
                 // Find an existing slot to put it into
-                for (int i = 0; itemArray.length > i; i++) {
+                for (int i = 0; itemArray.length > i; i++)
                     // Found an item
                     if (itemArray[i].getTypeId() == id &&
                             itemArray[i].getAmount() < 64) {
@@ -130,10 +127,9 @@ public class NearbyChestBlockBag extends BlockBag {
                         chest.getInventory().setContents(itemArray);
 
                         return;
-                    } else {
-                        emptySlot = i;
                     }
-                }
+                    else
+                        emptySlot = i;
 
                 // Didn't find an existing stack, so let's create a new one
                 if (emptySlot != -1) {
@@ -172,19 +168,18 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @return
      */
+    @Override
     public void addSourcePosition(WorldVector arg0) {
         //int ox = pos.getBlockX();
         //int oy = pos.getBlockY();
         //int oz = pos.getBlockZ();
 
-        for (int x = -3; x <= 3; x++) {
-            for (int y = -3; y <= 3; y++) {
+        for (int x = -3; x <= 3; x++)
+            for (int y = -3; y <= 3; y++)
                 for (int z = -3; z <= 3; z++) {
                     Vector cur = arg0.add(x, y, z);
                     addSingleSourcePosition(new WorldVector(arg0.getWorld(), cur));
                 }
-            }
-        }
     }
 
     /**
@@ -194,6 +189,7 @@ public class NearbyChestBlockBag extends BlockBag {
      *
      * @return
      */
+    @Override
     public void addSingleSourcePosition(WorldVector arg0) {
 
         int x = arg0.getBlockX();
@@ -241,6 +237,7 @@ public class NearbyChestBlockBag extends BlockBag {
      */
     public static class Factory implements BlockBagFactory {
 
+        @Override
         public BlockBag createBlockSource(World world, Vector v) {
 
             return new NearbyChestBlockBag(v);

@@ -52,7 +52,7 @@ public class LiquidFlood extends AbstractIC {
     }
 
     public void doStuff(ChipState chip) {
-        if(chip.getInput(0)) {
+        if(chip.getInput(0))
             for(int x = -radius + 1; x < radius; x++)
                 for(int y = -radius + 1; y < radius; y++)
                     for(int z = -radius + 1; z < radius; z++) {
@@ -60,24 +60,17 @@ public class LiquidFlood extends AbstractIC {
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
                         Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
-                        if(b.getTypeId() == 0 || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) {
-                            b.setType(liquid.equalsIgnoreCase("water") ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA);
-                        }
+                        if(b.getTypeId() == 0 || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) b.setType(liquid.equalsIgnoreCase("water") ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA);
                     }
-        }
-        else if(!chip.getInput(0)) {
-            for(int x = -radius + 1; x < radius; x++)
-                for(int y = -radius + 1; y < radius; y++)
-                    for(int z = -radius + 1; z < radius; z++) {
-                        int rx = getSign().getLocation().getBlockX() - x;
-                        int ry = getSign().getLocation().getBlockY() - y;
-                        int rz = getSign().getLocation().getBlockZ() - z;
-                        Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
-                        if(b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA) || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA)) {
-                            b.setType(Material.AIR);
-                        }
-                    }
-        }
+        else if(!chip.getInput(0)) for(int x = -radius + 1; x < radius; x++)
+            for(int y = -radius + 1; y < radius; y++)
+                for(int z = -radius + 1; z < radius; z++) {
+                    int rx = getSign().getLocation().getBlockX() - x;
+                    int ry = getSign().getLocation().getBlockY() - y;
+                    int rz = getSign().getLocation().getBlockZ() - z;
+                    Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
+                    if(b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA) || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.STATIONARY_WATER : Material.STATIONARY_LAVA)) b.setType(Material.AIR);
+                }
     }
 
     @Override

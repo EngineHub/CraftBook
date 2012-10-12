@@ -39,20 +39,14 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         // lets load all recipes
         if (cfg == null) return; //If the config is null, it can't continue.
         Set<String> keys = cfg.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                recipes.add(new Recipe(key, cfg));
-            }
-        }
+        if (keys != null) for (String key : keys)
+            recipes.add(new Recipe(key, cfg));
     }
 
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
 
-        for (Recipe recipe : recipes) {
-            if (recipe.checkIngredients(items)) {
-                return recipe;
-            }
-        }
+        for (Recipe recipe : recipes)
+            if (recipe.checkIngredients(items)) return recipe;
         throw new UnknownRecipeException("Are you sure you have the right ingredients?");
     }
 
@@ -101,11 +95,9 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
                     }
                     if (material != null) {
                         CauldronItemStack itemStack = new CauldronItemStack(material);
-                        if (split.length > 1) {
-                            itemStack.setData(Short.parseShort(split[1]));
-                        } else {
+                        if (split.length > 1) itemStack.setData(Short.parseShort(split[1]));
+                        else
                             itemStack.setData((short) -1);
-                        }
                         itemStack.setAmount(section.getInt(item, 1));
                         items.add(itemStack);
                     }
@@ -148,9 +140,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             if (items.size() <= 0) return false;
             int count = 0;
             for (CauldronItemStack item : items) {
-                if (!ingredients.contains(item)) {
-                    return false;
-                }
+                if (!ingredients.contains(item)) return false;
                 count++;
             }
             return count == ingredients.size();

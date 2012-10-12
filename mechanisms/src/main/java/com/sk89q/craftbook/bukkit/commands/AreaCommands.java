@@ -48,7 +48,7 @@ public class AreaCommands {
             usage = "[-n namespace ] <id>",
             flags = "n:",
             min = 1
-    )
+            )
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
 
         final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
@@ -63,21 +63,15 @@ public class AreaCommands {
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
             personal = false;
-        } else if (!player.hasPermission("craftbook.mech.area.save.self")) {
-            throw new CommandPermissionsException();
-        }
+        } else if (!player.hasPermission("craftbook.mech.area.save.self")) throw new CommandPermissionsException();
 
-        if (!CopyManager.isValidNamespace(namespace)) {
-            throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
-        }
+        if (!CopyManager.isValidNamespace(namespace)) throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
 
         if (personal) namespace = "~" + namespace;
 
         id = context.getString(0);
 
-        if (!CopyManager.isValidName(id)) {
-            throw new CommandException("Invalid area name. Needs to be between 1 and 13 letters long.");
-        }
+        if (!CopyManager.isValidName(id)) throw new CommandException("Invalid area name. Needs to be between 1 and 13 letters long.");
 
         try {
             WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -90,19 +84,15 @@ public class AreaCommands {
 
             // Check maximum size
             if (config.maxSizePerArea != -1 &&
-                    size.getBlockX() * size.getBlockY() * size.getBlockZ() > config.maxSizePerArea) {
-                throw new CommandException("Area is larger than allowed " + config.maxSizePerArea + " blocks.");
-            }
+                    size.getBlockX() * size.getBlockY() * size.getBlockZ() > config.maxSizePerArea) throw new CommandException("Area is larger than allowed " + config.maxSizePerArea + " blocks.");
 
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
             if (config.maxAreasPerUser >= 0 && !namespace.equals("global")) {
                 int count = copyManager.meetsQuota(world, namespace, id, config.maxAreasPerUser, plugin);
 
-                if (count > -1) {
-                    throw new CommandException("You are limited to "
-                            + config.maxAreasPerUser + " toggle area(s). You have " + count + " areas.");
-                }
+                if (count > -1) throw new CommandException("You are limited to "
+                        + config.maxAreasPerUser + " toggle area(s). You have " + count + " areas.");
             }
 
             // Copy
@@ -135,7 +125,7 @@ public class AreaCommands {
             desc = "Lists the areas of the given namespace or lists all areas.",
             usage = "[-n namespace] [page #]",
             flags = "an:"
-    )
+            )
     public void list(CommandContext context, CommandSender sender) throws CommandException {
 
         final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
@@ -146,13 +136,11 @@ public class AreaCommands {
         String namespace = "~" + player.getName();
 
         // get the namespace from the flag (if set)
-        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n'))) {
+        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n')))
             namespace = context.getFlag('n');
-        } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all")) {
+        else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all"))
             namespace = "";
-        } else if (!player.hasPermission("craftbook.mech.area.list.self")) {
-            throw new CommandPermissionsException();
-        }
+        else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
 
         int page = 1;
         try {
@@ -164,16 +152,12 @@ public class AreaCommands {
         // get the areas for the defined namespace
         File areas = new File(plugin.getDataFolder(), "areas");
 
-        if (!areas.exists()) {
-            throw new CommandException("There are no saved areas.");
-        }
+        if (!areas.exists()) throw new CommandException("There are no saved areas.");
 
         File folder = null;
         if (!namespace.equals("")) folder = new File(areas, namespace);
 
-        if (folder != null && !folder.exists()) {
-            throw new CommandException("The namespace '" + namespace + "' does not exist.");
-        }
+        if (folder != null && !folder.exists()) throw new CommandException("The namespace '" + namespace + "' does not exist.");
 
         List<String> areaList = new ArrayList<String>();
 
@@ -186,41 +170,33 @@ public class AreaCommands {
             }
         };
 
-        if (folder != null && folder.exists()) {
-            for (File area : folder.listFiles(fnf)) {
-                String areaName = area.getName();
-                areaName.replace(".schematic", "");
-                areaName.replace(".cbcopy", "");
-                areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
-                        + ChatColor.YELLOW + areaName);
-            }
-        } else {
-            for (File file : areas.listFiles()) {
-                if (file.isDirectory()) {
-                    for (File area : file.listFiles(fnf)) {
-                        String areaName = area.getName();
-                        areaName.replace(".schematic", "");
-                        areaName.replace(".cbcopy", "");
-                        areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
-                                + ChatColor.YELLOW + areaName);
-                    }
-                }
-            }
+        if (folder != null && folder.exists()) for (File area : folder.listFiles(fnf)) {
+            String areaName = area.getName();
+            areaName.replace(".schematic", "");
+            areaName.replace(".cbcopy", "");
+            areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
+                    + ChatColor.YELLOW + areaName);
         }
+        else
+            for (File file : areas.listFiles())
+                if (file.isDirectory()) for (File area : file.listFiles(fnf)) {
+                    String areaName = area.getName();
+                    areaName.replace(".schematic", "");
+                    areaName.replace(".cbcopy", "");
+                    areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
+                            + ChatColor.YELLOW + areaName);
+                }
 
         // now lets list the areas with a nice pagination
         if (areaList.size() > 0) {
             String tmp = namespace.equals("") ? "All Areas " : "Areas for " + namespace;
             player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + ((areaList.size() / 8) + 1));
             // list the areas one by one
-            for (String str : ArrayUtil.getArrayPage(areaList, page)) {
-                if (str != null && !str.equals("")) {
-                    player.print(str);
-                }
-            }
-        } else {
-            player.printError("There are no saved areas in the '" + namespace + "' namespace.");
+            for (String str : ArrayUtil.getArrayPage(areaList, page))
+                if (str != null && !str.equals("")) player.print(str);
         }
+        else
+            player.printError("There are no saved areas in the '" + namespace + "' namespace.");
     }
 
     @Command(
@@ -228,7 +204,7 @@ public class AreaCommands {
             desc = "Lists the areas of the given namespace or lists all areas.",
             usage = "[-n namespace] [area]",
             flags = "an:"
-    )
+            )
     public void delete(CommandContext context, CommandSender sender) throws CommandException {
 
         final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
@@ -240,20 +216,16 @@ public class AreaCommands {
         String areaId = null;
 
         // Get the namespace
-        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
+        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n')))
             namespace = context.getFlag('n');
-        } else if (!player.hasPermission("craftbook.mech.area.delete.self")) {
-            throw new CommandPermissionsException();
-        }
+        else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
 
         boolean deleteAll = false;
-        if (context.argsLength() > 0 && !context.hasFlag('a')) {
+        if (context.argsLength() > 0 && !context.hasFlag('a'))
             areaId = context.getString(0);
-        } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.delete." + namespace + ".all")) {
-            deleteAll = true;
-        } else {
+        else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.delete." + namespace + ".all")) deleteAll = true;
+        else
             throw new CommandException("You need to define an area or -a to delete all areas.");
-        }
 
 
         // add the area suffix
@@ -265,9 +237,7 @@ public class AreaCommands {
         } catch (Exception ignored) {
         }
 
-        if (areas == null || !areas.exists()) {
-            throw new CommandException("The namespace " + namespace + " does not exist.");
-        }
+        if (areas == null || !areas.exists()) throw new CommandException("The namespace " + namespace + " does not exist.");
 
         if (deleteAll) {
             if (deleteDir(areas)) player.print("All areas in the namespace " + namespace + " have been deleted.");
@@ -294,11 +264,8 @@ public class AreaCommands {
             }
         };
 
-        if (dir.isDirectory()) {
-            for (File aChild : dir.listFiles(fnf)) {
-                if (!aChild.delete()) return false;
-            }
-        }
+        if (dir.isDirectory()) for (File aChild : dir.listFiles(fnf))
+            if (!aChild.delete()) return false;
 
         // The directory is now empty so delete it
         return dir.delete();

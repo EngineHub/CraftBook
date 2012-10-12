@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.ic;
 
@@ -37,19 +37,19 @@ public interface ChipState {
     public boolean get(int pin);
 
     /*
-    * Gets the value for an input.
-    *
-    * @param inputIndex 0-indexed number
-    * @return
-    */
+     * Gets the value for an input.
+     *
+     * @param inputIndex 0-indexed number
+     * @return
+     */
     public boolean getInput(int inputIndex);
 
     /*
-    * Gets the value for an output.
-    *
-    * @param outputIndex 0-indexed number
-    * @return
-    */
+     * Gets the value for an output.
+     *
+     * @param outputIndex 0-indexed number
+     * @return
+     */
     public boolean getOutput(int outputIndex);
 
     /**
@@ -61,11 +61,11 @@ public interface ChipState {
     public void set(int pin, boolean value);
 
     /*
-    * Sets the value for an output.
-    *
-    * @param outputIndex 0-indexed number
-    * @return
-    */
+     * Sets the value for an output.
+     *
+     * @param outputIndex 0-indexed number
+     * @return
+     */
     public void setOutput(int outputIndex, boolean value);
 
     /**

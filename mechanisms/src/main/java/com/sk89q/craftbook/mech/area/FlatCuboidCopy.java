@@ -116,13 +116,9 @@ public class FlatCuboidCopy extends CuboidCopy {
             int size = width * height * length;
             blocks = new byte[size];
             data = new byte[size];
-            if (reader.read(blocks, 0, size) != size) {
-                throw new CuboidCopyException("File error: Bad size");
-            }
+            if (reader.read(blocks, 0, size) != size) throw new CuboidCopyException("File error: Bad size");
             data = new byte[size];
-            if (reader.read(data, 0, size) != size) {
-                throw new CuboidCopyException("File error: Bad size");
-            }
+            if (reader.read(data, 0, size) != size) throw new CuboidCopyException("File error: Bad size");
         } finally {
             try {
                 in.close();
@@ -130,7 +126,7 @@ public class FlatCuboidCopy extends CuboidCopy {
             }
         }
 
-        this.origin = new Vector(x, y, z);
+        origin = new Vector(x, y, z);
         this.width = width;
         this.height = height;
         this.length = length;
@@ -144,15 +140,13 @@ public class FlatCuboidCopy extends CuboidCopy {
     @Override
     public void copy() {
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
                 for (int z = 0; z < length; z++) {
                     int index = y * width * length + z * width + x;
                     blocks[index] = (byte) world.getBlockTypeIdAt(BukkitUtil.toLocation(world, origin.add(x, y, z)));
                     data[index] = world.getBlockAt(BukkitUtil.toLocation(world, origin.add(x, y, z))).getData();
                 }
-            }
-        }
     }
 
     /**
@@ -166,39 +160,29 @@ public class FlatCuboidCopy extends CuboidCopy {
         ArrayList<Tuple2<Vector, byte[]>> queueLast =
                 new ArrayList<Tuple2<Vector, byte[]>>();
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
                 for (int z = 0; z < length; z++) {
                     int index = y * width * length + z * width + x;
                     Vector pt = origin.add(x, y, z);
 
-                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
-                        world.getBlockAt(BukkitUtil.toLocation(world, pt)).setTypeId(0);
-                    }
+                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) world.getBlockAt(BukkitUtil.toLocation(world, pt)).setTypeId(0);
 
-                    if (BlockType.shouldPlaceLast(blocks[index])) {
-                        queueLast.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
-                    } else {
+                    if (BlockType.shouldPlaceLast(blocks[index])) queueLast.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
+                    else
                         queueAfter.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
-                    }
                 }
-            }
-        }
 
         for (Tuple2<Vector, byte[]> entry : queueAfter) {
             byte[] v = entry.b;
             world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setTypeId(v[0]);
-            if (BlockType.usesData(v[0])) {
-                world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
-            }
+            if (BlockType.usesData(v[0])) world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
         }
 
         for (Tuple2<Vector, byte[]> entry : queueLast) {
             byte[] v = entry.b;
             world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setTypeId(v[0]);
-            if (BlockType.usesData(v[0])) {
-                world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
-            }
+            if (BlockType.usesData(v[0])) world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
         }
 
     }

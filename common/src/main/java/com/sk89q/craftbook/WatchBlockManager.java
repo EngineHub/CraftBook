@@ -71,12 +71,11 @@ class WatchBlockManager {
      * @param oldWatchBlocks
      */
     public void update(PersistentMechanic m,
-                       List<BlockWorldVector> oldWatchBlocks) {
+            List<BlockWorldVector> oldWatchBlocks) {
 
         // This could be more efficient.
-        for (BlockWorldVector p : oldWatchBlocks) {
+        for (BlockWorldVector p : oldWatchBlocks)
             watchBlocks.get(p).remove(m);
-        }
 
         register(m);
     }
@@ -88,10 +87,9 @@ class WatchBlockManager {
      */
     public void deregister(PersistentMechanic m) {
 
-        for (BlockWorldVector p : m.getWatchedPositions()) {
+        for (BlockWorldVector p : m.getWatchedPositions())
             if (p != null && watchBlocks.get(p) != null)
                 watchBlocks.get(p).remove(m);
-        }
     }
 
     /**
@@ -104,13 +102,10 @@ class WatchBlockManager {
         Set<PersistentMechanic> pms =
                 watchBlocks.get(BukkitUtil.toWorldVector(event.getBlock()));
 
-        if (pms == null) {
-            return;
-        }
+        if (pms == null) return;
 
-        for (PersistentMechanic m : pms) {
+        for (PersistentMechanic m : pms)
             m.onWatchBlockNotification(event);
-        }
     }
 
     /**
@@ -136,9 +131,7 @@ class WatchBlockManager {
             int curChunkX = (int) Math.floor(pos.getBlockX() / 16.0);
             int curChunkZ = (int) Math.floor(pos.getBlockZ() / 16.0);
             // Not involved in this chunk!
-            if (curChunkX != chunkX || curChunkZ != chunkZ) {
-                continue;
-            }
+            if (curChunkX != chunkX || curChunkZ != chunkZ) continue;
 
             folks.addAll(entry.getValue());
         }

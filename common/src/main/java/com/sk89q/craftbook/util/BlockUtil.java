@@ -12,11 +12,7 @@ public class BlockUtil {
 
     public static boolean areBlocksIdentical(Block block, Block block2) {
 
-        if (block.getTypeId() == block2.getTypeId()) {
-            if (block.getData() == block2.getData()) {
-                return true;
-            }
-        }
+        if (block.getTypeId() == block2.getTypeId()) if (block.getData() == block2.getData()) return true;
         return false;
     }
 
@@ -27,11 +23,7 @@ public class BlockUtil {
 
     public static boolean isBlockIdenticalTo(Block block, int type, byte data) {
 
-        if (block.getTypeId() == type) {
-            if (block.getData() == data) {
-                return true;
-            }
-        }
+        if (block.getTypeId() == type) if (block.getData() == data) return true;
         return false;
     }
 

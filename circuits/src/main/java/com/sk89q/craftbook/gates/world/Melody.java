@@ -52,9 +52,7 @@ public class Melody extends AbstractIC {
         try {
             sequencer.stop();
             for (Player player : getServer().getOnlinePlayers())
-            {
                 jNote.getJingleNoteManager().stop(player);
-            }
             jNote.getJingleNoteManager().stopAll();
         }
         catch(Exception e){}
@@ -91,12 +89,11 @@ public class Melody extends AbstractIC {
 
                 File file = null;
 
-                for (File f : trialPaths) {
+                for (File f : trialPaths)
                     if (f.exists()) {
                         file = f;
                         break;
                     }
-                }
 
                 if (file == null) {
                     getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
@@ -106,9 +103,7 @@ public class Melody extends AbstractIC {
                 if(sequencer!=null||jNote!=null)
                 {
                     for (Player player : getServer().getOnlinePlayers())
-                    {
                         jNote.getJingleNoteManager().stop(player);
-                    }
                     jNote.getJingleNoteManager().stopAll();
                 }
                 sequencer = new MidiJingleSequencer(file);
@@ -124,9 +119,7 @@ public class Melody extends AbstractIC {
             {
                 sequencer.stop();
                 for (Player player : getServer().getOnlinePlayers())
-                {
                     jNote.getJingleNoteManager().stop(player);
-                }
                 jNote.getJingleNoteManager().stopAll();
             }
         }

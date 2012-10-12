@@ -90,15 +90,13 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            if (entityType != null && entityType.isAlive()) {
-                Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
-                        BlockFace.UP));
-                // spawn amount of mobs
-                for (int i = 0; i < amount; i++) {
-                    Entity entity = center.getWorld().spawnEntity(center, entityType);
-                    setEntityData(entity, data);
-                }
+        if (chip.getInput(0)) if (entityType != null && entityType.isAlive()) {
+            Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
+                    BlockFace.UP));
+            // spawn amount of mobs
+            for (int i = 0; i < amount; i++) {
+                Entity entity = center.getWorld().spawnEntity(center, entityType);
+                setEntityData(entity, data);
             }
         }
     }

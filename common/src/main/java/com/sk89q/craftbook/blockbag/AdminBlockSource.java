@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.blockbag;
 
@@ -71,11 +71,10 @@ public class AdminBlockSource extends BlockBag {
      *
      * @throws OutOfBlocksException
      */
+    @Override
     public void fetchBlock(int id) throws BlockBagException {
 
-        if (!canFetch) {
-            throw new OutOfBlocksException();
-        }
+        if (!canFetch) throw new OutOfBlocksException();
     }
 
     /**
@@ -88,11 +87,10 @@ public class AdminBlockSource extends BlockBag {
      *
      * @throws OutOfSpaceException
      */
+    @Override
     public void storeBlock(int id) throws BlockBagException {
 
-        if (!canStore) {
-            throw new OutOfSpaceException(id);
-        }
+        if (!canStore) throw new OutOfSpaceException(id);
     }
 
     /**
@@ -102,15 +100,13 @@ public class AdminBlockSource extends BlockBag {
      *
      * @return
      */
+    @Override
     public void addSourcePosition(WorldVector arg0) {
 
-        for (int x = -3; x <= 3; x++) {
-            for (int y = -3; y <= 3; y++) {
-                for (int z = -3; z <= 3; z++) {
+        for (int x = -3; x <= 3; x++)
+            for (int y = -3; y <= 3; y++)
+                for (int z = -3; z <= 3; z++)
                     addSingleSourcePosition(new WorldVector(arg0.getWorld(), arg0.add(x, y, z)));
-                }
-            }
-        }
     }
 
     /**
@@ -120,25 +116,23 @@ public class AdminBlockSource extends BlockBag {
      *
      * @return
      */
+    @Override
     public void addSingleSourcePosition(WorldVector arg0) {
 
         Block e = BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(arg0.getBlockX(), arg0.getBlockY(), arg0.getBlockZ());
         if (e.getState() instanceof Sign) {
             Sign s = (Sign) e.getState();
 
-            if (store && s.getLine(2).equalsIgnoreCase("[Black Hole]")) {
-                canStore = true;
-            }
+            if (store && s.getLine(2).equalsIgnoreCase("[Black Hole]")) canStore = true;
 
-            if (fetch && s.getLine(2).equalsIgnoreCase("[Block Source]")) {
-                canFetch = true;
-            }
+            if (fetch && s.getLine(2).equalsIgnoreCase("[Block Source]")) canFetch = true;
         }
     }
 
     /**
      * Flush changes.
      */
+    @Override
     public void flushChanges() {
 
     }
@@ -150,6 +144,7 @@ public class AdminBlockSource extends BlockBag {
      */
     public static class BlackHoleFactory implements BlockBagFactory {
 
+        @Override
         public BlockBag createBlockSource(World w, Vector v) {
 
             return new AdminBlockSource(false, true);
@@ -163,6 +158,7 @@ public class AdminBlockSource extends BlockBag {
      */
     public static class UnlimitedSourceFactory implements BlockBagFactory {
 
+        @Override
         public BlockBag createBlockSource(World w, Vector v) {
 
             return new AdminBlockSource(true, false);

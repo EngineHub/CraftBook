@@ -113,9 +113,7 @@ public abstract class AbstractICFactory implements ICFactory {
     public List<String> getStringList(ConfigurationSection cfg, String name, List<String> def) {
 
         List<String> it = cfg.getStringList(name);
-        if(it == null || it.size() == 0) {
-            it = def;
-        }
+        if(it == null || it.size() == 0) it = def;
         cfg.set(name, it);
         return it;
     }

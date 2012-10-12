@@ -150,9 +150,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     String id = in.readUTF();
                     String code = hashCode(in.readUTF());
                     if((lang.getName().equals(langName) || lang.supports(langName)) &&
-                       (isShared() || (id.equals(getID()) && hashCode(codeString).equals(code)))) {
+                            (isShared() || (id.equals(getID()) && hashCode(codeString).equals(code))))
                         lang.loadState(state, in);
-                    } else {
+                    else {
                         // Prevent errors from different ICs from affecting this one.
                         error = false;
                         errorString = "no error";
@@ -194,35 +194,29 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         Chest c = (Chest) chestBlock.getState();
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
-        for(ItemStack s : i.getContents()) {
+        for(ItemStack s : i.getContents())
             if((s != null &&
-                s.getAmount() > 0) &&
-               (s.getType() == Material.BOOK_AND_QUILL ||
-                s.getType() == Material.WRITTEN_BOOK)) {
+            s.getAmount() > 0) &&
+            (s.getType() == Material.BOOK_AND_QUILL ||
+            s.getType() == Material.WRITTEN_BOOK)) {
                 if(book != null)
                     throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
-        }
         if(book==null)
             throw new CodeNotFoundException("No written books found in chest.");
         BookItem data = new BookItem(book);
         String code = "";
-        for(String s:data.getPages()) {
+        for(String s:data.getPages())
             code += s+"\n";
-        }
         System.out.println(code);
         return code;
     }
     private String getCode() throws CodeNotFoundException {
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
-        if(above.getType() == Material.CHEST) {
-            return getBookCode(above);
-        }
+        if(above.getType() == Material.CHEST) return getBookCode(above);
         Block below = sign.getLocation().add(new Vector(0, -1, 0)).getBlock();
-        if(below.getType() == Material.CHEST) {
-            return getBookCode(below);
-        }
+        if(below.getType() == Material.CHEST) return getBookCode(below);
 
         Location l = sign.getLocation();
         World w = l.getWorld();
@@ -230,7 +224,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         int x = l.getBlockX();
         int z = l.getBlockZ();
 
-        for(int y=0;y<w.getMaxHeight();y++) {
+        for(int y=0;y<w.getMaxHeight();y++)
             if(y!=l.getBlockY())
                 if(w.getBlockAt(x,y,z).getState() instanceof Sign) {
                     Sign s = (Sign) w.getBlockAt(x,y,z).getState();
@@ -247,7 +241,6 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                         return code;
                     }
                 }
-        }
         throw new CodeNotFoundException("No code source found.");
     }
 
@@ -334,14 +327,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     " ("+l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ()+")");
             p.sendMessage(ChatColor.RED+"Language:"+ChatColor.RESET+" "+lang.getName());
             p.sendMessage(ChatColor.RED+"Full Storage Name:"+ChatColor.RESET+" "+getFileName());
-            if(error) {
-                p.sendMessage(errorString);
-            } else {
+            if(error) p.sendMessage(errorString);
+            else
                 p.sendMessage(lang.dumpState(state));
-            }
-        } else {
-            p.sendMessage(ChatColor.RED+"You do not have the necessary permissions to do that.");
         }
+        else
+            p.sendMessage(ChatColor.RED+"You do not have the necessary permissions to do that.");
     }
 
     @Override

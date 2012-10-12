@@ -17,11 +17,9 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         for (Item item : stacks) {
             ItemStack stack = item.getItemStack();
             String name = stack.getType() + ":" + stack.getDurability();
-            if (items.containsKey(name)) {
-                items.put(name, items.get(name) + stack.getAmount());
-            } else {
+            if (items.containsKey(name)) items.put(name, items.get(name) + stack.getAmount());
+            else
                 items.put(name, stack.getAmount());
-            }
         }
         Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
         // merge the amounts and stacks
@@ -97,9 +95,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
     public CauldronItemStack add(CauldronItemStack stack) {
 
-        if (stack.equals(this)) {
-            this.amount += stack.getAmount();
-        }
+        if (stack.equals(this)) amount += stack.getAmount();
         return this;
     }
 
@@ -115,9 +111,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
     public boolean isSameType(CauldronItemStack stack) {
 
-        if (data < 0 || stack.getData() < 0) {
-            return stack.getMaterial() == getMaterial();
-        }
+        if (data < 0 || stack.getData() < 0) return stack.getMaterial() == getMaterial();
         return stack.getMaterial() == getMaterial() &&
                 stack.getData() == getData();
     }

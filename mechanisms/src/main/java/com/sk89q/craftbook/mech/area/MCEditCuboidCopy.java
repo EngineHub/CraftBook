@@ -24,7 +24,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
     public MCEditCuboidCopy(Vector origin, Vector size, World world) {
 
         super(origin, size, world);
-        this.clipboard = new CuboidClipboard(size, origin);
+        clipboard = new CuboidClipboard(size, origin);
     }
 
     protected MCEditCuboidCopy(World world) {
@@ -42,12 +42,12 @@ public class MCEditCuboidCopy extends CuboidCopy {
     @Override
     protected void loadFromFile(File file) throws IOException, CuboidCopyException, DataException {
 
-        this.clipboard = SchematicFormat.MCEDIT.load(file);
-        this.origin = clipboard.getOrigin();
-        this.size = clipboard.getSize();
-        this.width = size.getBlockX();
-        this.height = size.getBlockY();
-        this.length = size.getBlockZ();
+        clipboard = SchematicFormat.MCEDIT.load(file);
+        origin = clipboard.getOrigin();
+        size = clipboard.getSize();
+        width = size.getBlockX();
+        height = size.getBlockY();
+        length = size.getBlockZ();
     }
 
     @Override

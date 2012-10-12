@@ -82,15 +82,13 @@ public class LightSwitch extends AbstractMechanic {
             String line = sign.getLine(1);
 
             if (line.equalsIgnoreCase("[|]") || line.equalsIgnoreCase("[I]")) {
-                if (!player.hasPermission("craftbook.mech.light-switch")) {
-                    throw new InsufficientPermissionsException();
-                }
+                if (!player.hasPermission("craftbook.mech.light-switch")) throw new InsufficientPermissionsException();
 
                 sign.setLine(1, "[I]");
                 player.print("mech.lightswitch.create");
-            } else {
-                return null;
             }
+            else
+                return null;
 
             throw new ProcessedMechanismException();
         }
@@ -183,8 +181,8 @@ public class LightSwitch extends AbstractMechanic {
 
             recentLightToggles.put(pt, currTime);
             int changed = 0;
-            for (int x = -radius + wx; x <= radius + wx; x++) {
-                for (int y = -radius + wy; y <= radius + wy; y++) {
+            for (int x = -radius + wx; x <= radius + wx; x++)
+                for (int y = -radius + wy; y <= radius + wy; y++)
                     for (int z = -radius + wz; z <= radius + wz; z++) {
                         int id = world.getBlockTypeIdAt(x, y, z);
                         if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
@@ -197,8 +195,6 @@ public class LightSwitch extends AbstractMechanic {
                             changed++;
                         }
                     }
-                }
-            }
             return true;
         }
         return false;

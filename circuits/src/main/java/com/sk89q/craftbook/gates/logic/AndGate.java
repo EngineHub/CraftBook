@@ -50,14 +50,12 @@ public class AndGate extends AbstractIC {
     public void trigger(ChipState chip) {
 
         short on = 0, valid = 0;
-        for (short i = 0; i < chip.getInputCount(); i++) {
-
+        for (short i = 0; i < chip.getInputCount(); i++)
             if (chip.isValid(i)) {
                 valid++;
 
                 if (chip.getInput(i)) on++;
             }
-        }
 
         // Condition; all valid must be ON, at least one valid.
         chip.setOutput(0, on == valid && valid > 0);

@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.util;
 
@@ -32,7 +32,7 @@ import java.util.Comparator;
  * @author sk89q
  */
 public class DistanceComparator<T extends BlockState>
-        implements Comparator<BlockState> {
+implements Comparator<BlockState> {
 
     /**
      * Origin to compare from.
@@ -57,6 +57,7 @@ public class DistanceComparator<T extends BlockState>
      *
      * @return
      */
+    @Override
     public int compare(BlockState o1, BlockState o2) {
 
         Block b1 = o1.getBlock();
@@ -65,12 +66,10 @@ public class DistanceComparator<T extends BlockState>
         double dist1 = b1.getLocation().distance(BukkitUtil.toLocation(b1.getWorld(), origin));
         double dist2 = b2.getLocation().distance(BukkitUtil.toLocation(b2.getWorld(), origin));
 
-        if (dist1 < dist2) {
+        if (dist1 < dist2)
             return -1;
-        } else if (dist1 > dist2) {
-            return 1;
-        } else {
+        else if (dist1 > dist2) return 1;
+        else
             return 0;
-        }
     }
 }

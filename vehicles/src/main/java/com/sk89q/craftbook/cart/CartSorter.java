@@ -28,11 +28,9 @@ public class CartSorter extends CartMechanism {
         // pi(sign)hich sort conditions apply
         //  (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
-        if (isSortApplicable(sign.getLine(2), cart)) {
+        if (isSortApplicable(sign.getLine(2), cart))
             dir = Hand.LEFT;
-        } else if (isSortApplicable(sign.getLine(3), cart)) {
-            dir = Hand.RIGHT;
-        }
+        else if (isSortApplicable(sign.getLine(3), cart)) dir = Hand.RIGHT;
 
         // pick the track block to modify and the curve to give it.
         //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
@@ -106,9 +104,7 @@ public class CartSorter extends CartMechanism {
 
     public static boolean isSortApplicable(String line, Minecart minecart) {
 
-        if (line.equalsIgnoreCase("All")) {
-            return true;
-        }
+        if (line.equalsIgnoreCase("All")) return true;
         Entity test = minecart.getPassenger();
         Player player = null;
         if (test instanceof Player)
@@ -116,84 +112,60 @@ public class CartSorter extends CartMechanism {
 
         if ((line.equalsIgnoreCase("Unoccupied")
                 || line.equalsIgnoreCase("Empty"))
-                && minecart.getPassenger() == null) {
-            return true;
-        }
+                && minecart.getPassenger() == null) return true;
 
         if (line.equalsIgnoreCase("Storage")
-                && minecart instanceof StorageMinecart) {
+                && minecart instanceof StorageMinecart)
             return true;
-        } else if (line.equalsIgnoreCase("Powered")
-                && minecart instanceof PoweredMinecart) {
+        else if (line.equalsIgnoreCase("Powered")
+                && minecart instanceof PoweredMinecart)
             return true;
-        } else if (line.equalsIgnoreCase("Minecart")
-                && minecart instanceof Minecart) {
-            return true;
-        }
+        else if (line.equalsIgnoreCase("Minecart")
+                && minecart instanceof Minecart) return true;
 
         if ((line.equalsIgnoreCase("Occupied")
                 || line.equalsIgnoreCase("Full"))
-                && minecart.getPassenger() != null) {
-            return true;
-        }
+                && minecart.getPassenger() != null) return true;
 
         if (line.equalsIgnoreCase("Animal")
-                && test instanceof Animals) {
-            return true;
-        }
+                && test instanceof Animals) return true;
 
         if (line.equalsIgnoreCase("Mob")
-                && test instanceof Monster) {
-            return true;
-        }
+                && test instanceof Monster) return true;
 
         if ((line.equalsIgnoreCase("Player")
                 || line.equalsIgnoreCase("Ply"))
-                && player != null) {
-            return true;
-        }
+                && player != null) return true;
 
         String[] parts = line.split(":");
 
-        if (parts.length >= 2) {
-            if (player != null && parts[0].equalsIgnoreCase("Held")) {
+        if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held"))
+            try {
+                int item = Integer.parseInt(parts[1]);
+                if (player.getItemInHand().getTypeId() == item) return true;
+            } catch (NumberFormatException ignored) {
+            }
+        else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
+            if (parts[1].equalsIgnoreCase(player.getName())) return true;
+        } else if (parts[0].equalsIgnoreCase("Mob")) {
+            String testMob = parts[1];
+            test.toString().toLowerCase().equalsIgnoreCase(testMob);
+        } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
+            StorageMinecart storageCart = (StorageMinecart) minecart;
+            Inventory storageInventory = storageCart.getInventory();
+
+            if (parts.length == 3) try {
+                int item = Integer.parseInt(parts[1]);
+                short durability = Short.parseShort(parts[2]);
+                if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
+            } catch (NumberFormatException ignored) {
+            }
+            else
                 try {
                     int item = Integer.parseInt(parts[1]);
-                    if (player.getItemInHand().getTypeId() == item) {
-                        return true;
-                    }
+                    if (storageInventory.contains(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }
-            } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
-                if (parts[1].equalsIgnoreCase(player.getName())) {
-                    return true;
-                }
-            } else if (parts[0].equalsIgnoreCase("Mob")) {
-                String testMob = parts[1];
-                test.toString().toLowerCase().equalsIgnoreCase(testMob);
-            } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
-                StorageMinecart storageCart = (StorageMinecart) minecart;
-                Inventory storageInventory = storageCart.getInventory();
-
-                if (parts.length == 3) {
-                    try {
-                        int item = Integer.parseInt(parts[1]);
-                        short durability = Short.parseShort(parts[2]);
-                        if (storageInventory.contains(new ItemStack(item, 1, durability))) {
-                            return true;
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                } else {
-                    try {
-                        int item = Integer.parseInt(parts[1]);
-                        if (storageInventory.contains(item)) {
-                            return true;
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                }
-            }
         }
 
         return false;
@@ -201,7 +173,7 @@ public class CartSorter extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

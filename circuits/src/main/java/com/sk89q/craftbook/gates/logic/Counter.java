@@ -74,9 +74,9 @@ public class Counter extends AbstractIC {
                 if (curVal == resetVal) { // If we've gotten to 0, reset if infinite mode
                     if (inf)
                         curVal = 0;
-                } else { // increment counter
-                    curVal++;
                 }
+                else
+                    curVal++;
 
                 // Set output to high if we're at 0, otherwise low
                 chip.setOutput(0, curVal == resetVal);

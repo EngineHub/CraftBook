@@ -162,9 +162,7 @@ public class MechanicManager {
             load(pos, localPlayer,
                     new ChangedSign(sign, event.getLines()));
         } catch (InvalidMechanismException e) {
-            if (e.getMessage() != null) {
-                localPlayer.printError(e.getMessage());
-            }
+            if (e.getMessage() != null) localPlayer.printError(e.getMessage());
 
             event.setCancelled(true);
             block.getWorld().dropItem(block.getLocation(), new ItemStack(Material.SIGN, 1));
@@ -201,16 +199,13 @@ public class MechanicManager {
 
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics) {
+            for (Mechanic aMechanic : mechanics)
                 if (aMechanic != null) {
                     aMechanic.onBlockBreak(event);
                     returnValue++;
                 }
-            }
         } catch (InvalidMechanismException e) {
-            if (e.getMessage() != null) {
-                player.printError(e.getMessage());
-            }
+            if (e.getMessage() != null) player.printError(e.getMessage());
         }
         return returnValue;
     }
@@ -239,16 +234,13 @@ public class MechanicManager {
 
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics) {
+            for (Mechanic aMechanic : mechanics)
                 if (aMechanic != null) {
                     aMechanic.onRightClick(event);
                     returnValue++;
                 }
-            }
         } catch (InvalidMechanismException e) {
-            if (e.getMessage() != null) {
-                player.printError(e.getMessage());
-            }
+            if (e.getMessage() != null) player.printError(e.getMessage());
         }
         return returnValue;
     }
@@ -276,16 +268,13 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics) {
+            for (Mechanic aMechanic : mechanics)
                 if (aMechanic != null) {
                     aMechanic.onLeftClick(event);
                     returnValue++;
                 }
-            }
         } catch (InvalidMechanismException e) {
-            if (e.getMessage() != null) {
-                player.printError(e.getMessage());
-            }
+            if (e.getMessage() != null) player.printError(e.getMessage());
         }
 
         return returnValue;
@@ -307,12 +296,11 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getBlock());
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics) {
+            for (Mechanic aMechanic : mechanics)
                 if (aMechanic != null) {
                     aMechanic.onBlockRedstoneChange(event);
                     returnValue++;
                 }
-            }
         } catch (InvalidMechanismException ignored) {
         }
 
@@ -355,10 +343,8 @@ public class MechanicManager {
                 triggersManager.register(pm);
                 watchBlockManager.register(pm);
 
-                if (aMechanic instanceof SelfTriggeringMechanic) {
-                    synchronized (this) {
-                        thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
-                    }
+                if (aMechanic instanceof SelfTriggeringMechanic) synchronized (this) {
+                    thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
                 }
                 break;
             }
@@ -368,13 +354,11 @@ public class MechanicManager {
         if (ptMechanic != null) {
 
             List<Mechanic> removedMechanics = new ArrayList<Mechanic>();
-            for (Mechanic aMechanic : detectedMechanics) {
+            for (Mechanic aMechanic : detectedMechanics)
                 if (ptMechanic.getClass().equals(aMechanic.getClass())) removedMechanics.add(aMechanic);
-            }
 
-            for (Mechanic aMechanic : removedMechanics) {
+            for (Mechanic aMechanic : removedMechanics)
                 if (detectedMechanics.contains(aMechanic)) detectedMechanics.remove(aMechanic);
-            }
 
             detectedMechanics.add(ptMechanic);
         }
@@ -417,10 +401,8 @@ public class MechanicManager {
                 triggersManager.register(pm);
                 watchBlockManager.register(pm);
 
-                if (aMechanic instanceof SelfTriggeringMechanic) {
-                    synchronized (this) {
-                        thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
-                    }
+                if (aMechanic instanceof SelfTriggeringMechanic) synchronized (this) {
+                    thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
                 }
                 break;
             }
@@ -430,13 +412,11 @@ public class MechanicManager {
         if (ptMechanic != null) {
 
             List<Mechanic> removedMechanics = new ArrayList<Mechanic>();
-            for (Mechanic aMechanic : detectedMechanics) {
+            for (Mechanic aMechanic : detectedMechanics)
                 if (ptMechanic.getClass().equals(aMechanic.getClass())) removedMechanics.add(aMechanic);
-            }
 
-            for (Mechanic aMechanic : removedMechanics) {
+            for (Mechanic aMechanic : removedMechanics)
                 if (detectedMechanics.contains(aMechanic)) detectedMechanics.remove(aMechanic);
-            }
 
             detectedMechanics.add(ptMechanic);
         }
@@ -486,14 +466,13 @@ public class MechanicManager {
 
         List<Mechanic> mechanics = new ArrayList<Mechanic>();
 
-        for (MechanicFactory<? extends Mechanic> factory : factories) {
+        for (MechanicFactory<? extends Mechanic> factory : factories)
             try {
                 Mechanic mechanic;
                 if ((mechanic = factory.detect(pos, player, sign)) != null) mechanics.add(mechanic);
             } catch (ProcessedMechanismException ignored) {
                 // Do nothing here one screwed up mech doesn't mean all them are wrong
             }
-        }
         return mechanics;
     }
 
@@ -518,18 +497,15 @@ public class MechanicManager {
      */
     public void enumerate(Chunk chunk) {
 
-        for (BlockState state : chunk.getTileEntities()) {
-            if (state instanceof Sign) {
+        for (BlockState state : chunk.getTileEntities())
+            if (state instanceof Sign) try {
                 try {
-                    try {
-                        load(toWorldVector(state.getBlock()));
-                    } catch (NullPointerException t) {
-                        t.printStackTrace();
-                    }
-                } catch (InvalidMechanismException ignored) {
+                    load(toWorldVector(state.getBlock()));
+                } catch (NullPointerException t) {
+                    t.printStackTrace();
                 }
+            } catch (InvalidMechanismException ignored) {
             }
-        }
     }
 
     /**
@@ -542,9 +518,8 @@ public class MechanicManager {
         Set<PersistentMechanic> applicable = triggersManager.getByChunk(chunk);
         applicable.addAll(watchBlockManager.getByChunk(chunk));
 
-        for (Mechanic m : applicable) {
+        for (Mechanic m : applicable)
             unloadWithEvent(m, event);
-        }
     }
 
     /**
@@ -622,18 +597,15 @@ public class MechanicManager {
             mechs = thinkingMechanics.toArray(mechs);
         }
 
-        for (SelfTriggeringMechanic mechanic : mechs) {
-            if (mechanic.isActive()) {
-                try {
-                    mechanic.think();
-                } catch (Throwable t) { // Mechanic failed to unload for some reason
-                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
-                            .getCanonicalName(), t);
-                }
-            } else {
-                unload(mechanic);
+        for (SelfTriggeringMechanic mechanic : mechs)
+            if (mechanic.isActive()) try {
+                mechanic.think();
+            } catch (Throwable t) { // Mechanic failed to unload for some reason
+                logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
+                        .getCanonicalName(), t);
             }
-        }
+            else
+                unload(mechanic);
     }
 
     public void registerEvent(Class<?> event, MechanicFactory<? extends Mechanic> mechanic) {

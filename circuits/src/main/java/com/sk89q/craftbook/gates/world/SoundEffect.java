@@ -35,9 +35,7 @@ public class SoundEffect extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            doSound();
-        }
+        if (chip.getInput(0)) doSound();
     }
 
     public void doSound() {
@@ -53,9 +51,7 @@ public class SoundEffect extends AbstractIC {
             }
             Block b = SignUtil.getBackBlock(getSign().getBlock());
             String soundName = getSign().getLine(3).trim();
-            if (soundName.length() > 0) {
-                b.getWorld().playSound(b.getLocation(), Sound.valueOf(soundName), volume, pitch);
-            }
+            if (soundName.length() > 0) b.getWorld().playSound(b.getLocation(), Sound.valueOf(soundName), volume, pitch);
         } catch (Exception ignored) {
         }
     }

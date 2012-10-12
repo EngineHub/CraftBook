@@ -115,7 +115,7 @@ public class SentryGun extends AbstractIC {
         }
          */
 
-        for (Entity aEntity : center.getWorld().getEntities()) {
+        for (Entity aEntity : center.getWorld().getEntities())
             if (!aEntity.isDead() && aEntity.isValid() && type.is(aEntity)
                     && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
                 Block signBlock = getSign().getBlock();
@@ -126,7 +126,6 @@ public class SentryGun extends AbstractIC {
                                 0.5).toVector(), 2.0f, 0.0f);
                 break;
             }
-        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -147,9 +146,7 @@ public class SentryGun extends AbstractIC {
 
             try {
                 String line = sign.getLine(3);
-                if (line != null && !line.contains("")) {
-                    Integer.parseInt(line);
-                }
+                if (line != null && !line.contains("")) Integer.parseInt(line);
             } catch (Exception e) {
                 throw new ICVerificationException("You need to give a radius in line four.");
             }

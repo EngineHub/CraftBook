@@ -227,9 +227,9 @@ public class Elevator extends AbstractMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (occupiable(floor)) {
+            if (occupiable(floor))
                 foundFree++;
-            } else {
+            else {
                 foundGround = true;
                 break;
             }
@@ -260,11 +260,9 @@ public class Elevator extends AbstractMechanic {
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
         String title = ((Sign) destination.getState()).getLines()[0];
-        if (title.length() != 0) {
-            player.print(player.translate("mech.lift.floor") + ": " + title);
-        } else {
+        if (title.length() != 0) player.print(player.translate("mech.lift.floor") + ": " + title);
+        else
             player.print("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
-        }
     }
 
     private static Elevator.Direction isLift(Block block) {

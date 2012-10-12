@@ -53,9 +53,7 @@ public class Ammeter extends AbstractMechanic {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
-        if (!player.hasPermission("craftbook.mech.ammeter.use")) {
-            return;
-        }
+        if (!player.hasPermission("craftbook.mech.ammeter.use")) return;
 
         Block block = event.getClickedBlock();
         if (event.getPlayer().getItemInHand().getType() == Material.COAL
@@ -103,20 +101,16 @@ public class Ammeter extends AbstractMechanic {
     private String getCurrentLine(int data) {
 
         String line = ChatColor.YELLOW + "[";
-        if (data > 10) {
+        if (data > 10)
             line = line + ChatColor.DARK_GREEN;
-        } else if (data > 5) {
+        else if (data > 5)
             line = line + ChatColor.GOLD;
-        } else if (data > 0) {
-            line = line + ChatColor.DARK_RED;
-        }
-        for (int i = 0; i < data; i++) {
+        else if (data > 0) line = line + ChatColor.DARK_RED;
+        for (int i = 0; i < data; i++)
             line = line + "|";
-        }
         line = line + ChatColor.BLACK;
-        for (int i = data; i < 15; i++) {
+        for (int i = data; i < 15; i++)
             line = line + "|";
-        }
         line = line + ChatColor.YELLOW + "]";
         return line;
     }
@@ -148,9 +142,7 @@ public class Ammeter extends AbstractMechanic {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (BlockType.canTransferRedstone(block.getTypeId()) ||
-                    BlockType.isRedstoneSource(block.getTypeId())) {
-                return new Ammeter(plugin);
-            }
+                    BlockType.isRedstoneSource(block.getTypeId())) return new Ammeter(plugin);
 
             return null;
         }

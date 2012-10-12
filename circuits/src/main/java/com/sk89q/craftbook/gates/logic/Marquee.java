@@ -60,9 +60,7 @@ public class Marquee extends AbstractIC {
         } catch (Exception ignored) {
         }
 
-        if (next == 0) {
-            next = reverse ? 3 : 1;
-        }
+        if (next == 0) next = reverse ? 3 : 1;
         for (short i = 0; i < chip.getOutputCount(); i++)
             chip.setOutput(i, false); // Clear all pins
 

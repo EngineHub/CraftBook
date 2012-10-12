@@ -161,9 +161,9 @@ public class Bridge extends AbstractMechanic {
             if (settings.canUseBlock(mat)) {
                 if (isValidBridge(proximalBaseCenter, mat, s)) break findBase; // it's below
                 else throw new InvalidConstructionException("mech.bridge.material");
-            } else {
-                throw new UnacceptableMaterialException("mech.bridge.unusable");
             }
+            else
+                throw new UnacceptableMaterialException("mech.bridge.unusable");
         }
 
         // Find the other side
@@ -214,22 +214,20 @@ public class Bridge extends AbstractMechanic {
         if (right > settings.maxWidth) right = settings.maxWidth;
 
         // Expand Left
-        for (int i = 0; i < left; i++) {
+        for (int i = 0; i < left; i++)
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        }
 
         // Expand Right
-        for (int i = 0; i < right; i++) {
+        for (int i = 0; i < right; i++)
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        }
 
         // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
@@ -282,29 +280,23 @@ public class Bridge extends AbstractMechanic {
             if (state instanceof Sign) sign = (Sign) state;
         }
 
-        if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite")) {
-            if (event.getPlayer().getItemInHand() != null)
-                if (getBridgeMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
+        if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite")) if (event.getPlayer().getItemInHand() != null)
+            if (getBridgeMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
 
-                    int amount = 1;
-                    if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
-                        amount = 5;
-                    addBlocks(sign,amount);
+                int amount = 1;
+                if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
+                    amount = 5;
+                addBlocks(sign,amount);
 
-                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                        } else {
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - amount);
-                        }
-                    }
+                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                else
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                            - amount);
 
-                    player.print("mech.restock");
-                    event.setCancelled(true);
-                    return;
-                }
-        }
+                player.print("mech.restock");
+                event.setCancelled(true);
+                return;
+            }
 
         flipState(player);
 

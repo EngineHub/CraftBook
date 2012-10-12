@@ -82,16 +82,14 @@ public class Payment extends AbstractMechanic {
         double money = Double.parseDouble(sign.getLine(2));
         String reciever = sign.getLine(3);
 
-        if (MechanismsPlugin.economy.withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess()) {
-            if (MechanismsPlugin.economy.depositPlayer(reciever, money).transactionSuccess()) {
-                Block back = SignUtil.getBackBlock(sign.getBlock());
-                BlockFace bface = sign.getBlock().getFace(back);
-                Block redstoneItem = back.getRelative(bface);
-                if (setState(sign.getBlock(), true))
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new turnOff(redstoneItem), 20L);
-            } else
-                MechanismsPlugin.economy.depositPlayer(event.getPlayer().getName(), money);
-        }
+        if (MechanismsPlugin.economy.withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess()) if (MechanismsPlugin.economy.depositPlayer(reciever, money).transactionSuccess()) {
+            Block back = SignUtil.getBackBlock(sign.getBlock());
+            BlockFace bface = sign.getBlock().getFace(back);
+            Block redstoneItem = back.getRelative(bface);
+            if (setState(sign.getBlock(), true))
+                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new turnOff(redstoneItem), 20L);
+        } else
+            MechanismsPlugin.economy.depositPlayer(event.getPlayer().getName(), money);
 
         event.setCancelled(true);
     }
@@ -153,9 +151,7 @@ public class Payment extends AbstractMechanic {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
                     Sign sign = (Sign) state;
-                    if (sign.getLine(1).equalsIgnoreCase("[Pay]")) {
-                        return new Payment(pt, plugin);
-                    }
+                    if (sign.getLine(1).equalsIgnoreCase("[Pay]")) return new Payment(pt, plugin);
                 }
             }
 
@@ -172,15 +168,13 @@ public class Payment extends AbstractMechanic {
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Pay]")) {
-                if (!player.hasPermission("craftbook.mech.pay")) {
-                    throw new InsufficientPermissionsException();
-                }
+                if (!player.hasPermission("craftbook.mech.pay")) throw new InsufficientPermissionsException();
 
                 sign.setLine(1, "[Pay]");
                 player.print("mech.pay.create");
-            } else {
-                return null;
             }
+            else
+                return null;
 
             throw new ProcessedMechanismException();
         }

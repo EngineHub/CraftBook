@@ -208,7 +208,7 @@ public class CauldronCookbook {
          * Stores a list of ingredients.
          */
         private final Map<Integer, Integer> ingredientLookup
-                = new HashMap<Integer, Integer>();
+        = new HashMap<Integer, Integer>();
         /**
          * List of resulting items or blocks.
          */
@@ -227,7 +227,7 @@ public class CauldronCookbook {
          * @param groups
          */
         public Recipe(String name, List<Integer> ingredients,
-                      List<Integer> results, String[] groups) {
+                List<Integer> results, String[] groups) {
 
             this.name = name;
             this.ingredients = Collections.unmodifiableList(ingredients);

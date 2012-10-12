@@ -68,17 +68,13 @@ public class ICMechanic extends PersistentMechanic {
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         // abort if the current did not change
-        if (event.getNewCurrent() == event.getOldCurrent()) {
-            return;
-        }
+        if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final Block source = event.getSource();
             final BlockState state = block.getState();
             // abort if the sign is the source or the block the sign is attached to
-            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) {
-                return;
-            }
+            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) return;
 
             Runnable runnable = new Runnable() {
 
@@ -123,11 +119,11 @@ public class ICMechanic extends PersistentMechanic {
 
                 Matcher matcher = ICMechanicFactory.codePattern.matcher(sign.getLine(1));
 
-                if (!matcher.matches()) {
+                if (!matcher.matches())
                     return false;
-                } else if (!matcher.group(1).equalsIgnoreCase(id)) {
+                else if (!matcher.group(1).equalsIgnoreCase(id))
                     return false;
-                } else return ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
+                else return ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
             }
         }
 

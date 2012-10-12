@@ -44,11 +44,8 @@ public class RecipeManager extends BaseConfiguration {
         // lets load all recipes
         if (cfg == null) return; //If the config is null, it can't continue.
         Set<String> keys = cfg.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                recipes.add(new Recipe(key, cfg));
-            }
-        }
+        if (keys != null) for (String key : keys)
+            recipes.add(new Recipe(key, cfg));
     }
 
     public static final class Recipe {
@@ -98,11 +95,9 @@ public class RecipeManager extends BaseConfiguration {
                 }
                 if (material != null) {
                     CraftingItemStack itemStack = new CraftingItemStack(material);
-                    if (split.length > 1) {
-                        itemStack.setData(Short.parseShort(split[1]));
-                    } else {
+                    if (split.length > 1) itemStack.setData(Short.parseShort(split[1]));
+                    else
                         itemStack.setData((short) 0);
-                    }
                     itemStack.setAmount(1);
                     items.put(itemStack, section.getString(item).toCharArray()[0]);
                 }
@@ -124,11 +119,9 @@ public class RecipeManager extends BaseConfiguration {
                 }
                 if (material != null) {
                     CraftingItemStack itemStack = new CraftingItemStack(material);
-                    if (split.length > 1) {
-                        itemStack.setData(Short.parseShort(split[1]));
-                    } else {
+                    if (split.length > 1) itemStack.setData(Short.parseShort(split[1]));
+                    else
                         itemStack.setData((short) 0);
-                    }
                     itemStack.setAmount(section.getInt(item, 1));
                     items.add(itemStack);
                 }
@@ -187,10 +180,9 @@ public class RecipeManager extends BaseConfiguration {
 
             public static RecipeType getTypeFromName(String name) {
 
-                for (RecipeType t : RecipeType.values()) {
+                for (RecipeType t : RecipeType.values())
                     if (t.getName().equalsIgnoreCase(name))
                         return t;
-                }
                 return SHAPELESS; //Default to shapeless
             }
         }

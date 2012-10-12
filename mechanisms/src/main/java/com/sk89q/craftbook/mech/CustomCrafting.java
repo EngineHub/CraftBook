@@ -34,11 +34,9 @@ public class CustomCrafting implements Listener {
         if (event.getInventory() instanceof FurnaceInventory) {
             if (fuels == null || fuels.size() <= 0) return;
             FurnaceInventory inv = (FurnaceInventory) event.getInventory();
-            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) {
-                if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
-                    inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
-                    inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
-                }
+            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
+                inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
+                inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
             }
         }
     }
@@ -183,9 +181,9 @@ public class CustomCrafting implements Listener {
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]) +
                             getShapeData(items[2].split(":")[0]),
                             getShapeData(items[3].split(":")[0]) + getShapeData(items[4].split(":")[0]) +
-                                    getShapeData(items[5].split(":")[0]),
+                            getShapeData(items[5].split(":")[0]),
                             getShapeData(items[6].split(":")[0]) + getShapeData(items[7].split(":")[0]) +
-                                    getShapeData(items[8].split(":")[0]));
+                            getShapeData(items[8].split(":")[0]));
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];

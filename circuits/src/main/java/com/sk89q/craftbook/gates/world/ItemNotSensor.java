@@ -36,9 +36,7 @@ public class ItemNotSensor extends ItemSensor {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            chip.setOutput(0, !isDetected());
-        }
+        if (chip.getInput(0)) chip.setOutput(0, !isDetected());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

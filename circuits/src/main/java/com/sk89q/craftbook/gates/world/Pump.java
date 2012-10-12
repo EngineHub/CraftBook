@@ -81,10 +81,8 @@ public class Pump extends AbstractIC {
                 return true;
             }
         }
-        else {
-            if(searchNear(c,liquid,depth + 1))
-                return true;
-        }
+        else if(searchNear(c,liquid,depth + 1))
+            return true;
         return false;
     }
 

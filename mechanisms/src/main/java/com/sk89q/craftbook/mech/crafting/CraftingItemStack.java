@@ -21,11 +21,9 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         for (Item item : stacks) {
             ItemStack stack = item.getItemStack();
             String name = stack.getType() + ":" + stack.getDurability();
-            if (items.containsKey(name)) {
-                items.put(name, items.get(name) + stack.getAmount());
-            } else {
+            if (items.containsKey(name)) items.put(name, items.get(name) + stack.getAmount());
+            else
                 items.put(name, stack.getAmount());
-            }
         }
         Set<CraftingItemStack> stackSet = new LinkedHashSet<CraftingItemStack>();
         // merge the amounts and stacks
@@ -104,9 +102,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
     public CraftingItemStack add(CraftingItemStack stack) {
 
-        if (stack.equals(this)) {
-            amount += stack.getAmount();
-        }
+        if (stack.equals(this)) amount += stack.getAmount();
         return this;
     }
 
@@ -122,9 +118,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
     public boolean isSameType(CraftingItemStack stack) {
 
-        if (data == -1 || stack.getData() == -1) {
-            return stack.getMaterial() == getMaterial();
-        }
+        if (data == -1 || stack.getData() == -1) return stack.getMaterial() == getMaterial();
         return stack.getMaterial() == getMaterial() &&
                 stack.getData() == getData();
     }

@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
@@ -84,7 +84,7 @@ public abstract class PersistentMechanic extends AbstractMechanic {
     public PersistentMechanic() {
 
         super();
-        this.triggers = Collections.unmodifiableList(
+        triggers = Collections.unmodifiableList(
                 new ArrayList<BlockWorldVector>());
     }
 

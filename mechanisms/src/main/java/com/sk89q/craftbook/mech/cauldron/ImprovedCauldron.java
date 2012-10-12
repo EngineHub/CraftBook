@@ -51,9 +51,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         @Override
         public ImprovedCauldron detect(BlockWorldVector pos) throws InvalidMechanismException {
 
-            if (isCauldron(pos)) {
-                return new ImprovedCauldron(plugin, BukkitUtil.toBlock(pos), recipes);
-            }
+            if (isCauldron(pos)) return new ImprovedCauldron(plugin, BukkitUtil.toBlock(pos), recipes);
             return null;
         }
 
@@ -105,41 +103,41 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                 Collection<Item> items = getItems();
                 ImprovedCauldronCookbook.Recipe recipe = cookbook.getRecipe(CauldronItemStack.convert(items));
 
-	            // lets check permissions for that recipe
-	            if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
-			            && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
-		            player.printError("You dont have permission to cook this recipe.");
-		            return;
-	            }
+                // lets check permissions for that recipe
+                if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
+                        && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
+                    player.printError("You dont have permission to cook this recipe.");
+                    return;
+                }
 
-	            if (!plugin.getLocalConfiguration().cauldronSettings.newSpoons) {
-	                cook(recipe, items);
-	                player.print(
-	                        "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
-	                        .YELLOW + " recipe.");
-	                block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-	                event.setCancelled(true);
-	            } else { //Spoons
-	                if (event.getPlayer().getItemInHand() == null) return;
-	                if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
-	                    double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
-	                    Random r = new Random();
-	                    double ran = r.nextDouble();
-	                    event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
-	                            .getDurability() - (short) 1));
-	                    if (chance <= ran) {
-	                        cook(recipe, items);
-	                        player.print(
-	                                "You have cooked the " + ChatColor.AQUA + recipe.getName() +
-	                                ChatColor.YELLOW + " recipe.");
-	                        block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
-	                                false);
-	                        event.setCancelled(true);
-	                    } else {
-	                        player.print("mech.cauldron.stir");
-	                    }
-	                }
-	            }
+                if (!plugin.getLocalConfiguration().cauldronSettings.newSpoons) {
+                    cook(recipe, items);
+                    player.print(
+                            "You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
+                            .YELLOW + " recipe.");
+                    block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+                    event.setCancelled(true);
+                } else { //Spoons
+                    if (event.getPlayer().getItemInHand() == null) return;
+                    if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
+                        double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
+                        Random r = new Random();
+                        double ran = r.nextDouble();
+                        event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
+                                .getDurability() - (short) 1));
+                        if (chance <= ran) {
+                            cook(recipe, items);
+                            player.print(
+                                    "You have cooked the " + ChatColor.AQUA + recipe.getName() +
+                                    ChatColor.YELLOW + " recipe.");
+                            block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
+                                    false);
+                            event.setCancelled(true);
+                        }
+                        else
+                            player.print("mech.cauldron.stir");
+                    }
+                }
             } catch (UnknownRecipeException e) {
                 player.printError(e.getMessage());
             }
@@ -177,16 +175,13 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
      */
     private void cook(ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
         // first lets destroy all items inside the cauldron
-        for (Item item : items) {
+        for (Item item : items)
             item.remove();
-        }
         // then give out the result items
         for (CauldronItemStack stack : recipe.getResults()) {
             // here we need to reset the data value to 0 or problems will occur later on
             // when trying to remove items from the inventory for example
-            if (stack.getData() < 0) {
-                stack.setData((short) 0);
-            }
+            if (stack.getData() < 0) stack.setData((short) 0);
             block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
         }
     }
@@ -194,16 +189,13 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
     private Collection<Item> getItems() {
 
         List<Item> items = new ArrayList<Item>();
-        for (Entity entity : block.getChunk().getEntities()) {
+        for (Entity entity : block.getChunk().getEntities())
             if (entity instanceof Item) {
                 Location location = entity.getLocation();
                 if (location.getBlockX() == block.getX()
                         && location.getBlockY() == block.getY()
-                        && location.getBlockZ() == block.getZ()) {
-                    items.add((Item) entity);
-                }
+                        && location.getBlockZ() == block.getZ()) items.add((Item) entity);
             }
-        }
         return items;
     }
 

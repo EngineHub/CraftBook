@@ -125,7 +125,7 @@ public class Planter extends AbstractIC {
 
                 if (items == null) return;
 
-                for (Item itemEnt : items) {
+                for (Item itemEnt : items)
                     if (!itemEnt.isDead()
                             && itemEnt.getItemStack().getAmount() > 0
                             && itemEnt.getItemStack().getTypeId() == itemId
@@ -153,7 +153,6 @@ public class Planter extends AbstractIC {
                             break;
                         }
                     }
-                }
             } catch (Exception ignored) {
             }
         }

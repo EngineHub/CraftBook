@@ -40,9 +40,7 @@ public class Command extends AbstractMechanic {
 
             if (block.getState() instanceof Sign) {
                 Sign s = (Sign) block.getState();
-                if (s.getLine(1).equalsIgnoreCase("[Command]")) {
-                    return new Command(block, plugin);
-                }
+                if (s.getLine(1).equalsIgnoreCase("[Command]")) return new Command(block, plugin);
             }
             return null;
         }
@@ -57,9 +55,7 @@ public class Command extends AbstractMechanic {
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Command]")) return null;
-            if (!player.hasPermission("craftbook.mech.command")) {
-                throw new InsufficientPermissionsException();
-            }
+            if (!player.hasPermission("craftbook.mech.command")) throw new InsufficientPermissionsException();
 
             player.print("mech.command.create");
             sign.setLine(1, "[Command]");

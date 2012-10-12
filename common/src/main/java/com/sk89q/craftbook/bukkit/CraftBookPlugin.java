@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.bukkit;
 
@@ -27,34 +27,34 @@ import com.sk89q.craftbook.CommonConfiguration;
  */
 public class CraftBookPlugin extends BaseBukkitPlugin {
 
-	private static CraftBookPlugin instance;
+    private static CraftBookPlugin instance;
 
-	public static CraftBookPlugin getInstance() {
-		return instance;
-	}
+    public static CraftBookPlugin getInstance() {
+        return instance;
+    }
 
-	private CommonConfiguration config;
+    private CommonConfiguration config;
 
-	public CraftBookPlugin() {
+    public CraftBookPlugin() {
 
-		instance = this;
-	}
+        instance = this;
+    }
 
-	@Override
-	public void onEnable() {
+    @Override
+    public void onEnable() {
 
-		super.onEnable();
-		config = new CommonConfiguration(getConfig(), getDataFolder());
-		saveConfig();
-	}
+        super.onEnable();
+        config = new CommonConfiguration(getConfig(), getDataFolder());
+        saveConfig();
+    }
 
-	@Override
+    @Override
     protected void registerEvents() {
 
     }
 
-	@Override
-	public CommonConfiguration getLocalConfiguration() {
-		return config;
-	}
+    @Override
+    public CommonConfiguration getLocalConfiguration() {
+        return config;
+    }
 }

@@ -38,9 +38,7 @@ public class DispenserRecipes implements Listener {
             if(!(event.getBlock().getState() instanceof Dispenser))
                 return; //Heh? Isn't this just for dispensers?
             Dispenser dis = (Dispenser) event.getBlock().getState();
-            if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
-                event.setCancelled(true);
-            }
+            if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) event.setCancelled(true);
         }
     }
 
@@ -58,20 +56,18 @@ public class DispenserRecipes implements Listener {
                 current:
                 {
                     if (r.recipe[0] == 0 && stacks[0] == null || r.recipe[0] == stacks[0].getTypeId()) {
-                        for (int i = 1; i < stacks.length; i++) {
+                        for (int i = 1; i < stacks.length; i++)
                             if (!(!(r.recipe[i] != 0 && stacks[i] == null) && (r.recipe[i] == 0 && stacks[i] ==
                                     null || r.recipe[i] == stacks[i].getTypeId())))
                                 break current; //This recipe is wrong. Do normal dispenser stuff...
-                        }
                         toReturn = r.doAction(dis, item, velocity, event);
-                        for (int i = 1; i < stacks.length; i++) {
+                        for (int i = 1; i < stacks.length; i++)
                             if (r.recipe[i] == 0 && stacks[i] == null || r.recipe[i] == stacks[i].getTypeId()) {
                                 if (stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0)
                                     continue;
                                 stacks[i] = ItemUtil.getUsedItem(stacks[i]);
                             } else
                                 return true; //Cancel the event, as obviously something went wrong.
-                        }
                         dis.getInventory().setContents(stacks);
                     }
                     break current;

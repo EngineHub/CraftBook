@@ -214,9 +214,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                     output = new FileOutputStream(actual);
                     byte[] buf = new byte[8192];
                     int length;
-                    while ((length = input.read(buf)) > 0) {
+                    while ((length = input.read(buf)) > 0)
                         output.write(buf, 0, length);
-                    }
 
                     logger.info(getDescription().getName()
                             + ": Default configuration file written: " + name);
@@ -260,10 +259,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     public boolean hasPermission(CommandSender sender, String perm) {
 
-        if (!(sender instanceof Player)) {
-            return sender.isOp() && sender instanceof ConsoleCommandSender
-                    || perms.hasPermission(sender.getName(), perm);
-        }
+        if (!(sender instanceof Player)) return sender.isOp() && sender instanceof ConsoleCommandSender
+                || perms.hasPermission(sender.getName(), perm);
 
         return hasPermission(sender, ((Player) sender).getWorld(), perm);
     }
@@ -314,9 +311,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
             sender.sendMessage(ChatColor.RED + e.getMessage());
             sender.sendMessage(ChatColor.RED + e.getUsage());
         } catch (WrappedCommandException e) {
-            if (e.getCause() instanceof NumberFormatException) {
+            if (e.getCause() instanceof NumberFormatException)
                 sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
-            } else {
+            else {
                 sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
                 e.printStackTrace();
             }

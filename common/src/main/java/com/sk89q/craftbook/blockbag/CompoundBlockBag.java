@@ -42,7 +42,7 @@ public class CompoundBlockBag extends BlockBag {
      */
     public CompoundBlockBag(List<BlockBag> bags) {
 
-        this.sources = bags;
+        sources = bags;
     }
 
     /**
@@ -50,6 +50,7 @@ public class CompoundBlockBag extends BlockBag {
      *
      * @param id
      */
+    @Override
     public void storeBlock(int id) throws BlockBagException {
 
         for (BlockBag b : sources)
@@ -66,6 +67,7 @@ public class CompoundBlockBag extends BlockBag {
      *
      * @param id
      */
+    @Override
     public void fetchBlock(int id) throws BlockBagException {
 
         for (BlockBag b : sources)
@@ -82,6 +84,7 @@ public class CompoundBlockBag extends BlockBag {
      *
      * @return
      */
+    @Override
     public void flushChanges() {
 
         for (BlockBag b : sources)

@@ -38,23 +38,19 @@ public class Pulser extends AbstractIC {
             Sign sign = getSign();
             String line2 = sign.getLine(2);
             String line3 = sign.getLine(3);
-            if (!(line2 == null) && !line2.equals("")) {
-                try {
-                    String[] split = line2.split(":");
-                    pulseLength = Integer.parseInt(split[0]);
-                    startDelay = Integer.parseInt(split[1]);
-                } catch (Exception e) {
-                    // defaults will be used
-                }
+            if (!(line2 == null) && !line2.equals("")) try {
+                String[] split = line2.split(":");
+                pulseLength = Integer.parseInt(split[0]);
+                startDelay = Integer.parseInt(split[1]);
+            } catch (Exception e) {
+                // defaults will be used
             }
-            if (!(line3 == null) && !line3.equals("")) {
-                try {
-                    String[] split = line3.split(":");
-                    pulseCount = Integer.parseInt(split[0]);
-                    pauseLength = Integer.parseInt(split[1]);
-                } catch (Exception e) {
-                    // defaults will be used
-                }
+            if (!(line3 == null) && !line3.equals("")) try {
+                String[] split = line3.split(":");
+                pulseCount = Integer.parseInt(split[0]);
+                pauseLength = Integer.parseInt(split[1]);
+            } catch (Exception e) {
+                // defaults will be used
             }
             sign.setLine(2, pulseLength + ":" + startDelay);
             sign.setLine(3, pulseCount + ":" + pulseLength);
@@ -78,9 +74,7 @@ public class Pulser extends AbstractIC {
     @Override
     public final void trigger(ChipState chip) {
 
-        if (getInput(chip)) {
-            startThread(chip);
-        }
+        if (getInput(chip)) startThread(chip);
     }
 
     private void startThread(ChipState chip) {
@@ -149,10 +143,9 @@ public class Pulser extends AbstractIC {
                 // stop the pulse if we reached the pulse length
                 if (currentPulse % pulseLength == 0) stopPulse();
                 else increasePulse();
-            } else {
-                // start the next pulse if the pause is over
-                if (currentTick % pauseLength == 0) startPulse();
             }
+            else // start the next pulse if the pause is over
+            if (currentTick % pauseLength == 0) startPulse();
             // if all pulses were sent stop the thread
             if (!on && currentPulseCount % pulseCount == 0) stopThread();
         }

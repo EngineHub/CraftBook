@@ -81,9 +81,7 @@ public class FamilyVIVO extends AbstractICFamily {
         @Override
         public void set(int pin, boolean value) {
             Block block = getBlock(pin);
-            if(isOutput(block)) {
-                if (block != null) ICUtil.setState(block, value);
-            }
+            if(isOutput(block)) if (block != null) ICUtil.setState(block, value);
         }
 
         private boolean isOutput(Block b) {

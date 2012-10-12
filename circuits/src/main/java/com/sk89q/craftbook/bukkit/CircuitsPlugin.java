@@ -82,39 +82,39 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         saveConfig();
 
 
-	    PermissionsResolverManager.initialize(this);
-	    perms = PermissionsResolverManager.getInstance();
+        PermissionsResolverManager.initialize(this);
+        perms = PermissionsResolverManager.getInstance();
 
-	    manager = new MechanicManager(this);
-	    MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
-	    adapter.register(manager);
+        manager = new MechanicManager(this);
+        MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
+        adapter.register(manager);
 
-	    File midi = new File(getDataFolder(), "midi/");
-	    if (!midi.exists()) midi.mkdir();
+        File midi = new File(getDataFolder(), "midi/");
+        if (!midi.exists()) midi.mkdir();
 
-	    if (config.enableICs) {
-		    registerICs();
-		    icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "ic-config.yml")), getDataFolder());
-		    try {
-			    icConfig.cfg.save(new File(getDataFolder(), "ic-config.yml"));
-		    } catch (IOException ex) {
-			    getLogger().log(Level.SEVERE, "Could not save IC Config", ex);
-		    }
-	    }
+        if (config.enableICs) {
+            registerICs();
+            icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "ic-config.yml")), getDataFolder());
+            try {
+                icConfig.cfg.save(new File(getDataFolder(), "ic-config.yml"));
+            } catch (IOException ex) {
+                getLogger().log(Level.SEVERE, "Could not save IC Config", ex);
+            }
+        }
 
-	    // Let's register mechanics!
-	    if (config.enableNetherstone) registerMechanic(new Netherrack.Factory());
-	    if (config.enablePumpkins) registerMechanic(new JackOLantern.Factory(this));
-	    if (config.enableGlowStone) registerMechanic(new GlowStone.Factory(this));
-	    if (config.enableICs) {
-		    registerMechanic(new ICMechanicFactory(this, icManager));
-		    setupSelfTriggered();
-	    }
+        // Let's register mechanics!
+        if (config.enableNetherstone) registerMechanic(new Netherrack.Factory());
+        if (config.enablePumpkins) registerMechanic(new JackOLantern.Factory(this));
+        if (config.enableGlowStone) registerMechanic(new GlowStone.Factory(this));
+        if (config.enableICs) {
+            registerMechanic(new ICMechanicFactory(this, icManager));
+            setupSelfTriggered();
+        }
 
-	    // Register events
-	    registerEvents();
+        // Register events
+        registerEvents();
 
-	    languageManager = new LanguageManager(this);
+        languageManager = new LanguageManager(this);
     }
 
     /**
@@ -325,9 +325,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     public List<RegisteredICFactory> getICList() {
 
         List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
-        for (Entry<String, RegisteredICFactory> e : icManager.registered.entrySet()) {
+        for (Entry<String, RegisteredICFactory> e : icManager.registered.entrySet())
             ics.add(e.getValue());
-        }
         return ics;
     }
 
@@ -361,9 +360,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @SuppressWarnings("unused")
     private void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
-        for (MechanicFactory<? extends Mechanic> aFactory : factories) {
+        for (MechanicFactory<? extends Mechanic> aFactory : factories)
             registerMechanic(aFactory);
-        }
     }
 
     /**

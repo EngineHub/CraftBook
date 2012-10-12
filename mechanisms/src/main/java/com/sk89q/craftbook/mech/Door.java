@@ -102,9 +102,9 @@ public class Door extends AbstractMechanic {
                     sign.setLine(0, "0");
                 sign.update();
                 player.print("mech.door.create");
-            } else {
-                return null;
             }
+            else
+                return null;
 
             throw new ProcessedMechanismException();
         }
@@ -162,13 +162,11 @@ public class Door extends AbstractMechanic {
         int block;
         findBase:
         {
-            if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
+            if (s.getLine(1).equalsIgnoreCase("[Door Up]"))
                 proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-            } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
-                proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-            } else {
+            else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
+            else
                 throw new InvalidConstructionException("Sign is incorrectly made.");
-            }
 
             block = proximalBaseCenter.getTypeId();
 
@@ -177,16 +175,14 @@ public class Door extends AbstractMechanic {
                         && proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == block)
                     break findBase;
                 throw new InvalidConstructionException("mech.door.material");
-            } else {
-                throw new UnacceptableMaterialException("mech.door.unusable");
             }
+            else
+                throw new UnacceptableMaterialException("mech.door.unusable");
         }
         // Find the other side
-        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]"))
             otherSide = trigger.getRelative(BlockFace.UP);
-        } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-            otherSide = trigger.getRelative(BlockFace.DOWN);
-        }
+        else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) otherSide = trigger.getRelative(BlockFace.DOWN);
         for (int i = 0; i <= settings.maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
@@ -201,11 +197,9 @@ public class Door extends AbstractMechanic {
                 if ("[Door]".equalsIgnoreCase(otherSignText)) break;
             }
 
-            if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+            if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]"))
                 otherSide = otherSide.getRelative(BlockFace.UP);
-            } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-                otherSide = otherSide.getRelative(BlockFace.DOWN);
-            }
+            else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) otherSide = otherSide.getRelative(BlockFace.DOWN);
         }
 
         if (otherSide.getType() != Material.SIGN_POST)
@@ -213,11 +207,9 @@ public class Door extends AbstractMechanic {
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
 
-        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]"))
             distalBaseCenter = otherSide.getRelative(BlockFace.DOWN);
-        } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
-            distalBaseCenter = otherSide.getRelative(BlockFace.UP);
-        }
+        else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) distalBaseCenter = otherSide.getRelative(BlockFace.UP);
 
         if (distalBaseCenter.getTypeId() != block && distalBaseCenter.getData() != proximalBaseCenter.getData()
                 || distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() != block && distalBaseCenter
@@ -248,22 +240,20 @@ public class Door extends AbstractMechanic {
         if (right > settings.maxWidth) right = settings.maxWidth;
 
         // Expand Left
-        for (int i = 0; i < left; i++) {
+        for (int i = 0; i < left; i++)
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        }
 
         // Expand Right
-        for (int i = 0; i < right; i++) {
+        for (int i = 0; i < right; i++)
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
-        }
 
         // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(BlockFace.UP), BukkitUtil.toVector(BlockFace.DOWN));
@@ -282,34 +272,30 @@ public class Door extends AbstractMechanic {
             return;
         }
 
-        if (event.getPlayer().getItemInHand() != null) {
-            if (getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
-                Sign sign = null;
+        if (event.getPlayer().getItemInHand() != null) if (getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
+            Sign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
-                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-                    BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign) sign = (Sign) state;
-                }
+            if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                    || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+                BlockState state = event.getClickedBlock().getState();
+                if (state instanceof Sign) sign = (Sign) state;
+            }
 
-                if (sign != null) {
-                    int amount = 1;
-                    if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
-                        amount = 5;
-                    addBlocks(sign,amount);
+            if (sign != null) {
+                int amount = 1;
+                if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
+                    amount = 5;
+                addBlocks(sign,amount);
 
-                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                        } else
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - amount);
-                    }
+                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount)
+                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                else
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                            - amount);
 
-                    player.print("mech.restock");
-                    event.setCancelled(true);
-                    return;
-                }
+                player.print("mech.restock");
+                event.setCancelled(true);
+                return;
             }
         }
 
@@ -337,11 +323,9 @@ public class Door extends AbstractMechanic {
         // efficiency choice :/
         Block hinge;
 
-        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
-            hinge = proximalBaseCenter.getRelative(BlockFace.UP);
-        } else {
+        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) hinge = proximalBaseCenter.getRelative(BlockFace.UP);
+        else
             hinge = proximalBaseCenter.getRelative(BlockFace.DOWN);
-        }
 
         // aaand we also only check if it's something we can
         // smosh or not when deciding if we're open or closed.
@@ -387,22 +371,20 @@ public class Door extends AbstractMechanic {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getTypeId())) {
-                    if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                        Sign s = (Sign) trigger.getState();
-                        if (hasEnoughBlocks(s)) {
-                            b.setType(getDoorMaterial());
-                            b.setData(getDoorData());
-                            removeBlocks(s,1);
-                        } else {
-                            if (player != null) player.printError("Not enough blocks for mechanic to function!");
-                            return;
-                        }
-
-                    } else {
+                if (canPassThrough(b.getTypeId())) if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                    Sign s = (Sign) trigger.getState();
+                    if (hasEnoughBlocks(s)) {
                         b.setType(getDoorMaterial());
                         b.setData(getDoorData());
+                        removeBlocks(s,1);
+                    } else {
+                        if (player != null) player.printError("Not enough blocks for mechanic to function!");
+                        return;
                     }
+
+                } else {
+                    b.setType(getDoorMaterial());
+                    b.setData(getDoorData());
                 }
             }
         }
@@ -472,9 +454,8 @@ public class Door extends AbstractMechanic {
         passableBlocks[8] = BlockID.DEAD_BUSH;
         passableBlocks[9] = BlockID.AIR;
 
-        for (int aPassableBlock : passableBlocks) {
+        for (int aPassableBlock : passableBlocks)
             if (aPassableBlock == t) return true;
-        }
 
         return false;
     }

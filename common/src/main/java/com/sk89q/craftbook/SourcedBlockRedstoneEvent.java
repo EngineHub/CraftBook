@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook;
 
@@ -36,7 +36,7 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
     public SourcedBlockRedstoneEvent(BlockRedstoneEvent event, Block block) {
 
         super(block, event.getOldCurrent(), event.getNewCurrent());
-        this.source = event.getBlock();
+        source = event.getBlock();
     }
 
     public SourcedBlockRedstoneEvent(Block source, Block block, int old, int n) {

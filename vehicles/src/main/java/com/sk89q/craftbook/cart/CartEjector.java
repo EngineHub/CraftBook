@@ -22,15 +22,10 @@ public class CartEjector extends CartMechanism {
 
         // go
         Block ejectTarget;
-        if (blocks.sign == null) {
-            ejectTarget = blocks.rail;
-        } else {
-            if (!blocks.matches("eject")) {
-                ejectTarget = blocks.rail;
-            } else {
-                ejectTarget = blocks.rail.getRelative(SignUtil.getFront(blocks.sign));
-            }
-        }
+        if (blocks.sign == null) ejectTarget = blocks.rail;
+        else if (!blocks.matches("eject")) ejectTarget = blocks.rail;
+        else
+            ejectTarget = blocks.rail.getRelative(SignUtil.getFront(blocks.sign));
         // if you use just
         //     cart.getPassenger().teleport(ejectTarget.getLocation());
         //   the client tweaks as bukkit tries to teleport you, then changes its mind and leaves you in the cart.
@@ -48,7 +43,7 @@ public class CartEjector extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

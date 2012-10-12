@@ -95,32 +95,22 @@ public class ContainerCollector extends AbstractIC {
                 }
 
                 // Check to see if it matches either test stack, if not stop
-                if (testStacks[0] != null) {
-                    if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) continue;
-                }
-                if (testStacks[1] != null) {
-                    if (!ItemUtil.areItemsIdentical(testStacks[1], item.getItemStack())) continue;
-                }
+                if (testStacks[0] != null) if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) continue;
+                if (testStacks[1] != null) if (!ItemUtil.areItemsIdentical(testStacks[1], item.getItemStack())) continue;
 
                 //Add the items to a container, and destroy them.
-                if (bl.getType() == Material.CHEST) {
+                if (bl.getType() == Material.CHEST) if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
 
-                    if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
-
-                        ((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
-                        item.remove();
-                        return true;
-                    }
+                    ((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
+                    item.remove();
+                    return true;
                 }
 
-                if (bl.getType() == Material.DISPENSER) {
+                if (bl.getType() == Material.DISPENSER) if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
 
-                    if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
-
-                        ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
-                        item.remove();
-                        return true;
-                    }
+                    ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
+                    item.remove();
+                    return true;
                 }
 
                 if (bl.getType() == Material.BREWING_STAND) {

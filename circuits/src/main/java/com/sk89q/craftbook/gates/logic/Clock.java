@@ -133,8 +133,6 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
     @Override
     public void think(ChipState chip) {
-        if (chip.getInput(0)) {
-            triggerClock(chip);
-        }
+        if (chip.getInput(0)) triggerClock(chip);
     }
 }

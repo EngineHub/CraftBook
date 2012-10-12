@@ -85,19 +85,17 @@ public class MapChanger extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
-        if(event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.MAP) {
-            if (block.getState() instanceof Sign) {
-                Sign sign = (Sign) block.getState();
-                byte id;
-                try {
-                    id = Byte.parseByte(sign.getLine(2));
-                } catch (Exception e) {
-                    id = -1;
-                }
-                if(id == -1)
-                    event.getPlayer().sendMessage("Invalid Map!");
-                event.getPlayer().getItemInHand().setDurability(id);
+        if(event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.MAP) if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            byte id;
+            try {
+                id = Byte.parseByte(sign.getLine(2));
+            } catch (Exception e) {
+                id = -1;
             }
+            if(id == -1)
+                event.getPlayer().sendMessage("Invalid Map!");
+            event.getPlayer().getItemInHand().setDurability(id);
         }
     }
 

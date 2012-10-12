@@ -43,20 +43,16 @@ public class Delayer extends AbstractIC {
     @Override
     public void trigger(final ChipState chip) {
 
-        if (chip.getInput(0)) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+        if (chip.getInput(0)) Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
-                @Override
-                public void run() {
+            @Override
+            public void run() {
 
-                    if (chip.getInput(0)) {
-                        chip.setOutput(0, true);
-                    }
-                }
-            }, delay * 20);
-        } else {
+                if (chip.getInput(0)) chip.setOutput(0, true);
+            }
+        }, delay * 20);
+        else
             chip.setOutput(0, false);
-        }
     }
 
     public static class Factory extends AbstractICFactory {

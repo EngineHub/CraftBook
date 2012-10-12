@@ -125,7 +125,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         // Register events
         registerEvents();
 
-	    languageManager = new LanguageManager(this);
+        languageManager = new LanguageManager(this);
     }
 
     /**
@@ -229,9 +229,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @SuppressWarnings("unused")
     private void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
-        for (MechanicFactory<? extends Mechanic> aFactory : factories) {
+        for (MechanicFactory<? extends Mechanic> aFactory : factories)
             registerMechanic(aFactory);
-        }
     }
 
     /**
@@ -256,9 +255,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      * @return if successfully added.
      */
     public boolean registerDispenserRecipe(Recipe recipe) {
-        if (getLocalConfiguration().dispenserSettings.enable) {
-            return dRecipes.addRecipe(recipe);
-        }
+        if (getLocalConfiguration().dispenserSettings.enable) return dRecipes.addRecipe(recipe);
         return false;
     }
 }

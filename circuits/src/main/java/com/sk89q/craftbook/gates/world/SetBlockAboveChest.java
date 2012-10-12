@@ -71,11 +71,9 @@ public class SetBlockAboveChest extends AbstractIC {
         int y = body.getY();
         int z = body.getZ();
 
-        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y + 1, z).getType() == Material.AIR) {
-            if (takeFromChest(x, y - 1, z, block, meta)) {
-                body.getWorld().getBlockAt(x, y + 1, z).setTypeId(block);
-                if (!(meta == -1)) body.getWorld().getBlockAt(x, y + 1, z).setData(meta);
-            }
+        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y + 1, z).getType() == Material.AIR) if (takeFromChest(x, y - 1, z, block, meta)) {
+            body.getWorld().getBlockAt(x, y + 1, z).setTypeId(block);
+            if (!(meta == -1)) body.getWorld().getBlockAt(x, y + 1, z).setData(meta);
         }
     }
 

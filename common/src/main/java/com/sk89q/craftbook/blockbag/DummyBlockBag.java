@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.sk89q.craftbook.blockbag;
 
@@ -56,6 +56,7 @@ public class DummyBlockBag extends BlockBag {
      *
      * @throws OutOfBlocksException
      */
+    @Override
     public void fetchBlock(int id) throws BlockBagException {
 
         if (!fetch) throw new OutOfBlocksException();
@@ -71,6 +72,7 @@ public class DummyBlockBag extends BlockBag {
      *
      * @throws OutOfSpaceException
      */
+    @Override
     public void storeBlock(int id) throws BlockBagException {
 
         if (!store) throw new OutOfSpaceException(id);
@@ -83,6 +85,7 @@ public class DummyBlockBag extends BlockBag {
      *
      * @return
      */
+    @Override
     public void addSourcePosition(WorldVector arg0) {
 
     }
@@ -94,6 +97,7 @@ public class DummyBlockBag extends BlockBag {
      *
      * @return
      */
+    @Override
     public void addSingleSourcePosition(WorldVector arg0) {
 
     }
@@ -101,6 +105,7 @@ public class DummyBlockBag extends BlockBag {
     /**
      * Flush changes.
      */
+    @Override
     public void flushChanges() {
 
     }
@@ -113,6 +118,7 @@ public class DummyBlockBag extends BlockBag {
      */
     public static class UnlimitedBlackHoleFactory implements BlockBagFactory {
 
+        @Override
         public BlockBag createBlockSource(World w, Vector v) {
 
             return new DummyBlockBag();
@@ -126,6 +132,7 @@ public class DummyBlockBag extends BlockBag {
      */
     public static class BlackHoleFactory implements BlockBagFactory {
 
+        @Override
         public BlockBag createBlockSource(World w, Vector v) {
 
             return new DummyBlockBag(false, true);
@@ -139,6 +146,7 @@ public class DummyBlockBag extends BlockBag {
      */
     public static class UnlimitedSourceFactory implements BlockBagFactory {
 
+        @Override
         public BlockBag createBlockSource(World w, Vector v) {
 
             return new DummyBlockBag(true, false);

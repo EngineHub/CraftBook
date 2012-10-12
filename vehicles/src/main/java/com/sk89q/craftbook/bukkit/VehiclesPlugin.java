@@ -62,7 +62,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         // Register events
         registerEvents();
 
-	    languageManager = new LanguageManager(this);
+        languageManager = new LanguageManager(this);
     }
 
     @Override
@@ -174,12 +174,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             if (!(vehicle instanceof Minecart)) return;
 
             VehiclesConfiguration config = getLocalConfiguration();
-            if (config.minecartRemoveOnExit) {
+            if (config.minecartRemoveOnExit)
                 vehicle.remove();
-            } else if (config.minecartDecayWhenEmpty) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) vehicle),
-                        config.minecartDecayTime);
-            }
+            else if (config.minecartDecayWhenEmpty) Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) vehicle),
+                    config.minecartDecayTime);
         }
 
         /**
@@ -240,14 +238,12 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         @EventHandler
         public void onChunkLoad(ChunkLoadEvent event) {
 
-            if (config.minecartDecayWhenEmpty) {
-                for (Entity ent : event.getChunk().getEntities()) {
-                    if (ent == null || ent.isDead()) continue;
-                    if (!(ent instanceof Minecart)) continue;
-                    if (!ent.isEmpty()) continue;
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) ent),
-                            config.minecartDecayTime);
-                }
+            if (config.minecartDecayWhenEmpty) for (Entity ent : event.getChunk().getEntities()) {
+                if (ent == null || ent.isDead()) continue;
+                if (!(ent instanceof Minecart)) continue;
+                if (!ent.isEmpty()) continue;
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) ent),
+                        config.minecartDecayTime);
             }
         }
 

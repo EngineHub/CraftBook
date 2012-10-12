@@ -48,6 +48,7 @@ public class FamilySI3O extends AbstractICFamily {
             super(source, sign);
         }
 
+        @Override
         protected Block getBlock(int pin) {
 
             Block bsign = sign.getBlock();

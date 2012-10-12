@@ -29,20 +29,18 @@ public class CartBooster extends CartMechanism {
 
         // speed up or down
         Vector newVelocity;
-        if (multiplier > 1) {
+        if (multiplier > 1)
             newVelocity = cart.getVelocity().normalize().multiply(multiplier);
-        } else if (multiplier < 1) {
-            newVelocity = cart.getVelocity().multiply(multiplier);
-        } else {
+        else if (multiplier < 1) newVelocity = cart.getVelocity().multiply(multiplier);
+        else
             return;
-        }
         // go
         cart.setVelocity(newVelocity);
     }
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

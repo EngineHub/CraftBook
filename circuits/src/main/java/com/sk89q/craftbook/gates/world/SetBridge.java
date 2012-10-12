@@ -47,31 +47,27 @@ public class SetBridge extends AbstractIC {
             center = SignUtil.getBackBlock(getSign().getBlock());
             faceing = SignUtil.getFacing(getSign().getBlock());
             String line = getSign().getLine(2);
-            if (!line.equals("")) {
-                try {
-                    String[] split = line.split("-");
-                    // parse the material data
-                    if (split.length > 0) {
-                        try {
-                            // parse the data that gets set when the block is toggled off
-                            String[] strings = split[1].split(":");
-                            offMaterial = Integer.parseInt(strings[0]);
-                            if (strings.length > 0) offData = Integer.parseInt(strings[1]);
-                        } catch (NumberFormatException e) {
-                            // do nothing and use the defaults
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            // do nothing and use the defaults
-                        }
-                    }
-                    // parse the material and data for toggle on
-                    String[] strings = split[0].split(":");
-                    onMaterial = Integer.parseInt(strings[0]);
-                    if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+            if (!line.equals("")) try {
+                String[] split = line.split("-");
+                // parse the material data
+                if (split.length > 0) try {
+                    // parse the data that gets set when the block is toggled off
+                    String[] strings = split[1].split(":");
+                    offMaterial = Integer.parseInt(strings[0]);
+                    if (strings.length > 0) offData = Integer.parseInt(strings[1]);
                 } catch (NumberFormatException e) {
                     // do nothing and use the defaults
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // do nothing and use the defaults
                 }
+                // parse the material and data for toggle on
+                String[] strings = split[0].split(":");
+                onMaterial = Integer.parseInt(strings[0]);
+                if (strings.length > 0) onData = Integer.parseInt(strings[1]);
+            } catch (NumberFormatException e) {
+                // do nothing and use the defaults
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // do nothing and use the defaults
             }
             // parse the coordinates
             line = getSign().getLine(3);
@@ -100,14 +96,12 @@ public class SetBridge extends AbstractIC {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // do nothing and use the defaults
                 }
-                if (relativeOffset) {
-                    center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
-                } else {
+                if (relativeOffset) center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
+                else
                     center = LocationUtil.getOffset(center, offsetX, offsetY, offsetZ);
-                }
-            } else {
-                center = center.getRelative(BlockFace.UP);
             }
+            else
+                center = center.getRelative(BlockFace.UP);
         }
         catch(Exception e){}
     }
@@ -128,25 +122,20 @@ public class SetBridge extends AbstractIC {
     public void trigger(ChipState chip) {
 
         load();
-        if (chip.getInput(0)) {
-            setDoor(true);
-        } else {
+        if (chip.getInput(0)) setDoor(true);
+        else
             setDoor(false);
-        }
     }
 
     private void setDoor(boolean open) {
 
-        for (int x = 0; x < width; x++) {
+        for (int x = 0; x < width; x++)
             for (int z = 0; z < depth; z++) {
                 Block block = LocationUtil.getRelativeOffset(center, faceing, x, 0, z);
-                if (open) {
-                    block.setTypeIdAndData(onMaterial, (byte) onData, true);
-                } else {
+                if (open) block.setTypeIdAndData(onMaterial, (byte) onData, true);
+                else
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
-                }
             }
-        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
