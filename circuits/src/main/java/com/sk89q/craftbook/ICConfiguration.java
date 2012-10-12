@@ -1,11 +1,10 @@
 package com.sk89q.craftbook;
 
-import java.io.File;
-
-import org.bukkit.configuration.file.FileConfiguration;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
 
 public class ICConfiguration extends BaseConfiguration {
 
@@ -16,7 +15,7 @@ public class ICConfiguration extends BaseConfiguration {
      * @param dataFolder
      */
     public ICConfiguration(FileConfiguration cfg, File dataFolder) {
-        super(cfg, dataFolder,false);
+        super(cfg, dataFolder);
 
         for(RegisteredICFactory factory : CircuitsPlugin.getInst().icManager.registered.values()) {
             if(factory.getId().startsWith("MCA")) continue;
