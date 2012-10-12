@@ -67,12 +67,17 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        Block b = SignUtil.getBackBlock(getSign().getBlock());
-        if (chip.getInput(0)) {
-            int dist = Integer.parseInt(getSign().getLine(2));
-            long time = Long.parseLong(getSign().getLine(3));
-            ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                    ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet4UpdateTime(time));
+        try {
+            Block b = SignUtil.getBackBlock(getSign().getBlock());
+            if (chip.getInput(0)) {
+                int dist = Integer.parseInt(getSign().getLine(2));
+                long time = Long.parseLong(getSign().getLine(3));
+                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
+                        ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet4UpdateTime(time));
+            }
+        }
+        catch(Exception e){
+            getSign().getBlock().breakNaturally();
         }
     }
 }
