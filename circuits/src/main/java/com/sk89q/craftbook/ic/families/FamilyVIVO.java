@@ -18,16 +18,17 @@
 
 package com.sk89q.craftbook.ic.families;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ic.AbstractChipState;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the variable-input variable-output family.
@@ -81,7 +82,9 @@ public class FamilyVIVO extends AbstractICFamily {
         @Override
         public void set(int pin, boolean value) {
             Block block = getBlock(pin);
-            if(isOutput(block)) if (block != null) ICUtil.setState(block, value);
+            if(isOutput(block)) if (block != null) {
+                ICUtil.setState(block, value);
+            }
         }
 
         private boolean isOutput(Block b) {

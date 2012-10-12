@@ -19,9 +19,10 @@
 
 package com.sk89q.craftbook.blockbag;
 
+import org.bukkit.World;
+
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bags.BlockBag;
-import org.bukkit.World;
 
 /**
  * Factory for block bags.

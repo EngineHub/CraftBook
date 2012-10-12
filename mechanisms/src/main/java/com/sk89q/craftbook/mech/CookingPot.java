@@ -147,9 +147,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     if (fire.getType() == Material.FIRE) {
                         Chest chest = (Chest) cb.getState();
                         for (ItemStack i : chest.getInventory().getContents()) {
-                            if (i == null) continue;
+                            if (i == null) {
+                                continue;
+                            }
                             ItemStack cooked = ItemUtil.getCookedResult(i);
-                            if (cooked == null) continue;
+                            if (cooked == null) {
+                                continue;
+                            }
                             chest.getInventory().addItem(new ItemStack(cooked.getType(), 1));
                             chest.getInventory().removeItem(new ItemStack(i.getType(), 1));
                             chest.update();
@@ -182,12 +186,14 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     event.getPlayer().getItemInHand().setTypeId(0);
                     event.getPlayer().setItemInHand(null);
                 }
-                else
+                else {
                     event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                }
                 event.getPlayer().sendMessage("You give the pot fuel!");
             }
-            else
+            else {
                 event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
+            }
         }
     }
 
@@ -205,8 +211,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             try {
-                if(event.getNewCurrent() > event.getOldCurrent())
+                if(event.getNewCurrent() > event.getOldCurrent()) {
                     increaseMultiplier(sign,1);
+                }
                 sign.update();
             } catch (Exception e) {
             }
@@ -214,7 +221,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     public void setMultiplier(Sign sign, int amount) {
-        if(amount < 1) amount = 1;
+        if(amount < 1) {
+            amount = 1;
+        }
         sign.setLine(3, amount + "");
         sign.update();
     }

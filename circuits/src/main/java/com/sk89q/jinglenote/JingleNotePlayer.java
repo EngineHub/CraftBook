@@ -28,7 +28,9 @@ public class JingleNotePlayer implements Runnable {
     @Override
     public void run() {
         try {
-            if (delay > 0) Thread.sleep(delay);
+            if (delay > 0) {
+                Thread.sleep(delay);
+            }
 
             try {
                 sequencer.run(this);
@@ -59,7 +61,9 @@ public class JingleNotePlayer implements Runnable {
 
     public void stop(boolean keepMusicBlock) {
 
-        if (sequencer != null) sequencer.stop();
+        if (sequencer != null) {
+            sequencer.stop();
+        }
     }
 
     /*public void play(byte instrument, byte note) {

@@ -92,8 +92,9 @@ public class FlexibleSetBlock extends AbstractIC {
             return;
         }
 
-        if (op.equals("-"))
+        if (op.equals("-")) {
             dist = -dist;
+        }
 
         int block;
         try {
@@ -104,10 +105,12 @@ public class FlexibleSetBlock extends AbstractIC {
 
         // default block data is 0
         byte data = 0;
-        if (params.length > 2) try {
-            data = Byte.parseByte(params[2]);
-        } catch (Exception e) {
-            return;
+        if (params.length > 2) {
+            try {
+                data = Byte.parseByte(params[2]);
+            } catch (Exception e) {
+                return;
+            }
         }
 
         boolean hold = line4.toUpperCase().contains("H");
@@ -119,12 +122,22 @@ public class FlexibleSetBlock extends AbstractIC {
         int y = body.getY();
         int z = body.getZ();
 
-        if (axis.equals("X")) x += dist;
-        else if (axis.equals("Y")) y += dist;
-        else z += dist;
+        if (axis.equals("X")) {
+            x += dist;
+        }
+        else if (axis.equals("Y")) {
+            y += dist;
+        }
+        else {
+            z += dist;
+        }
 
-        if (inp) body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
-        else if (hold) body.getWorld().getBlockAt(x, y, z).setTypeId(0);
+        if (inp) {
+            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
+        }
+        else if (hold) {
+            body.getWorld().getBlockAt(x, y, z).setTypeId(0);
+        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

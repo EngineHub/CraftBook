@@ -57,7 +57,9 @@ public class SetBlockAbove extends AbstractIC {
         String sblockdat = getSign().getLine(2).toUpperCase().trim();
         String sblock = sblockdat.split(":")[0];
         String smeta = "";
-        if (sblockdat.split(":").length > 1) smeta = sblockdat.split(":")[1];
+        if (sblockdat.split(":").length > 1) {
+            smeta = sblockdat.split(":")[1];
+        }
         String force = getSign().getLine(3).toUpperCase().trim();
 
         chip.setOutput(0, chip.getInput(0));
@@ -72,7 +74,9 @@ public class SetBlockAbove extends AbstractIC {
 
         byte meta = -1;
         try {
-            if (!smeta.equalsIgnoreCase("")) meta = Byte.parseByte(smeta);
+            if (!smeta.equalsIgnoreCase("")) {
+                meta = Byte.parseByte(smeta);
+            }
         } catch (Exception e) {
             return;
         }
@@ -86,7 +90,9 @@ public class SetBlockAbove extends AbstractIC {
 
         if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y + 1, z).getType() == Material.AIR) {
             body.getWorld().getBlockAt(x, y + 1, z).setTypeId(block);
-            if (!(meta == -1)) body.getWorld().getBlockAt(x, y + 1, z).setData(meta);
+            if (!(meta == -1)) {
+                body.getWorld().getBlockAt(x, y + 1, z).setData(meta);
+            }
         }
     }
 

@@ -84,8 +84,9 @@ public class Bookcase extends AbstractMechanic {
                 player.print(bookReadLine);
                 player.printRaw(text);
             }
-            else
+            else {
                 player.printError("Failed to fetch a line from the books file.");
+            }
         } catch (IOException e) {
             player.printError("Failed to read the books file.");
         }
@@ -112,7 +113,9 @@ public class Bookcase extends AbstractMechanic {
         int passes = 0;
         while ((line = br.readLine()) != null) {
             passes++;
-            if (passes >= toRead) break;
+            if (passes >= toRead) {
+                break;
+            }
         }
         br.close();
         return line;
@@ -129,8 +132,9 @@ public class Bookcase extends AbstractMechanic {
         if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
-        if (player.getTypeInHand() == 0 || !player.isHoldingBlock())
+        if (player.getTypeInHand() == 0 || !player.isHoldingBlock()) {
             read(player, plugin.getLocalConfiguration().bookcaseSettings.readLine);
+        }
     }
 
     /**

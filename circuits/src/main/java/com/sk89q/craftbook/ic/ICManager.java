@@ -86,8 +86,9 @@ public class ICManager {
         }
         if(longId!=null) {
             String toRegister = longId.toLowerCase();
-            if(toRegister.length() > 15)
+            if(toRegister.length() > 15) {
                 toRegister = toRegister.substring(0, 15);
+            }
             longRegistered.put(toRegister, id);
         }
 

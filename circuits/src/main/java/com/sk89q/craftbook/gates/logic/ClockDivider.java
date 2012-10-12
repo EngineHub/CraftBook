@@ -64,8 +64,12 @@ public class ClockDivider extends AbstractIC {
             count = Integer.parseInt(getSign().getLine(3));
         } catch (Exception ignored) {
         }
-        if (reset < 2) reset = 2;
-        if (reset > 128) reset = 128;
+        if (reset < 2) {
+            reset = 2;
+        }
+        if (reset > 128) {
+            reset = 128;
+        }
 
         // toggled, so increment count
         count++;

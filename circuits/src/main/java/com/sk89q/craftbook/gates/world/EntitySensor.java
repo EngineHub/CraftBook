@@ -87,13 +87,21 @@ public class EntitySensor extends AbstractIC {
             HashSet<Type> types = new HashSet<Type>();
 
             Type type = EnumUtil.getEnumFromString(Type.class, line);
-            if (type != null) types.add(type);
-            else
-                for (char aChar : line.toCharArray())
+            if (type != null) {
+                types.add(type);
+            }
+            else {
+                for (char aChar : line.toCharArray()) {
                     for (Type aType : Type.values())
-                        if (aType.getCharName() == aChar) types.add(aType);
+                        if (aType.getCharName() == aChar) {
+                            types.add(aType);
+                        }
+                }
+            }
 
-            if (types.size() == 0) types.add(ANY);
+            if (types.size() == 0) {
+                types.add(ANY);
+            }
 
             return types;
         }
@@ -119,7 +127,9 @@ public class EntitySensor extends AbstractIC {
             types = Type.getDetected(sign.getLine(3).trim());
 
             // Add all if no params are specified
-            if (types.size() == 0) types.add(Type.ANY);
+            if (types.size() == 0) {
+                types.add(Type.ANY);
+            }
 
             sign.setLine(3, sign.getLine(3).toUpperCase());
 
@@ -155,22 +165,27 @@ public class EntitySensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, isDetected());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, isDetected());
+        }
     }
 
     protected boolean isDetected() {
 
         load();
         for (Chunk chunk : chunks)
-            if (chunk.isLoaded()) // Get all entites from the chunks in the defined radius
-            for (Entity entity : chunk.getEntities())
-                if (!entity.isDead() && entity.isValid()) for (Type type : types)
-                    // Check Type
-                    if (type.is(entity)) {
-                        // Check Radius
-                        if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
-                        break;
+            if (chunk.isLoaded()) {
+                for (Entity entity : chunk.getEntities())
+                    if (!entity.isDead() && entity.isValid()) {
+                        for (Type type : types)
+                            // Check Type
+                            if (type.is(entity)) {
+                                // Check Radius
+                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+                                break;
+                            }
                     }
+            }
         return false;
     }
 

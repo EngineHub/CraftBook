@@ -59,19 +59,33 @@ public class FireShooter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) shootFire(1);
+        if (chip.getInput(0)) {
+            shootFire(1);
+        }
     }
 
     public void shootFire(int n) {
 
-        if (speed > 2.0) speed = 2F;
-        else if (speed < 0.2) speed = 0.2F;
+        if (speed > 2.0) {
+            speed = 2F;
+        }
+        else if (speed < 0.2) {
+            speed = 0.2F;
+        }
 
-        if (spread > 50) spread = 50;
-        else if (spread < 0) spread = 0;
+        if (spread > 50) {
+            spread = 50;
+        }
+        else if (spread < 0) {
+            spread = 0;
+        }
 
-        if (vert > 1) vert = 1;
-        else if (vert < -1) vert = -1;
+        if (vert > 1) {
+            vert = 1;
+        }
+        else if (vert < -1) {
+            vert = -1;
+        }
 
         Block signBlock = getSign().getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
@@ -83,7 +97,7 @@ public class FireShooter extends AbstractIC {
         Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
                 targetDir.getZ() + 0.5);
 
-        if (n != 1)
+        if (n != 1) {
             for (short i = 0; i < n; i++) {
                 Random rand = new Random();
                 velocity = new Vector(x + (rand.nextInt((int) spread) - spread / 2),
@@ -92,6 +106,7 @@ public class FireShooter extends AbstractIC {
                 SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
                 f.setVelocity(velocity);
             }
+        }
         else {
             SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
             f.setVelocity(velocity);

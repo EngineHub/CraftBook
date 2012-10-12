@@ -59,11 +59,13 @@ public abstract class CuboidCopy {
         int index = file.getName().lastIndexOf('.');
         String extension = file.getName().substring(index);
         CuboidCopy copy = null;
-        if (extension.equalsIgnoreCase(".cbcopy"))
+        if (extension.equalsIgnoreCase(".cbcopy")) {
             // this copies only blocks and not sign text or chest contents
             copy = new FlatCuboidCopy();
-        else if (extension.equalsIgnoreCase(".schematic")) // this copies all blocks including chest content and sign text
-        copy = new MCEditCuboidCopy(world);
+        }
+        else if (extension.equalsIgnoreCase(".schematic")) {
+            copy = new MCEditCuboidCopy(world);
+        }
         if (copy == null) throw new CuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
         try {
             copy.loadFromFile(file);
@@ -86,11 +88,13 @@ public abstract class CuboidCopy {
         if(world == null || origin == null) return;
         List<Vector> queued = new ArrayList<Vector>();
 
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     Vector pt = origin.add(x, y, z);
-                    if(pt == null) continue;
+                    if(pt == null) {
+                        continue;
+                    }
                     if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
                         Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));
                         if (block instanceof InventoryHolder) {
@@ -99,10 +103,13 @@ public abstract class CuboidCopy {
                         }
                         block.setTypeId(0);
                     }
-                    else
+                    else {
                         // Can't destroy these blocks yet
                         queued.add(pt);
+                    }
                 }
+            }
+        }
 
         for (Vector pt : queued) {
             Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));

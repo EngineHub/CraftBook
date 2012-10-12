@@ -38,16 +38,21 @@ public class NotLowDelayer extends AbstractIC {
     public void trigger(final ChipState chip) {
 
         int delay = Integer.parseInt(getSign().getLine(2));
-        if (chip.getInput(0)) chip.setOutput(0, false);
-        else
+        if (chip.getInput(0)) {
+            chip.setOutput(0, false);
+        }
+        else {
             Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
                 @Override
                 public void run() {
 
-                    if (!chip.getInput(0)) chip.setOutput(0, true);
+                    if (!chip.getInput(0)) {
+                        chip.setOutput(0, true);
+                    }
                 }
             }, delay * 20);
+        }
     }
 
     public static class Factory extends AbstractICFactory {

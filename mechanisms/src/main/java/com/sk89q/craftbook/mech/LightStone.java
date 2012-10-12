@@ -19,6 +19,13 @@
 
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
@@ -26,12 +33,6 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This allows users to Right-click to check the light level.
@@ -66,14 +67,19 @@ public class LightStone extends AbstractMechanic {
     private String getLightLine(int data) {
 
         String line = "";
-        if (data >= 9) line = line + ChatColor.GREEN;
-        else
+        if (data >= 9) {
+            line = line + ChatColor.GREEN;
+        }
+        else {
             line = line + ChatColor.DARK_RED;
-        for (int i = 0; i < data; i++)
+        }
+        for (int i = 0; i < data; i++) {
             line = line + "|";
+        }
         line = line + ChatColor.BLACK;
-        for (int i = data; i < 15; i++)
+        for (int i = data; i < 15; i++) {
             line = line + "|";
+        }
         return line;
     }
 

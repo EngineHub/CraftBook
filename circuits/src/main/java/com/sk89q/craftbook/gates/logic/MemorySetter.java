@@ -42,13 +42,17 @@ public class MemorySetter extends AbstractIC {
 
         try {
             File f = new File("plugins/CraftBookCircuits/ROM/", getSign().getLine(2));
-            if (!f.exists()) f.createNewFile();
+            if (!f.exists()) {
+                f.createNewFile();
+            }
             PrintWriter pw = new PrintWriter(f);
             for (int i = 0; i < 2; i++)
-                if (chip.getInput(i))
+                if (chip.getInput(i)) {
                     pw.println("1");
-                else
+                }
+                else {
                     pw.println("0");
+                }
             pw.close();
         } catch (Exception ignored) {
 

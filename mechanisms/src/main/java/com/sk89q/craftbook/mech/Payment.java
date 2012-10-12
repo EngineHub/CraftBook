@@ -1,11 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +11,18 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Lever;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Payment Mech, takes payment. (Requires Vault.)
@@ -74,7 +80,9 @@ public class Payment extends AbstractMechanic {
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
-            if (state instanceof Sign) sign = (Sign) state;
+            if (state instanceof Sign) {
+                sign = (Sign) state;
+            }
         }
 
         if (sign == null) return;
@@ -86,10 +94,13 @@ public class Payment extends AbstractMechanic {
             Block back = SignUtil.getBackBlock(sign.getBlock());
             BlockFace bface = sign.getBlock().getFace(back);
             Block redstoneItem = back.getRelative(bface);
-            if (setState(sign.getBlock(), true))
+            if (setState(sign.getBlock(), true)) {
                 plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new turnOff(redstoneItem), 20L);
-        } else
+            }
+        }
+        else {
             MechanismsPlugin.economy.depositPlayer(event.getPlayer().getName(), money);
+        }
 
         event.setCancelled(true);
     }
@@ -119,13 +130,17 @@ public class Payment extends AbstractMechanic {
 
         Block sourceBlock = block.getRelative(((Lever) block.getState().getData()).getAttachedFace());
 
-        if (!state) newData = data & 0x7;
-        else newData = data | 0x8;
+        if (!state) {
+            newData = data & 0x7;
+        }
+        else {
+            newData = data | 0x8;
+        }
 
         if (newData != data) {
             block.setData((byte) newData, true);
-            int oldS = state ? (0) : (1);
-            int newS = state ? (1) : (0);
+            int oldS = state ? 0 : 1;
+            int newS = state ? 1 : 0;
             BlockRedstoneEvent event = new BlockRedstoneEvent(sourceBlock, oldS, newS);
             Bukkit.getPluginManager().callEvent(event);
             return true;

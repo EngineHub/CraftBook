@@ -39,8 +39,9 @@ public class BlockBreaker extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if(chip.getInput(0))
+        if(chip.getInput(0)) {
             chip.setOutput(0, breakBlock());
+        }
     }
 
     public boolean breakBlock() {
@@ -56,8 +57,9 @@ public class BlockBreaker extends AbstractIC {
             chest = bl.getRelative(0, -1, 0);
             broken = bl.getRelative(0, 1, 0);
         }
-        if(chest != null && chest.getType() == Material.CHEST)
+        if(chest != null && chest.getType() == Material.CHEST) {
             hasChest = true;
+        }
         if(broken == null || broken.getTypeId() == 0) return false;
 
         ItemStack blockstack = new ItemStack(broken.getTypeId(), 1, broken.getData());
@@ -69,8 +71,9 @@ public class BlockBreaker extends AbstractIC {
             if(overflow.size() == 0)
                 return true;
             else {
-                for(Map.Entry<Integer, ItemStack> bit : overflow.entrySet())
+                for(Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
                     dropItem(bit.getValue());
+                }
                 return true;
             }
         }

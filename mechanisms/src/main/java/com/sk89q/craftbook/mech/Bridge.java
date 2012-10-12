@@ -101,20 +101,24 @@ public class Bridge extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite"))
+                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite")) {
                     sign.setLine(0, "0");
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite"))
+                }
+                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
+                }
                 sign.update();
                 player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge End]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite"))
+                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite")) {
                     sign.setLine(0, "0");
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite"))
+                }
+                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
+                }
                 sign.update();
                 player.print("mech.bridge.end-create");
             } else
@@ -153,13 +157,18 @@ public class Bridge extends AbstractMechanic {
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
-            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, s)) break findBase; //On Top
+            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, s))
+            {
+                break findBase; //On Top
+            }
 
             // If we've reached this point nothing was found on the top, check the bottom
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getType();
             if (settings.canUseBlock(mat)) {
-                if (isValidBridge(proximalBaseCenter, mat, s)) break findBase; // it's below
+                if (isValidBridge(proximalBaseCenter, mat, s)) {
+                    break findBase; // it's below
+                }
                 else throw new InvalidConstructionException("mech.bridge.material");
             }
             else
@@ -177,7 +186,9 @@ public class Bridge extends AbstractMechanic {
 
             if (farSide.getType() == Material.SIGN_POST) {
                 String otherSignText = ((Sign) farSide.getState()).getLine(1);
-                if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) break;
+                if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) {
+                    break;
+                }
             }
 
             farSide = farSide.getRelative(dir);
@@ -198,36 +209,48 @@ public class Bridge extends AbstractMechanic {
         int left, right;
         try {
             left = Integer.parseInt(s.getLine(2));
-            if (left < 0) left = 0;   // No negatives please
+            if (left < 0)
+            {
+                left = 0;   // No negatives please
+            }
         } catch (Exception ignored) {
             left = 1;
         }
         try {
             right = Integer.parseInt(s.getLine(3));
-            if (right < 0) right = 0; // No negatives please
+            if (right < 0)
+            {
+                right = 0; // No negatives please
+            }
         } catch (Exception ignored) {
             right = 1;
         }
 
         // Check Width
-        if (left > settings.maxWidth) left = settings.maxWidth;
-        if (right > settings.maxWidth) right = settings.maxWidth;
+        if (left > settings.maxWidth) {
+            left = settings.maxWidth;
+        }
+        if (right > settings.maxWidth) {
+            right = settings.maxWidth;
+        }
 
         // Expand Left
-        for (int i = 0; i < left; i++)
+        for (int i = 0; i < left; i++) {
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
+        }
 
         // Expand Right
-        for (int i = 0; i < right; i++)
+        for (int i = 0; i < right; i++) {
             try {
                 toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
             } catch (RegionOperationException e) {
                 e.printStackTrace();
             }
+        }
 
         // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
@@ -277,21 +300,27 @@ public class Bridge extends AbstractMechanic {
         if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
                 || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = event.getClickedBlock().getState();
-            if (state instanceof Sign) sign = (Sign) state;
+            if (state instanceof Sign) {
+                sign = (Sign) state;
+            }
         }
 
         if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite")) if (event.getPlayer().getItemInHand() != null)
             if (getBridgeMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
 
                 int amount = 1;
-                if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
+                if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
                     amount = 5;
+                }
                 addBlocks(sign,amount);
 
-                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                else
+                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) {
+                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                }
+                else {
                     event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
                             - amount);
+                }
 
                 player.print("mech.restock");
                 event.setCancelled(true);
@@ -312,10 +341,12 @@ public class Bridge extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        if (event.getNewCurrent() == 0)
+        if (event.getNewCurrent() == 0) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
-        else
+        }
+        else {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(null), 2);
+        }
     }
 
     private void flipState(LocalPlayer player) {
@@ -329,8 +360,12 @@ public class Bridge extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (canPassThrough(hinge.getTypeId())) new ToggleRegionClosed(player).run();
-        else new ToggleRegionOpen().run();
+        if (canPassThrough(hinge.getTypeId())) {
+            new ToggleRegionClosed(player).run();
+        }
+        else {
+            new ToggleRegionOpen().run();
+        }
     }
 
     private class ToggleRegionOpen implements Runnable {
@@ -341,13 +376,16 @@ public class Bridge extends AbstractMechanic {
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 int oldType = 0;
-                if (b != null) oldType = b.getTypeId();
+                if (b != null) {
+                    oldType = b.getTypeId();
+                }
                 if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId())) {
                     b.setType(Material.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
-                        if (oldType != 0)
+                        if (oldType != 0) {
                             addBlocks(s,1);
+                        }
                     }
                 }
             }
@@ -376,7 +414,9 @@ public class Bridge extends AbstractMechanic {
                             b.setData(getBridgeData());
                             removeBlocks(s,1);
                         } else {
-                            if (player != null) player.printError("Not enough blocks for mechanic to function!");
+                            if (player != null) {
+                                player.printError("Not enough blocks for mechanic to function!");
+                            }
                             return;
                         }
                     } else {
@@ -491,15 +531,18 @@ public class Bridge extends AbstractMechanic {
 
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = event.getBlock().getState();
-            if (state instanceof Sign) sign = (Sign) state;
+            if (state instanceof Sign) {
+                sign = (Sign) state;
+            }
         }
 
         if(sign == null) return;
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getBridgeMaterial(), getBlocks(sign), getBridgeData());
-            if (sign != null)
+            if (sign != null) {
                 sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+            }
         }
     }
 

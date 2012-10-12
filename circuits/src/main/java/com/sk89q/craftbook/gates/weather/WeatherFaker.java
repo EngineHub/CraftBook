@@ -92,9 +92,10 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
             }
         } else if (!chip.getInput(0)) {
             int dist = Integer.parseInt(getSign().getLine(2));
-            if (!getSign().getWorld().hasStorm())
+            if (!getSign().getWorld().hasStorm()) {
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
                         ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
+            }
             else {
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
                         ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1, 0));

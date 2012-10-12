@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,11 +22,13 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * @author Silthus
@@ -134,8 +135,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                                     false);
                             event.setCancelled(true);
                         }
-                        else
+                        else {
                             player.print("mech.cauldron.stir");
+                        }
                     }
                 }
             } catch (UnknownRecipeException e) {
@@ -157,11 +159,21 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         double toGo = temp = 1 - temp;
         double tenth = toGo / 10;
         int mutliplier = 0;
-        if (id == 269) mutliplier = 1;
-        if (id == 273) mutliplier = 2;
-        if (id == 256) mutliplier = 3;
-        if (id == 277) mutliplier = 4;
-        if (id == 284) mutliplier = 5;
+        if (id == 269) {
+            mutliplier = 1;
+        }
+        if (id == 273) {
+            mutliplier = 2;
+        }
+        if (id == 256) {
+            mutliplier = 3;
+        }
+        if (id == 277) {
+            mutliplier = 4;
+        }
+        if (id == 284) {
+            mutliplier = 5;
+        }
         mutliplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);
         return temp + tenth * mutliplier;
     }
@@ -175,13 +187,16 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
      */
     private void cook(ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
         // first lets destroy all items inside the cauldron
-        for (Item item : items)
+        for (Item item : items) {
             item.remove();
+        }
         // then give out the result items
         for (CauldronItemStack stack : recipe.getResults()) {
             // here we need to reset the data value to 0 or problems will occur later on
             // when trying to remove items from the inventory for example
-            if (stack.getData() < 0) stack.setData((short) 0);
+            if (stack.getData() < 0) {
+                stack.setData((short) 0);
+            }
             block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
         }
     }
@@ -194,7 +209,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                 Location location = entity.getLocation();
                 if (location.getBlockX() == block.getX()
                         && location.getBlockY() == block.getY()
-                        && location.getBlockZ() == block.getZ()) items.add((Item) entity);
+                        && location.getBlockZ() == block.getZ()) {
+                    items.add((Item) entity);
+                }
             }
         return items;
     }

@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CartEjector extends CartMechanism {
 
@@ -22,10 +23,15 @@ public class CartEjector extends CartMechanism {
 
         // go
         Block ejectTarget;
-        if (blocks.sign == null) ejectTarget = blocks.rail;
-        else if (!blocks.matches("eject")) ejectTarget = blocks.rail;
-        else
+        if (blocks.sign == null) {
+            ejectTarget = blocks.rail;
+        }
+        else if (!blocks.matches("eject")) {
+            ejectTarget = blocks.rail;
+        }
+        else {
             ejectTarget = blocks.rail.getRelative(SignUtil.getFront(blocks.sign));
+        }
         // if you use just
         //     cart.getPassenger().teleport(ejectTarget.getLocation());
         //   the client tweaks as bukkit tries to teleport you, then changes its mind and leaves you in the cart.

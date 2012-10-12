@@ -49,7 +49,9 @@ public class ServerTimeModulus extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, isServerTimeOdd());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, isServerTimeOdd());
+        }
     }
 
     /**
@@ -60,7 +62,9 @@ public class ServerTimeModulus extends AbstractIC {
     private boolean isServerTimeOdd() {
 
         long time = getSign().getBlock().getWorld().getTime() % 2;
-        if (time < 0) time += 2;
+        if (time < 0) {
+            time += 2;
+        }
         return time == 1;
     }
 

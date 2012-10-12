@@ -113,7 +113,9 @@ public abstract class AbstractICFactory implements ICFactory {
     public List<String> getStringList(ConfigurationSection cfg, String name, List<String> def) {
 
         List<String> it = cfg.getStringList(name);
-        if(it == null || it.size() == 0) it = def;
+        if(it == null || it.size() == 0) {
+            it = def;
+        }
         cfg.set(name, it);
         return it;
     }
@@ -121,9 +123,13 @@ public abstract class AbstractICFactory implements ICFactory {
     public Set<Integer> getIntegerSet(ConfigurationSection cfg, String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
-        if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
+        if (tids == null || tids.isEmpty() || tids.size() < 1) {
+            tids = def;
+        }
         Set<Integer> allowedBlocks = new HashSet<Integer>();
-        for (Integer tid : tids) allowedBlocks.add(tid);
+        for (Integer tid : tids) {
+            allowedBlocks.add(tid);
+        }
         cfg.set(name, tids);
         return allowedBlocks;
     }
@@ -131,9 +137,13 @@ public abstract class AbstractICFactory implements ICFactory {
     public Set<Material> getMaterialSet(ConfigurationSection cfg, String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
-        if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
+        if (tids == null || tids.isEmpty() || tids.size() < 1) {
+            tids = def;
+        }
         Set<Material> allowedBlocks = new HashSet<Material>();
-        for (Integer tid : tids) allowedBlocks.add(Material.getMaterial(tid));
+        for (Integer tid : tids) {
+            allowedBlocks.add(Material.getMaterial(tid));
+        }
         cfg.set(name, tids);
         return Collections.unmodifiableSet(allowedBlocks);
     }

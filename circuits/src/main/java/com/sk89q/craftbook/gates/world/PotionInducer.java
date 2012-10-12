@@ -51,18 +51,22 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        if (state.getInput(0)) for (Player p : getSign().getWorld().getPlayers()) {
-            int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
-            try {
-                effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
-                effectAmount = Integer.parseInt(getSign().getLine(2).split(":")[1]);
-                effectTime = Integer.parseInt(getSign().getLine(2).split(":")[2]);
-                radius = Integer.parseInt(getSign().getLine(3));
-            } catch (Exception ignored) {
+        if (state.getInput(0)) {
+            for (Player p : getSign().getWorld().getPlayers()) {
+                int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
+                try {
+                    effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+                    effectAmount = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+                    effectTime = Integer.parseInt(getSign().getLine(2).split(":")[2]);
+                    radius = Integer.parseInt(getSign().getLine(3));
+                } catch (Exception ignored) {
+                }
+                if (p.getLocation().distance(getSign().getLocation()) > radius) {
+                    continue;
+                }
+                p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
+                        effectAmount - 1), true);
             }
-            if (p.getLocation().distance(getSign().getLocation()) > radius) continue;
-            p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
-                    effectAmount - 1), true);
         }
     }
 

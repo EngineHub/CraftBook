@@ -58,7 +58,9 @@ public class WaterSensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, hasWater());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, hasWater());
+        }
     }
 
     /**

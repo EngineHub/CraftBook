@@ -82,8 +82,12 @@ public class GlowStone extends PersistentMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (event.getNewCurrent() > 0) event.getBlock().setTypeId(BlockID.LIGHTSTONE);
-        else event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock.getId());
+        if (event.getNewCurrent() > 0) {
+            event.getBlock().setTypeId(BlockID.LIGHTSTONE);
+        }
+        else {
+            event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock.getId());
+        }
 
         event.getBlock().setData(event.getBlock().getData(), false);
     }
@@ -107,8 +111,9 @@ public class GlowStone extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.getBlock().getTypeId() == BlockID.LIGHTSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
+        if(event.getBlock().getTypeId() == BlockID.LIGHTSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered())) {
             event.setCancelled(true);
+        }
     }
 
     @Override
@@ -123,7 +128,8 @@ public class GlowStone extends PersistentMechanic {
 
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
-        if(evt instanceof BlockBreakEvent) if(evt.getBlock().getTypeId() == BlockID.LIGHTSTONE && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
+        if(evt instanceof BlockBreakEvent) if(evt.getBlock().getTypeId() == BlockID.LIGHTSTONE && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered())) {
             ((BlockBreakEvent) evt).setCancelled(true);
+        }
     }
 }

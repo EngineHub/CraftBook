@@ -55,7 +55,9 @@ public class Area extends AbstractMechanic {
             String[] lines = sign.getLines();
 
             if (lines[1].equalsIgnoreCase("[Area]") || lines[1].equalsIgnoreCase("[SaveArea]")) {
-                if (sign.getLine(0).trim().equalsIgnoreCase("")) sign.setLine(0, "~" + player.getName());
+                if (sign.getLine(0).trim().equalsIgnoreCase("")) {
+                    sign.setLine(0, "~" + player.getName());
+                }
                 if (lines[1].equalsIgnoreCase("[Area]")) {
                     player.checkPermission("craftbook.mech.area.sign.area");
                     sign.setLine(1, "[Area]");
@@ -143,8 +145,9 @@ public class Area extends AbstractMechanic {
 
         // check if the sign still exists
         Sign sign = null;
-        if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
+        if (BukkitUtil.toBlock(pt).getState() instanceof Sign) {
             sign = (Sign) BukkitUtil.toBlock(pt).getState();
+        }
         if (sign == null) return;
         // toggle the area on or off
         toggle(sign);
@@ -164,8 +167,9 @@ public class Area extends AbstractMechanic {
 
         // check if the sign still exists
         Sign sign = null;
-        if (BukkitUtil.toBlock(pt).getState() instanceof Sign)
+        if (BukkitUtil.toBlock(pt).getState() instanceof Sign) {
             sign = (Sign) BukkitUtil.toBlock(pt).getState();
+        }
         if (sign == null) return;
         // toggle the area
         toggle(sign);
@@ -215,8 +219,9 @@ public class Area extends AbstractMechanic {
                     copy = CopyManager.getInstance().load(world, namespace, inactiveID, plugin);
                     copy.paste();
                 }
-                else
+                else {
                     copy.clear();
+                }
                 setToggledState(sign, false);
             } else {
                 // toggle the area on
@@ -251,9 +256,12 @@ public class Area extends AbstractMechanic {
 
         String line3 = sign.getLine(2);
         String line4 = sign.getLine(3);
-        if (pattern.matcher(line3).matches())
+        if (pattern.matcher(line3).matches()) {
             toggledOn = true;
-        else toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
+        }
+        else {
+            toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
+        }
     }
 
     private void setToggledState(Sign sign, boolean state) {

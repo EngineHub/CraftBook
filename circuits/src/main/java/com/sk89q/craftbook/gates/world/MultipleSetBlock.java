@@ -80,24 +80,34 @@ public class MultipleSetBlock extends AbstractIC {
         }
 
         byte data = 0;
-        if (coords.length == 5) try {
-            data = Byte.parseByte(coords[4]);
-        } catch (Exception e) {
-            return;
+        if (coords.length == 5) {
+            try {
+                data = Byte.parseByte(coords[4]);
+            } catch (Exception e) {
+                return;
+            }
         }
 
         x += Integer.parseInt(coords[0]);
         y += Integer.parseInt(coords[1]);
         z += Integer.parseInt(coords[2]);
 
-        if (!inp) block = 0;
+        if (!inp) {
+            block = 0;
+        }
 
-        if (dim.length == 3) for (int lx = 0; lx < Integer.parseInt(dim[0]); lx++)
-            for (int ly = 0; ly < Integer.parseInt(dim[1]); ly++)
-                for (int lz = 0; lz < Integer.parseInt(dim[2]); lz++)
-                    body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(block, data, true);
-        else
+        if (dim.length == 3) {
+            for (int lx = 0; lx < Integer.parseInt(dim[0]); lx++) {
+                for (int ly = 0; ly < Integer.parseInt(dim[1]); ly++) {
+                    for (int lz = 0; lz < Integer.parseInt(dim[2]); lz++) {
+                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(block, data, true);
+                    }
+                }
+            }
+        }
+        else {
             body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
+        }
     }
 
     public static class Factory extends AbstractICFactory implements

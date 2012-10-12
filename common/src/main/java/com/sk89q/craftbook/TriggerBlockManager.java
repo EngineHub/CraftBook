@@ -19,14 +19,14 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 
 /**
  * This keeps track of trigger blocks. Trigger blocks are what triggers
@@ -56,12 +56,15 @@ class TriggerBlockManager {
      */
     public void register(PersistentMechanic m) {
         // Debugging code
-        if (MechanicManager.DEBUG) for (BlockWorldVector p : m.getTriggerPositions())
-            if (triggers.get(p) != null) throw new CraftbookRuntimeException(new IllegalStateException(
-                    p + " has already been claimed by another Mechanic"));
+        if (MechanicManager.DEBUG) {
+            for (BlockWorldVector p : m.getTriggerPositions())
+                if (triggers.get(p) != null) throw new CraftbookRuntimeException(new IllegalStateException(
+                        p + " has already been claimed by another Mechanic"));
+        }
 
-        for (BlockWorldVector p : m.getTriggerPositions())
+        for (BlockWorldVector p : m.getTriggerPositions()) {
             triggers.put(p, m);
+        }
     }
 
     /**
@@ -71,12 +74,15 @@ class TriggerBlockManager {
      */
     public void deregister(PersistentMechanic m) {
         // Debugging code
-        if (MechanicManager.DEBUG) for (BlockWorldVector p : m.getTriggerPositions())
-            if (triggers.get(p) != m) throw new CraftbookRuntimeException(new IllegalStateException(
-                    p + " was occupied by another Mechanic"));
+        if (MechanicManager.DEBUG) {
+            for (BlockWorldVector p : m.getTriggerPositions())
+                if (triggers.get(p) != m) throw new CraftbookRuntimeException(new IllegalStateException(
+                        p + " was occupied by another Mechanic"));
+        }
 
-        for (BlockWorldVector p : m.getTriggerPositions())
+        for (BlockWorldVector p : m.getTriggerPositions()) {
             triggers.put(p, null);
+        }
     }
 
     /**
@@ -113,18 +119,22 @@ class TriggerBlockManager {
             BlockWorldVector pos = entry.getKey();
 
             // Different world! Abort
-            if (!pos.getWorld().equals(chunk.getWorld()))
+            if (!pos.getWorld().equals(chunk.getWorld())) {
                 continue;
+            }
 
             int curChunkX = (int) Math.floor(pos.getBlockX() / 16.0);
             int curChunkZ = (int) Math.floor(pos.getBlockZ() / 16.0);
             // Not involved in this chunk!
-            if (curChunkX != chunkX || curChunkZ != chunkZ) continue;
+            if (curChunkX != chunkX || curChunkZ != chunkZ) {
+                continue;
+            }
 
             PersistentMechanic pMechanic = entry.getValue();
 
-            if (pMechanic != null)
+            if (pMechanic != null) {
                 folks.add(entry.getValue());
+            }
         }
         return folks;
     }

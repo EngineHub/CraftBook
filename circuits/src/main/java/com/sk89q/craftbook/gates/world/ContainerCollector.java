@@ -45,7 +45,9 @@ public class ContainerCollector extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, collect());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, collect());
+        }
     }
 
     protected boolean collect() {
@@ -57,9 +59,13 @@ public class ContainerCollector extends AbstractIC {
         int z = b.getZ();
         Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         for (Entity en : getSign().getChunk().getEntities()) {
-            if (!(en instanceof Item)) continue;
+            if (!(en instanceof Item)) {
+                continue;
+            }
             Item item = (Item) en;
-            if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) continue;
+            if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
+                continue;
+            }
             int ix = item.getLocation().getBlockX();
             int iy = item.getLocation().getBlockY();
             int iz = item.getLocation().getBlockZ();
@@ -95,8 +101,12 @@ public class ContainerCollector extends AbstractIC {
                 }
 
                 // Check to see if it matches either test stack, if not stop
-                if (testStacks[0] != null) if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) continue;
-                if (testStacks[1] != null) if (!ItemUtil.areItemsIdentical(testStacks[1], item.getItemStack())) continue;
+                if (testStacks[0] != null) if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) {
+                    continue;
+                }
+                if (testStacks[1] != null) if (!ItemUtil.areItemsIdentical(testStacks[1], item.getItemStack())) {
+                    continue;
+                }
 
                 //Add the items to a container, and destroy them.
                 if (bl.getType() == Material.CHEST) if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
@@ -120,10 +130,12 @@ public class ContainerCollector extends AbstractIC {
                     if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
                             || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack())) {
 
-                        if(((BrewingStand) bl.getState()).getInventory().getIngredient() == null)
+                        if(((BrewingStand) bl.getState()).getInventory().getIngredient() == null) {
                             ((BrewingStand) bl.getState()).getInventory().setIngredient(item.getItemStack());
-                        else
+                        }
+                        else {
                             ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack());
+                        }
                         item.remove();
                         return true;
                     }
@@ -135,20 +147,24 @@ public class ContainerCollector extends AbstractIC {
 
                     if(ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getSmelting() == null
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getSmelting()))) {
-                        if(fur.getInventory().getSmelting() == null)
+                        if(fur.getInventory().getSmelting() == null) {
                             fur.getInventory().setSmelting(item.getItemStack());
-                        else
+                        }
+                        else {
                             ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(), item.getItemStack());
+                        }
                         item.remove();
                         return true;
                     }
 
                     if (ItemUtil.isAFuel(item.getItemStack()) && (fur.getInventory().getFuel() == null
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel()))){
-                        if(fur.getInventory().getFuel() == null)
+                        if(fur.getInventory().getFuel() == null) {
                             fur.getInventory().setFuel(item.getItemStack());
-                        else
+                        }
+                        else {
                             ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(), item.getItemStack());
+                        }
                         item.remove();
                         return true;
                     }

@@ -47,7 +47,9 @@ public class LightningSummon extends AbstractIC {
 
         try {
             String line = getSign().getLine(2);
-            if (line.length() > 0) center = ICUtil.parseBlockLocation(getSign());
+            if (line.length() > 0) {
+                center = ICUtil.parseBlockLocation(getSign());
+            }
         }
         catch(Exception e){}
     }
@@ -69,7 +71,9 @@ public class LightningSummon extends AbstractIC {
 
         if (chip.getInput(0)) {
             Block target = center;
-            if (target == null) target = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(getSign().getBlock()), BlockFace.UP);
+            if (target == null) {
+                target = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(getSign().getBlock()), BlockFace.UP);
+            }
             target.getWorld().strikeLightning(target.getLocation());
         }
     }

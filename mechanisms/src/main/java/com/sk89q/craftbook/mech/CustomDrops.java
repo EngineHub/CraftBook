@@ -39,8 +39,9 @@ public class CustomDrops implements Listener {
                 World w = event.getBlock().getWorld();
                 // Add the custom drops
                 for (CustomDropManager.DropDefinition dropDefinition : drops)
-                    if(ItemUtil.isStackValid(dropDefinition.getItemStack()))
+                    if(ItemUtil.isStackValid(dropDefinition.getItemStack())) {
                         w.dropItemNaturally(l, dropDefinition.getItemStack());
+                    }
 
                 event.getBlock().setTypeId(0);
                 event.setCancelled(true);
@@ -58,8 +59,9 @@ public class CustomDrops implements Listener {
         if (drops != null) {
             event.getDrops().clear();
             // Add the custom drops
-            for (CustomDropManager.DropDefinition dropDefinition : drops)
+            for (CustomDropManager.DropDefinition dropDefinition : drops) {
                 event.getDrops().add(dropDefinition.getItemStack());
+            }
         }
     }
 }

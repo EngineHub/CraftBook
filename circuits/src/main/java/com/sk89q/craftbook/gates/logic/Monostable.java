@@ -78,8 +78,12 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
             tick = 0;
         }
 
-        if (tick == 0) chip.setOutput(0, false);
-        else tick--;
+        if (tick == 0) {
+            chip.setOutput(0, false);
+        }
+        else {
+            tick--;
+        }
 
         sign.setLine(3, Integer.toString(tick));
         sign.update();

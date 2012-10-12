@@ -32,8 +32,9 @@ public class BonemealTerraformer extends AbstractIC {
     }
 
     private void load() {
-        if(maxradius == null)
+        if(maxradius == null) {
             maxradius = ((Factory)getFactory()).maxradius;
+        }
         try {
             radius = Integer.parseInt(getSign().getLine(3));
             if(radius > maxradius) {
@@ -59,15 +60,16 @@ public class BonemealTerraformer extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if(chip.getInput(0))
+        if(chip.getInput(0)) {
             terraform();
+        }
     }
 
     public void terraform() {
 
         Random random = new Random();
-        for(int x = -radius + 1; x < radius; x++)
-            for(int y = -radius + 1; y < radius; y++)
+        for(int x = -radius + 1; x < radius; x++) {
+            for(int y = -radius + 1; y < radius; y++) {
                 for(int z = -radius + 1; z < radius; z++)
                     if(random.nextInt(40) == 0) {
                         int rx = getSign().getLocation().getBlockX() - x;
@@ -75,28 +77,33 @@ public class BonemealTerraformer extends AbstractIC {
                         int rz = getSign().getLocation().getBlockZ() - z;
                         Block b = getSign().getWorld().getBlockAt(rx,ry,rz);
                         if(b.getType() == Material.CROPS && b.getData() < 0x7) {
-                            if(consumeBonemeal())
+                            if(consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x1));
+                            }
                             return;
                         }
                         if((b.getType() == Material.CROPS || b.getType() == Material.MELON_STEM || b.getType() == Material.PUMPKIN_STEM) && b.getData() < 0x7) {
-                            if(consumeBonemeal())
+                            if(consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x1));
+                            }
                             return;
                         }
                         if(b.getType() == Material.NETHER_STALK && b.getData() < 0x3) {
-                            if(consumeBonemeal())
+                            if(consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x1));
+                            }
                             return;
                         }
                         if((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x14 && b.getRelative(0, 1, 0).getTypeId() == 0 && b.getRelative(0, -2, 0).getTypeId() != b.getTypeId() && b.getRelative(0, -1, 0).getTypeId() != b.getTypeId()) {
-                            if(consumeBonemeal())
+                            if(consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x2));
+                            }
                             return;
                         }
                         if(b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getTypeId() == 0) {
-                            if(consumeBonemeal())
+                            if(consumeBonemeal()) {
                                 b.setType(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome.MUSHROOM_SHORE ? Material.MYCEL : Material.GRASS);
+                            }
                             return;
                         }
                         if(b.getType() == Material.GRASS && b.getRelative(0,1,0).getType() == Material.AIR && random.nextInt(15) == 0) {
@@ -106,12 +113,15 @@ public class BonemealTerraformer extends AbstractIC {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
                                     b.getRelative(0, 1, 0).setData((byte)1);
                                 }
-                                else if(t == 1)
+                                else if(t == 1) {
                                     b.getRelative(0, 1, 0).setType(Material.YELLOW_FLOWER);
-                                else if(t == 2)
+                                }
+                                else if(t == 2) {
                                     b.getRelative(0, 1, 0).setType(Material.RED_ROSE);
-                                else if(t == 3)
+                                }
+                                else if(t == 3) {
                                     b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 2, true);
+                                }
                                 else {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
                                     b.getRelative(0, 1, 0).setData((byte)1);
@@ -122,14 +132,18 @@ public class BonemealTerraformer extends AbstractIC {
                         if(b.getType() == Material.MYCEL && b.getRelative(0,1,0).getType() == Material.AIR && random.nextInt(15) == 0) {
                             if(consumeBonemeal()) {
                                 int t = random.nextInt(2);
-                                if(t == 0)
+                                if(t == 0) {
                                     b.getRelative(0, 1, 0).setType(Material.RED_MUSHROOM);
-                                else if(t == 1)
+                                }
+                                else if(t == 1) {
                                     b.getRelative(0, 1, 0).setType(Material.BROWN_MUSHROOM);
+                                }
                             }
                             return;
                         }
                     }
+            }
+        }
     }
 
     public boolean consumeBonemeal() {

@@ -105,55 +105,122 @@ public class CreatureSpawner extends AbstractIC {
 
         switch (ent.getType()) {
             case CREEPER:
-                if (data.equalsIgnoreCase("charged")) ((Creeper) ent).setPowered(true);
+                if (data.equalsIgnoreCase("charged")) {
+                    ((Creeper) ent).setPowered(true);
+                }
                 break;
             case SLIME:
-                if (data.equalsIgnoreCase("huge")) ((Slime) ent).setSize(16);
-                else if (data.equalsIgnoreCase("large")) ((Slime) ent).setSize(11);
-                else if (data.equalsIgnoreCase("normal")) ((Slime) ent).setSize(6);
-                else if (data.equalsIgnoreCase("small")) ((Slime) ent).setSize(3);
+                if (data.equalsIgnoreCase("huge")) {
+                    ((Slime) ent).setSize(16);
+                }
+                else if (data.equalsIgnoreCase("large")) {
+                    ((Slime) ent).setSize(11);
+                }
+                else if (data.equalsIgnoreCase("normal")) {
+                    ((Slime) ent).setSize(6);
+                }
+                else if (data.equalsIgnoreCase("small")) {
+                    ((Slime) ent).setSize(3);
+                }
                 break;
             case MAGMA_CUBE:
-                if (data.equalsIgnoreCase("huge")) ((MagmaCube) ent).setSize(16);
-                else if (data.equalsIgnoreCase("large")) ((MagmaCube) ent).setSize(11);
-                else if (data.equalsIgnoreCase("normal")) ((MagmaCube) ent).setSize(6);
-                else if (data.equalsIgnoreCase("small")) ((MagmaCube) ent).setSize(3);
+                if (data.equalsIgnoreCase("huge")) {
+                    ((MagmaCube) ent).setSize(16);
+                }
+                else if (data.equalsIgnoreCase("large")) {
+                    ((MagmaCube) ent).setSize(11);
+                }
+                else if (data.equalsIgnoreCase("normal")) {
+                    ((MagmaCube) ent).setSize(6);
+                }
+                else if (data.equalsIgnoreCase("small")) {
+                    ((MagmaCube) ent).setSize(3);
+                }
                 break;
             case WOLF:
-                if (data.equalsIgnoreCase("tame")) ((Wolf) ent).setTamed(true);
-                else if (data.equalsIgnoreCase("angry")) ((Wolf) ent).setAngry(true);
+                if (data.equalsIgnoreCase("tame")) {
+                    ((Wolf) ent).setTamed(true);
+                }
+                else if (data.equalsIgnoreCase("angry")) {
+                    ((Wolf) ent).setAngry(true);
+                }
                 break;
             case PIG_ZOMBIE:
-                if (data.equalsIgnoreCase("angry")) ((PigZombie) ent).setAngry(true);
+                if (data.equalsIgnoreCase("angry")) {
+                    ((PigZombie) ent).setAngry(true);
+                }
                 break;
             case VILLAGER:
-                if (data.equalsIgnoreCase("butcher")) ((Villager) ent).setProfession(Villager.Profession.BUTCHER);
-                else if (data.equalsIgnoreCase("smith")) ((Villager) ent).setProfession(Villager.Profession.BLACKSMITH);
-                else if (data.equalsIgnoreCase("priest")) ((Villager) ent).setProfession(Villager.Profession.PRIEST);
-                else if (data.equalsIgnoreCase("library"))
+                if (data.equalsIgnoreCase("butcher")) {
+                    ((Villager) ent).setProfession(Villager.Profession.BUTCHER);
+                }
+                else if (data.equalsIgnoreCase("smith")) {
+                    ((Villager) ent).setProfession(Villager.Profession.BLACKSMITH);
+                }
+                else if (data.equalsIgnoreCase("priest")) {
+                    ((Villager) ent).setProfession(Villager.Profession.PRIEST);
+                }
+                else if (data.equalsIgnoreCase("library")) {
                     ((Villager) ent).setProfession(Villager.Profession.LIBRARIAN);
-                else if (data.equalsIgnoreCase("farmer")) ((Villager) ent).setProfession(Villager.Profession.FARMER);
+                }
+                else if (data.equalsIgnoreCase("farmer")) {
+                    ((Villager) ent).setProfession(Villager.Profession.FARMER);
+                }
                 break;
             case SHEEP:
-                if (data.equalsIgnoreCase("black")) ((Sheep) ent).setColor(DyeColor.BLACK);
-                else if (data.equalsIgnoreCase("red")) ((Sheep) ent).setColor(DyeColor.RED);
-                else if (data.equalsIgnoreCase("green")) ((Sheep) ent).setColor(DyeColor.GREEN);
-                else if (data.equalsIgnoreCase("brown")) ((Sheep) ent).setColor(DyeColor.BROWN);
-                else if (data.equalsIgnoreCase("blue")) ((Sheep) ent).setColor(DyeColor.BLUE);
-                else if (data.equalsIgnoreCase("purple")) ((Sheep) ent).setColor(DyeColor.PURPLE);
-                else if (data.equalsIgnoreCase("cyan")) ((Sheep) ent).setColor(DyeColor.CYAN);
-                else if (data.equalsIgnoreCase("silver")) ((Sheep) ent).setColor(DyeColor.SILVER);
-                else if (data.equalsIgnoreCase("gray")) ((Sheep) ent).setColor(DyeColor.GRAY);
-                else if (data.equalsIgnoreCase("pink")) ((Sheep) ent).setColor(DyeColor.PINK);
-                else if (data.equalsIgnoreCase("lime")) ((Sheep) ent).setColor(DyeColor.LIME);
-                else if (data.equalsIgnoreCase("yellow")) ((Sheep) ent).setColor(DyeColor.YELLOW);
-                else if (data.equalsIgnoreCase("lblue")) ((Sheep) ent).setColor(DyeColor.LIGHT_BLUE);
-                else if (data.equalsIgnoreCase("magenta")) ((Sheep) ent).setColor(DyeColor.MAGENTA);
-                else if (data.equalsIgnoreCase("orange")) ((Sheep) ent).setColor(DyeColor.ORANGE);
-                else if (data.equalsIgnoreCase("white")) ((Sheep) ent).setColor(DyeColor.WHITE);
+                if (data.equalsIgnoreCase("black")) {
+                    ((Sheep) ent).setColor(DyeColor.BLACK);
+                }
+                else if (data.equalsIgnoreCase("red")) {
+                    ((Sheep) ent).setColor(DyeColor.RED);
+                }
+                else if (data.equalsIgnoreCase("green")) {
+                    ((Sheep) ent).setColor(DyeColor.GREEN);
+                }
+                else if (data.equalsIgnoreCase("brown")) {
+                    ((Sheep) ent).setColor(DyeColor.BROWN);
+                }
+                else if (data.equalsIgnoreCase("blue")) {
+                    ((Sheep) ent).setColor(DyeColor.BLUE);
+                }
+                else if (data.equalsIgnoreCase("purple")) {
+                    ((Sheep) ent).setColor(DyeColor.PURPLE);
+                }
+                else if (data.equalsIgnoreCase("cyan")) {
+                    ((Sheep) ent).setColor(DyeColor.CYAN);
+                }
+                else if (data.equalsIgnoreCase("silver")) {
+                    ((Sheep) ent).setColor(DyeColor.SILVER);
+                }
+                else if (data.equalsIgnoreCase("gray")) {
+                    ((Sheep) ent).setColor(DyeColor.GRAY);
+                }
+                else if (data.equalsIgnoreCase("pink")) {
+                    ((Sheep) ent).setColor(DyeColor.PINK);
+                }
+                else if (data.equalsIgnoreCase("lime")) {
+                    ((Sheep) ent).setColor(DyeColor.LIME);
+                }
+                else if (data.equalsIgnoreCase("yellow")) {
+                    ((Sheep) ent).setColor(DyeColor.YELLOW);
+                }
+                else if (data.equalsIgnoreCase("lblue")) {
+                    ((Sheep) ent).setColor(DyeColor.LIGHT_BLUE);
+                }
+                else if (data.equalsIgnoreCase("magenta")) {
+                    ((Sheep) ent).setColor(DyeColor.MAGENTA);
+                }
+                else if (data.equalsIgnoreCase("orange")) {
+                    ((Sheep) ent).setColor(DyeColor.ORANGE);
+                }
+                else if (data.equalsIgnoreCase("white")) {
+                    ((Sheep) ent).setColor(DyeColor.WHITE);
+                }
                 break;
             default:
-                if (ent instanceof Animals && data.equalsIgnoreCase("baby")) ((Animals) ent).setBaby();
+                if (ent instanceof Animals && data.equalsIgnoreCase("baby")) {
+                    ((Animals) ent).setBaby();
+                }
                 break;
 
         }

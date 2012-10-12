@@ -208,7 +208,9 @@ public class MetricsLite {
             }
 
             // Enable Task, if it is not running
-            if (taskId < 0) start();
+            if (taskId < 0) {
+                start();
+            }
         }
     }
 
@@ -267,7 +269,9 @@ public class MetricsLite {
         encodeDataPair(data, "revision", String.valueOf(REVISION));
 
         // If we're pinging, append it
-        if (isPing) encodeDataPair(data, "ping", "true");
+        if (isPing) {
+            encodeDataPair(data, "ping", "true");
+        }
 
         // Create the url
         URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(plugin.getDescription().getName())));
@@ -277,9 +281,12 @@ public class MetricsLite {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if (isMineshafterPresent()) connection = url.openConnection(Proxy.NO_PROXY);
-        else
+        if (isMineshafterPresent()) {
+            connection = url.openConnection(Proxy.NO_PROXY);
+        }
+        else {
             connection = url.openConnection();
+        }
 
         connection.setDoOutput(true);
 
@@ -297,7 +304,7 @@ public class MetricsLite {
         reader.close();
 
         if (response == null || response.startsWith("ERR"))
-         throw new IOException(response); //Throw the exception
+            throw new IOException(response); //Throw the exception
     }
 
     /**

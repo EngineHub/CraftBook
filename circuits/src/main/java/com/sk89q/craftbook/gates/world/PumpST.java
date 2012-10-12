@@ -31,8 +31,9 @@ public class PumpST extends Pump implements SelfTriggeredIC {
 
     @Override
     public void think(ChipState state) {
-        if(state.getInput(0))
+        if(state.getInput(0)) {
             state.setOutput(0, scan());
+        }
     }
 
     public static class Factory extends Pump.Factory {

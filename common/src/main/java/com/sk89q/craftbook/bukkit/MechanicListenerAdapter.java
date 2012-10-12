@@ -19,6 +19,22 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.material.Diode;
+import org.bukkit.plugin.PluginManager;
+
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -29,17 +45,6 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.material.Diode;
-import org.bukkit.plugin.PluginManager;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -105,9 +110,13 @@ public class MechanicListenerAdapter {
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onPlayerInteract(PlayerInteractEvent event) {
 
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) manager.dispatchBlockRightClick(event);
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                manager.dispatchBlockRightClick(event);
+            }
 
-            if (event.getAction() == Action.LEFT_CLICK_BLOCK) manager.dispatchBlockLeftClick(event);
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                manager.dispatchBlockLeftClick(event);
+            }
         }
     }
 
@@ -279,8 +288,8 @@ public class MechanicListenerAdapter {
                 boolean foundRepeater = false;
                 Block repeater = null;
                 //Search for the repeater.
-                for(int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++)
-                    for(int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++)
+                for(int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++) {
+                    for(int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++) {
                         for(int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++)
                             if(event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
                                 //Found a repeater.
@@ -291,6 +300,8 @@ public class MechanicListenerAdapter {
                                     break;
                                 }
                             }
+                    }
+                }
                 if(!foundRepeater || repeater == null) return;
 
                 manager.dispatchBlockRedstoneChange(

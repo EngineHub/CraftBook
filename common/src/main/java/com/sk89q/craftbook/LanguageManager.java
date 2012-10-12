@@ -1,12 +1,5 @@
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import net.minecraft.server.LocaleLanguage;
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,6 +7,15 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+
+import net.minecraft.server.LocaleLanguage;
+
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * @author Me4502
@@ -42,7 +44,9 @@ public class LanguageManager {
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.split(":").length != 2) continue;
+                    if (line.split(":").length != 2) {
+                        continue;
+                    }
                     languageData.put(line.split(":")[0], line.split(":")[1]);
                 }
                 br.close();

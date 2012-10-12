@@ -39,10 +39,12 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
         super(server, sign, factory);
 
         iSign = sign;
-        if(sign != null)
+        if(sign != null) {
             band = sign.getLine(2);
-        else
+        }
+        else {
             band = "";
+        }
     }
 
     @Override

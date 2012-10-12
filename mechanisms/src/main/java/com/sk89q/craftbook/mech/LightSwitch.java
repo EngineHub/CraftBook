@@ -155,10 +155,12 @@ public class LightSwitch extends AbstractMechanic {
             maximum = Integer.parseInt(((Sign) block.getState()).getLine(3));
         } catch (Exception ignored) {
         }
-        if (radius > plugin.getLocalConfiguration().lightSwitchSettings.maxRange)
+        if (radius > plugin.getLocalConfiguration().lightSwitchSettings.maxRange) {
             radius = plugin.getLocalConfiguration().lightSwitchSettings.maxRange;
-        if (maximum > plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum)
+        }
+        if (maximum > plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum) {
             maximum = plugin.getLocalConfiguration().lightSwitchSettings.maxMaximum;
+        }
 
         int wx = pt.getBlockX();
         int wy = pt.getBlockY();
@@ -181,8 +183,8 @@ public class LightSwitch extends AbstractMechanic {
 
             recentLightToggles.put(pt, currTime);
             int changed = 0;
-            for (int x = -radius + wx; x <= radius + wx; x++)
-                for (int y = -radius + wy; y <= radius + wy; y++)
+            for (int x = -radius + wx; x <= radius + wx; x++) {
+                for (int y = -radius + wy; y <= radius + wy; y++) {
                     for (int z = -radius + wz; z <= radius + wz; z++) {
                         int id = world.getBlockTypeIdAt(x, y, z);
                         if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF
@@ -190,11 +192,17 @@ public class LightSwitch extends AbstractMechanic {
                             // Limit the maximum number of changed lights
                             if (changed >= maximum) return true;
 
-                            if (on) world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
-                            else world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+                            if (on) {
+                                world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+                            }
+                            else {
+                                world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+                            }
                             changed++;
                         }
                     }
+                }
+            }
             return true;
         }
         return false;

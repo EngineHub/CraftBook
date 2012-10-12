@@ -52,7 +52,9 @@ public class MessageSender extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, sendMessage());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, sendMessage());
+        }
     }
 
     /**
@@ -73,7 +75,9 @@ public class MessageSender extends AbstractIC {
         if (player != null) {
             player.sendMessage(message.replace("&", "\u00A7"));
             sent = true;
-        } else if (name.equalsIgnoreCase("BROADCAST")) getServer().broadcastMessage(message);
+        } else if (name.equalsIgnoreCase("BROADCAST")) {
+            getServer().broadcastMessage(message);
+        }
         return sent;
     }
 

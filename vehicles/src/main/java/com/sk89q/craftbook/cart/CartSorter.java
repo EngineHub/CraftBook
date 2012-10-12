@@ -1,13 +1,20 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.util.SignUtil;
 
 /*
  * @contributor LordEnki
@@ -28,9 +35,12 @@ public class CartSorter extends CartMechanism {
         // pi(sign)hich sort conditions apply
         //  (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
-        if (isSortApplicable(sign.getLine(2), cart))
+        if (isSortApplicable(sign.getLine(2), cart)) {
             dir = Hand.LEFT;
-        else if (isSortApplicable(sign.getLine(3), cart)) dir = Hand.RIGHT;
+        }
+        else if (isSortApplicable(sign.getLine(3), cart)) {
+            dir = Hand.RIGHT;
+        }
 
         // pick the track block to modify and the curve to give it.
         //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
@@ -94,8 +104,9 @@ public class CartSorter extends CartMechanism {
 
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.
-        if (targetTrack.getType() == Material.RAILS)
+        if (targetTrack.getType() == Material.RAILS) {
             targetTrack.setData(trackData);
+        }
     }
 
     private enum Hand {
@@ -107,8 +118,9 @@ public class CartSorter extends CartMechanism {
         if (line.equalsIgnoreCase("All")) return true;
         Entity test = minecart.getPassenger();
         Player player = null;
-        if (test instanceof Player)
+        if (test instanceof Player) {
             player = (Player) test;
+        }
 
         if ((line.equalsIgnoreCase("Unoccupied")
                 || line.equalsIgnoreCase("Empty"))
@@ -139,12 +151,13 @@ public class CartSorter extends CartMechanism {
 
         String[] parts = line.split(":");
 
-        if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held"))
+        if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held")) {
             try {
                 int item = Integer.parseInt(parts[1]);
                 if (player.getItemInHand().getTypeId() == item) return true;
             } catch (NumberFormatException ignored) {
             }
+        }
         else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
             if (parts[1].equalsIgnoreCase(player.getName())) return true;
         } else if (parts[0].equalsIgnoreCase("Mob")) {
@@ -154,18 +167,21 @@ public class CartSorter extends CartMechanism {
             StorageMinecart storageCart = (StorageMinecart) minecart;
             Inventory storageInventory = storageCart.getInventory();
 
-            if (parts.length == 3) try {
-                int item = Integer.parseInt(parts[1]);
-                short durability = Short.parseShort(parts[2]);
-                if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
-            } catch (NumberFormatException ignored) {
+            if (parts.length == 3) {
+                try {
+                    int item = Integer.parseInt(parts[1]);
+                    short durability = Short.parseShort(parts[2]);
+                    if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
+                } catch (NumberFormatException ignored) {
+                }
             }
-            else
+            else {
                 try {
                     int item = Integer.parseInt(parts[1]);
                     if (storageInventory.contains(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }
+            }
         }
 
         return false;

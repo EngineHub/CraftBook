@@ -74,9 +74,12 @@ public class Netherrack extends AbstractMechanic {
 
         Block above = event.getBlock().getRelative(0, 1, 0);
 
-        if (event.getNewCurrent() > 0 && above != null && canPassThrough(above.getTypeId()))
+        if (event.getNewCurrent() > 0 && above != null && canPassThrough(above.getTypeId())) {
             above.setTypeId(BlockID.FIRE, false);
-        else if (above.getTypeId() == BlockID.FIRE) above.setTypeId(BlockID.AIR, false);
+        }
+        else if (above.getTypeId() == BlockID.FIRE) {
+            above.setTypeId(BlockID.AIR, false);
+        }
     }
 
     /**
@@ -95,7 +98,9 @@ public class Netherrack extends AbstractMechanic {
         }
 
         block = block.getRelative(0, -1, 0);
-        if (block.isBlockIndirectlyPowered()) event.setCancelled(true);
+        if (block.isBlockIndirectlyPowered()) {
+            event.setCancelled(true);
+        }
     }
 
     /**

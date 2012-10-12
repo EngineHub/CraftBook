@@ -64,8 +64,9 @@ public class JingleNoteManager {
     }
 
     public void stopAll() {
-        for (JingleNotePlayer notePlayer : instances.values())
+        for (JingleNotePlayer notePlayer : instances.values()) {
             notePlayer.stop(false);
+        }
 
         instances.clear();
     }

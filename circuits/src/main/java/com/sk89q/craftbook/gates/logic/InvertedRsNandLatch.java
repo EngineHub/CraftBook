@@ -34,9 +34,15 @@ public class InvertedRsNandLatch extends AbstractIC {
         boolean set = chip.get(0);
         boolean reset = chip.get(1);
 
-        if (!set && !reset) chip.set(3, true);
-        else if (set && !reset) chip.set(3, false);
-        else if (!set && reset) chip.set(3, true);
+        if (!set && !reset) {
+            chip.set(3, true);
+        }
+        else if (set && !reset) {
+            chip.set(3, false);
+        }
+        else if (!set && reset) {
+            chip.set(3, true);
+        }
     }
 
     public static class Factory extends AbstractICFactory {

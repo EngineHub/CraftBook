@@ -90,14 +90,18 @@ public class Planter extends AbstractIC {
 
         boolean isPlantable = false;
 
-        if (itemId == BlockID.SAPLING && (blockId == BlockID.DIRT || blockId == BlockID.GRASS))
+        if (itemId == BlockID.SAPLING && (blockId == BlockID.DIRT || blockId == BlockID.GRASS)) {
             isPlantable = true;
-        else if ((itemId == ItemID.SEEDS || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS) && blockId == BlockID.SOIL)
+        }
+        else if ((itemId == ItemID.SEEDS || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS) && blockId == BlockID.SOIL) {
             isPlantable = true;
-        else if (itemId == ItemID.NETHER_WART_SEED && blockId == BlockID.SLOW_SAND)
+        }
+        else if (itemId == ItemID.NETHER_WART_SEED && blockId == BlockID.SLOW_SAND) {
             isPlantable = true;
-        else if (itemId == BlockID.CACTUS && blockId == BlockID.SAND)
+        }
+        else if (itemId == BlockID.CACTUS && blockId == BlockID.SAND) {
             isPlantable = true;
+        }
 
         return isPlantable;
     }

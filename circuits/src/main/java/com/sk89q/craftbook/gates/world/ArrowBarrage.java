@@ -50,7 +50,9 @@ public class ArrowBarrage extends ArrowShooter {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) shootArrows(5);
+        if (chip.getInput(0)) {
+            shootArrows(5);
+        }
     }
 
     public static class Factory extends AbstractICFactory implements

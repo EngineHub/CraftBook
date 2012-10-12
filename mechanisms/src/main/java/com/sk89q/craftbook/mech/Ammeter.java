@@ -76,14 +76,20 @@ public class Ammeter extends AbstractMechanic {
                 break;
             case BlockID.LEVER:
             case BlockID.STONE_BUTTON:
-                if ((data & 0x8) == 0x8) current = 15;
+                if ((data & 0x8) == 0x8) {
+                    current = 15;
+                }
                 break;
             case BlockID.STONE_PRESSURE_PLATE:
-                if ((data & 0x1) == 0x1) current = 15;
+                if ((data & 0x1) == 0x1) {
+                    current = 15;
+                }
                 break;
             case BlockID.POWERED_RAIL:
             case BlockID.DETECTOR_RAIL:
-                if (data >= 0x8) current = 15;
+                if (data >= 0x8) {
+                    current = 15;
+                }
                 break;
             case BlockID.REDSTONE_TORCH_ON:
             case BlockID.REDSTONE_REPEATER_ON:
@@ -101,16 +107,22 @@ public class Ammeter extends AbstractMechanic {
     private String getCurrentLine(int data) {
 
         String line = ChatColor.YELLOW + "[";
-        if (data > 10)
+        if (data > 10) {
             line = line + ChatColor.DARK_GREEN;
-        else if (data > 5)
+        }
+        else if (data > 5) {
             line = line + ChatColor.GOLD;
-        else if (data > 0) line = line + ChatColor.DARK_RED;
-        for (int i = 0; i < data; i++)
+        }
+        else if (data > 0) {
+            line = line + ChatColor.DARK_RED;
+        }
+        for (int i = 0; i < data; i++) {
             line = line + "|";
+        }
         line = line + ChatColor.BLACK;
-        for (int i = data; i < 15; i++)
+        for (int i = data; i < 15; i++) {
             line = line + "|";
+        }
         line = line + ChatColor.YELLOW + "]";
         return line;
     }

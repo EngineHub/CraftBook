@@ -19,13 +19,18 @@
 
 package com.sk89q.craftbook;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.bukkit.event.block.BlockEvent;
+
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.event.block.BlockEvent;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Holds the blocks that are watched by mechanics.
@@ -74,8 +79,9 @@ class WatchBlockManager {
             List<BlockWorldVector> oldWatchBlocks) {
 
         // This could be more efficient.
-        for (BlockWorldVector p : oldWatchBlocks)
+        for (BlockWorldVector p : oldWatchBlocks) {
             watchBlocks.get(p).remove(m);
+        }
 
         register(m);
     }
@@ -88,8 +94,9 @@ class WatchBlockManager {
     public void deregister(PersistentMechanic m) {
 
         for (BlockWorldVector p : m.getWatchedPositions())
-            if (p != null && watchBlocks.get(p) != null)
+            if (p != null && watchBlocks.get(p) != null) {
                 watchBlocks.get(p).remove(m);
+            }
     }
 
     /**
@@ -104,8 +111,9 @@ class WatchBlockManager {
 
         if (pms == null) return;
 
-        for (PersistentMechanic m : pms)
+        for (PersistentMechanic m : pms) {
             m.onWatchBlockNotification(event);
+        }
     }
 
     /**
@@ -125,13 +133,16 @@ class WatchBlockManager {
             BlockWorldVector pos = entry.getKey();
 
             // Different world! Abort
-            if (!pos.getWorld().equals(chunk.getWorld()))
+            if (!pos.getWorld().equals(chunk.getWorld())) {
                 continue;
+            }
 
             int curChunkX = (int) Math.floor(pos.getBlockX() / 16.0);
             int curChunkZ = (int) Math.floor(pos.getBlockZ() / 16.0);
             // Not involved in this chunk!
-            if (curChunkX != chunkX || curChunkZ != chunkZ) continue;
+            if (curChunkX != chunkX || curChunkZ != chunkZ) {
+                continue;
+            }
 
             folks.addAll(entry.getValue());
         }

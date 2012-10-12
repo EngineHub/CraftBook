@@ -19,8 +19,16 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //import java.io.*;
@@ -41,15 +49,17 @@ public class CauldronCookbook {
 
         try {
             CauldronCookbook recipes = readCauldronRecipes("cauldron-recipes.txt");
-            if (recipes.size() != 0)
+            if (recipes.size() != 0) {
                 log.info(recipes.size()
                         + " cauldron recipe(s) loaded");
-            else
+            }
+            else {
                 log.warning("cauldron-recipes.txt had no recipes");
+            }
         } catch (FileNotFoundException e) {
             log.info("cauldron-recipes.txt not found: " + e.getMessage());
             try {
-                log.info("Looked in: " + (new File(".")).getCanonicalPath() + "/plugins/CraftBookMechanisms");
+                log.info("Looked in: " + new File(".").getCanonicalPath() + "/plugins/CraftBookMechanisms");
             } catch (IOException ioe) {
                 // Eat error
             }
@@ -118,22 +128,26 @@ public class CauldronCookbook {
             while ((line = buff.readLine()) != null) {
                 line = line.trim();
                 // Blank lines
-                if (line.length() == 0)
+                if (line.length() == 0) {
                     continue;
+                }
                 // Comment
-                if (line.charAt(0) == ';' || line.charAt(0) == '#' || line.equals(""))
+                if (line.charAt(0) == ';' || line.charAt(0) == '#' || line.equals("")) {
                     continue;
+                }
                 String[] parts = line.split(":");
-                if (parts.length < 3)
+                if (parts.length < 3) {
                     log.log(Level.WARNING, "Invalid cauldron recipe line in "
                             + file.getName() + ": '" + line + "'");
+                }
                 else {
                     String name = parts[0];
                     List<Integer> ingredients = parseCauldronItems(parts[1]);
                     List<Integer> results = parseCauldronItems(parts[2]);
                     String[] groups = null;
-                    if (parts.length >= 4 && parts[3].trim().length() > 0)
+                    if (parts.length >= 4 && parts[3].trim().length() > 0) {
                         groups = parts[3].split(",");
+                    }
                     CauldronCookbook.Recipe recipe =
                             new CauldronCookbook.Recipe(name, ingredients, results, groups);
                     add(recipe);
@@ -142,8 +156,9 @@ public class CauldronCookbook {
             return this;
         } finally {
             try {
-                if (input != null)
+                if (input != null) {
                     input.close();
+                }
             } catch (IOException ignored) {
             }
         }
@@ -171,8 +186,9 @@ public class CauldronCookbook {
                 }
 
                 try {
-                    for (int i = 0; i < multiplier; i++)
+                    for (int i = 0; i < multiplier; i++) {
                         out.add(Integer.valueOf(part));
+                    }
                 } catch (NumberFormatException e) {
                     /*int item = server.getConfiguration().getItemId(part);
 
@@ -236,10 +252,12 @@ public class CauldronCookbook {
 
             // Make a list of required ingredients by item ID
             for (Integer id : ingredients)
-                if (ingredientLookup.containsKey(id))
+                if (ingredientLookup.containsKey(id)) {
                     ingredientLookup.put(id, ingredientLookup.get(id) + 1);
-                else
+                }
+                else {
                     ingredientLookup.put(id, 1);
+                }
         }
 
         /**

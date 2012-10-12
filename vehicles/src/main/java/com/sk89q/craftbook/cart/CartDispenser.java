@@ -1,9 +1,5 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.worldedit.blocks.ItemType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -11,6 +7,11 @@ import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.worldedit.blocks.ItemType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * <p>
@@ -55,14 +56,16 @@ public class CartDispenser extends CartMechanism {
             CartType type = CartType.fromString(blocks.getSign().getLine(3));
 
             // go
-            if (cart == null) switch (pow) {
-                case ON:
-                    dispense(blocks, inv, type);
-                    return;
-                case OFF:       // power going off doesn't eat a cart unless the cart moves.
-                case NA:
+            if (cart == null) {
+                switch (pow) {
+                    case ON:
+                        dispense(blocks, inv, type);
+                        return;
+                    case OFF:       // power going off doesn't eat a cart unless the cart moves.
+                    case NA:
+                }
             }
-            else
+            else {
                 switch (pow) {
                     case ON:            // there's already a cart moving on the dispenser so don't spam.
                         return;
@@ -71,6 +74,7 @@ public class CartDispenser extends CartMechanism {
                         collect(cart, inv);
                         return;
                 }
+            }
         }
     }
 
@@ -86,8 +90,12 @@ public class CartDispenser extends CartMechanism {
         cart.remove();
         if (inv != null) {
             int cartType = ItemType.MINECART.getID();
-            if (cart instanceof StorageMinecart) cartType = ItemType.STORAGE_MINECART.getID();
-            else if (cart instanceof PoweredMinecart) cartType = ItemType.POWERED_MINECART.getID();
+            if (cart instanceof StorageMinecart) {
+                cartType = ItemType.STORAGE_MINECART.getID();
+            }
+            else if (cart instanceof PoweredMinecart) {
+                cartType = ItemType.POWERED_MINECART.getID();
+            }
             inv.addItem(new ItemStack(cartType, 1));
         }
     }
@@ -129,7 +137,9 @@ public class CartDispenser extends CartMechanism {
         public static CartType fromString(String s) {
 
             for (CartType ct : CartType.values()) {
-                if (ct == null) continue;
+                if (ct == null) {
+                    continue;
+                }
                 if (ct.name.equalsIgnoreCase(s))
                     return ct;
             }

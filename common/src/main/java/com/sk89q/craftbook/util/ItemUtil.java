@@ -131,9 +131,12 @@ public class ItemUtil {
     }
 
     public static void addToStack(ItemStack stack, ItemStack to) {
-        if(stack == null)
+        if(stack == null) {
             stack = new ItemStack(to.getTypeId(), to.getAmount(), to.getDurability());
-        else if(areItemsIdentical(stack, to)) stack.setAmount(stack.getAmount() + to.getAmount());
+        }
+        else if(areItemsIdentical(stack, to)) {
+            stack.setAmount(stack.getAmount() + to.getAmount());
+        }
     }
 
     public static boolean containsRawFood(Inventory inv) {
@@ -161,30 +164,38 @@ public class ItemUtil {
 
     public static ItemStack getUsedItem(ItemStack item) {
 
-        if (item.getTypeId() == ItemID.MUSHROOM_SOUP)
+        if (item.getTypeId() == ItemID.MUSHROOM_SOUP) {
             item.setTypeId(ItemID.BOWL); //Get your bowl back
-        else if (item.getTypeId() == ItemID.POTION)
+        }
+        else if (item.getTypeId() == ItemID.POTION) {
             item.setTypeId(ItemID.GLASS_BOTTLE); //Get your bottle back
+        }
         else if (item.getTypeId() == ItemID.LAVA_BUCKET || item.getTypeId() == ItemID.WATER_BUCKET ||
-                item.getTypeId() == ItemID.MILK_BUCKET)
+                item.getTypeId() == ItemID.MILK_BUCKET) {
             item.setTypeId(ItemID.BUCKET); //Get your bucket back
-        else if (item.getAmount() == 1)
+        }
+        else if (item.getAmount() == 1) {
             item.setTypeId(0);
-        else
+        }
+        else {
             item.setAmount(item.getAmount() - 1);
+        }
         return item;
     }
 
     public static ItemStack getSmallestStackOfType(ItemStack[] stacks, ItemStack item) {
         ItemStack smallest = null;
         for(ItemStack it : stacks) {
-            if(!ItemUtil.isStackValid(it))
+            if(!ItemUtil.isStackValid(it)) {
                 continue;
+            }
             if(ItemUtil.areItemsIdentical(it, item)) {
-                if(smallest == null)
+                if(smallest == null) {
                     smallest = it;
-                if(it.getAmount() < smallest.getAmount())
+                }
+                if(it.getAmount() < smallest.getAmount()) {
                     smallest = it;
+                }
             }
         }
 

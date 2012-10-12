@@ -37,7 +37,9 @@ public class WeatherControl extends AbstractIC {
         int thunderDuration = duration;
         try {
             String[] st = getSign().getLine(1).split("]");
-            if (st.length > 1) tstorm = st[1].equalsIgnoreCase("t");
+            if (st.length > 1) {
+                tstorm = st[1].equalsIgnoreCase("t");
+            }
             duration = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
         }
@@ -46,11 +48,19 @@ public class WeatherControl extends AbstractIC {
         } catch (Exception ignored) {
         }
 
-        if (duration > 24000) duration = 24000;
-        if (duration < 1) duration = 1;
+        if (duration > 24000) {
+            duration = 24000;
+        }
+        if (duration < 1) {
+            duration = 1;
+        }
 
-        if (thunderDuration > 24000) thunderDuration = 24000;
-        if (thunderDuration < 1) thunderDuration = 1;
+        if (thunderDuration > 24000) {
+            thunderDuration = 24000;
+        }
+        if (thunderDuration < 1) {
+            thunderDuration = 1;
+        }
 
 
         if (chip.getInput(0)) {

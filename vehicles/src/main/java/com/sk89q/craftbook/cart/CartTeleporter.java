@@ -21,7 +21,9 @@ public class CartTeleporter extends CartMechanism {
         String line = blocks.getSign().getLine(2);
         String[] pts = line.split(",");
         if (pts.length != 3) return;
-        if (!blocks.getSign().getLine(3).equals("")) world = cart.getServer().getWorld(blocks.getSign().getLine(3));
+        if (!blocks.getSign().getLine(3).equals("")) {
+            world = cart.getServer().getWorld(blocks.getSign().getLine(3));
+        }
 
         Double x;
         Double y;
@@ -47,10 +49,12 @@ public class CartTeleporter extends CartMechanism {
         Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0) {
 
         });
-        if (!loc.getChunk().isLoaded())
+        if (!loc.getChunk().isLoaded()) {
             loc.getChunk().load(true);
-        if (cart.getWorld() == world)
+        }
+        if (cart.getWorld() == world) {
             cart.teleport(loc);
+        }
         else {
             Minecart toCart = world.spawn(loc, Minecart.class);
             Entity passenger = cart.getPassenger();

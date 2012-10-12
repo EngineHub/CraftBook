@@ -36,8 +36,9 @@ public class MemoryAccess extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0))
+        if (chip.getInput(0)) {
             readMemory(chip);
+        }
     }
 
     public boolean readMemory(ChipState chip) {

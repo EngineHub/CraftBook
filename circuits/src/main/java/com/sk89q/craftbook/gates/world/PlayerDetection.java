@@ -40,7 +40,9 @@ public class PlayerDetection extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, isDetected());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, isDetected());
+        }
     }
 
     protected boolean isDetected() {
@@ -59,14 +61,20 @@ public class PlayerDetection extends AbstractIC {
         catch(Exception e){}
 
         Boolean isGroup = getSign().getLine(3).startsWith("g:");
-        if(getSign().getLine(3).length() == 0)
+        if(getSign().getLine(3).length() == 0) {
             isGroup = null;
+        }
 
         for(Player e : getServer().getOnlinePlayers()) {
-            if(e == null) continue;
-            if(!LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius))
+            if(e == null) {
                 continue;
-            if(e.isDead() || !e.isValid()) continue;
+            }
+            if(!LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
+                continue;
+            }
+            if(e.isDead() || !e.isValid()) {
+                continue;
+            }
             if(isGroup == null)
                 return true;
             if(!isGroup)//player

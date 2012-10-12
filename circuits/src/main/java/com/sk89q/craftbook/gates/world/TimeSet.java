@@ -30,8 +30,9 @@ public class TimeSet extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         try {
-            if(chip.getInput(0))
+            if(chip.getInput(0)) {
                 getSign().getWorld().setTime(Long.parseLong(getSign().getLine(2)));
+            }
         }
         catch(Exception e){}
     }

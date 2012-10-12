@@ -51,10 +51,12 @@ public class TimeControl extends AbstractIC {
     public void trigger(ChipState chip) {
 
         Long time;
-        if (chip.getInput(0))
+        if (chip.getInput(0)) {
             time = 0L;
-        else
+        }
+        else {
             time = 13000L;
+        }
         getSign().getWorld().setTime(time);
 
         chip.setOutput(0, chip.getInput(0));

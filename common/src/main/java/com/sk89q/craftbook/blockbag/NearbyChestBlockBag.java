@@ -19,6 +19,14 @@
 
 package com.sk89q.craftbook.blockbag;
 
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.bukkit.World;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.util.DistanceComparator;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
@@ -28,13 +36,6 @@ import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.World;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author sk89q
@@ -78,18 +79,21 @@ public class NearbyChestBlockBag extends BlockBag {
                 // Find the item
                 for (int i = 0; itemArray.length > i; i++)
                     if (itemArray[i] != null) // Found an item
-                    if (itemArray[i].getTypeId() == id &&
-                            itemArray[i].getAmount() >= 1) {
-                        int newAmount = itemArray[i].getAmount() - 1;
+                        if (itemArray[i].getTypeId() == id &&
+                        itemArray[i].getAmount() >= 1) {
+                            int newAmount = itemArray[i].getAmount() - 1;
 
-                        if (newAmount > 0) itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
-                        else
-                            itemArray[i] = null;
+                            if (newAmount > 0) {
+                                itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
+                            }
+                            else {
+                                itemArray[i] = null;
+                            }
 
-                        chest.getInventory().setContents(itemArray);
+                            chest.getInventory().setContents(itemArray);
 
-                        return;
-                    }
+                            return;
+                        }
             }
 
             throw new OutOfBlocksException();
@@ -120,7 +124,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 for (int i = 0; itemArray.length > i; i++)
                     // Found an item
                     if (itemArray[i].getTypeId() == id &&
-                            itemArray[i].getAmount() < 64) {
+                    itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
                         itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
 
@@ -128,8 +132,9 @@ public class NearbyChestBlockBag extends BlockBag {
 
                         return;
                     }
-                    else
+                    else {
                         emptySlot = i;
+                    }
 
                 // Didn't find an existing stack, so let's create a new one
                 if (emptySlot != -1) {
@@ -174,12 +179,14 @@ public class NearbyChestBlockBag extends BlockBag {
         //int oy = pos.getBlockY();
         //int oz = pos.getBlockZ();
 
-        for (int x = -3; x <= 3; x++)
-            for (int y = -3; y <= 3; y++)
+        for (int x = -3; x <= 3; x++) {
+            for (int y = -3; y <= 3; y++) {
                 for (int z = -3; z <= 3; z++) {
                     Vector cur = arg0.add(x, y, z);
                     addSingleSourcePosition(new WorldVector(arg0.getWorld(), cur));
                 }
+            }
+        }
     }
 
     /**
@@ -204,7 +211,9 @@ public class NearbyChestBlockBag extends BlockBag {
             if (complexBlock instanceof Chest) {
                 Chest chest = (Chest) complexBlock;
 
-                if (!chests.contains(chest)) chests.add((Chest) complexBlock);
+                if (!chests.contains(chest)) {
+                    chests.add((Chest) complexBlock);
+                }
             }
         }
     }

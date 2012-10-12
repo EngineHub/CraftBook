@@ -44,8 +44,11 @@ public class RecipeManager extends BaseConfiguration {
         // lets load all recipes
         if (cfg == null) return; //If the config is null, it can't continue.
         Set<String> keys = cfg.getKeys(false);
-        if (keys != null) for (String key : keys)
-            recipes.add(new Recipe(key, cfg));
+        if (keys != null) {
+            for (String key : keys) {
+                recipes.add(new Recipe(key, cfg));
+            }
+        }
     }
 
     public static final class Recipe {
@@ -72,8 +75,9 @@ public class RecipeManager extends BaseConfiguration {
         private void load() {
 
             type = RecipeType.getTypeFromName(config.getString("type"));
-            if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3)
+            if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
                 ingredients = getItems(config.getConfigurationSection("ingredients"));
+            }
             else {
                 items = getHashItems(config.getConfigurationSection("ingredients"));
                 shape = config.getStringList("shape");
@@ -95,9 +99,12 @@ public class RecipeManager extends BaseConfiguration {
                 }
                 if (material != null) {
                     CraftingItemStack itemStack = new CraftingItemStack(material);
-                    if (split.length > 1) itemStack.setData(Short.parseShort(split[1]));
-                    else
+                    if (split.length > 1) {
+                        itemStack.setData(Short.parseShort(split[1]));
+                    }
+                    else {
                         itemStack.setData((short) 0);
+                    }
                     itemStack.setAmount(1);
                     items.put(itemStack, section.getString(item).toCharArray()[0]);
                 }
@@ -119,9 +126,12 @@ public class RecipeManager extends BaseConfiguration {
                 }
                 if (material != null) {
                     CraftingItemStack itemStack = new CraftingItemStack(material);
-                    if (split.length > 1) itemStack.setData(Short.parseShort(split[1]));
-                    else
+                    if (split.length > 1) {
+                        itemStack.setData(Short.parseShort(split[1]));
+                    }
+                    else {
                         itemStack.setData((short) 0);
+                    }
                     itemStack.setAmount(section.getInt(item, 1));
                     items.add(itemStack);
                 }

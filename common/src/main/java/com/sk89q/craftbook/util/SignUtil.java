@@ -19,11 +19,12 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * <p>
@@ -90,7 +91,7 @@ public class SignUtil {
      */
     public static BlockFace getFront(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST)
+        if (sign.getType() == Material.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.WEST;
@@ -119,7 +120,8 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
-        else
+        }
+        else {
             switch (sign.getData()) {
                 case 0x2:
                     return BlockFace.EAST;
@@ -132,6 +134,7 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
+        }
     }
 
     public static Block getFrontBlock(Block sign) {
@@ -151,7 +154,7 @@ public class SignUtil {
      */
     public static BlockFace getBack(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST)
+        if (sign.getType() == Material.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.EAST;
@@ -180,7 +183,8 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
-        else
+        }
+        else {
             switch (sign.getData()) {
                 case 0x2:
                     return BlockFace.WEST;
@@ -193,6 +197,7 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
+        }
     }
 
     public static Block getBackBlock(Block sign) {
@@ -208,8 +213,9 @@ public class SignUtil {
         for (int i = 0; i < searchRadius; i++) {
             if (otherBlock.getRelative(way).getState() instanceof Sign) {
                 otherSign = (Sign) otherBlock.getRelative(way).getState();
-                if (otherSign.getLine(1).equalsIgnoreCase(criterea))
+                if (otherSign.getLine(1).equalsIgnoreCase(criterea)) {
                     break;
+                }
             }
             otherBlock = otherBlock.getRelative(way);
         }
@@ -230,7 +236,7 @@ public class SignUtil {
      */
     public static BlockFace getRight(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST)
+        if (sign.getType() == Material.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.SOUTH;
@@ -259,7 +265,8 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
-        else
+        }
+        else {
             switch (sign.getData()) {
                 case 0x2:
                     return BlockFace.SOUTH;
@@ -272,6 +279,7 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
+        }
     }
 
     public static Block getLeftBlock(Block sign) {
@@ -291,7 +299,7 @@ public class SignUtil {
      */
     public static BlockFace getLeft(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST)
+        if (sign.getType() == Material.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.NORTH;
@@ -320,7 +328,8 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
-        else
+        }
+        else {
             switch (sign.getData()) {
                 case 0x2:
                     return BlockFace.NORTH;
@@ -333,6 +342,7 @@ public class SignUtil {
                 default:
                     return BlockFace.SELF;
             }
+        }
     }
 
     public static Block getRightBlock(Block sign) {
@@ -351,7 +361,7 @@ public class SignUtil {
      */
     public static boolean isCardinal(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST)
+        if (sign.getType() == Material.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                 case 0x4:
@@ -361,6 +371,7 @@ public class SignUtil {
                 default:
                     return false;
             }
+        }
         else
             return true;
     }

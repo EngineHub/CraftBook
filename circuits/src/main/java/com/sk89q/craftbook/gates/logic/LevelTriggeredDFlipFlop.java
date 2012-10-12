@@ -34,9 +34,13 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.get(0)) chip.set(3, chip.get(1));
+        if (chip.get(0)) {
+            chip.set(3, chip.get(1));
+        }
 
-        if (chip.get(2)) chip.set(3, false);
+        if (chip.get(2)) {
+            chip.set(3, false);
+        }
     }
 
     public static class Factory extends AbstractICFactory {

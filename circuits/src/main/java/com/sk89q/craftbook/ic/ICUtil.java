@@ -62,19 +62,23 @@ public class ICUtil {
             if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
                 byte data = event.getBlock().getData();
                 if(ICUtil.getTorchStatus(event.getBlock().getLocation()).booleanValue()) {
-                    if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_OFF.getId())
+                    if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
                         event.getBlock().setTypeId(Material.REDSTONE_TORCH_OFF.getId());
+                    }
                 }
                 else
-                    if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_ON.getId())
+                    if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_ON.getId()) {
                         event.getBlock().setTypeId(Material.REDSTONE_TORCH_ON.getId());
+                    }
                 event.getBlock().setData(data, false);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
-            if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) ICUtil.removeTorch(event.getBlock().getLocation());
+            if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
+                ICUtil.removeTorch(event.getBlock().getLocation());
+            }
         }
     }
 
@@ -111,90 +115,110 @@ public class ICUtil {
         // first update the lever
         Lever lever = null;
         RedstoneTorch torch = null;
-        if(block.getState().getData() instanceof Lever)
+        if(block.getState().getData() instanceof Lever) {
             lever = (Lever) block.getState().getData();
-        else
+        }
+        else {
             torch = (RedstoneTorch) block.getState().getData();
+        }
 
-        if (!state) newData = data & 0x7;
-        else
+        if (!state) {
+            newData = data & 0x7;
+        }
+        else {
             newData = data | 0x8;
+        }
         // #END legacy code
         if(block.getType() == Material.REDSTONE_TORCH_OFF || block.getType() == Material.REDSTONE_TORCH_ON) {
             byte oldData = block.getData();
             setTorch(block.getLocation(), state);
             if(state) {
-                if(block.getTypeId() != Material.REDSTONE_TORCH_OFF.getId())
+                if(block.getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
                     block.setTypeId(Material.REDSTONE_TORCH_OFF.getId());
+                }
             }
             else
-                if(block.getTypeId() != Material.REDSTONE_TORCH_ON.getId())
+                if(block.getTypeId() != Material.REDSTONE_TORCH_ON.getId()) {
                     block.setTypeId(Material.REDSTONE_TORCH_ON.getId());
+                }
             block.setData(oldData, false);
         }
-        if (wasOn != state) try {
-            if(block.getType() == Material.LEVER) {
-                net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
-                net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+        if (wasOn != state) {
+            try {
+                if(block.getType() == Material.LEVER) {
+                    net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
+                    net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 
-                // Note: The player argument isn't actually used by the method in BlockLever so we can pass null.
-                // This method takes care of all the necessary block updates and redstone events.
-                // I dont know what the params at the back mean, but the method works perfectly without them.
-                nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null, 0, 0, 0, 0);
+                    // Note: The player argument isn't actually used by the method in BlockLever so we can pass null.
+                    // This method takes care of all the necessary block updates and redstone events.
+                    // I dont know what the params at the back mean, but the method works perfectly without them.
+                    nmsBlock.interact(nmsWorld, block.getX(), block.getY(), block.getZ(), null, 0, 0, 0, 0);
+                    return true;
+                }
+            } catch (Throwable e) {
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                // lets catch the exception if the method is not supported
+                block.setData((byte) newData, true);
+                // get the block the lever is attached to:
+                Block source;
+                if(block.getState().getData() instanceof Lever) {
+                    source = block.getRelative(lever.getAttachedFace());
+                }
+                else {
+                    source = block.getRelative(torch.getAttachedFace());
+                }
+                // then iterate over all blocks around the block the lever is attached to
+                for (BlockFace face : REDSTONE_CONTACT_FACES) {
+                    Block relative = source.getRelative(face);
+                    Material type = relative.getType();
+
+                    data = relative.getData();
+                    if (state) {
+                        newData = data | 0x8;
+                    }
+                    else {
+                        newData = data & ~0x8;
+                    }
+
+                    if (type == Material.REDSTONE_WIRE || type == Material.POWERED_RAIL) {
+                        relative.setData((byte) newData, true);
+                    }
+                    else if (type == Material.REDSTONE_LAMP_OFF || type == Material.REDSTONE_LAMP_ON) {
+                        if (state) {
+                            relative.setType(Material.REDSTONE_LAMP_ON);
+                        }
+                        else {
+                            relative.setType(Material.REDSTONE_LAMP_OFF);
+                        }
+                    } else if (type == Material.REDSTONE_TORCH_ON || type == Material.REDSTONE_TORCH_OFF) {
+                        if (state) {
+                            byte oldData = relative.getData();
+                            relative.setTypeId(Material.REDSTONE_TORCH_OFF.getId(), false);
+                            relative.setData(oldData, false);
+                        } else {
+                            byte oldData = relative.getData();
+                            relative.setTypeId(Material.REDSTONE_TORCH_ON.getId(), false);
+                            relative.setData(oldData, false);
+                        }
+                    } else if (type == Material.DIODE_BLOCK_ON || type == Material.DIODE_BLOCK_OFF) {
+                        if (state) {
+                            byte oldData = relative.getData();
+                            relative.setType(Material.DIODE_BLOCK_OFF);
+                            relative.setData(oldData);
+                        } else {
+                            byte oldData = relative.getData();
+                            relative.setType(Material.DIODE_BLOCK_ON);
+                            relative.setData(oldData);
+                        }
+                    } else if (type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE) {
+                        ((PistonBaseMaterial) relative.getState().getData()).setPowered(state);
+                        relative.getState().update();
+                    } else if (type == Material.LEVER) {
+                        relative.setData((byte) newData, true);
+                    }
+                }
                 return true;
             }
-        } catch (Throwable e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
-            // lets catch the exception if the method is not supported
-            block.setData((byte) newData, true);
-            // get the block the lever is attached to:
-            Block source;
-            if(block.getState().getData() instanceof Lever)
-                source = block.getRelative(lever.getAttachedFace());
-            else
-                source = block.getRelative(torch.getAttachedFace());
-            // then iterate over all blocks around the block the lever is attached to
-            for (BlockFace face : REDSTONE_CONTACT_FACES) {
-                Block relative = source.getRelative(face);
-                Material type = relative.getType();
-
-                data = relative.getData();
-                if (state) newData = data | 0x8;
-                else
-                    newData = data & ~0x8;
-
-                if (type == Material.REDSTONE_WIRE || type == Material.POWERED_RAIL)
-                    relative.setData((byte) newData, true);
-                else if (type == Material.REDSTONE_LAMP_OFF || type == Material.REDSTONE_LAMP_ON) {
-                    if (state) relative.setType(Material.REDSTONE_LAMP_ON);
-                    else
-                        relative.setType(Material.REDSTONE_LAMP_OFF);
-                } else if (type == Material.REDSTONE_TORCH_ON || type == Material.REDSTONE_TORCH_OFF) {
-                    if (state) {
-                        byte oldData = relative.getData();
-                        relative.setTypeId(Material.REDSTONE_TORCH_OFF.getId(), false);
-                        relative.setData(oldData, false);
-                    } else {
-                        byte oldData = relative.getData();
-                        relative.setTypeId(Material.REDSTONE_TORCH_ON.getId(), false);
-                        relative.setData(oldData, false);
-                    }
-                } else if (type == Material.DIODE_BLOCK_ON || type == Material.DIODE_BLOCK_OFF) {
-                    if (state) {
-                        byte oldData = relative.getData();
-                        relative.setType(Material.DIODE_BLOCK_OFF);
-                        relative.setData(oldData);
-                    } else {
-                        byte oldData = relative.getData();
-                        relative.setType(Material.DIODE_BLOCK_ON);
-                        relative.setData(oldData);
-                    }
-                } else if (type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE) {
-                    ((PistonBaseMaterial) relative.getState().getData()).setPowered(state);
-                    relative.getState().update();
-                } else if (type == Material.LEVER) relative.setData((byte) newData, true);
-            }
-            return true;
         }
         return false;
     }
@@ -217,16 +241,20 @@ public class ICUtil {
                 offsetY = Integer.parseInt(split[1]);
                 offsetZ = Integer.parseInt(split[2]);
             }
-            else
+            else {
                 offsetY = Integer.parseInt(line);
+            }
         } catch (NumberFormatException e) {
             // do nothing and use defaults
         } catch (ArrayIndexOutOfBoundsException e) {
             // do nothing and use defaults
         }
-        if (relative) target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
-        else
+        if (relative) {
+            target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
+        }
+        else {
             target = LocationUtil.getOffset(target, offsetX, offsetY, offsetZ);
+        }
         return target;
     }
 

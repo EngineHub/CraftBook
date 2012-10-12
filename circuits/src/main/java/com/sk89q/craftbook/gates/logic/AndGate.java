@@ -54,7 +54,9 @@ public class AndGate extends AbstractIC {
             if (chip.isValid(i)) {
                 valid++;
 
-                if (chip.getInput(i)) on++;
+                if (chip.getInput(i)) {
+                    on++;
+                }
             }
 
         // Condition; all valid must be ON, at least one valid.

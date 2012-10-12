@@ -147,7 +147,7 @@ public class Teleporter extends AbstractMechanic {
         if (trigger.getState() instanceof Sign) {
             Sign s = (Sign) trigger.getState();
             String[] pos = s.getLine(2).split(":");
-            if (pos.length > 2)
+            if (pos.length > 2) {
                 try {
                     toX = Double.parseDouble(pos[0]);
                     toY = Double.parseDouble(pos[1]);
@@ -155,6 +155,7 @@ public class Teleporter extends AbstractMechanic {
                 } catch (Exception e) {
                     return;
                 }
+            }
             else
                 return;
         }
@@ -162,17 +163,23 @@ public class Teleporter extends AbstractMechanic {
         Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
                 (int) Math.floor(toZ));
         // well, unless that's already a ceiling.
-        if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
+        if (!occupiable(floor)) {
+            floor = floor.getRelative(BlockFace.DOWN);
+        }
 
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
         for (int i = 0; i < 5; i++) {
-            if (occupiable(floor)) foundFree++;
-            else
+            if (occupiable(floor)) {
+                foundFree++;
+            }
+            else {
                 break;
-            if (floor.getY() == 0x0)        // hit the bottom of the world
+            }
+            if (floor.getY() == 0x0) {
                 break;
+            }
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (foundFree < 2) {

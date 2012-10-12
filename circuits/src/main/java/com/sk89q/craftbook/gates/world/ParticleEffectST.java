@@ -40,7 +40,9 @@ public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC 
     @Override
     public void think(ChipState state) {
 
-        if (state.getInput(0)) doEffect();
+        if (state.getInput(0)) {
+            doEffect();
+        }
     }
 
     public static class Factory extends AbstractICFactory {

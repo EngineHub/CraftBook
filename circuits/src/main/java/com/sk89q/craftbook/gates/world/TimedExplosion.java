@@ -63,10 +63,12 @@ public class TimedExplosion extends AbstractIC {
             Block infront = getSign().getBlock().getRelative(SignUtil.getBack(getSign().getBlock()).getOppositeFace());
             TNTPrimed tnt = (TNTPrimed) getSign().getWorld().spawnEntity(BlockUtil.getBlockCentre(infront), EntityType.PRIMED_TNT);
             tnt.setIsIncendiary(flamey);
-            if(ticks > 0)
+            if(ticks > 0) {
                 tnt.setFuseTicks(ticks);
-            if(yield > 0)
+            }
+            if(yield > 0) {
                 tnt.setYield(yield);
+            }
         }
     }
 

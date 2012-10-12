@@ -72,11 +72,13 @@ public class Counter extends AbstractIC {
             // If clock input triggered
             if (chip.getInput(0)) {
                 if (curVal == resetVal) { // If we've gotten to 0, reset if infinite mode
-                    if (inf)
+                    if (inf) {
                         curVal = 0;
+                    }
                 }
-                else
+                else {
                     curVal++;
+                }
 
                 // Set output to high if we're at 0, otherwise low
                 chip.setOutput(0, curVal == resetVal);

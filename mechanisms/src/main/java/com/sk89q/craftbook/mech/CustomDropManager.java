@@ -60,14 +60,16 @@ public final class CustomDropManager {
             Bukkit.getLogger().log(Level.SEVERE, "Unknown exception while loading custom block drop definitions", e);
         }
 
-        if (mobDefinitions.exists()) try {
-            loadDropDefinitions(mobDefinitions, true);
-        } catch (CustomDropParseException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Custom mob drop definitions failed to parse", e);
-        } catch (IOException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Unknown IO error while loading custom mob drop definitions", e);
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Unknown exception while loading custom mob drop definitions", e);
+        if (mobDefinitions.exists()) {
+            try {
+                loadDropDefinitions(mobDefinitions, true);
+            } catch (CustomDropParseException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Custom mob drop definitions failed to parse", e);
+            } catch (IOException e) {
+                Bukkit.getLogger().log(Level.SEVERE, "Unknown IO error while loading custom mob drop definitions", e);
+            } catch (Exception e) {
+                Bukkit.getLogger().log(Level.SEVERE, "Unknown exception while loading custom mob drop definitions", e);
+            }
         }
     }
 
@@ -101,7 +103,10 @@ public final class CustomDropManager {
                         line = line.split("#")[0]; //Remove comments
                         line = line.trim(); //Remove excess whitespace
 
-                        if (line.isEmpty()) continue; //Don't try to parse empty lines
+                        if (line.isEmpty())
+                        {
+                            continue; //Don't try to parse empty lines
+                        }
 
                         String[] split = line.split("->", 2); //Split primary field separator
 
@@ -132,7 +137,9 @@ public final class CustomDropManager {
                                 reader.close();
                                 throw new CustomDropParseException(prelude + "block id out of range");
                             }
-                            if (blockDropDefinitions[sourceId] == null) blockDropDefinitions[sourceId] = new CustomItemDrop();
+                            if (blockDropDefinitions[sourceId] == null) {
+                                blockDropDefinitions[sourceId] = new CustomItemDrop();
+                            }
                             CustomItemDrop drop = blockDropDefinitions[sourceId];
 
                             if (split.length == 1) {
@@ -165,8 +172,12 @@ public final class CustomDropManager {
 
                     reader.close();
 
-                    if (isMobDrop) this.mobDropDefinitions = mobDropDefinitions;
-                    else this.blockDropDefinitions = blockDropDefinitions;
+                    if (isMobDrop) {
+                        this.mobDropDefinitions = mobDropDefinitions;
+                    }
+                    else {
+                        this.blockDropDefinitions = blockDropDefinitions;
+                    }
         } catch (NumberFormatException e) {
             throw new CustomDropParseException(prelude + "number field failed to parse", e);
         }
@@ -177,7 +188,9 @@ public final class CustomDropManager {
         String[] split = s.split(",");
         DropDefinition[] drops = new DropDefinition[split.length]; //Java really needs a map function...
         for (int i = 0; i < split.length; i++)
+        {
             drops[i] = readDrop(split[i].trim(), prelude); //Strip excess whitespace and parse
+        }
         return drops;
     }
 

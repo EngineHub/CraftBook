@@ -36,7 +36,9 @@ public class BlockLauncher extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) launch();
+        if (chip.getInput(0)) {
+            launch();
+        }
     }
 
     public void launch() {

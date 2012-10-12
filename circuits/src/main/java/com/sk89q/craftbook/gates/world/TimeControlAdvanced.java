@@ -53,8 +53,12 @@ public class TimeControlAdvanced extends AbstractIC {
         if (chip.isTriggered(0) && chip.getInput(0)) {
             int time;
 
-            if (chip.get(1)) time = 24 * 1000;
-            else time = (0 - 8 + 24) * 1000;
+            if (chip.get(1)) {
+                time = 24 * 1000;
+            }
+            else {
+                time = (0 - 8 + 24) * 1000;
+            }
 
             getSign().getWorld().setTime(time);
         }

@@ -54,7 +54,9 @@ public class RsNorFlipFlop extends AbstractIC {
             return;
         }
 
-        if (chip.get(0)) chip.set(3, true);
+        if (chip.get(0)) {
+            chip.set(3, true);
+        }
 
     }
 

@@ -1,15 +1,16 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import com.sk89q.craftbook.BaseConfiguration;
 
 /**
  * @author Silthus
@@ -39,8 +40,11 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         // lets load all recipes
         if (cfg == null) return; //If the config is null, it can't continue.
         Set<String> keys = cfg.getKeys(false);
-        if (keys != null) for (String key : keys)
-            recipes.add(new Recipe(key, cfg));
+        if (keys != null) {
+            for (String key : keys) {
+                recipes.add(new Recipe(key, cfg));
+            }
+        }
     }
 
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
@@ -95,9 +99,12 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
                     }
                     if (material != null) {
                         CauldronItemStack itemStack = new CauldronItemStack(material);
-                        if (split.length > 1) itemStack.setData(Short.parseShort(split[1]));
-                        else
+                        if (split.length > 1) {
+                            itemStack.setData(Short.parseShort(split[1]));
+                        }
+                        else {
                             itemStack.setData((short) -1);
+                        }
                         itemStack.setAmount(section.getInt(item, 1));
                         items.add(itemStack);
                     }

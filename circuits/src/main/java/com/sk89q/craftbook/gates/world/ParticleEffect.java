@@ -39,7 +39,9 @@ public class ParticleEffect extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) doEffect();
+        if (chip.getInput(0)) {
+            doEffect();
+        }
     }
 
     public void doEffect() {
@@ -62,8 +64,9 @@ public class ParticleEffect extends AbstractIC {
             if (effectID == 2001 && Material.getMaterial(effectData) == null) return;
             int times = Integer.parseInt(getSign().getLine(3));
             Block b = SignUtil.getBackBlock(getSign().getBlock());
-            for (int i = 0; i < times; i++)
+            for (int i = 0; i < times; i++) {
                 b.getWorld().playEffect(b.getLocation().add(0,1,0), Effect.getById(effectID), effectData, 50);
+            }
         } catch (Exception ignored) {
         }
     }

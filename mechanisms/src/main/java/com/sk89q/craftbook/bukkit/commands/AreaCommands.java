@@ -1,5 +1,16 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -17,16 +28,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.data.DataException;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Silthus
@@ -67,7 +68,9 @@ public class AreaCommands {
 
         if (!CopyManager.isValidNamespace(namespace)) throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
 
-        if (personal) namespace = "~" + namespace;
+        if (personal) {
+            namespace = "~" + namespace;
+        }
 
         id = context.getString(0);
 
@@ -98,8 +101,12 @@ public class AreaCommands {
             // Copy
             CuboidCopy copy;
 
-            if (config.useSchematics) copy = new MCEditCuboidCopy(min, size, world);
-            else copy = new FlatCuboidCopy(min, size, world);
+            if (config.useSchematics) {
+                copy = new MCEditCuboidCopy(min, size, world);
+            }
+            else {
+                copy = new FlatCuboidCopy(min, size, world);
+            }
 
             copy.copy();
 
@@ -136,10 +143,12 @@ public class AreaCommands {
         String namespace = "~" + player.getName();
 
         // get the namespace from the flag (if set)
-        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n')))
+        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
-        else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all"))
+        }
+        else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all")) {
             namespace = "";
+        }
         else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
 
         int page = 1;
@@ -155,7 +164,9 @@ public class AreaCommands {
         if (!areas.exists()) throw new CommandException("There are no saved areas.");
 
         File folder = null;
-        if (!namespace.equals("")) folder = new File(areas, namespace);
+        if (!namespace.equals("")) {
+            folder = new File(areas, namespace);
+        }
 
         if (folder != null && !folder.exists()) throw new CommandException("The namespace '" + namespace + "' does not exist.");
 
@@ -170,33 +181,41 @@ public class AreaCommands {
             }
         };
 
-        if (folder != null && folder.exists()) for (File area : folder.listFiles(fnf)) {
-            String areaName = area.getName();
-            areaName.replace(".schematic", "");
-            areaName.replace(".cbcopy", "");
-            areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
-                    + ChatColor.YELLOW + areaName);
+        if (folder != null && folder.exists()) {
+            for (File area : folder.listFiles(fnf)) {
+                String areaName = area.getName();
+                areaName.replace(".schematic", "");
+                areaName.replace(".cbcopy", "");
+                areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
+                        + ChatColor.YELLOW + areaName);
+            }
         }
-        else
+        else {
             for (File file : areas.listFiles())
-                if (file.isDirectory()) for (File area : file.listFiles(fnf)) {
-                    String areaName = area.getName();
-                    areaName.replace(".schematic", "");
-                    areaName.replace(".cbcopy", "");
-                    areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
-                            + ChatColor.YELLOW + areaName);
+                if (file.isDirectory()) {
+                    for (File area : file.listFiles(fnf)) {
+                        String areaName = area.getName();
+                        areaName.replace(".schematic", "");
+                        areaName.replace(".cbcopy", "");
+                        areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
+                                + ChatColor.YELLOW + areaName);
+                    }
                 }
+        }
 
         // now lets list the areas with a nice pagination
         if (areaList.size() > 0) {
             String tmp = namespace.equals("") ? "All Areas " : "Areas for " + namespace;
-            player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + ((areaList.size() / 8) + 1));
+            player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + (areaList.size() / 8 + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page))
-                if (str != null && !str.equals("")) player.print(str);
+                if (str != null && !str.equals("")) {
+                    player.print(str);
+                }
         }
-        else
+        else {
             player.printError("There are no saved areas in the '" + namespace + "' namespace.");
+        }
     }
 
     @Command(
@@ -216,14 +235,18 @@ public class AreaCommands {
         String areaId = null;
 
         // Get the namespace
-        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n')))
+        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
+        }
         else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
 
         boolean deleteAll = false;
-        if (context.argsLength() > 0 && !context.hasFlag('a'))
+        if (context.argsLength() > 0 && !context.hasFlag('a')) {
             areaId = context.getString(0);
-        else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.delete." + namespace + ".all")) deleteAll = true;
+        }
+        else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.delete." + namespace + ".all")) {
+            deleteAll = true;
+        }
         else
             throw new CommandException("You need to define an area or -a to delete all areas.");
 
@@ -240,11 +263,15 @@ public class AreaCommands {
         if (areas == null || !areas.exists()) throw new CommandException("The namespace " + namespace + " does not exist.");
 
         if (deleteAll) {
-            if (deleteDir(areas)) player.print("All areas in the namespace " + namespace + " have been deleted.");
+            if (deleteDir(areas)) {
+                player.print("All areas in the namespace " + namespace + " have been deleted.");
+            }
         } else {
             File file = new File(areas, areaId);
-            if (file.delete()) player.print("The area '" + areaId + " in the namespace '" + namespace
-                    + "' has been deleted.");
+            if (file.delete()) {
+                player.print("The area '" + areaId + " in the namespace '" + namespace
+                        + "' has been deleted.");
+            }
         }
     }
 
@@ -264,8 +291,10 @@ public class AreaCommands {
             }
         };
 
-        if (dir.isDirectory()) for (File aChild : dir.listFiles(fnf))
-            if (!aChild.delete()) return false;
+        if (dir.isDirectory()) {
+            for (File aChild : dir.listFiles(fnf))
+                if (!aChild.delete()) return false;
+        }
 
         // The directory is now empty so delete it
         return dir.delete();

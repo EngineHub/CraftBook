@@ -1,11 +1,14 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.LocationUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.Packet40EntityMetadata;
 import net.minecraft.server.WatchableObject;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -13,12 +16,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerToggleSprintEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.LocationUtil;
 
 
 /**
@@ -39,34 +45,43 @@ public class Chair implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
 
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
-        if (chairs.containsValue(event.getBlock())) for (Entry<String, Block> e : chairs.entrySet())
-            if (e.getValue() == event.getBlock()) {
-                Player p = plugin.getServer().getPlayer(e.getKey());
-                Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
-                        new ChairWatcher((byte) 0));
-                for (Player play : LocationUtil.getNearbyPlayers(event.getBlock(),
-                        plugin.getServer().getViewDistance() * 16))
-                    ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
-                chairs.remove(p.getName());
-            }
+        if (chairs.containsValue(event.getBlock())) {
+            for (Entry<String, Block> e : chairs.entrySet())
+                if (e.getValue() == event.getBlock()) {
+                    Player p = plugin.getServer().getPlayer(e.getKey());
+                    Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
+                            new ChairWatcher((byte) 0));
+                    for (Player play : LocationUtil.getNearbyPlayers(event.getBlock(),
+                            plugin.getServer().getViewDistance() * 16)) {
+                        ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                    }
+                    chairs.remove(p.getName());
+                }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 
-        if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
+        if (chairs.containsKey(event.getPlayer().getName())) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 
-        if (chairs.containsKey(event.getPlayer().getName())) event.setCancelled(true);
+        if (chairs.containsKey(event.getPlayer().getName())) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
-        if (chairs.containsKey(event.getPlayer().getName())) chairs.remove(event.getPlayer().getName());
+        if (chairs.containsKey(event.getPlayer().getName())) {
+            chairs.remove(event.getPlayer().getName());
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -93,8 +108,9 @@ public class Chair implements Listener {
                 Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(),
                         new ChairWatcher((byte) 0));
                 for (Player play : LocationUtil.getNearbyPlayers(event.getClickedBlock(),
-                        plugin.getServer().getViewDistance() * 16))
+                        plugin.getServer().getViewDistance() * 16)) {
                     ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                }
                 chairs.remove(player.getPlayer().getName());
             } else { //Sit
                 if (chairs.containsValue(event.getClickedBlock()))
@@ -104,8 +120,9 @@ public class Chair implements Listener {
                 Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(),
                         new ChairWatcher((byte) 4));
                 for (Player play : LocationUtil.getNearbyPlayers(event.getClickedBlock(),
-                        plugin.getServer().getViewDistance() * 16))
+                        plugin.getServer().getViewDistance() * 16)) {
                     ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                }
                 chairs.put(player.getPlayer().getName(), event.getClickedBlock());
             }
         }

@@ -99,8 +99,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public WorldGuardPlugin getWorldGuard() {
         if(!useWorldGuard) return null;
-        if(worldguard == null)
+        if(worldguard == null) {
             worldguard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
+        }
         return worldguard;
     }
 
@@ -108,7 +109,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         if(useWorldGuard == false) return true;
         if(CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null)
             return true;
-        if(useFlag == null) useFlag = new StateFlag("use",true);
+        if(useFlag == null) {
+            useFlag = new StateFlag("use",true);
+        }
         if(loc == null || p == null) return true;
         ApplicableRegionSet rset = getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc);
         if(rset == null) return true;
@@ -162,8 +165,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();
 
-        if(getServer().getPluginManager().isPluginEnabled("WorldGuard"))
+        if(getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
             useWorldGuard = true;
+        }
     }
 
     /**
@@ -214,8 +218,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                     output = new FileOutputStream(actual);
                     byte[] buf = new byte[8192];
                     int length;
-                    while ((length = input.read(buf)) > 0)
+                    while ((length = input.read(buf)) > 0) {
                         output.write(buf, 0, length);
+                    }
 
                     logger.info(getDescription().getName()
                             + ": Default configuration file written: " + name);
@@ -228,8 +233,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                     }
 
                     try {
-                        if (output != null)
+                        if (output != null) {
                             output.close();
+                        }
                     } catch (IOException ignored) {
                     }
                 }
@@ -311,8 +317,9 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
             sender.sendMessage(ChatColor.RED + e.getMessage());
             sender.sendMessage(ChatColor.RED + e.getUsage());
         } catch (WrappedCommandException e) {
-            if (e.getCause() instanceof NumberFormatException)
+            if (e.getCause() instanceof NumberFormatException) {
                 sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
+            }
             else {
                 sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
                 e.printStackTrace();

@@ -76,16 +76,19 @@ public class MidiJingleSequencer implements JingleSequencer {
             Sequence seq = MidiSystem.getSequence(midiFile);
             sequencer.setSequence(seq);
         } catch (MidiUnavailableException e) {
-            if(sequencer.isOpen())
+            if(sequencer.isOpen()) {
                 sequencer.close();
+            }
             throw e;
         } catch (InvalidMidiDataException e) {
-            if(sequencer.isOpen())
+            if(sequencer.isOpen()) {
                 sequencer.close();
+            }
             throw e;
         } catch (IOException e) {
-            if(sequencer.isOpen())
+            if(sequencer.isOpen()) {
                 sequencer.close();
+            }
             throw e;
         }
     }
@@ -97,8 +100,9 @@ public class MidiJingleSequencer implements JingleSequencer {
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
         try {
-            if(!sequencer.isOpen())
+            if(!sequencer.isOpen()) {
                 sequencer.open();
+            }
             sequencer.getTransmitter().setReceiver(new Receiver() {
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
@@ -116,8 +120,9 @@ public class MidiJingleSequencer implements JingleSequencer {
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         }
-                        else
+                        else {
                             notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
+                        }
                     }
                 }
 
@@ -128,22 +133,27 @@ public class MidiJingleSequencer implements JingleSequencer {
 
             sequencer.start();
 
-            while (sequencer.isRunning() && notePlayer.isActive())
+            while (sequencer.isRunning() && notePlayer.isActive()) {
                 Thread.sleep(1000);
+            }
 
-            if(sequencer.isOpen())
+            if(sequencer.isOpen()) {
                 sequencer.stop();
+            }
         } catch (MidiUnavailableException e) {
             Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         } finally {
-            if(sequencer.isOpen())
+            if(sequencer.isOpen()) {
                 sequencer.close();
+            }
         }
     }
 
     @Override
     public void stop() {
-        if (sequencer != null && sequencer.isOpen()) sequencer.close();
+        if (sequencer != null && sequencer.isOpen()) {
+            sequencer.close();
+        }
     }
 
     private static byte toMCNote(int n) {

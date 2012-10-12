@@ -41,19 +41,31 @@ public class WeatherControlAdvanced extends AbstractIC {
         } catch (Exception ignored) {
         }
 
-        if (duration > 24000) duration = 24000;
-        else if (duration < 1) duration = 1;
+        if (duration > 24000) {
+            duration = 24000;
+        }
+        else if (duration < 1) {
+            duration = 1;
+        }
 
-        if (thunderDuration > 24000) thunderDuration = 24000;
-        else if (thunderDuration < 1) thunderDuration = 1;
+        if (thunderDuration > 24000) {
+            thunderDuration = 24000;
+        }
+        else if (thunderDuration < 1) {
+            thunderDuration = 1;
+        }
 
 
         if (chip.isTriggered(0) && chip.getInput(0)) {
 
             getSign().getWorld().setStorm(chip.getInput(1));
-            if (chip.getInput(1)) getSign().getWorld().setWeatherDuration(duration);
+            if (chip.getInput(1)) {
+                getSign().getWorld().setWeatherDuration(duration);
+            }
             getSign().getWorld().setThundering(chip.getInput(2));
-            if (chip.getInput(2)) getSign().getWorld().setThunderDuration(thunderDuration);
+            if (chip.getInput(2)) {
+                getSign().getWorld().setThunderDuration(thunderDuration);
+            }
         }
     }
 

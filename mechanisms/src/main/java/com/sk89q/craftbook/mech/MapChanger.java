@@ -93,8 +93,9 @@ public class MapChanger extends AbstractMechanic {
             } catch (Exception e) {
                 id = -1;
             }
-            if(id == -1)
+            if(id == -1) {
                 event.getPlayer().sendMessage("Invalid Map!");
+            }
             event.getPlayer().getItemInHand().setDurability(id);
         }
     }

@@ -53,20 +53,29 @@ public class ItemSensor extends AbstractIC {
             } catch (NumberFormatException e) {
                 // seems to be the name of the item
                 Material material = Material.getMaterial(split[0]);
-                if (material != null) item = material.getId();
+                if (material != null) {
+                    item = material.getId();
+                }
             }
 
-            if (item == 0) item = BlockID.STONE;
+            if (item == 0) {
+                item = BlockID.STONE;
+            }
 
-            if (split.length > 1) data = Short.parseShort(split[1]);
+            if (split.length > 1) {
+                data = Short.parseShort(split[1]);
+            }
 
             // if the line contains a = the offset is given
             // the given string should look something like that:
             // radius=x:y:z or radius, e.g. 1=-2:5:11
             radius = ICUtil.parseRadius(getSign());
-            if (getSign().getLine(2).contains("=")) center = ICUtil.parseBlockLocation(getSign());
-            else
+            if (getSign().getLine(2).contains("=")) {
+                center = ICUtil.parseBlockLocation(getSign());
+            }
+            else {
                 center = SignUtil.getBackBlock(getSign().getBlock());
+            }
             chunks = LocationUtil.getSurroundingChunks(block, radius);
         }
         catch(Exception e){}
@@ -87,22 +96,25 @@ public class ItemSensor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, isDetected());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, isDetected());
+        }
     }
 
     protected boolean isDetected() {
 
         load();
         for (Chunk chunk : chunks)
-            if (chunk.isLoaded()) // get all entites from the chunks in the defined radius
-            for (Entity entity : chunk.getEntities())
-                if (entity instanceof Item) {
-                    ItemStack itemStack = ((Item) entity).getItemStack();
-                    if (itemStack.getTypeId() == item) {
-                        if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                        if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+            if (chunk.isLoaded()) {
+                for (Entity entity : chunk.getEntities())
+                    if (entity instanceof Item) {
+                        ItemStack itemStack = ((Item) entity).getItemStack();
+                        if (itemStack.getTypeId() == item) {
+                            if (data != -1 && !(itemStack.getDurability() == data)) return false;
+                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+                        }
                     }
-                }
+            }
         return false;
     }
 

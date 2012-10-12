@@ -54,9 +54,12 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
             amountDone = 0;
             ticks = 0;
 
-            if (getSign().getLine(3) != null || getSign().getLine(3).equals(""))
+            if (getSign().getLine(3) != null || getSign().getLine(3).equals("")) {
                 maxTicks = Integer.parseInt(getSign().getLine(3));
-            else maxTicks = 10;
+            }
+            else {
+                maxTicks = 10;
+            }
 
             hasStarted = true;
             return false;

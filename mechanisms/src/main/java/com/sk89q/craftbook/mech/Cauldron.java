@@ -19,13 +19,12 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -37,11 +36,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Handler for cauldrons.
@@ -161,16 +162,20 @@ public class Cauldron extends AbstractMechanic {
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 
         // stop strange lava ids
-        if (below == 11)
+        if (below == 11) {
             below = 10;
-        if (below2 == 11)
+        }
+        if (below2 == 11) {
             below2 = 10;
+        }
         // Preliminary check so we don't waste CPU cycles
         if ((below == BlockID.LAVA || below2 == BlockID.LAVA)
                 && (s1 == blockID || s2 == blockID
                 || s3 == blockID || s4 == blockID)) {
             // Cauldron is 2 units deep
-            if (below == BlockID.LAVA) rootY++;
+            if (below == BlockID.LAVA) {
+                rootY++;
+            }
             performCauldron(player, world, new BlockWorldVector(pt.getWorld(),
                     x, rootY, z));
             return true;
@@ -211,10 +216,13 @@ public class Cauldron extends AbstractMechanic {
             // contents of the cauldron
             for (Map.Entry<BlockWorldVector, Integer> entry : visited
                     .entrySet())
-                if (entry.getValue() != blockID) if (!contents.containsKey(entry.getValue())) contents.put(entry.getValue(), 1);
-                else
+                if (entry.getValue() != blockID) if (!contents.containsKey(entry.getValue())) {
+                    contents.put(entry.getValue(), 1);
+                }
+                else {
                     contents.put(entry.getValue(),
                             contents.get(entry.getValue()) + 1);
+                }
 
             // Find the recipe
             CauldronCookbook.Recipe recipe = recipes.find(contents);
@@ -271,22 +279,25 @@ public class Cauldron extends AbstractMechanic {
                         ingredients.remove(entry.getValue());
                     }
 
-                for (BlockWorldVector v : removeQueue)
+                for (BlockWorldVector v : removeQueue) {
                     world.getBlockAt(v.getBlockX(), v.getBlockY(),
                             v.getBlockZ()).setType(Material.AIR);
+                }
 
                 // Give results
                 for (Integer id : recipe.getResults()) {
                     HashMap<Integer, ItemStack> map = player.getInventory()
                             .addItem(new ItemStack(id, 1));
-                    for (Entry<Integer, ItemStack> i : map.entrySet())
+                    for (Entry<Integer, ItemStack> i : map.entrySet()) {
                         world.dropItem(player.getLocation(), i.getValue());
+                    }
                 }
                 // Didn't find a recipe
             }
-            else
+            else {
                 player.sendMessage(ChatColor.RED
                         + "Hmm, this doesn't make anything...");
+            }
         } catch (NotACauldronException ignored) {
         }
     }
@@ -327,10 +338,14 @@ public class Cauldron extends AbstractMechanic {
                 pt.getBlockZ());
 
         // Make water work reliably
-        if (type == 9) type = 8;
+        if (type == 9) {
+            type = 8;
+        }
 
         // Make lava work reliably
-        if (type == 11) type = 10;
+        if (type == 11) {
+            type = 10;
+        }
 
         visited.put(pt, type);
 
@@ -340,8 +355,8 @@ public class Cauldron extends AbstractMechanic {
 
         // Must have a lava floor
         BlockWorldVector lavaPos = recurse(0, pt.getBlockY() - minY + 1, 0, pt);
-        if ((world.getBlockTypeIdAt(lavaPos.getBlockX(), lavaPos.getBlockY(),
-                lavaPos.getBlockZ())) == BlockID.LAVA) throw new NotACauldronException("mech.cauldron.no-lava");
+        if (world.getBlockTypeIdAt(lavaPos.getBlockX(), lavaPos.getBlockY(),
+                lavaPos.getBlockZ()) == BlockID.LAVA) throw new NotACauldronException("mech.cauldron.no-lava");
 
         // Now we recurse!
         findCauldronContents(world, recurse(1, 0, 0, pt), minY, maxY, visited);

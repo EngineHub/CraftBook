@@ -51,7 +51,9 @@ public class ContainerDispenser extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, dispense());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, dispense());
+        }
     }
 
     Block bl;
@@ -73,8 +75,9 @@ public class ContainerDispenser extends AbstractIC {
         if (bl.getType() == Material.CHEST) {
             Chest c = (Chest) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
-                if(ItemUtil.isStackValid(it))
+                if(ItemUtil.isStackValid(it)) {
                     stack = it;
+                }
         }
         else if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
@@ -84,16 +87,18 @@ public class ContainerDispenser extends AbstractIC {
             BrewingStand c = (BrewingStand) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
                 if(ItemUtil.isStackValid(it)) {
-                    if(ItemUtil.areItemsIdentical(it,c.getInventory().getIngredient()))
+                    if(ItemUtil.areItemsIdentical(it,c.getInventory().getIngredient())) {
                         continue;
+                    }
                     stack = it;
                 }
         }
         else if (bl.getType() == Material.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
-                if(ItemUtil.isStackValid(it))
+                if(ItemUtil.isStackValid(it)) {
                     stack = it;
+                }
         }
 
         if(stack == null) return false;
@@ -104,14 +109,18 @@ public class ContainerDispenser extends AbstractIC {
     public ItemStack dispenseItem(ItemStack item) {
         int curA = item.getAmount();
         int a = amount;
-        if(curA < a)
+        if(curA < a) {
             a = curA;
+        }
         ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
         getSign().getWorld().dropItem(BlockUtil.getBlockCentre(getSign().getBlock()), stack);
         item.setAmount(curA - a);
-        if(item.getAmount() <= 1) item = null;
-        if(bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE)
+        if(item.getAmount() <= 1) {
+            item = null;
+        }
+        if(bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
             ((Furnace)bl.getState()).getInventory().setResult(item);
+        }
         return item;
     }
 

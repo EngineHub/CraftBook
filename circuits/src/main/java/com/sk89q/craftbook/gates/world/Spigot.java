@@ -53,8 +53,9 @@ public class Spigot extends AbstractIC {
 
     @Override
     public void trigger(ChipState chip) {
-        if(chip.getInput(0))
+        if(chip.getInput(0)) {
             chip.setOutput(0,search());
+        }
     }
 
     public boolean search() {
@@ -121,10 +122,12 @@ public class Spigot extends AbstractIC {
     public Material getFromChest(Material m) {
         Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0,-1,0);
 
-        if(m == Material.STATIONARY_WATER)
+        if(m == Material.STATIONARY_WATER) {
             m = Material.WATER;
-        if(m == Material.STATIONARY_LAVA)
+        }
+        if(m == Material.STATIONARY_LAVA) {
             m = Material.LAVA;
+        }
 
         if(chest.getType() == Material.CHEST) {
             Chest c = (Chest)chest.getState();

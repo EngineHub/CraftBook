@@ -31,8 +31,12 @@ public class Dispatcher extends AbstractIC {
         boolean targetB = chip.getInput(1);
         boolean targetC = chip.getInput(2);
 
-        if (targetB) chip.setOutput(1, value);
-        if (targetC) chip.setOutput(2, value);
+        if (targetB) {
+            chip.setOutput(1, value);
+        }
+        if (targetC) {
+            chip.setOutput(2, value);
+        }
 
     }
 

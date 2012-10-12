@@ -1,12 +1,13 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+
+import com.sk89q.craftbook.RedstoneUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their
@@ -61,32 +62,35 @@ public abstract class CartMechanism {
     public Power isActive(Block rail, Block base, Block sign) {
 
         boolean isWired = false;
-        if (sign != null) //System.out.println("\tsign:");
-        switch (isActive(sign)) {
-            case ON:
-                return Power.ON;
-            case NA:
-                break;
-            case OFF:
-                isWired = true;
+        if (sign != null) {
+            switch (isActive(sign)) {
+                case ON:
+                    return Power.ON;
+                case NA:
+                    break;
+                case OFF:
+                    isWired = true;
+            }
         }
-        if (base != null) //System.out.println("\tbase:");
-        switch (isActive(base)) {
-            case ON:
-                return Power.ON;
-            case NA:
-                break;
-            case OFF:
-                isWired = true;
+        if (base != null) {
+            switch (isActive(base)) {
+                case ON:
+                    return Power.ON;
+                case NA:
+                    break;
+                case OFF:
+                    isWired = true;
+            }
         }
-        if (rail != null) //System.out.println("\trail:");
-        switch (isActive(rail)) {
-            case ON:
-                return Power.ON;
-            case NA:
-                break;
-            case OFF:
-                isWired = true;
+        if (rail != null) {
+            switch (isActive(rail)) {
+                case ON:
+                    return Power.ON;
+                case NA:
+                    break;
+                case OFF:
+                    isWired = true;
+            }
         }
         return isWired ? Power.OFF : Power.NA;
     }
@@ -133,10 +137,18 @@ public abstract class CartMechanism {
     public static Minecart getCart(Block rail) {
 
         for (Entity ent : rail.getChunk().getEntities()) {
-            if (!(ent instanceof Minecart)) continue;
-            if (ent.getLocation().getBlockX() != rail.getLocation().getBlockX()) continue;
-            if (ent.getLocation().getBlockY() != rail.getLocation().getBlockY()) continue;
-            if (ent.getLocation().getBlockZ() != rail.getLocation().getBlockZ()) continue;
+            if (!(ent instanceof Minecart)) {
+                continue;
+            }
+            if (ent.getLocation().getBlockX() != rail.getLocation().getBlockX()) {
+                continue;
+            }
+            if (ent.getLocation().getBlockY() != rail.getLocation().getBlockY()) {
+                continue;
+            }
+            if (ent.getLocation().getBlockZ() != rail.getLocation().getBlockZ()) {
+                continue;
+            }
             return (Minecart) ent;
         }
         return null;

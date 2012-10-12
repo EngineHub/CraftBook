@@ -33,8 +33,9 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
         try {
-            if(chip.getInput(0))
+            if(chip.getInput(0)) {
                 getSign().getWorld().setTime(Long.parseLong(getSign().getLine(2)));
+            }
         }
         catch(Exception e){}
     }

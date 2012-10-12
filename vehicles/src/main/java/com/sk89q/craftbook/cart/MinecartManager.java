@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import java.util.EnumMap;
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,8 +11,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import java.util.EnumMap;
-import java.util.Map;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 
 public class MinecartManager {
 
@@ -40,8 +41,9 @@ public class MinecartManager {
         mechanisms.put(cfg.matTeleport, new CartTeleporter());
         mechanisms.put(cfg.matDispenser, new CartDispenser());
         mechanisms.put(cfg.matMessager, new CartMessager(plugin));
-        for (Map.Entry<Material, CartMechanism> ent : mechanisms.entrySet())
+        for (Map.Entry<Material, CartMechanism> ent : mechanisms.entrySet()) {
             ent.getValue().setMaterial(ent.getKey());
+        }
     }
 
     public void impact(VehicleMoveEvent event) {
@@ -110,8 +112,9 @@ public class MinecartManager {
             try {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(huh);
                 CartMechanism thingy = mechanisms.get(cmb.base.getType());
-                if (thingy != null)
+                if (thingy != null) {
                     thingy.impact(CartMechanism.getCart(cmb.rail), cmb, false);
+                }
             } catch (InvalidMechanismException ignored) {
                 /* okay, so there's nothing interesting to see here.  carry on then, eh? */
             }

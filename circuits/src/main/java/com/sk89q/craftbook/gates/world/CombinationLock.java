@@ -39,12 +39,15 @@ public class CombinationLock extends AbstractIC {
             Character[] data = ArrayUtils.toObject(getSign().getLine(2).toCharArray());
             checkCombo:
             {
-                if(state.getInput(0) != (data[1] == 'X'))
+                if(state.getInput(0) != (data[1] == 'X')) {
                     break checkCombo;
-                if(state.getInput(1) != (data[2] == 'X'))
+                }
+                if(state.getInput(1) != (data[2] == 'X')) {
                     break checkCombo;
-                if(state.getInput(2) != (data[0] == 'X'))
+                }
+                if(state.getInput(2) != (data[0] == 'X')) {
                     break checkCombo;
+                }
 
                 state.setOutput(0, true);
                 return;

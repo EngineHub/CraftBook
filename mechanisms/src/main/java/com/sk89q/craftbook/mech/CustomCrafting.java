@@ -1,6 +1,14 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.regex.Pattern;
+
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
@@ -8,12 +16,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 @Deprecated
 public class CustomCrafting implements Listener {
@@ -61,14 +70,18 @@ public class CustomCrafting implements Listener {
 
         try {
             File recipeFile = new File(plugin.getDataFolder(), "recipes.txt");
-            if (!recipeFile.exists()) recipeFile.createNewFile();
+            if (!recipeFile.exists()) {
+                recipeFile.createNewFile();
+            }
             BufferedReader br = new BufferedReader(new FileReader(recipeFile));
             String lastLine;
             while ((lastLine = br.readLine()) != null) { //read file until the end
                 //Skip useless lines
                 lastLine = lastLine.split("#")[0];
                 lastLine = lastLine.trim();
-                if (lastLine.length() == 0) continue;
+                if (lastLine.length() == 0) {
+                    continue;
+                }
                 if (lastLine.startsWith("@[")) { //Shapeless Recipe
                     String output = lastLine.split(Pattern.quote("@["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
@@ -76,26 +89,34 @@ public class CustomCrafting implements Listener {
                     int amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
                     ShapelessRecipe r = new ShapelessRecipe(new ItemStack(id, amount, data));
                     String contents = br.readLine();
-                    if (contents == null) continue;
+                    if (contents == null) {
+                        continue;
+                    }
                     contents = contents.split("#")[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) continue;
+                    if (contents.length() == 0) {
+                        continue;
+                    }
                     String[] items = contents.split(",");
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];
                         int iidata;
-                        if (idata.equals("*"))
+                        if (idata.equals("*")) {
                             iidata = -1;
-                        else
+                        }
+                        else {
                             iidata = Integer.parseInt(idata);
+                        }
 
                         r.addIngredient(Material.getMaterial(iid), iidata);
                     }
-                    if (plugin.getServer().addRecipe(r))
+                    if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
-                    else
+                    }
+                    else {
                         plugin.getLogger().warning("Failed to add recipe!");
+                    }
                 } else if (lastLine.startsWith("$[")) { //Furnace Recipe
                     String output = lastLine.split(Pattern.quote("$["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
@@ -107,34 +128,46 @@ public class CustomCrafting implements Listener {
                     }
                     FurnaceRecipe r = new FurnaceRecipe(new ItemStack(id, amount, data), Material.AIR);
                     String contents = br.readLine();
-                    if (contents == null) continue;
+                    if (contents == null) {
+                        continue;
+                    }
                     contents = contents.split("#")[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) continue;
+                    if (contents.length() == 0) {
+                        continue;
+                    }
                     String[] items = contents.split(",");
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];
                         int iidata;
-                        if (idata.equals("*"))
+                        if (idata.equals("*")) {
                             iidata = -1;
-                        else
+                        }
+                        else {
                             iidata = Integer.parseInt(idata);
+                        }
 
                         r.setInput(Material.getMaterial(iid), iidata);
                     }
-                    if (plugin.getServer().addRecipe(r))
+                    if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
-                    else
+                    }
+                    else {
                         plugin.getLogger().warning("Failed to add recipe!");
+                    }
                 } else if (lastLine.startsWith("&[")) { //Furnace Fuel
                     String output = lastLine.split(Pattern.quote("&["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
                     String contents = br.readLine();
-                    if (contents == null) continue;
+                    if (contents == null) {
+                        continue;
+                    }
                     contents = contents.split("#")[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) continue;
+                    if (contents.length() == 0) {
+                        continue;
+                    }
                     int burnTime = Integer.parseInt(contents);
                     fuels.put(id, burnTime);
                     plugin.getLogger().info("Furnace Fuel Added!");
@@ -145,10 +178,14 @@ public class CustomCrafting implements Listener {
                     int amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
                     ShapedRecipe r = new ShapedRecipe(new ItemStack(id, amount, data));
                     String contents = br.readLine();
-                    if (contents == null) continue;
+                    if (contents == null) {
+                        continue;
+                    }
                     contents = contents.split("#")[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) continue;
+                    if (contents.length() == 0) {
+                        continue;
+                    }
                     String[] items = contents.split(",");
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]),
                             getShapeData(items[2].split(":")[0]) + getShapeData(items[3].split(":")[0]));
@@ -157,15 +194,21 @@ public class CustomCrafting implements Listener {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];
                         int iidata;
-                        if (idata.equals("*"))
+                        if (idata.equals("*")) {
                             iidata = -1;
-                        else
+                        }
+                        else {
                             iidata = Integer.parseInt(idata);
+                        }
 
                         r.setIngredient((iid + "").charAt(0), Material.getMaterial(iid), iidata);
                     }
-                    if (plugin.getServer().addRecipe(r)) plugin.getLogger().info("Recipe Added!");
-                    else plugin.getLogger().warning("Failed to add recipe!");
+                    if (plugin.getServer().addRecipe(r)) {
+                        plugin.getLogger().info("Recipe Added!");
+                    }
+                    else {
+                        plugin.getLogger().warning("Failed to add recipe!");
+                    }
                 } else if (lastLine.startsWith("[")) { //Shaped Recipe
                     String output = lastLine.split(Pattern.quote("["))[1].replace("]", "");
                     int id = Integer.parseInt(output.split(":")[0]);
@@ -173,10 +216,14 @@ public class CustomCrafting implements Listener {
                     int amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
                     ShapedRecipe r = new ShapedRecipe(new ItemStack(id, amount, data));
                     String contents = br.readLine();
-                    if (contents == null) continue;
+                    if (contents == null) {
+                        continue;
+                    }
                     contents = contents.split("#")[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) continue;
+                    if (contents.length() == 0) {
+                        continue;
+                    }
                     String[] items = contents.split(",");
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]) +
                             getShapeData(items[2].split(":")[0]),
@@ -188,15 +235,21 @@ public class CustomCrafting implements Listener {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];
                         int iidata;
-                        if (idata.equals("*"))
+                        if (idata.equals("*")) {
                             iidata = -1;
-                        else
+                        }
+                        else {
                             iidata = Integer.parseInt(idata);
+                        }
 
                         r.setIngredient((iid + "").charAt(0), Material.getMaterial(iid), iidata);
                     }
-                    if (plugin.getServer().addRecipe(r)) plugin.getLogger().info("Recipe Added!");
-                    else plugin.getLogger().warning("Failed to add recipe!");
+                    if (plugin.getServer().addRecipe(r)) {
+                        plugin.getLogger().info("Recipe Added!");
+                    }
+                    else {
+                        plugin.getLogger().warning("Failed to add recipe!");
+                    }
                 }
             }
             br.close();

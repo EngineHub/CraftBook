@@ -18,13 +18,13 @@ package com.sk89q.craftbook.blockbag;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.List;
+
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
-
-import java.util.List;
 
 /**
  * A collection of block bags.
@@ -53,12 +53,13 @@ public class CompoundBlockBag extends BlockBag {
     @Override
     public void storeBlock(int id) throws BlockBagException {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             try {
                 b.storeBlock(id);
                 return;
             } catch (OutOfSpaceException ignored) {
             }
+        }
         throw new OutOfSpaceException(id);
     }
 
@@ -70,12 +71,13 @@ public class CompoundBlockBag extends BlockBag {
     @Override
     public void fetchBlock(int id) throws BlockBagException {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             try {
                 b.fetchBlock(id);
                 return;
             } catch (OutOfBlocksException ignored) {
             }
+        }
         throw new OutOfBlocksException();
     }
 
@@ -87,21 +89,24 @@ public class CompoundBlockBag extends BlockBag {
     @Override
     public void flushChanges() {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             b.flushChanges();
+        }
     }
 
     @Override
     public void addSingleSourcePosition(WorldVector arg0) {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             b.addSingleSourcePosition(arg0);
+        }
     }
 
     @Override
     public void addSourcePosition(WorldVector arg0) {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             b.addSourcePosition(arg0);
+        }
     }
 }

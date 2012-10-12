@@ -44,7 +44,9 @@ public class SetBlockBelowChest extends AbstractIC {
         String sblockdat = getSign().getLine(2).toUpperCase().trim();
         String sblock = sblockdat.split(":")[0];
         String smeta = "";
-        if (sblockdat.split(":").length > 1) smeta = sblockdat.split(":")[1];
+        if (sblockdat.split(":").length > 1) {
+            smeta = sblockdat.split(":")[1];
+        }
         String force = getSign().getLine(3).toUpperCase().trim();
 
         chip.setOutput(0, chip.getInput(0));
@@ -59,7 +61,9 @@ public class SetBlockBelowChest extends AbstractIC {
 
         byte meta = -1;
         try {
-            if (!smeta.equalsIgnoreCase("")) meta = Byte.parseByte(smeta);
+            if (!smeta.equalsIgnoreCase("")) {
+                meta = Byte.parseByte(smeta);
+            }
         } catch (Exception e) {
             return;
         }
@@ -73,7 +77,9 @@ public class SetBlockBelowChest extends AbstractIC {
 
         if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y - 1, z).getType() == Material.AIR) if (takeFromChest(x, y + 1, z, block, meta)) {
             body.getWorld().getBlockAt(x, y - 1, z).setTypeId(block);
-            if (!(meta == -1)) body.getWorld().getBlockAt(x, y - 1, z).setData(meta);
+            if (!(meta == -1)) {
+                body.getWorld().getBlockAt(x, y - 1, z).setData(meta);
+            }
         }
     }
 
@@ -85,14 +91,22 @@ public class SetBlockBelowChest extends AbstractIC {
             Chest c = (Chest) bl.getState();
             ItemStack[] is = c.getInventory().getContents();
             for (int i = 0; i < is.length; i++) {
-                if (is[i] == null) continue;
+                if (is[i] == null) {
+                    continue;
+                }
                 if (is[i].getAmount() > 0 && is[i].getTypeId() == id) {
                     if (data != -1)
-                        if (!(is[i].getData().getData() == data)) continue;
+                        if (!(is[i].getData().getData() == data)) {
+                            continue;
+                        }
                     ItemStack stack = is[i];
                     getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), x, y, z), stack);
-                    if (is[i].getAmount() == 1) is[i] = new ItemStack(0, 0);
-                    else is[i].setAmount(is[i].getAmount() - 1);
+                    if (is[i].getAmount() == 1) {
+                        is[i] = new ItemStack(0, 0);
+                    }
+                    else {
+                        is[i].setAmount(is[i].getAmount() - 1);
+                    }
                     ret = true;
                     break;
                 }

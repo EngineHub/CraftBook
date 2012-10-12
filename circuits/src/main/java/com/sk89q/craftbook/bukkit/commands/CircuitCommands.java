@@ -49,17 +49,22 @@ public class CircuitCommands {
         try {
             IC ic = ric.getFactory().create(null);
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
-            if(plugin.getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null)
+            if(plugin.getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
                 player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
+            }
             player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
-            if(ric.getFactory().getLineHelp()[0] != null)
+            if(ric.getFactory().getLineHelp()[0] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
-            else
+            }
+            else {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: Nothing.");
-            if(ric.getFactory().getLineHelp()[1] != null)
+            }
+            if(ric.getFactory().getLineHelp()[1] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
-            else
+            }
+            else {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: Nothing.");
+            }
             player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId().toUpperCase());
         }
         catch(Exception e){}
@@ -92,8 +97,9 @@ public class CircuitCommands {
 
         player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page " + (accessedPage + 1) + " of " + pages + "):");
 
-        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++)
-         player.sendMessage(lines[i]);
+        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
+            player.sendMessage(lines[i]);
+        }
     }
 
     /**
@@ -112,7 +118,7 @@ public class CircuitCommands {
 
         ArrayList<String> strings = new ArrayList<String>();
         boolean col = true;
-        for (String ic : icNameList)
+        for (String ic : icNameList) {
             try {
                 col = !col;
                 RegisteredICFactory ric = plugin.icManager.registered.get(ic);
@@ -120,18 +126,24 @@ public class CircuitCommands {
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
                 if (ric.getFactory() instanceof RestrictedIC) {
-                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
+                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                    }
                 }
-                else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                }
                 strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
             }
             catch(Exception e){
                 if(ic.endsWith("5001") || ic.endsWith("5000")) {
                     //Stuff
                 }
-                else
+                else {
                     Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report it to Me4502");
+                }
             }
+        }
 
         return strings.toArray(new String[0]);
     }

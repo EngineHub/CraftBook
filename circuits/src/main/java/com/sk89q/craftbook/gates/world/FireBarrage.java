@@ -34,7 +34,9 @@ public class FireBarrage extends FireShooter {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) shootFire(5);
+        if (chip.getInput(0)) {
+            shootFire(5);
+        }
     }
 
     public static class Factory extends AbstractICFactory implements

@@ -58,20 +58,25 @@ public class CartDeposit extends CartMechanism {
         if (collecting) {
             // collecting
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
-            if (((Sign) blocks.sign.getState()).getLine(2).length() > 0)
+            if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
                 for (ItemStack item : cartinventory.getContents()) {
-                    if (item == null) continue;
+                    if (item == null) {
+                        continue;
+                    }
                     if (itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
                         transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                         cartinventory.remove(item);
                     }
                 }
+            }
             else {
                 transferitems.addAll(Arrays.asList(cartinventory.getContents()));
                 cartinventory.clear();
             }
 
-            while (transferitems.remove(null)) continue;
+            while (transferitems.remove(null)) {
+                continue;
+            }
 
             // is cart non-empty?
             if (transferitems.size() <= 0) return;
@@ -81,7 +86,9 @@ public class CartDeposit extends CartMechanism {
             // type " + stack.getType().toString());
 
             for (Chest container : containers) {
-                if (transferitems.size() <= 0) break;
+                if (transferitems.size() <= 0) {
+                    break;
+                }
                 Inventory containerinventory = container.getInventory();
 
                 leftovers.addAll(containerinventory.addItem(transferitems.toArray(trivialstackarray))
@@ -107,14 +114,17 @@ public class CartDeposit extends CartMechanism {
 
             for (Chest container : containers) {
                 Inventory containerinventory = container.getInventory();
-                if (((Sign) blocks.sign.getState()).getLine(2).length() > 0)
+                if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
                     for (ItemStack item : containerinventory.getContents()) {
-                        if (item == null) continue;
+                        if (item == null) {
+                            continue;
+                        }
                         if (itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
                             transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             containerinventory.remove(item);
                         }
                     }
+                }
                 else {
                     transferitems.addAll(Arrays.asList(containerinventory.getContents()));
                     containerinventory.clear();
@@ -140,7 +150,9 @@ public class CartDeposit extends CartMechanism {
             //System.out.println("deposited, " + transferitems.size() + " items left over.");
 
             for (Chest container : containers) {
-                if (transferitems.size() <= 0) break;
+                if (transferitems.size() <= 0) {
+                    break;
+                }
                 Inventory containerinventory = container.getInventory();
 
                 leftovers.addAll(containerinventory.addItem(transferitems.toArray(trivialstackarray))

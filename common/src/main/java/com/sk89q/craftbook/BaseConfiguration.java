@@ -1,13 +1,13 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -54,7 +54,9 @@ public class BaseConfiguration {
     public List<String> getStringList(String name, List<String> def) {
 
         List<String> it = cfg.getStringList(name);
-        if(it == null || it.size() == 0) it = def;
+        if(it == null || it.size() == 0) {
+            it = def;
+        }
         cfg.set(name, it);
         return it;
     }
@@ -62,9 +64,13 @@ public class BaseConfiguration {
     public Set<Integer> getIntegerSet(String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
-        if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
+        if (tids == null || tids.isEmpty() || tids.size() < 1) {
+            tids = def;
+        }
         Set<Integer> allowedBlocks = new HashSet<Integer>();
-        for (Integer tid : tids) allowedBlocks.add(tid);
+        for (Integer tid : tids) {
+            allowedBlocks.add(tid);
+        }
         cfg.set(name, tids);
         return allowedBlocks;
     }
@@ -72,9 +78,13 @@ public class BaseConfiguration {
     public Set<Material> getMaterialSet(String name, List<Integer> def) {
 
         List<Integer> tids = cfg.getIntegerList(name);
-        if (tids == null || tids.isEmpty() || tids.size() < 1) tids = def;
+        if (tids == null || tids.isEmpty() || tids.size() < 1) {
+            tids = def;
+        }
         Set<Material> allowedBlocks = new HashSet<Material>();
-        for (Integer tid : tids) allowedBlocks.add(Material.getMaterial(tid));
+        for (Integer tid : tids) {
+            allowedBlocks.add(Material.getMaterial(tid));
+        }
         cfg.set(name, tids);
         return Collections.unmodifiableSet(allowedBlocks);
     }

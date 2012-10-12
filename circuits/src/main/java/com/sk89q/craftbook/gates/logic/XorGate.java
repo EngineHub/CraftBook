@@ -57,9 +57,15 @@ public class XorGate extends AbstractIC {
             if (chip.isValid(i)) {
                 boolean pinval = chip.getInput(i);
                 //Got pin value, assign to first free variable, break if got both.
-                if (a == null) a = pinval;
-                else if (b == null) b = pinval;
-                else break;
+                if (a == null) {
+                    a = pinval;
+                }
+                else if (b == null) {
+                    b = pinval;
+                }
+                else {
+                    break;
+                }
             }
 
         if (a == null || b == null) return;

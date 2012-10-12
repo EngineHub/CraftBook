@@ -55,14 +55,20 @@ public class Marquee extends AbstractIC {
         int next = 0;
         try {
             String[] st = getSign().getLine(1).split("]");
-            if (st.length > 1) reverse = st[1].equalsIgnoreCase("r");
+            if (st.length > 1) {
+                reverse = st[1].equalsIgnoreCase("r");
+            }
             next = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
         }
 
-        if (next == 0) next = reverse ? 3 : 1;
+        if (next == 0) {
+            next = reverse ? 3 : 1;
+        }
         for (short i = 0; i < chip.getOutputCount(); i++)
+        {
             chip.setOutput(i, false); // Clear all pins
+        }
 
         switch (next) {
             case 1:
@@ -77,11 +83,19 @@ public class Marquee extends AbstractIC {
         }
 
 
-        if (reverse) next--;
-        else next++;
+        if (reverse) {
+            next--;
+        }
+        else {
+            next++;
+        }
 
-        if (next == 0) next = 3;
-        else if (next == 4) next = 1;
+        if (next == 0) {
+            next = 3;
+        }
+        else if (next == 4) {
+            next = 1;
+        }
 
         // set the next output and update sign
         getSign().setLine(2, Integer.toString(next));

@@ -55,8 +55,9 @@ public class PaintingSwitch implements Listener {
                     paintings.remove(paint);
                     players.remove(player.getName());
                     player.print("mech.painting.stop");
-                } else if (isBeingEdited(paint))
+                } else if (isBeingEdited(paint)) {
                     player.print(player.translate("mech.painting.used") + " " + paintings.get(paint));
+                }
                 else
                     return;
                 event.setCancelled(true);
@@ -73,21 +74,35 @@ public class PaintingSwitch implements Listener {
         if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player.getName()).isValid())
             return;
         boolean isForwards;
-        if (event.getNewSlot() > event.getPreviousSlot()) isForwards = true;
-        else if (event.getNewSlot() < event.getPreviousSlot()) isForwards = false;
+        if (event.getNewSlot() > event.getPreviousSlot()) {
+            isForwards = true;
+        }
+        else if (event.getNewSlot() < event.getPreviousSlot()) {
+            isForwards = false;
+        }
         else return;
-        if (event.getPreviousSlot() == 0 && event.getNewSlot() == 8) isForwards = false;
-        else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) isForwards = true;
+        if (event.getPreviousSlot() == 0 && event.getNewSlot() == 8) {
+            isForwards = false;
+        }
+        else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) {
+            isForwards = true;
+        }
         Art[] art = Art.values().clone();
         Painting paint = players.get(player.getName());
         int newID = paint.getArt().getId() + (isForwards ? 1 : -1);
-        if (newID < 0) newID = art.length - 1;
-        else if (newID > art.length - 1) newID = 0;
+        if (newID < 0) {
+            newID = art.length - 1;
+        }
+        else if (newID > art.length - 1) {
+            newID = 0;
+        }
         while(!paint.setArt(art[newID]))
-            if(newID > 0)
+            if(newID > 0) {
                 newID --;
-            else
+            }
+            else {
                 break;
+            }
         paintings.put(paint, player.getName());
         players.put(player.getName(), paint);
     }

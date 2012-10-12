@@ -1,16 +1,17 @@
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.minecraft.util.commands.CommandException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import com.sk89q.minecraft.util.commands.CommandException;
 
 public class PlayerUtil {
 
@@ -58,8 +59,8 @@ public class PlayerUtil {
 
             for (Player player : players)
                 if (player.getName().equalsIgnoreCase(filter)
-                        || (useDisplayNames
-                                && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter))) {
+                        || useDisplayNames
+                        && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter)) {
                     List<Player> list = new ArrayList<Player>();
                     list.add(player);
                     return list;
@@ -74,8 +75,10 @@ public class PlayerUtil {
 
             for (Player player : players)
                 if (player.getName().toLowerCase().contains(filter)
-                        || (useDisplayNames
-                                && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter))) list.add(player);
+                        || useDisplayNames
+                        && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter)) {
+                    list.add(player);
+                }
 
             return list;
 
@@ -85,8 +88,10 @@ public class PlayerUtil {
 
             for (Player player : players)
                 if (player.getName().toLowerCase().startsWith(filter)
-                        || (useDisplayNames
-                                && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter))) list.add(player);
+                        || useDisplayNames
+                        && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter)) {
+                    list.add(player);
+                }
 
             return list;
         }
@@ -136,7 +141,9 @@ public class PlayerUtil {
                 World sourceWorld = sourcePlayer.getWorld();
 
                 for (Player player : CircuitsPlugin.server.getOnlinePlayers())
-                    if (player.getWorld().equals(sourceWorld)) players.add(player);
+                    if (player.getWorld().equals(sourceWorld)) {
+                        players.add(player);
+                    }
 
                 return checkPlayerMatch(players);
 
@@ -151,7 +158,9 @@ public class PlayerUtil {
                 for (Player player : CircuitsPlugin.server.getOnlinePlayers())
                     if (player.getWorld().equals(sourceWorld)
                             && player.getLocation().toVector().distanceSquared(
-                                    sourceVector) < 900) players.add(player);
+                                    sourceVector) < 900) {
+                        players.add(player);
+                    }
 
                 return checkPlayerMatch(players);
 
@@ -180,7 +189,7 @@ public class PlayerUtil {
         Player[] players = CircuitsPlugin.server.getOnlinePlayers();
         for (Player player : players)
             if (player.getName().equalsIgnoreCase(filter)
-                    || (player.getDisplayName().equalsIgnoreCase(filter))) return player;
+                    || player.getDisplayName().equalsIgnoreCase(filter)) return player;
 
         throw new CommandException("No player found!");
     }
@@ -268,7 +277,9 @@ public class PlayerUtil {
 
         if (sender instanceof Player) {
             String name = ((Player) sender).getDisplayName();
-            if (endColor != null && name.contains("\u00A7")) name = name + endColor;
+            if (endColor != null && name.contains("\u00A7")) {
+                name = name + endColor;
+            }
             return name;
         } else if (sender instanceof ConsoleCommandSender) return "*Console*";
         else
@@ -285,7 +296,7 @@ public class PlayerUtil {
      */
     public static String toUniqueName(CommandSender sender) {
 
-        if (sender instanceof Player) return (sender).getName();
+        if (sender instanceof Player) return sender.getName();
         else
             return "*Console*";
     }

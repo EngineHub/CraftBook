@@ -30,20 +30,24 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
@@ -78,8 +82,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             error("code missing", "Code went missing!!");
         }
         try {
-            if(codeString!=null)
+            if(codeString!=null) {
                 code = lang.compile(codeString);
+            }
         } catch(ICVerificationException e) {
             throw new RuntimeException("inconsistent compile check!", e);
         }
@@ -115,7 +120,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             String hex = "";
             for(int i=0;i<digest.length;i++) {
                 String byteHex = Integer.toHexString(digest[i]&0xFF);
-                if(byteHex.length() == 1) byteHex = "0"+byteHex;
+                if(byteHex.length() == 1) {
+                    byteHex = "0"+byteHex;
+                }
                 hex += byteHex;
             }
             return hex;
@@ -150,8 +157,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     String id = in.readUTF();
                     String code = hashCode(in.readUTF());
                     if((lang.getName().equals(langName) || lang.supports(langName)) &&
-                            (isShared() || (id.equals(getID()) && hashCode(codeString).equals(code))))
+                            (isShared() || id.equals(getID()) && hashCode(codeString).equals(code))) {
                         lang.loadState(state, in);
+                    }
                     else {
                         // Prevent errors from different ICs from affecting this one.
                         error = false;
@@ -195,8 +203,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
         for(ItemStack s : i.getContents())
-            if((s != null &&
-            s.getAmount() > 0) &&
+            if(s != null &&
+            s.getAmount() > 0 &&
             (s.getType() == Material.BOOK_AND_QUILL ||
             s.getType() == Material.WRITTEN_BOOK)) {
                 if(book != null)
@@ -207,8 +215,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             throw new CodeNotFoundException("No written books found in chest.");
         BookItem data = new BookItem(book);
         String code = "";
-        for(String s:data.getPages())
+        for(String s:data.getPages()) {
             code += s+"\n";
+        }
         System.out.println(code);
         return code;
     }
@@ -234,8 +243,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                         String code = "";
                         while(b instanceof Sign) {
                             s = (Sign) b;
-                            for(int li=0;li<4 && y!=l.getBlockY();li++)
+                            for(int li=0;li<4 && y!=l.getBlockY();li++) {
                                 code += s.getLine(li)+"\n";
+                            }
                             b = w.getBlockAt(x, --y, z).getState();
                         }
                         return code;
@@ -268,7 +278,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     @Override
     public void trigger(ChipState chip) {
         try {
-            if(isShared()) tryLoadState();
+            if(isShared()) {
+                tryLoadState();
+            }
 
             lang.execute(chip, state, code);
 
@@ -327,12 +339,16 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     " ("+l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ()+")");
             p.sendMessage(ChatColor.RED+"Language:"+ChatColor.RESET+" "+lang.getName());
             p.sendMessage(ChatColor.RED+"Full Storage Name:"+ChatColor.RESET+" "+getFileName());
-            if(error) p.sendMessage(errorString);
-            else
+            if(error) {
+                p.sendMessage(errorString);
+            }
+            else {
                 p.sendMessage(lang.dumpState(state));
+            }
         }
-        else
+        else {
             p.sendMessage(ChatColor.RED+"You do not have the necessary permissions to do that.");
+        }
     }
 
     @Override

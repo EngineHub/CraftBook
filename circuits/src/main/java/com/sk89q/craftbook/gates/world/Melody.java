@@ -51,8 +51,9 @@ public class Melody extends AbstractIC {
     public void unload() {
         try {
             sequencer.stop();
-            for (Player player : getServer().getOnlinePlayers())
+            for (Player player : getServer().getOnlinePlayers()) {
                 jNote.getJingleNoteManager().stop(player);
+            }
             jNote.getJingleNoteManager().stopAll();
         }
         catch(Exception e){}
@@ -102,15 +103,19 @@ public class Melody extends AbstractIC {
 
                 if(sequencer!=null||jNote!=null)
                 {
-                    for (Player player : getServer().getOnlinePlayers())
+                    for (Player player : getServer().getOnlinePlayers()) {
                         jNote.getJingleNoteManager().stop(player);
+                    }
                     jNote.getJingleNoteManager().stopAll();
                 }
                 sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
-                    if(player==null)continue;
-                    if(radius > 0 && !LocationUtil.isWithinRadius(getSign().getLocation(), player.getLocation(), radius))
+                    if(player==null) {
                         continue;
+                    }
+                    if(radius > 0 && !LocationUtil.isWithinRadius(getSign().getLocation(), player.getLocation(), radius)) {
+                        continue;
+                    }
                     jNote.getJingleNoteManager().play(player, sequencer, 0);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
@@ -118,8 +123,9 @@ public class Melody extends AbstractIC {
             else if(!chip.getInput(0) && sequencer!=null)
             {
                 sequencer.stop();
-                for (Player player : getServer().getOnlinePlayers())
+                for (Player player : getServer().getOnlinePlayers()) {
                     jNote.getJingleNoteManager().stop(player);
+                }
                 jNote.getJingleNoteManager().stopAll();
             }
         }

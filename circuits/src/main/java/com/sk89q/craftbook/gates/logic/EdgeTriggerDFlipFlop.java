@@ -49,8 +49,12 @@ public class EdgeTriggerDFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.get(2)) chip.set(3, false);
-        else if (chip.get(1) && chip.isTriggered(1)) chip.set(3, chip.get(0));
+        if (chip.get(2)) {
+            chip.set(3, false);
+        }
+        else if (chip.get(1) && chip.isTriggered(1)) {
+            chip.set(3, chip.get(0));
+        }
 
     }
 

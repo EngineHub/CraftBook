@@ -146,7 +146,10 @@ public class Elevator extends AbstractMechanic {
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
-            if (derp != Direction.NONE) break;   // found it!
+            if (derp != Direction.NONE)
+            {
+                break;   // found it!
+            }
             if(destination.getY() == trigger.getY())
                 throw new InvalidConstructionException();
             if(plugin.getLocalConfiguration().elevatorSettings.loop && !loopd) {
@@ -220,21 +223,25 @@ public class Elevator extends AbstractMechanic {
         // to the destination sign's height (plus one).
         Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()),destination.getY() + 1,(int) Math.floor(player.getPosition().getPosition().getZ()));
         // well, unless that's already a ceiling.
-        if (!occupiable(floor)) floor = floor.getRelative(BlockFace.DOWN);
+        if (!occupiable(floor)) {
+            floor = floor.getRelative(BlockFace.DOWN);
+        }
 
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (occupiable(floor))
+            if (occupiable(floor)) {
                 foundFree++;
+            }
             else {
                 foundGround = true;
                 break;
             }
-            if (floor.getY() == 0x0)        // hit the bottom of the world
+            if (floor.getY() == 0x0) {
                 break;
+            }
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (!foundGround) {
@@ -260,9 +267,12 @@ public class Elevator extends AbstractMechanic {
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
         String title = ((Sign) destination.getState()).getLines()[0];
-        if (title.length() != 0) player.print(player.translate("mech.lift.floor") + ": " + title);
-        else
+        if (title.length() != 0) {
+            player.print(player.translate("mech.lift.floor") + ": " + title);
+        }
+        else {
             player.print("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
+        }
     }
 
     private static Elevator.Direction isLift(Block block) {
