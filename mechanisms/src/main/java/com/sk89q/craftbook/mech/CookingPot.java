@@ -106,7 +106,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
                 sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
-                sign.setLine(3, "1");
+                if(plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+                    sign.setLine(3, "0");
+                else
+                    sign.setLine(3, "1");
                 sign.update();
                 player.print("mech.cook.create");
             }
@@ -221,7 +224,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     public void setMultiplier(Sign sign, int amount) {
-        if(amount < 1) {
+        if(amount < 1 && !plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
             amount = 1;
         }
         sign.setLine(3, amount + "");
@@ -238,12 +241,16 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     public int getMultiplier(Sign sign) {
         int multiplier = 1;
+        if(plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+            multiplier = 0;
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
         }
         catch(Exception e) {
             multiplier = 1;
-            setMultiplier(sign,1);
+            if(plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+                multiplier = 0;
+            setMultiplier(sign, multiplier);
         }
         return multiplier;
     }
