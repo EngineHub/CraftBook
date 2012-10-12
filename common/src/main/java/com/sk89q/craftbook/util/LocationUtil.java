@@ -1,7 +1,11 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,18 +16,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * @author Silthus, Me4502
  */
 public final class LocationUtil {
 
-    private static BaseBukkitPlugin plugin;
-
-    public static void init(BaseBukkitPlugin plugin) {
-
-        LocationUtil.plugin = plugin;
+    public static void init() {
     }
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
@@ -48,7 +48,7 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets the distance between to points.
+     * Gets the distance between two points.
      *
      * @param l1
      * @param l2
