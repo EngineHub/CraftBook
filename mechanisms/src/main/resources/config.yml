@@ -1,34 +1,101 @@
-language: en_US
-ammeter-enable: true
-bookshelf-enable: true
-bookshelf-read-text: You pick up a book...
-bridge-enable: true
-bridge-redstone: true
-bridge-max-length: 30
-bridge-blocks: [4,5,20,43]
-door-enable: true
-door-redstone: true
-door-max-length: 30
-door-blocks: [4,5,20,43]
-gate-enable: true
-gate-redstone: true
-gate-blocks: [85,101,102,113]
-elevators-enable: true
-new-cauldron-enable: true
-cauldron-enable: false
-cauldron-block: 1
-light-switch-enable: true
-light-stone-enable: true
-custom-drops-require-permissions: false
-snow-piling-enable: true
-snow-trample-enable: true
-jump-trample-only: true
-placable-snow: true
-area-enable: true
-area-redstone: true
-max-areas-per-user: 30
-max-size-per-area: 5000
-stop-mechanism-dupe: true
-teleporter-enable: true
-command-sign-enable: true
-dispenser-recipes-enable: true
+Ammeter:
+  enable: true
+Bookcase:
+  enable: true
+  read-text: You pick up a book...
+Bridge:
+  enable: true
+  redstone: true
+  max-length: 30
+  max-width: 5
+  blocks:
+  - 4
+  - 5
+  - 20
+  - 43
+Door:
+  enable: true
+  redstone: true
+  max-length: 30
+  max-width: 5
+  blocks:
+  - 4
+  - 5
+  - 20
+  - 43
+Gate:
+  enable: true
+  redstone: true
+  blocks:
+  - 85
+  - 101
+  - 102
+  - 113
+Elevator:
+  enable: true
+  loop-top-bottom: false
+Teleporter:
+  enable: true
+Cauldron:
+  legacy-enable: false
+  legacy-block: 1
+  new-enable: true
+  new-spoons: true
+Lightstone:
+  enable: true
+Light Switch:
+  enable: true
+  max-range: 10
+  max-lights: 20
+Hidden Switch:
+  enable: true
+Snow:
+  piling-enable: true
+  trample-enable: true
+  placable-snow: true
+  jump-trample-only: true
+  pile-high: false
+Toggle Areas:
+  enable: true
+  redstone: true
+  max-areas-per-user: 30
+  max-size-per-area: 5000
+  use-schematic: true
+Command Sign:
+  enable: true
+Custom Drops:
+  enable: true
+  require-permissions: false
+Dispenser Recipes:
+  enable: true
+Chairs:
+  enable: true
+  sneaking: true
+  blocks:
+  - 53
+  - 67
+  - 108
+  - 109
+  - 114
+  - 128
+  - 134
+  - 135
+  - 136
+AI Mechanics:
+  enable: true
+  realistic-zombie-vision: true
+Chunk Anchor:
+  enable: true
+Cooking Pot:
+  enable: true
+  requires-fuel: false
+Custom Crafting:
+  enable: true
+Painting Settings:
+  enable: true
+XP Storer:
+  enable: true
+Map Changer:
+  enable: true
+Mechanisms:
+  stop-mechanism-dupe: true

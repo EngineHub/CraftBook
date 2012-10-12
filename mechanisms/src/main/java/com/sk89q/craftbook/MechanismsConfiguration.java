@@ -60,13 +60,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
         lightSwitchSettings = new LightSwitchSettings(new BaseConfigurationSection("Light Switch"));
         hiddenSwitchSettings = new HiddenSwitchSettings(new BaseConfigurationSection("Hidden Switch"));
         snowSettings = new SnowSettings(new BaseConfigurationSection("Snow"));
-        areaSettings = new AreaSettings(new BaseConfigurationSection("Areas"));
+        areaSettings = new AreaSettings(new BaseConfigurationSection("Toggle Areas"));
         commandSettings = new CommandSettings(new BaseConfigurationSection("Command Sign"));
         customDrops = new CustomDropManager(dataFolder);
         customDropSettings = new CustomDropSettings(new BaseConfigurationSection("Custom Drops"));
-        dispenserSettings = new DispenserSettings(new BaseConfigurationSection("Dispenser"));
+        dispenserSettings = new DispenserSettings(new BaseConfigurationSection("Dispenser Recipes"));
         chairSettings = new ChairSettings(new BaseConfigurationSection("Chairs"));
-        aiSettings = new AISettings(new BaseConfigurationSection("AI"));
+        aiSettings = new AISettings(new BaseConfigurationSection("AI Mechanics"));
         anchorSettings = new AnchorSettings(new BaseConfigurationSection("Chunk Anchor"));
         cookingPotSettings = new CookingPotSettings(new BaseConfigurationSection("Cooking Pot"));
         customCraftingSettings = new CustomCraftingSettings(new BaseConfigurationSection("Custom Crafting"));
@@ -113,7 +113,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private MechanismSettings(BaseConfigurationSection section) {
 
-            stopDestruction = section.getBoolean("stop-mechanism-dupe", false);
+            stopDestruction = section.getBoolean("stop-mechanism-dupe", true);
         }
     }
 
@@ -123,7 +123,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private DispenserSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("dispenser-recipes-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -133,7 +133,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private AnchorSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("chunk-anchor-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -143,17 +143,19 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private CustomCraftingSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("custom-crafting-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
     public class CookingPotSettings {
 
         public final boolean enable;
+        public final boolean requiresfuel;
 
         private CookingPotSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("cooking-pot-enable", true);
+            enable = section.getBoolean("enable", true);
+            requiresfuel = section.getBoolean("requires-fuel", false);
         }
     }
 
@@ -164,8 +166,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private BookcaseSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("bookshelf-enable", true);
-            readLine = section.getString("bookshelf-read-text", "You pick up a book...");
+            enable = section.getBoolean("enable", true);
+            readLine = section.getString("read-text", "You pick up a book...");
         }
     }
 
@@ -179,11 +181,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private BridgeSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("bridge-enable", true);
-            enableRedstone = section.getBoolean("bridge-redstone", true);
-            maxLength = section.getInt("bridge-max-length", 30);
-            maxWidth = section.getInt("bridge-max-width", 5);
-            allowedBlocks = section.getMaterialSet("bridge-blocks", Arrays.asList(4, 5, 20, 43));
+            enable = section.getBoolean("enable", true);
+            enableRedstone = section.getBoolean("redstone", true);
+            maxLength = section.getInt("max-length", 30);
+            maxWidth = section.getInt("max-width", 5);
+            allowedBlocks = section.getMaterialSet("blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
@@ -208,11 +210,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private DoorSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("door-enable", true);
-            enableRedstone = section.getBoolean("door-redstone", true);
-            maxLength = section.getInt("door-max-length", 30);
-            maxWidth = section.getInt("door-max-width", 5);
-            allowedBlocks = section.getIntegerSet("door-blocks", Arrays.asList(4, 5, 20, 43));
+            enable = section.getBoolean("enable", true);
+            enableRedstone = section.getBoolean("redstone", true);
+            maxLength = section.getInt("max-length", 30);
+            maxWidth = section.getInt("max-width", 5);
+            allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
@@ -235,9 +237,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private GateSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("gate-enable", true);
-            enableRedstone = section.getBoolean("gate-redstone", true);
-            allowedBlocks = section.getIntegerSet("gate-blocks", Arrays.asList(85, 101, 102, 113));
+            enable = section.getBoolean("enable", true);
+            enableRedstone = section.getBoolean("redstone", true);
+            allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(85, 101, 102, 113));
         }
 
         /**
@@ -258,7 +260,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private CommandSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("command-sign-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -269,8 +271,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private ElevatorSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("elevators-enable", true);
-            loop = section.getBoolean("elevators-loop-top-bottom", false);
+            enable = section.getBoolean("enable", true);
+            loop = section.getBoolean("loop-top-bottom", false);
         }
     }
 
@@ -280,7 +282,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private TeleporterSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("teleporter-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -293,10 +295,10 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private CauldronSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("cauldron-enable", false);
-            cauldronBlock = section.getInt("cauldron-block", 1);
-            enableNew = section.getBoolean("new-cauldron-enable", true);
-            newSpoons = section.getBoolean("new-cauldron-spoons", true);
+            enable = section.getBoolean("legacy-enable", false);
+            cauldronBlock = section.getInt("legacy-block", 1);
+            enableNew = section.getBoolean("new-enable", true);
+            newSpoons = section.getBoolean("new-spoons", true);
         }
     }
 
@@ -308,9 +310,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private LightSwitchSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("light-switch-enable", true);
-            maxRange = section.getInt("light-switch-max-range", 10);
-            maxMaximum = section.getInt("light-switch-max-lights", 20);
+            enable = section.getBoolean("enable", true);
+            maxRange = section.getInt("max-range", 10);
+            maxMaximum = section.getInt("max-lights", 20);
         }
     }
 
@@ -320,7 +322,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private LightStoneSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("light-stone-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -330,7 +332,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private AmmeterSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("ammeter-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -340,7 +342,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private HiddenSwitchSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("hidden-switches-enable", true);
+            enable = section.getBoolean("enable", true);
         }
     }
 
@@ -354,11 +356,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private SnowSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("snow-piling-enable", true);
-            trample = section.getBoolean("snow-trample-enable", true);
+            enable = section.getBoolean("piling-enable", true);
+            trample = section.getBoolean("trample-enable", true);
             placeSnow = section.getBoolean("placable-snow", true);
             jumpTrample = section.getBoolean("jump-trample-only", true);
-            piling = section.getBoolean("snow-piles-high", false);
+            piling = section.getBoolean("pile-high", false);
         }
     }
 
@@ -372,11 +374,11 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private AreaSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("area-enable", true);
-            enableRedstone = section.getBoolean("area-redstone", true);
+            enable = section.getBoolean("enable", true);
+            enableRedstone = section.getBoolean("redstone", true);
             maxAreasPerUser = section.getInt("max-areas-per-user", 30);
             maxSizePerArea = section.getInt("max-size-per-area", 5000);
-            useSchematics = section.getBoolean("area-use-schematic", true);
+            useSchematics = section.getBoolean("use-schematic", true);
         }
     }
 
@@ -387,8 +389,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private CustomDropSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("custom-drops-enable", true);
-            requirePermissions = section.getBoolean("custom-drops-require-permissions", false);
+            enable = section.getBoolean("enable", true);
+            requirePermissions = section.getBoolean("require-permissions", false);
         }
     }
 
@@ -401,9 +403,9 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private ChairSettings(BaseConfigurationSection section) {
 
-            enable = section.getBoolean("chair-enable", true);
-            requireSneak = section.getBoolean("chair-sneaking", true);
-            allowedBlocks = section.getMaterialSet("chair-blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
+            enable = section.getBoolean("enable", true);
+            requireSneak = section.getBoolean("sneaking", true);
+            allowedBlocks = section.getMaterialSet("blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
                     136));
         }
 
@@ -426,7 +428,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private AISettings(BaseConfigurationSection section) {
 
-            enabled = section.getBoolean("ai-mechanic-enable", true);
+            enabled = section.getBoolean("enable", true);
             zombieVision = section.getBoolean("realistic-zombie-vision", true);
         }
     }
@@ -437,7 +439,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private PaintingSettings(BaseConfigurationSection section) {
 
-            enabled = section.getBoolean("painting-switch-enable", true);
+            enabled = section.getBoolean("enable", true);
         }
     }
 
@@ -447,7 +449,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private XPStorerSettings(BaseConfigurationSection section) {
 
-            enabled = section.getBoolean("xp-storer-enable", true);
+            enabled = section.getBoolean("enable", true);
         }
     }
 
@@ -457,7 +459,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         private MapChangerSettings(BaseConfigurationSection section) {
 
-            enabled = section.getBoolean("map-changer-enable", true);
+            enabled = section.getBoolean("enable", true);
         }
     }
 }
