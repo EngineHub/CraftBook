@@ -1,5 +1,12 @@
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import net.minecraft.server.LocaleLanguage;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,14 +14,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-
-import net.minecraft.server.LocaleLanguage;
-
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
 /**
  * @author Me4502
@@ -34,7 +33,7 @@ public class LanguageManager {
 
     public void checkForLanguages() {
 
-        List<String> languages = plugin.getLocalConfiguration().commonSettings.languages;
+        List<String> languages = CraftBookPlugin.getInstance().getLocalConfiguration().languages;
         for(String language : languages) {
             language = language.trim();
             HashMap<String, String> languageData = new HashMap<String, String>();
@@ -58,7 +57,7 @@ public class LanguageManager {
     @Deprecated
     public String getString(String message) {
 
-        HashMap<String, String> languageData = languageMap.get(plugin.getLocalConfiguration().commonSettings.language);
+        HashMap<String, String> languageData = languageMap.get(CraftBookPlugin.getInstance().getLocalConfiguration().language);
         if(languageData == null)
             return "Missing Language File!";
         if (languageData.get(ChatColor.stripColor(message)) == null) return message;
@@ -81,7 +80,7 @@ public class LanguageManager {
             return (String) d.get(((CraftPlayer)p).getHandle().getLocale());
         }
         catch(Throwable e) {
-            return plugin.getLocalConfiguration().commonSettings.language;
+            return CraftBookPlugin.getInstance().getLocalConfiguration().language;
         }
     }
 }

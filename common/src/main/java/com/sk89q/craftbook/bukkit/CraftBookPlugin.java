@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.CommonConfiguration;
+
 /**
  * Plugin for CraftBook's core.
  *
@@ -25,8 +27,34 @@ package com.sk89q.craftbook.bukkit;
  */
 public class CraftBookPlugin extends BaseBukkitPlugin {
 
-    @Override
+	private static CraftBookPlugin instance;
+
+	public static CraftBookPlugin getInstance() {
+		return instance;
+	}
+
+	private CommonConfiguration config;
+
+	public CraftBookPlugin() {
+
+		instance = this;
+	}
+
+	@Override
+	public void onEnable() {
+
+		super.onEnable();
+		config = new CommonConfiguration(getConfig(), getDataFolder());
+		saveConfig();
+	}
+
+	@Override
     protected void registerEvents() {
 
     }
+
+	@Override
+	public CommonConfiguration getLocalConfiguration() {
+		return config;
+	}
 }
