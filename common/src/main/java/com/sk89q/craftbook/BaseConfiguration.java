@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -87,5 +88,83 @@ public class BaseConfiguration {
         }
         cfg.set(name, tids);
         return Collections.unmodifiableSet(allowedBlocks);
+    }
+
+    public class BaseConfigurationSection {
+
+        public final ConfigurationSection section;
+
+        public BaseConfigurationSection(String section) {
+
+            if(!cfg.isConfigurationSection(section))
+                cfg.createSection(section);
+            this.section = cfg.getConfigurationSection(section);
+        }
+
+        public int getInt(String name, int def) {
+
+            int it = section.getInt(name, def);
+            section.set(name, it);
+            return it;
+        }
+
+        public double getDouble(String name, double def) {
+
+            double it = section.getDouble(name, def);
+            section.set(name, it);
+            return it;
+        }
+
+        public boolean getBoolean(String name, boolean def) {
+
+            boolean it = section.getBoolean(name, def);
+            section.set(name, it);
+            return it;
+        }
+
+        public String getString(String name, String def) {
+
+            String it = section.getString(name, def);
+            section.set(name, it);
+            return it;
+        }
+
+        public List<String> getStringList(String name, List<String> def) {
+
+            List<String> it = section.getStringList(name);
+            if(it == null || it.size() == 0) {
+                it = def;
+            }
+            section.set(name, it);
+            return it;
+        }
+
+        public Set<Integer> getIntegerSet(String name, List<Integer> def) {
+
+            List<Integer> tids = section.getIntegerList(name);
+            if (tids == null || tids.isEmpty() || tids.size() < 1) {
+                tids = def;
+            }
+            Set<Integer> allowedBlocks = new HashSet<Integer>();
+            for (Integer tid : tids) {
+                allowedBlocks.add(tid);
+            }
+            section.set(name, tids);
+            return allowedBlocks;
+        }
+
+        public Set<Material> getMaterialSet(String name, List<Integer> def) {
+
+            List<Integer> tids = section.getIntegerList(name);
+            if (tids == null || tids.isEmpty() || tids.size() < 1) {
+                tids = def;
+            }
+            Set<Material> allowedBlocks = new HashSet<Material>();
+            for (Integer tid : tids) {
+                allowedBlocks.add(Material.getMaterial(tid));
+            }
+            section.set(name, tids);
+            return Collections.unmodifiableSet(allowedBlocks);
+        }
     }
 }
