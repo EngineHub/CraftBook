@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -158,6 +159,14 @@ public class Teleporter extends AbstractMechanic {
             }
             else
                 return;
+        }
+
+        if(plugin.getLocalConfiguration().teleporterSettings.requiresign) {
+            Block location = trigger.getWorld().getBlockAt((int)toX, (int)toY, (int)toZ);
+            if(location.getType() != Material.SIGN && location.getType() != Material.SIGN_POST) {
+                player.printError("mech.teleport.sign");
+                return;
+            }
         }
 
         Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),

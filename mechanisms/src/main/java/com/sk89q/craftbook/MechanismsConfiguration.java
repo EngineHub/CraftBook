@@ -281,11 +281,14 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final int maxrange;
+        public final boolean requiresign;
 
         private TeleporterSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
             maxrange = section.getInt("max-range", -1);
+            requiresign = section.getBoolean("need-sign-destination", false);
+
         }
     }
 
