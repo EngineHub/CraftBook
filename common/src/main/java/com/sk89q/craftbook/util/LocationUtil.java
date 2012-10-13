@@ -30,7 +30,7 @@ public final class LocationUtil {
 
         if(!l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()))
             return false;
-        return getDistance(l1, l2) <= radius;
+        return getDistanceSquared(l1, l2) <= radius * radius;
     }
 
     public static Entity[] getNearbyEntities(Location l, int radius){
@@ -58,9 +58,18 @@ public final class LocationUtil {
      */
     public static double getDistance(Location l1, Location l2) {
 
-        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance) return getBlockDistance(l1, l2);
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance)
+            return getBlockDistance(l1, l2);
         else
             return Math.sqrt(l1.distanceSquared(l2));
+    }
+
+    public static double getDistanceSquared(Location l1, Location l2) {
+
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance)
+            return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
+        else
+            return l1.distanceSquared(l2);
     }
 
     /**
