@@ -1,3 +1,15 @@
+3.3.2:
+- Fixed MIDI IC tones and added velocity + guitar noise.
+- Pump IC. Pumps liquids into above chest.
+- Fix deposit/collect vehicle mechanic.
+- Fix Custom drops not replacing drops.
+- ICList Now shows permissions.
+- language config node added again, overrides default language
+- Per-IC Config. Doesn't contain much yet.
+- Improved Planter IC
+- Added Spigot IC. Opposite of pump. (Uses below chest)
+- Map Changer Mechanic.
+
 3.3.1:
 - Chest Collector renamed to Container Collector
     - Can now collect into many containers.
