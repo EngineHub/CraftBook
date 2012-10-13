@@ -19,6 +19,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.CommonConfiguration;
+import com.sk89q.craftbook.bukkit.Metrics.Graph;
 
 /**
  * Plugin for CraftBook's core.
@@ -46,6 +47,23 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
         super.onEnable();
         config = new CommonConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+        try {
+            Metrics metrics = new Metrics(this);
+
+            Graph graph = metrics.createGraph("Language");
+            for(String lan : languageManager.getLanguages()) {
+                graph.addPlotter(new Metrics.Plotter(lan) {
+                    @Override
+                    public int getValue() {
+                        return 1;
+                    }
+                });
+            }
+
+            metrics.start();
+        } catch (Exception e) {
+        }
     }
 
     @Override

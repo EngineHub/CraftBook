@@ -19,8 +19,8 @@
 - Added Block Breaker IC's.
 - Added FlameThrower IC.
 - Added Liquid Flood IC.
-- Bonemeal terraformer IC.
-- Timed explosion IC.
+- Added Bonemeal terraformer IC.
+- Added Timed explosion IC.
 - Improved Combo Lock IC.
 - Added Plugin Metrics support.
 - IC's work on MC 1.2 and lower

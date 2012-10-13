@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import net.minecraft.server.LocaleLanguage;
@@ -86,5 +87,9 @@ public class LanguageManager {
         catch(Throwable e) {
             return CraftBookPlugin.getInstance().getLocalConfiguration().language;
         }
+    }
+
+    public Set<String> getLanguages() {
+        return languageMap.keySet();
     }
 }

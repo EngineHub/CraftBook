@@ -140,12 +140,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        try {
-            MetricsLite metrics = new MetricsLite(this);
-            metrics.start();
-        } catch (Exception e) {
-        }
-
         // Make the data folder for the plugin where configuration files
         // and other data files will be stored
         getDataFolder().mkdirs();
