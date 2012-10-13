@@ -212,7 +212,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().dispenserSettings.enable) {
             getServer().getPluginManager().registerEvents(dRecipes = new DispenserRecipes(this), this);
         }
-        if (getLocalConfiguration().snowSettings.enable) {
+        if (getLocalConfiguration().snowSettings.enable || getLocalConfiguration().snowSettings.placeSnow) {
             getServer().getPluginManager().registerEvents(new Snow(this), this);
         }
         if (getLocalConfiguration().customDropSettings.enable) {
