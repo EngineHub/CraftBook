@@ -28,6 +28,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -109,7 +110,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle hits an entity
          */
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
             VehiclesConfiguration config = getLocalConfiguration();
@@ -147,7 +148,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle is created.
          */
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleCreate(VehicleCreateEvent event) {
 
             Vehicle vehicle = event.getVehicle();
@@ -166,7 +167,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
          * Called when a vehicle is exited
          */
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleEnter(VehicleEnterEvent event) {
 
             Vehicle vehicle = event.getVehicle();
@@ -180,7 +181,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
          * Called when a vehicle is exited
          */
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleExit(VehicleExitEvent event) {
 
             Vehicle vehicle = event.getVehicle();
@@ -200,7 +201,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when an vehicle moves.
          */
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
@@ -211,7 +212,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         /**
          * Called when a vehicle is destroied.
          */
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleDestroy(VehicleDestroyEvent event) {
 
             if (!(event.getVehicle() instanceof Boat)) return;
@@ -240,7 +241,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             this.plugin = plugin;
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
             // ignore events that are only changes in current strength
             if (event.getOldCurrent() > 0 == event.getNewCurrent() > 0) return;
@@ -253,7 +254,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             }
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onChunkLoad(ChunkLoadEvent event) {
 
             if (config.minecartDecayWhenEmpty) {
@@ -273,7 +274,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             }
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onSignChange(SignChangeEvent event) {
 
             Block block = event.getBlock();

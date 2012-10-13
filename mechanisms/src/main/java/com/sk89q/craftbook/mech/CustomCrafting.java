@@ -37,7 +37,7 @@ public class CustomCrafting implements Listener {
 
     public final HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
 
         if (event.getInventory() instanceof FurnaceInventory) {
@@ -50,7 +50,7 @@ public class CustomCrafting implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFurnaceBurn(FurnaceBurnEvent event) {
 
         if (event.getFuel() == null) return;

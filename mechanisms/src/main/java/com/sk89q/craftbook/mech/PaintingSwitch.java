@@ -37,7 +37,7 @@ public class PaintingSwitch implements Listener {
         return false;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
         if (event.getRightClicked() instanceof Painting) {
@@ -65,7 +65,7 @@ public class PaintingSwitch implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
 
         if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;

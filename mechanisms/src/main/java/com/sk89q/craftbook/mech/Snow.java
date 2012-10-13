@@ -33,7 +33,7 @@ public class Snow implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
@@ -64,7 +64,7 @@ public class Snow implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.trample) return;
@@ -92,7 +92,7 @@ public class Snow implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockForm(final BlockFormEvent event) {
 
         if (!plugin.getLocalConfiguration().snowSettings.enable) return;

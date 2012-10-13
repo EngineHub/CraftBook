@@ -21,7 +21,7 @@ public class CustomDrops implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
         if (plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
@@ -49,7 +49,7 @@ public class CustomDrops implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomMobDrops(EntityDeathEvent event) {
 
         EntityType entityType = event.getEntityType();

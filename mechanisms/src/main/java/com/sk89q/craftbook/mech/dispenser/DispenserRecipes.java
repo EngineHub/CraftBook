@@ -31,7 +31,7 @@ public class DispenserRecipes implements Listener {
         addRecipe(new Fan());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockDispense(BlockDispenseEvent event) {
 
         if (plugin.getLocalConfiguration().dispenserSettings.enable) {

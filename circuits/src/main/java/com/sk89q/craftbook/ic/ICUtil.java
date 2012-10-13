@@ -57,7 +57,7 @@ public class ICUtil {
 
     public class ICListener implements Listener {
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockPhysics(BlockPhysicsEvent event) {
             if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
                 byte data = event.getBlock().getData();
@@ -74,7 +74,7 @@ public class ICUtil {
             }
         }
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
             if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
                 ICUtil.removeTorch(event.getBlock().getLocation());

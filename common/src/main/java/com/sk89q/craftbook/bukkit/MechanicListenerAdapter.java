@@ -107,7 +107,7 @@ public class MechanicListenerAdapter {
             this.plugin = plugin;
         }
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onPlayerInteract(PlayerInteractEvent event) {
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -142,24 +142,24 @@ public class MechanicListenerAdapter {
             this.plugin = plugin;
         }
 
-        //@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+        //@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         //public void onEvent(Event event) {
         //
         //}
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onSignChange(SignChangeEvent event) {
 
             manager.dispatchSignChange(event);
         }
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
 
             manager.dispatchBlockBreak(event);
         }
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 
             int oldLevel = event.getOldCurrent();
@@ -278,7 +278,7 @@ public class MechanicListenerAdapter {
             }
         }
 
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
             if(!CraftBookPlugin.getInstance().getLocalConfiguration().experimentalRepeaters) return;
@@ -352,7 +352,7 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is loaded.
          */
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onChunkLoad(final ChunkLoadEvent event) {
 
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -368,7 +368,7 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is unloaded.
          */
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onChunkUnload(ChunkUnloadEvent event) {
 
             int chunkX = event.getChunk().getX();

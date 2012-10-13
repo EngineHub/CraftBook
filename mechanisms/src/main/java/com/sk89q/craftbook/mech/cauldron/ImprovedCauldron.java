@@ -80,7 +80,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         cookbook = recipes;
     }
 
-    /*TODO@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    /*TODO@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerPickup(PlayerPickupItemEvent event) {
 	if(block == null) return;
 	if(event.getItem().getLocation().getBlock().getLocation().distance(block.getLocation()) < 1) {

@@ -19,7 +19,7 @@ public class AIMechanic implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
 
         if (!plugin.getLocalConfiguration().aiSettings.enabled) return;
