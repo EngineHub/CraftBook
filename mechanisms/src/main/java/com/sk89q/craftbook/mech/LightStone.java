@@ -31,7 +31,6 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -56,7 +55,7 @@ public class LightStone extends AbstractMechanic {
         if (!player.hasPermission("craftbook.mech.lightstone.use")) return;
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
-        if (event.getPlayer().getItemInHand().getTypeId() == ItemID.LIGHTSTONE_DUST) {
+        if (event.getPlayer().getItemInHand().getTypeId() == plugin.getLocalConfiguration().lightStoneSettings.id) {
             String lightLevelLine = getLightLine(block.getLightLevel());
             player.print(
                     ChatColor.YELLOW + "LightStone: [" + lightLevelLine

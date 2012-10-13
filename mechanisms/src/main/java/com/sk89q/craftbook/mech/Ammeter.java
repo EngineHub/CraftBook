@@ -20,7 +20,6 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -56,7 +55,7 @@ public class Ammeter extends AbstractMechanic {
         if (!player.hasPermission("craftbook.mech.ammeter.use")) return;
 
         Block block = event.getClickedBlock();
-        if (event.getPlayer().getItemInHand().getType() == Material.COAL
+        if (event.getPlayer().getItemInHand().getTypeId() == plugin.getLocalConfiguration().ammeterSettings.id
                 && (BlockType.canTransferRedstone(block.getTypeId()) ||
                         BlockType.isRedstoneSource(block.getTypeId()))) {
             int data = getSpecialData(block);

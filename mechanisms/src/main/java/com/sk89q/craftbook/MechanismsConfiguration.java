@@ -29,6 +29,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.craftbook.mech.CustomDropManager;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -319,20 +320,24 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class LightStoneSettings {
 
         public final boolean enable;
+        public final int id;
 
         private LightStoneSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
+            id = section.getInt("item-id", ItemID.LIGHTSTONE_DUST);
         }
     }
 
     public class AmmeterSettings {
 
         public final boolean enable;
+        public final int id;
 
         private AmmeterSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
+            id = section.getInt("item-id", ItemID.COAL);
         }
     }
 
