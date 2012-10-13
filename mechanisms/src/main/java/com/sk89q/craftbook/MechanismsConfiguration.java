@@ -280,10 +280,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class TeleporterSettings {
 
         public final boolean enable;
+        public final int maxrange;
 
         private TeleporterSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
+            maxrange = section.getInt("max-range", -1);
         }
     }
 
