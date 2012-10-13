@@ -185,7 +185,7 @@ public class Snow implements Listener {
 
         block.setData(data);
         for (Player p : block.getWorld().getPlayers())
-            if (p.getLocation().distance(block.getLocation()) < plugin.getServer().getViewDistance() * 16) {
+            if (p.getLocation().distanceSquared(block.getLocation()) < plugin.getServer().getViewDistance() * 16 * plugin.getServer().getViewDistance() * 16) {
                 p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
             }
     }

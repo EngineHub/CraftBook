@@ -40,7 +40,7 @@ public final class LocationUtil {
             for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
                 int x=(int) l.getX(),y=(int) l.getY(),z=(int) l.getZ();
                 for (Entity e : new Location(l.getWorld(),x+chX*16,y,z+chZ*16).getChunk().getEntities())
-                    if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock()) {
+                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l.getBlock()) {
                         radiusEntities.add(e);
                     }
             }

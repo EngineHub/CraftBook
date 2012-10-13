@@ -29,7 +29,7 @@ public class Fan extends Recipe {
         MaterialData d = dis.getBlock().getState().getData();
         BlockFace face = ((org.bukkit.material.Dispenser) d).getFacing();
         for (Entity e : dis.getWorld().getChunkAt(dis.getBlock().getRelative(face).getLocation()).getEntities())
-            if (e.getLocation().getBlock().getLocation().distance(dis.getBlock().getRelative(face).getLocation()) <= 2) {
+            if (e.getLocation().getBlock().getLocation().distanceSquared(dis.getBlock().getRelative(face).getLocation()) <= 2 * 2) {
                 e.setVelocity(e.getVelocity().add(velocity).multiply(10));
             }
         return true;

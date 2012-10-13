@@ -61,7 +61,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
                     radius = Integer.parseInt(getSign().getLine(3));
                 } catch (Exception ignored) {
                 }
-                if (p.getLocation().distance(getSign().getLocation()) > radius) {
+                if (p.getLocation().distanceSquared(getSign().getLocation()) > radius * radius) {
                     continue;
                 }
                 p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,

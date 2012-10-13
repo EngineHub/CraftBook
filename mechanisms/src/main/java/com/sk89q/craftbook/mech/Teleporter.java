@@ -204,7 +204,7 @@ public class Teleporter extends AbstractMechanic {
             subspaceRift = subspaceRift.setPosition(new Vector(floor.getX(),floor.getY() + 2, floor.getZ()));
             player.getVehicle().teleport(subspaceRift);
         }
-        if(plugin.getLocalConfiguration().teleporterSettings.maxrange > 0 && subspaceRift.getPosition().distance(player.getPosition().getPosition()) > plugin.getLocalConfiguration().teleporterSettings.maxrange) {
+        if(plugin.getLocalConfiguration().teleporterSettings.maxrange > 0 && subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > plugin.getLocalConfiguration().teleporterSettings.maxrange * plugin.getLocalConfiguration().teleporterSettings.maxrange) {
             player.print("mech.teleport.range");
             return;
         }
