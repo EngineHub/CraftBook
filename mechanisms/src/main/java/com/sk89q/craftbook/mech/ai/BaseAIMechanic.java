@@ -1,8 +1,16 @@
 package com.sk89q.craftbook.mech.ai;
 
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.entity.Entity;
 
-public interface BaseAIMechanic {
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
-    public abstract void onEntityTarget(EntityTargetEvent event);
+public class BaseAIMechanic {
+
+    public MechanismsPlugin plugin;
+    public Entity entity;
+
+    public BaseAIMechanic(MechanismsPlugin plugin, Entity entity) {
+        this.plugin = plugin;
+        this.entity = entity;
+    }
 }

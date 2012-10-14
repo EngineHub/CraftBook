@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech.ai;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -7,13 +8,11 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
-public class ZombieAIMechanic implements BaseAIMechanic {
+public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic {
 
-    MechanismsPlugin plugin;
+    public ZombieAIMechanic(MechanismsPlugin plugin, Entity entity) {
 
-    public ZombieAIMechanic(MechanismsPlugin plugin) {
-
-        this.plugin = plugin;
+        super(plugin, entity);
     }
 
     @Override
