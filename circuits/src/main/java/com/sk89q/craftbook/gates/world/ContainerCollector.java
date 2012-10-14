@@ -79,7 +79,7 @@ public class ContainerCollector extends AbstractIC {
                     if (getSign().getLine(2).contains(":")) {
                         int id = Integer.parseInt(getSign().getLine(2).split(":")[0]);
                         int data = Integer.parseInt(getSign().getLine(2).split(":")[1]);
-                        testStacks[0] = new ItemStack(id, 0, (short) 0, (byte) data);
+                        testStacks[0] = new ItemStack(id, 0, (short) data);
                     } else {
                         int id = Integer.parseInt(getSign().getLine(2));
                         testStacks[1] = new ItemStack(id, 1, (short)0, (byte)0);
@@ -92,7 +92,7 @@ public class ContainerCollector extends AbstractIC {
                     if (getSign().getLine(3).contains(":")) {
                         int id = Integer.parseInt(getSign().getLine(3).split(":")[0]);
                         int data = Integer.parseInt(getSign().getLine(3).split(":")[1]);
-                        testStacks[1] = new ItemStack(id, 0, (short) 0, (byte) data);
+                        testStacks[1] = new ItemStack(id, 0, (short) data);
                     } else {
                         int id = Integer.parseInt(getSign().getLine(2));
                         testStacks[1] = new ItemStack(id, 1, (short)0, (byte)0);
