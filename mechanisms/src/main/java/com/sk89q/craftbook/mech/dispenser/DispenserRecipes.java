@@ -29,6 +29,7 @@ public class DispenserRecipes implements Listener {
         addRecipe(new SnowShooter());
         addRecipe(new FireArrows());
         addRecipe(new Fan());
+        addRecipe(new Cannon());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

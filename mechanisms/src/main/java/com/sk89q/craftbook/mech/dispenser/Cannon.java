@@ -2,7 +2,8 @@ package com.sk89q.craftbook.mech.dispenser;
 
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
-import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -11,22 +12,19 @@ import org.bukkit.util.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
-/**
- * @author Me4502
- */
-public class FireArrows extends Recipe {
+public class Cannon  extends Recipe {
 
-    public FireArrows(int[] recipe) {
+    public Cannon(int[] recipe) {
 
         super(recipe);
     }
 
-    public FireArrows() {
+    public Cannon() {
 
         super(new int[] {
-                BlockID.AIR,            ItemID.FIRE_CHARGE,     BlockID.AIR,
-                ItemID.FIRE_CHARGE,     ItemID.ARROW,           ItemID.FIRE_CHARGE,
-                BlockID.AIR,            ItemID.FIRE_CHARGE,     BlockID.AIR
+                ItemID.FIRE_CHARGE,     ItemID.SULPHUR,     ItemID.FIRE_CHARGE,
+                ItemID.SULPHUR,         BlockID.TNT,        ItemID.SULPHUR,
+                ItemID.FIRE_CHARGE,     ItemID.SULPHUR,     ItemID.FIRE_CHARGE
         });
     }
 
@@ -36,8 +34,11 @@ public class FireArrows extends Recipe {
         MaterialData d = dis.getBlock().getState().getData();
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) d;
         BlockFace face = disp.getFacing();
-        Arrow a = dis.getWorld().spawnArrow(dis.getBlock().getRelative(face).getLocation(), velocity, 1.0f, 0.0f);
-        a.setFireTicks(5000);
+        TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(dis.getBlock().getRelative(face).getLocation(), EntityType.PRIMED_TNT);
+        a.setVelocity(velocity);
+        a.setIsIncendiary(true);
+        a.setYield(0.4f);
+        a.setFuseTicks(200);
         return true;
     }
 }

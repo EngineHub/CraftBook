@@ -17,8 +17,17 @@ public class Recipe {
         this.recipe = recipe;
     }
 
+    /**
+     * Does the recipe action.
+     * 
+     * @param dispenser
+     * @param itemstack
+     * @param velocity
+     * @param event
+     * @return true if event needs to be cancelled.
+     */
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
-        return false; //True if you want to cancel event.
+        return false;
     }
 }

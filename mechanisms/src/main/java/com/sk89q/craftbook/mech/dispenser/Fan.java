@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
+import com.sk89q.worldedit.blocks.BlockID;
+
 /**
  * @author Me4502
  */
@@ -20,7 +22,11 @@ public class Fan extends Recipe {
 
     public Fan() {
 
-        super(new int[] {30, 18, 30, 18, 33, 18, 30, 18, 30});
+        super(new int[] {
+                BlockID.WEB,    BlockID.LEAVES,         BlockID.WEB,
+                BlockID.LEAVES, BlockID.PISTON_BASE,    BlockID.LEAVES,
+                BlockID.WEB,    BlockID.LEAVES,         BlockID.WEB
+        });
     }
 
     @Override
