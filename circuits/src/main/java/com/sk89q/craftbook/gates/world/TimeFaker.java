@@ -51,6 +51,20 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
 
             return new TimeFaker(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+            return "Radius based fake time.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+            String[] lines = new String[] {
+                    "radius",
+                    "time"
+            };
+            return lines;
+        }
     }
 
     @Override
