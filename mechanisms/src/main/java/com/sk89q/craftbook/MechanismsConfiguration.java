@@ -435,11 +435,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enabled;
         public final boolean zombieVision;
+        public final boolean skeletonCriticals;
 
         private AISettings(BaseConfigurationSection section) {
 
             enabled = section.getBoolean("enable", true);
             zombieVision = section.getBoolean("realistic-zombie-vision", true);
+            skeletonCriticals = section.getBoolean("skeleton-critical-shot", true);
         }
     }
 
