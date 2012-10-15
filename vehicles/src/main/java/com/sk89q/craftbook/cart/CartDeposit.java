@@ -52,9 +52,6 @@ public class CartDeposit extends CartMechanism {
         }
         catch(Exception e){}
 
-        if(itemID < 0)
-            return;
-
         if (collecting) {
             // collecting
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
@@ -63,7 +60,7 @@ public class CartDeposit extends CartMechanism {
                     if (item == null) {
                         continue;
                     }
-                    if (itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
+                    if (itemID < 0 || itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
                         transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                         cartinventory.remove(item);
                     }
@@ -119,7 +116,7 @@ public class CartDeposit extends CartMechanism {
                         if (item == null) {
                             continue;
                         }
-                        if (itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
+                        if (itemID < 0 || itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
                             transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             containerinventory.remove(item);
                         }
