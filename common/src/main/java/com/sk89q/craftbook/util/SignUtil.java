@@ -122,8 +122,6 @@ public class SignUtil {
 	    }
 	    else {
 		    switch (sign.getData()) {
-			    case 0x0:
-			    case 0x1:
 			    case 0x3:
 				    return BlockFace.SOUTH;
 			    case 0x2:
@@ -187,8 +185,6 @@ public class SignUtil {
         }
         else {
             switch (sign.getData()) {
-	            case 0x0:
-	            case 0x1:
 	            case 0x3:
 		            return BlockFace.NORTH;
                 case 0x2:
@@ -271,8 +267,6 @@ public class SignUtil {
 	    }
 	    else {
 		    switch (sign.getData()) {
-			    case 0x0:
-			    case 0x1:
 			    case 0x3:
 				    return BlockFace.EAST;
 			    case 0x2:
@@ -336,8 +330,6 @@ public class SignUtil {
         }
         else {
             switch (sign.getData()) {
-	            case 0x0:
-	            case 0x1:
 	            case 0x3:
 		            return BlockFace.WEST;
                 case 0x2:
