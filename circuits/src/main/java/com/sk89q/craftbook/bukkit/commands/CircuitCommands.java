@@ -1,13 +1,5 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -15,6 +7,13 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CircuitCommands {
 
@@ -31,6 +30,16 @@ public class CircuitCommands {
             )
     public void ic(CommandContext context, CommandSender sender) {
     }
+
+	@Command(
+			aliases = {"reloadics"},
+			desc = "Reloads the IC config"
+	)
+	public void reload(CommandContext context, CommandSender sender) {
+
+		plugin.getLocalConfiguration().reload();
+		sender.sendMessage("The IC config has been reloaded.");
+	}
 
     @Command(
             aliases = {"icdocs"},
