@@ -36,6 +36,22 @@ public class CircuitsConfiguration extends BaseConfiguration {
 
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
+    }
+
+    public final File dataFolder;
+
+    // public
+
+    public boolean enableNetherstone;
+    public boolean enablePumpkins;
+    public boolean enableICs;
+    public boolean enableGlowStone;
+    public boolean enableShorthandIcs;
+    public Material glowstoneOffBlock;
+    public boolean cacheICs;
+
+    @Override
+    public void load() {
 
         enableNetherstone = getBoolean("redstone-netherstone", false);
         enablePumpkins = getBoolean("redstone-pumpkins", true);
@@ -45,16 +61,4 @@ public class CircuitsConfiguration extends BaseConfiguration {
         glowstoneOffBlock = Material.getMaterial(getInt("glowstone-off-material", BlockID.GLASS));
         cacheICs = getBoolean("cache-ics", true);
     }
-
-    public final File dataFolder;
-
-    // public
-
-    public final boolean enableNetherstone;
-    public final boolean enablePumpkins;
-    public final boolean enableICs;
-    public final boolean enableGlowStone;
-    public final boolean enableShorthandIcs;
-    public final Material glowstoneOffBlock;
-    public final boolean cacheICs;
 }

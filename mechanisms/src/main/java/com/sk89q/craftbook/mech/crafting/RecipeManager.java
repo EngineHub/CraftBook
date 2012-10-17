@@ -17,16 +17,23 @@ import com.sk89q.craftbook.BaseConfiguration;
 public class RecipeManager extends BaseConfiguration {
 
     public static RecipeManager INSTANCE;
-    private final Collection<Recipe> recipes;
-    private final File config;
+    private Collection<Recipe> recipes;
+    private File config;
+    private File dataFolder;
 
     public RecipeManager(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
+        INSTANCE = this;
+        this.dataFolder = dataFolder;
+    }
+
+
+    @Override
+    public void load() {
         recipes = new ArrayList<Recipe>();
         config = new File(dataFolder, "crafting-recipes.yml");
         load(cfg.getConfigurationSection("crafting-recipes"));
-        INSTANCE = this;
     }
 
     public Collection<Recipe> getRecipes() {
@@ -34,10 +41,13 @@ public class RecipeManager extends BaseConfiguration {
         return recipes;
     }
 
-    public void reload() {
+    @Override
+    public boolean reload() {
 
         recipes.clear();
         load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("crafting-recipes"));
+
+        return true;
     }
 
     private void load(ConfigurationSection cfg) {

@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 /**
  * @author Me4502
  */
-public class BaseConfiguration {
+public abstract class BaseConfiguration {
 
     public final FileConfiguration cfg;
     public final File folder;
@@ -22,6 +22,20 @@ public class BaseConfiguration {
 
         this.cfg = cfg;
         folder = dataFolder;
+
+        load();
+    }
+
+    public abstract void load();
+
+    public boolean reload() {
+        try {
+            load();
+            return true;
+        }
+        catch(Exception e) {
+            return false;
+        }
     }
 
     public int getInt(String name, int def) {

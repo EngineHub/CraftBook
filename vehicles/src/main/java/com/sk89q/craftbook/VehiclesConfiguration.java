@@ -40,6 +40,10 @@ public class VehiclesConfiguration extends BaseConfiguration {
 
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
+    }
+
+    @Override
+    public void load() {
 
         matBoostMax = Material.getMaterial(getInt("max-boost-block", 41));
         matBoost25x = Material.getMaterial(getInt("25x-boost-block", 14));
@@ -73,32 +77,33 @@ public class VehiclesConfiguration extends BaseConfiguration {
 
     public final File dataFolder;
 
-    public final Material matBoostMax;
-    public final Material matBoost25x;
-    public final Material matSlow50x;
-    public final Material matSlow20x;
-    public final Material matReverse;
-    public final Material matStation;
-    public final Material matSorter;
-    public final Material matEjector;
-    public final Material matDeposit;
-    public final Material matTeleport;
-    public final Material matDispenser;
-    public final Material matMessager;
+    public Material matBoostMax;
+    public Material matBoost25x;
+    public Material matSlow50x;
+    public Material matSlow20x;
+    public Material matReverse;
+    public Material matStation;
+    public Material matSorter;
+    public Material matEjector;
+    public Material matDeposit;
+    public Material matTeleport;
+    public Material matDispenser;
+    public Material matMessager;
 
-    public final boolean minecartSlowWhenEmpty;
-    public final boolean minecartRemoveOnExit;
-    public final boolean minecartRemoveEntities;
-    public final boolean minecartRemoveEntitiesOtherCarts;
-    public final double minecartMaxSpeedModifier;
-    public final boolean minecartTrackMessages;
-    public final boolean minecartDecayWhenEmpty;
-    public final boolean minecartEnterOnImpact;
+    public boolean minecartSlowWhenEmpty;
+    public boolean minecartRemoveOnExit;
+    public boolean minecartRemoveEntities;
+    public boolean minecartRemoveEntitiesOtherCarts;
+    public double minecartMaxSpeedModifier;
+    public boolean minecartTrackMessages;
+    public boolean minecartDecayWhenEmpty;
+    public boolean minecartEnterOnImpact;
 
-    public final boolean boatNoCrash;
-    public final boolean boatRemoveEntities;
-    public final boolean boatRemoveEntitiesOtherBoats;
-    public final boolean boatBreakReturn;
+    public boolean boatNoCrash;
+    public boolean boatRemoveEntities;
+    public boolean boatRemoveEntitiesOtherBoats;
+    public boolean boatBreakReturn;
 
-    public final int minecartDecayTime;
+    public int minecartDecayTime;
+
 }

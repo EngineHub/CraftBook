@@ -18,22 +18,32 @@ import com.sk89q.craftbook.BaseConfiguration;
 public class ImprovedCauldronCookbook extends BaseConfiguration {
 
     public static ImprovedCauldronCookbook INSTANCE;
-    private final Collection<Recipe> recipes;
-    private final File config;
+    private Collection<Recipe> recipes;
+    private File config;
+    private File dataFolder;
 
     public ImprovedCauldronCookbook(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
+        INSTANCE = this;
+        this.dataFolder = dataFolder;
+    }
+
+
+    @Override
+    public void load() {
         recipes = new ArrayList<Recipe>();
         config = new File(dataFolder, "cauldron-recipes.yml");
         load(cfg.getConfigurationSection("cauldron-recipes"));
-        INSTANCE = this;
     }
 
-    public void reload() {
+    @Override
+    public boolean reload() {
 
         recipes.clear();
         load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("cauldron-recipes"));
+
+        return true;
     }
 
     private void load(ConfigurationSection cfg) {

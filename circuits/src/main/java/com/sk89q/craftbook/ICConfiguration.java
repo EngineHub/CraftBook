@@ -17,7 +17,10 @@ public class ICConfiguration extends BaseConfiguration {
      */
     public ICConfiguration(FileConfiguration cfg, File dataFolder) {
         super(cfg, dataFolder);
+    }
 
+    @Override
+    public void load() {
         for(RegisteredICFactory factory : CircuitsPlugin.getInst().icManager.registered.values()) {
             if(factory.getId().startsWith("MCA")) {
                 continue;

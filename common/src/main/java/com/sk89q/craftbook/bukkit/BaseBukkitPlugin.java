@@ -146,8 +146,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         createDefaultConfiguration("en_US.txt", true);
         createDefaultConfiguration("config.yml", false);
 
-        config = new BaseConfiguration(getConfig(), getDataFolder());
-        saveConfig();
+        //config = new BaseConfiguration(getConfig(), getDataFolder());
+        //saveConfig();
         // init the util classes that need a plugin reference
         LocationUtil.init();
 

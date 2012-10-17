@@ -48,6 +48,10 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
+    }
+
+    @Override
+    public void load() {
 
         ammeterSettings = new AmmeterSettings(new BaseConfigurationSection("Ammeter"));
         bookcaseSettings = new BookcaseSettings(new BaseConfigurationSection("Bookcase"));
@@ -80,32 +84,32 @@ public class MechanismsConfiguration extends BaseConfiguration {
     }
 
     public final File dataFolder;
-    public final MechanismSettings mechSettings;
-    public final AmmeterSettings ammeterSettings;
-    public final BookcaseSettings bookcaseSettings;
-    public final BridgeSettings bridgeSettings;
-    public final DoorSettings doorSettings;
-    public final GateSettings gateSettings;
-    public final ElevatorSettings elevatorSettings;
-    public final TeleporterSettings teleporterSettings;
-    public final CauldronSettings cauldronSettings;
-    public final LightStoneSettings lightStoneSettings;
-    public final LightSwitchSettings lightSwitchSettings;
-    public final HiddenSwitchSettings hiddenSwitchSettings;
-    public final SnowSettings snowSettings;
-    public final AreaSettings areaSettings;
-    public final CommandSettings commandSettings;
-    public final CustomDropManager customDrops;
-    public final CustomDropSettings customDropSettings;
-    public final DispenserSettings dispenserSettings;
-    public final ChairSettings chairSettings;
-    public final AISettings aiSettings;
-    public final AnchorSettings anchorSettings;
-    public final CookingPotSettings cookingPotSettings;
-    public final CustomCraftingSettings customCraftingSettings;
-    public final PaintingSettings paintingSettings;
-    public final XPStorerSettings xpStorerSettings;
-    public final MapChangerSettings mapChangerSettings;
+    public MechanismSettings mechSettings;
+    public AmmeterSettings ammeterSettings;
+    public BookcaseSettings bookcaseSettings;
+    public BridgeSettings bridgeSettings;
+    public DoorSettings doorSettings;
+    public GateSettings gateSettings;
+    public ElevatorSettings elevatorSettings;
+    public TeleporterSettings teleporterSettings;
+    public CauldronSettings cauldronSettings;
+    public LightStoneSettings lightStoneSettings;
+    public LightSwitchSettings lightSwitchSettings;
+    public HiddenSwitchSettings hiddenSwitchSettings;
+    public SnowSettings snowSettings;
+    public AreaSettings areaSettings;
+    public CommandSettings commandSettings;
+    public CustomDropManager customDrops;
+    public CustomDropSettings customDropSettings;
+    public DispenserSettings dispenserSettings;
+    public ChairSettings chairSettings;
+    public AISettings aiSettings;
+    public AnchorSettings anchorSettings;
+    public CookingPotSettings cookingPotSettings;
+    public CustomCraftingSettings customCraftingSettings;
+    public PaintingSettings paintingSettings;
+    public XPStorerSettings xpStorerSettings;
+    public MapChangerSettings mapChangerSettings;
 
     //General settings
     public class MechanismSettings {
