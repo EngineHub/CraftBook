@@ -351,10 +351,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class HiddenSwitchSettings {
 
         public final boolean enable;
+        public final boolean anyside;
 
         private HiddenSwitchSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
+            anyside = section.getBoolean("any-side", true);
         }
     }
 

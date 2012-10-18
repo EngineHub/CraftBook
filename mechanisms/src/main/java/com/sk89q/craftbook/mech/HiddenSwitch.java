@@ -93,42 +93,66 @@ public class HiddenSwitch extends AbstractMechanic {
                 || event.getBlockFace() == BlockFace.WEST
                 || event.getBlockFace() == BlockFace.NORTH
                 || event.getBlockFace() == BlockFace.SOUTH)) return;
-        Block testBlock = switchBlock.getRelative(event.getBlockFace().getOppositeFace());
+        BlockFace face = event.getBlockFace().getOppositeFace();
+        Block testBlock = switchBlock.getRelative(face);
+        boolean passed = false;
 
-        if (testBlock.getType() == Material.WALL_SIGN) {
-            Sign s = (Sign) testBlock.getState();
-            if (s.getLine(1).equalsIgnoreCase("[X]")) {
+        while(true) {
+            if (testBlock.getType() == Material.WALL_SIGN) {
+                Sign s = (Sign) testBlock.getState();
+                if (s.getLine(1).equalsIgnoreCase("[X]")) {
 
-                int itemID = -1;
+                    int itemID = -1;
 
-                if (!s.getLine(0).trim().equalsIgnoreCase("")) {
-                    try {
-                        itemID = Integer.parseInt(s.getLine(0).trim());
-                    } catch (NumberFormatException ignored) {
+                    if (!s.getLine(0).trim().equalsIgnoreCase("")) {
+                        try {
+                            itemID = Integer.parseInt(s.getLine(0).trim());
+                        } catch (NumberFormatException ignored) {
+                        }
                     }
-                }
 
-                if (!s.getLine(2).trim().equalsIgnoreCase("")) if (!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
-                    player.printError("mech.group");
-                    return;
-                }
+                    if (!s.getLine(2).trim().equalsIgnoreCase("")) if (!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
+                        player.printError("mech.group");
+                        return;
+                    }
 
-                if (itemID == -1) {
-                    toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                }
-                else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
-                    if (itemID == 0 && event.getPlayer().getItemInHand() == null
-                            || event.getPlayer().getItemInHand().getTypeId() == itemID) {
+                    if (itemID == -1) {
                         toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                    }
+                    else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
+                        if (itemID == 0 && event.getPlayer().getItemInHand() == null
+                                || event.getPlayer().getItemInHand().getTypeId() == itemID) {
+                            toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                        }
+                        else {
+                            player.printError("mech.hiddenswitch.key");
+                        }
                     }
                     else {
                         player.printError("mech.hiddenswitch.key");
                     }
-                }
-                else {
-                    player.printError("mech.hiddenswitch.key");
+
+                    break;
                 }
             }
+            else if (plugin.getLocalConfiguration().hiddenSwitchSettings.anyside){
+                if(face == event.getBlockFace().getOppositeFace() && passed)
+                    break;
+                passed = true;
+
+                if(face == BlockFace.WEST)
+                    face = BlockFace.NORTH;
+                else if(face == BlockFace.NORTH)
+                    face = BlockFace.EAST;
+                else if(face == BlockFace.EAST)
+                    face = BlockFace.SOUTH;
+                else if(face == BlockFace.SOUTH)
+                    face = BlockFace.WEST;
+
+                testBlock = switchBlock.getRelative(face);
+            }
+            else
+                break;
         }
     }
 
