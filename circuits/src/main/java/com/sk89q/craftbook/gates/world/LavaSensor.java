@@ -32,7 +32,7 @@ public class LavaSensor extends AbstractIC {
         super(server, sign, factory);
         try {
             center = ICUtil.parseBlockLocation(sign);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

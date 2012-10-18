@@ -103,8 +103,8 @@ class BookItem {
         if (newpages.length == 0 && pages.size() == 0) {
             pages.add(new NBTTagString("1", ""));
         } else {
-            for (int i = 0; i < newpages.length; i++) {
-                pages.add(new NBTTagString("" + pages.size() + "", newpages[i]));
+            for (String newpage : newpages) {
+                pages.add(new NBTTagString("" + pages.size() + "", newpage));
             }
         }
         tags.set("pages", pages);

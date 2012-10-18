@@ -23,7 +23,7 @@ public class PowerSensor extends AbstractIC {
 
         try {
             center = ICUtil.parseBlockLocation(getSign());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

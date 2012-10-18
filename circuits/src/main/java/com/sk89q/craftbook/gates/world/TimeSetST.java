@@ -36,7 +36,7 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
             if (chip.getInput(0)) {
                 getSign().getWorld().setTime(Long.parseLong(getSign().getLine(2)));
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

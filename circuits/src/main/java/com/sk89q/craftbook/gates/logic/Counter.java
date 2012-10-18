@@ -35,7 +35,7 @@ public class Counter extends AbstractIC {
             }
             getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
             getSign().update();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

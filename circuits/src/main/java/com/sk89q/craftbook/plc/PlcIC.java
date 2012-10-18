@@ -118,8 +118,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] digest = md.digest(code.getBytes("UTF-8"));
             String hex = "";
-            for (int i = 0; i < digest.length; i++) {
-                String byteHex = Integer.toHexString(digest[i] & 0xFF);
+            for (byte aDigest : digest) {
+                String byteHex = Integer.toHexString(aDigest & 0xFF);
                 if (byteHex.length() == 1) {
                     byteHex = "0" + byteHex;
                 }

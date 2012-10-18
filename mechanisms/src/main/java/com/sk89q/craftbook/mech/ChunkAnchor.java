@@ -94,7 +94,7 @@ public class ChunkAnchor extends PersistentMechanic {
             try {
                 sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "1" : "0");
                 sign.update();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

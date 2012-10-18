@@ -64,7 +64,6 @@ public class AdminBlockSource extends BlockBag {
     /**
      * Gets a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -80,7 +79,6 @@ public class AdminBlockSource extends BlockBag {
     /**
      * Stores a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -95,8 +93,6 @@ public class AdminBlockSource extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */
@@ -114,8 +110,6 @@ public class AdminBlockSource extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */

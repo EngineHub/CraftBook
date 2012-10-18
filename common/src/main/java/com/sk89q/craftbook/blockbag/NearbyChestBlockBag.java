@@ -61,7 +61,6 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Gets a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -103,7 +102,6 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Stores a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -152,7 +150,6 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Stores a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -165,8 +162,6 @@ public class NearbyChestBlockBag extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */
@@ -188,8 +183,6 @@ public class NearbyChestBlockBag extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */

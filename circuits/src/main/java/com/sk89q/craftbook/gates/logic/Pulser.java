@@ -53,7 +53,7 @@ public class Pulser extends AbstractIC {
             sign.setLine(2, pulseLength + ":" + startDelay);
             sign.setLine(3, pulseCount + ":" + pulseLength);
             sign.update();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

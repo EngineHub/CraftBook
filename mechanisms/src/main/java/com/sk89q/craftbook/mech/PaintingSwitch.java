@@ -31,8 +31,7 @@ public class PaintingSwitch implements Listener {
 
         if (paintings.get(paint) != null && players.get(paintings.get(paint)) != null) {
             Player p = plugin.getServer().getPlayer(paintings.get(paint));
-            if (p == null || p.isDead()) return false;
-            return true;
+            return !(p == null || p.isDead());
         }
         return false;
     }

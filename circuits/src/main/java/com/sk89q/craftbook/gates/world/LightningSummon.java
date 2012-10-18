@@ -43,7 +43,7 @@ public class LightningSummon extends AbstractIC {
             if (line.length() > 0) {
                 center = ICUtil.parseBlockLocation(getSign());
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

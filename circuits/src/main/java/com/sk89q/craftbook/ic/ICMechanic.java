@@ -120,9 +120,9 @@ public class ICMechanic extends PersistentMechanic {
 
                 if (!matcher.matches())
                     return false;
-                else if (!matcher.group(1).equalsIgnoreCase(id))
-                    return false;
-                else return ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
+                else
+                    return matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && ((PersistentIC) ic)
+                            .isActive();
             }
         }
 

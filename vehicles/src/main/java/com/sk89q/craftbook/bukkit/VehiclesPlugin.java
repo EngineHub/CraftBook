@@ -82,7 +82,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             }
 
             metrics.start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

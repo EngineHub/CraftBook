@@ -18,7 +18,7 @@ public class Delayer extends AbstractIC {
         super(server, block, factory);
         try {
             delay = Integer.parseInt(getSign().getLine(2));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

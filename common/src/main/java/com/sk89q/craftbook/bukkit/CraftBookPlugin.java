@@ -70,7 +70,7 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
             }
 
             metrics.start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

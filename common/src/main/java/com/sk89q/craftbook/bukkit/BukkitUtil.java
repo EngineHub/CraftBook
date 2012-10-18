@@ -134,8 +134,7 @@ public class BukkitUtil {
 
         if (Math.abs(a.getX() - b.getX()) > EQUALS_PRECISION) return false;
         if (Math.abs(a.getY() - b.getY()) > EQUALS_PRECISION) return false;
-        if (Math.abs(a.getZ() - b.getZ()) > EQUALS_PRECISION) return false;
-        return true;
+        return Math.abs(a.getZ() - b.getZ()) <= EQUALS_PRECISION;
     }
 
     public static final double EQUALS_PRECISION = 0.0001;

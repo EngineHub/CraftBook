@@ -53,7 +53,7 @@ public class PowerSensorST extends PowerSensor implements SelfTriggeredIC {
                     sign.setLine(1, "[MC0266]");
                     sign.update();
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             return new PowerSensorST(getServer(), sign, this);
         }

@@ -49,14 +49,14 @@ public class BlockLauncher extends AbstractIC {
         try {
             id = Integer.parseInt(getSign().getLine(2).split(":")[0]);
             data = Byte.parseByte(getSign().getLine(2).split(":")[1]);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         Vector velocity = new Vector(0, 0.5, 0);
         try {
             velocity.setX(Double.parseDouble(getSign().getLine(3).split(":")[0]));
             velocity.setY(Double.parseDouble(getSign().getLine(3).split(":")[1]));
             velocity.setZ(Double.parseDouble(getSign().getLine(3).split(":")[2]));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         if (velocity.getY() < 0) {
             above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);

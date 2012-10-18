@@ -118,9 +118,7 @@ public class ICManager {
      */
     public static boolean isCachedIC(BlockWorldVector pt) {
 
-        if (!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
-            return false;
-        return cachedICs.containsKey(pt);
+        return CircuitsPlugin.getInst().getLocalConfiguration().cacheICs && cachedICs.containsKey(pt);
     }
 
     /**

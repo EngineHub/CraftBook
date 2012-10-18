@@ -80,7 +80,7 @@ public class ParticleEffect extends AbstractIC {
                     sign.update();
                     return new SetDoor(getServer(), sign, this);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             return new ParticleEffect(getServer(), sign, this);
         }

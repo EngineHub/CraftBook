@@ -29,12 +29,12 @@ public class Spigot extends AbstractIC {
 
         try {
             radius = Integer.parseInt(getSign().getLine(2));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         try {
             yOffset = Integer.parseInt(getSign().getLine(3));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

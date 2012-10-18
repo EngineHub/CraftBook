@@ -53,8 +53,6 @@ public abstract class RedstoneUtil {
     }
 
     /**
-     * @param pow
-     *
      * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be
      *         wires).
      */

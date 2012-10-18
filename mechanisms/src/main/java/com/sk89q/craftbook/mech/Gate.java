@@ -648,7 +648,7 @@ public class Gate extends AbstractMechanic {
         if (!sign.getLine(0).equalsIgnoreCase("")) {
             try {
                 return Integer.parseInt(sign.getLine(0));
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         LocalWorld world = pt.getWorld();
@@ -690,8 +690,7 @@ public class Gate extends AbstractMechanic {
         int curBlocks = getBlocks(s) - amount;
         s.setLine(3, curBlocks + "");
         s.update();
-        if (curBlocks >= 3) return true;
-        else return false;
+        return curBlocks >= 3;
     }
 
     public boolean addBlocks(Sign s, int amount) {
@@ -700,8 +699,7 @@ public class Gate extends AbstractMechanic {
         int curBlocks = getBlocks(s) + amount;
         s.setLine(3, curBlocks + "");
         s.update();
-        if (curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public void setBlocks(Sign s, int amount) {
@@ -710,7 +708,6 @@ public class Gate extends AbstractMechanic {
         int curBlocks = amount;
         s.setLine(3, curBlocks + "");
         s.update();
-        return;
     }
 
     public int getBlocks(Sign s) {
@@ -730,7 +727,7 @@ public class Gate extends AbstractMechanic {
                 curBlocks += Integer.parseInt(other.getLine(3));
                 setBlocks(s, curBlocks);
                 setBlocks(other, 0);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         } catch (Exception e) {
             curBlocks = 0;
@@ -741,8 +738,7 @@ public class Gate extends AbstractMechanic {
     public boolean hasEnoughBlocks(Sign s) {
 
         if (s.getLine(3).equalsIgnoreCase("infinite")) return true;
-        if (getBlocks(s) > 0) return true;
-        return false;
+        return getBlocks(s) > 0;
     }
 
     public boolean hasEnoughBlocks(Sign s, Sign other) {
@@ -750,8 +746,7 @@ public class Gate extends AbstractMechanic {
         if (s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3)
                 .equalsIgnoreCase("infinite"))
             return true;
-        if (getBlocks(s, other) > 0) return true;
-        return false;
+        return getBlocks(s, other) > 0;
     }
 
     // TODO Use this to clean this mech up

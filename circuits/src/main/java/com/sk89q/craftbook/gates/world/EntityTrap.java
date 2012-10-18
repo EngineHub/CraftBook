@@ -101,7 +101,7 @@ public class EntityTrap extends AbstractIC {
 
                 damage = Integer.parseInt(getSign().getLine(2).split("=")[2]);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         if (getSign().getLine(3).length() != 0) {
@@ -125,7 +125,7 @@ public class EntityTrap extends AbstractIC {
                 }
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         return false;

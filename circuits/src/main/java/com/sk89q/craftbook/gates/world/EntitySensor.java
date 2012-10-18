@@ -130,7 +130,7 @@ public class EntitySensor extends AbstractIC {
             chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()),
                     radius); //Update chunks
             sign.update();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

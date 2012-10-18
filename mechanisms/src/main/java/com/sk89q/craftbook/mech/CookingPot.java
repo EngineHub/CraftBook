@@ -210,7 +210,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     increaseMultiplier(sign, 1);
                 }
                 sign.update();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -237,8 +237,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     public int getMultiplier(Sign sign) {
 
         int multiplier = 1;
-        if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
-            multiplier = 0;
+        if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) multiplier = 0;
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
         } catch (Exception e) {

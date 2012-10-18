@@ -64,7 +64,7 @@ public class ICUtil {
                     .REDSTONE_TORCH_OFF)
                 if (ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
                     byte data = event.getBlock().getData();
-                    if (ICUtil.getTorchStatus(event.getBlock().getLocation()).booleanValue()) {
+                    if (ICUtil.getTorchStatus(event.getBlock().getLocation())) {
                         if (event.getBlock().getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
                             event.getBlock().setTypeId(Material.REDSTONE_TORCH_OFF.getId());
                         }

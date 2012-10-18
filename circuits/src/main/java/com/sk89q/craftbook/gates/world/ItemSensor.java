@@ -68,7 +68,7 @@ public class ItemSensor extends AbstractIC {
                 center = SignUtil.getBackBlock(getSign().getBlock());
             }
             chunks = LocationUtil.getSurroundingChunks(block, radius);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

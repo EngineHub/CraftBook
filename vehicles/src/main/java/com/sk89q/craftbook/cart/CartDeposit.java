@@ -48,7 +48,7 @@ public class CartDeposit extends CartMechanism {
         try {
             itemID = Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2).split(":")[0]);
             itemData = Byte.parseByte(((Sign) blocks.sign.getState()).getLine(2).split(":")[1]);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         if (collecting) {

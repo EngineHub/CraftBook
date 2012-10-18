@@ -37,7 +37,7 @@ public class TimedExplosion extends AbstractIC {
 
         try {
             flamey = getSign().getLine(3).endsWith("!");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

@@ -30,7 +30,7 @@ public class TimeSet extends AbstractIC {
             if (chip.getInput(0)) {
                 getSign().getWorld().setTime(Long.parseLong(getSign().getLine(2)));
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

@@ -20,8 +20,6 @@ public class Recipe {
     /**
      * Does the recipe action.
      *
-     * @param dispenser
-     * @param itemstack
      * @param velocity
      * @param event
      *

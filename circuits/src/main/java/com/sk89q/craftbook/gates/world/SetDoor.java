@@ -108,7 +108,7 @@ public class SetDoor extends AbstractIC {
             } else {
                 center = center.getRelative(BlockFace.UP);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

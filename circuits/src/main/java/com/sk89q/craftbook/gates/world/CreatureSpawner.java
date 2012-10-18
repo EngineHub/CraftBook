@@ -56,7 +56,7 @@ public class CreatureSpawner extends AbstractIC {
                 data = line;
             }
             center = SignUtil.getBackBlock(getSign().getBlock());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

@@ -172,8 +172,6 @@ public class Area extends AbstractMechanic {
      * @param pt     if you didn't already check if this is a signpost with appropriate
      *               text, you're going on Santa's naughty list.
      * @param plugin
-     * @param Save   on toggle.
-     *
      * @throws InvalidMechanismException
      */
     private Area(BlockWorldVector pt, MechanismsPlugin plugin, boolean save) throws InvalidMechanismException {
@@ -248,11 +246,7 @@ public class Area extends AbstractMechanic {
 
         String line3 = sign.getLine(2);
         String line4 = sign.getLine(3);
-        if (pattern.matcher(line3).matches()) {
-            toggledOn = true;
-        } else {
-            toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
-        }
+        toggledOn = pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
     private void setToggledState(Sign sign, boolean state) {

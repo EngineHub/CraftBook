@@ -142,7 +142,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             }
 
             metrics.start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

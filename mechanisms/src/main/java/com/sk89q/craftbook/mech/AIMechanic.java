@@ -37,7 +37,7 @@ public class AIMechanic implements Listener {
                         event.getEntity());
                 if (ai == null) return;
                 ai.onEntityTarget(event);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -53,7 +53,7 @@ public class AIMechanic implements Listener {
                         event.getEntity());
                 if (ai == null) return;
                 ai.onBowShot(event);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -63,9 +63,7 @@ public class AIMechanic implements Listener {
 
         if (!BaseAIMechanic.class.isAssignableFrom(mechanic)) return false;
 
-        if (mechanics.contains(mechanic))
-            return false;
+        return !mechanics.contains(mechanic) && mechanics.add((Class<BaseAIMechanic>) mechanic);
 
-        return mechanics.add((Class<BaseAIMechanic>) mechanic);
     }
 }

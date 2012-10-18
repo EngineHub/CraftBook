@@ -544,8 +544,7 @@ public class Bridge extends AbstractMechanic {
         int curBlocks = getBlocks(s) - amount;
         s.setLine(0, curBlocks + "");
         s.update();
-        if (curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public boolean addBlocks(Sign s, int amount) {
@@ -554,8 +553,7 @@ public class Bridge extends AbstractMechanic {
         int curBlocks = getBlocks(s) + amount;
         s.setLine(0, curBlocks + "");
         s.update();
-        if (curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public int getBlocks(Sign s) {
@@ -573,7 +571,6 @@ public class Bridge extends AbstractMechanic {
     public boolean hasEnoughBlocks(Sign s) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
-        if (getBlocks(s) > 0) return true;
-        return false;
+        return getBlocks(s) > 0;
     }
 }

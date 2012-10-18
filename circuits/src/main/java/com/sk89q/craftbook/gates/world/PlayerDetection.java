@@ -51,7 +51,7 @@ public class PlayerDetection extends AbstractIC {
                 int z = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[2]);
                 location.add(x, y, z);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         Boolean isGroup = getSign().getLine(3).startsWith("g:");

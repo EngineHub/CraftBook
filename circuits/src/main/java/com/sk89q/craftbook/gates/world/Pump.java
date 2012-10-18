@@ -66,9 +66,7 @@ public class Pump extends AbstractIC {
             return true;
         if (check(c, block.getRelative(1, 0, 0), depth))
             return true;
-        if (check(c, block.getRelative(-1, 0, 0), depth))
-            return true;
-        return false;
+        return check(c, block.getRelative(-1, 0, 0), depth);
     }
 
     public boolean check(Chest c, Block liquid, int depth) {

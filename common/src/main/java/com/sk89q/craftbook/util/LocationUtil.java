@@ -24,9 +24,8 @@ public final class LocationUtil {
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
-        if (!l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()))
-            return false;
-        return getDistanceSquared(l1, l2) <= radius * radius;
+        return l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()) && getDistanceSquared(l1,
+                l2) <= radius * radius;
     }
 
     public static Entity[] getNearbyEntities(Location l, int radius) {

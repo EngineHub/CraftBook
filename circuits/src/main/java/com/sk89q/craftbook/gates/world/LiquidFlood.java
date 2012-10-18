@@ -44,7 +44,7 @@ public class LiquidFlood extends AbstractIC {
 
         try {
             liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

@@ -121,7 +121,6 @@ public class AutomaticCrafter extends AbstractIC {
                         it.setAmount(it.getAmount() + 1);
                     }
                     item.remove();
-                    continue;
                 }
             }
         }
@@ -176,13 +175,9 @@ public class AutomaticCrafter extends AbstractIC {
                     if (require == null) {
                         require = new ItemStack(0, 0);
                     }
-                    if (it == null || it.getTypeId() == 0)
-                        if (require.getTypeId() == 0) {
-                            continue;
-                        } else
-                            return false;
-                    else if (require.getTypeId() == it.getTypeId() && require.getDurability() == it.getDurability()) {
-                        continue;
+                    if (it == null || it.getTypeId() == 0) {
+                        if (require.getTypeId() != 0) return false;
+                    } else if (require.getTypeId() == it.getTypeId() && require.getDurability() == it.getDurability()) {
                     } else
                         return false;
                 } catch (Exception e) {
@@ -208,10 +203,8 @@ public class AutomaticCrafter extends AbstractIC {
                     }
                 }
             }
-            if (ing.size() != 0)
-                return false;
+            return ing.size() == 0;
 
-            return true;
         } else
             return false;
     }

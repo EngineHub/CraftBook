@@ -67,8 +67,6 @@ public class Command extends AbstractMechanic {
     /**
      * @param trigger if you didn't already check if this is a wall sign with
      *                appropriate text, you're going on Santa's naughty list.
-     * @param dir     the direction (UP or DOWN) in which we're looking for a destination
-     *
      * @throws InvalidMechanismException
      */
     private Command(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {

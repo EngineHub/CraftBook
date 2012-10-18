@@ -109,7 +109,7 @@ public class CircuitCommands {
             }
             player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
                     .toUpperCase());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -188,6 +188,6 @@ public class CircuitCommands {
             }
         }
 
-        return strings.toArray(new String[0]);
+        return strings.toArray(new String[strings.size()]);
     }
 }

@@ -169,7 +169,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             }
 
             metrics.start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -297,7 +297,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      */
     public boolean registerDispenserRecipe(Recipe recipe) {
 
-        if (getLocalConfiguration().dispenserSettings.enable) return dRecipes.addRecipe(recipe);
-        return false;
+        return getLocalConfiguration().dispenserSettings.enable && dRecipes.addRecipe(recipe);
     }
 }

@@ -101,25 +101,23 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public boolean canUseInArea(Location loc, Player p) {
 
-        if (useWorldGuard == false) return true;
-        if (CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null)
+        if (!useWorldGuard) return true;
+        if (!CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions || getWorldGuard() == null)
             return true;
         if (useFlag == null) {
             useFlag = new StateFlag("use", true);
         }
         if (loc == null || p == null) return true;
         ApplicableRegionSet rset = getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc);
-        if (rset == null) return true;
-        return rset.allows(useFlag, getWorldGuard().wrapPlayer(p));
+        return rset == null || rset.allows(useFlag, getWorldGuard().wrapPlayer(p));
     }
 
     public boolean canBuildInArea(Location loc, Player p) {
 
-        if (useWorldGuard == false) return true;
+        if (!useWorldGuard) return true;
         if (loc == null || p == null) return true;
-        if (CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null)
-            return true;
-        return getWorldGuard().canBuild(p, loc);
+        return !CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions || getWorldGuard() == null ||
+                getWorldGuard().canBuild(p, loc);
     }
 
     /**

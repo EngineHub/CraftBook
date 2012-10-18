@@ -51,7 +51,7 @@ public class Melody extends AbstractIC {
                 jNote.getJingleNoteManager().stop(player);
             }
             jNote.getJingleNoteManager().stopAll();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -62,13 +62,13 @@ public class Melody extends AbstractIC {
             if (sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1]
                     .equalsIgnoreCase("START"))
                 return;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         int radius = -1;
         try {
             radius = Integer.parseInt(getSign().getLine(3).split(":")[0]);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         try {
@@ -147,7 +147,7 @@ public class Melody extends AbstractIC {
                     sign.update();
                     return new PowerSensor(getServer(), sign, this);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             return new Melody(getServer(), sign, this);
         }

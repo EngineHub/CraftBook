@@ -56,16 +56,16 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         ArrayList<LineInfo> lines = new ArrayList<LineInfo>();
         int line = 1;
         int col = 1;
-        for (int i = 0; i < chars.length; i++) {
+        for (char aChar : chars) {
             lines.add(new LineInfo(line, col));
-            switch (chars[i]) {
+            switch (aChar) {
                 case '\n':
                     line++;
                     col = 0;
             }
             col++;
         }
-        return new WithLineInfo<char[]>(lines.toArray(new LineInfo[0]), chars);
+        return new WithLineInfo<char[]>(lines.toArray(new LineInfo[lines.size()]), chars);
     }
 
     private char[] fixArray(Character[] c) {
@@ -88,8 +88,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         for (int i = 0; i < data.length; i++) {
             switch (data[i]) {
                 case ':':
-                    lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[0]),
-                            new String(fixArray(current.toArray(new Character[0])))));
+                    lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[currentLineInfo.size()]),
+                            new String(fixArray(current.toArray(new Character[current.size()])))));
                     current.clear();
                     currentLineInfo.clear();
                     break;
@@ -101,9 +101,9 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                     currentLineInfo.add(chars.lineInfo[i]);
             }
         }
-        lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[0]),
-                new String(fixArray(current.toArray(new Character[0])))));
-        return lines.toArray(new WithLineInfo[0]);
+        lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[currentLineInfo.size()]),
+                new String(fixArray(current.toArray(new Character[current.size()])))));
+        return lines.toArray(new WithLineInfo[lines.size()]);
     }
 
     @Override
@@ -245,8 +245,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
 
         out.writeInt(PERLSTONE_STORE_VERSION);
         out.writeInt(state.length);
-        for (int i = 0; i < state.length; i++) {
-            out.writeBoolean(state[i]);
+        for (boolean aState : state) {
+            out.writeBoolean(aState);
         }
     }
 
@@ -348,7 +348,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                 " in function #" + fno + "\n";
         errm += ChatColor.RED + "Local Variable Table: \n " + ChatColor.RESET + dumpStateText(lt) + "\n";
         errm += ChatColor.RED + " - Shift: " + ChatColor.RESET + lshift + "\n";
-        errm += ChatColor.RED + "Function Stack: " + ChatColor.RESET + dumpStateText(stack.toArray(new Boolean[0]));
+        errm += ChatColor.RED + "Function Stack: " + ChatColor.RESET + dumpStateText(stack.toArray(new Boolean[stack
+                .size()]));
         return errm;
     }
 
@@ -383,8 +384,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
 
             int ip = 0;
             Stack<Boolean> executionStack = new Stack<Boolean>();
-            for (int i = 0; i < args.length; i++) {
-                executionStack.push(args[i]);
+            for (boolean arg1 : args) {
+                executionStack.push(arg1);
             }
             boolean[] lt = new boolean[32];
             int pshift = 0;
