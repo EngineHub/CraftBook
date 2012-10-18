@@ -54,27 +54,19 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception ignored) {
         }
 
-        Boolean isGroup = getSign().getLine(3).startsWith("g:");
-        if (getSign().getLine(3).length() == 0) {
-            isGroup = null;
-        }
-
         for (Player e : getServer().getOnlinePlayers()) {
-            if (e == null) {
+            if (e == null || !e.isValid()
+                    || !LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
                 continue;
             }
-            if (!LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
-                continue;
+
+            String nameLine = getSign().getLine(3);
+            if (nameLine.length() > 0) {
+                nameLine.replace("g:", "").replace("p:", "");
+                return e.getName().startsWith(nameLine)
+                        || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine);
             }
-            if (e.isDead() || !e.isValid()) {
-                continue;
-            }
-            if (isGroup == null)
-                return true;
-            if (!isGroup)//player
-                return e.getName().startsWith(getSign().getLine(3).split(":")[1]);
-            else
-                return CircuitsPlugin.getInst().isInGroup(e.getName(), getSign().getLine(3).split(":")[1]);
+            return true;
         }
 
         return false;
