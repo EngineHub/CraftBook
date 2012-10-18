@@ -47,7 +47,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public MechanismsConfiguration(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
-        this.dataFolder = dataFolder;
     }
 
     @Override
@@ -83,7 +82,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
         mechSettings = new MechanismSettings(new BaseConfigurationSection("Mechanisms"));
     }
 
-    public final File dataFolder;
     public MechanismSettings mechSettings;
     public AmmeterSettings ammeterSettings;
     public BookcaseSettings bookcaseSettings;

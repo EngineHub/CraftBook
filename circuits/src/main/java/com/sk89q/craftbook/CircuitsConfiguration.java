@@ -35,12 +35,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public CircuitsConfiguration(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
-        this.dataFolder = dataFolder;
     }
-
-    public final File dataFolder;
-
-    // public
 
     public boolean enableNetherstone;
     public boolean enablePumpkins;

@@ -16,12 +16,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 public abstract class BaseConfiguration {
 
     public final FileConfiguration cfg;
-    public final File folder;
+    public final File dataFolder;
 
     public BaseConfiguration(FileConfiguration cfg, File dataFolder) {
 
         this.cfg = cfg;
-        folder = dataFolder;
+        this.dataFolder = dataFolder;
 
         load();
     }
