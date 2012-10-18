@@ -18,11 +18,15 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through
@@ -31,6 +35,12 @@ import com.sk89q.worldedit.BlockWorldVector;
  * @author sk89q
  */
 public class ICManager {
+
+	/**
+	 * The pattern used to extract the custom IC prefix.
+	 */
+	public static final Pattern IC_PATTERN =
+			Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{4,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Holds a map of registered IC factories with their ID.
@@ -50,6 +60,8 @@ public class ICManager {
 
     private static final Map<BlockWorldVector, IC> cachedICs
     = new HashMap<BlockWorldVector, IC>();
+
+	private static final Set<String> customPrefix = new HashSet<String>();
 
     /**
      * Register an IC with the manager. The casing of the ID can be of any
@@ -79,20 +91,37 @@ public class ICManager {
 
         for (ICFamily family : families) {
             String id2 = id.replace("MC", family.getModifier());
-            RegisteredICFactory registration
-            = new RegisteredICFactory(id2, longId, factory, family);
-            // Lowercase the ID so that we can do case in-sensitive lookups
-            registered.put(id2.toLowerCase(), registration);
+	        RegisteredICFactory registration = new RegisteredICFactory(id2, longId, factory, family);
+	        // Lowercase the ID so that we can do case in-sensitive lookups
+	        registered.put(id2.toLowerCase(), registration);
         }
-        if(longId!=null) {
+        if(longId != null) {
             String toRegister = longId.toLowerCase();
             if(toRegister.length() > 15) {
                 toRegister = toRegister.substring(0, 15);
             }
             longRegistered.put(toRegister, id);
         }
-
     }
+
+	public boolean registerCustomIC(String id, String longId, ICFactory factory, ICFamily... families) {
+
+		// this is needed so we dont have two patterns
+		String id2 = "[" + id + "]";
+		// lets check if the IC ID has already been registered
+		if (registered.containsKey(id.toLowerCase())) {
+			return false;
+		}
+		// check if the ic matches the requirements
+		Matcher matcher = IC_PATTERN.matcher(id2);
+		if (!matcher.matches()) {
+			return false;
+		}
+		// lets get the custom prefix
+		customPrefix.add(matcher.group(2).toLowerCase());
+		register(id, longId, factory, families);
+		return true;
+	}
 
     /**
      * Get an IC registration by a provided ID.
@@ -174,4 +203,8 @@ public class ICManager {
 
         removeCachedIC(pt);
     }
+
+	public boolean hasCustomPrefix(String prefix) {
+		return customPrefix.contains(prefix.toLowerCase());
+	}
 }

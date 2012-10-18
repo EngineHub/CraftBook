@@ -18,12 +18,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -31,6 +25,11 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
@@ -73,7 +72,12 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         // detect the text on the sign to see if it's any kind of IC at all.
         Matcher matcher = codePattern.matcher(sign.getLine(1));
-        if (!matcher.matches()) return null;
+        if (!matcher.matches()) {
+	        // lets check for custon prefixes
+	        matcher = ICManager.IC_PATTERN.matcher(sign.getLine(1));
+	        if (!matcher.matches()) return null;
+	        if (!manager.hasCustomPrefix(matcher.group(2))) return null;
+        }
         String id = matcher.group(1);
         // after this point, we don't return null if we can't make an IC: we throw shit,
         //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
@@ -127,8 +131,19 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
+	    boolean matches = true;
         Matcher matcher = codePattern.matcher(sign.getLine(1));
-        if (matcher.matches()) {
+	    // lets check for custom ics
+	    if (!matcher.matches()) {
+		    // lets check for custon prefixes
+		    matcher = ICManager.IC_PATTERN.matcher(sign.getLine(1));
+		    if (!matcher.matches()) matches = false;
+		    if (!manager.hasCustomPrefix(matcher.group(2))) matches = false;
+	    }
+
+        if (matches) {
+
+
             String id = matcher.group(1);
             String suffix = "";
             String[] str = sign.getLine(1).split("]");
