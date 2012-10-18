@@ -132,9 +132,8 @@ public class BukkitUtil {
      */
     public static boolean equals(org.bukkit.Location a, org.bukkit.Location b) {
 
-        if (Math.abs(a.getX() - b.getX()) > EQUALS_PRECISION) return false;
-        if (Math.abs(a.getY() - b.getY()) > EQUALS_PRECISION) return false;
-        return Math.abs(a.getZ() - b.getZ()) <= EQUALS_PRECISION;
+        return Math.abs(a.getX() - b.getX()) <= EQUALS_PRECISION && Math.abs(a.getY() - b.getY()) <= EQUALS_PRECISION
+                && Math.abs(a.getZ() - b.getZ()) <= EQUALS_PRECISION;
     }
 
     public static final double EQUALS_PRECISION = 0.0001;

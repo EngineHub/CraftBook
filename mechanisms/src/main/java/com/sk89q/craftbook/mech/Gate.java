@@ -737,16 +737,13 @@ public class Gate extends AbstractMechanic {
 
     public boolean hasEnoughBlocks(Sign s) {
 
-        if (s.getLine(3).equalsIgnoreCase("infinite")) return true;
-        return getBlocks(s) > 0;
+        return s.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }
 
     public boolean hasEnoughBlocks(Sign s, Sign other) {
 
-        if (s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3)
-                .equalsIgnoreCase("infinite"))
-            return true;
-        return getBlocks(s, other) > 0;
+        return s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3)
+                .equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
 
     // TODO Use this to clean this mech up

@@ -61,9 +61,8 @@ public class AIMechanic implements Listener {
     @SuppressWarnings("unchecked")
     public boolean registerAIMechanic(Class<?> mechanic) {
 
-        if (!BaseAIMechanic.class.isAssignableFrom(mechanic)) return false;
-
-        return !mechanics.contains(mechanic) && mechanics.add((Class<BaseAIMechanic>) mechanic);
+        return BaseAIMechanic.class.isAssignableFrom(mechanic) && !mechanics.contains(mechanic) && mechanics.add(
+                (Class<BaseAIMechanic>) mechanic);
 
     }
 }
