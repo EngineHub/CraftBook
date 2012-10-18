@@ -62,8 +62,8 @@ public class PlayerDetection extends AbstractIC {
 
             String nameLine = getSign().getLine(3);
             if (nameLine.length() > 0) {
-                nameLine.replace("g:", "").replace("p:", "");
-                return e.getName().startsWith(nameLine)
+                nameLine = nameLine.replace("g:", "").replace("p:", "");
+                return e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
                         || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine);
             }
             return true;
