@@ -476,6 +476,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         return config;
     }
 
+    public ICConfiguration getICConfiguration() {
+
+        return icConfig;
+    }
+
     public PermissionsResolverManager getPermissionsResolver() {
 
         return perms;
