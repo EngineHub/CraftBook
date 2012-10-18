@@ -271,11 +271,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final boolean loop;
+        public final boolean buttons;
 
         private ElevatorSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
             loop = section.getBoolean("loop-top-bottom", false);
+            buttons = section.getBoolean("allow-button-on-back", true);
         }
     }
 

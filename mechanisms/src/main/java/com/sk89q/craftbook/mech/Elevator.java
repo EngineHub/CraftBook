@@ -26,6 +26,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.material.Button;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -36,6 +37,7 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
@@ -278,7 +280,15 @@ public class Elevator extends AbstractMechanic {
     private static Elevator.Direction isLift(Block block) {
 
         BlockState state = block.getState();
-        if (!(state instanceof Sign)) return Direction.NONE;
+        if (!(state instanceof Sign)) {
+            if(MechanismsPlugin.getInst().getLocalConfiguration().elevatorSettings.buttons && block.getTypeId() == BlockID.STONE_BUTTON) {
+                Button b = (Button) block.getState().getData();
+                Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
+                if(sign.getState() instanceof Sign)
+                    return isLift((Sign) sign.getState());
+            }
+            return Direction.NONE;
+        }
 
         return isLift((Sign) state);
     }
