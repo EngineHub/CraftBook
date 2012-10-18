@@ -1,22 +1,15 @@
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class MapChanger extends AbstractMechanic {
 
@@ -84,40 +77,47 @@ public class MapChanger extends AbstractMechanic {
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
+
         Block block = event.getClickedBlock();
-        if(event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.MAP) if (block.getState() instanceof Sign) {
-            Sign sign = (Sign) block.getState();
-            byte id;
-            try {
-                id = Byte.parseByte(sign.getLine(2));
-            } catch (Exception e) {
-                id = -1;
+        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.MAP)
+            if (block.getState() instanceof Sign) {
+                Sign sign = (Sign) block.getState();
+                byte id;
+                try {
+                    id = Byte.parseByte(sign.getLine(2));
+                } catch (Exception e) {
+                    id = -1;
+                }
+                if (id == -1) {
+                    event.getPlayer().sendMessage("Invalid Map!");
+                }
+                event.getPlayer().getItemInHand().setDurability(id);
             }
-            if(id == -1) {
-                event.getPlayer().sendMessage("Invalid Map!");
-            }
-            event.getPlayer().getItemInHand().setDurability(id);
-        }
     }
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
     }
 
     @Override
     public void unload() {
+
     }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+
     }
 
     @Override
     public void unloadWithEvent(ChunkUnloadEvent event) {
+
     }
 
     @Override
     public boolean isActive() {
+
         return false;
     }
 }

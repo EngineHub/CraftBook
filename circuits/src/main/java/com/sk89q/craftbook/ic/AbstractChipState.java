@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.material.Diode;
-
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * @author Silthus
@@ -38,7 +37,9 @@ public abstract class AbstractChipState implements ChipState {
         if (block != null) if (block.getType() == Material.REDSTONE_WIRE)
             return true;
         else if (block.getType() == Material.DIODE_BLOCK_OFF
-                || block.getType() == Material.DIODE_BLOCK_ON) if (block.getRelative(((Diode) block.getState().getData()).getFacing()).equals(sign.getBlock())) return true;
+                || block.getType() == Material.DIODE_BLOCK_ON)
+            if (block.getRelative(((Diode) block.getState().getData()).getFacing()).equals(sign.getBlock()))
+                return true;
         return false;
     }
 }

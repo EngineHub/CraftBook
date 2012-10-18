@@ -1,17 +1,9 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -31,8 +23,8 @@ public class PowerSensor extends AbstractIC {
 
         try {
             center = ICUtil.parseBlockLocation(getSign());
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Override

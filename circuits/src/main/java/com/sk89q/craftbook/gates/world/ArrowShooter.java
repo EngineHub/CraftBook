@@ -19,20 +19,14 @@
 package com.sk89q.craftbook.gates.world;
 
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class ArrowShooter extends AbstractIC {
 
@@ -78,20 +72,17 @@ public class ArrowShooter extends AbstractIC {
 
         if (speed > 2.0) {
             speed = 2F;
-        }
-        else if (speed < 0.2) {
+        } else if (speed < 0.2) {
             speed = 0.2F;
         }
         if (spread > 50) {
             spread = 50;
-        }
-        else if (spread < 0) {
+        } else if (spread < 0) {
             spread = 0;
         }
         if (vert > 1) {
             vert = 1;
-        }
-        else if (vert < -1) {
+        } else if (vert < -1) {
             vert = -1;
         }
 
@@ -112,7 +103,7 @@ public class ArrowShooter extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 
@@ -127,11 +118,13 @@ public class ArrowShooter extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Shoots an arrow.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "speed:spread",
                     "vertical gain"

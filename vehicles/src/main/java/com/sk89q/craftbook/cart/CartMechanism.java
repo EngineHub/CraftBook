@@ -1,13 +1,12 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RedstoneUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
-
-import com.sk89q.craftbook.RedstoneUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their
@@ -46,7 +45,7 @@ public abstract class CartMechanism {
     }
 
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] {BlockFace.NORTH, BlockFace.EAST,
-        BlockFace.SOUTH, BlockFace.WEST};
+            BlockFace.SOUTH, BlockFace.WEST};
 
     /**
      * Determins if a cart mechanism should be enabled.

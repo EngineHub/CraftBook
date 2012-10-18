@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.Random;
-
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -10,13 +10,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Random;
 
 /**
  * @author Me4502
@@ -68,22 +62,19 @@ public class FireShooter extends AbstractIC {
 
         if (speed > 2.0) {
             speed = 2F;
-        }
-        else if (speed < 0.2) {
+        } else if (speed < 0.2) {
             speed = 0.2F;
         }
 
         if (spread > 50) {
             spread = 50;
-        }
-        else if (spread < 0) {
+        } else if (spread < 0) {
             spread = 0;
         }
 
         if (vert > 1) {
             vert = 1;
-        }
-        else if (vert < -1) {
+        } else if (vert < -1) {
             vert = -1;
         }
 
@@ -102,19 +93,18 @@ public class FireShooter extends AbstractIC {
                 Random rand = new Random();
                 velocity = new Vector(x + (rand.nextInt((int) spread) - spread / 2),
                         vert + (rand.nextInt((int) spread) - spread / 2), z + (rand.nextInt((int) spread) - spread
-                                / 2));
+                        / 2));
                 SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
                 f.setVelocity(velocity);
             }
-        }
-        else {
+        } else {
             SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
             f.setVelocity(velocity);
         }
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 
@@ -129,11 +119,13 @@ public class FireShooter extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Shoots a fireball.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "speed:spread",
                     "vertical gain"

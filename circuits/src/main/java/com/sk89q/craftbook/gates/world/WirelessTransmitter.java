@@ -18,20 +18,15 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.HistoryHashMap;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.HistoryHashMap;
 
 public class WirelessTransmitter extends AbstractIC {
 
     protected static final HistoryHashMap<String, Boolean> memory
-    = new HistoryHashMap<String, Boolean>(100);
+            = new HistoryHashMap<String, Boolean>(100);
 
     protected String band;
 
@@ -40,8 +35,7 @@ public class WirelessTransmitter extends AbstractIC {
         super(server, sign, factory);
         try {
             band = sign.getLine(2);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             band = "test";
         }
     }

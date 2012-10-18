@@ -1,8 +1,7 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -11,8 +10,8 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CartDeposit extends CartMechanism {
 
@@ -49,8 +48,8 @@ public class CartDeposit extends CartMechanism {
         try {
             itemID = Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2).split(":")[0]);
             itemData = Byte.parseByte(((Sign) blocks.sign.getState()).getLine(2).split(":")[1]);
+        } catch (Exception e) {
         }
-        catch(Exception e){}
 
         if (collecting) {
             // collecting
@@ -60,13 +59,13 @@ public class CartDeposit extends CartMechanism {
                     if (item == null) {
                         continue;
                     }
-                    if (itemID < 0 || itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
-                        transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                        cartinventory.remove(item);
-                    }
+                    if (itemID < 0 || itemID == item.getTypeId())
+                        if (itemData < 0 || itemData == item.getDurability()) {
+                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                            cartinventory.remove(item);
+                        }
                 }
-            }
-            else {
+            } else {
                 transferitems.addAll(Arrays.asList(cartinventory.getContents()));
                 cartinventory.clear();
             }
@@ -116,13 +115,14 @@ public class CartDeposit extends CartMechanism {
                         if (item == null) {
                             continue;
                         }
-                        if (itemID < 0 || itemID == item.getTypeId()) if(itemData < 0 || itemData == item.getDurability()) {
-                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                            containerinventory.remove(item);
-                        }
+                        if (itemID < 0 || itemID == item.getTypeId())
+                            if (itemData < 0 || itemData == item.getDurability()) {
+                                transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(),
+                                        item.getDurability()));
+                                containerinventory.remove(item);
+                            }
                     }
-                }
-                else {
+                } else {
                     transferitems.addAll(Arrays.asList(containerinventory.getContents()));
                     containerinventory.clear();
                 }
@@ -165,7 +165,7 @@ public class CartDeposit extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

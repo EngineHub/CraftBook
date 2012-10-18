@@ -1,21 +1,13 @@
 package com.sk89q.craftbook.gates.weather;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import net.minecraft.server.Packet70Bed;
-
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -54,11 +46,13 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
 
         @Override
         public String getDescription() {
+
             return "Fakes a players weather in radius.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "radius",
                     null
@@ -95,8 +89,7 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
             if (!getSign().getWorld().hasStorm()) {
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
                         ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
-            }
-            else {
+            } else {
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
                         ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet70Bed(1, 0));
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,

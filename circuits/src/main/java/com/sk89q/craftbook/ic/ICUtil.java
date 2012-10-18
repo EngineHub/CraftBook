@@ -18,8 +18,9 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.HashMap;
-
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,9 +37,7 @@ import org.bukkit.material.Lever;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.material.RedstoneTorch;
 
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.HashMap;
 
 /**
  * IC utility functions.
@@ -48,9 +47,10 @@ import com.sk89q.craftbook.util.SignUtil;
 public class ICUtil {
 
     private static BlockFace[] REDSTONE_CONTACT_FACES =
-        {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
+            {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
 
     public ICUtil() {
+
     }
 
     private static HashMap<Location, Boolean> torchStatus = new HashMap<Location, Boolean>();
@@ -59,38 +59,45 @@ public class ICUtil {
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockPhysics(BlockPhysicsEvent event) {
-            if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
-                byte data = event.getBlock().getData();
-                if(ICUtil.getTorchStatus(event.getBlock().getLocation()).booleanValue()) {
-                    if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
-                        event.getBlock().setTypeId(Material.REDSTONE_TORCH_OFF.getId());
-                    }
-                }
-                else
-                    if(event.getBlock().getTypeId() != Material.REDSTONE_TORCH_ON.getId()) {
+
+            if (event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material
+                    .REDSTONE_TORCH_OFF)
+                if (ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
+                    byte data = event.getBlock().getData();
+                    if (ICUtil.getTorchStatus(event.getBlock().getLocation()).booleanValue()) {
+                        if (event.getBlock().getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
+                            event.getBlock().setTypeId(Material.REDSTONE_TORCH_OFF.getId());
+                        }
+                    } else if (event.getBlock().getTypeId() != Material.REDSTONE_TORCH_ON.getId()) {
                         event.getBlock().setTypeId(Material.REDSTONE_TORCH_ON.getId());
                     }
-                event.getBlock().setData(data, false);
-            }
+                    event.getBlock().setData(data, false);
+                }
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
-            if(event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material.REDSTONE_TORCH_OFF) if(ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
-                ICUtil.removeTorch(event.getBlock().getLocation());
-            }
+
+            if (event.getBlock().getType() == Material.REDSTONE_TORCH_ON || event.getBlock().getType() == Material
+                    .REDSTONE_TORCH_OFF)
+                if (ICUtil.getTorchStatus(event.getBlock().getLocation()) != null) {
+                    ICUtil.removeTorch(event.getBlock().getLocation());
+                }
         }
     }
 
     public static Boolean getTorchStatus(Location loc) {
+
         return torchStatus.get(loc);
     }
 
     public static void removeTorch(Location loc) {
+
         torchStatus.remove(loc);
     }
 
     public static void setTorch(Location loc, Boolean value) {
+
         torchStatus.put(loc, value);
     }
 
@@ -115,37 +122,33 @@ public class ICUtil {
         // first update the lever
         Lever lever = null;
         RedstoneTorch torch = null;
-        if(block.getState().getData() instanceof Lever) {
+        if (block.getState().getData() instanceof Lever) {
             lever = (Lever) block.getState().getData();
-        }
-        else {
+        } else {
             torch = (RedstoneTorch) block.getState().getData();
         }
 
         if (!state) {
             newData = data & 0x7;
-        }
-        else {
+        } else {
             newData = data | 0x8;
         }
         // #END legacy code
-        if(block.getType() == Material.REDSTONE_TORCH_OFF || block.getType() == Material.REDSTONE_TORCH_ON) {
+        if (block.getType() == Material.REDSTONE_TORCH_OFF || block.getType() == Material.REDSTONE_TORCH_ON) {
             byte oldData = block.getData();
             setTorch(block.getLocation(), state);
-            if(state) {
-                if(block.getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
+            if (state) {
+                if (block.getTypeId() != Material.REDSTONE_TORCH_OFF.getId()) {
                     block.setTypeId(Material.REDSTONE_TORCH_OFF.getId());
                 }
+            } else if (block.getTypeId() != Material.REDSTONE_TORCH_ON.getId()) {
+                block.setTypeId(Material.REDSTONE_TORCH_ON.getId());
             }
-            else
-                if(block.getTypeId() != Material.REDSTONE_TORCH_ON.getId()) {
-                    block.setTypeId(Material.REDSTONE_TORCH_ON.getId());
-                }
             block.setData(oldData, false);
         }
         if (wasOn != state) {
             try {
-                if(block.getType() == Material.LEVER) {
+                if (block.getType() == Material.LEVER) {
                     net.minecraft.server.Block nmsBlock = net.minecraft.server.Block.byId[Material.LEVER.getId()];
                     net.minecraft.server.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 
@@ -161,10 +164,9 @@ public class ICUtil {
                 block.setData((byte) newData, true);
                 // get the block the lever is attached to:
                 Block source;
-                if(block.getState().getData() instanceof Lever) {
+                if (block.getState().getData() instanceof Lever) {
                     source = block.getRelative(lever.getAttachedFace());
-                }
-                else {
+                } else {
                     source = block.getRelative(torch.getAttachedFace());
                 }
                 // then iterate over all blocks around the block the lever is attached to
@@ -175,19 +177,16 @@ public class ICUtil {
                     data = relative.getData();
                     if (state) {
                         newData = data | 0x8;
-                    }
-                    else {
+                    } else {
                         newData = data & ~0x8;
                     }
 
                     if (type == Material.REDSTONE_WIRE || type == Material.POWERED_RAIL) {
                         relative.setData((byte) newData, true);
-                    }
-                    else if (type == Material.REDSTONE_LAMP_OFF || type == Material.REDSTONE_LAMP_ON) {
+                    } else if (type == Material.REDSTONE_LAMP_OFF || type == Material.REDSTONE_LAMP_ON) {
                         if (state) {
                             relative.setType(Material.REDSTONE_LAMP_ON);
-                        }
-                        else {
+                        } else {
                             relative.setType(Material.REDSTONE_LAMP_OFF);
                         }
                     } else if (type == Material.REDSTONE_TORCH_ON || type == Material.REDSTONE_TORCH_OFF) {
@@ -240,8 +239,7 @@ public class ICUtil {
                 offsetX = Integer.parseInt(split[0]);
                 offsetY = Integer.parseInt(split[1]);
                 offsetZ = Integer.parseInt(split[2]);
-            }
-            else {
+            } else {
                 offsetY = Integer.parseInt(line);
             }
         } catch (NumberFormatException e) {
@@ -251,8 +249,7 @@ public class ICUtil {
         }
         if (relative) {
             target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
-        }
-        else {
+        } else {
             target = LocationUtil.getOffset(target, offsetX, offsetY, offsetZ);
         }
         return target;

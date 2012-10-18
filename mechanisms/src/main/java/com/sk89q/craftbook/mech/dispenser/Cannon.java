@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.EntityType;
@@ -9,10 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-
-public class Cannon  extends Recipe {
+public class Cannon extends Recipe {
 
     public Cannon(int[] recipe) {
 
@@ -22,9 +21,9 @@ public class Cannon  extends Recipe {
     public Cannon() {
 
         super(new int[] {
-                ItemID.FIRE_CHARGE,     ItemID.SULPHUR,     ItemID.FIRE_CHARGE,
-                ItemID.SULPHUR,         BlockID.TNT,        ItemID.SULPHUR,
-                ItemID.FIRE_CHARGE,     ItemID.SULPHUR,     ItemID.FIRE_CHARGE
+                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE,
+                ItemID.SULPHUR, BlockID.TNT, ItemID.SULPHUR,
+                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE
         });
     }
 
@@ -34,7 +33,8 @@ public class Cannon  extends Recipe {
         MaterialData d = dis.getBlock().getState().getData();
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) d;
         BlockFace face = disp.getFacing();
-        TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(dis.getBlock().getRelative(face).getLocation(), EntityType.PRIMED_TNT);
+        TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(dis.getBlock().getRelative(face).getLocation(),
+                EntityType.PRIMED_TNT);
         a.setVelocity(velocity);
         a.setIsIncendiary(true);
         a.setYield(0.4f);

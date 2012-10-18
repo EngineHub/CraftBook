@@ -19,14 +19,9 @@
 package com.sk89q.craftbook.gates.world;
 
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class ArrowBarrage extends ArrowShooter {
 
@@ -56,7 +51,7 @@ public class ArrowBarrage extends ArrowShooter {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 
@@ -71,11 +66,13 @@ public class ArrowBarrage extends ArrowShooter {
 
         @Override
         public String getDescription() {
+
             return "Shoots a barrage of arrows.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "speed:spread",
                     "vertical gain"

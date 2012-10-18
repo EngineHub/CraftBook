@@ -18,17 +18,6 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
@@ -36,6 +25,16 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this
@@ -52,7 +51,7 @@ public class ICMechanic extends PersistentMechanic {
     protected final BlockWorldVector pos;
 
     public ICMechanic(CircuitsPlugin plugin, String id, IC ic,
-            ICFamily family, BlockWorldVector pos) {
+                      ICFamily family, BlockWorldVector pos) {
 
         super(pos);
         this.plugin = plugin;

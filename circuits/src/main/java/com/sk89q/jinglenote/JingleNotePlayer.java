@@ -12,13 +12,15 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class JingleNotePlayer implements Runnable {
+
     protected final Player player;
     protected final Location loc;
     protected JingleSequencer sequencer;
     protected final int delay;
 
     public JingleNotePlayer(Player player,
-            Location loc, JingleSequencer seq,  int delay) {
+                            Location loc, JingleSequencer seq, int delay) {
+
         this.player = player;
         this.loc = loc;
         sequencer = seq;
@@ -27,6 +29,7 @@ public class JingleNotePlayer implements Runnable {
 
     @Override
     public void run() {
+
         try {
             if (delay > 0) {
                 Thread.sleep(delay);
@@ -48,14 +51,17 @@ public class JingleNotePlayer implements Runnable {
     }
 
     public boolean isActive() {
+
         return player.isOnline();
     }
 
     public Player getPlayer() {
+
         return player;
     }
 
     public Location getLocation() {
+
         return loc;
     }
 
@@ -74,14 +80,16 @@ public class JingleNotePlayer implements Runnable {
     }*/
 
     public void play(Sound instrument, int pitch) {
+
         if (!player.isOnline() || instrument == null) return;
-        float np = (float)Math.pow(2.0D, (pitch - 12) / 12.0D);
+        float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
         player.playSound(loc, instrument, 30f, np);
     }
 
     public void play(Sound instrument, int pitch, float velocity) {
+
         if (!player.isOnline() || instrument == null) return;
-        float np = (float)Math.pow(2.0D, (pitch - 12) / 12.0D);
-        player.playSound(player.getLocation(), instrument, velocity/64, np);
+        float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
+        player.playSound(player.getLocation(), instrument, velocity / 64, np);
     }
 }

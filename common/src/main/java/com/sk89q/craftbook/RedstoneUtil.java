@@ -1,10 +1,9 @@
 package com.sk89q.craftbook;
 
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic
@@ -70,7 +69,8 @@ public abstract class RedstoneUtil {
 
     public static boolean isPotentialPowerSource(Block pow) {
 
-        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE_BLOCK_OFF || pow.getType() == Material.DIODE_BLOCK_ON;
+        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE_BLOCK_OFF || pow.getType()
+                == Material.DIODE_BLOCK_ON;
         //return BlockType.isRedstoneBlock(pow.getTypeId());
     }
 
@@ -83,7 +83,8 @@ public abstract class RedstoneUtil {
      */
     public static boolean isPotentialPowerSource(Block mech, Block pow) {
 
-        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE_BLOCK_OFF || pow.getType() == Material.DIODE_BLOCK_ON;
+        return pow.getType() == Material.REDSTONE_WIRE || pow.getType() == Material.DIODE_BLOCK_OFF || pow.getType()
+                == Material.DIODE_BLOCK_ON;
     }
 
 

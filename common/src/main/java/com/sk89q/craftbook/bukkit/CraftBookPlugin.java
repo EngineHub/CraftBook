@@ -34,6 +34,7 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
     private static CraftBookPlugin instance;
 
     public static CraftBookPlugin getInstance() {
+
         return instance;
     }
 
@@ -51,16 +52,18 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
         config = new CommonConfiguration(getConfig(), getDataFolder());
         saveConfig();
 
-	    registerCommand(Commands.class);
+        registerCommand(Commands.class);
 
         try {
             Metrics metrics = new Metrics(this);
 
             Graph graph = metrics.createGraph("Language");
-            for(String lan : languageManager.getLanguages()) {
+            for (String lan : languageManager.getLanguages()) {
                 graph.addPlotter(new Metrics.Plotter(lan) {
+
                     @Override
                     public int getValue() {
+
                         return 1;
                     }
                 });
@@ -78,19 +81,20 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
 
     @Override
     public CommonConfiguration getLocalConfiguration() {
+
         return config;
     }
 
-	public class Commands {
+    public class Commands {
 
-		@Command(
-				aliases = "cbreload",
-				desc = "Reloads the CraftBook Common config"
-		)
-		public void reload(CommandContext context, CommandSender sender) {
+        @Command(
+                aliases = "cbreload",
+                desc = "Reloads the CraftBook Common config"
+        )
+        public void reload(CommandContext context, CommandSender sender) {
 
-			getLocalConfiguration().reload();
-			sender.sendMessage("The CraftBook Common config has been reloaded.");
-		}
-	}
+            getLocalConfiguration().reload();
+            sender.sendMessage("The CraftBook Common config has been reloaded.");
+        }
+    }
 }

@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.Set;
-
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -11,17 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -72,13 +64,12 @@ public class ItemSensor extends AbstractIC {
             radius = ICUtil.parseRadius(getSign());
             if (getSign().getLine(2).contains("=")) {
                 center = ICUtil.parseBlockLocation(getSign());
-            }
-            else {
+            } else {
                 center = SignUtil.getBackBlock(getSign().getBlock());
             }
             chunks = LocationUtil.getSurroundingChunks(block, radius);
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Override
@@ -111,7 +102,8 @@ public class ItemSensor extends AbstractIC {
                         ItemStack itemStack = ((Item) entity).getItemStack();
                         if (itemStack.getTypeId() == item) {
                             if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                                return true;
                         }
                     }
             }

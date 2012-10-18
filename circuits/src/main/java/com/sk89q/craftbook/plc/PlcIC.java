@@ -18,23 +18,11 @@
 
 package com.sk89q.craftbook.plc;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -44,12 +32,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
+
     private static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
     private static final int PLC_STORE_VERSION = 1;
@@ -65,27 +55,30 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private String errorString = "no error";
 
     PlcIC(Sign s, Lang l) throws ICVerificationException {
+
         sign = s;
         try {
             codeString = getCode();
-        } catch(CodeNotFoundException e) {
-            throw new ICVerificationException("Error retrieving code: "+e.getMessage());
+        } catch (CodeNotFoundException e) {
+            throw new ICVerificationException("Error retrieving code: " + e.getMessage());
         }
         l.compile(codeString);
     }
+
     public PlcIC(Server sv, Sign s, Lang l) {
+
         lang = l;
         sign = s;
         try {
             codeString = getCode();
-        } catch(CodeNotFoundException e) {
+        } catch (CodeNotFoundException e) {
             error("code missing", "Code went missing!!");
         }
         try {
-            if(codeString!=null) {
+            if (codeString != null) {
                 code = lang.compile(codeString);
             }
-        } catch(ICVerificationException e) {
+        } catch (ICVerificationException e) {
             throw new RuntimeException("inconsistent compile check!", e);
         }
         state = lang.initState();
@@ -93,19 +86,25 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private boolean isShared() {
+
         return !sign.getLine(3).isEmpty() && sign.getLine(3).startsWith("id:");
     }
 
     private String getID() {
+
         return sign.getLine(2);
     }
+
     private String getFileName() {
-        if(!isShared()) {
+
+        if (!isShared()) {
             Location l = sign.getLocation();
-            return lang.getName()+"$$"+l.getBlockX()+"_"+l.getBlockY()+"_"+l.getBlockZ();
-        } else return lang.getName()+"$"+sign.getLine(3);
+            return lang.getName() + "$$" + l.getBlockX() + "_" + l.getBlockY() + "_" + l.getBlockZ();
+        } else return lang.getName() + "$" + sign.getLine(3);
     }
+
     private File getStorageLocation() {
+
         World w = sign.getWorld();
         File worldDir = w.getWorldFolder();
         File targetDir = new File(worldDir, "craftbook-plcs");
@@ -114,14 +113,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private String hashCode(String code) {
+
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] digest = md.digest(code.getBytes("UTF-8"));
             String hex = "";
-            for(int i=0;i<digest.length;i++) {
-                String byteHex = Integer.toHexString(digest[i]&0xFF);
-                if(byteHex.length() == 1) {
-                    byteHex = "0"+byteHex;
+            for (int i = 0; i < digest.length; i++) {
+                String byteHex = Integer.toHexString(digest[i] & 0xFF);
+                if (byteHex.length() == 1) {
+                    byteHex = "0" + byteHex;
                 }
                 hex += byteHex;
             }
@@ -134,9 +134,10 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private void tryLoadState() {
+
         try {
             loadState();
-        } catch(IOException e) {
+        } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load PLC state", e);
             state = lang.initState();
             getStorageLocation().delete();
@@ -144,11 +145,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private void loadState() throws IOException {
-        if(!getStorageLocation().exists()) return; // Prevent error spam
+
+        if (!getStorageLocation().exists()) return; // Prevent error spam
 
         DataInputStream in = new DataInputStream(new FileInputStream(getStorageLocation()));
         try {
-            switch(in.readInt()) {
+            switch (in.readInt()) {
                 case 1:
                     error = in.readBoolean();
                     errorString = in.readUTF();
@@ -156,11 +158,10 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     String langName = in.readUTF();
                     String id = in.readUTF();
                     String code = hashCode(in.readUTF());
-                    if((lang.getName().equals(langName) || lang.supports(langName)) &&
+                    if ((lang.getName().equals(langName) || lang.supports(langName)) &&
                             (isShared() || id.equals(getID()) && hashCode(codeString).equals(code))) {
                         lang.loadState(state, in);
-                    }
-                    else {
+                    } else {
                         // Prevent errors from different ICs from affecting this one.
                         error = false;
                         errorString = "no error";
@@ -175,22 +176,24 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private void trySaveState() {
+
         try {
             saveState();
-        } catch(IOException e) {
-            logger.log(Level.SEVERE, "Failed to save PLC state",e);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to save PLC state", e);
             state = lang.initState();
         }
     }
 
     private void saveState() throws IOException {
+
         DataOutputStream out = new DataOutputStream(new FileOutputStream(getStorageLocation()));
         try {
             out.writeInt(PLC_STORE_VERSION);
             out.writeBoolean(error);
             out.writeUTF(errorString);
             out.writeUTF(lang.getName());
-            out.writeUTF(error?"(error)":getID());
+            out.writeUTF(error ? "(error)" : getID());
             out.writeUTF(hashCode(codeString));
             lang.writeState(state, out);
         } finally {
@@ -199,33 +202,36 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private String getBookCode(Block chestBlock) throws CodeNotFoundException {
+
         Chest c = (Chest) chestBlock.getState();
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
-        for(ItemStack s : i.getContents())
-            if(s != null &&
-            s.getAmount() > 0 &&
-            (s.getType() == Material.BOOK_AND_QUILL ||
-            s.getType() == Material.WRITTEN_BOOK)) {
-                if(book != null)
+        for (ItemStack s : i.getContents())
+            if (s != null &&
+                    s.getAmount() > 0 &&
+                    (s.getType() == Material.BOOK_AND_QUILL ||
+                            s.getType() == Material.WRITTEN_BOOK)) {
+                if (book != null)
                     throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
-        if(book==null)
+        if (book == null)
             throw new CodeNotFoundException("No written books found in chest.");
         BookItem data = new BookItem(book);
         String code = "";
-        for(String s:data.getPages()) {
-            code += s+"\n";
+        for (String s : data.getPages()) {
+            code += s + "\n";
         }
         System.out.println(code);
         return code;
     }
+
     private String getCode() throws CodeNotFoundException {
+
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
-        if(above.getType() == Material.CHEST) return getBookCode(above);
+        if (above.getType() == Material.CHEST) return getBookCode(above);
         Block below = sign.getLocation().add(new Vector(0, -1, 0)).getBlock();
-        if(below.getType() == Material.CHEST) return getBookCode(below);
+        if (below.getType() == Material.CHEST) return getBookCode(below);
 
         Location l = sign.getLocation();
         World w = l.getWorld();
@@ -233,18 +239,18 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         int x = l.getBlockX();
         int z = l.getBlockZ();
 
-        for(int y=0;y<w.getMaxHeight();y++)
-            if(y!=l.getBlockY())
-                if(w.getBlockAt(x,y,z).getState() instanceof Sign) {
-                    Sign s = (Sign) w.getBlockAt(x,y,z).getState();
-                    if(s.getLine(1).equalsIgnoreCase("[Code Block]")) {
+        for (int y = 0; y < w.getMaxHeight(); y++)
+            if (y != l.getBlockY())
+                if (w.getBlockAt(x, y, z).getState() instanceof Sign) {
+                    Sign s = (Sign) w.getBlockAt(x, y, z).getState();
+                    if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
                         y--;
                         BlockState b = w.getBlockAt(x, y, z).getState();
                         String code = "";
-                        while(b instanceof Sign) {
+                        while (b instanceof Sign) {
                             s = (Sign) b;
-                            for(int li=0;li<4 && y!=l.getBlockY();li++) {
-                                code += s.getLine(li)+"\n";
+                            for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
+                                code += s.getLine(li) + "\n";
                             }
                             b = w.getBlockAt(x, --y, z).getState();
                         }
@@ -256,15 +262,18 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     @Override
     public String getTitle() {
-        return lang.getName()+" PLC";
+
+        return lang.getName() + " PLC";
     }
 
     @Override
     public String getSignTitle() {
+
         return lang.getName().toUpperCase();
     }
 
     public void error(String shortMessage, String detailedMessage) {
+
         sign.setLine(2, ChatColor.RED + "!Error!");
         sign.setLine(3, shortMessage);
         sign.update();
@@ -277,80 +286,93 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     @Override
     public void trigger(ChipState chip) {
+
         try {
-            if(isShared()) {
+            if (isShared()) {
                 tryLoadState();
             }
 
             lang.execute(chip, state, code);
 
             trySaveState();
-        } catch(PlcException e) {
+        } catch (PlcException e) {
             error(e.getMessage(), e.detailedMessage);
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Internal error while executing PLC", e);
-            error(e.getClass().getName(), "Internal error encountered: "+e.getClass().getName());
+            error(e.getClass().getName(), "Internal error encountered: " + e.getClass().getName());
         }
     }
 
     public IC selfTriggered() {
+
         final IC self = this;
         return new SelfTriggeredIC() {
+
             @Override
             public String getTitle() {
+
                 return self.getTitle();
             }
 
             @Override
             public String getSignTitle() {
+
                 return self.getSignTitle();
             }
 
             @Override
-            public void trigger(ChipState chip) {}
+            public void trigger(ChipState chip) {
+
+            }
 
             @Override
             public void think(ChipState chip) {
+
                 self.trigger(chip);
             }
 
             @Override
             public boolean isActive() {
+
                 return true;
             }
 
             @Override
             public void onRightClick(Player p) {
+
                 self.onRightClick(p);
             }
 
             @Override
-            public void unload() {}
+            public void unload() {
+
+            }
         };
     }
 
     @Override
     public void onRightClick(Player p) {
-        if(p.hasPermission("craftbook.plc.debug")) {
-            p.sendMessage(ChatColor.GREEN+"Programmable Logic Controller debug information");
+
+        if (p.hasPermission("craftbook.plc.debug")) {
+            p.sendMessage(ChatColor.GREEN + "Programmable Logic Controller debug information");
             Location l = sign.getLocation();
-            p.sendMessage(ChatColor.RED+"Status:"+ChatColor.RESET+" "+(error?"Error Encountered":"OK"));
-            p.sendMessage(ChatColor.RED+"Location:"+ChatColor.RESET+
-                    " ("+l.getBlockX()+", "+l.getBlockY()+", "+l.getBlockZ()+")");
-            p.sendMessage(ChatColor.RED+"Language:"+ChatColor.RESET+" "+lang.getName());
-            p.sendMessage(ChatColor.RED+"Full Storage Name:"+ChatColor.RESET+" "+getFileName());
-            if(error) {
+            p.sendMessage(ChatColor.RED + "Status:" + ChatColor.RESET + " " + (error ? "Error Encountered" : "OK"));
+            p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET +
+                    " (" + l.getBlockX() + ", " + l.getBlockY() + ", " + l.getBlockZ() + ")");
+            p.sendMessage(ChatColor.RED + "Language:" + ChatColor.RESET + " " + lang.getName());
+            p.sendMessage(ChatColor.RED + "Full Storage Name:" + ChatColor.RESET + " " + getFileName());
+            if (error) {
                 p.sendMessage(errorString);
-            }
-            else {
+            } else {
                 p.sendMessage(lang.dumpState(state));
             }
-        }
-        else {
-            p.sendMessage(ChatColor.RED+"You do not have the necessary permissions to do that.");
+        } else {
+            p.sendMessage(ChatColor.RED + "You do not have the necessary permissions to do that.");
         }
     }
 
     @Override
-    public void unload() {}
+    public void unload() {
+
+    }
 }

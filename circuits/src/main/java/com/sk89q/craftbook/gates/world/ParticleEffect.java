@@ -1,18 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -50,11 +44,10 @@ public class ParticleEffect extends AbstractIC {
             int effectID;
             try {
                 effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 effectID = Effect.valueOf(getSign().getLine(2).split(":")[0]).getId();
             }
-            if(Effect.getById(effectID) == null) return;
+            if (Effect.getById(effectID) == null) return;
             int effectData;
             try {
                 effectData = Integer.parseInt(getSign().getLine(2).split(":")[1]);
@@ -65,7 +58,7 @@ public class ParticleEffect extends AbstractIC {
             int times = Integer.parseInt(getSign().getLine(3));
             Block b = SignUtil.getBackBlock(getSign().getBlock());
             for (int i = 0; i < times; i++) {
-                b.getWorld().playEffect(b.getLocation().add(0,1,0), Effect.getById(effectID), effectData, 50);
+                b.getWorld().playEffect(b.getLocation().add(0, 1, 0), Effect.getById(effectID), effectData, 50);
             }
         } catch (Exception ignored) {
         }
@@ -87,8 +80,8 @@ public class ParticleEffect extends AbstractIC {
                     sign.update();
                     return new SetDoor(getServer(), sign, this);
                 }
+            } catch (Exception e) {
             }
-            catch(Exception e){}
             return new ParticleEffect(getServer(), sign, this);
         }
     }

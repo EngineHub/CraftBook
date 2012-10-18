@@ -1,33 +1,31 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
 
     public LiquidFloodST(Server server, Sign block, ICFactory factory) {
+
         super(server, block, factory);
     }
 
     @Override
     public String getTitle() {
+
         return "Self-Triggered Liquid Flooder";
     }
 
     @Override
     public String getSignTitle() {
+
         return "LIQUID FLOOD ST";
     }
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
@@ -38,7 +36,7 @@ public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 
@@ -53,11 +51,13 @@ public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
 
         @Override
         public String getDescription() {
+
             return "Floods an area with a liquid.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "water/lava",
                     "radius"

@@ -19,14 +19,6 @@
 
 package com.sk89q.craftbook.circuits;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -34,6 +26,13 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
@@ -47,6 +46,7 @@ public class JackOLantern extends PersistentMechanic {
         CircuitsPlugin plugin;
 
         public Factory(CircuitsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
@@ -96,6 +96,7 @@ public class JackOLantern extends PersistentMechanic {
     }
 
     public void setPowered(Block block, boolean on) {
+
         byte data = block.getData();
         block.setTypeId(on ? BlockID.JACKOLANTERN : BlockID.PUMPKIN);
         block.setData(data);
@@ -122,13 +123,17 @@ public class JackOLantern extends PersistentMechanic {
 
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
+
         return Arrays.asList(pt);
     }
 
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
-        if(evt instanceof BlockBreakEvent) if(evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered())) {
-            ((BlockBreakEvent) evt).setCancelled(true);
-        }
+
+        if (evt instanceof BlockBreakEvent)
+            if (evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() ||
+                    evt.getBlock().isBlockPowered())) {
+                ((BlockBreakEvent) evt).setCancelled(true);
+            }
     }
 }

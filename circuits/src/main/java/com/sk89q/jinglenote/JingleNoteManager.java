@@ -7,25 +7,27 @@
 
 package com.sk89q.jinglenote;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A manager of play instances.
- * 
+ *
  * @author sk89q
  */
 public class JingleNoteManager {
+
     /**
      * List of instances.
      */
     protected final Map<String, JingleNotePlayer> instances
-    = new HashMap<String, JingleNotePlayer>();
+            = new HashMap<String, JingleNotePlayer>();
 
     public void play(Player player, JingleSequencer sequencer, int delay) {
+
         String name = player.getName();
         Location loc = player.getLocation();
 
@@ -36,8 +38,8 @@ public class JingleNoteManager {
 
             existing.stop(
                     existingLoc.getBlockX() == loc.getBlockX()
-                    && existingLoc.getBlockY() == loc.getBlockY()
-                    && existingLoc.getBlockZ() == loc.getBlockZ());
+                            && existingLoc.getBlockY() == loc.getBlockY()
+                            && existingLoc.getBlockZ() == loc.getBlockZ());
 
             instances.remove(name);
         }
@@ -51,6 +53,7 @@ public class JingleNoteManager {
     }
 
     public boolean stop(Player player) {
+
         String name = player.getName();
 
         // Existing player found!
@@ -64,6 +67,7 @@ public class JingleNoteManager {
     }
 
     public void stopAll() {
+
         for (JingleNotePlayer notePlayer : instances.values()) {
             notePlayer.stop(false);
         }

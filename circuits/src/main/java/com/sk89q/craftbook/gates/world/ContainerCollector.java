@@ -1,24 +1,14 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -63,7 +53,7 @@ public class ContainerCollector extends AbstractIC {
                 continue;
             }
             Item item = (Item) en;
-            if(!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
+            if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
                 continue;
             }
             int ix = item.getLocation().getBlockX();
@@ -82,7 +72,7 @@ public class ContainerCollector extends AbstractIC {
                         testStacks[0] = new ItemStack(id, 0, (short) data);
                     } else {
                         int id = Integer.parseInt(getSign().getLine(2));
-                        testStacks[1] = new ItemStack(id, 1, (short)0, (byte)0);
+                        testStacks[1] = new ItemStack(id, 1, (short) 0, (byte) 0);
                     }
                 } catch (Exception ignored) {
                 }
@@ -95,7 +85,7 @@ public class ContainerCollector extends AbstractIC {
                         testStacks[1] = new ItemStack(id, 0, (short) data);
                     } else {
                         int id = Integer.parseInt(getSign().getLine(2));
-                        testStacks[1] = new ItemStack(id, 1, (short)0, (byte)0);
+                        testStacks[1] = new ItemStack(id, 1, (short) 0, (byte) 0);
                     }
                 } catch (Exception ignored) {
                 }
@@ -116,25 +106,27 @@ public class ContainerCollector extends AbstractIC {
                     return true;
                 }
 
-                if (bl.getType() == Material.DISPENSER) if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
+                if (bl.getType() == Material.DISPENSER)
+                    if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
 
-                    ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
-                    item.remove();
-                    return true;
-                }
+                        ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
+                        item.remove();
+                        return true;
+                    }
 
                 if (bl.getType() == Material.BREWING_STAND) {
 
-                    if(!ItemUtil.isAPotionIngredient(item.getItemStack()))
+                    if (!ItemUtil.isAPotionIngredient(item.getItemStack()))
                         return false;
                     if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
-                            || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack())) {
+                            || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient
+                            (), item.getItemStack())) {
 
-                        if(((BrewingStand) bl.getState()).getInventory().getIngredient() == null) {
+                        if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null) {
                             ((BrewingStand) bl.getState()).getInventory().setIngredient(item.getItemStack());
-                        }
-                        else {
-                            ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(), item.getItemStack());
+                        } else {
+                            ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(),
+                                    item.getItemStack());
                         }
                         item.remove();
                         return true;
@@ -145,25 +137,25 @@ public class ContainerCollector extends AbstractIC {
 
                     Furnace fur = (Furnace) bl.getState();
 
-                    if(ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getSmelting() == null
+                    if (ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getSmelting() == null
                             || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getSmelting()))) {
-                        if(fur.getInventory().getSmelting() == null) {
+                        if (fur.getInventory().getSmelting() == null) {
                             fur.getInventory().setSmelting(item.getItemStack());
-                        }
-                        else {
-                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(), item.getItemStack());
+                        } else {
+                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(),
+                                    item.getItemStack());
                         }
                         item.remove();
                         return true;
                     }
 
                     if (ItemUtil.isAFuel(item.getItemStack()) && (fur.getInventory().getFuel() == null
-                            || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel()))){
-                        if(fur.getInventory().getFuel() == null) {
+                            || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel()))) {
+                        if (fur.getInventory().getFuel() == null) {
                             fur.getInventory().setFuel(item.getItemStack());
-                        }
-                        else {
-                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(), item.getItemStack());
+                        } else {
+                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(),
+                                    item.getItemStack());
                         }
                         item.remove();
                         return true;
@@ -189,11 +181,13 @@ public class ContainerCollector extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Collects items into above chest.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "included id:data",
                     "excluded id:data"

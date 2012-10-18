@@ -18,31 +18,16 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Wolf;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.entity.*;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -71,8 +56,8 @@ public class CreatureSpawner extends AbstractIC {
                 data = line;
             }
             center = SignUtil.getBackBlock(getSign().getBlock());
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Override
@@ -112,36 +97,29 @@ public class CreatureSpawner extends AbstractIC {
             case SLIME:
                 if (data.equalsIgnoreCase("huge")) {
                     ((Slime) ent).setSize(16);
-                }
-                else if (data.equalsIgnoreCase("large")) {
+                } else if (data.equalsIgnoreCase("large")) {
                     ((Slime) ent).setSize(11);
-                }
-                else if (data.equalsIgnoreCase("normal")) {
+                } else if (data.equalsIgnoreCase("normal")) {
                     ((Slime) ent).setSize(6);
-                }
-                else if (data.equalsIgnoreCase("small")) {
+                } else if (data.equalsIgnoreCase("small")) {
                     ((Slime) ent).setSize(3);
                 }
                 break;
             case MAGMA_CUBE:
                 if (data.equalsIgnoreCase("huge")) {
                     ((MagmaCube) ent).setSize(16);
-                }
-                else if (data.equalsIgnoreCase("large")) {
+                } else if (data.equalsIgnoreCase("large")) {
                     ((MagmaCube) ent).setSize(11);
-                }
-                else if (data.equalsIgnoreCase("normal")) {
+                } else if (data.equalsIgnoreCase("normal")) {
                     ((MagmaCube) ent).setSize(6);
-                }
-                else if (data.equalsIgnoreCase("small")) {
+                } else if (data.equalsIgnoreCase("small")) {
                     ((MagmaCube) ent).setSize(3);
                 }
                 break;
             case WOLF:
                 if (data.equalsIgnoreCase("tame")) {
                     ((Wolf) ent).setTamed(true);
-                }
-                else if (data.equalsIgnoreCase("angry")) {
+                } else if (data.equalsIgnoreCase("angry")) {
                     ((Wolf) ent).setAngry(true);
                 }
                 break;
@@ -153,67 +131,48 @@ public class CreatureSpawner extends AbstractIC {
             case VILLAGER:
                 if (data.equalsIgnoreCase("butcher")) {
                     ((Villager) ent).setProfession(Villager.Profession.BUTCHER);
-                }
-                else if (data.equalsIgnoreCase("smith")) {
+                } else if (data.equalsIgnoreCase("smith")) {
                     ((Villager) ent).setProfession(Villager.Profession.BLACKSMITH);
-                }
-                else if (data.equalsIgnoreCase("priest")) {
+                } else if (data.equalsIgnoreCase("priest")) {
                     ((Villager) ent).setProfession(Villager.Profession.PRIEST);
-                }
-                else if (data.equalsIgnoreCase("library")) {
+                } else if (data.equalsIgnoreCase("library")) {
                     ((Villager) ent).setProfession(Villager.Profession.LIBRARIAN);
-                }
-                else if (data.equalsIgnoreCase("farmer")) {
+                } else if (data.equalsIgnoreCase("farmer")) {
                     ((Villager) ent).setProfession(Villager.Profession.FARMER);
                 }
                 break;
             case SHEEP:
                 if (data.equalsIgnoreCase("black")) {
                     ((Sheep) ent).setColor(DyeColor.BLACK);
-                }
-                else if (data.equalsIgnoreCase("red")) {
+                } else if (data.equalsIgnoreCase("red")) {
                     ((Sheep) ent).setColor(DyeColor.RED);
-                }
-                else if (data.equalsIgnoreCase("green")) {
+                } else if (data.equalsIgnoreCase("green")) {
                     ((Sheep) ent).setColor(DyeColor.GREEN);
-                }
-                else if (data.equalsIgnoreCase("brown")) {
+                } else if (data.equalsIgnoreCase("brown")) {
                     ((Sheep) ent).setColor(DyeColor.BROWN);
-                }
-                else if (data.equalsIgnoreCase("blue")) {
+                } else if (data.equalsIgnoreCase("blue")) {
                     ((Sheep) ent).setColor(DyeColor.BLUE);
-                }
-                else if (data.equalsIgnoreCase("purple")) {
+                } else if (data.equalsIgnoreCase("purple")) {
                     ((Sheep) ent).setColor(DyeColor.PURPLE);
-                }
-                else if (data.equalsIgnoreCase("cyan")) {
+                } else if (data.equalsIgnoreCase("cyan")) {
                     ((Sheep) ent).setColor(DyeColor.CYAN);
-                }
-                else if (data.equalsIgnoreCase("silver")) {
+                } else if (data.equalsIgnoreCase("silver")) {
                     ((Sheep) ent).setColor(DyeColor.SILVER);
-                }
-                else if (data.equalsIgnoreCase("gray")) {
+                } else if (data.equalsIgnoreCase("gray")) {
                     ((Sheep) ent).setColor(DyeColor.GRAY);
-                }
-                else if (data.equalsIgnoreCase("pink")) {
+                } else if (data.equalsIgnoreCase("pink")) {
                     ((Sheep) ent).setColor(DyeColor.PINK);
-                }
-                else if (data.equalsIgnoreCase("lime")) {
+                } else if (data.equalsIgnoreCase("lime")) {
                     ((Sheep) ent).setColor(DyeColor.LIME);
-                }
-                else if (data.equalsIgnoreCase("yellow")) {
+                } else if (data.equalsIgnoreCase("yellow")) {
                     ((Sheep) ent).setColor(DyeColor.YELLOW);
-                }
-                else if (data.equalsIgnoreCase("lblue")) {
+                } else if (data.equalsIgnoreCase("lblue")) {
                     ((Sheep) ent).setColor(DyeColor.LIGHT_BLUE);
-                }
-                else if (data.equalsIgnoreCase("magenta")) {
+                } else if (data.equalsIgnoreCase("magenta")) {
                     ((Sheep) ent).setColor(DyeColor.MAGENTA);
-                }
-                else if (data.equalsIgnoreCase("orange")) {
+                } else if (data.equalsIgnoreCase("orange")) {
                     ((Sheep) ent).setColor(DyeColor.ORANGE);
-                }
-                else if (data.equalsIgnoreCase("white")) {
+                } else if (data.equalsIgnoreCase("white")) {
                     ((Sheep) ent).setColor(DyeColor.WHITE);
                 }
                 break;
@@ -241,11 +200,13 @@ public class CreatureSpawner extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Spawns a mob with specified data.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "entitytype",
                     "data:amount"

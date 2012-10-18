@@ -1,25 +1,20 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.jinglenote.JingleNoteComponent;
+import com.sk89q.jinglenote.MidiJingleSequencer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.jinglenote.JingleNoteComponent;
-import com.sk89q.jinglenote.MidiJingleSequencer;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.logging.Level;
 
 /**
  * @author Me4502
@@ -49,34 +44,35 @@ public class Melody extends AbstractIC {
 
     @Override
     public void unload() {
+
         try {
             sequencer.stop();
             for (Player player : getServer().getOnlinePlayers()) {
                 jNote.getJingleNoteManager().stop(player);
             }
             jNote.getJingleNoteManager().stopAll();
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Override
     public void trigger(ChipState chip) {
 
         try {
-            if(sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1].equalsIgnoreCase("START"))
+            if (sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1]
+                    .equalsIgnoreCase("START"))
                 return;
+        } catch (Exception e) {
         }
-        catch(Exception e){}
 
         int radius = -1;
         try {
             radius = Integer.parseInt(getSign().getLine(3).split(":")[0]);
+        } catch (Exception e) {
         }
-        catch(Exception e){}
 
         try {
-            if(chip.getInput(0))
-            {
+            if (chip.getInput(0)) {
                 String midiName = getSign().getLine(2);
 
                 File[] trialPaths = {
@@ -101,8 +97,7 @@ public class Melody extends AbstractIC {
                     return;
                 }
 
-                if(sequencer!=null||jNote!=null)
-                {
+                if (sequencer != null || jNote != null) {
                     for (Player player : getServer().getOnlinePlayers()) {
                         jNote.getJingleNoteManager().stop(player);
                     }
@@ -110,26 +105,24 @@ public class Melody extends AbstractIC {
                 }
                 sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
-                    if(player==null) {
+                    if (player == null) {
                         continue;
                     }
-                    if(radius > 0 && !LocationUtil.isWithinRadius(getSign().getLocation(), player.getLocation(), radius)) {
+                    if (radius > 0 && !LocationUtil.isWithinRadius(getSign().getLocation(), player.getLocation(),
+                            radius)) {
                         continue;
                     }
                     jNote.getJingleNoteManager().play(player, sequencer, 0);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
-            }
-            else if(!chip.getInput(0) && sequencer!=null)
-            {
+            } else if (!chip.getInput(0) && sequencer != null) {
                 sequencer.stop();
                 for (Player player : getServer().getOnlinePlayers()) {
                     jNote.getJingleNoteManager().stop(player);
                 }
                 jNote.getJingleNoteManager().stopAll();
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
             final Writer result = new StringWriter();
             final PrintWriter printWriter = new PrintWriter(result);
@@ -154,18 +147,20 @@ public class Melody extends AbstractIC {
                     sign.update();
                     return new PowerSensor(getServer(), sign, this);
                 }
+            } catch (Exception e) {
             }
-            catch(Exception e){}
             return new Melody(getServer(), sign, this);
         }
 
         @Override
         public String getDescription() {
+
             return "Plays a MIDI.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "MIDI name",
                     "Radius"

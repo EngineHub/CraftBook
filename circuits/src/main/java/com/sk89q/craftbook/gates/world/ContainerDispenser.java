@@ -1,23 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.*;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Me4502
@@ -75,51 +65,49 @@ public class ContainerDispenser extends AbstractIC {
         if (bl.getType() == Material.CHEST) {
             Chest c = (Chest) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
-                if(ItemUtil.isStackValid(it)) {
+                if (ItemUtil.isStackValid(it)) {
                     stack = it;
                 }
-        }
-        else if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
+        } else if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
             stack = c.getInventory().getResult();
-        }
-        else if (bl.getType() == Material.BREWING_STAND) {
+        } else if (bl.getType() == Material.BREWING_STAND) {
             BrewingStand c = (BrewingStand) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
-                if(ItemUtil.isStackValid(it)) {
-                    if(ItemUtil.areItemsIdentical(it,c.getInventory().getIngredient())) {
+                if (ItemUtil.isStackValid(it)) {
+                    if (ItemUtil.areItemsIdentical(it, c.getInventory().getIngredient())) {
                         continue;
                     }
                     stack = it;
                 }
-        }
-        else if (bl.getType() == Material.DISPENSER) {
+        } else if (bl.getType() == Material.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
-                if(ItemUtil.isStackValid(it)) {
+                if (ItemUtil.isStackValid(it)) {
                     stack = it;
                 }
         }
 
-        if(stack == null) return false;
+        if (stack == null) return false;
         dispenseItem(stack);
         return true;
     }
 
     public ItemStack dispenseItem(ItemStack item) {
+
         int curA = item.getAmount();
         int a = amount;
-        if(curA < a) {
+        if (curA < a) {
             a = curA;
         }
         ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
         getSign().getWorld().dropItem(BlockUtil.getBlockCentre(getSign().getBlock()), stack);
         item.setAmount(curA - a);
-        if(item.getAmount() <= 1) {
+        if (item.getAmount() <= 1) {
             item = null;
         }
-        if(bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
-            ((Furnace)bl.getState()).getInventory().setResult(item);
+        if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
+            ((Furnace) bl.getState()).getInventory().setResult(item);
         }
         return item;
     }
@@ -139,11 +127,13 @@ public class ContainerDispenser extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Dispenses items out of containers.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     null,
                     null

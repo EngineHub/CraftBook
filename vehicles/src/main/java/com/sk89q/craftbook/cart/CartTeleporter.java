@@ -54,8 +54,7 @@ public class CartTeleporter extends CartMechanism {
         }
         if (cart.getWorld() == world) {
             cart.teleport(loc);
-        }
-        else {
+        } else {
             Minecart toCart = world.spawn(loc, Minecart.class);
             Entity passenger = cart.getPassenger();
             if (passenger != null) {
@@ -71,7 +70,7 @@ public class CartTeleporter extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

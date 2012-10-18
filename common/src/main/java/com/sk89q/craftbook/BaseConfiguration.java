@@ -1,14 +1,14 @@
 package com.sk89q.craftbook;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -29,11 +29,11 @@ public abstract class BaseConfiguration {
     public abstract void load();
 
     public boolean reload() {
+
         try {
             load();
             return true;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -69,7 +69,7 @@ public abstract class BaseConfiguration {
     public List<String> getStringList(String name, List<String> def) {
 
         List<String> it = cfg.getStringList(name);
-        if(it == null || it.size() == 0) {
+        if (it == null || it.size() == 0) {
             it = def;
         }
         cfg.set(name, it);
@@ -110,7 +110,7 @@ public abstract class BaseConfiguration {
 
         public BaseConfigurationSection(String section) {
 
-            if(!cfg.isConfigurationSection(section))
+            if (!cfg.isConfigurationSection(section))
                 cfg.createSection(section);
             this.section = cfg.getConfigurationSection(section);
         }
@@ -146,7 +146,7 @@ public abstract class BaseConfiguration {
         public List<String> getStringList(String name, List<String> def) {
 
             List<String> it = section.getStringList(name);
-            if(it == null || it.size() == 0) {
+            if (it == null || it.size() == 0) {
                 it = def;
             }
             section.set(name, it);

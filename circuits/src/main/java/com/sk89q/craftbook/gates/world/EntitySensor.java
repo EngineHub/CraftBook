@@ -1,33 +1,17 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.*;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -89,8 +73,7 @@ public class EntitySensor extends AbstractIC {
             Type type = EnumUtil.getEnumFromString(Type.class, line);
             if (type != null) {
                 types.add(type);
-            }
-            else {
+            } else {
                 for (char aChar : line.toCharArray()) {
                     for (Type aType : Type.values())
                         if (aType.getCharName() == aChar) {
@@ -144,10 +127,11 @@ public class EntitySensor extends AbstractIC {
                 getSign().setLine(2, radius + "");
                 center = SignUtil.getBackBlock(getSign().getBlock());
             }
-            chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()), radius); //Update chunks
+            chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()),
+                    radius); //Update chunks
             sign.update();
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Override
@@ -181,7 +165,8 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                                    return true;
                                 break;
                             }
                     }

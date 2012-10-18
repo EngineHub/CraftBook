@@ -1,13 +1,8 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 public class InvertedRsNandLatch extends AbstractIC {
 
@@ -36,11 +31,9 @@ public class InvertedRsNandLatch extends AbstractIC {
 
         if (!set && !reset) {
             chip.set(3, true);
-        }
-        else if (set && !reset) {
+        } else if (set && !reset) {
             chip.set(3, false);
-        }
-        else if (!set && reset) {
+        } else if (!set && reset) {
             chip.set(3, true);
         }
     }

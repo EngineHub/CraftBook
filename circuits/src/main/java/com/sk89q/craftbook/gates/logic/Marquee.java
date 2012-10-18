@@ -18,14 +18,9 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 public class Marquee extends AbstractIC {
 
@@ -65,8 +60,7 @@ public class Marquee extends AbstractIC {
         if (next == 0) {
             next = reverse ? 3 : 1;
         }
-        for (short i = 0; i < chip.getOutputCount(); i++)
-        {
+        for (short i = 0; i < chip.getOutputCount(); i++) {
             chip.setOutput(i, false); // Clear all pins
         }
 
@@ -85,15 +79,13 @@ public class Marquee extends AbstractIC {
 
         if (reverse) {
             next--;
-        }
-        else {
+        } else {
             next++;
         }
 
         if (next == 0) {
             next = 3;
-        }
-        else if (next == 4) {
+        } else if (next == 4) {
             next = 1;
         }
 

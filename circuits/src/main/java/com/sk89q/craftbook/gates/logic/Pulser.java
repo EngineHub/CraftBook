@@ -1,16 +1,10 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -59,8 +53,8 @@ public class Pulser extends AbstractIC {
             sign.setLine(2, pulseLength + ":" + startDelay);
             sign.setLine(3, pulseCount + ":" + pulseLength);
             sign.update();
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Override
@@ -133,10 +127,10 @@ public class Pulser extends AbstractIC {
             this.pulseCount = pulseCount;
             this.pauseLength = pauseLength;
 
-            if(pulseLength == 0) {
+            if (pulseLength == 0) {
                 pulseLength = 1;
             }
-            if(pauseLength == 0) {
+            if (pauseLength == 0) {
                 pauseLength = 1;
             }
         }
@@ -153,12 +147,10 @@ public class Pulser extends AbstractIC {
                 // stop the pulse if we reached the pulse length
                 if (currentPulse % pulseLength == 0) {
                     stopPulse();
-                }
-                else {
+                } else {
                     increasePulse();
                 }
-            }
-            else // start the next pulse if the pause is over
+            } else // start the next pulse if the pause is over
                 if (currentTick % pauseLength == 0) {
                     startPulse();
                 }

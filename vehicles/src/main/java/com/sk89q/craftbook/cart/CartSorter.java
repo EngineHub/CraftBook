@@ -1,20 +1,13 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.util.SignUtil;
 
 /*
  * @contributor LordEnki
@@ -37,8 +30,7 @@ public class CartSorter extends CartMechanism {
         Hand dir = Hand.STRAIGHT;
         if (isSortApplicable(sign.getLine(2), cart)) {
             dir = Hand.LEFT;
-        }
-        else if (isSortApplicable(sign.getLine(3), cart)) {
+        } else if (isSortApplicable(sign.getLine(3), cart)) {
             dir = Hand.RIGHT;
         }
 
@@ -157,8 +149,7 @@ public class CartSorter extends CartMechanism {
                 if (player.getItemInHand().getTypeId() == item) return true;
             } catch (NumberFormatException ignored) {
             }
-        }
-        else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
+        } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
             if (parts[1].equalsIgnoreCase(player.getName())) return true;
         } else if (parts[0].equalsIgnoreCase("Mob")) {
             String testMob = parts[1];
@@ -174,8 +165,7 @@ public class CartSorter extends CartMechanism {
                     if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
                 } catch (NumberFormatException ignored) {
                 }
-            }
-            else {
+            } else {
                 try {
                     int item = Integer.parseInt(parts[1]);
                     if (storageInventory.contains(item)) return true;
@@ -189,7 +179,7 @@ public class CartSorter extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

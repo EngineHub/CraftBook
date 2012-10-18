@@ -61,6 +61,7 @@ public class RegisteredICFactory {
     }
 
     public String getShorthand() {
+
         return longId;
     }
 }

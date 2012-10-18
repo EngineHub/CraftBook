@@ -18,22 +18,25 @@
 
 package com.sk89q.craftbook.plc;
 
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.ICVerificationException;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.ICVerificationException;
-
 public interface PlcLanguage<StateT, CodeT> {
+
     String getName();
 
     StateT initState();
+
     CodeT compile(String code) throws ICVerificationException;
 
     boolean supports(String lang);
 
     void writeState(StateT t, DataOutputStream out) throws IOException;
+
     void loadState(StateT t, DataInputStream in) throws IOException;
 
     String dumpState(StateT t);

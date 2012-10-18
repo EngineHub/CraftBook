@@ -19,22 +19,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.material.Diode;
-import org.bukkit.plugin.PluginManager;
-
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -45,6 +29,17 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.material.Diode;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -276,31 +271,33 @@ public class MechanicListenerAdapter {
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
-            if(!CraftBookPlugin.getInstance().getLocalConfiguration().experimentalRepeaters) return;
+            if (!CraftBookPlugin.getInstance().getLocalConfiguration().experimentalRepeaters) return;
             int type = event.getChangedTypeId();
-            if(type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON) {
+            if (type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON) {
 
                 boolean foundRepeater = false;
                 Block repeater = null;
                 //Search for the repeater.
-                for(int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++) {
-                    for(int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++) {
-                        for(int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++)
-                            if(event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
+                for (int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++) {
+                    for (int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++) {
+                        for (int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++)
+                            if (event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
                                 //Found a repeater.
                                 repeater = event.getBlock().getWorld().getBlockAt(x, y, z);
                                 Diode rep = (Diode) repeater.getState().getData();
-                                if(repeater.getRelative(rep.getFacing()).equals(event.getBlock())) {
+                                if (repeater.getRelative(rep.getFacing()).equals(event.getBlock())) {
                                     foundRepeater = true;
                                     break;
                                 }
                             }
                     }
                 }
-                if(!foundRepeater || repeater == null) return;
+                if (!foundRepeater || repeater == null) return;
 
                 manager.dispatchBlockRedstoneChange(
-                        new SourcedBlockRedstoneEvent(repeater, event.getBlock(), type == BlockID.REDSTONE_REPEATER_ON ? 0 : 15, type == BlockID.REDSTONE_REPEATER_ON ? 15 : 0));
+                        new SourcedBlockRedstoneEvent(repeater, event.getBlock(),
+                                type == BlockID.REDSTONE_REPEATER_ON ? 0 : 15, type == BlockID.REDSTONE_REPEATER_ON ?
+                                15 : 0));
             }
         }
 
@@ -314,7 +311,7 @@ public class MechanicListenerAdapter {
          * @param newLevel
          */
         protected void handleDirectWireInput(WorldVector pt,
-                boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
+                                             boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
 
             Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
                     pt.getBlockZ());

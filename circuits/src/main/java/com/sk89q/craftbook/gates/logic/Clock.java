@@ -18,16 +18,9 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class Clock extends AbstractIC implements SelfTriggeredIC {
 
@@ -53,9 +46,11 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
     @Override
     public void trigger(ChipState chip) {
+
     }
 
     protected void triggerClock(ChipState chip) {
+
         short tick, reset;
         try {
             reset = Short.parseShort(sign.getLine(2));
@@ -113,11 +108,13 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
         @Override
         public String getDescription() {
+
             return "Outputs hight every X ticks when input is high.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "ticks required",
                     "current ticks"
@@ -128,11 +125,13 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
     @Override
     public boolean isActive() {
+
         return true;
     }
 
     @Override
     public void think(ChipState chip) {
+
         if (chip.getInput(0)) {
             triggerClock(chip);
         }

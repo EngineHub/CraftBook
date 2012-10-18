@@ -20,13 +20,6 @@
 
 package com.sk89q.craftbook.circuits;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -34,6 +27,12 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -47,6 +46,7 @@ public class GlowStone extends PersistentMechanic {
         CircuitsPlugin plugin;
 
         public Factory(CircuitsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
@@ -55,7 +55,8 @@ public class GlowStone extends PersistentMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == plugin.getLocalConfiguration().glowstoneOffBlock.getId() || type == BlockID.LIGHTSTONE) return new GlowStone(pt, plugin);
+            if (type == plugin.getLocalConfiguration().glowstoneOffBlock.getId() || type == BlockID.LIGHTSTONE)
+                return new GlowStone(pt, plugin);
 
             return null;
         }
@@ -84,8 +85,7 @@ public class GlowStone extends PersistentMechanic {
 
         if (event.getNewCurrent() > 0) {
             event.getBlock().setTypeId(BlockID.LIGHTSTONE);
-        }
-        else {
+        } else {
             event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock.getId());
         }
 
@@ -111,7 +111,9 @@ public class GlowStone extends PersistentMechanic {
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
-        if(event.getBlock().getTypeId() == BlockID.LIGHTSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered())) {
+
+        if (event.getBlock().getTypeId() == BlockID.LIGHTSTONE && (event.getBlock().isBlockIndirectlyPowered() ||
+                event.getBlock().isBlockPowered())) {
             event.setCancelled(true);
         }
     }
@@ -123,13 +125,17 @@ public class GlowStone extends PersistentMechanic {
 
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
+
         return Arrays.asList(pt);
     }
 
     @Override
     public void onWatchBlockNotification(BlockEvent evt) {
-        if(evt instanceof BlockBreakEvent) if(evt.getBlock().getTypeId() == BlockID.LIGHTSTONE && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered())) {
-            ((BlockBreakEvent) evt).setCancelled(true);
-        }
+
+        if (evt instanceof BlockBreakEvent)
+            if (evt.getBlock().getTypeId() == BlockID.LIGHTSTONE && (evt.getBlock().isBlockIndirectlyPowered() || evt
+                    .getBlock().isBlockPowered())) {
+                ((BlockBreakEvent) evt).setCancelled(true);
+            }
     }
 }

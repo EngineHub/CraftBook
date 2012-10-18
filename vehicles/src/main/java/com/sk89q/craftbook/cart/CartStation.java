@@ -1,8 +1,7 @@
 package com.sk89q.craftbook.cart;
 
 
-import static com.sk89q.craftbook.cart.CartUtils.stop;
-
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,7 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.util.SignUtil;
+import static com.sk89q.craftbook.cart.CartUtils.stop;
 
 public class CartStation extends CartMechanism {
 
@@ -60,7 +59,7 @@ public class CartStation extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;

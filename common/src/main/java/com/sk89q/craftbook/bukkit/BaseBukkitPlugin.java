@@ -18,12 +18,16 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
-
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.wepif.PermissionsResolverManager;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -33,22 +37,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
-import com.sk89q.wepif.PermissionsResolverManager;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -98,30 +91,34 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     }
 
     public WorldGuardPlugin getWorldGuard() {
-        if(!useWorldGuard) return null;
-        if(worldguard == null) {
+
+        if (!useWorldGuard) return null;
+        if (worldguard == null) {
             worldguard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
         }
         return worldguard;
     }
 
     public boolean canUseInArea(Location loc, Player p) {
-        if(useWorldGuard == false) return true;
-        if(CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null)
+
+        if (useWorldGuard == false) return true;
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null)
             return true;
-        if(useFlag == null) {
-            useFlag = new StateFlag("use",true);
+        if (useFlag == null) {
+            useFlag = new StateFlag("use", true);
         }
-        if(loc == null || p == null) return true;
+        if (loc == null || p == null) return true;
         ApplicableRegionSet rset = getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc);
-        if(rset == null) return true;
+        if (rset == null) return true;
         return rset.allows(useFlag, getWorldGuard().wrapPlayer(p));
     }
 
     public boolean canBuildInArea(Location loc, Player p) {
-        if(useWorldGuard == false) return true;
-        if(loc == null || p == null) return true;
-        if(CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null) return true;
+
+        if (useWorldGuard == false) return true;
+        if (loc == null || p == null) return true;
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions == false || getWorldGuard() == null)
+            return true;
         return getWorldGuard().canBuild(p, loc);
     }
 
@@ -159,7 +156,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         PermissionsResolverManager.initialize(this);
         perms = PermissionsResolverManager.getInstance();
 
-        if(getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
+        if (getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
             useWorldGuard = true;
         }
     }
@@ -267,7 +264,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public boolean hasPermission(CommandSender sender, World world, String perm) {
 
-        if (sender.isOp() && CraftBookPlugin.getInstance().getLocalConfiguration().opPerms || sender instanceof ConsoleCommandSender)
+        if (sender.isOp() && CraftBookPlugin.getInstance().getLocalConfiguration().opPerms || sender instanceof
+                ConsoleCommandSender)
             return true;
 
         // Invoke the permissions resolver
@@ -299,7 +297,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-            String[] args) {
+                             String[] args) {
 
         try {
             commands.execute(cmd.getName(), args, sender, sender);
@@ -313,8 +311,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         } catch (WrappedCommandException e) {
             if (e.getCause() instanceof NumberFormatException) {
                 sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
-            }
-            else {
+            } else {
                 sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
                 e.printStackTrace();
             }

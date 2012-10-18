@@ -1,13 +1,5 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -17,6 +9,13 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CircuitCommands {
 
@@ -30,14 +29,15 @@ public class CircuitCommands {
     @Command(
             aliases = {"ic"},
             desc = "Commands to manage Craftbook IC's"
-            )
+    )
     public void ic(CommandContext context, CommandSender sender) {
+
     }
 
     @Command(
             aliases = {"reloadics"},
             desc = "Reloads the IC config"
-            )
+    )
     public void reload(CommandContext context, CommandSender sender) {
 
         plugin.getICConfiguration().reload();
@@ -47,7 +47,7 @@ public class CircuitCommands {
     @Command(
             aliases = {"cbcircuits"},
             desc = "Handles the basic Craftbook Circuits commands."
-            )
+    )
     @NestedCommand(NestedCommands.class)
     public void cbcircuits(CommandContext context, CommandSender sender) {
 
@@ -66,7 +66,7 @@ public class CircuitCommands {
         @Command(
                 aliases = {"reload"},
                 desc = "Reloads the craftbook circuits config"
-                )
+        )
         @CommandPermissions("craftbook.circuit.reload")
         public void reload(CommandContext context, CommandSender sender) {
 
@@ -80,37 +80,37 @@ public class CircuitCommands {
             desc = "Documentation on CraftBook IC's",
             min = 1,
             max = 1
-            )
+    )
     public void icdocs(CommandContext context, CommandSender sender) {
-        if(!(sender instanceof Player)) return;
-        Player player = (Player)sender;
+
+        if (!(sender instanceof Player)) return;
+        Player player = (Player) sender;
         RegisteredICFactory ric = plugin.icManager.registered.get(context.getString(0).toLowerCase());
-        if(ric == null) {
+        if (ric == null) {
             player.sendMessage(ChatColor.RED + "Invalid IC!");
             return;
         }
         try {
             IC ic = ric.getFactory().create(null);
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
-            if(plugin.getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
+            if (plugin.getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
                 player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
             }
             player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
-            if(ric.getFactory().getLineHelp()[0] != null) {
+            if (ric.getFactory().getLineHelp()[0] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
-            }
-            else {
+            } else {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: Nothing.");
             }
-            if(ric.getFactory().getLineHelp()[1] != null) {
+            if (ric.getFactory().getLineHelp()[1] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
-            }
-            else {
+            } else {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: Nothing.");
             }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId().toUpperCase());
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
+                    .toUpperCase());
+        } catch (Exception e) {
         }
-        catch(Exception e){}
     }
 
     @Command(
@@ -118,11 +118,11 @@ public class CircuitCommands {
             desc = "List available IC's",
             min = 0,
             max = 1
-            )
+    )
     public void listics(CommandContext context, CommandSender sender) {
 
-        if(!(sender instanceof Player)) return;
-        Player player = (Player)sender;
+        if (!(sender instanceof Player)) return;
+        Player player = (Player) sender;
         String[] lines = generateICText(player);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
@@ -172,18 +172,18 @@ public class CircuitCommands {
                     if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
                         colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                     }
-                }
-                else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
                     colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                 }
-                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
-            }
-            catch(Exception e){
-                if(ic.endsWith("5001") || ic.endsWith("5000")) {
+                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
+                        SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor
+                        .DARK_RED + "R " : ""));
+            } catch (Exception e) {
+                if (ic.endsWith("5001") || ic.endsWith("5000")) {
                     //Stuff
-                }
-                else {
-                    Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report it to Me4502");
+                } else {
+                    Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" +
+                            " it to Me4502");
                 }
             }
         }

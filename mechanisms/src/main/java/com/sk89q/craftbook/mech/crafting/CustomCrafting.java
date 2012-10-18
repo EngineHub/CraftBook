@@ -1,25 +1,22 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
+import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
+import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.io.File;
+import java.util.Collection;
+import java.util.Map.Entry;
 
 /**
- * 
  * Custom Crafting Recipe Handler
- * 
- * @author Me4502
  *
+ * @author Me4502
  */
 public class CustomCrafting {
 
@@ -63,7 +60,8 @@ public class CustomCrafting {
                 }
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().severe("Corrupt or invalid recipe!");
-                plugin.getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
+                plugin.getLogger().severe("Please either delete custom-crafting.yml, " +
+                        "or fix the issues with your recipes file!");
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
                 plugin.getLogger().severe(GeneralUtil.getStackTrace(e));

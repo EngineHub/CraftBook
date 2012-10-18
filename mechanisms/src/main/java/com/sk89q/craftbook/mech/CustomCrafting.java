@@ -1,14 +1,6 @@
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
@@ -16,13 +8,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.io.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 @Deprecated
 public class CustomCrafting implements Listener {
@@ -43,10 +34,11 @@ public class CustomCrafting implements Listener {
         if (event.getInventory() instanceof FurnaceInventory) {
             if (fuels == null || fuels.size() <= 0) return;
             FurnaceInventory inv = (FurnaceInventory) event.getInventory();
-            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
-                inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
-                inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
-            }
+            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null)
+                if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
+                    inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
+                    inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
+                }
         }
     }
 
@@ -104,8 +96,7 @@ public class CustomCrafting implements Listener {
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
-                        }
-                        else {
+                        } else {
                             iidata = Integer.parseInt(idata);
                         }
 
@@ -113,8 +104,7 @@ public class CustomCrafting implements Listener {
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
-                    }
-                    else {
+                    } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("$[")) { //Furnace Recipe
@@ -143,8 +133,7 @@ public class CustomCrafting implements Listener {
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
-                        }
-                        else {
+                        } else {
                             iidata = Integer.parseInt(idata);
                         }
 
@@ -152,8 +141,7 @@ public class CustomCrafting implements Listener {
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
-                    }
-                    else {
+                    } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("&[")) { //Furnace Fuel
@@ -196,8 +184,7 @@ public class CustomCrafting implements Listener {
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
-                        }
-                        else {
+                        } else {
                             iidata = Integer.parseInt(idata);
                         }
 
@@ -205,8 +192,7 @@ public class CustomCrafting implements Listener {
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
-                    }
-                    else {
+                    } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("[")) { //Shaped Recipe
@@ -228,17 +214,16 @@ public class CustomCrafting implements Listener {
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]) +
                             getShapeData(items[2].split(":")[0]),
                             getShapeData(items[3].split(":")[0]) + getShapeData(items[4].split(":")[0]) +
-                            getShapeData(items[5].split(":")[0]),
+                                    getShapeData(items[5].split(":")[0]),
                             getShapeData(items[6].split(":")[0]) + getShapeData(items[7].split(":")[0]) +
-                            getShapeData(items[8].split(":")[0]));
+                                    getShapeData(items[8].split(":")[0]));
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
-                        }
-                        else {
+                        } else {
                             iidata = Integer.parseInt(idata);
                         }
 
@@ -246,8 +231,7 @@ public class CustomCrafting implements Listener {
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
-                    }
-                    else {
+                    } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 }

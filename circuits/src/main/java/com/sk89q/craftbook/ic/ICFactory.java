@@ -18,10 +18,9 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
-
-import com.sk89q.craftbook.LocalPlayer;
 
 /**
  * Factories are used to generate instances of ICs.
@@ -69,21 +68,21 @@ public interface ICFactory {
 
     /**
      * Get a short description of the IC
-     * 
+     *
      * @return a short description.
      */
     public String getDescription();
 
     /**
      * Get line-by-line help.
-     * 
+     *
      * @return array of lines 3 and 4
      */
     public String[] getLineHelp();
 
     /**
      * Adds config to the IC.
-     * 
+     *
      * @param section
      */
     public void addConfiguration(ConfigurationSection section);

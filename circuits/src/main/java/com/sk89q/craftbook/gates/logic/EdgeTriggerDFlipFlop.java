@@ -18,14 +18,9 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 public class EdgeTriggerDFlipFlop extends AbstractIC {
 
@@ -51,8 +46,7 @@ public class EdgeTriggerDFlipFlop extends AbstractIC {
 
         if (chip.get(2)) {
             chip.set(3, false);
-        }
-        else if (chip.get(1) && chip.isTriggered(1)) {
+        } else if (chip.get(1) && chip.isTriggered(1)) {
             chip.set(3, chip.get(0));
         }
 

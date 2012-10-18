@@ -24,8 +24,7 @@ public final class ArrayUtil {
         String[] array;
         if (list.size() > 8) {
             array = new String[list.size()];
-        }
-        else {
+        } else {
             array = new String[8];
         }
         int j = 0;
