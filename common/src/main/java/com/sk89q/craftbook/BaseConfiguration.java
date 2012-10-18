@@ -1,14 +1,14 @@
 package com.sk89q.craftbook;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -16,12 +16,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 public abstract class BaseConfiguration {
 
     public final FileConfiguration cfg;
-    public final File folder;
+    public final File dataFolder;
 
     public BaseConfiguration(FileConfiguration cfg, File dataFolder) {
 
         this.cfg = cfg;
-        folder = dataFolder;
+        this.dataFolder = dataFolder;
 
         load();
     }

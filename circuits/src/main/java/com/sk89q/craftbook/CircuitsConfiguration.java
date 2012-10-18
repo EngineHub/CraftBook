@@ -18,12 +18,11 @@
 
 package com.sk89q.craftbook;
 
-import java.io.File;
-
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.sk89q.worldedit.blocks.BlockID;
+import java.io.File;
 
 /**
  * Configuration handler for CraftBook.
@@ -35,12 +34,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public CircuitsConfiguration(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
-        this.dataFolder = dataFolder;
     }
-
-    public final File dataFolder;
-
-    // public
 
     public boolean enableNetherstone;
     public boolean enablePumpkins;

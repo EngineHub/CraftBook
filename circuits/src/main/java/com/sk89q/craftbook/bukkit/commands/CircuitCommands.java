@@ -7,6 +7,8 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -31,15 +33,46 @@ public class CircuitCommands {
     public void ic(CommandContext context, CommandSender sender) {
     }
 
-	@Command(
-			aliases = {"reloadics"},
-			desc = "Reloads the IC config"
-	)
-	public void reload(CommandContext context, CommandSender sender) {
+    @Command(
+            aliases = {"reloadics"},
+            desc = "Reloads the IC config"
+            )
+    public void reload(CommandContext context, CommandSender sender) {
 
-		plugin.getLocalConfiguration().reload();
-		sender.sendMessage("The IC config has been reloaded.");
-	}
+        plugin.getICConfiguration().reload();
+        sender.sendMessage("The IC config has been reloaded.");
+    }
+
+    @Command(
+            aliases = {"cbcircuits"},
+            desc = "Handles the basic Craftbook Circuits commands."
+            )
+    @NestedCommand(NestedCommands.class)
+    public void cbcircuits(CommandContext context, CommandSender sender) {
+
+    }
+
+
+    public static class NestedCommands {
+
+        private final CircuitsPlugin plugin;
+
+        public NestedCommands(CircuitsPlugin plugin) {
+
+            this.plugin = plugin;
+        }
+
+        @Command(
+                aliases = {"reload"},
+                desc = "Reloads the craftbook circuits config"
+                )
+        @CommandPermissions("craftbook.circuit.reload")
+        public void reload(CommandContext context, CommandSender sender) {
+
+            plugin.getLocalConfiguration().reload();
+            sender.sendMessage("Config has been reloaded successfully!");
+        }
+    }
 
     @Command(
             aliases = {"icdocs"},

@@ -18,18 +18,17 @@
 
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.mech.CustomDropManager;
+import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.sk89q.craftbook.mech.CustomDropManager;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -47,7 +46,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public MechanismsConfiguration(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
-        this.dataFolder = dataFolder;
     }
 
     @Override
@@ -83,7 +81,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
         mechSettings = new MechanismSettings(new BaseConfigurationSection("Mechanisms"));
     }
 
-    public final File dataFolder;
     public MechanismSettings mechSettings;
     public AmmeterSettings ammeterSettings;
     public BookcaseSettings bookcaseSettings;
@@ -273,11 +270,13 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final boolean loop;
+        public final boolean buttons;
 
         private ElevatorSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
             loop = section.getBoolean("loop-top-bottom", false);
+            buttons = section.getBoolean("allow-button-on-back", true);
         }
     }
 
@@ -353,10 +352,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class HiddenSwitchSettings {
 
         public final boolean enable;
+        public final boolean anyside;
 
         private HiddenSwitchSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
+            anyside = section.getBoolean("any-side", true);
         }
     }
 

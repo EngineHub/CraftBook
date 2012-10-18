@@ -29,10 +29,8 @@ import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mech.dispenser.Recipe;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 
@@ -52,8 +50,12 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     private DispenserRecipes dRecipes = null;
 
+    private static MechanismsPlugin instance;
+
     @Override
     public void onEnable() {
+
+        instance = this;
 
         super.onEnable();
 
@@ -242,15 +244,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         return economy != null;
     }
 
-    public boolean reloadPlugin(CommandSender sender) { //XXX experimental
-        try {
-            sender.sendMessage(ChatColor.RED + "Successfully reloaded configuration!");
-            getServer().getPluginManager().enablePlugin(new MechanismsPlugin());
-            getServer().getPluginManager().disablePlugin(this);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+    public static MechanismsPlugin getInst() {
+        return instance;
     }
 
     /**
