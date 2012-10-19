@@ -157,17 +157,15 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 	    boolean matches = true;
         Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
 	    // lets check for custom ics
-	    if (!matcher.matches()) {
-		    try {
-			    if (!manager.hasCustomPrefix(matcher.group(2))) matches = false;
-		    } catch (Exception e) {
-			    // we need to catch here if the sign changes when beeing parsed
-				matches = false;
-		    }
+	    if (!matcher.matches()) matches = false;
+	    try {
+		    if (!manager.hasCustomPrefix(matcher.group(2))) matches = false;
+	    } catch (Exception e) {
+		    // we need to catch here if the sign changes when beeing parsed
+		    matches = false;
 	    }
 
         if (matches) {
-
 
             String id = matcher.group(1);
             String suffix = "";
@@ -223,8 +221,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                         family,
                         pt
                         );
-            }
-            else {
+            } else {
                 mechanic = new ICMechanic(
                         plugin,
                         id,
