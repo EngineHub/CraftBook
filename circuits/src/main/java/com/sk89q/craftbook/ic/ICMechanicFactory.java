@@ -36,8 +36,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     /**
      * The pattern used to match an IC on a sign.
      */
-    public static final Pattern codePattern =
-            Pattern.compile("^\\[(MC[^\\]]+)\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
+	public static final Pattern IC_PATTERN =
+			Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{4,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Manager of ICs.
@@ -71,13 +71,11 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         Sign sign = (Sign) block.getState();
 
         // detect the text on the sign to see if it's any kind of IC at all.
-        Matcher matcher = codePattern.matcher(sign.getLine(1));
-        if (!matcher.matches()) {
-	        // lets check for custon prefixes
-	        matcher = ICManager.IC_PATTERN.matcher(sign.getLine(1));
-	        if (!matcher.matches()) return null;
-	        if (!manager.hasCustomPrefix(matcher.group(2))) return null;
-        }
+        Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
+
+	    if (!matcher.matches()) return null;
+		if (!manager.hasCustomPrefix(matcher.group(2))) return null;
+
         String id = matcher.group(1);
         // after this point, we don't return null if we can't make an IC: we throw shit,
         //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
@@ -132,13 +130,10 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
 	    boolean matches = true;
-        Matcher matcher = codePattern.matcher(sign.getLine(1));
+        Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
 	    // lets check for custom ics
 	    if (!matcher.matches()) {
 		    try {
-			    // lets check for custon prefixes
-			    matcher = ICManager.IC_PATTERN.matcher(sign.getLine(1));
-			    if (!matcher.matches()) matches = false;
 			    if (!manager.hasCustomPrefix(matcher.group(2))) matches = false;
 		    } catch (Exception e) {
 			    // we need to catch here if the sign changes when beeing parsed

@@ -52,6 +52,14 @@ import java.util.logging.Level;
  */
 public class CircuitsPlugin extends BaseBukkitPlugin {
 
+	public static final ICFamily FAMILY_SISO = new FamilySISO();
+	public static final ICFamily FAMILY_3ISO = new Family3ISO();
+	public static final ICFamily FAMILY_SI3O = new FamilySI3O();
+	public static final ICFamily FAMILY_AISO = new FamilyAISO();
+	public static final ICFamily FAMILY_3I3O = new Family3I3O();
+	public static final ICFamily FAMILY_VIVO = new FamilyVIVO();
+	public static final ICFamily FAMILY_SI5O = new FamilySI5O();
+
     protected CircuitsConfiguration config;
     protected ICConfiguration icConfig;
     public ICManager icManager;
@@ -125,9 +133,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
 
-	    // init the API interface for custom IC registration
-	    CraftBook.init(icManager, manager);
-
         try {
             Metrics metrics = new Metrics(this);
 
@@ -155,13 +160,13 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         // Let's register ICs!
         icManager = new ICManager();
-        ICFamily familySISO = new FamilySISO();
-        ICFamily family3ISO = new Family3ISO();
-        ICFamily familySI3O = new FamilySI3O();
-        ICFamily familyAISO = new FamilyAISO();
-        ICFamily family3I3O = new Family3I3O();
-        ICFamily familyVIVO = new FamilyVIVO();
-        ICFamily familySI5O = new FamilySI5O();
+        ICFamily familySISO = FAMILY_SISO;
+        ICFamily family3ISO = FAMILY_3ISO;
+        ICFamily familySI3O = FAMILY_SI3O;
+        ICFamily familyAISO = FAMILY_AISO;
+        ICFamily family3I3O = FAMILY_3I3O;
+        ICFamily familyVIVO = FAMILY_VIVO;
+        ICFamily familySI5O = FAMILY_SI5O;
 
         //SISOs
         registerIC("MC1000", "repeater"      , new Repeater.Factory(server), familySISO, familyAISO);
@@ -373,9 +378,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      * @param factory
      * @param families
      */
-    protected void registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
+    public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
-        icManager.register(name, longName, factory, families);
+        return icManager.register(name, longName, factory, families);
     }
 
     /**
@@ -383,7 +388,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      *
      * @param factory
      */
-    protected void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
+    public void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         manager.register(factory);
     }
