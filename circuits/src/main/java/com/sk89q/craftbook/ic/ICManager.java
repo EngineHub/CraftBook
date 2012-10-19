@@ -83,41 +83,36 @@ public class ICManager {
      */
     public boolean register(String id, String longId, ICFactory factory, ICFamily... families) {
 
+	    // check if at least one family is given
+	    if (families.length < 1) {
+		    return false;
+	    }
 	    // this is needed so we dont have two patterns
 	    String id2 = "[" + id + "]";
+	    // lets check if the IC ID has already been registered
+	    if (registered.containsKey(id.toLowerCase())) {
+		    return false;
+	    }
 	    // check if the ic matches the requirements
 	    Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(id2);
 	    if (!matcher.matches()) {
 		    return false;
 	    }
 	    String prefix = matcher.group(2).toLowerCase();
-	    // lets check if the IC ID has already been registered
-	    if (registered.containsKey(id.toLowerCase())) {
-		    boolean b = false;
-		    for (ICFamily family : families) {
-			    if (prefix.equalsIgnoreCase(family.getModifier())) {
-				    b = true;
-				    break;
-			    }
-		    }
-		    if (!b) return false;
-	    }
 	    // lets get the custom prefix
 	    customPrefix.add(prefix);
 
-	    for (ICFamily family : families) {
-            id2 = id.replace("MC", family.getModifier());
-	        RegisteredICFactory registration = new RegisteredICFactory(id2, longId, factory, family);
-	        // Lowercase the ID so that we can do case in-sensitive lookups
-	        registered.put(id2.toLowerCase(), registration);
-        }
-        if(longId != null) {
-            String toRegister = longId.toLowerCase();
-            if(toRegister.length() > 15) {
-                toRegister = toRegister.substring(0, 15);
-            }
-            longRegistered.put(toRegister, id);
-        }
+	    RegisteredICFactory registration = new RegisteredICFactory(id, longId, factory, families);
+	    // Lowercase the ID so that we can do case in-sensitive lookups
+	    registered.put(id.toLowerCase(), registration);
+
+	    if (longId != null) {
+		    String toRegister = longId.toLowerCase();
+		    if (toRegister.length() > 15) {
+			    toRegister = toRegister.substring(0, 15);
+		    }
+		    longRegistered.put(toRegister, id);
+	    }
 	    return true;
     }
     /**

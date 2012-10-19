@@ -18,16 +18,15 @@
 
 package com.sk89q.craftbook.ic.families;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ic.AbstractChipState;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the single input single output family.
@@ -43,9 +42,9 @@ public class FamilyAISO extends AbstractICFamily {
     }
 
     @Override
-    public String getModifier() {
+    public String getSuffix() {
 
-        return "MCA";
+        return "A";
     }
 
     public static class ChipStateAISO extends AbstractChipState {

@@ -18,9 +18,8 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Sign;
-
 import com.sk89q.worldedit.BlockWorldVector;
+import org.bukkit.block.Sign;
 
 /**
  * IC families handle the logic required in figuring out where pins are
@@ -47,6 +46,6 @@ public interface ICFamily {
      *
      * @return family modifier
      */
-    public String getModifier();
+    public String getSuffix();
 
 }
