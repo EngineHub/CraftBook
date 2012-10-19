@@ -1,13 +1,8 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 /**
  * A JK flip flop.
@@ -42,11 +37,9 @@ public class JkFlipFlop extends AbstractIC {
         boolean k = chip.get(2); //Reset
         if (chip.isTriggered(0) && !chip.get(0)) if (j && k) {
             chip.set(3, !chip.get(3));
-        }
-        else if (j && !k) {
+        } else if (j && !k) {
             chip.set(3, true);
-        }
-        else if (k) {
+        } else if (k) {
             chip.set(3, false);
         }
     }

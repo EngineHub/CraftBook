@@ -1,14 +1,8 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
@@ -56,8 +50,7 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
 
             if (getSign().getLine(3) != null || getSign().getLine(3).equals("")) {
                 maxTicks = Integer.parseInt(getSign().getLine(3));
-            }
-            else {
+            } else {
                 maxTicks = 10;
             }
 

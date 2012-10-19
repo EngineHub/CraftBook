@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.mech.ai;
 
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
-
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic {
 
@@ -28,9 +27,10 @@ public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic
                 return;
             }
         if (zombie.getLocation().getBlock().getLightLevel() > 6) return; //They can clearly see the target.
-        if (event.getTarget() instanceof Player) if (((Player) event.getTarget()).isSneaking() && event.getTarget().getLocation().distanceSquared(zombie
-                .getLocation()) > 2 * 2) {
-            event.setCancelled(true);
-        }
+        if (event.getTarget() instanceof Player)
+            if (((Player) event.getTarget()).isSneaking() && event.getTarget().getLocation().distanceSquared(zombie
+                    .getLocation()) > 2 * 2) {
+                event.setCancelled(true);
+            }
     }
 }

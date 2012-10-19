@@ -19,24 +19,18 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone
@@ -86,8 +80,7 @@ public class LightSwitch extends AbstractMechanic {
 
                 sign.setLine(1, "[I]");
                 player.print("mech.lightswitch.create");
-            }
-            else
+            } else
                 return null;
 
             throw new ProcessedMechanismException();
@@ -194,8 +187,7 @@ public class LightSwitch extends AbstractMechanic {
 
                             if (on) {
                                 world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
-                            }
-                            else {
+                            } else {
                                 world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
                             }
                             changed++;

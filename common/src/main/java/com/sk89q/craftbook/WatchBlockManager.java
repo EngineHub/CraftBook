@@ -19,18 +19,13 @@
 
 package com.sk89q.craftbook;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.bukkit.event.block.BlockEvent;
-
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.event.block.BlockEvent;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Holds the blocks that are watched by mechanics.
@@ -76,7 +71,7 @@ class WatchBlockManager {
      * @param oldWatchBlocks
      */
     public void update(PersistentMechanic m,
-            List<BlockWorldVector> oldWatchBlocks) {
+                       List<BlockWorldVector> oldWatchBlocks) {
 
         // This could be more efficient.
         for (BlockWorldVector p : oldWatchBlocks) {

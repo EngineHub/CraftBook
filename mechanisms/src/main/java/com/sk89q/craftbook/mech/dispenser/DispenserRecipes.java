@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import java.util.ArrayList;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,8 +10,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
+import java.util.ArrayList;
 
 /**
  * @author Me4502
@@ -36,7 +35,7 @@ public class DispenserRecipes implements Listener {
     public void onBlockDispense(BlockDispenseEvent event) {
 
         if (plugin.getLocalConfiguration().dispenserSettings.enable) {
-            if(!(event.getBlock().getState() instanceof Dispenser))
+            if (!(event.getBlock().getState() instanceof Dispenser))
                 return; //Heh? Isn't this just for dispensers?
             Dispenser dis = (Dispenser) event.getBlock().getState();
             if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
@@ -61,8 +60,7 @@ public class DispenserRecipes implements Listener {
                     if (r.recipe[0] == 0 && stacks[0] == null || r.recipe[0] == stacks[0].getTypeId()) {
                         for (int i = 1; i < stacks.length; i++)
                             if (!(!(r.recipe[i] != 0 && stacks[i] == null) && (r.recipe[i] == 0 && stacks[i] ==
-                            null || r.recipe[i] == stacks[i].getTypeId())))
-                            {
+                                    null || r.recipe[i] == stacks[i].getTypeId()))) {
                                 break current; //This recipe is wrong. Do normal dispenser stuff...
                             }
                         toReturn = r.doAction(dis, item, velocity, event);

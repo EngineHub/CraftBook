@@ -19,6 +19,16 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.RegionOperationException;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,23 +39,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.RegionOperationException;
 
 /**
  * Door.
@@ -76,10 +69,10 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Down]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
-                }
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
                 sign.update();
@@ -88,10 +81,10 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Up]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
-                }
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
                 sign.update();
@@ -100,16 +93,15 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
-                }
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
                 sign.update();
                 player.print("mech.door.create");
-            }
-            else
+            } else
                 return null;
 
             throw new ProcessedMechanismException();
@@ -170,11 +162,9 @@ public class Door extends AbstractMechanic {
         {
             if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-            }
-            else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
+            } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
                 proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-            }
-            else
+            } else
                 throw new InvalidConstructionException("Sign is incorrectly made.");
 
             block = proximalBaseCenter.getTypeId();
@@ -185,15 +175,13 @@ public class Door extends AbstractMechanic {
                     break findBase;
                 }
                 throw new InvalidConstructionException("mech.door.material");
-            }
-            else
+            } else
                 throw new UnacceptableMaterialException("mech.door.unusable");
         }
         // Find the other side
         if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
             otherSide = trigger.getRelative(BlockFace.UP);
-        }
-        else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+        } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
             otherSide = trigger.getRelative(BlockFace.DOWN);
         }
         for (int i = 0; i <= settings.maxLength; i++) {
@@ -218,8 +206,7 @@ public class Door extends AbstractMechanic {
 
             if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
                 otherSide = otherSide.getRelative(BlockFace.UP);
-            }
-            else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+            } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
                 otherSide = otherSide.getRelative(BlockFace.DOWN);
             }
         }
@@ -231,8 +218,7 @@ public class Door extends AbstractMechanic {
 
         if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
             distalBaseCenter = otherSide.getRelative(BlockFace.DOWN);
-        }
-        else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+        } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
 
@@ -249,8 +235,7 @@ public class Door extends AbstractMechanic {
         int left, right;
         try {
             left = Integer.parseInt(s.getLine(2));
-            if (left < 0)
-            {
+            if (left < 0) {
                 left = 0;   // No negatives please
             }
         } catch (Exception e) {
@@ -258,8 +243,7 @@ public class Door extends AbstractMechanic {
         }
         try {
             right = Integer.parseInt(s.getLine(3));
-            if (right < 0)
-            {
+            if (right < 0) {
                 right = 0; // No negatives please
             }
         } catch (Exception e) {
@@ -309,37 +293,38 @@ public class Door extends AbstractMechanic {
             return;
         }
 
-        if (event.getPlayer().getItemInHand() != null) if (getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
-            Sign sign = null;
+        if (event.getPlayer().getItemInHand() != null)
+            if (getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
+                Sign sign = null;
 
-            if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
-                    || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-                BlockState state = event.getClickedBlock().getState();
-                if (state instanceof Sign) {
-                    sign = (Sign) state;
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
+                        || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+                    BlockState state = event.getClickedBlock().getState();
+                    if (state instanceof Sign) {
+                        sign = (Sign) state;
+                    }
+                }
+
+                if (sign != null) {
+                    int amount = 1;
+                    if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
+                        amount = 5;
+                    }
+                    addBlocks(sign, amount);
+
+                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
+                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
+                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                        } else {
+                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                                    - amount);
+                        }
+
+                    player.print("mech.restock");
+                    event.setCancelled(true);
+                    return;
                 }
             }
-
-            if (sign != null) {
-                int amount = 1;
-                if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
-                    amount = 5;
-                }
-                addBlocks(sign,amount);
-
-                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                }
-                else {
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                            - amount);
-                }
-
-                player.print("mech.restock");
-                event.setCancelled(true);
-                return;
-            }
-        }
 
         flipState(player);
 
@@ -367,8 +352,7 @@ public class Door extends AbstractMechanic {
 
         if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
             hinge = proximalBaseCenter.getRelative(BlockFace.UP);
-        }
-        else {
+        } else {
             hinge = proximalBaseCenter.getRelative(BlockFace.DOWN);
         }
 
@@ -379,8 +363,7 @@ public class Door extends AbstractMechanic {
         // results.
         if (canPassThrough(hinge.getTypeId())) {
             new ToggleRegionClosed(player).run();
-        }
-        else {
+        } else {
             new ToggleRegionOpen().run();
         }
     }
@@ -401,7 +384,7 @@ public class Door extends AbstractMechanic {
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
                         if (oldType != 0) {
-                            addBlocks(s,1);
+                            addBlocks(s, 1);
                         }
                     }
                 }
@@ -428,7 +411,7 @@ public class Door extends AbstractMechanic {
                     if (hasEnoughBlocks(s)) {
                         b.setType(getDoorMaterial());
                         b.setData(getDoorData());
-                        removeBlocks(s,1);
+                        removeBlocks(s, 1);
                     } else {
                         if (player != null) {
                             player.printError("Not enough blocks for mechanic to function!");
@@ -579,25 +562,26 @@ public class Door extends AbstractMechanic {
     }
 
     public boolean removeBlocks(Sign s, int amount) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
         s.setLine(0, curBlocks + "");
         s.update();
-        if(curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public boolean addBlocks(Sign s, int amount) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
         s.setLine(0, curBlocks + "");
         s.update();
-        if(curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public int getBlocks(Sign s) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return 100000;
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return 100000;
         int curBlocks;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
@@ -608,8 +592,7 @@ public class Door extends AbstractMechanic {
     }
 
     public boolean hasEnoughBlocks(Sign s) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
-        if(getBlocks(s) > 0) return true;
-        return false;
+
+        return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }
 }

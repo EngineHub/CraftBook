@@ -19,6 +19,16 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.RegionOperationException;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,23 +39,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.RegionOperationException;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
@@ -101,10 +94,10 @@ public class Bridge extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
-                }
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
                 sign.update();
@@ -113,10 +106,10 @@ public class Bridge extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge End]");
-                if(sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
-                }
-                else if(!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
                 sign.update();
@@ -157,8 +150,7 @@ public class Bridge extends AbstractMechanic {
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getType();
-            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, s))
-            {
+            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, s)) {
                 break findBase; //On Top
             }
 
@@ -168,10 +160,8 @@ public class Bridge extends AbstractMechanic {
             if (settings.canUseBlock(mat)) {
                 if (isValidBridge(proximalBaseCenter, mat, s)) {
                     break findBase; // it's below
-                }
-                else throw new InvalidConstructionException("mech.bridge.material");
-            }
-            else
+                } else throw new InvalidConstructionException("mech.bridge.material");
+            } else
                 throw new UnacceptableMaterialException("mech.bridge.unusable");
         }
 
@@ -209,8 +199,7 @@ public class Bridge extends AbstractMechanic {
         int left, right;
         try {
             left = Integer.parseInt(s.getLine(2));
-            if (left < 0)
-            {
+            if (left < 0) {
                 left = 0;   // No negatives please
             }
         } catch (Exception ignored) {
@@ -218,8 +207,7 @@ public class Bridge extends AbstractMechanic {
         }
         try {
             right = Integer.parseInt(s.getLine(3));
-            if (right < 0)
-            {
+            if (right < 0) {
                 right = 0; // No negatives please
             }
         } catch (Exception ignored) {
@@ -305,27 +293,28 @@ public class Bridge extends AbstractMechanic {
             }
         }
 
-        if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite")) if (event.getPlayer().getItemInHand() != null)
-            if (getBridgeMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
+        if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
+            if (event.getPlayer().getItemInHand() != null)
+                if (getBridgeMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
 
-                int amount = 1;
-                if(event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
-                    amount = 5;
-                }
-                addBlocks(sign,amount);
+                    int amount = 1;
+                    if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
+                        amount = 5;
+                    }
+                    addBlocks(sign, amount);
 
-                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                }
-                else {
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                            - amount);
-                }
+                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
+                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
+                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                        } else {
+                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                                    - amount);
+                        }
 
-                player.print("mech.restock");
-                event.setCancelled(true);
-                return;
-            }
+                    player.print("mech.restock");
+                    event.setCancelled(true);
+                    return;
+                }
 
         flipState(player);
 
@@ -343,8 +332,7 @@ public class Bridge extends AbstractMechanic {
 
         if (event.getNewCurrent() == 0) {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionOpen(), 2);
-        }
-        else {
+        } else {
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new ToggleRegionClosed(null), 2);
         }
     }
@@ -362,8 +350,7 @@ public class Bridge extends AbstractMechanic {
         // results.
         if (canPassThrough(hinge.getTypeId())) {
             new ToggleRegionClosed(player).run();
-        }
-        else {
+        } else {
             new ToggleRegionOpen().run();
         }
     }
@@ -384,7 +371,7 @@ public class Bridge extends AbstractMechanic {
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
                         if (oldType != 0) {
-                            addBlocks(s,1);
+                            addBlocks(s, 1);
                         }
                     }
                 }
@@ -412,7 +399,7 @@ public class Bridge extends AbstractMechanic {
                         if (hasEnoughBlocks(s)) {
                             b.setType(getBridgeMaterial());
                             b.setData(getBridgeData());
-                            removeBlocks(s,1);
+                            removeBlocks(s, 1);
                         } else {
                             if (player != null) {
                                 player.printError("Not enough blocks for mechanic to function!");
@@ -536,7 +523,7 @@ public class Bridge extends AbstractMechanic {
             }
         }
 
-        if(sign == null) return;
+        if (sign == null) return;
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getBridgeMaterial(), getBlocks(sign), getBridgeData());
@@ -552,25 +539,26 @@ public class Bridge extends AbstractMechanic {
     }
 
     public boolean removeBlocks(Sign s, int amount) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
         s.setLine(0, curBlocks + "");
         s.update();
-        if(curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public boolean addBlocks(Sign s, int amount) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
         s.setLine(0, curBlocks + "");
         s.update();
-        if(curBlocks >= 0) return true;
-        else return false;
+        return curBlocks >= 0;
     }
 
     public int getBlocks(Sign s) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return 0;
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return 0;
         int curBlocks;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
@@ -581,8 +569,7 @@ public class Bridge extends AbstractMechanic {
     }
 
     public boolean hasEnoughBlocks(Sign s) {
-        if(s.getLine(0).equalsIgnoreCase("infinite")) return true;
-        if(getBlocks(s) > 0) return true;
-        return false;
+
+        return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }
 }

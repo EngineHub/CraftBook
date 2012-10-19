@@ -1,3 +1,22 @@
+3.3.3
+* Major changes to Config (Config needs to be regenerated!!!)
++ Data support for legacy cauldron. (Seperated with @)
++ Group support for legacy cauldron.
++ Added option for cooking pot to require fuel.
++ Added custom items for lightstone and ammeter
+* Snow placing works without snow mechanic enabled. (Just placing enabled)
++ Added max range option to teleporters. (Default is off)
++ Added option to require signs at teleport location
+* XPStorer improvements
+* Major Optimizations
++ Dispenser Recipe Additions and Improvements.
++ Skeleton AI Mechanic and improvements ai mechanics.
+* Fix CartDeposit
++ Config reload commands.
++ Added any-side support to hidden switch
++ added button on back support to lifts.
+* Fixed PlayerDetection IC.
+
 3.3.2:
 - Fixed MIDI IC tones and added velocity + guitar noise.
 - Pump IC. Pumps liquids into above chest.

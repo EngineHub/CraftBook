@@ -19,12 +19,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
@@ -33,6 +27,11 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
@@ -57,7 +56,7 @@ public class Ammeter extends AbstractMechanic {
         Block block = event.getClickedBlock();
         if (event.getPlayer().getItemInHand().getTypeId() == plugin.getLocalConfiguration().ammeterSettings.id
                 && (BlockType.canTransferRedstone(block.getTypeId()) ||
-                        BlockType.isRedstoneSource(block.getTypeId()))) {
+                BlockType.isRedstoneSource(block.getTypeId()))) {
             int data = getSpecialData(block);
             String line = getCurrentLine(data);
             player.print("Ammeter: " + line + ChatColor.WHITE + " " + data + " A");
@@ -108,11 +107,9 @@ public class Ammeter extends AbstractMechanic {
         String line = ChatColor.YELLOW + "[";
         if (data > 10) {
             line = line + ChatColor.DARK_GREEN;
-        }
-        else if (data > 5) {
+        } else if (data > 5) {
             line = line + ChatColor.GOLD;
-        }
-        else if (data > 0) {
+        } else if (data > 0) {
             line = line + ChatColor.DARK_RED;
         }
         for (int i = 0; i < data; i++) {

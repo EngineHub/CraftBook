@@ -1,9 +1,11 @@
 package com.sk89q.craftbook.mech.area;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -12,17 +14,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.data.DataException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 /**
  * Area.
@@ -69,8 +63,7 @@ public class Area extends AbstractMechanic {
                 // check if the namespace and area exists
                 isValidArea(sign);
                 player.print("Toggle area created.");
-            }
-            else
+            } else
                 return null;
 
 
@@ -179,8 +172,6 @@ public class Area extends AbstractMechanic {
      * @param pt     if you didn't already check if this is a signpost with appropriate
      *               text, you're going on Santa's naughty list.
      * @param plugin
-     * @param Save on toggle.
-     *
      * @throws InvalidMechanismException
      */
     private Area(BlockWorldVector pt, MechanismsPlugin plugin, boolean save) throws InvalidMechanismException {
@@ -218,8 +209,7 @@ public class Area extends AbstractMechanic {
                 if (inactiveID.length() > 0 && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(world, namespace, inactiveID, plugin);
                     copy.paste();
-                }
-                else {
+                } else {
                     copy.clear();
                 }
                 setToggledState(sign, false);
@@ -256,12 +246,7 @@ public class Area extends AbstractMechanic {
 
         String line3 = sign.getLine(2);
         String line4 = sign.getLine(3);
-        if (pattern.matcher(line3).matches()) {
-            toggledOn = true;
-        }
-        else {
-            toggledOn = !(line4.equals("--") || pattern.matcher(line4).matches());
-        }
+        toggledOn = pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
     private void setToggledState(Sign sign, boolean state) {

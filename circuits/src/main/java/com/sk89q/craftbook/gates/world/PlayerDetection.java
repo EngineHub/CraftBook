@@ -1,18 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
 
 /**
  * @author Me4502
@@ -51,36 +45,28 @@ public class PlayerDetection extends AbstractIC {
         Location location = getSign().getLocation();
         try {
             radius = Integer.parseInt(getSign().getLine(2).split("=")[0]);
-            if(getSign().getLine(2).contains("=")) {
+            if (getSign().getLine(2).contains("=")) {
                 int x = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[0]);
                 int y = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[1]);
                 int z = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[2]);
                 location.add(x, y, z);
             }
-        }
-        catch(Exception e){}
-
-        Boolean isGroup = getSign().getLine(3).startsWith("g:");
-        if(getSign().getLine(3).length() == 0) {
-            isGroup = null;
+        } catch (Exception ignored) {
         }
 
-        for(Player e : getServer().getOnlinePlayers()) {
-            if(e == null) {
+        for (Player e : getServer().getOnlinePlayers()) {
+            if (e == null || !e.isValid()
+                    || !LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
                 continue;
             }
-            if(!LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
-                continue;
+
+            String nameLine = getSign().getLine(3);
+            if (nameLine.length() > 0) {
+                nameLine.replace("g:", "").replace("p:", "");
+                return e.getName().startsWith(nameLine)
+                        || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine);
             }
-            if(e.isDead() || !e.isValid()) {
-                continue;
-            }
-            if(isGroup == null)
-                return true;
-            if(!isGroup)//player
-                return e.getName().startsWith(getSign().getLine(3).split(":")[1]);
-            else
-                return CircuitsPlugin.getInst().isInGroup(e.getName(), getSign().getLine(3).split(":")[1]);
+            return true;
         }
 
         return false;

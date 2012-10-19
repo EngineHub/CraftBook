@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.mech.area;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a cuboid copy that can be saved to disk and
@@ -62,8 +61,7 @@ public abstract class CuboidCopy {
         if (extension.equalsIgnoreCase(".cbcopy")) {
             // this copies only blocks and not sign text or chest contents
             copy = new FlatCuboidCopy();
-        }
-        else if (extension.equalsIgnoreCase(".schematic")) {
+        } else if (extension.equalsIgnoreCase(".schematic")) {
             copy = new MCEditCuboidCopy(world);
         }
         if (copy == null) throw new CuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
@@ -85,14 +83,14 @@ public abstract class CuboidCopy {
      */
     public void clear() {
 
-        if(world == null || origin == null) return;
+        if (world == null || origin == null) return;
         List<Vector> queued = new ArrayList<Vector>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     Vector pt = origin.add(x, y, z);
-                    if(pt == null) {
+                    if (pt == null) {
                         continue;
                     }
                     if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
@@ -102,8 +100,7 @@ public abstract class CuboidCopy {
                             holder.getInventory().clear();
                         }
                         block.setTypeId(0);
-                    }
-                    else {
+                    } else {
                         // Can't destroy these blocks yet
                         queued.add(pt);
                     }

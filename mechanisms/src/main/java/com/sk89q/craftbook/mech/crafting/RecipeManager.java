@@ -1,18 +1,13 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.BaseConfiguration;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.*;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -31,6 +26,7 @@ public class RecipeManager extends BaseConfiguration {
 
     @Override
     public void load() {
+
         recipes = new ArrayList<Recipe>();
         config = new File(dataFolder, "crafting-recipes.yml");
         load(cfg.getConfigurationSection("crafting-recipes"));
@@ -87,8 +83,7 @@ public class RecipeManager extends BaseConfiguration {
             type = RecipeType.getTypeFromName(config.getString("type"));
             if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
                 ingredients = getItems(config.getConfigurationSection("ingredients"));
-            }
-            else {
+            } else {
                 items = getHashItems(config.getConfigurationSection("ingredients"));
                 shape = config.getStringList("shape");
             }
@@ -111,8 +106,7 @@ public class RecipeManager extends BaseConfiguration {
                     CraftingItemStack itemStack = new CraftingItemStack(material);
                     if (split.length > 1) {
                         itemStack.setData(Short.parseShort(split[1]));
-                    }
-                    else {
+                    } else {
                         itemStack.setData((short) 0);
                     }
                     itemStack.setAmount(1);
@@ -138,8 +132,7 @@ public class RecipeManager extends BaseConfiguration {
                     CraftingItemStack itemStack = new CraftingItemStack(material);
                     if (split.length > 1) {
                         itemStack.setData(Short.parseShort(split[1]));
-                    }
-                    else {
+                    } else {
                         itemStack.setData((short) 0);
                     }
                     itemStack.setAmount(section.getInt(item, 1));

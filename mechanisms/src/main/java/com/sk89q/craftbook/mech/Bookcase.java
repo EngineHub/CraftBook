@@ -19,23 +19,18 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Random;
-
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
+import java.io.*;
+import java.util.Random;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line
@@ -83,8 +78,7 @@ public class Bookcase extends AbstractMechanic {
             if (text != null) {
                 player.print(bookReadLine);
                 player.printRaw(text);
-            }
-            else {
+            } else {
                 player.printError("Failed to fetch a line from the books file.");
             }
         } catch (IOException e) {

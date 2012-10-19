@@ -1,22 +1,17 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.Collection;
-
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Item;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Item;
+
+import java.util.Collection;
 
 /**
  * Sapling planter
@@ -73,7 +68,7 @@ public class Planter extends AbstractIC {
         if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(),
                 target.getBlockZ()) == 0
                 && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1,
-                        target.getBlockZ()))) {
+                target.getBlockZ()))) {
 
             BlockPlanter run = new BlockPlanter(world, target, info[0], info[1]);
             run.run();
@@ -92,14 +87,12 @@ public class Planter extends AbstractIC {
 
         if (itemId == BlockID.SAPLING && (blockId == BlockID.DIRT || blockId == BlockID.GRASS)) {
             isPlantable = true;
-        }
-        else if ((itemId == ItemID.SEEDS || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS) && blockId == BlockID.SOIL) {
+        } else if ((itemId == ItemID.SEEDS || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS) &&
+                blockId == BlockID.SOIL) {
             isPlantable = true;
-        }
-        else if (itemId == ItemID.NETHER_WART_SEED && blockId == BlockID.SLOW_SAND) {
+        } else if (itemId == ItemID.NETHER_WART_SEED && blockId == BlockID.SLOW_SAND) {
             isPlantable = true;
-        }
-        else if (itemId == BlockID.CACTUS && blockId == BlockID.SAND) {
+        } else if (itemId == BlockID.CACTUS && blockId == BlockID.SAND) {
             isPlantable = true;
         }
 
@@ -197,11 +190,13 @@ public class Planter extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Plants plantable things at set offset.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "Item to plant id:data",
                     "Y Offset"

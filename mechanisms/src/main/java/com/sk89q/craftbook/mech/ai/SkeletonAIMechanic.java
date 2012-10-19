@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.mech.ai;
 
-import java.util.Random;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityShootBowEvent;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.util.Random;
 
 public class SkeletonAIMechanic extends BaseAIMechanic implements BowShotAIMechanic {
 
@@ -19,8 +18,9 @@ public class SkeletonAIMechanic extends BaseAIMechanic implements BowShotAIMecha
 
     @Override
     public void onBowShot(EntityShootBowEvent event) {
-        if(event.getEntityType() != EntityType.SKELETON) return;
-        if(r.nextInt(30) == 0) {
+
+        if (event.getEntityType() != EntityType.SKELETON) return;
+        if (r.nextInt(30) == 0) {
             event.getProjectile().setFireTicks(5000);
         }
     }

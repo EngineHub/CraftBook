@@ -18,14 +18,9 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 public class DaySensor extends AbstractIC {
 
@@ -62,18 +57,18 @@ public class DaySensor extends AbstractIC {
     protected boolean isDay() {
 
         long night = 13000l;
-        if(getSign().getLine(3).length() > 0) {
+        if (getSign().getLine(3).length() > 0) {
             try {
                 night = Long.parseLong(getSign().getLine(3));
+            } catch (Exception ignored) {
             }
-            catch(Exception e){}
         }
         long day = 0l;
-        if(getSign().getLine(2).length() > 0) {
+        if (getSign().getLine(2).length() > 0) {
             try {
                 day = Long.parseLong(getSign().getLine(2));
+            } catch (Exception ignored) {
             }
-            catch(Exception e){}
         }
         long time = getSign().getBlock().getWorld().getTime() % 24000;
         if (time < 0) {
@@ -82,8 +77,8 @@ public class DaySensor extends AbstractIC {
 
         if (day <= night)
             return time >= day && time <= night;
-            else if (day <= night) return time >= day || time <= night;
-            return time < night;
+        else if (day <= night) return time >= day || time <= night;
+        return time < night;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -101,11 +96,13 @@ public class DaySensor extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Outputs high if it is day.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "custom day start",
                     "custom day end"

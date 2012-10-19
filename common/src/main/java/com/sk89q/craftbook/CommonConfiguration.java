@@ -1,11 +1,11 @@
 package com.sk89q.craftbook;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Silthus
@@ -27,6 +27,7 @@ public class CommonConfiguration extends BaseConfiguration {
 
     @Override
     public void load() {
+
         languages = getStringList("languages", new ArrayList<String>(Arrays.asList("en_US")));
         language = getString("language", "en_US");
         opPerms = getBoolean("op-perms", true);

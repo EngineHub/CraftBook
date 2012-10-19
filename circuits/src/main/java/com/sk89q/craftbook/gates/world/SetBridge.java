@@ -1,18 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -108,16 +102,14 @@ public class SetBridge extends AbstractIC {
                 }
                 if (relativeOffset) {
                     center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
-                }
-                else {
+                } else {
                     center = LocationUtil.getOffset(center, offsetX, offsetY, offsetZ);
                 }
-            }
-            else {
+            } else {
                 center = center.getRelative(BlockFace.UP);
             }
+        } catch (Exception ignored) {
         }
-        catch(Exception e){}
     }
 
     @Override
@@ -138,8 +130,7 @@ public class SetBridge extends AbstractIC {
         load();
         if (chip.getInput(0)) {
             setDoor(true);
-        }
-        else {
+        } else {
             setDoor(false);
         }
     }
@@ -151,8 +142,7 @@ public class SetBridge extends AbstractIC {
                 Block block = LocationUtil.getRelativeOffset(center, faceing, x, 0, z);
                 if (open) {
                     block.setTypeIdAndData(onMaterial, (byte) onData, true);
-                }
-                else {
+                } else {
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
                 }
             }

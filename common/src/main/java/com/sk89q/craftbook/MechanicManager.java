@@ -19,17 +19,10 @@
 
 package com.sk89q.craftbook;
 
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.ChangedSign;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -42,10 +35,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.ChangedSign;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
@@ -97,7 +91,8 @@ public class MechanicManager {
      */
     private final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
 
-    protected HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>> eventRegistration = new HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>>();
+    protected HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>> eventRegistration = new
+            HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>>();
 
     /**
      * Construct the manager.
@@ -190,7 +185,7 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
-        if(!plugin.canBuildInArea(event.getBlock().getLocation(), event.getPlayer())) {
+        if (!plugin.canBuildInArea(event.getBlock().getLocation(), event.getPlayer())) {
             player.printError("area.permissions");
             return 0;
         }
@@ -230,7 +225,7 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
-        if(!plugin.canUseInArea(event.getClickedBlock().getLocation(), event.getPlayer())) {
+        if (!plugin.canUseInArea(event.getClickedBlock().getLocation(), event.getPlayer())) {
             player.printError("area.permissions");
             return 0;
         }
@@ -267,7 +262,7 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
-        if(!plugin.canUseInArea(event.getClickedBlock().getLocation(), event.getPlayer())) {
+        if (!plugin.canUseInArea(event.getClickedBlock().getLocation(), event.getPlayer())) {
             player.printError("area.permissions");
             return 0;
         }
@@ -643,15 +638,15 @@ public class MechanicManager {
                     logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
                             .getCanonicalName(), t);
                 }
-            }
-            else {
+            } else {
                 unload(mechanic);
             }
     }
 
     public void registerEvent(Class<?> event, MechanicFactory<? extends Mechanic> mechanic) {
+
         ArrayList<MechanicFactory<? extends Mechanic>> list = eventRegistration.get(event);
-        if(list == null) {
+        if (list == null) {
             list = new ArrayList<MechanicFactory<? extends Mechanic>>();
         }
         list.add(mechanic);

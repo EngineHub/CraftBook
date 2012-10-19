@@ -51,7 +51,7 @@ public class ICMechanic extends PersistentMechanic {
     protected final BlockWorldVector pos;
 
     public ICMechanic(CircuitsPlugin plugin, String id, IC ic,
-            ICFamily family, BlockWorldVector pos) {
+                      ICFamily family, BlockWorldVector pos) {
 
         super(pos);
         this.plugin = plugin;
@@ -118,11 +118,8 @@ public class ICMechanic extends PersistentMechanic {
 
                 Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(sign.getLine(1));
 
-                if (!matcher.matches())
-                    return false;
-                else if (!matcher.group(1).equalsIgnoreCase(id))
-                    return false;
-                else return ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
+                return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && (
+                        (PersistentIC) ic).isActive();
             }
         }
 

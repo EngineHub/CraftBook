@@ -1,14 +1,9 @@
 package com.sk89q.craftbook.gates.weather;
 
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 public class TStormSensor extends AbstractIC {
 
@@ -53,11 +48,13 @@ public class TStormSensor extends AbstractIC {
 
         @Override
         public String getDescription() {
+
             return "Outputs high if it is storming.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     null,
                     null

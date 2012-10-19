@@ -1,10 +1,10 @@
 package com.sk89q.craftbook;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+
+import java.util.ArrayList;
 
 public class RailUtil {
 

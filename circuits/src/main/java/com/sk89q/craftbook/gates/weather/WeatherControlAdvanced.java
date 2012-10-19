@@ -1,14 +1,9 @@
 package com.sk89q.craftbook.gates.weather;
 
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 public class WeatherControlAdvanced extends AbstractIC {
 
@@ -43,15 +38,13 @@ public class WeatherControlAdvanced extends AbstractIC {
 
         if (duration > 24000) {
             duration = 24000;
-        }
-        else if (duration < 1) {
+        } else if (duration < 1) {
             duration = 1;
         }
 
         if (thunderDuration > 24000) {
             thunderDuration = 24000;
-        }
-        else if (thunderDuration < 1) {
+        } else if (thunderDuration < 1) {
             thunderDuration = 1;
         }
 

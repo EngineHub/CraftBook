@@ -8,6 +8,7 @@ public class BukkitVehicle implements Vehicle {
     protected final org.bukkit.entity.Vehicle vehicle;
 
     public org.bukkit.entity.Vehicle getVehicle() {
+
         return vehicle;
     }
 
@@ -18,11 +19,13 @@ public class BukkitVehicle implements Vehicle {
 
     @Override
     public Location getLocation() {
+
         return BukkitUtil.toLocation(vehicle.getLocation());
     }
 
     @Override
     public void teleport(Location location) {
+
         vehicle.teleport(BukkitUtil.toLocation(location));
     }
 }

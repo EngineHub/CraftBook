@@ -1,11 +1,6 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +11,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.*;
 
 /**
  * @author Silthus, Me4502
@@ -24,23 +19,25 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 public final class LocationUtil {
 
     public static void init() {
+
     }
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
-        if(!l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()))
-            return false;
-        return getDistanceSquared(l1, l2) <= radius * radius;
+        return l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()) && getDistanceSquared(l1,
+                l2) <= radius * radius;
     }
 
-    public static Entity[] getNearbyEntities(Location l, int radius){
-        int chunkRadius = radius < 16 ? 1 : (radius - radius % 16)/16;
+    public static Entity[] getNearbyEntities(Location l, int radius) {
+
+        int chunkRadius = radius < 16 ? 1 : (radius - radius % 16) / 16;
         HashSet<Entity> radiusEntities = new HashSet<Entity>();
-        for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++) {
-            for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
-                int x=(int) l.getX(),y=(int) l.getY(),z=(int) l.getZ();
-                for (Entity e : new Location(l.getWorld(),x+chX*16,y,z+chZ*16).getChunk().getEntities())
-                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l.getBlock()) {
+        for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+                int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
+                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities())
+                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
+                            .getBlock()) {
                         radiusEntities.add(e);
                     }
             }
@@ -172,24 +169,21 @@ public final class LocationUtil {
         // apply left and right offset
         if (offsetX > 0) {
             block = getRelativeBlock(block, right, offsetX);
-        }
-        else if (offsetX < 0) {
+        } else if (offsetX < 0) {
             block = getRelativeBlock(block, left, offsetX);
         }
 
         // apply front and back offset
         if (offsetZ > 0) {
             block = getRelativeBlock(block, front, offsetZ);
-        }
-        else if (offsetZ < 0) {
+        } else if (offsetZ < 0) {
             block = getRelativeBlock(block, back, offsetZ);
         }
 
         // apply up and down offset
         if (offsetY > 0) {
             block = getRelativeBlock(block, BlockFace.UP, offsetY);
-        }
-        else if (offsetY < 0) {
+        } else if (offsetY < 0) {
             block = getRelativeBlock(block, BlockFace.DOWN, offsetY);
         }
         return block;

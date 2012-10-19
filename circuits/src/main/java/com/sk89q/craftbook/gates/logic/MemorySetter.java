@@ -1,17 +1,11 @@
 package com.sk89q.craftbook.gates.logic;
 
-import java.io.File;
-import java.io.PrintWriter;
-
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import java.io.File;
+import java.io.PrintWriter;
 
 public class MemorySetter extends AbstractIC {
 
@@ -49,8 +43,7 @@ public class MemorySetter extends AbstractIC {
             for (int i = 0; i < 2; i++)
                 if (chip.getInput(i)) {
                     pw.println("1");
-                }
-                else {
+                } else {
                     pw.println("0");
                 }
             pw.close();
@@ -61,7 +54,7 @@ public class MemorySetter extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 

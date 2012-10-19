@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -13,21 +18,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.PersistentMechanic;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SelfTriggeringMechanic;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -99,21 +91,20 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
          */
         @Override
         public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
-                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
 
                 sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
-                if(plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+                if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
                     sign.setLine(3, "0");
                 else
                     sign.setLine(3, "1");
                 sign.update();
                 player.print("mech.cook.create");
-            }
-            else
+            } else
                 return null;
 
             throw new ProcessedMechanismException();
@@ -183,20 +174,20 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int y = b.getY() + 2;
             int z = b.getZ();
             Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getType() == Material.CHEST) if(event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer().getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
-                increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));
-                if(event.getPlayer().getItemInHand().getAmount() <= 1) {
-                    event.getPlayer().getItemInHand().setTypeId(0);
-                    event.getPlayer().setItemInHand(null);
+            if (cb.getType() == Material.CHEST)
+                if (event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer()
+                        .getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
+                    increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));
+                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
+                        event.getPlayer().getItemInHand().setTypeId(0);
+                        event.getPlayer().setItemInHand(null);
+                    } else {
+                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                    }
+                    event.getPlayer().sendMessage("You give the pot fuel!");
+                } else {
+                    event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
                 }
-                else {
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
-                }
-                event.getPlayer().sendMessage("You give the pot fuel!");
-            }
-            else {
-                event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
-            }
         }
     }
 
@@ -210,21 +201,23 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
         Block block = event.getBlock();
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             try {
-                if(event.getNewCurrent() > event.getOldCurrent()) {
-                    increaseMultiplier(sign,1);
+                if (event.getNewCurrent() > event.getOldCurrent()) {
+                    increaseMultiplier(sign, 1);
                 }
                 sign.update();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
 
     public void setMultiplier(Sign sign, int amount) {
-        if(amount < 1 && !plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
+
+        if (amount < 1 && !plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
             amount = 1;
         }
         sign.setLine(3, amount + "");
@@ -232,23 +225,24 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     public void increaseMultiplier(Sign sign, int amount) {
+
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
     public void decreaseMultiplier(Sign sign, int amount) {
+
         setMultiplier(sign, getMultiplier(sign) - amount);
     }
 
     public int getMultiplier(Sign sign) {
+
         int multiplier = 1;
-        if(plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
-            multiplier = 0;
+        if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) multiplier = 0;
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             multiplier = 1;
-            if(plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+            if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
                 multiplier = 0;
             setMultiplier(sign, multiplier);
         }
@@ -267,6 +261,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
+
         List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
         bwv.add(pt);
         return bwv;
@@ -280,20 +275,23 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         private int mult;
 
         private Ingredients(int id, int mult) {
+
             this.id = id;
             this.mult = mult;
         }
 
         public static boolean isIngredient(int id) {
-            for(Ingredients in : values())
-                if(in.id == id)
+
+            for (Ingredients in : values())
+                if (in.id == id)
                     return true;
             return false;
         }
 
         public static int getTime(int id) {
-            for(Ingredients in : values())
-                if(in.id == id)
+
+            for (Ingredients in : values())
+                if (in.id == id)
                     return in.mult;
             return 0;
         }

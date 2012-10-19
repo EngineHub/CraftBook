@@ -19,14 +19,6 @@
 
 package com.sk89q.craftbook.blockbag;
 
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.bukkit.World;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.util.DistanceComparator;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
@@ -36,6 +28,13 @@ import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.World;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author sk89q
@@ -62,7 +61,6 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Gets a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -80,13 +78,12 @@ public class NearbyChestBlockBag extends BlockBag {
                 for (int i = 0; itemArray.length > i; i++)
                     if (itemArray[i] != null) // Found an item
                         if (itemArray[i].getTypeId() == id &&
-                        itemArray[i].getAmount() >= 1) {
+                                itemArray[i].getAmount() >= 1) {
                             int newAmount = itemArray[i].getAmount() - 1;
 
                             if (newAmount > 0) {
                                 itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
-                            }
-                            else {
+                            } else {
                                 itemArray[i] = null;
                             }
 
@@ -105,7 +102,6 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Stores a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -124,15 +120,14 @@ public class NearbyChestBlockBag extends BlockBag {
                 for (int i = 0; itemArray.length > i; i++)
                     // Found an item
                     if (itemArray[i].getTypeId() == id &&
-                    itemArray[i].getAmount() < 64) {
+                            itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
                         itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
 
                         chest.getInventory().setContents(itemArray);
 
                         return;
-                    }
-                    else {
+                    } else {
                         emptySlot = i;
                     }
 
@@ -155,7 +150,6 @@ public class NearbyChestBlockBag extends BlockBag {
     /**
      * Stores a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -168,8 +162,6 @@ public class NearbyChestBlockBag extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */
@@ -191,8 +183,6 @@ public class NearbyChestBlockBag extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */

@@ -18,39 +18,25 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.Metrics.Graph;
+import com.sk89q.craftbook.cart.CartMechanism;
+import com.sk89q.craftbook.cart.MinecartManager;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.Metrics.Graph;
-import com.sk89q.craftbook.cart.CartMechanism;
-import com.sk89q.craftbook.cart.MinecartManager;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -84,17 +70,19 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             Metrics metrics = new Metrics(this);
 
             Graph graph = metrics.createGraph("Language");
-            for(String lan : languageManager.getLanguages()) {
+            for (String lan : languageManager.getLanguages()) {
                 graph.addPlotter(new Metrics.Plotter(lan) {
+
                     @Override
                     public int getValue() {
+
                         return 1;
                     }
                 });
             }
 
             metrics.start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -209,8 +197,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             VehiclesConfiguration config = getLocalConfiguration();
             if (config.minecartRemoveOnExit) {
                 vehicle.remove();
-            }
-            else if (config.minecartDecayWhenEmpty) {
+            } else if (config.minecartDecayWhenEmpty) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) vehicle),
                         config.minecartDecayTime);
             }
@@ -302,26 +289,19 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             try {
                 if (lines[1].equalsIgnoreCase("[deposit]") || lines[1].equalsIgnoreCase("[collect]")) {
                     player.checkPermission("craftbook.vehicles.deposit");
-                }
-                else if (lines[1].equalsIgnoreCase("[dispenser]")) {
+                } else if (lines[1].equalsIgnoreCase("[dispenser]")) {
                     player.checkPermission("craftbook.vehicles.dispenser");
-                }
-                else if (lines[1].equalsIgnoreCase("[eject]")) {
+                } else if (lines[1].equalsIgnoreCase("[eject]")) {
                     player.checkPermission("craftbook.vehicles.eject");
-                }
-                else if (lines[1].equalsIgnoreCase("[print]")) {
+                } else if (lines[1].equalsIgnoreCase("[print]")) {
                     player.checkPermission("craftbook.vehicles.print");
-                }
-                else if (lines[1].equalsIgnoreCase("[reverse]")) {
+                } else if (lines[1].equalsIgnoreCase("[reverse]")) {
                     player.checkPermission("craftbook.vehicles.reverse");
-                }
-                else if (lines[1].equalsIgnoreCase("[sort]")) {
+                } else if (lines[1].equalsIgnoreCase("[sort]")) {
                     player.checkPermission("craftbook.vehicles.sort");
-                }
-                else if (lines[1].equalsIgnoreCase("[station]")) {
+                } else if (lines[1].equalsIgnoreCase("[station]")) {
                     player.checkPermission("craftbook.vehicles.station");
-                }
-                else if (lines[1].equalsIgnoreCase("[teleport]")) {
+                } else if (lines[1].equalsIgnoreCase("[teleport]")) {
                     player.checkPermission("craftbook.vehicles.teleport");
                 }
             } catch (InsufficientPermissionsException e) {

@@ -131,10 +131,10 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().cauldronSettings.enableNew) {
             registerMechanic(new ImprovedCauldron.Factory(this));
         }
-        if(getLocalConfiguration().xpStorerSettings.enabled) {
+        if (getLocalConfiguration().xpStorerSettings.enabled) {
             registerMechanic(new XPStorer.Factory(this));
         }
-        if(getLocalConfiguration().mapChangerSettings.enabled) {
+        if (getLocalConfiguration().mapChangerSettings.enabled) {
             registerMechanic(new MapChanger.Factory(this));
         }
         if (getLocalConfiguration().customCraftingSettings.enable) {
@@ -157,17 +157,19 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             Metrics metrics = new Metrics(this);
 
             Graph graph = metrics.createGraph("Language");
-            for(String lan : languageManager.getLanguages()) {
+            for (String lan : languageManager.getLanguages()) {
                 graph.addPlotter(new Metrics.Plotter(lan) {
+
                     @Override
                     public int getValue() {
+
                         return 1;
                     }
                 });
             }
 
             metrics.start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -245,6 +247,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     }
 
     public static MechanismsPlugin getInst() {
+
         return instance;
     }
 
@@ -289,11 +292,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      * Register a Dispenser Recipe
      *
      * @param recipe
-     * 
+     *
      * @return if successfully added.
      */
     public boolean registerDispenserRecipe(Recipe recipe) {
-        if (getLocalConfiguration().dispenserSettings.enable) return dRecipes.addRecipe(recipe);
-        return false;
+
+        return getLocalConfiguration().dispenserSettings.enable && dRecipes.addRecipe(recipe);
     }
 }

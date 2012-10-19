@@ -18,15 +18,14 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Vehicle;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class BukkitPlayer implements LocalPlayer {
 
@@ -47,19 +46,22 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public void print(String message) {
 
-        player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
+        player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message,
+                plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
     @Override
     public void printError(String message) {
 
-        player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
+        player.sendMessage(ChatColor.RED + plugin.getLanguageManager().getString(message,
+                plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
     @Override
     public void printRaw(String message) {
 
-        player.sendMessage(plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
+        player.sendMessage(plugin.getLanguageManager().getString(message,
+                plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
     @Override
@@ -82,43 +84,51 @@ public class BukkitPlayer implements LocalPlayer {
 
     @Override
     public Location getPosition() {
+
         return BukkitUtil.toLocation(player.getLocation());
     }
 
     @Override
     public void teleport(Location location) {
+
         player.teleport(BukkitUtil.toLocation(location));
     }
 
     @Override
     public void setPosition(Vector pos, float pitch, float yaw) {
-        player.teleport(new org.bukkit.Location(player.getWorld(), pos.getX(), pos.getY(),pos.getZ(), yaw, pitch));
+
+        player.teleport(new org.bukkit.Location(player.getWorld(), pos.getX(), pos.getY(), pos.getZ(), yaw, pitch));
     }
 
     @Override
     public boolean isInsideVehicle() {
+
         return player.isInsideVehicle();
     }
 
     @Override
     public Vehicle getVehicle() {
-        return BukkitUtil.toVehicle((org.bukkit.entity.Vehicle)player.getVehicle());
+
+        return BukkitUtil.toVehicle((org.bukkit.entity.Vehicle) player.getVehicle());
     }
 
     @Override
     public int getTypeInHand() {
-        if(player.getItemInHand() == null)
+
+        if (player.getItemInHand() == null)
             return 0;
         return player.getItemInHand().getTypeId();
     }
 
     @Override
     public boolean isHoldingBlock() {
+
         return Material.getMaterial(getTypeInHand()).isBlock();
     }
 
     @Override
     public String translate(String message) {
+
         return plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player));
     }
 }

@@ -19,14 +19,13 @@
 
 package com.sk89q.craftbook.blockbag;
 
-import org.bukkit.World;
-
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
+import org.bukkit.World;
 
 /**
  * For the uninitiated.
@@ -50,7 +49,6 @@ public class DummyBlockBag extends BlockBag {
     /**
      * Gets a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -66,7 +64,6 @@ public class DummyBlockBag extends BlockBag {
     /**
      * Stores a block.
      *
-     * @param pos
      * @param id
      *
      * @return
@@ -82,8 +79,6 @@ public class DummyBlockBag extends BlockBag {
     /**
      * Adds a position to be used a source.
      *
-     * @param pos
-     *
      * @return
      */
     @Override
@@ -93,8 +88,6 @@ public class DummyBlockBag extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     *
-     * @param pos
      *
      * @return
      */

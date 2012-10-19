@@ -1,15 +1,9 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
 
 /**
  * @author Me4502
@@ -35,17 +29,18 @@ public class CombinationLock extends AbstractIC {
 
     @Override
     public void trigger(ChipState state) {
+
         try {
             Character[] data = ArrayUtils.toObject(getSign().getLine(2).toCharArray());
             checkCombo:
             {
-                if(state.getInput(0) != (data[1] == 'X')) {
+                if (state.getInput(0) != (data[1] == 'X')) {
                     break checkCombo;
                 }
-                if(state.getInput(1) != (data[2] == 'X')) {
+                if (state.getInput(1) != (data[2] == 'X')) {
                     break checkCombo;
                 }
-                if(state.getInput(2) != (data[0] == 'X')) {
+                if (state.getInput(2) != (data[0] == 'X')) {
                     break checkCombo;
                 }
 
@@ -74,16 +69,19 @@ public class CombinationLock extends AbstractIC {
         @Override
         public void verify(Sign sign) throws ICVerificationException {
 
-            if (sign.getLine(2) == null && sign.getLine(2).equals("")) throw new ICVerificationException("Line three needs to be a combination");
+            if (sign.getLine(2) == null && sign.getLine(2).equals(""))
+                throw new ICVerificationException("Line three needs to be a combination");
         }
 
         @Override
         public String getDescription() {
+
             return "Checks combination on sign against inputs.";
         }
 
         @Override
         public String[] getLineHelp() {
+
             String[] lines = new String[] {
                     "Combination. X = On, O = Off (XOX)",
                     null

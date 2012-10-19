@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-
 import com.sk89q.craftbook.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 
 public class CartEjector extends CartMechanism {
 
@@ -25,11 +24,9 @@ public class CartEjector extends CartMechanism {
         Block ejectTarget;
         if (blocks.sign == null) {
             ejectTarget = blocks.rail;
-        }
-        else if (!blocks.matches("eject")) {
+        } else if (!blocks.matches("eject")) {
             ejectTarget = blocks.rail;
-        }
-        else {
+        } else {
             ejectTarget = blocks.rail.getRelative(SignUtil.getFront(blocks.sign));
         }
         // if you use just
@@ -49,7 +46,7 @@ public class CartEjector extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+                      boolean minor) {
 
     }
 }

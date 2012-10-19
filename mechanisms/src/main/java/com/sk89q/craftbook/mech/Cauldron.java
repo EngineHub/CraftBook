@@ -19,12 +19,14 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -36,14 +38,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Handler for cauldrons.
@@ -91,7 +90,7 @@ public class Cauldron extends AbstractMechanic {
      * @param plugin
      */
     public Cauldron(CauldronCookbook recipes, BlockWorldVector pt,
-            MechanismsPlugin plugin) {
+                    MechanismsPlugin plugin) {
 
         super();
         this.recipes = recipes;
@@ -110,11 +109,12 @@ public class Cauldron extends AbstractMechanic {
 
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return;
         if (event.getPlayer().getItemInHand().getTypeId() >= 255
-                || event.getPlayer().getItemInHand().getType() == Material.AIR) if (preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt)) {
-                    event.setUseInteractedBlock(Result.DENY);
-                    event.setUseItemInHand(Result.DENY);
-                    event.setCancelled(true);
-                }
+                || event.getPlayer().getItemInHand().getType() == Material.AIR)
+            if (preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt)) {
+                event.setUseInteractedBlock(Result.DENY);
+                event.setUseItemInHand(Result.DENY);
+                event.setCancelled(true);
+            }
     }
 
     /**
@@ -219,8 +219,7 @@ public class Cauldron extends AbstractMechanic {
                 if (entry.getValue().a != blockID)
                     if (!contents.containsKey(entry.getValue())) {
                         contents.put(entry.getValue(), 1);
-                    }
-                    else {
+                    } else {
                         contents.put(entry.getValue(),
                                 contents.get(entry.getValue()) + 1);
                     }
@@ -273,7 +272,7 @@ public class Cauldron extends AbstractMechanic {
                         world.getBlockAt(entry.getKey().getBlockX(),
                                 entry.getKey().getBlockY(),
                                 entry.getKey().getBlockZ()).setType(
-                                        Material.AIR);
+                                Material.AIR);
                         // }
                         ingredients.remove(entry.getValue());
                     }
@@ -292,8 +291,7 @@ public class Cauldron extends AbstractMechanic {
                     }
                 }
                 // Didn't find a recipe
-            }
-            else {
+            } else {
                 player.sendMessage(ChatColor.RED
                         + "Hmm, this doesn't make anything...");
             }
@@ -318,8 +316,8 @@ public class Cauldron extends AbstractMechanic {
      * @throws Cauldron.NotACauldronException
      */
     public void findCauldronContents(World world, BlockWorldVector pt,
-            int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
-                    throws NotACauldronException {
+                                     int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
+            throws NotACauldronException {
 
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 
@@ -346,7 +344,8 @@ public class Cauldron extends AbstractMechanic {
             type = 10;
         }
 
-        visited.put(pt, new Tuple2<Integer, Short>(type,(short) world.getBlockAt(pt.getBlockX(),pt.getBlockY(),pt.getBlockZ()).getData()));
+        visited.put(pt, new Tuple2<Integer, Short>(type, (short) world.getBlockAt(pt.getBlockX(), pt.getBlockY(),
+                pt.getBlockZ()).getData()));
 
         // It's a wall -- we only needed to remember that we visited it but
         // we don't need to recurse

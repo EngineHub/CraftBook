@@ -60,7 +60,8 @@ public class HiddenSwitch extends AbstractMechanic {
             if (isValidWallSign(wrd, pos.add(1, 0, 0))
                     || isValidWallSign(wrd, pos.add(-1, 0, 0))
                     || isValidWallSign(wrd, pos.add(0, 0, 1))
-                    || isValidWallSign(wrd, pos.add(0, 0, -1))) return new HiddenSwitch(BukkitUtil.toBlock(pos), plugin);
+                    || isValidWallSign(wrd, pos.add(0, 0, -1)))
+                return new HiddenSwitch(BukkitUtil.toBlock(pos), plugin);
             return null;
         }
     }
@@ -92,7 +93,7 @@ public class HiddenSwitch extends AbstractMechanic {
         Block testBlock = switchBlock.getRelative(face);
         boolean passed = false;
 
-        while(true) {
+        while (true) {
             if (testBlock.getType() == Material.WALL_SIGN) {
                 Sign s = (Sign) testBlock.getState();
                 if (s.getLine(1).equalsIgnoreCase("[X]")) {
@@ -106,47 +107,43 @@ public class HiddenSwitch extends AbstractMechanic {
                         }
                     }
 
-                    if (!s.getLine(2).trim().equalsIgnoreCase("")) if (!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
-                        player.printError("mech.group");
-                        return;
-                    }
+                    if (!s.getLine(2).trim().equalsIgnoreCase(""))
+                        if (!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
+                            player.printError("mech.group");
+                            return;
+                        }
 
                     if (itemID == -1) {
                         toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                    }
-                    else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
+                    } else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
                         if (itemID == 0 && event.getPlayer().getItemInHand() == null
                                 || event.getPlayer().getItemInHand().getTypeId() == itemID) {
                             toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                        }
-                        else {
+                        } else {
                             player.printError("mech.hiddenswitch.key");
                         }
-                    }
-                    else {
+                    } else {
                         player.printError("mech.hiddenswitch.key");
                     }
 
                     break;
                 }
-            }
-            else if (plugin.getLocalConfiguration().hiddenSwitchSettings.anyside){
-                if(face == event.getBlockFace().getOppositeFace() && passed)
+            } else if (plugin.getLocalConfiguration().hiddenSwitchSettings.anyside) {
+                if (face == event.getBlockFace().getOppositeFace() && passed)
                     break;
                 passed = true;
 
-                if(face == BlockFace.WEST)
+                if (face == BlockFace.WEST)
                     face = BlockFace.NORTH;
-                else if(face == BlockFace.NORTH)
+                else if (face == BlockFace.NORTH)
                     face = BlockFace.EAST;
-                else if(face == BlockFace.EAST)
+                else if (face == BlockFace.EAST)
                     face = BlockFace.SOUTH;
-                else if(face == BlockFace.SOUTH)
+                else if (face == BlockFace.SOUTH)
                     face = BlockFace.WEST;
 
                 testBlock = switchBlock.getRelative(face);
-            }
-            else
+            } else
                 break;
         }
     }
@@ -175,12 +172,13 @@ public class HiddenSwitch extends AbstractMechanic {
 
             if (checkBlock.getTypeId() == BlockID.LEVER) {
                 checkBlock.setData((byte) (checkBlock.getData() ^ 0x8));
-            }
-            else if (checkBlock.getTypeId() == BlockID.STONE_BUTTON) {
+            } else if (checkBlock.getTypeId() == BlockID.STONE_BUTTON) {
                 checkBlock.setData((byte) (checkBlock.getData() | 0x8));
                 Runnable turnOff = new Runnable() {
+
                     @Override
                     public void run() {
+
                         checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                     }
                 };

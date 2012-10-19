@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -7,14 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -75,12 +69,13 @@ public class SetBlockBelowChest extends AbstractIC {
         int y = body.getY();
         int z = body.getZ();
 
-        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y - 1, z).getType() == Material.AIR) if (takeFromChest(x, y + 1, z, block, meta)) {
-            body.getWorld().getBlockAt(x, y - 1, z).setTypeId(block);
-            if (!(meta == -1)) {
-                body.getWorld().getBlockAt(x, y - 1, z).setData(meta);
+        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y - 1, z).getType() == Material.AIR)
+            if (takeFromChest(x, y + 1, z, block, meta)) {
+                body.getWorld().getBlockAt(x, y - 1, z).setTypeId(block);
+                if (!(meta == -1)) {
+                    body.getWorld().getBlockAt(x, y - 1, z).setData(meta);
+                }
             }
-        }
     }
 
     public boolean takeFromChest(int x, int y, int z, int id, byte data) {
@@ -103,8 +98,7 @@ public class SetBlockBelowChest extends AbstractIC {
                     getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), x, y, z), stack);
                     if (is[i].getAmount() == 1) {
                         is[i] = new ItemStack(0, 0);
-                    }
-                    else {
+                    } else {
                         is[i].setAmount(is[i].getAmount() - 1);
                     }
                     ret = true;
@@ -117,7 +111,7 @@ public class SetBlockBelowChest extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+            RestrictedIC {
 
         public Factory(Server server) {
 

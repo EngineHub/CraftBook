@@ -1,12 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -14,6 +7,12 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class XPStorer extends AbstractMechanic {
 
@@ -22,6 +21,7 @@ public class XPStorer extends AbstractMechanic {
         MechanismsPlugin plugin;
 
         public Factory(MechanismsPlugin plugin) {
+
             this.plugin = plugin;
         }
 
@@ -52,10 +52,10 @@ public class XPStorer extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.xpstore.use")) return;
-        int rows = (int) Math.ceil(event.getPlayer().getLevel()/15);
+        if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.xpstore.use")) return;
+        int rows = (int) Math.ceil(event.getPlayer().getLevel() / 15);
         Inventory store = Bukkit.createInventory(event.getPlayer(), rows * 9, "Experience Points");
-        while(event.getPlayer().getTotalExperience() > 15) {
+        while (event.getPlayer().getTotalExperience() > 15) {
             event.getPlayer().setTotalExperience(event.getPlayer().getTotalExperience() - 15);
             store.addItem(new ItemStack(ItemID.BOTTLE_O_ENCHANTING, 1));
         }
@@ -77,6 +77,7 @@ public class XPStorer extends AbstractMechanic {
 
     @Override
     public boolean isActive() {
+
         return false;
     }
 

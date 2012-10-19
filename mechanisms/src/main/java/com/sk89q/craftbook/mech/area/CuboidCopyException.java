@@ -28,7 +28,6 @@ public class CuboidCopyException extends Exception {
     /**
      * Construct an instance.
      *
-     * @param msg
      */
     public CuboidCopyException() {
 

@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.HashMap;
-
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import org.bukkit.Art;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
@@ -11,8 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import java.util.HashMap;
 
 /**
  * @author Me4502
@@ -29,10 +28,10 @@ public class PaintingSwitch implements Listener {
     }
 
     public boolean isBeingEdited(Painting paint) {
-        if(paintings.get(paint) != null && players.get(paintings.get(paint)) != null) {
+
+        if (paintings.get(paint) != null && players.get(paintings.get(paint)) != null) {
             Player p = plugin.getServer().getPlayer(paintings.get(paint));
-            if(p == null || p.isDead()) return false;
-            return true;
+            return !(p == null || p.isDead());
         }
         return false;
     }
@@ -44,7 +43,7 @@ public class PaintingSwitch implements Listener {
             LocalPlayer player = plugin.wrap(event.getPlayer());
             if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
             Painting paint = (Painting) event.getRightClicked();
-            if(!plugin.canUseInArea(paint.getLocation(), event.getPlayer()))
+            if (!plugin.canUseInArea(paint.getLocation(), event.getPlayer()))
                 return;
             if (player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (!isBeingEdited(paint)) {
@@ -57,8 +56,7 @@ public class PaintingSwitch implements Listener {
                     player.print("mech.painting.stop");
                 } else if (isBeingEdited(paint)) {
                     player.print(player.translate("mech.painting.used") + " " + paintings.get(paint));
-                }
-                else
+                } else
                     return;
                 event.setCancelled(true);
             }
@@ -71,20 +69,18 @@ public class PaintingSwitch implements Listener {
         if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player.getName()).isValid())
+        if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player
+                .getName()).isValid())
             return;
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
             isForwards = true;
-        }
-        else if (event.getNewSlot() < event.getPreviousSlot()) {
+        } else if (event.getNewSlot() < event.getPreviousSlot()) {
             isForwards = false;
-        }
-        else return;
+        } else return;
         if (event.getPreviousSlot() == 0 && event.getNewSlot() == 8) {
             isForwards = false;
-        }
-        else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) {
+        } else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) {
             isForwards = true;
         }
         Art[] art = Art.values().clone();
@@ -92,15 +88,13 @@ public class PaintingSwitch implements Listener {
         int newID = paint.getArt().getId() + (isForwards ? 1 : -1);
         if (newID < 0) {
             newID = art.length - 1;
-        }
-        else if (newID > art.length - 1) {
+        } else if (newID > art.length - 1) {
             newID = 0;
         }
-        while(!paint.setArt(art[newID]))
-            if(newID > 0) {
-                newID --;
-            }
-            else {
+        while (!paint.setArt(art[newID]))
+            if (newID > 0) {
+                newID--;
+            } else {
                 break;
             }
         paintings.put(paint, player.getName());
