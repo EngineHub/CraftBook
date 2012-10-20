@@ -22,7 +22,10 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through
@@ -38,7 +41,7 @@ public class ICManager {
      * @see RegisteredICFactory
      */
     public final Map<String, RegisteredICFactory> registered
-            = new HashMap<String, RegisteredICFactory>();
+    = new HashMap<String, RegisteredICFactory>();
 
     /**
      * Holds a map of long IDs to short IDs
@@ -46,10 +49,12 @@ public class ICManager {
      * @see RegisteredICFactory
      */
     public final Map<String, String> longRegistered
-            = new HashMap<String, String>();
+    = new HashMap<String, String>();
 
     private static final Map<BlockWorldVector, IC> cachedICs
-            = new HashMap<BlockWorldVector, IC>();
+    = new HashMap<BlockWorldVector, IC>();
+
+	private static final Set<String> customPrefix = new HashSet<String>();
 
     /**
      * Register an IC with the manager. The casing of the ID can be of any
@@ -74,26 +79,42 @@ public class ICManager {
      * @param longId   case-insensitive long name (such as inverter)
      * @param factory  factory to create ICs
      * @param families families for the ic
+     * @return true if IC registration was a success
      */
-    public void register(String id, String longId, ICFactory factory, ICFamily... families) {
+    public boolean register(String id, String longId, ICFactory factory, ICFamily... families) {
 
-        for (ICFamily family : families) {
-            String id2 = id.replace("MC", family.getModifier());
-            RegisteredICFactory registration
-                    = new RegisteredICFactory(id2, longId, factory, family);
-            // Lowercase the ID so that we can do case in-sensitive lookups
-            registered.put(id2.toLowerCase(), registration);
-        }
-        if (longId != null) {
-            String toRegister = longId.toLowerCase();
-            if (toRegister.length() > 15) {
-                toRegister = toRegister.substring(0, 15);
-            }
-            longRegistered.put(toRegister, id);
-        }
+	    // check if at least one family is given
+	    if (families.length < 1) {
+		    return false;
+	    }
+	    // this is needed so we dont have two patterns
+	    String id2 = "[" + id + "]";
+	    // lets check if the IC ID has already been registered
+	    if (registered.containsKey(id.toLowerCase())) {
+		    return false;
+	    }
+	    // check if the ic matches the requirements
+	    Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(id2);
+	    if (!matcher.matches()) {
+		    return false;
+	    }
+	    String prefix = matcher.group(2).toLowerCase();
+	    // lets get the custom prefix
+	    customPrefix.add(prefix);
 
+	    RegisteredICFactory registration = new RegisteredICFactory(id, longId, factory, families);
+	    // Lowercase the ID so that we can do case in-sensitive lookups
+	    registered.put(id.toLowerCase(), registration);
+
+	    if (longId != null) {
+		    String toRegister = longId.toLowerCase();
+		    if (toRegister.length() > 15) {
+			    toRegister = toRegister.substring(0, 15);
+		    }
+		    longRegistered.put(toRegister, id);
+	    }
+	    return true;
     }
-
     /**
      * Get an IC registration by a provided ID.
      *
@@ -118,7 +139,9 @@ public class ICManager {
      */
     public static boolean isCachedIC(BlockWorldVector pt) {
 
-        return CircuitsPlugin.getInst().getLocalConfiguration().cacheICs && cachedICs.containsKey(pt);
+        if(!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
+            return false;
+        return cachedICs.containsKey(pt);
     }
 
     /**
@@ -142,7 +165,7 @@ public class ICManager {
      */
     public static void addCachedIC(BlockWorldVector pt, IC ic) {
 
-        if (!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
+        if(!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
             return;
         cachedICs.put(pt, ic);
     }
@@ -172,4 +195,8 @@ public class ICManager {
 
         removeCachedIC(pt);
     }
+
+	public boolean hasCustomPrefix(String prefix) {
+		return customPrefix.contains(prefix.toLowerCase());
+	}
 }
