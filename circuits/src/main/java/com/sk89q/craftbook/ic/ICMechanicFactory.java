@@ -37,7 +37,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      * The pattern used to match an IC on a sign.
      */
 	public static final Pattern IC_PATTERN =
-			Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{4,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
+			Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Manager of ICs.
