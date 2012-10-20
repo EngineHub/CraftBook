@@ -42,9 +42,9 @@ public class FamilyAISO extends AbstractICFamily {
     }
 
     @Override
-    public String getModifier() {
+    public String getSuffix() {
 
-        return "MCA";
+        return "A";
     }
 
     public static class ChipStateAISO extends AbstractChipState {

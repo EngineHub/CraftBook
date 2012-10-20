@@ -46,6 +46,6 @@ public interface ICFamily {
      *
      * @return family modifier
      */
-    public String getModifier();
+    public String getSuffix();
 
 }

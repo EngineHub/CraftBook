@@ -116,7 +116,7 @@ public class ICMechanic extends PersistentMechanic {
             if (state instanceof Sign) {
                 Sign sign = (Sign) state;
 
-                Matcher matcher = ICMechanicFactory.codePattern.matcher(sign.getLine(1));
+                Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(sign.getLine(1));
 
                 return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && (
                         (PersistentIC) ic).isActive();

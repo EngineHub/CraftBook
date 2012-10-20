@@ -26,8 +26,8 @@ package com.sk89q.craftbook.ic;
 public abstract class AbstractICFamily implements ICFamily {
 
     @Override
-    public String getModifier() {
+    public String getSuffix() {
         // here we return the default modifier string
-        return "MC";
+        return "";
     }
 }

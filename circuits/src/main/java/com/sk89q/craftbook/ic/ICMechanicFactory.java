@@ -36,8 +36,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     /**
      * The pattern used to match an IC on a sign.
      */
-    public static final Pattern codePattern =
-            Pattern.compile("^\\[(MC[^\\]]+)\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
+	public static final Pattern IC_PATTERN =
+			Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Manager of ICs.
@@ -71,43 +71,72 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         Sign sign = (Sign) block.getState();
 
         // detect the text on the sign to see if it's any kind of IC at all.
-        Matcher matcher = codePattern.matcher(sign.getLine(1));
-        if (!matcher.matches()) return null;
-        String id = matcher.group(1);
-        // after this point, we don't return null if we can't make an IC: we throw shit,
-        //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
+        Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
+	    if (!matcher.matches()) return null;
 
-        // now actually try to pull up an IC of that id number.
-        RegisteredICFactory registration = manager.get(id);
-        if (registration == null) throw new InvalidMechanismException(
+	    String prefix = matcher.group(2);
+	    // TODO: remove after some time to stop converting existing MCA ICs
+	    // convert existing MCA ICs to the new [MCXXXX]A syntax
+	    if (prefix.equalsIgnoreCase("MCA")) {
+		    sign.setLine(1, sign.getLine(1).replace("A", "") + "A");
+		    sign.update();
+	    }
+
+	    if (!manager.hasCustomPrefix(prefix)) return null;
+
+	    String id = matcher.group(1);
+	    // after this point, we don't return null if we can't make an IC: we throw shit,
+	    //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
+
+	    // now actually try to pull up an IC of that id number.
+	    RegisteredICFactory registration = manager.get(id);
+	    if (registration == null) throw new InvalidMechanismException(
                 "\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
 
-        IC ic;
-        // check if the ic is cached and get that single instance instead of creating a new one
-        if (ICManager.isCachedIC(pt)) {
-            ic = ICManager.getCachedIC(pt);
-        } else {
-            ic = registration.getFactory().create(sign);
-            // add the created ic to the cache
-            ICManager.addCachedIC(pt, ic);
-        }
+	    IC ic;
+	    // check if the ic is cached and get that single instance instead of creating a new one
+	    if (ICManager.isCachedIC(pt)) {
+		    ic = ICManager.getCachedIC(pt);
+	    }
+        else {
+		    ic = registration.getFactory().create(sign);
+		    // add the created ic to the cache
+		    ICManager.addCachedIC(pt, ic);
+	    }
+	    // extract the suffix
+	    String suffix = "";
+	    String[] str = sign.getLine(1).split("]");
+	    if (str.length > 1) {
+		    suffix = str[1];
+	    }
 
-        // okay, everything checked out.  we can finally make it.
-        if (ic instanceof SelfTriggeredIC) return new SelfTriggeredICMechanic(
+	    ICFamily family = registration.getFamilies()[0];
+	    if (suffix != null && !suffix.equals("")) {
+		    for (ICFamily f : registration.getFamilies()) {
+			    if (f.getSuffix().equalsIgnoreCase(suffix)) {
+				    family = f;
+				    break;
+			    }
+		    }
+	    }
+
+	    // okay, everything checked out.  we can finally make it.
+	    if (ic instanceof SelfTriggeredIC) return new SelfTriggeredICMechanic(
                 plugin,
                 id,
                 (SelfTriggeredIC) ic,
-                registration.getFamily(),
+                family,
                 pt
-        );
-        else
-            return new ICMechanic(
-                    plugin,
-                    id,
-                    ic,
-                    registration.getFamily(),
-                    pt
-            );
+                );
+        else {
+		    return new ICMechanic(
+		            plugin,
+		            id,
+		            ic,
+		            family,
+		            pt
+		            );
+	    }
     }
 
 
@@ -117,7 +146,6 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
-
         return detect(pt, player, sign, false);
     }
 
@@ -126,8 +154,19 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
-        Matcher matcher = codePattern.matcher(sign.getLine(1));
-        if (matcher.matches()) {
+	    boolean matches = true;
+        Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
+	    // lets check for custom ics
+	    if (!matcher.matches()) matches = false;
+	    try {
+		    if (!manager.hasCustomPrefix(matcher.group(2))) matches = false;
+	    } catch (Exception e) {
+		    // we need to catch here if the sign changes when beeing parsed
+		    matches = false;
+	    }
+
+        if (matches) {
+
             String id = matcher.group(1);
             String suffix = "";
             String[] str = sign.getLine(1).split("]");
@@ -135,10 +174,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 suffix = str[1];
             }
 
-            if (block.getTypeId() != BlockID.WALL_SIGN)
-                throw new InvalidMechanismException("Only wall signs are used for ICs.");
+            if (block.getTypeId() != BlockID.WALL_SIGN) throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
-            if (ICManager.isCachedIC(pt)) {
+            if(ICManager.isCachedIC(pt)) {
                 ICManager.removeCachedIC(pt);
             }
 
@@ -149,12 +187,11 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             ICFactory factory = registration.getFactory();
 
             if (factory instanceof RestrictedIC) {
-                if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase()))
-                    throw new ICVerificationException("You don't have permission to use "
-                            + registration.getId() + ".");
-            } else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase()))
-                throw new ICVerificationException("You don't have permission to use "
+                if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
                         + registration.getId() + ".");
+            }
+            else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
+                    + registration.getId() + ".");
 
             factory.verify(sign);
 
@@ -164,6 +201,16 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
 
+	        ICFamily family = registration.getFamilies()[0];
+	        if (suffix != null && !suffix.equals("")) {
+		        for (ICFamily f : registration.getFamilies()) {
+			        if (f.getSuffix().equalsIgnoreCase(suffix)) {
+				        family = f;
+				        break;
+			        }
+		        }
+	        }
+
             ICMechanic mechanic;
 
             if (ic instanceof SelfTriggeredIC) {
@@ -171,32 +218,31 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                         plugin,
                         id,
                         (SelfTriggeredIC) ic,
-                        registration.getFamily(),
+                        family,
                         pt
-                );
+                        );
             } else {
                 mechanic = new ICMechanic(
                         plugin,
                         id,
                         ic,
-                        registration.getFamily(),
+                        family,
                         pt
-                );
+                        );
             }
 
-            if (!shortHand) {
+            if(!shortHand) {
                 sign.setLine(0, ic.getSignTitle());
             }
 
             player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
 
             return mechanic;
-        } else if (plugin.getLocalConfiguration().enableShorthandIcs &&
+        } else if(plugin.getLocalConfiguration().enableShorthandIcs &&
                 sign.getLine(0).startsWith("=")) {
             String id = sign.getLine(0).substring(1);
 
-            if (block.getTypeId() != BlockID.WALL_SIGN)
-                throw new InvalidMechanismException("Only wall signs are used for ICs.");
+            if (block.getTypeId() != BlockID.WALL_SIGN) throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             String shortId = manager.longRegistered.get(id.toLowerCase());
             if (shortId == null) {
@@ -204,10 +250,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 return null;
             }
 
-            sign.setLine(1, "[" + shortId + "]");
+            sign.setLine(1, "["+shortId+"]");
 
             detect(pt, player, sign, true);
-        }
-        return null;
+        } return null;
     }
 }
