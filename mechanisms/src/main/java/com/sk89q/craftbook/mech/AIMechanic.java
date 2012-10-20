@@ -1,23 +1,26 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.ai.*;
+import java.util.ArrayList;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import java.util.ArrayList;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
+import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
+import com.sk89q.craftbook.mech.ai.SkeletonAIMechanic;
+import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
+import com.sk89q.craftbook.mech.ai.ZombieAIMechanic;
 
 public class AIMechanic implements Listener {
 
-    public MechanismsPlugin plugin;
     ArrayList<Class<BaseAIMechanic>> mechanics = new ArrayList<Class<BaseAIMechanic>>();
 
     public AIMechanic(MechanismsPlugin plugin) {
 
-        this.plugin = plugin;
         if (!plugin.getLocalConfiguration().aiSettings.enabled) return;
 
         if (plugin.getLocalConfiguration().aiSettings.zombieVision)

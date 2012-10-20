@@ -507,7 +507,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     protected void registerEvents() {
 
         if (getLocalConfiguration().enableICs) {
-            getServer().getPluginManager().registerEvents(new ICUtil().new ICListener(), this);
+            getServer().getPluginManager().registerEvents(new ICUtil.ICListener(), this);
         }
     }
 

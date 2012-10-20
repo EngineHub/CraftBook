@@ -18,16 +18,13 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.minecraft.util.commands.*;
-import com.sk89q.wepif.PermissionsResolverManager;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
+import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -37,11 +34,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Logger;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.minecraft.util.commands.CommandUsageException;
+import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
+import com.sk89q.minecraft.util.commands.SimpleInjector;
+import com.sk89q.minecraft.util.commands.WrappedCommandException;
+import com.sk89q.wepif.PermissionsResolverManager;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
@@ -68,6 +76,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     protected WorldGuardPlugin worldguard = null;
     protected boolean useWorldGuard = false;
     protected StateFlag useFlag = null;
+
+    public static final Random random = new Random(); //Good random, allowing for more random numbers.
 
     /**
      * Logger for messages.
@@ -293,7 +303,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      */
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-                             String[] args) {
+            String[] args) {
 
         try {
             commands.execute(cmd.getName(), args, sender, sender);

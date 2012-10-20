@@ -1,11 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +11,18 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Lever;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Payment Mech, takes payment. (Requires Vault.)
@@ -90,7 +96,7 @@ public class Payment extends AbstractMechanic {
                 BlockFace bface = sign.getBlock().getFace(back);
                 Block redstoneItem = back.getRelative(bface);
                 if (setState(sign.getBlock(), true)) {
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new turnOff(redstoneItem), 20L);
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new TurnOff(redstoneItem), 20L);
                 }
             } else {
                 MechanismsPlugin.economy.depositPlayer(event.getPlayer().getName(), money);
@@ -99,11 +105,11 @@ public class Payment extends AbstractMechanic {
         event.setCancelled(true);
     }
 
-    private class turnOff implements Runnable {
+    private static class TurnOff implements Runnable {
 
         final Block block;
 
-        public turnOff(Block block) {
+        public TurnOff(Block block) {
 
             this.block = block;
         }

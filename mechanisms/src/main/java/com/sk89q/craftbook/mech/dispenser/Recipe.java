@@ -14,7 +14,7 @@ public class Recipe {
 
     public Recipe(int[] recipe) {
 
-        this.recipe = recipe;
+        this.recipe = recipe.clone();
     }
 
     /**

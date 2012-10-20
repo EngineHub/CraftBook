@@ -1,17 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Collection;
+
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Item;
 
-import java.util.Collection;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Sapling planter
@@ -68,7 +73,7 @@ public class Planter extends AbstractIC {
         if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(),
                 target.getBlockZ()) == 0
                 && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1,
-                target.getBlockZ()))) {
+                        target.getBlockZ()))) {
 
             BlockPlanter run = new BlockPlanter(world, target, info[0], info[1]);
             run.run();
@@ -126,8 +131,7 @@ public class Planter extends AbstractIC {
                     if (!itemEnt.isDead()
                             && itemEnt.getItemStack().getAmount() > 0
                             && itemEnt.getItemStack().getTypeId() == itemId
-                            && (damVal == -1 || damVal == -1 || itemEnt
-                            .getItemStack().getDurability() == damVal)) {
+                            && (damVal == -1 || itemEnt.getItemStack().getDurability() == damVal)) {
                         double diffX = target.getBlockX()
                                 - itemEnt.getLocation().getX();
                         double diffY = target.getBlockY()
