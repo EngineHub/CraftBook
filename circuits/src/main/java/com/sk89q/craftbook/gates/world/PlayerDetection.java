@@ -60,7 +60,7 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception ignored) {
         }
 
-        String nameLine = getSign().getLine(3);
+        String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "");
         if (nameLine.length() <= 0)
             return false;
 
@@ -70,7 +70,6 @@ public class PlayerDetection extends AbstractIC {
                 continue;
             }
 
-            nameLine = nameLine.replace("g:", "").replace("p:", "");
             if(e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
                     || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))
                 return true;
