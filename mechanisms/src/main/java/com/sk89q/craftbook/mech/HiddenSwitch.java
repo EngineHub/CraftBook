@@ -93,7 +93,9 @@ public class HiddenSwitch extends AbstractMechanic {
         if (!(event.getBlockFace() == BlockFace.EAST
                 || event.getBlockFace() == BlockFace.WEST
                 || event.getBlockFace() == BlockFace.NORTH
-                || event.getBlockFace() == BlockFace.SOUTH)) return;
+                || event.getBlockFace() == BlockFace.SOUTH
+                || event.getBlockFace() == BlockFace.UP
+                || event.getBlockFace() == BlockFace.DOWN)) return;
         BlockFace face = event.getBlockFace().getOppositeFace();
         Block testBlock = switchBlock.getRelative(face);
         boolean passed = false;
