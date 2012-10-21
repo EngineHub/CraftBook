@@ -60,21 +60,22 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception ignored) {
         }
 
-        String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "");
-        if (nameLine.length() <= 0)
-            return false;
-
         for (Player e : getServer().getOnlinePlayers()) {
             if (e == null || !e.isValid()
                     || !LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
                 continue;
             }
 
-            if(e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
-                    || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))
-                return true;
+            String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "");
+            if (nameLine.length() <= 0) {
+                if(e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
+                        || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))
+                    return true;
+                else
+                    continue;
+            }
             else
-                continue;
+                return true;
         }
 
         return false;
