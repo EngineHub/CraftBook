@@ -60,14 +60,15 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception ignored) {
         }
 
+        String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "");
+
         for (Player e : getServer().getOnlinePlayers()) {
             if (e == null || !e.isValid()
                     || !LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
                 continue;
             }
 
-            String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "");
-            if (nameLine.length() <= 0) {
+            if (nameLine.length() > 0) {
                 if(e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
                         || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))
                     return true;
