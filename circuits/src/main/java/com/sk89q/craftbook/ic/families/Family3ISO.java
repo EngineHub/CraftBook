@@ -21,7 +21,6 @@ package com.sk89q.craftbook.ic.families;
 import com.sk89q.craftbook.ic.AbstractChipState;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.block.Block;
@@ -41,14 +40,26 @@ public class Family3ISO extends AbstractICFamily {
         return new ChipState3ISO(source, sign);
     }
 
-    public static class ChipState3ISO extends AbstractChipState {
+	@Override
+	public ChipState detectSelfTriggered(BlockWorldVector source, Sign sign) {
+
+		return new ChipState3ISO(source, sign, true);
+	}
+
+
+	public static class ChipState3ISO extends AbstractChipState {
 
         public ChipState3ISO(BlockWorldVector source, Sign sign) {
 
-            super(source, sign);
+            super(source, sign, false);
         }
 
-        @Override
+	    public ChipState3ISO(BlockWorldVector source, Sign sign, boolean selfTriggered) {
+
+		    super(source, sign, selfTriggered);
+	    }
+
+	    @Override
         protected Block getBlock(int pin) {
 
             switch (pin) {
@@ -63,22 +74,6 @@ public class Family3ISO extends AbstractICFamily {
                     return sign.getBlock().getRelative(face).getRelative(face);
                 default:
                     return null;
-            }
-        }
-
-        @Override
-        public boolean get(int pin) {
-
-            Block block = getBlock(pin);
-            return block != null && block.isBlockIndirectlyPowered();
-        }
-
-        @Override
-        public void set(int pin, boolean value) {
-
-            Block block = getBlock(pin);
-            if (block != null) {
-                ICUtil.setState(block, value);
             }
         }
 

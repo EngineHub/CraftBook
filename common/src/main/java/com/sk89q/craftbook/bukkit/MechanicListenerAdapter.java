@@ -183,79 +183,73 @@ public class MechanicListenerAdapter {
             // yet been updated, so we're going to do this very ugly thing of
             // faking the value with the new one whenever the data value of this
             // block is requested -- it is quite ugly
-            try {
-                if (type == BlockID.LEVER) {
-                } else if (type == BlockID.STONE_PRESSURE_PLATE) {
-                } else if (type == BlockID.WOODEN_PRESSURE_PLATE) {
-                } else if (type == BlockID.STONE_BUTTON) {
-                } else if (type == BlockID.POWERED_RAIL) {
-                } else if (type == BlockID.REDSTONE_WIRE) {
 
-                    int above = world.getBlockTypeIdAt(x, y + 1, z);
+            if (type == BlockID.REDSTONE_WIRE) {
 
-                    int westSide = world.getBlockTypeIdAt(x, y, z + 1);
-                    int westSideAbove = world.getBlockTypeIdAt(x, y + 1, z + 1);
-                    int westSideBelow = world.getBlockTypeIdAt(x, y - 1, z + 1);
-                    int eastSide = world.getBlockTypeIdAt(x, y, z - 1);
-                    int eastSideAbove = world.getBlockTypeIdAt(x, y + 1, z - 1);
-                    int eastSideBelow = world.getBlockTypeIdAt(x, y - 1, z - 1);
+	            if (CraftBookPlugin.getInstance().getLocalConfiguration().indirectRedstone) {
 
-                    int northSide = world.getBlockTypeIdAt(x - 1, y, z);
-                    int northSideAbove = world.getBlockTypeIdAt(x - 1, y + 1, z);
-                    int northSideBelow = world.getBlockTypeIdAt(x - 1, y - 1, z);
-                    int southSide = world.getBlockTypeIdAt(x + 1, y, z);
-                    int southSideAbove = world.getBlockTypeIdAt(x + 1, y + 1, z);
-                    int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
+		            // power all blocks around the redstone wire on the same y level
+		            // north/south
+		            handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
+		            handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+		            // east/west
+		            handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
+		            handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
 
-                    // Make sure that the wire points to only this block
-                    if ((!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
-                            && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
-	                    if (!CraftBookPlugin.getInstance().getLocalConfiguration().indirectRedstone) {
-		                    if (!BlockType.isRedstoneBlock(westSide)
-				                    && !BlockType.isRedstoneBlock(eastSide)) {
-			                    // Possible blocks north / south
-			                    handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
-			                    handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
-			                    handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
-			                    handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
-		                    }
-	                    } else {
-		                    // Possible blocks north / south
-		                    handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
-		                    handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
-	                    }
-                    }
+		            // Can be triggered from below
+		            handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
+	            } else {
 
-                    if ((!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
-                            && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
-	                    if (!CraftBookPlugin.getInstance().getLocalConfiguration().indirectRedstone) {
-		                    if (!BlockType.isRedstoneBlock(northSide)
-				                    && !BlockType.isRedstoneBlock(southSide)) {
-			                    // Possible blocks west / east
-			                    handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
-			                    handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
-			                    handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
-			                    handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
-		                    }
-	                    } else {
-		                    // Possible blocks west / east
-		                    handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
-		                    handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
-	                    }
-                    }
+		            int above = world.getBlockTypeIdAt(x, y + 1, z);
 
-                    // Can be triggered from below
-                    handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
+		            int westSide = world.getBlockTypeIdAt(x, y, z + 1);
+		            int westSideAbove = world.getBlockTypeIdAt(x, y + 1, z + 1);
+		            int westSideBelow = world.getBlockTypeIdAt(x, y - 1, z + 1);
+		            int eastSide = world.getBlockTypeIdAt(x, y, z - 1);
+		            int eastSideAbove = world.getBlockTypeIdAt(x, y + 1, z - 1);
+		            int eastSideBelow = world.getBlockTypeIdAt(x, y - 1, z - 1);
 
-                    return;
-                }
+		            int northSide = world.getBlockTypeIdAt(x - 1, y, z);
+		            int northSideAbove = world.getBlockTypeIdAt(x - 1, y + 1, z);
+		            int northSideBelow = world.getBlockTypeIdAt(x - 1, y - 1, z);
+		            int southSide = world.getBlockTypeIdAt(x + 1, y, z);
+		            int southSideAbove = world.getBlockTypeIdAt(x + 1, y + 1, z);
+		            int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
 
-                // For redstone wires, the code already exited this method
-                // Non-wire blocks proceed
+		            // handle direct wire input for possible mechanics north/south
+		            // for north/south we need to check if east/west has air or no redstone blocks
+		            if (!BlockType.isRedstoneBlock(eastSide)
+				            && (!BlockType.isRedstoneBlock(eastSideAbove) || above != 0 || eastSide == 0)
+				            && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)
+				            // blocks on the westside
+				            && !BlockType.isRedstoneBlock(westSide)
+				            && (!BlockType.isRedstoneBlock(westSideAbove) || above != 0 || westSide == 0)
+				            && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)) {
+			            // handle direct wire input north and south
+			            handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
+			            handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+		            }
+
+		            // handle direct wire input for possible mechanics north/south
+		            // for east/west we need to check if north/south has air or no redstone blocks
+		            if (!BlockType.isRedstoneBlock(northSide)
+				            && (!BlockType.isRedstoneBlock(northSideAbove) || above != 0 || northSide == 0)
+				            && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
+				            // blocks on the south
+				            && !BlockType.isRedstoneBlock(southSide)
+				            && (!BlockType.isRedstoneBlock(southSideAbove) || above != 0 || southSide == 0)
+				            && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
+			            // handle direct wire input east and west
+			            handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
+			            handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
+		            }
+
+		            // Can be triggered from below
+		            handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
+	            }
+            } else if (BlockType.isRedstoneBlock(type)) {
+	            // For redstone wires, the code already exited this method
+	            // Non-wire blocks proceed
 
                 handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
                 handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
@@ -268,7 +262,6 @@ public class MechanicListenerAdapter {
 
                 // Can be triggered from below
                 handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
-            } finally {
             }
         }
 
