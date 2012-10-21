@@ -1,15 +1,30 @@
 package com.sk89q.craftbook.mech.cauldron;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.*;
 
 /**
  * @author Silthus
  */
 public class CauldronItemStack implements Comparable<CauldronItemStack> {
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + amount;
+        result = prime * result + data;
+        result = prime * result
+                + (material == null ? 0 : material.hashCode());
+        return result;
+    }
 
     public static Collection<CauldronItemStack> convert(Collection<Item> stacks) {
 
@@ -25,10 +40,9 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         }
         Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
         // merge the amounts and stacks
-        for (String stack : items.keySet()) {
-            String[] split = stack.split(":");
-            stackSet.add(new CauldronItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
-                    items.get(stack)));
+        for (Map.Entry<String, Integer> stack : items.entrySet()) {
+            String[] split = stack.getKey().split(":");
+            stackSet.add(new CauldronItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]), stack.getValue()));
         }
         return stackSet;
     }
@@ -103,16 +117,6 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         return this;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-
-        if (obj instanceof CauldronItemStack) {
-            CauldronItemStack stack = (CauldronItemStack) obj;
-            return isSameType(stack) && stack.getAmount() == getAmount();
-        }
-        return false;
-    }
-
     public boolean isSameType(CauldronItemStack stack) {
 
         if (data < 0 || stack.getData() < 0) return stack.getMaterial() == getMaterial();
@@ -126,5 +130,15 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         if (getAmount() > stack.getAmount()) return 1;
         if (getAmount() == stack.getAmount()) return 0;
         return -1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj instanceof CauldronItemStack) {
+            CauldronItemStack stack = (CauldronItemStack) obj;
+            return isSameType(stack) && stack.getAmount() == getAmount();
+        }
+        return false;
     }
 }

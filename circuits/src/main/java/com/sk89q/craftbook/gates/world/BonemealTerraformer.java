@@ -1,9 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Biome;
@@ -13,8 +11,15 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Random;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class BonemealTerraformer extends AbstractIC {
 
@@ -66,11 +71,10 @@ public class BonemealTerraformer extends AbstractIC {
 
     public void terraform() {
 
-        Random random = new Random();
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
                 for (int z = -radius + 1; z < radius; z++)
-                    if (random.nextInt(40) == 0) {
+                    if (CircuitsPlugin.random.nextInt(40) == 0) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
@@ -96,8 +100,8 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if ((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData
                                 () < 0x14 && b.getRelative(0, 1, 0).getTypeId() == 0 && b.getRelative(0, -2,
-                                0).getTypeId() != b.getTypeId() && b.getRelative(0, -1,
-                                0).getTypeId() != b.getTypeId()) {
+                                        0).getTypeId() != b.getTypeId() && b.getRelative(0, -1,
+                                                0).getTypeId() != b.getTypeId()) {
                             if (consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x2));
                             }
@@ -111,9 +115,9 @@ public class BonemealTerraformer extends AbstractIC {
                             return;
                         }
                         if (b.getType() == Material.GRASS && b.getRelative(0, 1,
-                                0).getType() == Material.AIR && random.nextInt(15) == 0) {
+                                0).getType() == Material.AIR && CircuitsPlugin.random.nextInt(15) == 0) {
                             if (consumeBonemeal()) {
-                                int t = random.nextInt(7);
+                                int t = CircuitsPlugin.random.nextInt(7);
                                 if (t == 0) {
                                     b.getRelative(0, 1, 0).setType(Material.LONG_GRASS);
                                     b.getRelative(0, 1, 0).setData((byte) 1);
@@ -131,9 +135,9 @@ public class BonemealTerraformer extends AbstractIC {
                             return;
                         }
                         if (b.getType() == Material.MYCEL && b.getRelative(0, 1,
-                                0).getType() == Material.AIR && random.nextInt(15) == 0) {
+                                0).getType() == Material.AIR && CircuitsPlugin.random.nextInt(15) == 0) {
                             if (consumeBonemeal()) {
-                                int t = random.nextInt(2);
+                                int t = CircuitsPlugin.random.nextInt(2);
                                 if (t == 0) {
                                     b.getRelative(0, 1, 0).setType(Material.RED_MUSHROOM);
                                 } else if (t == 1) {

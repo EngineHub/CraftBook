@@ -1,5 +1,16 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
@@ -17,16 +28,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.data.DataException;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Silthus
@@ -48,7 +49,7 @@ public class AreaCommands {
             usage = "[-n namespace ] <id>",
             flags = "n:",
             min = 1
-    )
+            )
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
 
         final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
@@ -133,7 +134,7 @@ public class AreaCommands {
             desc = "Lists the areas of the given namespace or lists all areas.",
             usage = "[-n namespace] [page #]",
             flags = "an:"
-    )
+            )
     public void list(CommandContext context, CommandSender sender) throws CommandException {
 
         final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;
@@ -184,8 +185,8 @@ public class AreaCommands {
         if (folder != null && folder.exists()) {
             for (File area : folder.listFiles(fnf)) {
                 String areaName = area.getName();
-                areaName.replace(".schematic", "");
-                areaName.replace(".cbcopy", "");
+                areaName = areaName.replace(".schematic", "");
+                areaName = areaName.replace(".cbcopy", "");
                 areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
                         + ChatColor.YELLOW + areaName);
             }
@@ -194,8 +195,8 @@ public class AreaCommands {
                 if (file.isDirectory()) {
                     for (File area : file.listFiles(fnf)) {
                         String areaName = area.getName();
-                        areaName.replace(".schematic", "");
-                        areaName.replace(".cbcopy", "");
+                        areaName = areaName.replace(".schematic", "");
+                        areaName = areaName.replace(".cbcopy", "");
                         areaList.add(ChatColor.AQUA + folder.getName() + "   :   "
                                 + ChatColor.YELLOW + areaName);
                     }
@@ -221,7 +222,7 @@ public class AreaCommands {
             desc = "Lists the areas of the given namespace or lists all areas.",
             usage = "[-n namespace] [area]",
             flags = "an:"
-    )
+            )
     public void delete(CommandContext context, CommandSender sender) throws CommandException {
 
         final MechanismsConfiguration.AreaSettings config = plugin.getLocalConfiguration().areaSettings;

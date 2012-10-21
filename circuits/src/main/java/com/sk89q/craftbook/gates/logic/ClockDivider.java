@@ -18,15 +18,16 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 
-import java.util.Random;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class ClockDivider extends AbstractIC {
-
-    protected Random random = new Random();
 
     public ClockDivider(Server server, Sign sign, ICFactory factory) {
 

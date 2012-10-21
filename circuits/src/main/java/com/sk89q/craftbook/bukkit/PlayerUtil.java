@@ -1,23 +1,19 @@
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.minecraft.util.commands.CommandException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import com.sk89q.minecraft.util.commands.CommandException;
 
 public class PlayerUtil {
-
-    // DO NOT INSTANTIATE ME!!!!!
-    private PlayerUtil() {
-
-    }
 
     /**
      * Checks to see if the sender is a player, otherwise throw an exception.
@@ -153,12 +149,12 @@ public class PlayerUtil {
                 Player sourcePlayer = checkPlayer(source);
                 World sourceWorld = sourcePlayer.getWorld();
                 org.bukkit.util.Vector sourceVector
-                        = sourcePlayer.getLocation().toVector();
+                = sourcePlayer.getLocation().toVector();
 
                 for (Player player : CircuitsPlugin.server.getOnlinePlayers())
                     if (player.getWorld().equals(sourceWorld)
                             && player.getLocation().toVector().distanceSquared(
-                            sourceVector) < 900) {
+                                    sourceVector) < 900) {
                         players.add(player);
                     }
 

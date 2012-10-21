@@ -1,12 +1,18 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
 
 /**
  * @author Me4502
@@ -54,19 +60,23 @@ public class PlayerDetection extends AbstractIC {
         } catch (Exception ignored) {
         }
 
+        String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "");
+
         for (Player e : getServer().getOnlinePlayers()) {
             if (e == null || !e.isValid()
                     || !LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
                 continue;
             }
 
-            String nameLine = getSign().getLine(3);
             if (nameLine.length() > 0) {
-                nameLine = nameLine.replace("g:", "").replace("p:", "");
-                return e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
-                        || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine);
+                if(e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
+                        || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))
+                    return true;
+                else
+                    continue;
             }
-            return true;
+            else
+                return true;
         }
 
         return false;

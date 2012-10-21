@@ -18,9 +18,8 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,7 +36,9 @@ import org.bukkit.material.Lever;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.material.RedstoneTorch;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * IC utility functions.
@@ -47,7 +48,7 @@ import java.util.HashMap;
 public class ICUtil {
 
     private static BlockFace[] REDSTONE_CONTACT_FACES =
-            {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
+        {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
 
     public ICUtil() {
 
@@ -55,7 +56,7 @@ public class ICUtil {
 
     private static HashMap<Location, Boolean> torchStatus = new HashMap<Location, Boolean>();
 
-    public class ICListener implements Listener {
+    public static class ICListener implements Listener {
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockPhysics(BlockPhysicsEvent event) {

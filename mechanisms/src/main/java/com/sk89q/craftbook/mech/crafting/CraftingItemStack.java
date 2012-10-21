@@ -1,10 +1,14 @@
 package com.sk89q.craftbook.mech.crafting;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.*;
 
 /**
  * @author Silthus
@@ -106,16 +110,6 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         return this;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-
-        if (obj instanceof CraftingItemStack) {
-            CraftingItemStack stack = (CraftingItemStack) obj;
-            return isSameType(stack) && stack.getAmount() == getAmount();
-        }
-        return false;
-    }
-
     public boolean isSameType(CraftingItemStack stack) {
 
         if (data == -1 || stack.getData() == -1) return stack.getMaterial() == getMaterial();
@@ -129,5 +123,26 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         if (getAmount() > stack.getAmount()) return 1;
         if (getAmount() == stack.getAmount()) return 0;
         return -1;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + amount;
+        result = prime * result + data;
+        result = prime * result
+                + (material == null ? 0 : material.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj instanceof CraftingItemStack) {
+            CraftingItemStack stack = (CraftingItemStack) obj;
+            return isSameType(stack) && stack.getAmount() == getAmount();
+        }
+        return false;
     }
 }
