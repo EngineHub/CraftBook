@@ -14,14 +14,31 @@ public abstract class AbstractChipState implements ChipState {
 
     protected final Sign sign;
     protected final BlockWorldVector source;
+	protected final boolean selfTriggered;
 
-    public AbstractChipState(BlockWorldVector source, Sign sign) {
+	protected AbstractChipState(BlockWorldVector source, Sign sign, boolean selfTriggered) {
+		this.sign = sign;
+		this.source = source;
+		this.selfTriggered = selfTriggered;
+	}
 
-        this.sign = sign;
-        this.source = source;
-    }
+	protected abstract Block getBlock(int pin);
 
-    protected abstract Block getBlock(int pin);
+	@Override
+	public boolean get(int pin) {
+
+		Block block = getBlock(pin);
+		return block != null && (selfTriggered || isTriggered(pin)) && block.isBlockIndirectlyPowered();
+	}
+
+	@Override
+	public void set(int pin, boolean value) {
+
+		Block block = getBlock(pin);
+		if (block != null) {
+			ICUtil.setState(block, value);
+		}
+	}
 
     @Override
     public boolean isTriggered(int pin) {

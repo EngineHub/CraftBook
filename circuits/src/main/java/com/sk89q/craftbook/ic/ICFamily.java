@@ -41,6 +41,17 @@ public interface ICFamily {
      */
     public ChipState detect(BlockWorldVector source, Sign sign);
 
+	/**
+	 * Return a {@link ChipState} that provides an interface to access
+	 * the I/O pins.
+	 *
+	 * @param source
+	 * @param sign
+	 *
+	 * @return
+	 */
+	public ChipState detectSelfTriggered(BlockWorldVector source, Sign sign);
+
     /**
      * Gets the sign modifier of the family. In case of the base ic thats MC.
      *
