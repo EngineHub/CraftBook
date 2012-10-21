@@ -76,7 +76,7 @@ public class Netherrack extends AbstractMechanic {
 
         if (event.getNewCurrent() > 0 && canPassThrough(above.getTypeId())) {
             above.setTypeId(BlockID.FIRE, false);
-        } else if (above.getTypeId() == BlockID.FIRE) {
+        } else if (event.getNewCurrent() < 1 && above != null && above.getTypeId() == BlockID.FIRE) {
             above.setTypeId(BlockID.AIR, false);
         }
     }

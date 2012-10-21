@@ -42,14 +42,26 @@ public class FamilyVIVO extends AbstractICFamily {
         return new ChipStateVIVO(source, sign);
     }
 
-    public static class ChipStateVIVO extends AbstractChipState {
+	@Override
+	public ChipState detectSelfTriggered(BlockWorldVector source, Sign sign) {
+
+		return new ChipStateVIVO(source, sign, true);
+	}
+
+
+	public static class ChipStateVIVO extends AbstractChipState {
 
         public ChipStateVIVO(BlockWorldVector source, Sign sign) {
 
-            super(source, sign);
+            super(source, sign, false);
         }
 
-        @Override
+	    public ChipStateVIVO(BlockWorldVector source, Sign sign, boolean selfTriggered) {
+
+		    super(source, sign, selfTriggered);
+	    }
+
+	    @Override
         protected Block getBlock(int pin) {
 
             BlockFace fback = SignUtil.getBack(sign.getBlock());
@@ -73,13 +85,6 @@ public class FamilyVIVO extends AbstractICFamily {
 
             }
 
-        }
-
-        @Override
-        public boolean get(int pin) {
-
-            Block block = getBlock(pin);
-            return block != null && block.isBlockIndirectlyPowered();
         }
 
         @Override

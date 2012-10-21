@@ -46,7 +46,7 @@ public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggerin
 
         if (state instanceof Sign) {
             // Assuming that the plugin host isn't going wonky here
-            ChipState chipState = family.detect(pt, (Sign) state);
+            ChipState chipState = family.detectSelfTriggered(pt, (Sign) state);
             selfTrigIC.think(chipState);
         }
     }
