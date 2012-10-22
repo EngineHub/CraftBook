@@ -18,19 +18,18 @@
 
 package com.sk89q.craftbook.plc.lang;
 
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.plc.PlcException;
+import com.sk89q.craftbook.plc.PlcLanguage;
+import org.bukkit.ChatColor;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
-
-import org.bukkit.ChatColor;
-
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.plc.PlcException;
-import com.sk89q.craftbook.plc.PlcLanguage;
 
 public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]> {
 

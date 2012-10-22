@@ -7,11 +7,11 @@
 
 package com.sk89q.jinglenote;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A manager of play instances.

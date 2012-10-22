@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.mech.area;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a cuboid copy that can be saved to disk and

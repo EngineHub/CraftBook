@@ -18,15 +18,14 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Vehicle;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class BukkitPlayer implements LocalPlayer {
 
