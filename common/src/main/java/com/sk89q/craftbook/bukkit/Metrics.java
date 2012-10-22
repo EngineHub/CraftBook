@@ -134,9 +134,7 @@ public class Metrics {
 
     public Metrics(final Plugin plugin) throws IOException {
 
-        if (plugin == null) {
-            throw new IllegalArgumentException("Plugin cannot be null");
-        }
+        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
 
         this.plugin = plugin;
 
@@ -168,9 +166,7 @@ public class Metrics {
      */
     public Graph createGraph(final String name) {
 
-        if (name == null) {
-            throw new IllegalArgumentException("Graph name cannot be null");
-        }
+        if (name == null) throw new IllegalArgumentException("Graph name cannot be null");
 
         // Construct the graph object
         final Graph graph = new Graph(name);
@@ -189,9 +185,7 @@ public class Metrics {
      */
     public void addGraph(final Graph graph) {
 
-        if (graph == null) {
-            throw new IllegalArgumentException("Graph cannot be null");
-        }
+        if (graph == null) throw new IllegalArgumentException("Graph cannot be null");
 
         graphs.add(graph);
     }
@@ -203,9 +197,7 @@ public class Metrics {
      */
     public void addCustomData(final Plotter plotter) {
 
-        if (plotter == null) {
-            throw new IllegalArgumentException("Plotter cannot be null");
-        }
+        if (plotter == null) throw new IllegalArgumentException("Plotter cannot be null");
 
         // Add the plotter to the graph o/
         defaultGraph.addPlotter(plotter);
@@ -225,14 +217,10 @@ public class Metrics {
 
         synchronized (optOutLock) {
             // Did we opt out?
-            if (isOptOut()) {
-                return false;
-            }
+            if (isOptOut()) return false;
 
             // Is metrics already running?
-            if (taskId >= 0) {
-                return true;
-            }
+            if (taskId >= 0) return true;
 
             // Begin hitting the server with glorious data
             taskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
@@ -427,9 +415,9 @@ public class Metrics {
         writer.close();
         reader.close();
 
-        if (response == null || response.startsWith("ERR")) {
+        if (response == null || response.startsWith("ERR"))
             throw new IOException(response); //Throw the exception
-        } else {
+        else {
             // Is this the first update this hour?
             if (response.contains("OK This is your first update this hour")) {
                 synchronized (graphs) {
@@ -560,9 +548,7 @@ public class Metrics {
         @Override
         public boolean equals(final Object object) {
 
-            if (!(object instanceof Graph)) {
-                return false;
-            }
+            if (!(object instanceof Graph)) return false;
 
             final Graph graph = (Graph) object;
             return graph.name.equals(name);
@@ -641,9 +627,7 @@ public class Metrics {
         @Override
         public boolean equals(final Object object) {
 
-            if (!(object instanceof Plotter)) {
-                return false;
-            }
+            if (!(object instanceof Plotter)) return false;
 
             final Plotter plotter = (Plotter) object;
             return plotter.name.equals(name) && plotter.getValue() == getValue();

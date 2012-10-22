@@ -1,9 +1,8 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -12,10 +11,20 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
-import java.util.Iterator;
-import java.util.List;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class AutomaticCrafter extends AbstractIC {
 
@@ -101,27 +110,27 @@ public class AutomaticCrafter extends AbstractIC {
         for (Entity en : getSign().getChunk().getEntities()) {
             check:
             {
-                if (!(en instanceof Item)) {
-                    continue;
-                }
-                Item item = (Item) en;
-                if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
-                    continue;
-                }
-                int ix = item.getLocation().getBlockX();
-                int iy = item.getLocation().getBlockY();
-                int iz = item.getLocation().getBlockZ();
-                if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                    for (int i = 0; i < item.getItemStack().getAmount(); i++) {
-                        ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
-                                item.getItemStack());
-                        if (it == null) {
-                            break check;
-                        }
-                        it.setAmount(it.getAmount() + 1);
+            if (!(en instanceof Item)) {
+                continue;
+            }
+            Item item = (Item) en;
+            if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
+                continue;
+            }
+            int ix = item.getLocation().getBlockX();
+            int iy = item.getLocation().getBlockY();
+            int iz = item.getLocation().getBlockZ();
+            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+                for (int i = 0; i < item.getItemStack().getAmount(); i++) {
+                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
+                            item.getItemStack());
+                    if (it == null) {
+                        break check;
                     }
-                    item.remove();
+                    it.setAmount(it.getAmount() + 1);
                 }
+                item.remove();
+            }
             }
         }
         return false;

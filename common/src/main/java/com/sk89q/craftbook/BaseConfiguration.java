@@ -1,14 +1,14 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -110,8 +110,9 @@ public abstract class BaseConfiguration {
 
         public BaseConfigurationSection(String section) {
 
-            if (!cfg.isConfigurationSection(section))
+            if (!cfg.isConfigurationSection(section)) {
                 cfg.createSection(section);
+            }
             this.section = cfg.getConfigurationSection(section);
         }
 

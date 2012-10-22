@@ -8,7 +8,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -95,8 +95,8 @@ public class FireShooter extends AbstractIC {
 
         if (n != 1) {
             for (short i = 0; i < n; i++) {
-                velocity = new Vector(x + (CircuitsPlugin.random.nextInt((int) spread) - spread / 2),
-                        vert + (CircuitsPlugin.random.nextInt((int) spread) - spread / 2), z + (CircuitsPlugin.random.nextInt((int) spread) - spread
+                velocity = new Vector(x + (BaseBukkitPlugin.random.nextInt((int) spread) - spread / 2),
+                        vert + (BaseBukkitPlugin.random.nextInt((int) spread) - spread / 2), z + (BaseBukkitPlugin.random.nextInt((int) spread) - spread
                                 / 2));
                 SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
                 f.setVelocity(velocity);

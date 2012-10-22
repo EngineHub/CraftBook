@@ -19,8 +19,9 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.block.Sign;
+
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * MechanicFactory attempts to detect a mechanism at a position and will produce

@@ -1,13 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -18,8 +13,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SelfTriggeringMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -91,17 +99,19 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
          */
         @Override
         public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
-                                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
 
                 sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
-                if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+                if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
                     sign.setLine(3, "0");
-                else
+                }
+                else {
                     sign.setLine(3, "1");
+                }
                 sign.update();
                 player.print("mech.cook.create");
             } else
@@ -237,13 +247,16 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     public int getMultiplier(Sign sign) {
 
         int multiplier = 1;
-        if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) multiplier = 0;
+        if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
+            multiplier = 0;
+        }
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
         } catch (Exception e) {
             multiplier = 1;
-            if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel)
+            if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
                 multiplier = 0;
+            }
             setMultiplier(sign, multiplier);
         }
         return multiplier;

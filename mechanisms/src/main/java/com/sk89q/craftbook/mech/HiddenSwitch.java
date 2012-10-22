@@ -136,26 +136,35 @@ public class HiddenSwitch extends AbstractMechanic {
                     break;
                 }
             } else if (plugin.getLocalConfiguration().hiddenSwitchSettings.anyside) {
-                if (face == event.getBlockFace().getOppositeFace() && passed)
+                if (face == event.getBlockFace().getOppositeFace() && passed) {
                     break;
+                }
                 passed = true;
 
-                if (face == BlockFace.WEST)
+                if (face == BlockFace.WEST) {
                     face = BlockFace.NORTH;
-                else if (face == BlockFace.NORTH)
+                }
+                else if (face == BlockFace.NORTH) {
                     face = BlockFace.EAST;
-                else if (face == BlockFace.EAST)
+                }
+                else if (face == BlockFace.EAST) {
                     face = BlockFace.SOUTH;
-                else if (face == BlockFace.SOUTH)
+                }
+                else if (face == BlockFace.SOUTH) {
                     face = BlockFace.UP;
-                else if (face == BlockFace.UP)
+                }
+                else if (face == BlockFace.UP) {
                     face = BlockFace.DOWN;
-                else if (face == BlockFace.DOWN)
+                }
+                else if (face == BlockFace.DOWN) {
                     face = BlockFace.WEST;
+                }
 
                 testBlock = switchBlock.getRelative(face);
-            } else
+            }
+            else {
                 break;
+            }
         }
     }
 

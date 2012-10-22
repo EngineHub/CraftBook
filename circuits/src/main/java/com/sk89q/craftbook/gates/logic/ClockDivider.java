@@ -94,6 +94,21 @@ public class ClockDivider extends AbstractIC {
 
             return new ClockDivider(getServer(), sign, this);
         }
-    }
 
+        @Override
+        public String getDescription() {
+
+            return "Clock that toggles output when reset.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "ticks required",
+                    "current ticks"
+            };
+            return lines;
+        }
+    }
 }

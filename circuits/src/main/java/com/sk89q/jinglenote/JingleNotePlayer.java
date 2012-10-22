@@ -19,7 +19,7 @@ public class JingleNotePlayer implements Runnable {
     protected final int delay;
 
     public JingleNotePlayer(Player player,
-                            Location loc, JingleSequencer seq, int delay) {
+            Location loc, JingleSequencer seq, int delay) {
 
         this.player = player;
         this.loc = loc;

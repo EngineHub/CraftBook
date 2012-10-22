@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import java.util.EnumMap;
+import java.util.Map;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,8 +11,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import java.util.EnumMap;
-import java.util.Map;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 
 public class MinecartManager {
 
@@ -56,8 +57,8 @@ public class MinecartManager {
                 Location to = event.getTo();
                 boolean crossesBlockBoundary =
                         from.getBlockX() == to.getBlockX()
-                                && from.getBlockY() == to.getBlockY()
-                                && from.getBlockZ() == to.getBlockZ();
+                        && from.getBlockY() == to.getBlockY()
+                        && from.getBlockZ() == to.getBlockZ();
                 thingy.impact((Minecart) event.getVehicle(), cmb, crossesBlockBoundary);
             }
         } catch (InvalidMechanismException ignored) {
@@ -76,8 +77,8 @@ public class MinecartManager {
                 Location from = event.getEntered().getLocation();
                 boolean crossesBlockBoundary =
                         from.getBlockX() == to.getBlockX()
-                                && from.getBlockY() == to.getBlockY()
-                                && from.getBlockZ() == to.getBlockZ();
+                        && from.getBlockY() == to.getBlockY()
+                        && from.getBlockZ() == to.getBlockZ();
                 thingy.enter((Minecart) event.getVehicle(), event.getEntered(), cmb, crossesBlockBoundary);
             }
         } catch (InvalidMechanismException ignored) {

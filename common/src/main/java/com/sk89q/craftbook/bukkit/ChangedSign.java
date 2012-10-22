@@ -18,6 +18,8 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.util.List;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,8 +29,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
-
-import java.util.List;
 
 public class ChangedSign implements Sign {
 

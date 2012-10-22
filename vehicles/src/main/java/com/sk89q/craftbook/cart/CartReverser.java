@@ -1,13 +1,14 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.SignUtil;
+import static com.sk89q.craftbook.cart.CartUtils.reverse;
+
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import static com.sk89q.craftbook.cart.CartUtils.reverse;
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class CartReverser extends CartMechanism {
 
@@ -59,7 +60,7 @@ public class CartReverser extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

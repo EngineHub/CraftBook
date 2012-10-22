@@ -29,7 +29,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
 /**
  * Storage class for custom drop definitions.
@@ -262,7 +262,7 @@ public final class CustomDropManager {
 
         public ItemStack getItemStack() {
 
-            return new ItemStack(id, countMin == countMax ? countMin : countMin + MechanismsPlugin.random.nextInt(countMax - countMin +
+            return new ItemStack(id, countMin == countMax ? countMin : countMin + BaseBukkitPlugin.random.nextInt(countMax - countMin +
                     1), data);
         }
 

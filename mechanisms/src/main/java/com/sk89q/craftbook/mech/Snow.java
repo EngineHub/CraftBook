@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -74,7 +75,7 @@ public class Snow implements Listener {
 
         if (plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() >= 0D)
             return;
-        if (MechanismsPlugin.random.nextInt(10) == 6) {
+        if (BaseBukkitPlugin.random.nextInt(10) == 6) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
             if (b.getTypeId() == 78) {
                 if (!plugin.canBuildInArea(event.getPlayer().getLocation(), event.getPlayer()))
@@ -104,7 +105,7 @@ public class Snow implements Listener {
                         && !plugin.getLocalConfiguration().snowSettings.piling
                         || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
                     return;
-                long delay = MechanismsPlugin.random.nextInt(100) + 60;
+                long delay = BaseBukkitPlugin.random.nextInt(100) + 60;
                 if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
                         new MakeSnow(block.getLocation()), delay * 20L) == -1) {
                     plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
@@ -132,13 +133,13 @@ public class Snow implements Listener {
                 event.add(0, 1, 0);
                 if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80)) return;
                 incrementData(event.getBlock());
-                long delay = MechanismsPlugin.random.nextInt(100) + 60;
+                long delay = BaseBukkitPlugin.random.nextInt(100) + 60;
                 if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MakeSnow(event),
                         delay * 20L) == -1) {
                     plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
                 }
             } else {
-                long delay = MechanismsPlugin.random.nextInt(100) + 600;
+                long delay = BaseBukkitPlugin.random.nextInt(100) + 600;
                 if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MakeSnow(event),
                         delay * 20L) == -1) {
                     plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");

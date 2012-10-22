@@ -7,15 +7,24 @@
 
 package com.sk89q.jinglenote;
 
-import com.sk89q.craftbook.util.GeneralUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-
-import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+
+import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * A sequencer that reads MIDI files.
@@ -25,24 +34,24 @@ import java.util.Map;
 public class MidiJingleSequencer implements JingleSequencer {
 
     private static final int[] instruments = {
-            0, 0, 0, 0, 0, 0, 0, 0, //8
-            0, 0, 0, 0, 0, 0, 0, 0, //16
-            0, 0, 0, 0, 0, 0, 0, 5, //24
-            5, 5, 5, 5, 5, 5, 5, 1, //32
-            1, 1, 1, 1, 1, 1, 1, 0, //40
-            0, 0, 0, 0, 0, 0, 0, 2, //48
-            0, 0, 0, 0, 0, 0, 0, 0, //56
-            0, 0, 0, 0, 0, 0, 0, 0, //64
-            0, 0, 0, 0, 0, 0, 0, 0, //72
-            0, 0, 0, 0, 0, 0, 0, 0, //80
-            0, 0, 0, 0, 0, 0, 0, 0, //88
-            0, 0, 0, 0, 0, 0, 0, 0, //96
-            0, 0, 0, 0, 0, 0, 0, 0, //104
-            0, 0, 0, 0, 0, 0, 0, 0, //112
-            1, 1, 1, 1, 1, 1, 1, 5, //120
-            1, 1, 1, 1, 1, 2, 4, 3, //128
+        0, 0, 0, 0, 0, 0, 0, 0, //8
+        0, 0, 0, 0, 0, 0, 0, 0, //16
+        0, 0, 0, 0, 0, 0, 0, 5, //24
+        5, 5, 5, 5, 5, 5, 5, 1, //32
+        1, 1, 1, 1, 1, 1, 1, 0, //40
+        0, 0, 0, 0, 0, 0, 0, 2, //48
+        0, 0, 0, 0, 0, 0, 0, 0, //56
+        0, 0, 0, 0, 0, 0, 0, 0, //64
+        0, 0, 0, 0, 0, 0, 0, 0, //72
+        0, 0, 0, 0, 0, 0, 0, 0, //80
+        0, 0, 0, 0, 0, 0, 0, 0, //88
+        0, 0, 0, 0, 0, 0, 0, 0, //96
+        0, 0, 0, 0, 0, 0, 0, 0, //104
+        0, 0, 0, 0, 0, 0, 0, 0, //112
+        1, 1, 1, 1, 1, 1, 1, 5, //120
+        1, 1, 1, 1, 1, 2, 4, 3, //128
 
-            //16
+        //16
     };
 
     /*private static int[] percussion = {
@@ -58,7 +67,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     private Sequencer sequencer = null;
 
     public MidiJingleSequencer(File midiFile) throws MidiUnavailableException,
-            InvalidMidiDataException, IOException {
+    InvalidMidiDataException, IOException {
 
         this.midiFile = midiFile;
 

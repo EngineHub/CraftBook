@@ -23,10 +23,12 @@ public class AIMechanic implements Listener {
 
         if (!plugin.getLocalConfiguration().aiSettings.enabled) return;
 
-        if (plugin.getLocalConfiguration().aiSettings.zombieVision)
+        if (plugin.getLocalConfiguration().aiSettings.zombieVision) {
             registerAIMechanic(ZombieAIMechanic.class);
-        if (plugin.getLocalConfiguration().aiSettings.skeletonCriticals)
+        }
+        if (plugin.getLocalConfiguration().aiSettings.skeletonCriticals) {
             registerAIMechanic(SkeletonAIMechanic.class);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -35,7 +37,9 @@ public class AIMechanic implements Listener {
         if (event.getTarget() == null || event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
             try {
-                if (!TargetAIMechanic.class.isAssignableFrom(mechanic)) continue;
+                if (!TargetAIMechanic.class.isAssignableFrom(mechanic)) {
+                    continue;
+                }
                 TargetAIMechanic ai = (TargetAIMechanic) mechanic.getConstructors()[0].newInstance(this,
                         event.getEntity());
                 if (ai == null) return;
@@ -51,7 +55,9 @@ public class AIMechanic implements Listener {
         if (event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
             try {
-                if (!BowShotAIMechanic.class.isAssignableFrom(mechanic)) continue;
+                if (!BowShotAIMechanic.class.isAssignableFrom(mechanic)) {
+                    continue;
+                }
                 BowShotAIMechanic ai = (BowShotAIMechanic) mechanic.getConstructors()[0].newInstance(this,
                         event.getEntity());
                 if (ai == null) return;

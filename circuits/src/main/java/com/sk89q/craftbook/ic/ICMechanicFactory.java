@@ -18,6 +18,12 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -25,19 +31,14 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
     /**
      * The pattern used to match an IC on a sign.
      */
-	public static final Pattern IC_PATTERN =
-			Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern IC_PATTERN =
+            Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Manager of ICs.
@@ -72,71 +73,70 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         // detect the text on the sign to see if it's any kind of IC at all.
         Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
-	    if (!matcher.matches()) return null;
+        if (!matcher.matches()) return null;
 
-	    String prefix = matcher.group(2);
-	    // TODO: remove after some time to stop converting existing MCA ICs
-	    // convert existing MCA ICs to the new [MCXXXX]A syntax
-	    if (prefix.equalsIgnoreCase("MCA")) {
-		    sign.setLine(1, sign.getLine(1).replace("A", "") + "A");
-		    sign.update();
-	    }
+        String prefix = matcher.group(2);
+        // TODO: remove after some time to stop converting existing MCA ICs
+        // convert existing MCA ICs to the new [MCXXXX]A syntax
+        if (prefix.equalsIgnoreCase("MCA")) {
+            sign.setLine(1, sign.getLine(1).replace("A", "") + "A");
+            sign.update();
+        }
 
-	    if (!manager.hasCustomPrefix(prefix)) return null;
+        if (!manager.hasCustomPrefix(prefix)) return null;
 
-	    String id = matcher.group(1);
-	    // after this point, we don't return null if we can't make an IC: we throw shit,
-	    //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
+        String id = matcher.group(1);
+        // after this point, we don't return null if we can't make an IC: we throw shit,
+        //  because it SHOULD be an IC and can't possibly be any other kind of mechanic.
 
-	    // now actually try to pull up an IC of that id number.
-	    RegisteredICFactory registration = manager.get(id);
-	    if (registration == null) throw new InvalidMechanismException(
+        // now actually try to pull up an IC of that id number.
+        RegisteredICFactory registration = manager.get(id);
+        if (registration == null) throw new InvalidMechanismException(
                 "\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
 
-	    IC ic;
-	    // check if the ic is cached and get that single instance instead of creating a new one
-	    if (ICManager.isCachedIC(pt)) {
-		    ic = ICManager.getCachedIC(pt);
-	    }
+        IC ic;
+        // check if the ic is cached and get that single instance instead of creating a new one
+        if (ICManager.isCachedIC(pt)) {
+            ic = ICManager.getCachedIC(pt);
+        }
         else {
-		    ic = registration.getFactory().create(sign);
-		    // add the created ic to the cache
-		    ICManager.addCachedIC(pt, ic);
-	    }
-	    // extract the suffix
-	    String suffix = "";
-	    String[] str = sign.getLine(1).split("]");
-	    if (str.length > 1) {
-		    suffix = str[1];
-	    }
+            ic = registration.getFactory().create(sign);
+            // add the created ic to the cache
+            ICManager.addCachedIC(pt, ic);
+        }
+        // extract the suffix
+        String suffix = "";
+        String[] str = sign.getLine(1).split("]");
+        if (str.length > 1) {
+            suffix = str[1];
+        }
 
-	    ICFamily family = registration.getFamilies()[0];
-	    if (suffix != null && !suffix.equals("")) {
-		    for (ICFamily f : registration.getFamilies()) {
-			    if (f.getSuffix().equalsIgnoreCase(suffix)) {
-				    family = f;
-				    break;
-			    }
-		    }
-	    }
+        ICFamily family = registration.getFamilies()[0];
+        if (suffix != null && !suffix.equals("")) {
+            for (ICFamily f : registration.getFamilies()) {
+                if (f.getSuffix().equalsIgnoreCase(suffix)) {
+                    family = f;
+                    break;
+                }
+            }
+        }
 
-	    // okay, everything checked out.  we can finally make it.
-	    if (ic instanceof SelfTriggeredIC) return new SelfTriggeredICMechanic(
+        // okay, everything checked out.  we can finally make it.
+        if (ic instanceof SelfTriggeredIC) return new SelfTriggeredICMechanic(
                 plugin,
                 id,
                 (SelfTriggeredIC) ic,
                 family,
                 pt
                 );
-        else {
-		    return new ICMechanic(
-		            plugin,
-		            id,
-		            ic,
-		            family,
-		            pt
-		            );
-	    }
+        else
+            return new ICMechanic(
+                    plugin,
+                    id,
+                    ic,
+                    family,
+                    pt
+                    );
     }
 
 
@@ -154,16 +154,20 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
-	    boolean matches = true;
+        boolean matches = true;
         Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
-	    // lets check for custom ics
-	    if (!matcher.matches()) matches = false;
-	    try {
-		    if (!manager.hasCustomPrefix(matcher.group(2))) matches = false;
-	    } catch (Exception e) {
-		    // we need to catch here if the sign changes when beeing parsed
-		    matches = false;
-	    }
+        // lets check for custom ics
+        if (!matcher.matches()) {
+            matches = false;
+        }
+        try {
+            if (!manager.hasCustomPrefix(matcher.group(2))) {
+                matches = false;
+            }
+        } catch (Exception e) {
+            // we need to catch here if the sign changes when beeing parsed
+            matches = false;
+        }
 
         if (matches) {
 
@@ -201,15 +205,15 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
 
-	        ICFamily family = registration.getFamilies()[0];
-	        if (suffix != null && !suffix.equals("")) {
-		        for (ICFamily f : registration.getFamilies()) {
-			        if (f.getSuffix().equalsIgnoreCase(suffix)) {
-				        family = f;
-				        break;
-			        }
-		        }
-	        }
+            ICFamily family = registration.getFamilies()[0];
+            if (suffix != null && !suffix.equals("")) {
+                for (ICFamily f : registration.getFamilies()) {
+                    if (f.getSuffix().equalsIgnoreCase(suffix)) {
+                        family = f;
+                        break;
+                    }
+                }
+            }
 
             ICMechanic mechanic;
 

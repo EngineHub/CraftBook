@@ -1,5 +1,13 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -9,13 +17,6 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class CircuitCommands {
 
@@ -29,7 +30,7 @@ public class CircuitCommands {
     @Command(
             aliases = {"ic"},
             desc = "Commands to manage Craftbook IC's"
-    )
+            )
     public void ic(CommandContext context, CommandSender sender) {
 
     }
@@ -37,7 +38,7 @@ public class CircuitCommands {
     @Command(
             aliases = {"reloadics"},
             desc = "Reloads the IC config"
-    )
+            )
     public void reload(CommandContext context, CommandSender sender) {
 
         plugin.getICConfiguration().reload();
@@ -47,7 +48,7 @@ public class CircuitCommands {
     @Command(
             aliases = {"cbcircuits"},
             desc = "Handles the basic Craftbook Circuits commands."
-    )
+            )
     @NestedCommand(NestedCommands.class)
     public void cbcircuits(CommandContext context, CommandSender sender) {
 
@@ -66,7 +67,7 @@ public class CircuitCommands {
         @Command(
                 aliases = {"reload"},
                 desc = "Reloads the craftbook circuits config"
-        )
+                )
         @CommandPermissions("craftbook.circuit.reload")
         public void reload(CommandContext context, CommandSender sender) {
 
@@ -80,7 +81,7 @@ public class CircuitCommands {
             desc = "Documentation on CraftBook IC's",
             min = 1,
             max = 1
-    )
+            )
     public void icdocs(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
@@ -100,12 +101,12 @@ public class CircuitCommands {
             if (ric.getFactory().getLineHelp()[0] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
             } else {
-                player.sendMessage(ChatColor.YELLOW + "Line 3: Nothing.");
+                player.sendMessage(ChatColor.YELLOW + "Line 3: Blank.");
             }
             if (ric.getFactory().getLineHelp()[1] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
             } else {
-                player.sendMessage(ChatColor.YELLOW + "Line 4: Nothing.");
+                player.sendMessage(ChatColor.YELLOW + "Line 4: Blank.");
             }
             player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
                     .toUpperCase());
@@ -118,7 +119,7 @@ public class CircuitCommands {
             desc = "List available IC's",
             min = 0,
             max = 1
-    )
+            )
     public void listics(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
@@ -177,7 +178,7 @@ public class CircuitCommands {
                 }
                 strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
                         SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor
-                        .DARK_RED + "R " : ""));
+                                .DARK_RED + "R " : ""));
             } catch (Exception e) {
                 if (ic.endsWith("5001") || ic.endsWith("5000")) {
                     //Stuff

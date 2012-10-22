@@ -72,8 +72,9 @@ public class PlayerDetection extends AbstractIC {
                 if(e.getName().toLowerCase().startsWith(nameLine.toLowerCase())
                         || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))
                     return true;
-                else
+                else {
                     continue;
+                }
             }
             else
                 return true;

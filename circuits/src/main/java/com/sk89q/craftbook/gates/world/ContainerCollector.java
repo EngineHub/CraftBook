@@ -1,14 +1,24 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -120,7 +130,7 @@ public class ContainerCollector extends AbstractIC {
                         return false;
                     if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
                             || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient
-                            (), item.getItemStack())) {
+                                    (), item.getItemStack())) {
 
                         if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null) {
                             ((BrewingStand) bl.getState()).getInventory().setIngredient(item.getItemStack());

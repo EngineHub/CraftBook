@@ -18,9 +18,14 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class DaySensor extends AbstractIC {
 
@@ -77,8 +82,8 @@ public class DaySensor extends AbstractIC {
 
         if (day <= night)
             return time >= day && time <= night;
-        else if (day <= night) return time >= day || time <= night;
-        return time < night;
+            else if (day <= night) return time >= day || time <= night;
+            return time < night;
     }
 
     public static class Factory extends AbstractICFactory {
