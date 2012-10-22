@@ -1,20 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class FlameThrower extends AbstractIC {
 
@@ -58,8 +51,9 @@ public class FlameThrower extends AbstractIC {
         Block fire = getSign().getBlock().getRelative(direction).getRelative(direction);
         for (int i = 0; i < distance; i++) {
             if (make) {
-                if (fire.getTypeId() == 0 || fire.getType() == Material.LONG_GRASS)
+                if (fire.getTypeId() == 0 || fire.getType() == Material.LONG_GRASS) {
                     fire.setTypeId(BlockID.FIRE);
+                }
             } else if (fire.getTypeId() == BlockID.FIRE) {
                 fire.setTypeId(BlockID.AIR);
             }

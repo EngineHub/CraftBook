@@ -1,16 +1,9 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class RandomBitST extends AbstractIC implements SelfTriggeredIC {
 
@@ -36,7 +29,7 @@ public class RandomBitST extends AbstractIC implements SelfTriggeredIC {
 
         if (chip.getInput(0)) {
             for (short i = 0; i < chip.getOutputCount(); i++) {
-                chip.setOutput(i, CircuitsPlugin.random.nextBoolean());
+                chip.setOutput(i, BaseBukkitPlugin.random.nextBoolean());
             }
         }
     }

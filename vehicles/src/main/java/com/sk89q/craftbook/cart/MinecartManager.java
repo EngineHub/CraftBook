@@ -56,8 +56,8 @@ public class MinecartManager {
                 Location to = event.getTo();
                 boolean crossesBlockBoundary =
                         from.getBlockX() == to.getBlockX()
-                                && from.getBlockY() == to.getBlockY()
-                                && from.getBlockZ() == to.getBlockZ();
+                        && from.getBlockY() == to.getBlockY()
+                        && from.getBlockZ() == to.getBlockZ();
                 thingy.impact((Minecart) event.getVehicle(), cmb, crossesBlockBoundary);
             }
         } catch (InvalidMechanismException ignored) {
@@ -76,8 +76,8 @@ public class MinecartManager {
                 Location from = event.getEntered().getLocation();
                 boolean crossesBlockBoundary =
                         from.getBlockX() == to.getBlockX()
-                                && from.getBlockY() == to.getBlockY()
-                                && from.getBlockZ() == to.getBlockZ();
+                        && from.getBlockY() == to.getBlockY()
+                        && from.getBlockZ() == to.getBlockZ();
                 thingy.enter((Minecart) event.getVehicle(), event.getEntered(), cmb, crossesBlockBoundary);
             }
         } catch (InvalidMechanismException ignored) {

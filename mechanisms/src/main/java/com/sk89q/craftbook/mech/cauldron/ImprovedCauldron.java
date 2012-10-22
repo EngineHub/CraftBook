@@ -1,10 +1,13 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,13 +24,10 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -121,7 +121,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                     if (event.getPlayer().getItemInHand() == null) return;
                     if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
                         double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
-                        double ran = MechanismsPlugin.random.nextDouble();
+                        double ran = BaseBukkitPlugin.random.nextDouble();
                         event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
                                 .getDurability() - (short) 1));
                         if (chance <= ran) {

@@ -51,5 +51,21 @@ public class Dispatcher extends AbstractIC {
 
             return new Dispatcher(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Send middle signal out high sides.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
     }
 }

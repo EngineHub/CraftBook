@@ -58,7 +58,7 @@ public class LightStone extends AbstractMechanic {
             String lightLevelLine = getLightLine(block.getLightLevel());
             player.print(
                     ChatColor.YELLOW + "LightStone: [" + lightLevelLine
-                            + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
+                    + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
         }
     }
 

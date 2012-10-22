@@ -208,9 +208,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         ItemStack book = null;
         for (ItemStack s : i.getContents())
             if (s != null &&
-                    s.getAmount() > 0 &&
-                    (s.getType() == Material.BOOK_AND_QUILL ||
-                            s.getType() == Material.WRITTEN_BOOK)) {
+            s.getAmount() > 0 &&
+            (s.getType() == Material.BOOK_AND_QUILL ||
+            s.getType() == Material.WRITTEN_BOOK)) {
                 if (book != null)
                     throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;

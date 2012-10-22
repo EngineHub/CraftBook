@@ -56,7 +56,7 @@ public class Ammeter extends AbstractMechanic {
         Block block = event.getClickedBlock();
         if (event.getPlayer().getItemInHand().getTypeId() == plugin.getLocalConfiguration().ammeterSettings.id
                 && (BlockType.canTransferRedstone(block.getTypeId()) ||
-                BlockType.isRedstoneSource(block.getTypeId()))) {
+                        BlockType.isRedstoneSource(block.getTypeId()))) {
             int data = getSpecialData(block);
             String line = getCurrentLine(data);
             player.print("Ammeter: " + line + ChatColor.WHITE + " " + data + " A");

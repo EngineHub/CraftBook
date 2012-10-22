@@ -75,5 +75,21 @@ public class Delayer extends AbstractIC {
                 throw new ICVerificationException("The third line needs to be a number.");
             }
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Delays signal by X seconds.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "seconds",
+                    null
+            };
+            return lines;
+        }
     }
 }

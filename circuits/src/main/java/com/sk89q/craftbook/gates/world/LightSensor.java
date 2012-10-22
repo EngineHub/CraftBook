@@ -91,7 +91,7 @@ public class LightSensor extends AbstractIC {
                 .getBlockAt(backBlock.getX() + x,
                         backBlock.getY() + y,
                         backBlock.getZ() + z)
-                .getLightLevel();
+                        .getLightLevel();
 
         return lightLevel >= specifiedLevel;
     }

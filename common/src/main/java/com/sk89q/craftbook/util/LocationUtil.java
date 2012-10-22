@@ -37,7 +37,7 @@ public final class LocationUtil {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
                 for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities())
                     if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
-                            .getBlock()) {
+                    .getBlock()) {
                         radiusEntities.add(e);
                     }
             }

@@ -104,5 +104,21 @@ public class Counter extends AbstractIC {
 
             return new Counter(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Increments on redstone signal, outputs high when reset.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "reset ticks:(Optional)INF",
+                    "current ticks"
+            };
+            return lines;
+        }
     }
 }

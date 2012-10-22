@@ -180,8 +180,9 @@ public class CauldronCookbook {
                 try {
                     Short s = 0;
                     Integer id = Integer.valueOf(part.split("@")[0]);
-                    if (part.split("@").length > 1)
+                    if (part.split("@").length > 1) {
                         s = Short.valueOf(part.split("@")[1]);
+                    }
                     for (int i = 0; i < multiplier; i++) {
                         out.add(new Tuple2<Integer, Short>(id, s));
                     }
@@ -220,7 +221,7 @@ public class CauldronCookbook {
          * Stores a list of ingredients.
          */
         private final Map<Tuple2<Integer, Short>, Integer> ingredientLookup
-                = new HashMap<Tuple2<Integer, Short>, Integer>();
+        = new HashMap<Tuple2<Integer, Short>, Integer>();
         /**
          * List of resulting items or blocks.
          */
@@ -239,7 +240,7 @@ public class CauldronCookbook {
          * @param groups
          */
         public Recipe(String name, List<Tuple2<Integer, Short>> ingredients,
-                      List<Tuple2<Integer, Short>> results, String[] groups) {
+                List<Tuple2<Integer, Short>> results, String[] groups) {
 
             this.name = name;
             this.ingredients = Collections.unmodifiableList(ingredients);

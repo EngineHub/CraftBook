@@ -39,7 +39,7 @@ public class SentryGunST extends SentryGun implements SelfTriggeredIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 

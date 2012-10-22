@@ -86,6 +86,21 @@ public class WeatherControl extends AbstractIC {
 
             return new WeatherControl(getServer(), sign, this);
         }
-    }
 
+        @Override
+        public String getDescription() {
+
+            return "Set rain and thunder duration.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "rain duration",
+                    "thunder duration"
+            };
+            return lines;
+        }
+    }
 }

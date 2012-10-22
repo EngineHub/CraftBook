@@ -1,19 +1,14 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.ai.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
-import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
-import com.sk89q.craftbook.mech.ai.SkeletonAIMechanic;
-import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
-import com.sk89q.craftbook.mech.ai.ZombieAIMechanic;
+import java.util.ArrayList;
 
 public class AIMechanic implements Listener {
 
@@ -23,10 +18,12 @@ public class AIMechanic implements Listener {
 
         if (!plugin.getLocalConfiguration().aiSettings.enabled) return;
 
-        if (plugin.getLocalConfiguration().aiSettings.zombieVision)
+        if (plugin.getLocalConfiguration().aiSettings.zombieVision) {
             registerAIMechanic(ZombieAIMechanic.class);
-        if (plugin.getLocalConfiguration().aiSettings.skeletonCriticals)
+        }
+        if (plugin.getLocalConfiguration().aiSettings.skeletonCriticals) {
             registerAIMechanic(SkeletonAIMechanic.class);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -35,7 +32,9 @@ public class AIMechanic implements Listener {
         if (event.getTarget() == null || event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
             try {
-                if (!TargetAIMechanic.class.isAssignableFrom(mechanic)) continue;
+                if (!TargetAIMechanic.class.isAssignableFrom(mechanic)) {
+                    continue;
+                }
                 TargetAIMechanic ai = (TargetAIMechanic) mechanic.getConstructors()[0].newInstance(this,
                         event.getEntity());
                 if (ai == null) return;
@@ -51,7 +50,9 @@ public class AIMechanic implements Listener {
         if (event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
             try {
-                if (!BowShotAIMechanic.class.isAssignableFrom(mechanic)) continue;
+                if (!BowShotAIMechanic.class.isAssignableFrom(mechanic)) {
+                    continue;
+                }
                 BowShotAIMechanic ai = (BowShotAIMechanic) mechanic.getConstructors()[0].newInstance(this,
                         event.getEntity());
                 if (ai == null) return;

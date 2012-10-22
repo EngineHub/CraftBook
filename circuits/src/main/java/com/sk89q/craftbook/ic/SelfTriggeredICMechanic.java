@@ -31,7 +31,7 @@ public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggerin
     private final SelfTriggeredIC selfTrigIC;
 
     public SelfTriggeredICMechanic(CircuitsPlugin plugin, String id, SelfTriggeredIC ic,
-                                   ICFamily family, BlockWorldVector pos) {
+            ICFamily family, BlockWorldVector pos) {
 
         super(plugin, id, ic, family, pos);
         selfTrigIC = ic;

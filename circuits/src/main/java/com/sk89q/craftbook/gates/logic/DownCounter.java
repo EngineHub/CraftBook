@@ -120,5 +120,21 @@ public class DownCounter extends AbstractIC {
 
             return new DownCounter(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Outputs high when counter reaches 0.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "start ticks:(Optional)INF",
+                    "current ticks"
+            };
+            return lines;
+        }
     }
 }

@@ -54,7 +54,7 @@ public class MemorySetter extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory implements
-            RestrictedIC {
+    RestrictedIC {
 
         public Factory(Server server) {
 

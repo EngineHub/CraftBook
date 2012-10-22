@@ -187,19 +187,19 @@ public class CopyManager {
 
         if (files == null)
             return quota > 0 ? -1 : 0;
-        else if (ignore == null)
-            return files.length < quota ? -1 : files.length;
-        else {
-            int count = 0;
+            else if (ignore == null)
+                return files.length < quota ? -1 : files.length;
+            else {
+                int count = 0;
 
-            for (String f : files) {
-                if (f.equals(ignoreFilename)) return -1;
+                for (String f : files) {
+                    if (f.equals(ignoreFilename)) return -1;
 
-                count++;
+                    count++;
+                }
+
+                return count < quota ? -1 : count;
             }
-
-            return count < quota ? -1 : count;
-        }
     }
 
     private HistoryHashMap<String, CuboidCopy> getCache(String world) {

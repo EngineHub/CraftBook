@@ -78,7 +78,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 for (int i = 0; itemArray.length > i; i++)
                     if (itemArray[i] != null) // Found an item
                         if (itemArray[i].getTypeId() == id &&
-                                itemArray[i].getAmount() >= 1) {
+                        itemArray[i].getAmount() >= 1) {
                             int newAmount = itemArray[i].getAmount() - 1;
 
                             if (newAmount > 0) {
@@ -120,7 +120,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 for (int i = 0; itemArray.length > i; i++)
                     // Found an item
                     if (itemArray[i].getTypeId() == id &&
-                            itemArray[i].getAmount() < 64) {
+                    itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
                         itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
 

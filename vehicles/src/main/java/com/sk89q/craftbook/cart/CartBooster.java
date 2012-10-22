@@ -41,7 +41,7 @@ public class CartBooster extends CartMechanism {
 
     @Override
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
+            boolean minor) {
 
     }
 }

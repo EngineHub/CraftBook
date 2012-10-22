@@ -120,7 +120,7 @@ public class ContainerCollector extends AbstractIC {
                         return false;
                     if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
                             || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient
-                            (), item.getItemStack())) {
+                                    (), item.getItemStack())) {
 
                         if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null) {
                             ((BrewingStand) bl.getState()).getInventory().setIngredient(item.getItemStack());

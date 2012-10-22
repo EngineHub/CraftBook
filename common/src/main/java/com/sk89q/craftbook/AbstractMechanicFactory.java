@@ -22,7 +22,7 @@ import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.block.Sign;
 
 public abstract class AbstractMechanicFactory<T extends Mechanic>
-        implements MechanicFactory<T> {
+implements MechanicFactory<T> {
 
     @Override
     public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)

@@ -42,7 +42,7 @@ public class RainSensorST extends AbstractIC implements SelfTriggeredIC {
     }
 
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends RainSensor.Factory {
 
         public Factory(Server server) {
 
@@ -53,22 +53,6 @@ public class RainSensorST extends AbstractIC implements SelfTriggeredIC {
         public IC create(Sign sign) {
 
             return new RainSensorST(getServer(), sign, this);
-        }
-
-        @Override
-        public String getDescription() {
-
-            return "Outputs high if it is raining.";
-        }
-
-        @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {
-                    null,
-                    null
-            };
-            return lines;
         }
     }
 }

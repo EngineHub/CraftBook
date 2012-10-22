@@ -323,7 +323,7 @@ public class Elevator extends AbstractMechanic {
     }
 
     private static class InvalidConstructionException extends
-            InvalidMechanismException {
+    InvalidMechanismException {
 
         private static final long serialVersionUID = 2306504048848430689L;
 

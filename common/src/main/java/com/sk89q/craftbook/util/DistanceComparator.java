@@ -32,7 +32,7 @@ import java.util.Comparator;
  * @author sk89q
  */
 public class DistanceComparator<T extends BlockState>
-        implements Comparator<BlockState> {
+implements Comparator<BlockState> {
 
     /**
      * Origin to compare from.

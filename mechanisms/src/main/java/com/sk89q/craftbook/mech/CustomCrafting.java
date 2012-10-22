@@ -214,9 +214,9 @@ public class CustomCrafting implements Listener {
                     r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]) +
                             getShapeData(items[2].split(":")[0]),
                             getShapeData(items[3].split(":")[0]) + getShapeData(items[4].split(":")[0]) +
-                                    getShapeData(items[5].split(":")[0]),
+                            getShapeData(items[5].split(":")[0]),
                             getShapeData(items[6].split(":")[0]) + getShapeData(items[7].split(":")[0]) +
-                                    getShapeData(items[8].split(":")[0]));
+                            getShapeData(items[8].split(":")[0]));
                     for (String item : items) {
                         int iid = Integer.parseInt(item.split(":")[0]);
                         String idata = item.split(":")[1];

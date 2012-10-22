@@ -67,9 +67,9 @@ public class PlanterST extends Planter implements SelfTriggeredIC {
         if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(),
                 target.getBlockZ()) == 0
                 && itemPlantableOnBlock(
-                info[0],
-                world.getBlockTypeIdAt(target.getBlockX(),
-                        target.getBlockY() - 1, target.getBlockZ()))) {
+                        info[0],
+                        world.getBlockTypeIdAt(target.getBlockX(),
+                                target.getBlockY() - 1, target.getBlockZ()))) {
 
             BlockPlanter sp = new BlockPlanter(world, target, info[0],
                     info[1]);

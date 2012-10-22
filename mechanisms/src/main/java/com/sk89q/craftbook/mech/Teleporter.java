@@ -69,7 +69,7 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                                 Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 

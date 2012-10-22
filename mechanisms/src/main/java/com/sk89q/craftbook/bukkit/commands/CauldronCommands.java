@@ -20,7 +20,7 @@ public class CauldronCommands {
     @Command(
             aliases = {"reload"},
             desc = "Reloads the cauldron recipes from the config."
-    )
+            )
     @CommandPermissions("craftbook.mech.cauldron.reload")
     public void reload(CommandContext context, CommandSender sender) {
 

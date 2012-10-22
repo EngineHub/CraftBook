@@ -77,8 +77,8 @@ public class DaySensor extends AbstractIC {
 
         if (day <= night)
             return time >= day && time <= night;
-        else if (day <= night) return time >= day || time <= night;
-        return time < night;
+            else if (day <= night) return time >= day || time <= night;
+            return time < night;
     }
 
     public static class Factory extends AbstractICFactory {

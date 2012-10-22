@@ -110,8 +110,9 @@ public abstract class BaseConfiguration {
 
         public BaseConfigurationSection(String section) {
 
-            if (!cfg.isConfigurationSection(section))
+            if (!cfg.isConfigurationSection(section)) {
                 cfg.createSection(section);
+            }
             this.section = cfg.getConfigurationSection(section);
         }
 

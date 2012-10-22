@@ -18,15 +18,14 @@
 
 package com.sk89q.craftbook.plc;
 
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
-
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
 
@@ -52,7 +51,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     public void verify(Sign sign) throws ICVerificationException {
 
         new PlcIC<StateT, CodeT, Lang>(sign, lang); //Huge ugly hack!!
-        sign.setLine(2, "id:" + Math.abs(CircuitsPlugin.random.nextInt()));
+        sign.setLine(2, "id:" + Math.abs(BaseBukkitPlugin.random.nextInt()));
         if (!sign.getLine(3).isEmpty()) {
             String line = sign.getLine(3);
             if (!line.matches("[-_a-zA-Z0-9]+"))

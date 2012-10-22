@@ -90,7 +90,7 @@ public class Cauldron extends AbstractMechanic {
      * @param plugin
      */
     public Cauldron(CauldronCookbook recipes, BlockWorldVector pt,
-                    MechanismsPlugin plugin) {
+            MechanismsPlugin plugin) {
 
         super();
         this.recipes = recipes;
@@ -272,7 +272,7 @@ public class Cauldron extends AbstractMechanic {
                         world.getBlockAt(entry.getKey().getBlockX(),
                                 entry.getKey().getBlockY(),
                                 entry.getKey().getBlockZ()).setType(
-                                Material.AIR);
+                                        Material.AIR);
                         // }
                         ingredients.remove(entry.getValue());
                     }
@@ -316,8 +316,8 @@ public class Cauldron extends AbstractMechanic {
      * @throws Cauldron.NotACauldronException
      */
     public void findCauldronContents(World world, BlockWorldVector pt,
-                                     int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
-            throws NotACauldronException {
+            int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
+                    throws NotACauldronException {
 
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 

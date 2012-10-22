@@ -79,7 +79,7 @@ public class BukkitUtil {
                 getLocalWorld(loc.getWorld()),
                 new Vector(loc.getX(), loc.getY(), loc.getZ()),
                 loc.getYaw(), loc.getPitch()
-        );
+                );
     }
 
     public static Vector toVector(org.bukkit.util.Vector vector) {
@@ -106,7 +106,7 @@ public class BukkitUtil {
                 loc.getBlockZ() + 0.5,
                 loc.getPitch(),
                 loc.getYaw()
-        );
+                );
     }
 
     public static Player matchSinglePlayer(Server server, String name) {
@@ -145,7 +145,7 @@ public class BukkitUtil {
                 toWorld(teleportLocation.getWorld()),
                 pt.getX(), pt.getY(), pt.getZ(),
                 teleportLocation.getYaw(), teleportLocation.getPitch()
-        );
+                );
     }
 
     public static World toWorld(final LocalWorld world) {

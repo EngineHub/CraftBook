@@ -527,7 +527,8 @@ public class MechanicManager {
      */
     public void enumerate(Chunk chunk) {
 
-        for (BlockState state : chunk.getTileEntities())
+        for (BlockState state : chunk.getTileEntities()) {
+            if(state == null) continue;
             if (state instanceof Sign) {
                 try {
                     try {
@@ -538,6 +539,7 @@ public class MechanicManager {
                 } catch (InvalidMechanismException ignored) {
                 }
             }
+        }
     }
 
     /**

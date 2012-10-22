@@ -71,7 +71,7 @@ class WatchBlockManager {
      * @param oldWatchBlocks
      */
     public void update(PersistentMechanic m,
-                       List<BlockWorldVector> oldWatchBlocks) {
+            List<BlockWorldVector> oldWatchBlocks) {
 
         // This could be more efficient.
         for (BlockWorldVector p : oldWatchBlocks) {

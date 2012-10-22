@@ -26,7 +26,7 @@ import org.bukkit.block.Sign;
 public class WirelessTransmitter extends AbstractIC {
 
     protected static final HistoryHashMap<String, Boolean> memory
-            = new HistoryHashMap<String, Boolean>(100);
+    = new HistoryHashMap<String, Boolean>(100);
 
     protected String band;
 

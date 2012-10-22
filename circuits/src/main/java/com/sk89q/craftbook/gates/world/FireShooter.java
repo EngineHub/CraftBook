@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -7,15 +10,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -95,8 +89,8 @@ public class FireShooter extends AbstractIC {
 
         if (n != 1) {
             for (short i = 0; i < n; i++) {
-                velocity = new Vector(x + (CircuitsPlugin.random.nextInt((int) spread) - spread / 2),
-                        vert + (CircuitsPlugin.random.nextInt((int) spread) - spread / 2), z + (CircuitsPlugin.random.nextInt((int) spread) - spread
+                velocity = new Vector(x + (BaseBukkitPlugin.random.nextInt((int) spread) - spread / 2),
+                        vert + (BaseBukkitPlugin.random.nextInt((int) spread) - spread / 2), z + (BaseBukkitPlugin.random.nextInt((int) spread) - spread
                                 / 2));
                 SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
                 f.setVelocity(velocity);
