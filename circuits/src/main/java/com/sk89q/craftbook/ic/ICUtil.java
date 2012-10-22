@@ -108,36 +108,18 @@ public class ICUtil {
      */
     public static boolean setState(Block block, boolean state, Block source) {
 
-        if (block.getTypeId() != BlockID.LEVER
-		        && block.getTypeId() != BlockID.REDSTONE_TORCH_OFF
-		        && block.getTypeId() != BlockID.REDSTONE_TORCH_ON)
+        if (block.getTypeId() != BlockID.LEVER)
             return false;
-
-	    // lets get the current state of the block
-	    boolean wasOn;
-	    if (block.getTypeId() != BlockID.LEVER) {
-		    // check if the torch was on or off
-		    wasOn = block.getTypeId() == BlockID.REDSTONE_TORCH_ON;
-		    // we want to think inverted here because of the torch
-		    // the ic wants output true so we need to give him output false
-		    if (wasOn == state) {
-			    block.setTypeIdAndData(
-					    (wasOn ? BlockID.REDSTONE_TORCH_OFF : BlockID.REDSTONE_TORCH_ON),
-					    block.getData(),
-					    true
-			    );
-			    return true;
-		    }
-		    return false;
-	    }
 
 	    // return if the lever is not attached to our IC block
 	    Lever lever = (Lever) block.getState().getData();
 	    if (!block.getRelative(lever.getAttachedFace()).equals(source)) {
 		    return false;
 	    }
+
 	    // check if the lever was toggled on
-	    wasOn = (block.getData() & 0x8) > 0;
+	    boolean wasOn = (block.getData() & 0x8) > 0;
+
 	    byte data = block.getData();
 	    int newData;
 	    // check if the state changed and set the data value
@@ -149,12 +131,10 @@ public class ICUtil {
 
 	    // if the state changed lets apply physics to the source block and the lever itself
 	    if (wasOn != state) {
-		    net.minecraft.server.World w = ((CraftWorld)block.getWorld()).getHandle();
 		    // set the new data
-		    w.setData(block.getX(), block.getY(), block.getZ(), newData);
-		    // apply physics to the block and torch/lever
-		    w.b(block.getX(), block.getY(), block.getZ());
-		    w.applyPhysics(block.getX(), block.getY(), block.getZ(), 0);
+		    block.setData((byte) newData, true);
+		    // apply physics to the source block the lever is attached to
+		    net.minecraft.server.World w = ((CraftWorld)block.getWorld()).getHandle();
 		    w.applyPhysics(source.getX(), source.getY(), source.getZ(), 0);
 		    return true;
 	    }
