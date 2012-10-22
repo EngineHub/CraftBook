@@ -216,53 +216,52 @@ public class MechanicListenerAdapter {
 		            int southSideAbove = world.getBlockTypeIdAt(x + 1, y + 1, z);
 		            int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
 
-		            // handle direct wire input for possible mechanics north/south
-		            // for north/south we need to check if east/west has air or no redstone blocks
-		            if (!BlockType.isRedstoneBlock(eastSide)
-				            && (!BlockType.isRedstoneBlock(eastSideAbove) || above != 0 || eastSide == 0)
-				            && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)
-				            // blocks on the westside
-				            && !BlockType.isRedstoneBlock(westSide)
-				            && (!BlockType.isRedstoneBlock(westSideAbove) || above != 0 || westSide == 0)
-				            && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)) {
-			            // handle direct wire input north and south
+		            // Make sure that the wire points to only this block
+		            if (!BlockType.isRedstoneBlock(westSide)
+				            && !BlockType.isRedstoneBlock(eastSide)
+				            && (!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0 || above != 0)
+				            && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0 || above != 0)
+				            && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
+				            && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
+			            // Possible blocks north / south
 			            handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
 			            handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+			            handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
+			            handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
 		            }
 
-		            // handle direct wire input for possible mechanics north/south
-		            // for east/west we need to check if north/south has air or no redstone blocks
 		            if (!BlockType.isRedstoneBlock(northSide)
-				            && (!BlockType.isRedstoneBlock(northSideAbove) || above != 0 || northSide == 0)
-				            && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
-				            // blocks on the south
 				            && !BlockType.isRedstoneBlock(southSide)
-				            && (!BlockType.isRedstoneBlock(southSideAbove) || above != 0 || southSide == 0)
+				            && (!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0 || above != 0)
+				            && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0 || above != 0)
+				            && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
 				            && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
-			            // handle direct wire input east and west
+			            // Possible blocks west / east
 			            handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
 			            handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
+			            handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
+			            handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
 		            }
 
 		            // Can be triggered from below
 		            handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
 	            }
-            } else if (BlockType.isRedstoneBlock(type)) {
-	            // For redstone wires, the code already exited this method
-	            // Non-wire blocks proceed
-
-                handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
-
-                // Can be triggered from below
-                handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
+	            return;
             }
+            // For redstone wires, the code already exited this method
+            // Non-wire blocks proceed
+
+            handleDirectWireInput(new WorldVector(w, x - 1, y, z), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x + 1, y, z), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x, y, z - 1), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x, y, z + 1), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), isOn, block, oldLevel, newLevel);
+            handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), isOn, block, oldLevel, newLevel);
+
+            // Can be triggered from below
+            handleDirectWireInput(new WorldVector(w, x, y + 1, z), isOn, block, oldLevel, newLevel);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

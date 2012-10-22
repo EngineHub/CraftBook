@@ -82,7 +82,15 @@ public class ICMechanic extends PersistentMechanic {
                     // Assuming that the plugin host isn't going wonky here
                     ChipState chipState = family.detect(
                             BukkitUtil.toWorldVector(source), (Sign) state);
-                    ic.trigger(chipState);
+	                int cnt = 0;
+	                for (int i = 0; i < chipState.getInputCount(); i++) {
+		                if (chipState.isTriggered(i)) {
+			                cnt++;
+		                }
+	                }
+	                if (cnt > 0) {
+		                ic.trigger(chipState);
+	                }
                 }
             };
             //FIXME: these should be registered with a global scheduler so we can end up with one runnable actually

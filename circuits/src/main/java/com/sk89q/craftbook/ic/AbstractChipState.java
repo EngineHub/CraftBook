@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Material;
@@ -15,11 +16,14 @@ public abstract class AbstractChipState implements ChipState {
     protected final Sign sign;
     protected final BlockWorldVector source;
 	protected final boolean selfTriggered;
+	protected final Block icBlock;
 
 	protected AbstractChipState(BlockWorldVector source, Sign sign, boolean selfTriggered) {
+
 		this.sign = sign;
 		this.source = source;
 		this.selfTriggered = selfTriggered;
+		this.icBlock = SignUtil.getBackBlock(sign.getBlock());
 	}
 
 	protected abstract Block getBlock(int pin);
@@ -28,7 +32,9 @@ public abstract class AbstractChipState implements ChipState {
 	public boolean get(int pin) {
 
 		Block block = getBlock(pin);
-		return block != null && (selfTriggered || isTriggered(pin)) && block.isBlockIndirectlyPowered();
+		return block != null
+				&& (selfTriggered || isTriggered(pin))
+				&& block.isBlockIndirectlyPowered();
 	}
 
 	@Override
@@ -36,7 +42,7 @@ public abstract class AbstractChipState implements ChipState {
 
 		Block block = getBlock(pin);
 		if (block != null) {
-			ICUtil.setState(block, value);
+			ICUtil.setState(block, value, icBlock);
 		}
 	}
 
