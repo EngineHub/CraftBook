@@ -1,9 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -11,6 +7,9 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.block.Sign;
 
 public class PlanterST extends Planter implements SelfTriggeredIC {
 

@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-
 import com.sk89q.craftbook.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 
 public class CartEjector extends CartMechanism {
 

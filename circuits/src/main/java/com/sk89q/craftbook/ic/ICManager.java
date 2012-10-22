@@ -18,14 +18,14 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through

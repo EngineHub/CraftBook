@@ -1,25 +1,20 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.jinglenote.JingleNoteComponent;
+import com.sk89q.jinglenote.MidiJingleSequencer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.jinglenote.JingleNoteComponent;
-import com.sk89q.jinglenote.MidiJingleSequencer;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.logging.Level;
 
 /**
  * @author Me4502

@@ -18,17 +18,16 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.LocalPlayer;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.sk89q.craftbook.LocalPlayer;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Abstract IC factory.

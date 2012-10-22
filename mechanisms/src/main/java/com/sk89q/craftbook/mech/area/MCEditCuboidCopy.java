@@ -1,10 +1,5 @@
 package com.sk89q.craftbook.mech.area;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.bukkit.World;
-
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
@@ -14,6 +9,10 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import org.bukkit.World;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Silthus
