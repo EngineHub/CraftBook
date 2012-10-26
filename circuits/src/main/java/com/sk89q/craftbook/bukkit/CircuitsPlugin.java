@@ -163,7 +163,6 @@ import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
-import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
 import com.sk89q.craftbook.ic.families.Family3I3O;
 import com.sk89q.craftbook.ic.families.Family3ISO;
@@ -506,9 +505,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @Override
     protected void registerEvents() {
 
-        if (getLocalConfiguration().enableICs) {
-            getServer().getPluginManager().registerEvents(new ICUtil.ICListener(), this);
-        }
+        //if (getLocalConfiguration().enableICs) {
+        //TODO reimplement torches    getServer().getPluginManager().registerEvents(new ICUtil.ICListener(), this);
+        //}
     }
 
     @Override

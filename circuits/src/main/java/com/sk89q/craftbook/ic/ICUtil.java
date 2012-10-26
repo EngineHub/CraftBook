@@ -18,23 +18,17 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.HashMap;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.material.Lever;
+
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.material.Lever;
-
-import java.util.HashMap;
 
 /**
  * IC utility functions.
@@ -43,8 +37,8 @@ import java.util.HashMap;
  */
 public class ICUtil {
 
-    private static BlockFace[] REDSTONE_CONTACT_FACES =
-        {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
+    //private static BlockFace[] REDSTONE_CONTACT_FACES =
+    //    {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
 
     public ICUtil() {
 
@@ -52,7 +46,7 @@ public class ICUtil {
 
     private static HashMap<Location, Boolean> torchStatus = new HashMap<Location, Boolean>();
 
-    public static class ICListener implements Listener {
+    /*TODO reimplement torches. public static class ICListener implements Listener {
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockPhysics(BlockPhysicsEvent event) {
@@ -81,7 +75,7 @@ public class ICUtil {
                     ICUtil.removeTorch(event.getBlock().getLocation());
                 }
         }
-    }
+    }*/
 
     public static Boolean getTorchStatus(Location loc) {
 
@@ -111,33 +105,33 @@ public class ICUtil {
         if (block.getTypeId() != BlockID.LEVER)
             return false;
 
-	    // return if the lever is not attached to our IC block
-	    Lever lever = (Lever) block.getState().getData();
-	    if (!block.getRelative(lever.getAttachedFace()).equals(source)) {
-		    return false;
-	    }
+        // return if the lever is not attached to our IC block
+        Lever lever = (Lever) block.getState().getData();
+        if (!block.getRelative(lever.getAttachedFace()).equals(source)) {
+            return false;
+        }
 
-	    // check if the lever was toggled on
-	    boolean wasOn = (block.getData() & 0x8) > 0;
+        // check if the lever was toggled on
+        boolean wasOn = (block.getData() & 0x8) > 0;
 
-	    byte data = block.getData();
-	    int newData;
-	    // check if the state changed and set the data value
-	    if (!state) {
-		    newData = data & 0x7;
-	    } else {
-		    newData = data | 0x8;
-	    }
+        byte data = block.getData();
+        int newData;
+        // check if the state changed and set the data value
+        if (!state) {
+            newData = data & 0x7;
+        } else {
+            newData = data | 0x8;
+        }
 
-	    // if the state changed lets apply physics to the source block and the lever itself
-	    if (wasOn != state) {
-		    // set the new data
-		    block.setData((byte) newData, true);
-		    // apply physics to the source block the lever is attached to
-		    net.minecraft.server.World w = ((CraftWorld)block.getWorld()).getHandle();
-		    w.applyPhysics(source.getX(), source.getY(), source.getZ(), 0);
-		    return true;
-	    }
+        // if the state changed lets apply physics to the source block and the lever itself
+        if (wasOn != state) {
+            // set the new data
+            block.setData((byte) newData, true);
+            // apply physics to the source block the lever is attached to
+            net.minecraft.server.World w = ((CraftWorld)block.getWorld()).getHandle();
+            w.applyPhysics(source.getX(), source.getY(), source.getZ(), 0);
+            return true;
+        }
 
         return false;
     }
