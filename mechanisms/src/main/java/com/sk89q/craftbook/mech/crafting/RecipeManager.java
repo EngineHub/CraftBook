@@ -1,13 +1,19 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.*;
+import com.sk89q.craftbook.BaseConfiguration;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -93,25 +99,31 @@ public class RecipeManager extends BaseConfiguration {
         private HashMap<CraftingItemStack, Character> getHashItems(ConfigurationSection section) {
 
             HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
-            for (String item : section.getKeys(false)) {
-                String[] split = item.split(":");
-                Material material;
-                try {
-                    material = Material.getMaterial(Integer.parseInt(split[0]));
-                } catch (NumberFormatException e) {
-                    // use the name
-                    material = Material.getMaterial(split[0].toUpperCase());
-                }
-                if (material != null) {
-                    CraftingItemStack itemStack = new CraftingItemStack(material);
-                    if (split.length > 1) {
-                        itemStack.setData(Short.parseShort(split[1]));
-                    } else {
-                        itemStack.setData((short) 0);
+            try {
+                for (String item : section.getKeys(false)) {
+                    if(item == null || item.length() == 0) continue;
+                    String[] split = item.split(":");
+                    Material material;
+                    try {
+                        material = Material.getMaterial(Integer.parseInt(split[0]));
+                    } catch (NumberFormatException e) {
+                        // use the name
+                        material = Material.getMaterial(split[0].toUpperCase());
                     }
-                    itemStack.setAmount(1);
-                    items.put(itemStack, section.getString(item).toCharArray()[0]);
+                    if (material != null) {
+                        CraftingItemStack itemStack = new CraftingItemStack(material);
+                        if (split.length > 1) {
+                            itemStack.setData(Short.parseShort(split[1]));
+                        } else {
+                            itemStack.setData((short) 0);
+                        }
+                        itemStack.setAmount(1);
+                        items.put(itemStack, section.getString(item).toCharArray()[0]);
+                    }
                 }
+            }
+            catch(Exception e) {
+                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + section.getName());
             }
             return items;
         }
@@ -119,25 +131,31 @@ public class RecipeManager extends BaseConfiguration {
         private Collection<CraftingItemStack> getItems(ConfigurationSection section) {
 
             Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
-            for (String item : section.getKeys(false)) {
-                String[] split = item.split(":");
-                Material material;
-                try {
-                    material = Material.getMaterial(Integer.parseInt(split[0]));
-                } catch (NumberFormatException e) {
-                    // use the name
-                    material = Material.getMaterial(split[0].toUpperCase());
-                }
-                if (material != null) {
-                    CraftingItemStack itemStack = new CraftingItemStack(material);
-                    if (split.length > 1) {
-                        itemStack.setData(Short.parseShort(split[1]));
-                    } else {
-                        itemStack.setData((short) 0);
+            try {
+                for (String item : section.getKeys(false)) {
+                    if(item == null || item.length() == 0) continue;
+                    String[] split = item.split(":");
+                    Material material;
+                    try {
+                        material = Material.getMaterial(Integer.parseInt(split[0]));
+                    } catch (NumberFormatException e) {
+                        // use the name
+                        material = Material.getMaterial(split[0].toUpperCase());
                     }
-                    itemStack.setAmount(section.getInt(item, 1));
-                    items.add(itemStack);
+                    if (material != null) {
+                        CraftingItemStack itemStack = new CraftingItemStack(material);
+                        if (split.length > 1) {
+                            itemStack.setData(Short.parseShort(split[1]));
+                        } else {
+                            itemStack.setData((short) 0);
+                        }
+                        itemStack.setAmount(section.getInt(item, 1));
+                        items.add(itemStack);
+                    }
                 }
+            }
+            catch(Exception e) {
+                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + section.getName());
             }
             return items;
         }
