@@ -216,7 +216,8 @@ public class Gate extends AbstractMechanic {
             Set<BlockVector> visitedColumns, Boolean close) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
-        if (visitedColumns.size() > 14) return false;
+        if (plugin.getLocalConfiguration().gateSettings.limitColumns &&
+                visitedColumns.size() > plugin.getLocalConfiguration().gateSettings.maxColumns) return false;
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) return false;
         if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()))) return false;
 

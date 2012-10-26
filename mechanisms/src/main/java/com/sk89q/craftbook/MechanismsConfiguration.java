@@ -235,12 +235,16 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final boolean enableRedstone;
+        public final boolean limitColumns;
+        public final int maxColumns;
         public final Set<Integer> allowedBlocks;
 
         private GateSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
             enableRedstone = section.getBoolean("redstone", true);
+            limitColumns = section.getBoolean("limit-columns", true);
+            maxColumns = section.getInt("max-columns", 14);
             allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(85, 101, 102, 113));
         }
 
