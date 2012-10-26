@@ -1,3 +1,13 @@
+3.3.4
++ Added API to add your own IC's.
+* Fixed Player Detection IC.
+* Fix many possible bugs.
++ Up and Down face support for hidden switch.
+* Fixed many redstone related bugs.
++ Allowed custom settings on max columns for gates.
+- Remove redstone torch support for IC's
+* MANY behind the scene fixes for IC's and other mechanics.
+
 3.3.3
 * Major changes to Config (Config needs to be regenerated!!!)
 + Data support for legacy cauldron. (Seperated with @)
