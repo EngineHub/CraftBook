@@ -370,87 +370,78 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC2511", "inv fe pulser",new LowNotPulser.Factory(server), familySISO, familyAISO);
 
         //SI3Os
-        registerIC("MC2020", "random 3", new Random3Bit.Factory(server), familySI3O);
-        registerIC("MC2999", "marquee", new Marquee.Factory(server), familySI3O);
+        registerIC("MC2020", "random 3",    new Random3Bit.Factory(server), familySI3O);
+        registerIC("MC2999", "marquee",     new Marquee.Factory(server), familySI3O);
 
         //3ISOs
-        registerIC("MC3002", "and", new AndGate.Factory(server), family3ISO);
-        registerIC("MC3003", "nand", new NandGate.Factory(server), family3ISO);
-        registerIC("MC3020", "xor", new XorGate.Factory(server), family3ISO);
-        registerIC("MC3021", "xnor", new XnorGate.Factory(server), family3ISO);
-        registerIC("MC3030", "nor flip", new RsNorFlipFlop.Factory(server), family3ISO);
-        registerIC("MC3031", "inv nand latch", new InvertedRsNandLatch.Factory(server), family3ISO);
-        registerIC("MC3032", "jk flip", new JkFlipFlop.Factory(server), family3ISO);
-        registerIC("MC3033", "nand latch", new RsNandLatch.Factory(server), family3ISO);
-        registerIC("MC3034", "edge df flip", new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
-        registerIC("MC3036", "level df flip", new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
+        registerIC("MC3002", "and",         new AndGate.Factory(server), family3ISO);
+        registerIC("MC3003", "nand",        new NandGate.Factory(server), family3ISO);
+        registerIC("MC3020", "xor",         new XorGate.Factory(server), family3ISO);
+        registerIC("MC3021", "xnor",        new XnorGate.Factory(server), family3ISO);
+        registerIC("MC3030", "nor flip",    new RsNorFlipFlop.Factory(server), family3ISO);
+        registerIC("MC3031", "inv nand latch",new InvertedRsNandLatch.Factory(server), family3ISO);
+        registerIC("MC3032", "jk flip",     new JkFlipFlop.Factory(server), family3ISO);
+        registerIC("MC3033", "nand latch",  new RsNandLatch.Factory(server), family3ISO);
+        registerIC("MC3034", "edge df flip",new EdgeTriggerDFlipFlop.Factory(server), family3ISO);
+        registerIC("MC3036", "level df flip",new LevelTriggeredDFlipFlop.Factory(server), family3ISO);
         registerIC("MC3040", "multiplexer", new Multiplexer.Factory(server), family3ISO);
-        registerIC("MC3050", "combo", new CombinationLock.Factory(server), family3ISO);
-        registerIC("MC3101", "down counter", new DownCounter.Factory(server), family3ISO);
-        registerIC("MC3102", "counter", new Counter.Factory(server), family3ISO);
-        registerIC("MC3231", "t control adva", new TimeControlAdvanced.Factory(server),
-                family3ISO);             // Restricted
-        registerIC("MC3300", "ROM set", new MemorySetter.Factory(server), family3ISO);          // Restricted
-        registerIC("MC3301", "ROM get", new MemoryAccess.Factory(server), familySI3O);          // Restricted
+        registerIC("MC3050", "combo",       new CombinationLock.Factory(server), family3ISO);
+        registerIC("MC3101", "down counter",new DownCounter.Factory(server), family3ISO);
+        registerIC("MC3102", "counter",     new Counter.Factory(server), family3ISO);
+        registerIC("MC3231", "t control adva",new TimeControlAdvanced.Factory(server), family3ISO);             // Restricted
+        registerIC("MC3300", "ROM set",     new MemorySetter.Factory(server), family3ISO);          // Restricted
+        registerIC("MC3301", "ROM get",     new MemoryAccess.Factory(server), familySI3O);          // Restricted
         //3I3Os
-        registerIC("MC4000", "full adder", new FullAdder.Factory(server), family3I3O);
-        registerIC("MC4010", "half adder", new HalfAdder.Factory(server), family3I3O);
-        registerIC("MC4100", "full subtr", new FullSubtractor.Factory(server), family3I3O);
-        registerIC("MC4110", "half subtr", new HalfSubtractor.Factory(server), family3I3O);
-        registerIC("MC4200", "dispatcher", new Dispatcher.Factory(server), family3I3O);
+        registerIC("MC4000", "full adder",  new FullAdder.Factory(server), family3I3O);
+        registerIC("MC4010", "half adder",  new HalfAdder.Factory(server), family3I3O);
+        registerIC("MC4100", "full subtr",  new FullSubtractor.Factory(server), family3I3O);
+        registerIC("MC4110", "half subtr",  new HalfSubtractor.Factory(server), family3I3O);
+        registerIC("MC4200", "dispatcher",  new Dispatcher.Factory(server), family3I3O);
 
         //SI5O's
-        registerIC("MC6020", "random 5", new Random5Bit.Factory(server), familySI5O);
+        registerIC("MC6020", "random 5",    new Random5Bit.Factory(server), familySI5O);
 
         //PLCs
-        registerIC("MC5000", "perlstone", PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
-        registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
+        registerIC("MC5000", "perlstone",   PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
+        registerIC("MC5001", "perlstone 3i3o",PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
 
         //Self triggered
-        registerIC("MC0020", "random 1 st", new RandomBitST.Factory(server), familySISO,
-                familyAISO);                     //Restricted
+        registerIC("MC0020", "random 1 st", new RandomBitST.Factory(server), familySISO, familyAISO);                     //Restricted
         registerIC("MC0111", "receiver st", new WirelessReceiverST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0204", "trap st", new EntityTrapST.Factory(server), familySISO,
-                familyAISO);                    // Restricted
-        registerIC("MC0209", "collector st", new ContainerCollectorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0210", "emitter st", new ParticleEffectST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0219", "auto craft st", new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0220", "a bl break st", new BlockBreakerST.Factory(server, false), familySISO, familyAISO);
-        registerIC("MC0221", "b bl break st", new BlockBreakerST.Factory(server, true), familySISO, familyAISO);
-        registerIC("MC0222", "liq flood st", new LiquidFloodST.Factory(server), familySISO, familyAISO);    //Restricted
-        registerIC("MC0223", "terraform st", new BonemealTerraformerST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0225", "pump st", new PumpST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0230", "sense day st", new DaySensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0232", "time set st", new TimeSetST.Factory(server), familySISO,
-                familyAISO);         // Restricted
-        registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0261", "sense lava st", new LavaSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0262", "sense light st", new LightSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0263", "sense block st", new BlockSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0264", "sense item st", new ItemSensorST.Factory(server), familySISO,
-                familyAISO);                    // Restricted
-        registerIC("MC0265", "sense n item s", new ItemNotSensorST.Factory(server), familySISO,
-                familyAISO);                 // Restricted
-        registerIC("MC0266", "sense power st", new PowerSensorST.Factory(server), familySISO,
-                familyAISO);                   // Restricted
-        registerIC("MC0270", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO,
-                familyAISO);                  // Restricted
-        registerIC("MC0272", "sense playe st", new PlayerDetectionST.Factory(server), familySISO,
-                familyAISO);               // Restricted
-        registerIC("MC0420", "clock st", new ClockST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0421", "monostable", new Monostable.Factory(server), familySISO, familyAISO);
-        registerIC("MC0500", "range output", new RangedOutput.Factory(server), familySISO, familyAISO);
+        registerIC("MC0204", "trap st",     new EntityTrapST.Factory(server), familySISO, familyAISO);                    // Restricted
+        registerIC("MC0209", "collector st",new ContainerCollectorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0210", "emitter st",  new ParticleEffectST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0219", "auto craft st",new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0220", "a bl break st",new BlockBreakerST.Factory(server, false), familySISO, familyAISO);
+        registerIC("MC0221", "b bl break st",new BlockBreakerST.Factory(server, true), familySISO, familyAISO);
+        registerIC("MC0222", "liq flood st",new LiquidFloodST.Factory(server), familySISO, familyAISO);    //Restricted
+        registerIC("MC0223", "terraform st",new BonemealTerraformerST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0225", "pump st",     new PumpST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0230", "sense day st",new DaySensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0232", "time set st", new TimeSetST.Factory(server), familySISO, familyAISO);         // Restricted
+        registerIC("MC0260", "sense water st",new WaterSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0261", "sense lava st",new LavaSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0262", "sense light st",new LightSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0263", "sense block st",new BlockSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0264", "sense item st",new ItemSensorST.Factory(server), familySISO, familyAISO);                    // Restricted
+        registerIC("MC0265", "sense n item s",new ItemNotSensorST.Factory(server), familySISO, familyAISO);                 // Restricted
+        registerIC("MC0266", "sense power st",new PowerSensorST.Factory(server), familySISO, familyAISO);                   // Restricted
+        registerIC("MC0270", "sense power st",new PowerSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0271", "sense entit st",new EntitySensorST.Factory(server), familySISO, familyAISO);                  // Restricted
+        registerIC("MC0272", "sense playe st",new PlayerDetectionST.Factory(server), familySISO, familyAISO);               // Restricted
+        registerIC("MC0420", "clock st",    new ClockST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0421", "monostable",  new Monostable.Factory(server), familySISO, familyAISO);
+        registerIC("MC0500", "range output",new RangedOutput.Factory(server), familySISO, familyAISO);
         //Xtra ICs
         //SISOs
-        registerIC("MCX230", "rain sense", new RainSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MCX230", "rain sense",  new RainSensor.Factory(server), familySISO, familyAISO);
         registerIC("MCX231", "storm sense", new TStormSensor.Factory(server), familySISO, familyAISO);
         registerIC("MCX233", "weather set", new WeatherControl.Factory(server), familySISO, familyAISO);
         //3ISOs
-        registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
+        registerIC("MCT233", "weather set ad",new WeatherControlAdvanced.Factory(server), family3ISO);
         //Self triggered
-        registerIC("MCZ230", "rain sense st", new RainSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MCZ231", "storm sense st", new TStormSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MCZ230", "rain sense st",new RainSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MCZ231", "storm sense st",new TStormSensorST.Factory(server), familySISO, familyAISO);
     }
 
     /**
