@@ -52,34 +52,36 @@ public class MechanismsConfiguration extends BaseConfiguration {
     @Override
     public void load() {
 
+        aiSettings = new AISettings(new BaseConfigurationSection("AI Mechanics"));
         ammeterSettings = new AmmeterSettings(new BaseConfigurationSection("Ammeter"));
+        anchorSettings = new AnchorSettings(new BaseConfigurationSection("Chunk Anchor"));
+        areaSettings = new AreaSettings(new BaseConfigurationSection("Toggle Areas"));
         bookcaseSettings = new BookcaseSettings(new BaseConfigurationSection("Bookcase"));
         bridgeSettings = new BridgeSettings(new BaseConfigurationSection("Bridge"));
-        doorSettings = new DoorSettings(new BaseConfigurationSection("Door"));
-        gateSettings = new GateSettings(new BaseConfigurationSection("Gate"));
-        elevatorSettings = new ElevatorSettings(new BaseConfigurationSection("Elevator"));
-        teleporterSettings = new TeleporterSettings(new BaseConfigurationSection("Teleporter"));
         cauldronSettings = new CauldronSettings(new BaseConfigurationSection("Cauldron"));
-        lightStoneSettings = new LightStoneSettings(new BaseConfigurationSection("Lightstone"));
-        lightSwitchSettings = new LightSwitchSettings(new BaseConfigurationSection("Light Switch"));
-        hiddenSwitchSettings = new HiddenSwitchSettings(new BaseConfigurationSection("Hidden Switch"));
-        snowSettings = new SnowSettings(new BaseConfigurationSection("Snow"));
-        areaSettings = new AreaSettings(new BaseConfigurationSection("Toggle Areas"));
-        commandSettings = new CommandSettings(new BaseConfigurationSection("Command Sign"));
-        customDrops = new CustomDropManager(dataFolder);
-        customDropSettings = new CustomDropSettings(new BaseConfigurationSection("Custom Drops"));
-        dispenserSettings = new DispenserSettings(new BaseConfigurationSection("Dispenser Recipes"));
         chairSettings = new ChairSettings(new BaseConfigurationSection("Chairs"));
-        aiSettings = new AISettings(new BaseConfigurationSection("AI Mechanics"));
-        anchorSettings = new AnchorSettings(new BaseConfigurationSection("Chunk Anchor"));
+        commandSettings = new CommandSettings(new BaseConfigurationSection("Command Sign"));
         cookingPotSettings = new CookingPotSettings(new BaseConfigurationSection("Cooking Pot"));
         customCraftingSettings = new CustomCraftingSettings(new BaseConfigurationSection("Custom Crafting"));
-        paintingSettings = new PaintingSettings(new BaseConfigurationSection("Painting Settings"));
-        xpStorerSettings = new XPStorerSettings(new BaseConfigurationSection("XP Storer"));
+        customDropSettings = new CustomDropSettings(new BaseConfigurationSection("Custom Drops"));
+        dispenserSettings = new DispenserSettings(new BaseConfigurationSection("Dispenser Recipes"));
+        doorSettings = new DoorSettings(new BaseConfigurationSection("Door"));
+        elevatorSettings = new ElevatorSettings(new BaseConfigurationSection("Elevator"));
+        gateSettings = new GateSettings(new BaseConfigurationSection("Gate"));
+        hiddenSwitchSettings = new HiddenSwitchSettings(new BaseConfigurationSection("Hidden Switch"));
+        lightStoneSettings = new LightStoneSettings(new BaseConfigurationSection("Lightstone"));
+        lightSwitchSettings = new LightSwitchSettings(new BaseConfigurationSection("Light Switch"));
         mapChangerSettings = new MapChangerSettings(new BaseConfigurationSection("Map Changer"));
+        paintingSettings = new PaintingSettings(new BaseConfigurationSection("Painting Settings"));
+        snowSettings = new SnowSettings(new BaseConfigurationSection("Snow"));
+        teleporterSettings = new TeleporterSettings(new BaseConfigurationSection("Teleporter"));
+        xpStorerSettings = new XPStorerSettings(new BaseConfigurationSection("XP Storer"));
 
         //Do this last, so it shows first.
         mechSettings = new MechanismSettings(new BaseConfigurationSection("Mechanisms"));
+
+        //Non-config stuff
+        customDrops = new CustomDropManager(dataFolder);
     }
 
     public class AISettings {
@@ -376,16 +378,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enabled = section.getBoolean("enable", true);
         }
     }
-    //General settings
-    public class MechanismSettings {
-
-        public final boolean stopDestruction;
-
-        private MechanismSettings(BaseConfigurationSection section) {
-
-            stopDestruction = section.getBoolean("stop-mechanism-dupe", true);
-        }
-    }
     public class PaintingSettings {
 
         public final boolean enabled;
@@ -433,6 +425,16 @@ public class MechanismsConfiguration extends BaseConfiguration {
         private XPStorerSettings(BaseConfigurationSection section) {
 
             enabled = section.getBoolean("enable", true);
+        }
+    }
+    //General settings
+    public class MechanismSettings {
+
+        public final boolean stopDestruction;
+
+        private MechanismSettings(BaseConfigurationSection section) {
+
+            stopDestruction = section.getBoolean("stop-mechanism-dupe", true);
         }
     }
 
