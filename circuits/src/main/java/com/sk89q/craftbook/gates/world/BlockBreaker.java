@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -10,8 +10,13 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockBreaker extends AbstractIC {
 
@@ -61,23 +66,26 @@ public class BlockBreaker extends AbstractIC {
         }
         if (broken == null || broken.getTypeId() == 0) return false;
 
-        ItemStack blockstack = new ItemStack(broken.getTypeId(), 1, broken.getData());
+        broken.getDrops();
+        for(ItemStack blockstack  : broken.getDrops()) {
+
+            if (hasChest) {
+                Chest c = (Chest) chest.getState();
+                HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
+                if (overflow.size() == 0)
+                    continue;
+                else {
+                    for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
+                        dropItem(bit.getValue());
+                    }
+                    continue;
+                }
+            }
+
+            dropItem(blockstack);
+        }
         broken.setTypeId(0);
 
-        if (hasChest) {
-            Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
-            if (overflow.size() == 0)
-                return true;
-            else {
-                for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
-                    dropItem(bit.getValue());
-                }
-                return true;
-            }
-        }
-
-        dropItem(blockstack);
 
         return true;
     }
