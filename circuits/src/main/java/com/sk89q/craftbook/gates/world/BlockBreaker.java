@@ -67,6 +67,16 @@ public class BlockBreaker extends AbstractIC {
         }
         if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK) return false;
 
+        try {
+            int blockID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+            if(blockID != broken.getTypeId())
+                return false;
+            byte data = Byte.parseByte(getSign().getLine(2).split(":")[1]);
+            if(data != broken.getData())
+                return false;
+        }
+        catch(Exception e){}
+
         broken.getDrops();
         for(ItemStack blockstack  : broken.getDrops()) {
 
@@ -122,7 +132,7 @@ public class BlockBreaker extends AbstractIC {
         public String[] getLineHelp() {
 
             String[] lines = new String[] {
-                    null,
+                    "Optional block ID",
                     null
             };
             return lines;
