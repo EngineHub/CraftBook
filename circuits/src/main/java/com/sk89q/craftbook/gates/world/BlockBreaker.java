@@ -17,6 +17,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class BlockBreaker extends AbstractIC {
 
@@ -64,7 +65,7 @@ public class BlockBreaker extends AbstractIC {
         if (chest != null && chest.getType() == Material.CHEST) {
             hasChest = true;
         }
-        if (broken == null || broken.getTypeId() == 0) return false;
+        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK) return false;
 
         broken.getDrops();
         for(ItemStack blockstack  : broken.getDrops()) {
