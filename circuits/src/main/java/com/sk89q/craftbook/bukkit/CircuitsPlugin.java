@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.ICConfiguration;
@@ -159,6 +161,7 @@ import com.sk89q.craftbook.gates.world.WaterSensorST;
 import com.sk89q.craftbook.gates.world.WirelessReceiver;
 import com.sk89q.craftbook.gates.world.WirelessReceiverST;
 import com.sk89q.craftbook.gates.world.WirelessTransmitter;
+import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
@@ -551,5 +554,34 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     protected boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         return manager.unregister(factory);
+    }
+
+    public void generateICDocs(Player player, String id) {
+        RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
+        if (ric == null) {
+            player.sendMessage(ChatColor.RED + "Invalid IC!");
+            return;
+        }
+        try {
+            IC ic = ric.getFactory().create(null);
+            player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
+            if (getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
+                player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
+            }
+            player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
+            if (ric.getFactory().getLineHelp()[0] != null) {
+                player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
+            } else {
+                player.sendMessage(ChatColor.YELLOW + "Line 3: Blank.");
+            }
+            if (ric.getFactory().getLineHelp()[1] != null) {
+                player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
+            } else {
+                player.sendMessage(ChatColor.YELLOW + "Line 4: Blank.");
+            }
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
+                    .toUpperCase());
+        } catch (Exception ignored) {
+        }
     }
 }

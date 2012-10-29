@@ -1,5 +1,13 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
@@ -9,13 +17,6 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class CircuitCommands {
 
@@ -85,32 +86,7 @@ public class CircuitCommands {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        RegisteredICFactory ric = plugin.icManager.registered.get(context.getString(0).toLowerCase());
-        if (ric == null) {
-            player.sendMessage(ChatColor.RED + "Invalid IC!");
-            return;
-        }
-        try {
-            IC ic = ric.getFactory().create(null);
-            player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
-            if (plugin.getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
-                player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
-            }
-            player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
-            if (ric.getFactory().getLineHelp()[0] != null) {
-                player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
-            } else {
-                player.sendMessage(ChatColor.YELLOW + "Line 3: Blank.");
-            }
-            if (ric.getFactory().getLineHelp()[1] != null) {
-                player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
-            } else {
-                player.sendMessage(ChatColor.YELLOW + "Line 4: Blank.");
-            }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
-                    .toUpperCase());
-        } catch (Exception ignored) {
-        }
+        plugin.generateICDocs(player, context.getString(0));
     }
 
     @Command(

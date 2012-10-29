@@ -1,13 +1,21 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import net.minecraft.server.Packet4UpdateTime;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -81,7 +89,7 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
                 int dist = Integer.parseInt(getSign().getLine(2));
                 long time = Long.parseLong(getSign().getLine(3));
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                        ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet4UpdateTime(time));
+                        ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet4UpdateTime(time, time));
             }
         } catch (Exception e) {
             getSign().getBlock().breakNaturally();

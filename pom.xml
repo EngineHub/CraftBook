@@ -26,20 +26,20 @@
     </properties>
     <repositories>
         <repository>
-            <id>zml-repo</id>
-            <url>http://files.zachsthings.com/repo</url>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
             <id>sk89q-mvn2</id>
             <url>http://mvn2.sk89q.com/repo</url>
         </repository>
         <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
-        </repository>
-        <repository>
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+        </repository>
+                <repository>
+            <id>zml-repo</id>
+            <url>http://files.zachsthings.com/repo</url>
         </repository>
     </repositories>
     <dependencies>
@@ -56,12 +56,12 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.3.2-R1.1-SNAPSHOT</version>
+            <version>1.4.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.3.2-R1.1-SNAPSHOT</version>
+            <version>1.4.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>

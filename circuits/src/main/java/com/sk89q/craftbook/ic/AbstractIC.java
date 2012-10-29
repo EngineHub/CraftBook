@@ -18,10 +18,11 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 
 /**
  * A base abstract IC that all ICs can inherit from.
@@ -63,7 +64,12 @@ public abstract class AbstractIC implements IC {
 
     @Override
     public void onRightClick(Player p) {
-
+        try {
+            if(p.isSneaking()) {
+                CircuitsPlugin.getInst().generateICDocs(p, getSign().getLine(1).split("[")[1].split("]")[0]);
+            }
+        }
+        catch(Exception e){}
     }
 
     @Override
