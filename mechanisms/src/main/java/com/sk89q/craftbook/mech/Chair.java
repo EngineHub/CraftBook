@@ -9,7 +9,6 @@ import net.minecraft.server.DataWatcher;
 import net.minecraft.server.Packet40EntityMetadata;
 import net.minecraft.server.WatchableObject;
 
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
@@ -126,7 +124,7 @@ public class Chair implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    /*@EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) { //Stop players leaving there chair.
         if (chairs.containsKey(event.getPlayer().getName())) {
             if (chairs.get(event.getPlayer().getName()).getLocation().getWorld() != event.getPlayer().getWorld()) {
@@ -141,7 +139,7 @@ public class Chair implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
+    }*/
 
     public static class ChairWatcher extends DataWatcher {
 
