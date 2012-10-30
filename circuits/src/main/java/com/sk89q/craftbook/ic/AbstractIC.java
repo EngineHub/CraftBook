@@ -64,12 +64,9 @@ public abstract class AbstractIC implements IC {
 
     @Override
     public void onRightClick(Player p) {
-        try {
-            if(p.isSneaking()) {
-                CircuitsPlugin.getInst().generateICDocs(p, getSign().getLine(1).split("[")[1].split("]")[0]);
-            }
+        if(p.isSneaking()) {
+            CircuitsPlugin.getInst().generateICDocs(p, getSign().getLine(1).split("\\[")[1].split("\\]")[0]);
         }
-        catch(Exception e){}
     }
 
     @Override
