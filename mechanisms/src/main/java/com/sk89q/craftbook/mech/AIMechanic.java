@@ -22,7 +22,11 @@ public class AIMechanic implements Listener {
 
     ArrayList<Class<BaseAIMechanic>> mechanics = new ArrayList<Class<BaseAIMechanic>>();
 
+    MechanismsPlugin plugin;
+
     public AIMechanic(MechanismsPlugin plugin) {
+
+        this.plugin = plugin;
 
         if (!plugin.getLocalConfiguration().aiSettings.enabled) return;
 
@@ -43,8 +47,7 @@ public class AIMechanic implements Listener {
                 if (!TargetAIMechanic.class.isAssignableFrom(mechanic)) {
                     continue;
                 }
-                TargetAIMechanic ai = (TargetAIMechanic) mechanic.getConstructors()[0].newInstance(this,
-                        event.getEntity());
+                TargetAIMechanic ai = (TargetAIMechanic) mechanic.getConstructors()[0].newInstance(plugin, event.getEntity());
                 if (ai == null) return;
                 ai.onEntityTarget(event);
             } catch (Exception e) {
@@ -62,8 +65,7 @@ public class AIMechanic implements Listener {
                 if (!BowShotAIMechanic.class.isAssignableFrom(mechanic)) {
                     continue;
                 }
-                BowShotAIMechanic ai = (BowShotAIMechanic) mechanic.getConstructors()[0].newInstance(this,
-                        event.getEntity());
+                BowShotAIMechanic ai = (BowShotAIMechanic) mechanic.getConstructors()[0].newInstance(plugin, event.getEntity());
                 if (ai == null) return;
                 ai.onBowShot(event);
             } catch (Exception e) {
