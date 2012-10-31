@@ -13,7 +13,6 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
 /**
@@ -121,8 +120,7 @@ public class SetBlockBelowChest extends AbstractIC {
         return ret;
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 
@@ -133,6 +131,22 @@ public class SetBlockBelowChest extends AbstractIC {
         public IC create(Sign sign) {
 
             return new SetBlockBelowChest(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Sets below block from above chest.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "id:data",
+                    "forced or not"
+            };
+            return lines;
         }
     }
 }

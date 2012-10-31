@@ -8,18 +8,16 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
  */
-public class SetBlockAboveChest extends AbstractIC {
+public class SetBlockAboveChest extends SetBlockAbove {
 
     public SetBlockAboveChest(Server server, Sign sign, ICFactory factory) {
 
@@ -120,8 +118,7 @@ public class SetBlockAboveChest extends AbstractIC {
         return ret;
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 
@@ -132,6 +129,22 @@ public class SetBlockAboveChest extends AbstractIC {
         public IC create(Sign sign) {
 
             return new SetBlockAboveChest(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Sets above block from below chest.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "id:data",
+                    "forced or not"
+            };
+            return lines;
         }
     }
 }

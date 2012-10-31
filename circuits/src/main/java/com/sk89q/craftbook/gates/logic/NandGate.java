@@ -18,9 +18,14 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class NandGate extends AbstractIC {
 
@@ -70,6 +75,21 @@ public class NandGate extends AbstractIC {
 
             return new NandGate(getServer(), sign, this);
         }
-    }
 
+        @Override
+        public String getDescription() {
+
+            return "NAND Gate. Outputs high if all inputs are low.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
+    }
 }

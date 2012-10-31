@@ -1,12 +1,18 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -83,6 +89,22 @@ public class ParticleEffect extends AbstractIC {
             } catch (Exception ignored) {
             }
             return new ParticleEffect(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Creates particle effects.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "effectID:effectData",
+                    "amount of particles"
+            };
+            return lines;
         }
     }
 }

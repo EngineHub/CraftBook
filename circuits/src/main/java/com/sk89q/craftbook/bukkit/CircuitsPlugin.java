@@ -558,12 +558,18 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     public void generateICDocs(Player player, String id) {
         RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
+        /*TODO continue work on all docs for(Map.Entry<String, RegisteredICFactory> rc : icManager.registered.entrySet()) {
+            if(rc.getValue().getFactory().getDescription().equalsIgnoreCase("No Description.")) {
+                Bukkit.getLogger().severe("IC " + rc.getValue().getId() + " MISSING DOCS!");
+            }
+        }*/
         if (ric == null) {
             player.sendMessage(ChatColor.RED + "Invalid IC!");
             return;
         }
         try {
             IC ic = ric.getFactory().create(null);
+            player.sendMessage("    "); //To space the area
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
             if (getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
                 player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());

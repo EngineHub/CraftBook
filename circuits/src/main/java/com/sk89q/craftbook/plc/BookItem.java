@@ -16,13 +16,14 @@
  */
 
 // Code from http://forums.bukkit.org/threads/simple-temp-book-api.93562/
-// Replace when proper Bukkit Book API exists
+// TODO Replace when proper Bukkit Book API exists
 
 package com.sk89q.craftbook.plc;
 
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.NBTTagList;
 import net.minecraft.server.NBTTagString;
+
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 class BookItem {

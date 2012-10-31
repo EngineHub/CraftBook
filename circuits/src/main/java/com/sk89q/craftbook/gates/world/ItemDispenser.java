@@ -18,13 +18,19 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
@@ -98,6 +104,22 @@ public class ItemDispenser extends AbstractIC {
         public IC create(Sign sign) {
 
             return new ItemDispenser(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Spawns in items.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "id:data",
+                    "amount"
+            };
+            return lines;
         }
     }
 }
