@@ -141,9 +141,9 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                         else if(data[0].equalsIgnoreCase("v")) {
                             try {
                                 double x, y, z;
-                                x = Double.parseDouble(getSign().getLine(2).split(":")[0]);
-                                y = Double.parseDouble(getSign().getLine(2).split(":")[1]);
-                                z = Double.parseDouble(getSign().getLine(2).split(":")[2]);
+                                x = Double.parseDouble(data[1].split(",")[0]);
+                                y = Double.parseDouble(data[1].split(",")[1]);
+                                z = Double.parseDouble(data[1].split(",")[2]);
                                 ent.setVelocity(new org.bukkit.util.Vector(x,y,z));
                             }
                             catch(Exception e){
@@ -164,8 +164,8 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                             ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(bit.split(";")[0].split(":")[1])], 1, d);
                             try {
                                 for(int e = 1; e < bit.split(";").length; e++) {
-                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(bit.split(";")[e].split(":")[1])],
-                                            Integer.parseInt(bit.split(";")[e].split(":")[2]));
+                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(bit.split(";")[e].split(":")[0])],
+                                            Integer.parseInt(bit.split(";")[e].split(":")[1]));
                                 }
                             }
                             catch(Exception e){}
