@@ -18,22 +18,28 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import net.minecraft.server.EntityWolf;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -114,7 +120,6 @@ public class CreatureSpawner extends AbstractIC {
             ((Ageable) ent).setAgeLock(true);
         }
 
-
         switch (ent.getType()) {
             case CREEPER:
                 if (data[0].equalsIgnoreCase("charged")) {
@@ -160,6 +165,43 @@ public class CreatureSpawner extends AbstractIC {
                     ((Wolf) ent).setTamed(true);
                 } else if (data[0].equalsIgnoreCase("angry")) {
                     ((Wolf) ent).setAngry(true);
+                } else if (data[0].equalsIgnoreCase("collar")) {
+                    try {
+                        EntityWolf wolf = (EntityWolf) ((CraftLivingEntity)ent).getHandle();
+                        wolf.setCollarColor(Integer.decode(data[1]));
+                    }
+                    catch(Exception e){}
+                }
+                break;
+            case ENDERMAN:
+                if (data[0].equalsIgnoreCase("block")) {
+                    try {
+                        int id = Integer.parseInt(data[1]);
+                        byte d = 0;
+                        if(data.length > 2)
+                            d = Byte.parseByte(data[2]);
+                        ((Enderman) ent).setCarriedMaterial(new MaterialData(id, d));
+                    }
+                    catch(Exception e){}
+                }
+                break;
+            case PRIMED_TNT:
+                if (data[0].equalsIgnoreCase("fuse")) {
+                    try {
+                        int length = Integer.parseInt(data[1]);
+                        ((TNTPrimed) ent).setFuseTicks(length);
+                    }
+                    catch(Exception e){}
+                }
+                else if (data[0].equalsIgnoreCase("yield")) {
+                    try {
+                        float yield = Float.parseFloat(data[1]);
+                        ((TNTPrimed) ent).setYield(yield);
+                    }
+                    catch(Exception e){}
+                }
+                else if (data[0].equalsIgnoreCase("fire")) {
+                    ((TNTPrimed) ent).setIsIncendiary(true);
                 }
                 break;
             case PIG_ZOMBIE:
