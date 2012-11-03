@@ -25,7 +25,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -70,7 +69,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         // if we're not looking at a wall sign, it can't be an IC.
         if (block.getTypeId() != BlockID.WALL_SIGN) return null;
-        ChangedSign sign = BukkitUtil.toChangedSign((Sign) block.getState());
+        Sign sign = (Sign) block.getState();
 
         // detect the text on the sign to see if it's any kind of IC at all.
         Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));

@@ -399,7 +399,7 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a
      *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player, ChangedSign sign)
+    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
 
         List<Mechanic> detectedMechanics = detect(pos, player, sign);
@@ -494,7 +494,7 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a
      *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign)
+    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
             throws InvalidMechanismException {
 
         List<Mechanic> mechanics = new ArrayList<Mechanic>();
