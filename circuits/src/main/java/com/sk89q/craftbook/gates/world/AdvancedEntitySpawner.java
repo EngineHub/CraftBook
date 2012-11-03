@@ -127,7 +127,7 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
             if(effectSign != null) { //Apply effects
                 for(int s = 0; s < 4; s++) {
                     try {
-                        String bit = armourSign.getLine(s);
+                        String bit = effectSign.getLine(s);
                         if(bit == null || bit.trim().length() == 0)
                             continue;
 
