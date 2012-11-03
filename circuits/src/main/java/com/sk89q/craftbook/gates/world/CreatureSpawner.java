@@ -33,6 +33,7 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
@@ -120,6 +121,14 @@ public class CreatureSpawner extends AbstractIC {
         if (ent instanceof Ageable && data[0].equalsIgnoreCase("babylock")) {
             ((Ageable) ent).setBaby();
             ((Ageable) ent).setAgeLock(true);
+        }
+
+        if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("health")) {
+            try {
+                int health = Integer.parseInt(data[1]);
+                ((LivingEntity) ent).setHealth(health);
+            }
+            catch(Exception e){}
         }
 
         switch (ent.getType()) {
