@@ -90,6 +90,7 @@ import com.sk89q.craftbook.gates.weather.TStormSensorST;
 import com.sk89q.craftbook.gates.weather.WeatherControl;
 import com.sk89q.craftbook.gates.weather.WeatherControlAdvanced;
 import com.sk89q.craftbook.gates.weather.WeatherFaker;
+import com.sk89q.craftbook.gates.world.AdvancedEntitySpawner;
 import com.sk89q.craftbook.gates.world.ArrowBarrage;
 import com.sk89q.craftbook.gates.world.ArrowShooter;
 import com.sk89q.craftbook.gates.world.AutomaticCrafter;
@@ -340,6 +341,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1224", "time bomb",   new TimedExplosion.Factory(server), familySISO, familyAISO); //Restricted
         registerIC("MC1225", "pump",        new Pump.Factory(server), familySISO, familyAISO);
         registerIC("MC1226", "spigot",      new Spigot.Factory(server), familySISO, familyAISO);
+        registerIC("MC1227", "avd spawner", new AdvancedEntitySpawner.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1230", "sense day",   new DaySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1231", "t control",   new TimeControl.Factory(server), familySISO, familyAISO);         // Restricted
         registerIC("MC1232", "time set",    new TimeSet.Factory(server), familySISO, familyAISO);         // Restricted

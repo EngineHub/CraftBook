@@ -18,16 +18,31 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -88,6 +103,16 @@ public class CreatureSpawner extends AbstractIC {
 
     public void setEntityData(Entity ent, String data) {
 
+        if (ent instanceof Ageable && data.equalsIgnoreCase("baby")) {
+            ((Ageable) ent).setBaby();
+        }
+
+        if (ent instanceof Ageable && data.equalsIgnoreCase("babylock")) {
+            ((Ageable) ent).setBaby();
+            ((Ageable) ent).setAgeLock(true);
+        }
+
+
         switch (ent.getType()) {
             case CREEPER:
                 if (data.equalsIgnoreCase("charged")) {
@@ -103,6 +128,12 @@ public class CreatureSpawner extends AbstractIC {
                     ((Slime) ent).setSize(6);
                 } else if (data.equalsIgnoreCase("small")) {
                     ((Slime) ent).setSize(3);
+                } else {
+                    try {
+                        int size = Integer.parseInt(data);
+                        ((Slime) ent).setSize(size);
+                    }
+                    catch(Exception e){}
                 }
                 break;
             case MAGMA_CUBE:
@@ -114,6 +145,12 @@ public class CreatureSpawner extends AbstractIC {
                     ((MagmaCube) ent).setSize(6);
                 } else if (data.equalsIgnoreCase("small")) {
                     ((MagmaCube) ent).setSize(3);
+                } else {
+                    try {
+                        int size = Integer.parseInt(data);
+                        ((MagmaCube) ent).setSize(size);
+                    }
+                    catch(Exception e){}
                 }
                 break;
             case WOLF:
@@ -177,11 +214,7 @@ public class CreatureSpawner extends AbstractIC {
                 }
                 break;
             default:
-                if (ent instanceof Animals && data.equalsIgnoreCase("baby")) {
-                    ((Animals) ent).setBaby();
-                }
                 break;
-
         }
     }
 
