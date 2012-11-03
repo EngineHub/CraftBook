@@ -1,3 +1,16 @@
+3.3.5
+* Neated code for configurations.
++ Added filter support to Block Breakers
++ Updated to 1.4.2
+* Enhanced AI Mechanics.
+* Improved XP Storer.
++ Added wooden button support to hidden switch.
++ Set block IC's now support names.
++ Added ability to shift right click IC's to get info on them
+- Removed useless config node from common config.
+* Fixed indirect-redstone issue with below blocks.
+* Fixed many IC's not working. (MC1017, MC1018, MC3XXX)
+
 3.3.4
 + Added API to add your own IC's.
 * Fixed Player Detection IC.
