@@ -592,4 +592,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         } catch (Exception ignored) {
         }
     }
+
+    @Override
+    public void reloadConfiguration() {
+        config = new CircuitsConfiguration(getConfig(), getDataFolder());
+        saveConfig();
+    }
 }

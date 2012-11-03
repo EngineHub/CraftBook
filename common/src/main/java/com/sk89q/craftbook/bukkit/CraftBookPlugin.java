@@ -98,4 +98,10 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
             sender.sendMessage("The CraftBook Common config has been reloaded.");
         }
     }
+
+    @Override
+    public void reloadConfiguration() {
+        config = new CommonConfiguration(getConfig(), getDataFolder());
+        saveConfig();
+    }
 }

@@ -41,7 +41,7 @@ public class CircuitCommands {
             )
     public void reload(CommandContext context, CommandSender sender) {
 
-        plugin.getICConfiguration().reload();
+        plugin.reloadConfig();
         sender.sendMessage("The IC config has been reloaded.");
     }
 

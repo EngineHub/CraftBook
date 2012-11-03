@@ -134,7 +134,7 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                         String[] data = bit.split(":");
 
                         if(data[0].equalsIgnoreCase("e"))
-                            setEntityData(ent, data[1]);
+                            setEntityData(ent, bit.replace(data[0] + ":", ""));
                         else if(data[0].equalsIgnoreCase("p")) {
                             //TODO potion effects
                         }

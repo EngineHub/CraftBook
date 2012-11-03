@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import org.bukkit.command.CommandSender;
+
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import org.bukkit.command.CommandSender;
 
 /**
  * @author Silthus
@@ -62,7 +63,7 @@ public class MechanismCommands {
         @CommandPermissions("craftbook.mech.reload")
         public void reload(CommandContext context, CommandSender sender) {
 
-            plugin.getLocalConfiguration().reload();
+            plugin.reloadConfig();
             sender.sendMessage("Config has been reloaded successfully!");
         }
     }

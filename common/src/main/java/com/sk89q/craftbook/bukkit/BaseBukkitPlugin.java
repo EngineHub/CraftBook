@@ -327,4 +327,6 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
         return true;
     }
+
+    public abstract void reloadConfiguration();
 }

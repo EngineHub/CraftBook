@@ -101,13 +101,15 @@ public class CreatureSpawner extends AbstractIC {
         }
     }
 
-    public void setEntityData(Entity ent, String data) {
+    public void setEntityData(Entity ent, String bit) {
 
-        if (ent instanceof Ageable && data.equalsIgnoreCase("baby")) {
+        String[] data = bit.split(":");
+
+        if (ent instanceof Ageable && data[0].equalsIgnoreCase("baby")) {
             ((Ageable) ent).setBaby();
         }
 
-        if (ent instanceof Ageable && data.equalsIgnoreCase("babylock")) {
+        if (ent instanceof Ageable && data[0].equalsIgnoreCase("babylock")) {
             ((Ageable) ent).setBaby();
             ((Ageable) ent).setAgeLock(true);
         }
@@ -115,101 +117,101 @@ public class CreatureSpawner extends AbstractIC {
 
         switch (ent.getType()) {
             case CREEPER:
-                if (data.equalsIgnoreCase("charged")) {
+                if (data[0].equalsIgnoreCase("charged")) {
                     ((Creeper) ent).setPowered(true);
                 }
                 break;
             case SLIME:
-                if (data.equalsIgnoreCase("huge")) {
+                if (data[0].equalsIgnoreCase("huge")) {
                     ((Slime) ent).setSize(16);
-                } else if (data.equalsIgnoreCase("large")) {
+                } else if (data[0].equalsIgnoreCase("large")) {
                     ((Slime) ent).setSize(11);
-                } else if (data.equalsIgnoreCase("normal")) {
+                } else if (data[0].equalsIgnoreCase("normal")) {
                     ((Slime) ent).setSize(6);
-                } else if (data.equalsIgnoreCase("small")) {
+                } else if (data[0].equalsIgnoreCase("small")) {
                     ((Slime) ent).setSize(3);
-                } else {
+                } else if (data[0].equalsIgnoreCase("size")){
                     try {
-                        int size = Integer.parseInt(data);
+                        int size = Integer.parseInt(data[1]);
                         ((Slime) ent).setSize(size);
                     }
                     catch(Exception e){}
                 }
                 break;
             case MAGMA_CUBE:
-                if (data.equalsIgnoreCase("huge")) {
+                if (data[0].equalsIgnoreCase("huge")) {
                     ((MagmaCube) ent).setSize(16);
-                } else if (data.equalsIgnoreCase("large")) {
+                } else if (data[0].equalsIgnoreCase("large")) {
                     ((MagmaCube) ent).setSize(11);
-                } else if (data.equalsIgnoreCase("normal")) {
+                } else if (data[0].equalsIgnoreCase("normal")) {
                     ((MagmaCube) ent).setSize(6);
-                } else if (data.equalsIgnoreCase("small")) {
+                } else if (data[0].equalsIgnoreCase("small")) {
                     ((MagmaCube) ent).setSize(3);
-                } else {
+                } else if (data[0].equalsIgnoreCase("size")){
                     try {
-                        int size = Integer.parseInt(data);
+                        int size = Integer.parseInt(data[1]);
                         ((MagmaCube) ent).setSize(size);
                     }
                     catch(Exception e){}
                 }
                 break;
             case WOLF:
-                if (data.equalsIgnoreCase("tame")) {
+                if (data[0].equalsIgnoreCase("tame")) {
                     ((Wolf) ent).setTamed(true);
-                } else if (data.equalsIgnoreCase("angry")) {
+                } else if (data[0].equalsIgnoreCase("angry")) {
                     ((Wolf) ent).setAngry(true);
                 }
                 break;
             case PIG_ZOMBIE:
-                if (data.equalsIgnoreCase("angry")) {
+                if (data[0].equalsIgnoreCase("angry")) {
                     ((PigZombie) ent).setAngry(true);
                 }
                 break;
             case VILLAGER:
-                if (data.equalsIgnoreCase("butcher")) {
+                if (data[0].equalsIgnoreCase("butcher")) {
                     ((Villager) ent).setProfession(Villager.Profession.BUTCHER);
-                } else if (data.equalsIgnoreCase("smith")) {
+                } else if (data[0].equalsIgnoreCase("smith")) {
                     ((Villager) ent).setProfession(Villager.Profession.BLACKSMITH);
-                } else if (data.equalsIgnoreCase("priest")) {
+                } else if (data[0].equalsIgnoreCase("priest")) {
                     ((Villager) ent).setProfession(Villager.Profession.PRIEST);
-                } else if (data.equalsIgnoreCase("library")) {
+                } else if (data[0].equalsIgnoreCase("library")) {
                     ((Villager) ent).setProfession(Villager.Profession.LIBRARIAN);
-                } else if (data.equalsIgnoreCase("farmer")) {
+                } else if (data[0].equalsIgnoreCase("farmer")) {
                     ((Villager) ent).setProfession(Villager.Profession.FARMER);
                 }
                 break;
             case SHEEP:
-                if (data.equalsIgnoreCase("black")) {
+                if (data[0].equalsIgnoreCase("black")) {
                     ((Sheep) ent).setColor(DyeColor.BLACK);
-                } else if (data.equalsIgnoreCase("red")) {
+                } else if (data[0].equalsIgnoreCase("red")) {
                     ((Sheep) ent).setColor(DyeColor.RED);
-                } else if (data.equalsIgnoreCase("green")) {
+                } else if (data[0].equalsIgnoreCase("green")) {
                     ((Sheep) ent).setColor(DyeColor.GREEN);
-                } else if (data.equalsIgnoreCase("brown")) {
+                } else if (data[0].equalsIgnoreCase("brown")) {
                     ((Sheep) ent).setColor(DyeColor.BROWN);
-                } else if (data.equalsIgnoreCase("blue")) {
+                } else if (data[0].equalsIgnoreCase("blue")) {
                     ((Sheep) ent).setColor(DyeColor.BLUE);
-                } else if (data.equalsIgnoreCase("purple")) {
+                } else if (data[0].equalsIgnoreCase("purple")) {
                     ((Sheep) ent).setColor(DyeColor.PURPLE);
-                } else if (data.equalsIgnoreCase("cyan")) {
+                } else if (data[0].equalsIgnoreCase("cyan")) {
                     ((Sheep) ent).setColor(DyeColor.CYAN);
-                } else if (data.equalsIgnoreCase("silver")) {
+                } else if (data[0].equalsIgnoreCase("silver")) {
                     ((Sheep) ent).setColor(DyeColor.SILVER);
-                } else if (data.equalsIgnoreCase("gray")) {
+                } else if (data[0].equalsIgnoreCase("gray")) {
                     ((Sheep) ent).setColor(DyeColor.GRAY);
-                } else if (data.equalsIgnoreCase("pink")) {
+                } else if (data[0].equalsIgnoreCase("pink")) {
                     ((Sheep) ent).setColor(DyeColor.PINK);
-                } else if (data.equalsIgnoreCase("lime")) {
+                } else if (data[0].equalsIgnoreCase("lime")) {
                     ((Sheep) ent).setColor(DyeColor.LIME);
-                } else if (data.equalsIgnoreCase("yellow")) {
+                } else if (data[0].equalsIgnoreCase("yellow")) {
                     ((Sheep) ent).setColor(DyeColor.YELLOW);
-                } else if (data.equalsIgnoreCase("lblue")) {
+                } else if (data[0].equalsIgnoreCase("lblue")) {
                     ((Sheep) ent).setColor(DyeColor.LIGHT_BLUE);
-                } else if (data.equalsIgnoreCase("magenta")) {
+                } else if (data[0].equalsIgnoreCase("magenta")) {
                     ((Sheep) ent).setColor(DyeColor.MAGENTA);
-                } else if (data.equalsIgnoreCase("orange")) {
+                } else if (data[0].equalsIgnoreCase("orange")) {
                     ((Sheep) ent).setColor(DyeColor.ORANGE);
-                } else if (data.equalsIgnoreCase("white")) {
+                } else if (data[0].equalsIgnoreCase("white")) {
                     ((Sheep) ent).setColor(DyeColor.WHITE);
                 }
                 break;
