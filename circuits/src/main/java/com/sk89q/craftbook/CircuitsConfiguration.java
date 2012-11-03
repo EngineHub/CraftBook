@@ -18,11 +18,11 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.Material;
+import java.io.File;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Configuration handler for CraftBook.
@@ -41,7 +41,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public boolean enableICs;
     public boolean enableGlowStone;
     public boolean enableShorthandIcs;
-    public Material glowstoneOffBlock;
+    public int glowstoneOffBlock;
     public boolean cacheICs;
 
     @Override
@@ -52,7 +52,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
         enableICs = getBoolean("redstone-ics", true);
         enableGlowStone = getBoolean("redstone-glowstone", false);
         enableShorthandIcs = getBoolean("enable-shorthand-ics", false);
-        glowstoneOffBlock = Material.getMaterial(getInt("glowstone-off-material", BlockID.GLASS));
+        glowstoneOffBlock = getInt("glowstone-off-material", BlockID.GLASS);
         cacheICs = getBoolean("cache-ics", true);
     }
 }

@@ -35,11 +35,11 @@ public abstract class AbstractIC implements IC {
     private final Sign sign;
     private final ICFactory factory;
 
-    public AbstractIC(Server server, Sign block, ICFactory factory) {
+    public AbstractIC(Server server, Sign sign, ICFactory factory) {
 
         this.factory = factory;
         this.server = server;
-        sign = block;
+        this.sign = sign;
     }
 
     protected Server getServer() {

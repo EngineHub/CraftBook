@@ -18,18 +18,20 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
@@ -68,7 +70,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         // if we're not looking at a wall sign, it can't be an IC.
         if (block.getTypeId() != BlockID.WALL_SIGN) return null;
-        Sign sign = (Sign) block.getState();
+        ChangedSign sign = BukkitUtil.toChangedSign((Sign) block.getState());
 
         // detect the text on the sign to see if it's any kind of IC at all.
         Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
@@ -79,7 +81,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         // convert existing MCA ICs to the new [MCXXXX]A syntax
         if (prefix.equalsIgnoreCase("MCA")) {
             sign.setLine(1, sign.getLine(1).replace("A", "") + "A");
-            sign.update();
+            sign.update(false);
         }
 
         if (!manager.hasCustomPrefix(prefix)) return null;

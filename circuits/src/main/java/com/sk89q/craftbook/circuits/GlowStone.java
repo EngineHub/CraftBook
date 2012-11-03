@@ -20,6 +20,13 @@
 
 package com.sk89q.craftbook.circuits;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -27,12 +34,6 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -55,7 +56,7 @@ public class GlowStone extends PersistentMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == plugin.getLocalConfiguration().glowstoneOffBlock.getId() || type == BlockID.LIGHTSTONE)
+            if (type == plugin.getLocalConfiguration().glowstoneOffBlock || type == BlockID.LIGHTSTONE)
                 return new GlowStone(pt, plugin);
 
             return null;
@@ -86,7 +87,7 @@ public class GlowStone extends PersistentMechanic {
         if (event.getNewCurrent() > 0) {
             event.getBlock().setTypeId(BlockID.LIGHTSTONE);
         } else {
-            event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock.getId());
+            event.getBlock().setTypeId(plugin.getLocalConfiguration().glowstoneOffBlock);
         }
 
         event.getBlock().setData(event.getBlock().getData(), false);
