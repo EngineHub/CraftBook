@@ -28,6 +28,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
@@ -37,6 +38,7 @@ import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.material.MaterialData;
@@ -202,6 +204,19 @@ public class CreatureSpawner extends AbstractIC {
                 }
                 else if (data[0].equalsIgnoreCase("fire")) {
                     ((TNTPrimed) ent).setIsIncendiary(true);
+                }
+                break;
+            case ARROW:
+                if (data[0].equalsIgnoreCase("fire")) {
+                    ((Arrow) ent).setFireTicks(5000);
+                }
+                if (data[0].equalsIgnoreCase("bounce")) {
+                    ((Arrow) ent).setBounce(true);
+                }
+                break;
+            case THROWN_EXP_BOTTLE:
+                if (data[0].equalsIgnoreCase("bounce")) {
+                    ((ThrownExpBottle) ent).setBounce(true);
                 }
                 break;
             case PIG_ZOMBIE:
