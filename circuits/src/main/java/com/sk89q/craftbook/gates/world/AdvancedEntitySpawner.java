@@ -12,6 +12,8 @@ import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -135,8 +137,16 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
                         if(data[0].equalsIgnoreCase("e"))
                             setEntityData(ent, bit.replace(data[0] + ":", ""));
-                        else if(data[0].equalsIgnoreCase("p")) {
-                            //TODO potion effects
+                        else if(data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
+                            for(int a = 1; a < data.length; a++) {
+                                try {
+                                    String[] potionBits = data[a].split(";");
+                                    PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])),
+                                            Integer.parseInt(potionBits[1]),Integer.parseInt(potionBits[2]));
+                                    ((LivingEntity)ent).addPotionEffect(effect, true);
+                                }
+                                catch(Exception e){}
+                            }
                         }
                         else if(data[0].equalsIgnoreCase("v")) {
                             try {
