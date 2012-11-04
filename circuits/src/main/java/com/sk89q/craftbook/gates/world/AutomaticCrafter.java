@@ -1,21 +1,30 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Iterator;
+import java.util.List;
+
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
-import java.util.Iterator;
-import java.util.List;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class AutomaticCrafter extends AbstractIC {
 
@@ -137,7 +146,7 @@ public class AutomaticCrafter extends AbstractIC {
 
         boolean ret = false;
         Block crafter = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
-        if (crafter.getType() == Material.DISPENSER) {
+        if (crafter.getTypeId() == BlockID.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();
             if (craft) {
                 craft(disp);

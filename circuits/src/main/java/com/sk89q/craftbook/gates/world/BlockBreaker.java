@@ -3,7 +3,6 @@ package com.sk89q.craftbook.gates.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -62,7 +61,7 @@ public class BlockBreaker extends AbstractIC {
             chest = bl.getRelative(0, -1, 0);
             broken = bl.getRelative(0, 1, 0);
         }
-        if (chest != null && chest.getType() == Material.CHEST) {
+        if (chest != null && chest.getTypeId() == BlockID.CHEST) {
             hasChest = true;
         }
         if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK) return false;

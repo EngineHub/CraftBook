@@ -1,14 +1,24 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -99,14 +109,14 @@ public class ContainerCollector extends AbstractIC {
                 }
 
                 //Add the items to a container, and destroy them.
-                if (bl.getType() == Material.CHEST) if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
+                if (bl.getTypeId() == BlockID.CHEST) if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
 
                     ((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
                     item.remove();
                     return true;
                 }
 
-                if (bl.getType() == Material.DISPENSER)
+                if (bl.getTypeId() == BlockID.DISPENSER)
                     if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
 
                         ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
@@ -114,7 +124,7 @@ public class ContainerCollector extends AbstractIC {
                         return true;
                     }
 
-                if (bl.getType() == Material.BREWING_STAND) {
+                if (bl.getTypeId() == BlockID.BREWING_STAND) {
 
                     if (!ItemUtil.isAPotionIngredient(item.getItemStack()))
                         return false;
@@ -133,7 +143,7 @@ public class ContainerCollector extends AbstractIC {
                     }
                 }
 
-                if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
+                if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
 
                     Furnace fur = (Furnace) bl.getState();
 

@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -124,7 +123,7 @@ public class Payment extends AbstractMechanic {
 
     public static boolean setState(Block block, boolean state) {
 
-        if (block.getType() != Material.LEVER) return false;
+        if (block.getTypeId() != BlockID.LEVER) return false;
         byte data = block.getData();
         int newData;
 

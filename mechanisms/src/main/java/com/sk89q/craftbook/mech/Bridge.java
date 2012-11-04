@@ -181,7 +181,7 @@ public class Bridge extends AbstractMechanic {
             // i = settings.maxLength is actually the farthest place we're
             // allowed to find the distal signpost
 
-            if (farSide.getType() == Material.SIGN_POST) {
+            if (farSide.getTypeId() == BlockID.SIGN_POST) {
                 String otherSignText = ((Sign) farSide.getState()).getLine(1);
                 if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) {
                     break;
@@ -190,7 +190,7 @@ public class Bridge extends AbstractMechanic {
 
             farSide = farSide.getRelative(dir);
         }
-        if (farSide.getType() != Material.SIGN_POST) throw new InvalidConstructionException("mech.bridge.other-sign");
+        if (farSide.getTypeId() != BlockID.SIGN_POST) throw new InvalidConstructionException("mech.bridge.other-sign");
 
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farSide.getRelative(trigger.getFace(proximalBaseCenter));
@@ -374,7 +374,7 @@ public class Bridge extends AbstractMechanic {
                     oldType = b.getTypeId();
                 }
                 if (b.getType() == getBridgeMaterial() || canPassThrough(b.getTypeId())) {
-                    b.setType(Material.AIR);
+                    b.setTypeId(BlockID.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
                         if (oldType != 0) {

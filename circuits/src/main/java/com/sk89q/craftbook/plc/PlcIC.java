@@ -18,11 +18,23 @@
 
 package com.sk89q.craftbook.plc;
 
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -32,11 +44,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.io.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.worldedit.blocks.BlockID;
 
 class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
 
@@ -229,9 +241,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private String getCode() throws CodeNotFoundException {
 
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
-        if (above.getType() == Material.CHEST) return getBookCode(above);
+        if (above.getTypeId() == BlockID.CHEST) return getBookCode(above);
         Block below = sign.getLocation().add(new Vector(0, -1, 0)).getBlock();
-        if (below.getType() == Material.CHEST) return getBookCode(below);
+        if (below.getTypeId() == BlockID.CHEST) return getBookCode(below);
 
         Location l = sign.getLocation();
         World w = l.getWorld();
