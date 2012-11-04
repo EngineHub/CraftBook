@@ -19,7 +19,6 @@
 
 package com.sk89q.craftbook.util;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -91,7 +90,7 @@ public class SignUtil {
      */
     public static BlockFace getFront(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getTypeId() == BlockID.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.WEST;
@@ -153,7 +152,7 @@ public class SignUtil {
      */
     public static BlockFace getBack(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getTypeId() == BlockID.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.EAST;
@@ -234,7 +233,7 @@ public class SignUtil {
      */
     public static BlockFace getRight(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getTypeId() == BlockID.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.SOUTH;
@@ -296,7 +295,7 @@ public class SignUtil {
      */
     public static BlockFace getLeft(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getTypeId() == BlockID.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.NORTH;
@@ -357,7 +356,7 @@ public class SignUtil {
      */
     public static boolean isCardinal(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getTypeId() == BlockID.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                 case 0x4:

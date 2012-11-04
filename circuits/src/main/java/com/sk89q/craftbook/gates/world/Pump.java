@@ -1,13 +1,18 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -45,7 +50,7 @@ public class Pump extends AbstractIC {
     public boolean scan() {
 
         Block pump = SignUtil.getBackBlock(getSign().getBlock());
-        if (!(pump.getRelative(0, 1, 0).getType() == Material.CHEST))
+        if (!(pump.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST))
             return false;
         Chest c = (Chest) pump.getRelative(0, 1, 0).getState();
         for (int y = 0; y > -10; y--) {
@@ -67,7 +72,7 @@ public class Pump extends AbstractIC {
         if (!liquid.isLiquid())
             return false;
         if (liquid.getData() == 0x0) {
-            if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()), 1)).size() == 0) {
+            if (c.getInventory().addItem(new ItemStack(parse(liquid.getTypeId()), 1)).size() == 0) {
                 liquid.setTypeId(0);
                 return true;
             }
@@ -76,13 +81,13 @@ public class Pump extends AbstractIC {
         return false;
     }
 
-    public Material parse(Material mat) {
+    public int parse(int mat) {
 
-        if (mat == Material.STATIONARY_WATER || mat == Material.WATER)
-            return Material.WATER;
-        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA)
-            return Material.LAVA;
-        return Material.AIR;
+        if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER)
+            return BlockID.WATER;
+        if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA)
+            return BlockID.LAVA;
+        return BlockID.AIR;
     }
 
     public static class Factory extends AbstractICFactory {

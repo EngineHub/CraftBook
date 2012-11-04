@@ -1,10 +1,11 @@
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.RegisteredICFactory;
+import java.io.File;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.RegisteredICFactory;
 
 public class ICConfiguration extends BaseConfiguration {
 
@@ -26,12 +27,8 @@ public class ICConfiguration extends BaseConfiguration {
             if (factory.getId().startsWith("MCA")) {
                 continue;
             }
-            try {
-                factory.getFactory().addConfiguration(cfg.getConfigurationSection(factory.getId()));
-            } catch (NullPointerException npe) {
-                cfg.createSection(factory.getId());
-                factory.getFactory().addConfiguration(cfg.getConfigurationSection(factory.getId()));
-            }
+            if(factory.getFactory().needsConfiguration())
+                factory.getFactory().addConfiguration(new BaseConfiguration.BaseConfigurationSection(factory.getId()));
         }
     }
 }

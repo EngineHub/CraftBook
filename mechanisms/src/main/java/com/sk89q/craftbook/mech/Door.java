@@ -19,7 +19,23 @@ package com.sk89q.craftbook.mech;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.*;
+import org.bukkit.GameMode;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
@@ -29,16 +45,6 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.RegionOperationException;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Door.
@@ -191,7 +197,7 @@ public class Door extends AbstractMechanic {
             // i = settings.maxLength is actually the farthest place we're
             // allowed to find the distal signpost
 
-            if (otherSide.getType() == Material.SIGN_POST) {
+            if (otherSide.getTypeId() == BlockID.SIGN_POST) {
                 String otherSignText = ((Sign) otherSide.getState()).getLines()[1];
                 if ("[Door Down]".equalsIgnoreCase(otherSignText)) {
                     break;
@@ -211,7 +217,7 @@ public class Door extends AbstractMechanic {
             }
         }
 
-        if (otherSide.getType() != Material.SIGN_POST)
+        if (otherSide.getTypeId() != BlockID.SIGN_POST)
             throw new InvalidConstructionException("mech.door.other-sign");
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
@@ -294,7 +300,7 @@ public class Door extends AbstractMechanic {
         }
 
         if (event.getPlayer().getItemInHand() != null)
-            if (getDoorMaterial().getId() == event.getPlayer().getItemInHand().getTypeId()) {
+            if (getDoorMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
                 Sign sign = null;
 
                 if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
@@ -379,8 +385,8 @@ public class Door extends AbstractMechanic {
                 if (b != null) {
                     oldType = b.getTypeId();
                 }
-                if (b.getType() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
-                    b.setType(Material.AIR);
+                if (b.getTypeId() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
+                    b.setTypeId(BlockID.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                         Sign s = (Sign) trigger.getState();
                         if (oldType != 0) {
@@ -409,7 +415,7 @@ public class Door extends AbstractMechanic {
                 if (canPassThrough(b.getTypeId())) if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
                     Sign s = (Sign) trigger.getState();
                     if (hasEnoughBlocks(s)) {
-                        b.setType(getDoorMaterial());
+                        b.setTypeId(getDoorMaterial());
                         b.setData(getDoorData());
                         removeBlocks(s, 1);
                     } else {
@@ -420,7 +426,7 @@ public class Door extends AbstractMechanic {
                     }
 
                 } else {
-                    b.setType(getDoorMaterial());
+                    b.setTypeId(getDoorMaterial());
                     b.setData(getDoorData());
                 }
             }
@@ -438,9 +444,9 @@ public class Door extends AbstractMechanic {
         return false;
     }
 
-    private Material getDoorMaterial() {
+    private int getDoorMaterial() {
 
-        return proximalBaseCenter.getType();
+        return proximalBaseCenter.getTypeId();
     }
 
     private byte getDoorData() {

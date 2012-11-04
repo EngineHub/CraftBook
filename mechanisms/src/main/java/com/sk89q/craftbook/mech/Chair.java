@@ -85,7 +85,7 @@ public class Chair implements Listener {
 
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
         if (event.getClickedBlock() == null || !plugin.getLocalConfiguration().chairSettings.canUseBlock(event
-                .getClickedBlock().getType()))
+                .getClickedBlock().getTypeId()))
             return; //???
 
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());

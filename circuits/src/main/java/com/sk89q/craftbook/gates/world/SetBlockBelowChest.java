@@ -14,6 +14,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -79,7 +80,7 @@ public class SetBlockBelowChest extends AbstractIC {
         int y = body.getY();
         int z = body.getZ();
 
-        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y - 1, z).getType() == Material.AIR)
+        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y - 1, z).getTypeId() == BlockID.AIR)
             if (takeFromChest(x, y + 1, z, block, meta)) {
                 body.getWorld().getBlockAt(x, y - 1, z).setTypeId(block);
                 if (!(meta == -1)) {
@@ -92,7 +93,7 @@ public class SetBlockBelowChest extends AbstractIC {
 
         boolean ret = false;
         Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
-        if (bl.getType() == Material.CHEST) {
+        if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
             ItemStack[] is = c.getInventory().getContents();
             for (int i = 0; i < is.length; i++) {

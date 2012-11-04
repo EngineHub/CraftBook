@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -153,7 +152,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enableRedstone;
         public final int maxLength;
         public final int maxWidth;
-        public final Set<Material> allowedBlocks;
+        public final Set<Integer> allowedBlocks;
 
         private BridgeSettings(BaseConfigurationSection section) {
 
@@ -161,7 +160,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enableRedstone = section.getBoolean("redstone", true);
             maxLength = section.getInt("max-length", 30);
             maxWidth = section.getInt("max-width", 5);
-            allowedBlocks = section.getMaterialSet("blocks", Arrays.asList(4, 5, 20, 43));
+            allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(4, 5, 20, 43));
         }
 
         /**
@@ -170,7 +169,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
-        public boolean canUseBlock(Material b) {
+        public boolean canUseBlock(Integer b) {
 
             return allowedBlocks.contains(b);
         }
@@ -194,14 +193,14 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
         public final boolean enable;
         public final boolean requireSneak;
-        public final Set<Material> allowedBlocks;
+        public final Set<Integer> allowedBlocks;
         public Map<String, Block> chairs = new HashMap<String, Block>();
 
         private ChairSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
             requireSneak = section.getBoolean("sneaking", true);
-            allowedBlocks = section.getMaterialSet("blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
+            allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
                     136));
         }
 
@@ -211,7 +210,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
          * @return true if the given block type can be used for a bridge; false
          *         otherwise.
          */
-        public boolean canUseBlock(Material b) {
+        public boolean canUseBlock(Integer b) {
 
             return allowedBlocks.contains(b);
         }

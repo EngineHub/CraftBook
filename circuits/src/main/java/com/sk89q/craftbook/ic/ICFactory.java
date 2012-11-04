@@ -19,8 +19,8 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
 
+import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 
 /**
@@ -86,5 +86,12 @@ public interface ICFactory {
      *
      * @param section
      */
-    public void addConfiguration(ConfigurationSection section);
+    public void addConfiguration(BaseConfiguration.BaseConfigurationSection section);
+
+    /**
+     * Check if IC uses configuration.
+     * 
+     * @return if IC uses configuration.
+     */
+    public boolean needsConfiguration();
 }

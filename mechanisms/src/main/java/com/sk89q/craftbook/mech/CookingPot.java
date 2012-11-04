@@ -1,14 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Material;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -18,8 +12,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SelfTriggeringMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -133,14 +140,14 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int y = b.getY() + 2;
             int z = b.getZ();
             Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getType() == Material.CHEST) {
+            if (cb.getTypeId() == BlockID.CHEST) {
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())) {
                     decreaseMultiplier(sign, 1);
                     lastTick += getMultiplier(sign);
                 }
                 if (lastTick >= 50) {
                     Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
-                    if (fire.getType() == Material.FIRE) {
+                    if (fire.getTypeId() == BlockID.FIRE) {
                         Chest chest = (Chest) cb.getState();
                         for (ItemStack i : chest.getInventory().getContents()) {
                             if (i == null) {
@@ -176,7 +183,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int y = b.getY() + 2;
             int z = b.getZ();
             Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getType() == Material.CHEST)
+            if (cb.getTypeId() == BlockID.CHEST)
                 if (event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer()
                         .getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
                     increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));

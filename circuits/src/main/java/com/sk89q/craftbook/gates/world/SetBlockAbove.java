@@ -30,6 +30,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 
 public class SetBlockAbove extends AbstractIC {
@@ -93,7 +94,7 @@ public class SetBlockAbove extends AbstractIC {
         int y = body.getY();
         int z = body.getZ();
 
-        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y + 1, z).getType() == Material.AIR) {
+        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y + 1, z).getTypeId() == BlockID.AIR) {
             body.getWorld().getBlockAt(x, y + 1, z).setTypeId(block);
             if (!(meta == -1)) {
                 body.getWorld().getBlockAt(x, y + 1, z).setData(meta);

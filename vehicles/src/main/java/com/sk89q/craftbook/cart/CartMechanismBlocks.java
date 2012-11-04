@@ -1,12 +1,12 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * <p>
@@ -189,13 +189,13 @@ public class CartMechanismBlocks {
     /**
      * @param mat
      *
-     * @return true if the base block is the same type as the given material.
+     * @return true if the base block is the same type as the given block.
      */
     // this tends to be redundant if checked within a CartMechanism, since it's axiomatic that that CartMechanism by
-    // virtue of its configured base material.
-    public boolean matches(Material mat) {
+    // virtue of its configured base type.
+    public boolean matches(int mat) {
 
-        return base.getType() == mat;
+        return base.getTypeId() == mat;
     }
 
     /**

@@ -1,14 +1,12 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Me4502
@@ -90,20 +88,6 @@ public abstract class BaseConfiguration {
         return allowedBlocks;
     }
 
-    public Set<Material> getMaterialSet(String name, List<Integer> def) {
-
-        List<Integer> tids = cfg.getIntegerList(name);
-        if (tids == null || tids.isEmpty() || tids.size() < 1) {
-            tids = def;
-        }
-        Set<Material> allowedBlocks = new HashSet<Material>();
-        for (Integer tid : tids) {
-            allowedBlocks.add(Material.getMaterial(tid));
-        }
-        cfg.set(name, tids);
-        return Collections.unmodifiableSet(allowedBlocks);
-    }
-
     public class BaseConfigurationSection {
 
         public final ConfigurationSection section;
@@ -166,20 +150,6 @@ public abstract class BaseConfiguration {
             }
             section.set(name, tids);
             return allowedBlocks;
-        }
-
-        public Set<Material> getMaterialSet(String name, List<Integer> def) {
-
-            List<Integer> tids = section.getIntegerList(name);
-            if (tids == null || tids.isEmpty() || tids.size() < 1) {
-                tids = def;
-            }
-            Set<Material> allowedBlocks = new HashSet<Material>();
-            for (Integer tid : tids) {
-                allowedBlocks.add(Material.getMaterial(tid));
-            }
-            section.set(name, tids);
-            return Collections.unmodifiableSet(allowedBlocks);
         }
     }
 }

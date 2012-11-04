@@ -67,6 +67,7 @@ public class ItemDispenser extends AbstractIC {
                 data = Short.parseShort(item.split(":")[1]);
                 item = item.split(":")[0];
             }
+
             Material mat = Material.matchMaterial(item);
             if (mat == null) return;
             int id = mat.getId();

@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -49,6 +48,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
 
@@ -221,8 +221,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         for (ItemStack s : i.getContents())
             if (s != null &&
             s.getAmount() > 0 &&
-            (s.getType() == Material.BOOK_AND_QUILL ||
-            s.getType() == Material.WRITTEN_BOOK)) {
+            (s.getTypeId() == ItemID.BOOK_AND_QUILL ||
+            s.getTypeId() == ItemID.WRITTEN_BOOK)) {
                 if (book != null)
                     throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;

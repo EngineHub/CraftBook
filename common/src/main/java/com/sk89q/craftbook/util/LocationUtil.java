@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Silthus, Me4502
@@ -253,7 +253,7 @@ public final class LocationUtil {
      */
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
 
-        while (block.getType() != Material.AIR && block.getRelative(direction).getType() != Material.AIR) {
+        while (block.getTypeId() != BlockID.AIR && block.getRelative(direction).getTypeId() != BlockID.AIR) {
             if (!(block.getY() < block.getWorld().getMaxHeight())) {
                 break;
             }

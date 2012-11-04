@@ -18,14 +18,15 @@
 
 package com.sk89q.craftbook.plc;
 
+import org.bukkit.Server;
+import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.BaseConfiguration.BaseConfigurationSection;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
 
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
 
@@ -87,7 +88,11 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public void addConfiguration(ConfigurationSection section) {
+    public void addConfiguration(BaseConfigurationSection section) {
+    }
 
+    @Override
+    public boolean needsConfiguration() {
+        return false;
     }
 }

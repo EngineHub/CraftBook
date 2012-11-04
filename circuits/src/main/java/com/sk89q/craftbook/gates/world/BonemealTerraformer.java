@@ -7,9 +7,9 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -196,9 +196,14 @@ public class BonemealTerraformer extends AbstractIC {
         }
 
         @Override
-        public void addConfiguration(ConfigurationSection section) {
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
 
-            maxradius = getInt(section, "max-radius", 15);
+            maxradius = section.getInt("max-radius", 15);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+            return true;
         }
     }
 }

@@ -1,18 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class Spigot extends AbstractIC {
 
@@ -75,17 +79,17 @@ public class Spigot extends AbstractIC {
             return false;
         if (off.getTypeId() == 0) {
 
-            Material m = getFromChest();
-            if (m == Material.AIR)
+            int m = getFromChest();
+            if (m == BlockID.AIR)
                 return false;
-            off.setType(m);
+            off.setTypeId(m);
             return true;
         } else if (off.isLiquid()) if (off.getData() != 0x0) { //Moving
 
-            Material m = getFromChest(off.getType());
-            if (m == Material.AIR)
+            int m = getFromChest(off.getTypeId());
+            if (m == BlockID.AIR)
                 return false;
-            off.setType(m);
+            off.setTypeId(m);
             return true;
         } else { //Still
 
@@ -104,42 +108,42 @@ public class Spigot extends AbstractIC {
         return false;
     }
 
-    public Material getFromChest() {
+    public int getFromChest() {
 
         Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
 
-        if (chest.getType() == Material.CHEST) {
+        if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
             if (over.size() == 0)
-                return Material.WATER;
+                return BlockID.WATER;
             over = c.getInventory().removeItem(new ItemStack(BlockID.LAVA, 1));
             if (over.size() == 0)
-                return Material.LAVA;
+                return BlockID.LAVA;
         }
 
-        return Material.AIR;
+        return BlockID.AIR;
     }
 
-    public Material getFromChest(Material m) {
+    public int getFromChest(int m) {
 
         Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
 
-        if (m == Material.STATIONARY_WATER) {
-            m = Material.WATER;
+        if (m == BlockID.STATIONARY_WATER) {
+            m = BlockID.WATER;
         }
-        if (m == Material.STATIONARY_LAVA) {
-            m = Material.LAVA;
+        if (m == BlockID.STATIONARY_LAVA) {
+            m = BlockID.LAVA;
         }
 
-        if (chest.getType() == Material.CHEST) {
+        if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m, 1));
             if (over.size() == 0)
                 return m;
         }
 
-        return Material.AIR;
+        return BlockID.AIR;
     }
 
     public static class Factory extends AbstractICFactory {

@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -101,7 +100,7 @@ public class HiddenSwitch extends AbstractMechanic {
         boolean passed = false;
 
         while (true) {
-            if (testBlock.getType() == Material.WALL_SIGN) {
+            if (testBlock.getTypeId() == BlockID.WALL_SIGN) {
                 Sign s = (Sign) testBlock.getState();
                 if (s.getLine(1).equalsIgnoreCase("[X]")) {
 
