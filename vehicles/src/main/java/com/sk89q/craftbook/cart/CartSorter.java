@@ -13,6 +13,7 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -21,6 +22,12 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 
 public class CartSorter extends CartMechanism {
+
+    private static VehiclesPlugin plugin;
+
+    public CartSorter(VehiclesPlugin plugin){
+        CartSorter.plugin = plugin;
+    }
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -47,57 +54,57 @@ public class CartSorter extends CartMechanism {
         byte trackData;
         BlockFace next = SignUtil.getFacing(blocks.sign);
         switch (next) {
-            case WEST:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 9;
-                        break;
-                    case RIGHT:
-                        trackData = 8;
-                        break;
-                    default:
-                        trackData = 0;
-                }
+        case WEST:
+            switch (dir) {
+            case LEFT:
+                trackData = 9;
                 break;
-            case EAST:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 7;
-                        break;
-                    case RIGHT:
-                        trackData = 6;
-                        break;
-                    default:
-                        trackData = 0;
-                }
-                break;
-            case NORTH:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 6;
-                        break;
-                    case RIGHT:
-                        trackData = 9;
-                        break;
-                    default:
-                        trackData = 1;
-                }
-                break;
-            case SOUTH:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 8;
-                        break;
-                    case RIGHT:
-                        trackData = 7;
-                        break;
-                    default:
-                        trackData = 1;
-                }
+            case RIGHT:
+                trackData = 8;
                 break;
             default:
-                //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
-                return;
+                trackData = 0;
+            }
+            break;
+        case EAST:
+            switch (dir) {
+            case LEFT:
+                trackData = 7;
+                break;
+            case RIGHT:
+                trackData = 6;
+                break;
+            default:
+                trackData = 0;
+            }
+            break;
+        case NORTH:
+            switch (dir) {
+            case LEFT:
+                trackData = 6;
+                break;
+            case RIGHT:
+                trackData = 9;
+                break;
+            default:
+                trackData = 1;
+            }
+            break;
+        case SOUTH:
+            switch (dir) {
+            case LEFT:
+                trackData = 8;
+                break;
+            case RIGHT:
+                trackData = 7;
+                break;
+            default:
+                trackData = 1;
+            }
+            break;
+        default:
+            //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
+                    return;
         }
         Block targetTrack = blocks.rail.getRelative(next);
 
@@ -178,6 +185,12 @@ public class CartSorter extends CartMechanism {
                     if (storageInventory.contains(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }
+            }
+        }if(line.startsWith("#")){
+            if(player!=null){
+                String stationName = line.substring(1);
+                String selectedStation = plugin.getStation(player.getName());
+                return stationName.equalsIgnoreCase(selectedStation);
             }
         }
 
