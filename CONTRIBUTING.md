@@ -1,7 +1,7 @@
 Contributing
 ============
 
-Thank you for your interest in contributing to WorldEdit! We appreciate your
+Thank you for your interest in contributing to CraftBook! We appreciate your
 effort, but to make sure that the inclusion of your patch is a smooth process, we
 ask that you make note of the following guidelines.
 
