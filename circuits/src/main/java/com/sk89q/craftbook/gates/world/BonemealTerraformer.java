@@ -1,10 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Biome;
@@ -14,7 +11,15 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class BonemealTerraformer extends AbstractIC {
 
@@ -60,16 +65,16 @@ public class BonemealTerraformer extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            terraform();
+            terraform(true);
         }
     }
 
-    public void terraform() {
+    public void terraform(boolean overrideChance) {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
                 for (int z = -radius + 1; z < radius; z++)
-                    if (BaseBukkitPlugin.random.nextInt(40) == 0) {
+                    if (overrideChance || BaseBukkitPlugin.random.nextInt(40) == 0) {
                         int rx = getSign().getLocation().getBlockX() - x;
                         int ry = getSign().getLocation().getBlockY() - y;
                         int rz = getSign().getLocation().getBlockZ() - z;
