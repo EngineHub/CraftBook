@@ -29,6 +29,8 @@ ask that you make note of the following guidelines.
 * **Test your code.** We're not interested in broken code, for the obvious reasons.
 * **Write unit tests.** While this is strictly optional, we recommend it for
   complicated algorithms.
+* **Write IC Documentation** For IC's, make sure to write documentation in there 
+  factory. Along with per-line documentation.
 
 
 Checklist
