@@ -1,18 +1,18 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import java.util.EnumMap;
-import java.util.Map;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 
 public class MinecartManager {
 
@@ -23,11 +23,11 @@ public class MinecartManager {
     }
 
     private final VehiclesPlugin plugin;
-    private Map<Material, CartMechanism> mechanisms;
+    private Map<Integer, CartMechanism> mechanisms;
 
     public void reloadConfiguration(VehiclesConfiguration cfg) {
 
-        mechanisms = new EnumMap<Material, CartMechanism>(Material.class);
+        mechanisms = new HashMap<Integer, CartMechanism>();
         mechanisms.put(cfg.matBoostMax, new CartBooster(100));
         mechanisms.put(cfg.matBoost25x, new CartBooster(1.25));
         mechanisms.put(cfg.matSlow20x, new CartBooster(0.8));
@@ -40,7 +40,7 @@ public class MinecartManager {
         mechanisms.put(cfg.matTeleport, new CartTeleporter());
         mechanisms.put(cfg.matDispenser, new CartDispenser());
         mechanisms.put(cfg.matMessager, new CartMessager(plugin));
-        for (Map.Entry<Material, CartMechanism> ent : mechanisms.entrySet()) {
+        for (Map.Entry<Integer, CartMechanism> ent : mechanisms.entrySet()) {
             ent.getValue().setMaterial(ent.getKey());
         }
     }

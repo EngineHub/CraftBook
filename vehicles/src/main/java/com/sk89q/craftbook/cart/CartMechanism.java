@@ -1,12 +1,12 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+
+import com.sk89q.craftbook.RedstoneUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their
@@ -37,9 +37,9 @@ public abstract class CartMechanism {
 
     public abstract void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor);
 
-    protected Material material;
+    protected Integer material;
 
-    void setMaterial(Material mat) {
+    void setMaterial(Integer mat) {
 
         material = mat;
     }

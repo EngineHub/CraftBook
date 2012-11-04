@@ -19,10 +19,9 @@
 package com.sk89q.craftbook;
 
 
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -45,18 +44,18 @@ public class VehiclesConfiguration extends BaseConfiguration {
     @Override
     public void load() {
 
-        matBoostMax = Material.getMaterial(getInt("max-boost-block", 41));
-        matBoost25x = Material.getMaterial(getInt("25x-boost-block", 14));
-        matSlow50x = Material.getMaterial(getInt("50x-slow-block", 88));
-        matSlow20x = Material.getMaterial(getInt("20x-slow-block", 13));
-        matReverse = Material.getMaterial(getInt("reverse-block", 35));
-        matStation = Material.getMaterial(getInt("station-block", 49));
-        matSorter = Material.getMaterial(getInt("sort-block", 87));
-        matEjector = Material.getMaterial(getInt("eject-block", 42));
-        matDeposit = Material.getMaterial(getInt("deposit-block", 15));
-        matTeleport = Material.getMaterial(getInt("teleport-block", 133));
-        matDispenser = Material.getMaterial(getInt("dispenser-block", 129));
-        matMessager = Material.getMaterial(getInt("messager-block", 121));
+        matBoostMax = getInt("max-boost-block", 41);
+        matBoost25x = getInt("25x-boost-block", 14);
+        matSlow50x = getInt("50x-slow-block", 88);
+        matSlow20x = getInt("20x-slow-block", 13);
+        matReverse = getInt("reverse-block", 35);
+        matStation = getInt("station-block", 49);
+        matSorter = getInt("sort-block", 87);
+        matEjector = getInt("eject-block", 42);
+        matDeposit = getInt("deposit-block", 15);
+        matTeleport = getInt("teleport-block", 133);
+        matDispenser = getInt("dispenser-block", 129);
+        matMessager = getInt("messager-block", 121);
 
         minecartEnterOnImpact = getBoolean("minecart-enter-on-impact", true);
         minecartSlowWhenEmpty = getBoolean("minecart-slow-when-empty", true);
@@ -77,18 +76,18 @@ public class VehiclesConfiguration extends BaseConfiguration {
 
     public final File dataFolder;
 
-    public Material matBoostMax;
-    public Material matBoost25x;
-    public Material matSlow50x;
-    public Material matSlow20x;
-    public Material matReverse;
-    public Material matStation;
-    public Material matSorter;
-    public Material matEjector;
-    public Material matDeposit;
-    public Material matTeleport;
-    public Material matDispenser;
-    public Material matMessager;
+    public Integer matBoostMax;
+    public Integer matBoost25x;
+    public Integer matSlow50x;
+    public Integer matSlow20x;
+    public Integer matReverse;
+    public Integer matStation;
+    public Integer matSorter;
+    public Integer matEjector;
+    public Integer matDeposit;
+    public Integer matTeleport;
+    public Integer matDispenser;
+    public Integer matMessager;
 
     public boolean minecartSlowWhenEmpty;
     public boolean minecartRemoveOnExit;
