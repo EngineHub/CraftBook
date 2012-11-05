@@ -35,6 +35,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
@@ -135,6 +136,11 @@ public class CreatureSpawner extends AbstractIC {
             case CREEPER:
                 if (data[0].equalsIgnoreCase("charged")) {
                     ((Creeper) ent).setPowered(true);
+                }
+                break;
+            case PIG:
+                if (data[0].equalsIgnoreCase("saddle")) {
+                    ((Pig) ent).setSaddle(true);
                 }
                 break;
             case SLIME:
