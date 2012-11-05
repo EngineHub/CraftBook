@@ -81,15 +81,15 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
         if(!chip.getInput(0))
             return;
         Block left = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock());
-        Sign effectSign = null;
+        ChangedSign effectSign = null;
         if(left.getTypeId() == BlockID.WALL_SIGN) {
-            effectSign = (Sign) left.getState();
+            effectSign = BukkitUtil.toChangedSign((Sign) left.getState());
         }
 
         Block right = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock());
-        Sign armourSign = null;
+        ChangedSign armourSign = null;
         if(right.getTypeId() == BlockID.WALL_SIGN) {
-            armourSign = (Sign) right.getState();
+            armourSign = BukkitUtil.toChangedSign((Sign) right.getState());
         }
 
         for(int i = 0; i < amount; i++) {
