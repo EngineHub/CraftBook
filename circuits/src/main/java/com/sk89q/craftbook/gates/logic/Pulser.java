@@ -1,10 +1,16 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -20,7 +26,7 @@ public class Pulser extends AbstractIC {
     private int taskId;
     private boolean running;
 
-    public Pulser(Server server, Sign block, ICFactory factory) {
+    public Pulser(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -29,7 +35,7 @@ public class Pulser extends AbstractIC {
     private void load() {
 
         try {
-            Sign sign = getSign();
+            ChangedSign sign = getSign();
             String line2 = sign.getLine(2);
             String line3 = sign.getLine(3);
             if (!(line2 == null) && !line2.equals("")) {
@@ -52,7 +58,7 @@ public class Pulser extends AbstractIC {
             }
             sign.setLine(2, pulseLength + ":" + startDelay);
             sign.setLine(3, pulseCount + ":" + pulseLength);
-            sign.update();
+            sign.update(false);
         } catch (Exception ignored) {
         }
     }
@@ -189,7 +195,7 @@ public class Pulser extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Pulser(getServer(), sign, this);
         }

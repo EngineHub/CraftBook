@@ -25,7 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Arrow;
@@ -45,6 +44,8 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.material.MaterialData;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -61,7 +62,7 @@ public class CreatureSpawner extends AbstractIC {
     private int amount = 1;
     private Block center;
 
-    public CreatureSpawner(Server server, Sign sign, ICFactory factory) {
+    public CreatureSpawner(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
         load();
@@ -80,7 +81,7 @@ public class CreatureSpawner extends AbstractIC {
             } catch (Exception e) {
                 data = line;
             }
-            center = SignUtil.getBackBlock(getSign().getBlock());
+            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         } catch (Exception ignored) {
         }
     }
@@ -300,7 +301,7 @@ public class CreatureSpawner extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new CreatureSpawner(getServer(), sign, this);
         }

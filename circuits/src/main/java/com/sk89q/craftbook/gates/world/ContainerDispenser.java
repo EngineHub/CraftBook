@@ -6,9 +6,10 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -26,7 +27,7 @@ public class ContainerDispenser extends AbstractIC {
 
     private int amount = 1;
 
-    public ContainerDispenser(Server server, Sign sign, ICFactory factory) {
+    public ContainerDispenser(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
         try {
@@ -65,12 +66,12 @@ public class ContainerDispenser extends AbstractIC {
      */
     protected boolean dispense() {
 
-        Block b = SignUtil.getBackBlock(getSign().getBlock());
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         int x = b.getX();
         int y = b.getY() + 1;
         int z = b.getZ();
-        bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+        bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         ItemStack stack = null;
         if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
@@ -111,7 +112,7 @@ public class ContainerDispenser extends AbstractIC {
             a = curA;
         }
         ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
-        getSign().getWorld().dropItem(BlockUtil.getBlockCentre(getSign().getBlock()), stack);
+        BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), stack);
         item.setAmount(curA - a);
         if (item.getAmount() <= 1) {
             item = null;
@@ -130,7 +131,7 @@ public class ContainerDispenser extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ContainerDispenser(getServer(), sign, this);
         }

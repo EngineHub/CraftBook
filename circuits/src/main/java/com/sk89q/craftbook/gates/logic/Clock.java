@@ -18,18 +18,22 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class Clock extends AbstractIC implements SelfTriggeredIC {
 
-    final Sign sign;
-
-    public Clock(Server server, Sign psign, ICFactory factory) {
+    public Clock(Server server, ChangedSign psign, ICFactory factory) {
 
         super(server, psign, factory);
-        sign = psign;
     }
 
     @Override
@@ -53,13 +57,13 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
         short tick, reset;
         try {
-            reset = Short.parseShort(sign.getLine(2));
+            reset = Short.parseShort(getSign().getLine(2));
         } catch (NumberFormatException e) {
             return;
         }
 
         try {
-            tick = Short.parseShort(sign.getLine(3));
+            tick = Short.parseShort(getSign().getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
         }
@@ -71,8 +75,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
             chip.setOutput(0, !chip.getOutput(0));
         }
 
-        sign.setLine(3, Short.toString(tick));
-        //sign.update(); Laggggy
+        getSign().setLine(3, Short.toString(tick));
     }
 
     public static class Factory extends AbstractICFactory {
@@ -83,13 +86,13 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Clock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             int lol;
             try {
@@ -103,7 +106,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
             sign.setLine(2, Integer.toString(lol));
             sign.setLine(3, "0");
-            sign.update();
+            sign.update(false);
         }
 
         @Override

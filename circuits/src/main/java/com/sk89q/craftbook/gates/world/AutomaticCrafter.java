@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
@@ -16,6 +15,8 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -28,7 +29,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class AutomaticCrafter extends AbstractIC {
 
-    public AutomaticCrafter(Server server, Sign block, ICFactory factory) {
+    public AutomaticCrafter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -107,7 +108,7 @@ public class AutomaticCrafter extends AbstractIC {
 
     public boolean collect(Dispenser disp) {
 
-        for (Entity en : getSign().getChunk().getEntities()) {
+        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
             check:
             {
             if (!(en instanceof Item)) {
@@ -145,7 +146,7 @@ public class AutomaticCrafter extends AbstractIC {
     public boolean doStuff(boolean craft, boolean collect) {
 
         boolean ret = false;
-        Block crafter = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
+        Block crafter = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (crafter.getTypeId() == BlockID.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();
             if (craft) {
@@ -226,7 +227,7 @@ public class AutomaticCrafter extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new AutomaticCrafter(getServer(), sign, this);
         }

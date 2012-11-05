@@ -22,10 +22,11 @@ import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.material.Lever;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -136,9 +137,9 @@ public class ICUtil {
         return false;
     }
 
-    public static Block parseBlockLocation(Sign sign, int lPos, boolean relative) {
+    public static Block parseBlockLocation(ChangedSign sign, int lPos, boolean relative) {
 
-        Block target = SignUtil.getBackBlock(sign.getBlock());
+        Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
         String line = sign.getLine(lPos);
         int offsetX = 0;
         int offsetY = 0;
@@ -169,22 +170,22 @@ public class ICUtil {
         return target;
     }
 
-    public static Block parseBlockLocation(Sign sign, int lPos) {
+    public static Block parseBlockLocation(ChangedSign sign, int lPos) {
 
         return parseBlockLocation(sign, lPos, true);
     }
 
-    public static Block parseBlockLocation(Sign sign) {
+    public static Block parseBlockLocation(ChangedSign sign) {
 
         return parseBlockLocation(sign, 2, true);
     }
 
-    public static void verifySignSyntax(Sign sign) throws ICVerificationException {
+    public static void verifySignSyntax(ChangedSign sign) throws ICVerificationException {
 
         verifySignSyntax(sign, 2);
     }
 
-    public static void verifySignSyntax(Sign sign, int i) throws ICVerificationException {
+    public static void verifySignSyntax(ChangedSign sign, int i) throws ICVerificationException {
 
         try {
             String line = sign.getLine(i);
@@ -204,12 +205,12 @@ public class ICUtil {
         }
     }
 
-    public static int parseRadius(Sign sign) {
+    public static int parseRadius(ChangedSign sign) {
 
         return parseRadius(sign, 2);
     }
 
-    public static int parseRadius(Sign sign, int lPos) {
+    public static int parseRadius(ChangedSign sign, int lPos) {
 
         String line = sign.getLine(lPos);
         int radius = 10; //default radius is 10.

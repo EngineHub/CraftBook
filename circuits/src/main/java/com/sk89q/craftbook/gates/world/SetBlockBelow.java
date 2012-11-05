@@ -21,8 +21,9 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -35,7 +36,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class SetBlockBelow extends AbstractIC {
 
-    public SetBlockBelow(Server server, Sign sign, ICFactory factory) {
+    public SetBlockBelow(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -87,7 +88,7 @@ public class SetBlockBelow extends AbstractIC {
             return;
         }
 
-        Block body = SignUtil.getBackBlock(getSign().getBlock());
+        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         int x = body.getX();
         int y = body.getY();
@@ -110,7 +111,7 @@ public class SetBlockBelow extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SetBlockBelow(getServer(), sign, this);
         }

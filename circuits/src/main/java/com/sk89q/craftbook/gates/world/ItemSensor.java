@@ -1,19 +1,28 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Set;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Silthus
@@ -27,7 +36,7 @@ public class ItemSensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public ItemSensor(Server server, Sign block, ICFactory factory) {
+    public ItemSensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -36,9 +45,8 @@ public class ItemSensor extends AbstractIC {
     private void load() {
 
         try {
-            Sign sign = getSign();
-            Block block = SignUtil.getBackBlock(sign.getBlock());
-            String[] split = sign.getLine(3).trim().split(":");
+            Block block = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            String[] split = getSign().getLine(3).trim().split(":");
             // lets get the type to detect first
             try {
                 item = Integer.parseInt(split[0]);
@@ -65,7 +73,7 @@ public class ItemSensor extends AbstractIC {
             if (getSign().getLine(2).contains("=")) {
                 center = ICUtil.parseBlockLocation(getSign());
             } else {
-                center = SignUtil.getBackBlock(getSign().getBlock());
+                center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             }
             chunks = LocationUtil.getSurroundingChunks(block, radius);
         } catch (Exception ignored) {
@@ -118,13 +126,13 @@ public class ItemSensor extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ItemSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }

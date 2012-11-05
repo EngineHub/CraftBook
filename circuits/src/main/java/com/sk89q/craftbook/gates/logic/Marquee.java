@@ -19,8 +19,8 @@
 package com.sk89q.craftbook.gates.logic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -29,7 +29,7 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class Marquee extends AbstractIC {
 
-    public Marquee(Server server, Sign sign, ICFactory factory) {
+    public Marquee(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -96,7 +96,6 @@ public class Marquee extends AbstractIC {
 
         // set the next output and update sign
         getSign().setLine(2, Integer.toString(next));
-        getSign().update();
 
     }
 
@@ -108,7 +107,7 @@ public class Marquee extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Marquee(getServer(), sign, this);
         }

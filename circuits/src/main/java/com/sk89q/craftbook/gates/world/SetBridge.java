@@ -3,8 +3,9 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -35,7 +36,7 @@ public class SetBridge extends AbstractIC {
     private Block center;
     private BlockFace faceing;
 
-    public SetBridge(Server server, Sign block, ICFactory factory) {
+    public SetBridge(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -44,8 +45,8 @@ public class SetBridge extends AbstractIC {
     private void load() {
 
         try {
-            center = SignUtil.getBackBlock(getSign().getBlock());
-            faceing = SignUtil.getFacing(getSign().getBlock());
+            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
             String line = getSign().getLine(2);
             if (!line.equals("")) {
                 try {
@@ -163,7 +164,7 @@ public class SetBridge extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SetBridge(getServer(), sign, this);
         }

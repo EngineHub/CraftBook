@@ -31,7 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -43,10 +42,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -61,12 +63,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private String codeString;
     private CodeT code;
 
-    private Sign sign;
+    private ChangedSign sign;
 
     private boolean error = false;
     private String errorString = "no error";
 
-    PlcIC(Sign s, Lang l) throws ICVerificationException {
+    PlcIC(ChangedSign s, Lang l) throws ICVerificationException {
 
         sign = s;
         try {
@@ -77,7 +79,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         l.compile(codeString);
     }
 
-    public PlcIC(Server sv, Sign s, Lang l) {
+    public PlcIC(Server sv, ChangedSign s, Lang l) {
 
         lang = l;
         sign = s;
@@ -110,14 +112,14 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private String getFileName() {
 
         if (!isShared()) {
-            Location l = sign.getLocation();
-            return lang.getName() + "$$" + l.getBlockX() + "_" + l.getBlockY() + "_" + l.getBlockZ();
+            Location l = sign.getSignLocation();
+            return lang.getName() + "$$" + l.getPosition().getBlockX() + "_" + l.getPosition().getBlockY() + "_" + l.getPosition().getBlockZ();
         } else return lang.getName() + "$" + sign.getLine(3);
     }
 
     private File getStorageLocation() {
 
-        World w = sign.getWorld();
+        World w = BukkitUtil.toWorld(sign.getLocalWorld());
         File worldDir = w.getWorldFolder();
         File targetDir = new File(worldDir, "craftbook-plcs");
         targetDir.mkdirs();
@@ -240,12 +242,14 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     private String getCode() throws CodeNotFoundException {
 
+        Sign sign = BukkitUtil.toSign(this.sign);
+
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
         if (above.getTypeId() == BlockID.CHEST) return getBookCode(above);
         Block below = sign.getLocation().add(new Vector(0, -1, 0)).getBlock();
         if (below.getTypeId() == BlockID.CHEST) return getBookCode(below);
 
-        Location l = sign.getLocation();
+        org.bukkit.Location l = sign.getLocation();
         World w = l.getWorld();
 
         int x = l.getBlockX();
@@ -288,7 +292,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         sign.setLine(2, ChatColor.RED + "!Error!");
         sign.setLine(3, shortMessage);
-        sign.update();
+        sign.update(false);
 
         error = true;
         errorString = detailedMessage;
@@ -367,10 +371,10 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         if (p.hasPermission("craftbook.plc.debug")) {
             p.sendMessage(ChatColor.GREEN + "Programmable Logic Controller debug information");
-            Location l = sign.getLocation();
+            Location l = sign.getSignLocation();
             p.sendMessage(ChatColor.RED + "Status:" + ChatColor.RESET + " " + (error ? "Error Encountered" : "OK"));
             p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET +
-                    " (" + l.getBlockX() + ", " + l.getBlockY() + ", " + l.getBlockZ() + ")");
+                    " (" + l.getPosition().getBlockX() + ", " + l.getPosition().getBlockY() + ", " + l.getPosition().getBlockZ() + ")");
             p.sendMessage(ChatColor.RED + "Language:" + ChatColor.RESET + " " + lang.getName());
             p.sendMessage(ChatColor.RED + "Full Storage Name:" + ChatColor.RESET + " " + getFileName());
             if (error) {

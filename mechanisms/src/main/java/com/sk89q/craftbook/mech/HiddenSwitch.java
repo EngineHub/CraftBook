@@ -11,6 +11,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -32,7 +33,7 @@ public class HiddenSwitch extends AbstractMechanic {
         final MechanismsPlugin plugin;
 
         @Override
-        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
+        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException {
             // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
             //FIXME In the future add a check here to test if you can actually build wall signs on this block.

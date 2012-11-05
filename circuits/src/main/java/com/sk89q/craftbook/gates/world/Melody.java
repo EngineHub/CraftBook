@@ -1,20 +1,26 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.jinglenote.JingleNoteComponent;
-import com.sk89q.jinglenote.MidiJingleSequencer;
-import org.bukkit.ChatColor;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.jinglenote.JingleNoteComponent;
+import com.sk89q.jinglenote.MidiJingleSequencer;
 
 /**
  * @author Me4502
@@ -24,7 +30,7 @@ public class Melody extends AbstractIC {
     MidiJingleSequencer sequencer;
     JingleNoteComponent jNote = new JingleNoteComponent();
 
-    public Melody(Server server, Sign block, ICFactory factory) {
+    public Melody(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         jNote.enable();
@@ -108,7 +114,7 @@ public class Melody extends AbstractIC {
                     if (player == null) {
                         continue;
                     }
-                    if (radius > 0 && !LocationUtil.isWithinRadius(getSign().getLocation(), player.getLocation(),
+                    if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(),
                             radius)) {
                         continue;
                     }
@@ -139,12 +145,12 @@ public class Melody extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             try {
                 if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
                     sign.setLine(1, "[MC1266]");
-                    sign.update();
+                    sign.update(false);
                     return new PowerSensor(getServer(), sign, this);
                 }
             } catch (Exception ignored) {

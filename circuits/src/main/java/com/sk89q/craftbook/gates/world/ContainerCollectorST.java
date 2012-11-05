@@ -1,18 +1,19 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 /**
  * @author Me4502
  */
 public class ContainerCollectorST extends ContainerCollector implements SelfTriggeredIC {
 
-    public ContainerCollectorST(Server server, Sign sign, ICFactory factory) {
+    public ContainerCollectorST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -44,7 +45,7 @@ public class ContainerCollectorST extends ContainerCollector implements SelfTrig
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ContainerCollectorST(getServer(), sign, this);
         }

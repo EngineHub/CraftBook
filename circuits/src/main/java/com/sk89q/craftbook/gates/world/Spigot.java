@@ -7,9 +7,10 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -23,7 +24,7 @@ public class Spigot extends AbstractIC {
     int radius = 15;
     int yOffset = 1;
 
-    public Spigot(Server server, Sign block, ICFactory factory) {
+    public Spigot(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -64,7 +65,7 @@ public class Spigot extends AbstractIC {
 
     public boolean search() {
 
-        Block off = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, yOffset, 0);
+        Block off = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, yOffset, 0);
         ArrayList<Location> searched = new ArrayList<Location>();
         return searchAt(searched, off);
     }
@@ -74,7 +75,7 @@ public class Spigot extends AbstractIC {
         if (searched.contains(off.getLocation()))
             return false;
         searched.add(off.getLocation());
-        if (off.getLocation().distanceSquared(SignUtil.getBackBlock(getSign().getBlock().getRelative(0, yOffset,
+        if (off.getLocation().distanceSquared(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock().getRelative(0, yOffset,
                 0)).getLocation()) > radius * radius)
             return false;
         if (off.getTypeId() == 0) {
@@ -110,7 +111,7 @@ public class Spigot extends AbstractIC {
 
     public int getFromChest() {
 
-        Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
+        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
 
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
@@ -127,7 +128,7 @@ public class Spigot extends AbstractIC {
 
     public int getFromChest(int m) {
 
-        Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
+        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
 
         if (m == BlockID.STATIONARY_WATER) {
             m = BlockID.WATER;
@@ -154,7 +155,7 @@ public class Spigot extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Spigot(getServer(), sign, this);
         }

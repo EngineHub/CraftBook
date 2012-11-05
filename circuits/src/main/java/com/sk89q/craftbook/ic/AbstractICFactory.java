@@ -19,9 +19,9 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 
 /**
@@ -44,14 +44,14 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
-    public void verify(Sign sign) throws ICVerificationException {
+    public void verify(ChangedSign sign) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
         //TODO make some IC's use this to check if its valid.
     }
 
     @Override
-    public void checkPlayer(Sign sign, LocalPlayer player) throws ICVerificationException {
+    public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
         //TODO Use this to make some restricted IC's allowed to normal users, but limited.

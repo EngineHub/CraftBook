@@ -42,7 +42,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -162,8 +162,7 @@ public class MechanicManager {
         Sign sign = (Sign) state;
 
         try {
-            load(pos, localPlayer,
-                    new BukkitChangedSign(sign, event.getLines()));
+            load(pos, localPlayer, BukkitUtil.toChangedSign(sign));
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 localPlayer.printError(e.getMessage());
@@ -399,7 +398,7 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a
      *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player, Sign sign)
+    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player, ChangedSign sign)
             throws InvalidMechanismException {
 
         List<Mechanic> detectedMechanics = detect(pos, player, sign);
@@ -494,7 +493,7 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a
      *                                   mechanism, but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
+    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign)
             throws InvalidMechanismException {
 
         List<Mechanic> mechanics = new ArrayList<Mechanic>();

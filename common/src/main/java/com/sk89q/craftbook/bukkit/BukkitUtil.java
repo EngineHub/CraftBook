@@ -58,6 +58,10 @@ public class BukkitUtil {
         return new BukkitChangedSign(sign, sign.getLines());
     }
 
+    public static Sign toSign(ChangedSign sign) {
+        return ((BukkitChangedSign)sign).sign;
+    }
+
     private static final Map<World, LocalWorld> wlw = new HashMap<World, LocalWorld>();
 
     public static LocalWorld getLocalWorld(World w) {

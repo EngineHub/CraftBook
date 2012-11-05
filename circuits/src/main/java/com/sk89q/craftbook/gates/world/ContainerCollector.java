@@ -6,11 +6,12 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -25,7 +26,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ContainerCollector extends AbstractIC {
 
-    public ContainerCollector(Server server, Sign sign, ICFactory factory) {
+    public ContainerCollector(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -52,13 +53,13 @@ public class ContainerCollector extends AbstractIC {
 
     protected boolean collect() {
 
-        Block b = SignUtil.getBackBlock(getSign().getBlock());
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         int x = b.getX();
         int y = b.getY() + 1;
         int z = b.getZ();
-        Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
-        for (Entity en : getSign().getChunk().getEntities()) {
+        Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
+        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
             if (!(en instanceof Item)) {
                 continue;
             }
@@ -184,7 +185,7 @@ public class ContainerCollector extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ContainerCollector(getServer(), sign, this);
         }

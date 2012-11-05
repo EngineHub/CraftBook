@@ -19,8 +19,8 @@
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -31,7 +31,7 @@ public class WirelessReceiver extends AbstractIC {
 
     protected String band;
 
-    public WirelessReceiver(Server server, Sign sign, ICFactory factory) {
+    public WirelessReceiver(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
 
@@ -73,7 +73,7 @@ public class WirelessReceiver extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new WirelessReceiver(getServer(), sign, this);
         }

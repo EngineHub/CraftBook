@@ -13,6 +13,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -98,7 +99,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
          */
         @Override
         public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
-                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
@@ -111,7 +112,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 else {
                     sign.setLine(3, "1");
                 }
-                sign.update();
+                sign.update(false);
                 player.print("mech.cook.create");
             } else
                 return null;

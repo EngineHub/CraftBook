@@ -9,6 +9,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -76,7 +77,7 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                Sign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 

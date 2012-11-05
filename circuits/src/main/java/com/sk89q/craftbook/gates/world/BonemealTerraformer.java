@@ -6,11 +6,12 @@ import org.bukkit.Server;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -25,7 +26,7 @@ public class BonemealTerraformer extends AbstractIC {
     int radius;
     Integer maxradius;
 
-    public BonemealTerraformer(Server server, Sign block, ICFactory factory) {
+    public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -41,7 +42,7 @@ public class BonemealTerraformer extends AbstractIC {
             if (radius > maxradius) {
                 radius = maxradius;
                 getSign().setLine(3, maxradius + "");
-                getSign().update();
+                getSign().update(false);
             }
         } catch (Exception e) {
             radius = 10;
@@ -74,10 +75,10 @@ public class BonemealTerraformer extends AbstractIC {
             for (int y = -radius + 1; y < radius; y++) {
                 for (int z = -radius + 1; z < radius; z++)
                     if (overrideChance || BaseBukkitPlugin.random.nextInt(40) == 0) {
-                        int rx = getSign().getLocation().getBlockX() - x;
-                        int ry = getSign().getLocation().getBlockY() - y;
-                        int rz = getSign().getLocation().getBlockZ() - z;
-                        Block b = getSign().getWorld().getBlockAt(rx, ry, rz);
+                        int rx = getSign().getSignLocation().getPosition().getBlockX() - x;
+                        int ry = getSign().getSignLocation().getPosition().getBlockY() - y;
+                        int rz = getSign().getSignLocation().getPosition().getBlockZ() - z;
+                        Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == BlockID.CROPS && b.getData() < 0x7) {
                             if (consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x1));
@@ -152,7 +153,7 @@ public class BonemealTerraformer extends AbstractIC {
 
     public boolean consumeBonemeal() {
 
-        Block chest = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
+        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.INK_SACK, 1,
@@ -174,7 +175,7 @@ public class BonemealTerraformer extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BonemealTerraformer(getServer(), sign, this);
         }

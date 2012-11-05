@@ -1,17 +1,24 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
+
 public class BlockLauncher extends AbstractIC {
 
-    public BlockLauncher(Server server, Sign block, ICFactory factory) {
+    public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -38,7 +45,7 @@ public class BlockLauncher extends AbstractIC {
 
     public void launch() {
 
-        Block above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, 1, 0);
+        Block above = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         int timeout = 12;
         while (above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() >= 255) {
             above = above.getRelative(0, 1, 0);
@@ -59,7 +66,7 @@ public class BlockLauncher extends AbstractIC {
         } catch (Exception ignored) {
         }
         if (velocity.getY() < 0) {
-            above = SignUtil.getBackBlock(getSign().getBlock()).getRelative(0, -1, 0);
+            above = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
             timeout = 12;
             while (above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() <= 1) {
                 above = above.getRelative(0, -1, 0);
@@ -67,7 +74,7 @@ public class BlockLauncher extends AbstractIC {
             }
         }
         double y = above.getY() - 0.99D;
-        FallingBlock block = getSign().getWorld().spawnFallingBlock(new Location(getSign().getWorld(),
+        FallingBlock block = BukkitUtil.toSign(getSign()).getWorld().spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(),
                 above.getX() + 0.5D, y, above.getZ() + 0.5D), id, data);
         block.setVelocity(velocity);
     }
@@ -81,7 +88,7 @@ public class BlockLauncher extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BlockLauncher(getServer(), sign, this);
         }

@@ -18,13 +18,18 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class LightSensorST extends LightSensor implements SelfTriggeredIC {
 
-    public LightSensorST(Server server, Sign sign, ICFactory factory) {
+    public LightSensorST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -72,7 +77,7 @@ public class LightSensorST extends LightSensor implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new LightSensorST(getServer(), sign, this);
         }

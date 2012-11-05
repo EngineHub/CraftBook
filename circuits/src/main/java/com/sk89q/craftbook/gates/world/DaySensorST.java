@@ -18,17 +18,18 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class DaySensorST extends DaySensor implements SelfTriggeredIC {
 
 
-    public DaySensorST(Server server, Sign sign, ICFactory factory) {
+    public DaySensorST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -61,7 +62,7 @@ public class DaySensorST extends DaySensor implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new DaySensorST(getServer(), sign, this);
         }

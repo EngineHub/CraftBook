@@ -1,15 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -20,7 +27,7 @@ public class FireShooter extends AbstractIC {
     private float spread = 4;
     private float vert = 0;
 
-    public FireShooter(Server server, Sign sign, ICFactory factory) {
+    public FireShooter(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
         load();
@@ -77,14 +84,14 @@ public class FireShooter extends AbstractIC {
             vert = -1;
         }
 
-        Block signBlock = getSign().getBlock();
+        Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
         float x = targetDir.getX() - signBlock.getX();
         float z = targetDir.getZ() - signBlock.getZ();
         Vector velocity = new Vector(x, vert, z);
-        Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
+        Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
                 targetDir.getZ() + 0.5);
 
         if (n != 1) {
@@ -92,11 +99,11 @@ public class FireShooter extends AbstractIC {
                 velocity = new Vector(x + (BaseBukkitPlugin.random.nextInt((int) spread) - spread / 2),
                         vert + (BaseBukkitPlugin.random.nextInt((int) spread) - spread / 2), z + (BaseBukkitPlugin.random.nextInt((int) spread) - spread
                                 / 2));
-                SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
+                SmallFireball f = BukkitUtil.toSign(getSign()).getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
                 f.setVelocity(velocity);
             }
         } else {
-            SmallFireball f = getSign().getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
+            SmallFireball f = BukkitUtil.toSign(getSign()).getWorld().spawn(shootLoc, org.bukkit.entity.SmallFireball.class);
             f.setVelocity(velocity);
         }
     }
@@ -110,7 +117,7 @@ public class FireShooter extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new FireShooter(getServer(), sign, this);
         }

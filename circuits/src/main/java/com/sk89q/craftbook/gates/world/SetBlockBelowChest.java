@@ -5,9 +5,10 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -21,7 +22,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class SetBlockBelowChest extends AbstractIC {
 
-    public SetBlockBelowChest(Server server, Sign sign, ICFactory factory) {
+    public SetBlockBelowChest(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -74,7 +75,7 @@ public class SetBlockBelowChest extends AbstractIC {
         }
 
 
-        Block body = SignUtil.getBackBlock(getSign().getBlock());
+        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         int x = body.getX();
         int y = body.getY();
@@ -92,7 +93,7 @@ public class SetBlockBelowChest extends AbstractIC {
     public boolean takeFromChest(int x, int y, int z, int id, byte data) {
 
         boolean ret = false;
-        Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
+        Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
             ItemStack[] is = c.getInventory().getContents();
@@ -106,7 +107,7 @@ public class SetBlockBelowChest extends AbstractIC {
                             continue;
                         }
                     ItemStack stack = is[i];
-                    getSign().getWorld().dropItemNaturally(new Location(getSign().getWorld(), x, y, z), stack);
+                    BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(new Location(BukkitUtil.toSign(getSign()).getWorld(), x, y, z), stack);
                     if (is[i].getAmount() == 1) {
                         is[i] = new ItemStack(0, 0);
                     } else {
@@ -129,7 +130,7 @@ public class SetBlockBelowChest extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SetBlockBelowChest(getServer(), sign, this);
         }

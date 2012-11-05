@@ -1,13 +1,19 @@
 package com.sk89q.craftbook.gates.weather;
 
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class WeatherControl extends AbstractIC {
 
-    public WeatherControl(Server server, Sign sign, ICFactory factory) {
+    public WeatherControl(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -59,16 +65,16 @@ public class WeatherControl extends AbstractIC {
 
 
         if (chip.getInput(0)) {
-            getSign().getWorld().setStorm(true);
-            getSign().getWorld().setWeatherDuration(duration);
+            BukkitUtil.toSign(getSign()).getWorld().setStorm(true);
+            BukkitUtil.toSign(getSign()).getWorld().setWeatherDuration(duration);
             if (tstorm) {
-                getSign().getWorld().setThundering(true);
-                getSign().getWorld().setThunderDuration(thunderDuration);
+                BukkitUtil.toSign(getSign()).getWorld().setThundering(true);
+                BukkitUtil.toSign(getSign()).getWorld().setThunderDuration(thunderDuration);
             }
             chip.setOutput(0, true);
         } else {
-            getSign().getWorld().setThundering(false);
-            getSign().getWorld().setStorm(false);
+            BukkitUtil.toSign(getSign()).getWorld().setThundering(false);
+            BukkitUtil.toSign(getSign()).getWorld().setStorm(false);
             chip.setOutput(0, false);
         }
     }
@@ -82,7 +88,7 @@ public class WeatherControl extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new WeatherControl(getServer(), sign, this);
         }

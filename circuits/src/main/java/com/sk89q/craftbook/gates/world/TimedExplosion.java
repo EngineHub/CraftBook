@@ -1,13 +1,20 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class TimedExplosion extends AbstractIC {
 
@@ -15,7 +22,7 @@ public class TimedExplosion extends AbstractIC {
     float yield;
     boolean flamey;
 
-    public TimedExplosion(Server server, Sign block, ICFactory factory) {
+    public TimedExplosion(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -57,8 +64,8 @@ public class TimedExplosion extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            Block infront = getSign().getBlock().getRelative(SignUtil.getBack(getSign().getBlock()).getOppositeFace());
-            TNTPrimed tnt = (TNTPrimed) getSign().getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
+            Block infront = BukkitUtil.toSign(getSign()).getBlock().getRelative(SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock()).getOppositeFace());
+            TNTPrimed tnt = (TNTPrimed) BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
                     EntityType.PRIMED_TNT);
             tnt.setIsIncendiary(flamey);
             if (ticks > 0) {
@@ -79,7 +86,7 @@ public class TimedExplosion extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new TimedExplosion(getServer(), sign, this);
         }

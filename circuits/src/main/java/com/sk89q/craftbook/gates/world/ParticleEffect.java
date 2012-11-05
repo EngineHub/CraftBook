@@ -4,8 +4,9 @@ import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -19,7 +20,7 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class ParticleEffect extends AbstractIC {
 
-    public ParticleEffect(Server server, Sign sign, ICFactory factory) {
+    public ParticleEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -62,7 +63,7 @@ public class ParticleEffect extends AbstractIC {
             }
             if (effectID == 2001 && Material.getMaterial(effectData) == null) return;
             int times = Integer.parseInt(getSign().getLine(3));
-            Block b = SignUtil.getBackBlock(getSign().getBlock());
+            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             for (int i = 0; i < times; i++) {
                 b.getWorld().playEffect(b.getLocation().add(0, 1, 0), Effect.getById(effectID), effectData, 50);
             }
@@ -78,12 +79,12 @@ public class ParticleEffect extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             try {
                 if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
                     sign.setLine(1, "[MC1212]");
-                    sign.update();
+                    sign.update(false);
                     return new SetDoor(getServer(), sign, this);
                 }
             } catch (Exception ignored) {

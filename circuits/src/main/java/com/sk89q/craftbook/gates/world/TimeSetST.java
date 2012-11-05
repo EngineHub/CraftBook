@@ -1,12 +1,18 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class TimeSetST extends TimeSet implements SelfTriggeredIC {
 
-    public TimeSetST(Server server, Sign sign, ICFactory factory) {
+    public TimeSetST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -34,7 +40,7 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
 
         try {
             if (chip.getInput(0)) {
-                getSign().getWorld().setTime(Long.parseLong(getSign().getLine(2)));
+                BukkitUtil.toSign(getSign()).getWorld().setTime(Long.parseLong(getSign().getLine(2)));
             }
         } catch (Exception ignored) {
         }
@@ -48,7 +54,7 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new TimeSetST(getServer(), sign, this);
         }

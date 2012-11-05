@@ -2,7 +2,6 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -14,6 +13,8 @@ import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -67,7 +68,7 @@ public class EntityCannon extends AbstractIC {
         }
     }
 
-    public EntityCannon(Server server, Sign sign, ICFactory factory) {
+    public EntityCannon(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -99,7 +100,7 @@ public class EntityCannon extends AbstractIC {
      */
     protected boolean shoot() {
 
-        Location location = getSign().getLocation();
+        Location location = BukkitUtil.toSign(getSign()).getLocation();
         Type type = Type.MOB_HOSTILE;
 
         if (getSign().getLine(3).length() != 0) {
@@ -141,7 +142,7 @@ public class EntityCannon extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new EntityCannon(getServer(), sign, this);
         }

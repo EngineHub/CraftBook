@@ -19,8 +19,8 @@
 package com.sk89q.craftbook.gates.logic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -29,7 +29,7 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class Repeater extends AbstractIC {
 
-    public Repeater(Server server, Sign sign, ICFactory factory) {
+    public Repeater(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -60,7 +60,7 @@ public class Repeater extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Repeater(getServer(), sign, this);
         }

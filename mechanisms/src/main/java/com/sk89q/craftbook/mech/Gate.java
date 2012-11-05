@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -485,7 +486,7 @@ public class Gate extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Gate detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public Gate detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
@@ -509,7 +510,7 @@ public class Gate extends AbstractMechanic {
                 } else if (!sign.getLine(3).equalsIgnoreCase("infinite")) {
                     sign.setLine(3, "0");
                 }
-                sign.update();
+                sign.update(false);
                 player.print("mech.gate.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
                 if (!player.hasPermission("craftbook.mech.gate") && !player.hasPermission("craftbook.mech.dgate"))
@@ -533,7 +534,7 @@ public class Gate extends AbstractMechanic {
                 } else if (!sign.getLine(3).equalsIgnoreCase("infinite")) {
                     sign.setLine(3, "0");
                 }
-                sign.update();
+                sign.update(false);
                 player.print("mech.dgate.create");
             } else
                 return null;

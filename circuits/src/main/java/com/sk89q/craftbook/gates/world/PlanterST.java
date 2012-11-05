@@ -1,19 +1,20 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+import org.bukkit.World;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.block.Sign;
 
 public class PlanterST extends Planter implements SelfTriggeredIC {
 
-    public PlanterST(Server server, Sign block, ICFactory factory) {
+    public PlanterST(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -40,9 +41,9 @@ public class PlanterST extends Planter implements SelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        World world = getSign().getWorld();
+        World world = BukkitUtil.toSign(getSign()).getWorld();
         Vector onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(
-                getSign().getBlock()).getLocation());
+                BukkitUtil.toSign(getSign()).getBlock()).getLocation());
         Vector target;
         int[] info = null;
         int yOffset;
@@ -85,7 +86,7 @@ public class PlanterST extends Planter implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new PlanterST(getServer(), sign, this);
         }

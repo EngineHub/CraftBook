@@ -1,15 +1,20 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class Counter extends AbstractIC {
 
     private int resetVal;
     private boolean inf;
 
-    public Counter(Server server, Sign block, ICFactory factory) {
+    public Counter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -34,7 +39,7 @@ public class Counter extends AbstractIC {
             } catch (Exception ignored) {
             }
             getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
-            getSign().update();
+            getSign().update(false);
         } catch (Exception ignored) {
         }
     }
@@ -88,7 +93,6 @@ public class Counter extends AbstractIC {
         // Update counter value stored on sign if it's changed
         if (curVal != oldVal) {
             getSign().setLine(3, curVal + "");
-            getSign().update();
         }
     }
 
@@ -100,7 +104,7 @@ public class Counter extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Counter(getServer(), sign, this);
         }

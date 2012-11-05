@@ -1,17 +1,34 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -96,7 +113,7 @@ public class EntitySensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public EntitySensor(Server server, Sign block, ICFactory factory) {
+    public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -105,16 +122,15 @@ public class EntitySensor extends AbstractIC {
     private void load() {
 
         try {
-            Sign sign = getSign();
             // lets get the types to detect first
-            types = Type.getDetected(sign.getLine(3).trim());
+            types = Type.getDetected(getSign().getLine(3).trim());
 
             // Add all if no params are specified
             if (types.size() == 0) {
                 types.add(Type.ANY);
             }
 
-            sign.setLine(3, sign.getLine(3).toUpperCase());
+            getSign().setLine(3, getSign().getLine(3).toUpperCase());
 
             // if the line contains a = the offset is given
             // the given string should look something like that:
@@ -125,11 +141,11 @@ public class EntitySensor extends AbstractIC {
                 center = ICUtil.parseBlockLocation(getSign());
             } else {
                 getSign().setLine(2, radius + "");
-                center = SignUtil.getBackBlock(getSign().getBlock());
+                center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             }
-            chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(getSign().getBlock()),
+            chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
                     radius); //Update chunks
-            sign.update();
+            getSign().update(false);
         } catch (Exception ignored) {
         }
     }
@@ -182,13 +198,13 @@ public class EntitySensor extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new EntitySensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }

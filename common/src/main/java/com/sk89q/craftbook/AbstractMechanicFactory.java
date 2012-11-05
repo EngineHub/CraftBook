@@ -18,15 +18,13 @@
 
 package com.sk89q.craftbook;
 
-import org.bukkit.block.Sign;
-
 import com.sk89q.worldedit.BlockWorldVector;
 
 public abstract class AbstractMechanicFactory<T extends Mechanic>
 implements MechanicFactory<T> {
 
     @Override
-    public T detect(BlockWorldVector pos, LocalPlayer player, Sign sign)
+    public T detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign)
             throws InvalidMechanismException, ProcessedMechanismException {
 
         return null;

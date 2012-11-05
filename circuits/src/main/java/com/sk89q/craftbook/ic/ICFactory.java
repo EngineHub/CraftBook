@@ -18,9 +18,8 @@
 
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 
 /**
@@ -39,7 +38,7 @@ public interface ICFactory {
      *
      * @return an IC ready to be used
      */
-    public IC create(Sign sign);
+    public IC create(ChangedSign sign);
 
     /**
      * Verify that the IC can be created in the area of the world defined by the
@@ -53,7 +52,7 @@ public interface ICFactory {
      * @throws ICVerificationException if the area of the world defined by the sign does not
      *                                 represent a valid setup for this type of IC.
      */
-    public void verify(Sign sign) throws ICVerificationException;
+    public void verify(ChangedSign sign) throws ICVerificationException;
 
     /**
      * Check the player who creates the IC, used in the MessageSender IC, to make sure
@@ -65,7 +64,7 @@ public interface ICFactory {
      * @throws ICVerificationException if the area of the world defined by the sign does not
      *                                 represent a valid setup for this type of IC.
      */
-    public void checkPlayer(Sign sign, LocalPlayer player) throws ICVerificationException;
+    public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException;
 
     /**
      * Get a short description of the IC

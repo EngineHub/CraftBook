@@ -19,9 +19,9 @@
 package com.sk89q.craftbook.plc;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.BaseConfiguration.BaseConfigurationSection;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.IC;
@@ -42,14 +42,14 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public IC create(Sign sign) {
+    public IC create(ChangedSign sign) {
 
         PlcIC<StateT, CodeT, Lang> i = new PlcIC<StateT, CodeT, Lang>(s, sign, lang);
         return selfTriggered ? i.selfTriggered() : i;
     }
 
     @Override
-    public void verify(Sign sign) throws ICVerificationException {
+    public void verify(ChangedSign sign) throws ICVerificationException {
 
         new PlcIC<StateT, CodeT, Lang>(sign, lang); //Huge ugly hack!!
         sign.setLine(2, "id:" + Math.abs(BaseBukkitPlugin.random.nextInt()));
@@ -58,11 +58,11 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
             if (!line.matches("[-_a-zA-Z0-9]+"))
                 throw new ICVerificationException("illegal storage name");
         }
-        sign.update();
+        sign.update(false);
     }
 
     @Override
-    public void checkPlayer(Sign sign, LocalPlayer player) throws ICVerificationException {
+    public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
         // Do nothing
     }
 

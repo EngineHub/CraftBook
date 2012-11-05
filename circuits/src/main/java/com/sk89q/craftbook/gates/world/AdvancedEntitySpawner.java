@@ -15,6 +15,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
@@ -24,11 +26,10 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class AdvancedEntitySpawner extends CreatureSpawner {
 
-    public AdvancedEntitySpawner(Server server, Sign sign, ICFactory factory) {
+    public AdvancedEntitySpawner(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
         load();
     }
@@ -66,10 +67,10 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
             x += getSign().getX();
             y += getSign().getY();
             z += getSign().getZ();
-            location = new Location(BukkitUtil.getLocalWorld(getSign().getWorld()), new Vector(x,y,z));
+            location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()), new Vector(x,y,z));
         }
         catch(Exception e){
-            location = new Location(BukkitUtil.getLocalWorld(getSign().getWorld()),
+            location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()),
                     new Vector(getSign().getX(),getSign().getY(),getSign().getZ()));
         }
     }
@@ -79,20 +80,20 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
         if(!chip.getInput(0))
             return;
-        Block left = SignUtil.getLeftBlock(getSign().getBlock());
+        Block left = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock());
         Sign effectSign = null;
         if(left.getTypeId() == BlockID.WALL_SIGN) {
             effectSign = (Sign) left.getState();
         }
 
-        Block right = SignUtil.getRightBlock(getSign().getBlock());
+        Block right = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock());
         Sign armourSign = null;
         if(right.getTypeId() == BlockID.WALL_SIGN) {
             armourSign = (Sign) right.getState();
         }
 
         for(int i = 0; i < amount; i++) {
-            Entity ent = getSign().getWorld().spawnEntity(BukkitUtil.toLocation(location), type);
+            Entity ent = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), type);
 
             if(armourSign != null) { //Apply armor
                 if(ent instanceof LivingEntity) {
@@ -196,7 +197,7 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new AdvancedEntitySpawner(getServer(), sign, this);
         }

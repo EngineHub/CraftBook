@@ -6,9 +6,10 @@ import java.util.Map;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -22,7 +23,7 @@ public class BlockBreaker extends AbstractIC {
 
     boolean above;
 
-    public BlockBreaker(Server server, Sign block, boolean above, ICFactory factory) {
+    public BlockBreaker(Server server, ChangedSign block, boolean above, ICFactory factory) {
 
         super(server, block, factory);
         this.above = above;
@@ -51,7 +52,7 @@ public class BlockBreaker extends AbstractIC {
     public boolean breakBlock() {
 
         boolean hasChest = false;
-        Block bl = SignUtil.getBackBlock(getSign().getBlock());
+        Block bl = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         Block chest;
         Block broken;
         if (above) {
@@ -102,7 +103,7 @@ public class BlockBreaker extends AbstractIC {
 
     public void dropItem(ItemStack item) {
 
-        getSign().getWorld().dropItem(BlockUtil.getBlockCentre(getSign().getBlock()), item);
+        BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), item);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -116,7 +117,7 @@ public class BlockBreaker extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BlockBreaker(getServer(), sign, above, this);
         }
