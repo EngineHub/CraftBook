@@ -88,7 +88,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
         
-        registerCommand(VehicleCommands.class);
+        //registerCommand(VehicleCommands.class);
         
         try {
             Metrics metrics = new Metrics(this);
