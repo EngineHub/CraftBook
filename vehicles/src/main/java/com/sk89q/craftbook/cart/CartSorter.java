@@ -26,7 +26,6 @@ public class CartSorter extends CartMechanism {
     private static VehiclesPlugin plugin;
 
     public CartSorter(VehiclesPlugin plugin){
-        System.out.println("LOADED SORTER");//DEBUG
         CartSorter.plugin = plugin;
     }
 
@@ -121,7 +120,6 @@ public class CartSorter extends CartMechanism {
     }
 
     public static boolean isSortApplicable(String line, Minecart minecart) {
-        System.out.println("SORTING :: " + line);//DEBUG
         if (line.equalsIgnoreCase("All")) return true;
         Entity test = minecart.getPassenger();
         Player player = null;
@@ -188,7 +186,6 @@ public class CartSorter extends CartMechanism {
                 }
             }
         }if(line.startsWith("#")){
-            System.out.println("STATION NAME");//DEBUG
             if(player!=null){
                 String stationName = line;
                 String selectedStation = plugin.getStation(player.getName());
