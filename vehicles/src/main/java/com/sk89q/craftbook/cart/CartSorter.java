@@ -165,7 +165,16 @@ public class CartSorter extends CartMechanism {
             StorageMinecart storageCart = (StorageMinecart) minecart;
             Inventory storageInventory = storageCart.getInventory();
 
-            if (parts.length == 3) {
+            if (parts.length == 4) {
+                try {
+                    int item = Integer.parseInt(parts[1]);
+                    short durability = Short.parseShort(parts[2]);
+                    int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0), storageInventory.getContents().length - 1);
+                    ItemStack indexed = storageInventory.getContents()[index];
+                    if (indexed != null && indexed.equals(new ItemStack(item, 1, durability))) return true;
+                } catch (NumberFormatException ignored) {
+                }
+            } else if (parts.length == 3) {
                 try {
                     int item = Integer.parseInt(parts[1]);
                     short durability = Short.parseShort(parts[2]);
