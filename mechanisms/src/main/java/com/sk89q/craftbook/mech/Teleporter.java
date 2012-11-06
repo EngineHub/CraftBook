@@ -23,6 +23,8 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
+import java.util.regex.Pattern;
+
 /**
  * Teleporter Mechanism. Based off Elevator
  *
@@ -197,10 +199,10 @@ public class Teleporter extends AbstractMechanic {
 
         // Teleport!
         Location subspaceRift = player.getPosition();
-        subspaceRift = subspaceRift.setPosition(new Vector(floor.getX(), floor.getY() + 1, floor.getZ()));
+        subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 1, floor.getZ() + 0.5));
         if (player.isInsideVehicle()) {
             subspaceRift = player.getVehicle().getLocation();
-            subspaceRift = subspaceRift.setPosition(new Vector(floor.getX(), floor.getY() + 2, floor.getZ()));
+            subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 2, floor.getZ() + 0.5));
             player.getVehicle().teleport(subspaceRift);
         }
         if (plugin.getLocalConfiguration().teleporterSettings.maxrange > 0 && subspaceRift.getPosition().distanceSq

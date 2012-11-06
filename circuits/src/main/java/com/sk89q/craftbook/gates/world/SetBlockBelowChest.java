@@ -3,6 +3,7 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
@@ -93,25 +94,24 @@ public class SetBlockBelowChest extends AbstractIC {
     public boolean takeFromChest(int x, int y, int z, int id, byte data) {
 
         boolean ret = false;
-        Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
+        Block bl = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(x, y, z);
         if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
             ItemStack[] is = c.getInventory().getContents();
             for (int i = 0; i < is.length; i++) {
-                if (is[i] == null) {
+                final ItemStack stack = is[i];
+                if (stack == null) {
                     continue;
                 }
-                if (is[i].getAmount() > 0 && is[i].getTypeId() == id) {
+                if (stack.getAmount() > 0 && stack.getTypeId() == id) {
                     if (data != -1)
-                        if (!(is[i].getData().getData() == data)) {
+                        if (!(stack.getData().getData() == data)) {
                             continue;
                         }
-                    ItemStack stack = is[i];
-                    BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(new Location(BukkitUtil.toSign(getSign()).getWorld(), x, y, z), stack);
-                    if (is[i].getAmount() == 1) {
+                    if (stack.getAmount() == 1) {
                         is[i] = new ItemStack(0, 0);
                     } else {
-                        is[i].setAmount(is[i].getAmount() - 1);
+                        stack.setAmount(stack.getAmount() - 1);
                     }
                     ret = true;
                     break;
