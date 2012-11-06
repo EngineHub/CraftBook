@@ -43,9 +43,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     /**
      * Construct a cooking pot for a location.
-     *
-     * @param pt
-     * @param plugin
      */
     public CookingPot(BlockWorldVector pt, MechanismsPlugin plugin) {
 
@@ -132,7 +129,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             try {
                 lastTick = Integer.parseInt(sign.getLine(2));
             } catch (Exception e) {
-                sign.setLine(2, lastTick + "");
+                sign.setLine(2, String.valueOf(lastTick));
                 sign.update();
             }
             oldTick = lastTick;
@@ -168,7 +165,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 }
             }
             if (lastTick != oldTick) {
-                sign.setLine(2, lastTick + "");
+                sign.setLine(2, String.valueOf(lastTick));
                 sign.update();
             }
         }
@@ -230,7 +227,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if (amount < 1 && !plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
             amount = 1;
         }
-        sign.setLine(3, amount + "");
+        sign.setLine(3, String.valueOf(amount));
         sign.update();
     }
 
@@ -246,10 +243,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     public int getMultiplier(Sign sign) {
 
-        int multiplier = 1;
-        if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
-            multiplier = 0;
-        }
+        int multiplier;
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
         } catch (Exception e) {
