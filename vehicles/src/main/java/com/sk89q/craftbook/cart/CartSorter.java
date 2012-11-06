@@ -13,6 +13,7 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -21,6 +22,12 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 
 public class CartSorter extends CartMechanism {
+
+    private static VehiclesPlugin plugin;
+
+    public CartSorter(VehiclesPlugin plugin){
+        CartSorter.plugin = plugin;
+    }
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -98,7 +105,7 @@ public class CartSorter extends CartMechanism {
             default:
                 //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
                 return;
-        }
+       }
         Block targetTrack = blocks.rail.getRelative(next);
 
         // now check sanity real quick that there's actually a track after this,
@@ -113,7 +120,6 @@ public class CartSorter extends CartMechanism {
     }
 
     public static boolean isSortApplicable(String line, Minecart minecart) {
-
         if (line.equalsIgnoreCase("All")) return true;
         Entity test = minecart.getPassenger();
         Player player = null;
@@ -187,6 +193,12 @@ public class CartSorter extends CartMechanism {
                     if (storageInventory.contains(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }
+            }
+        }if(line.startsWith("#")){
+            if(player!=null){
+                String stationName = line;
+                String selectedStation = plugin.getStation(player.getName());
+                return stationName.equalsIgnoreCase("#" + selectedStation);
             }
         }
 

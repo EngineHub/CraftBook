@@ -18,6 +18,9 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -48,6 +51,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
 import com.sk89q.craftbook.bukkit.Metrics.Graph;
+import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -62,8 +66,12 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     private VehiclesConfiguration config;
     private MinecartManager cartman;
 
+    private Map<String,String> stationSelection;
+    
     @Override
     public void onEnable() {
+        
+        stationSelection = new HashMap<String,String>();
 
         super.onEnable();
 
@@ -79,7 +87,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         registerEvents();
 
         languageManager = new LanguageManager(this);
-
+        
+        registerCommand(VehicleCommands.class);
+        
         try {
             Metrics metrics = new Metrics(this);
 
@@ -332,6 +342,26 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         config = new VehiclesConfiguration(getConfig(), getDataFolder());
         saveConfig();
     }
+    
+    /**
+     * Sets a player's station, used by sorter mechanism
+     * @param player Player name to set station for
+     * @param station station name to set
+     */
+    public void setStation(String player,String station){
+        stationSelection.put(player,station);
+    }
+    
+    /**
+     * Get the station a player has chosen
+     * @param player player name to get station for
+     * @return name of station, or null if not set
+     */
+    public String getStation(String player){
+        return stationSelection.get(player);
+    }
+    
+    
 
     class Decay implements Runnable {
 

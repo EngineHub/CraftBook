@@ -39,7 +39,7 @@ public class MinecartManager {
         if(cfg.matReverse > 0)
             mechanisms.put(cfg.matReverse, new CartReverser());
         if(cfg.matSorter > 0)
-            mechanisms.put(cfg.matSorter, new CartSorter());
+            mechanisms.put(cfg.matSorter, new CartSorter(plugin));
         if(cfg.matStation > 0)
             mechanisms.put(cfg.matStation, new CartStation());
         if(cfg.matEjector > 0)
@@ -52,6 +52,7 @@ public class MinecartManager {
             mechanisms.put(cfg.matDispenser, new CartDispenser());
         if(cfg.matMessager > 0)
             mechanisms.put(cfg.matMessager, new CartMessager(plugin));
+        
         for (Map.Entry<Integer, CartMechanism> ent : mechanisms.entrySet()) {
             ent.getValue().setMaterial(ent.getKey());
         }
