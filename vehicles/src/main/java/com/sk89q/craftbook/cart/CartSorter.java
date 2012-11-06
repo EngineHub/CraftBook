@@ -56,50 +56,50 @@ public class CartSorter extends CartMechanism {
         switch (next) {
             case WEST:
                 switch (dir) {
-                case LEFT:
-                    trackData = 9;
-                    break;
-                case RIGHT:
-                    trackData = 8;
-                    break;
-                default:
-                    trackData = 0;
+                    case LEFT:
+                        trackData = 9;
+                        break;
+                    case RIGHT:
+                        trackData = 8;
+                        break;
+                    default:
+                        trackData = 0;
                 }
                 break;
             case EAST:
                 switch (dir) {
-                case LEFT:
-                    trackData = 7;
-                    break;
-                case RIGHT:
-                    trackData = 6;
-                    break;
-                default:
-                    trackData = 0;
+                    case LEFT:
+                        trackData = 7;
+                        break;
+                    case RIGHT:
+                        trackData = 6;
+                        break;
+                    default:
+                        trackData = 0;
                 }
                 break;
             case NORTH:
                 switch (dir) {
-                case LEFT:
-                    trackData = 6;
-                    break;
-                case RIGHT:
-                    trackData = 9;
-                    break;
-                default:
-                    trackData = 1;
+                    case LEFT:
+                        trackData = 6;
+                        break;
+                    case RIGHT:
+                        trackData = 9;
+                        break;
+                    default:
+                        trackData = 1;
                 }
                 break;
             case SOUTH:
                 switch (dir) {
-                case LEFT:
-                    trackData = 8;
-                    break;
-                case RIGHT:
-                    trackData = 7;
-                    break;
-                default:
-                    trackData = 1;
+                    case LEFT:
+                        trackData = 8;
+                        break;
+                    case RIGHT:
+                        trackData = 7;
+                        break;
+                    default:
+                        trackData = 1;
                 }
                 break;
             default:
