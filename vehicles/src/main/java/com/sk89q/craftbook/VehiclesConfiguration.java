@@ -87,8 +87,8 @@ public class VehiclesConfiguration extends BaseConfiguration {
     public Integer matSorter;
     public Integer matEjector;
     public Integer matDeposit;
-    public Integer matLift;
     public Integer matTeleport;
+    public Integer matLift;
     public Integer matDispenser;
     public Integer matMessager;
 

@@ -1,33 +1,20 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /*
  * @contributor LordEnki
  */
 
 public class CartSorter extends CartMechanism {
-
-    private static VehiclesPlugin plugin;
-
-    public CartSorter(VehiclesPlugin plugin){
-        CartSorter.plugin = plugin;
-    }
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -194,11 +181,11 @@ public class CartSorter extends CartMechanism {
                 } catch (NumberFormatException ignored) {
                 }
             }
-        }if(line.startsWith("#")){
-            if(player!=null){
-                String stationName = line;
-                String selectedStation = plugin.getStation(player.getName());
-                return stationName.equalsIgnoreCase("#" + selectedStation);
+        }
+        if (line.startsWith("#")) {
+            if (player != null){
+                String selectedStation = VehiclesPlugin.getInstance().getStation(player.getName());
+                return line.equalsIgnoreCase("#" + selectedStation);
             }
         }
 

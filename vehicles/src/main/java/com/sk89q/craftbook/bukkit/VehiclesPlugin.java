@@ -18,43 +18,29 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.Metrics.Graph;
+import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
+import com.sk89q.craftbook.cart.CartMechanism;
+import com.sk89q.craftbook.cart.MinecartManager;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.event.vehicle.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.Metrics.Graph;
-import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
-import com.sk89q.craftbook.cart.CartMechanism;
-import com.sk89q.craftbook.cart.MinecartManager;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Plugin for CraftBook's redstone additions.
@@ -63,6 +49,7 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class VehiclesPlugin extends BaseBukkitPlugin {
 
+    private static VehiclesPlugin instance;
     private VehiclesConfiguration config;
     private MinecartManager cartman;
 
@@ -70,7 +57,9 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
     
     @Override
     public void onEnable() {
-        
+
+        instance = this;
+
         stationSelection = new HashMap<String,String>();
 
         super.onEnable();
@@ -123,6 +112,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         return config;
     }
 
+    public static VehiclesPlugin getInstance() {
+
+        return instance;
+    }
 
     /**
      * Preprocesses event data coming directly from bukkit and passes it off to
@@ -348,7 +341,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      * @param player Player name to set station for
      * @param station station name to set
      */
-    public void setStation(String player,String station){
+    public void setStation(String player, String station){
         stationSelection.put(player,station);
     }
     
@@ -357,7 +350,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
      * @param player player name to get station for
      * @return name of station, or null if not set
      */
-    public String getStation(String player){
+    public String getStation(String player) {
         return stationSelection.get(player);
     }
     
