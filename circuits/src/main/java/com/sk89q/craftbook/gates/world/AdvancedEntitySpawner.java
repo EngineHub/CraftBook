@@ -138,6 +138,11 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
                         if(data[0].equalsIgnoreCase("e"))
                             setEntityData(ent, bit.replace(data[0] + ":", ""));
+                        else if(data[0].equalsIgnoreCase("r")) {
+                            EntityType rider = EntityType.fromName(data[1].trim());
+                            Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), rider);
+                            ent.setPassenger(rid);
+                        }
                         else if(data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
                             for(int a = 1; a < data.length; a++) {
                                 try {
