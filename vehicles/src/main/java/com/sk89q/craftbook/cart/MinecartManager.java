@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
@@ -10,9 +10,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MinecartManager {
 
@@ -28,31 +27,19 @@ public class MinecartManager {
     public void reloadConfiguration(VehiclesConfiguration cfg) {
 
         mechanisms = new HashMap<Integer, CartMechanism>();
-        if(cfg.matBoostMax > 0)
-            mechanisms.put(cfg.matBoostMax, new CartBooster(100));
-        if(cfg.matBoost25x > 0)
-            mechanisms.put(cfg.matBoost25x, new CartBooster(1.25));
-        if(cfg.matSlow20x > 0)
-            mechanisms.put(cfg.matSlow20x, new CartBooster(0.8));
-        if(cfg.matSlow50x > 0)
-            mechanisms.put(cfg.matSlow50x, new CartBooster(0.5));
-        if(cfg.matReverse > 0)
-            mechanisms.put(cfg.matReverse, new CartReverser());
-        if(cfg.matSorter > 0)
-            mechanisms.put(cfg.matSorter, new CartSorter(plugin));
-        if(cfg.matStation > 0)
-            mechanisms.put(cfg.matStation, new CartStation());
-        if(cfg.matEjector > 0)
-            mechanisms.put(cfg.matEjector, new CartEjector());
-        if(cfg.matDeposit > 0)
-            mechanisms.put(cfg.matDeposit, new CartDeposit());
-        if(cfg.matTeleport > 0)
-            mechanisms.put(cfg.matTeleport, new CartTeleporter());
-        if(cfg.matDispenser > 0)
-            mechanisms.put(cfg.matDispenser, new CartDispenser());
-        if(cfg.matMessager > 0)
-            mechanisms.put(cfg.matMessager, new CartMessager(plugin));
-        
+        if (cfg.matBoostMax > 0) mechanisms.put(cfg.matBoostMax, new CartBooster(100));
+        if (cfg.matBoost25x > 0) mechanisms.put(cfg.matBoost25x, new CartBooster(1.25));
+        if (cfg.matSlow20x > 0) mechanisms.put(cfg.matSlow20x, new CartBooster(0.8));
+        if (cfg.matSlow50x > 0) mechanisms.put(cfg.matSlow50x, new CartBooster(0.5));
+        if (cfg.matReverse > 0) mechanisms.put(cfg.matReverse, new CartReverser());
+        if (cfg.matSorter > 0) mechanisms.put(cfg.matSorter, new CartSorter());
+        if (cfg.matStation > 0) mechanisms.put(cfg.matStation, new CartStation());
+        if (cfg.matEjector > 0) mechanisms.put(cfg.matEjector, new CartEjector());
+        if (cfg.matDeposit > 0) mechanisms.put(cfg.matDeposit, new CartDeposit());
+        if (cfg.matTeleport > 0) mechanisms.put(cfg.matTeleport, new CartTeleporter());
+        if (cfg.matLift > 0) mechanisms.put(cfg.matLift, new CartLift());
+        if (cfg.matDispenser > 0) mechanisms.put(cfg.matDispenser, new CartDispenser());
+        if (cfg.matMessager > 0) mechanisms.put(cfg.matMessager, new CartMessager(plugin));
         for (Map.Entry<Integer, CartMechanism> ent : mechanisms.entrySet()) {
             ent.getValue().setMaterial(ent.getKey());
         }

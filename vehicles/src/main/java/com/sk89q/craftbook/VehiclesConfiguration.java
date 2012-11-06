@@ -19,9 +19,9 @@
 package com.sk89q.craftbook;
 
 
-import java.io.File;
-
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -54,6 +54,7 @@ public class VehiclesConfiguration extends BaseConfiguration {
         matEjector = getInt("eject-block", 42);
         matDeposit = getInt("deposit-block", 15);
         matTeleport = getInt("teleport-block", 133);
+        matLift = getInt("lift-block", 112);
         matDispenser = getInt("dispenser-block", 129);
         matMessager = getInt("messager-block", 121);
 
@@ -86,6 +87,7 @@ public class VehiclesConfiguration extends BaseConfiguration {
     public Integer matSorter;
     public Integer matEjector;
     public Integer matDeposit;
+    public Integer matLift;
     public Integer matTeleport;
     public Integer matDispenser;
     public Integer matMessager;
