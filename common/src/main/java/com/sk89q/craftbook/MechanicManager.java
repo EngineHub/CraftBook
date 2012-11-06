@@ -19,17 +19,11 @@
 
 package com.sk89q.craftbook;
 
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -41,11 +35,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
@@ -162,7 +156,7 @@ public class MechanicManager {
         Sign sign = (Sign) state;
 
         try {
-            load(pos, localPlayer, BukkitUtil.toChangedSign(sign));
+            load(pos, localPlayer, BukkitUtil.toChangedSign(sign, event.getLines()));
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 localPlayer.printError(e.getMessage());

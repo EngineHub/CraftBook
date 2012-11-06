@@ -1,33 +1,22 @@
 package com.sk89q.craftbook.bukkit;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.Location;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.entity.BukkitEntity;
 import com.sk89q.worldedit.bukkit.entity.BukkitExpOrb;
 import com.sk89q.worldedit.bukkit.entity.BukkitItem;
 import com.sk89q.worldedit.bukkit.entity.BukkitPainting;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //$Id$
 /*
@@ -55,7 +44,13 @@ public class BukkitUtil {
     }
 
     public static ChangedSign toChangedSign(Sign sign) {
-        return new BukkitChangedSign(sign, sign.getLines());
+
+        return toChangedSign(sign, sign.getLines());
+    }
+
+    public static ChangedSign toChangedSign(Sign sign, String[] lines) {
+
+        return new BukkitChangedSign(sign, lines);
     }
 
     public static Sign toSign(ChangedSign sign) {
