@@ -18,23 +18,14 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.List;
-
-import org.bukkit.Chunk;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.material.MaterialData;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Location;
 
-public class BukkitChangedSign implements ChangedSign, Sign {
+public class BukkitChangedSign implements ChangedSign {
 
     protected final Sign sign;
     protected String[] lines;
@@ -146,70 +137,5 @@ public class BukkitChangedSign implements ChangedSign, Sign {
     @Override
     public void setLines(String[] lines) {
         this.lines = lines;
-    }
-
-    @Override
-    public Chunk getChunk() {
-        return sign.getChunk();
-    }
-
-    @Override
-    public Material getType() {
-        return sign.getType();
-    }
-
-    @Override
-    public void setData(MaterialData arg0) {
-        sign.setData(arg0);
-    }
-
-    @Override
-    public void setType(Material arg0) {
-        sign.setType(arg0);
-    }
-
-    @Override
-    public boolean update() {
-        return sign.update();
-    }
-
-    @Override
-    public List<MetadataValue> getMetadata(String arg0) {
-        return sign.getMetadata(arg0);
-    }
-
-    @Override
-    public boolean hasMetadata(String arg0) {
-        return sign.hasMetadata(arg0);
-    }
-
-    @Override
-    public void removeMetadata(String arg0, Plugin arg1) {
-        sign.removeMetadata(arg0, arg1);
-    }
-
-    @Override
-    public void setMetadata(String arg0, MetadataValue arg1) {
-
-    }
-
-    @Override
-    public Block getBlock() {
-        return sign.getBlock();
-    }
-
-    @Override
-    public MaterialData getData() {
-        return sign.getData();
-    }
-
-    @Override
-    public World getWorld() {
-        return sign.getWorld();
-    }
-
-    @Override
-    public org.bukkit.Location getLocation() {
-        return null;
     }
 }

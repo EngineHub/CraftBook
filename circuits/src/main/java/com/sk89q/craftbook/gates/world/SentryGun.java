@@ -1,13 +1,25 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class SentryGun extends AbstractIC {
 
@@ -46,7 +58,7 @@ public class SentryGun extends AbstractIC {
     private Block center;
     private int radius = 10;
 
-    public SentryGun(Server server, Sign block, ICFactory factory) {
+    public SentryGun(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         load();
@@ -55,7 +67,7 @@ public class SentryGun extends AbstractIC {
     private void load() {
 
         type = Type.fromString(getSign().getLine(2));
-        center = SignUtil.getBackBlock(getSign().getBlock());
+        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         radius = Integer.parseInt(getSign().getLine(3));
     }
 
@@ -107,7 +119,7 @@ public class SentryGun extends AbstractIC {
         for (Entity aEntity : center.getWorld().getEntities())
             if (!aEntity.isDead() && aEntity.isValid() && type.is(aEntity)
                     && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
-                Block signBlock = getSign().getBlock();
+                Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
                 BlockFace face = SignUtil.getBack(signBlock);
                 Block targetDir = signBlock.getRelative(face).getRelative(face);
                 center.getWorld().spawnArrow(targetDir.getLocation(),
@@ -125,13 +137,13 @@ public class SentryGun extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SentryGun(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 String line = sign.getLine(3);

@@ -19,18 +19,25 @@
 package com.sk89q.craftbook.gates.world;
 
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class ArrowShooter extends AbstractIC {
 
-    public ArrowShooter(Server server, Sign sign, ICFactory factory) {
+    public ArrowShooter(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -67,7 +74,7 @@ public class ArrowShooter extends AbstractIC {
             vert = Float.parseFloat(getSign().getLine(3).trim());
         } catch (Exception e) {
             getSign().setLine(2, speed + ":" + spread + ":" + vert);
-            getSign().update();
+            getSign().update(false);
         }
 
         if (speed > 2.0) {
@@ -87,18 +94,18 @@ public class ArrowShooter extends AbstractIC {
         }
 
 
-        Block signBlock = getSign().getBlock();
+        Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
         float x = targetDir.getX() - signBlock.getX();
         float z = targetDir.getZ() - signBlock.getZ();
         Vector velocity = new Vector(x, vert, z);
-        Location shootLoc = new Location(getSign().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
+        Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
                 targetDir.getZ() + 0.5);
 
         for (short i = 0; i < n; i++) {
-            getSign().getWorld().spawnArrow(shootLoc, velocity, speed, spread);
+            BukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, speed, spread);
         }
     }
 
@@ -111,7 +118,7 @@ public class ArrowShooter extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ArrowShooter(getServer(), sign, this);
         }

@@ -1,16 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 /**
  * @author Me4502
  */
 public class CombinationLock extends AbstractIC {
 
-    public CombinationLock(Server server, Sign block, ICFactory factory) {
+    public CombinationLock(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -61,13 +67,13 @@ public class CombinationLock extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new CombinationLock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             if (sign.getLine(2) == null && sign.getLine(2).equals(""))
                 throw new ICVerificationException("Line three needs to be a combination");

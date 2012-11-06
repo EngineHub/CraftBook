@@ -4,10 +4,11 @@ import net.minecraft.server.Packet4UpdateTime;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -22,7 +23,7 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
 
-    public TimeFaker(Server server, Sign sign, ICFactory factory) {
+    public TimeFaker(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -47,7 +48,7 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new TimeFaker(getServer(), sign, this);
         }
@@ -84,15 +85,15 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
     public void think(ChipState chip) {
 
         try {
-            Block b = SignUtil.getBackBlock(getSign().getBlock());
+            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             if (chip.getInput(0)) {
                 int dist = Integer.parseInt(getSign().getLine(2));
                 long time = Long.parseLong(getSign().getLine(3));
                 ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                        ((CraftWorld) getSign().getWorld()).getHandle().dimension, new Packet4UpdateTime(time, time));
+                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet4UpdateTime(time, time));
             }
         } catch (Exception e) {
-            getSign().getBlock().breakNaturally();
+            BukkitUtil.toSign(getSign()).getBlock().breakNaturally();
         }
     }
 }

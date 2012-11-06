@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
@@ -68,7 +69,7 @@ public class Door extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Door detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public Door detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Door Down]")) {
@@ -81,7 +82,7 @@ public class Door extends AbstractMechanic {
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
-                sign.update();
+                sign.update(false);
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 player.checkPermission("craftbook.mech.door");
@@ -93,7 +94,7 @@ public class Door extends AbstractMechanic {
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
-                sign.update();
+                sign.update(false);
                 player.print("mech.door.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Door]")) {
                 player.checkPermission("craftbook.mech.door");
@@ -105,7 +106,7 @@ public class Door extends AbstractMechanic {
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
-                sign.update();
+                sign.update(false);
                 player.print("mech.door.create");
             } else
                 return null;

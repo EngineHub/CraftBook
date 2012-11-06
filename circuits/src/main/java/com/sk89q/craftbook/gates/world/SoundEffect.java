@@ -1,15 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class SoundEffect extends AbstractIC {
 
-    public SoundEffect(Server server, Sign sign, ICFactory factory) {
+    public SoundEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -45,7 +52,7 @@ public class SoundEffect extends AbstractIC {
             } catch (Exception e) {
                 pitch = 0;
             }
-            Block b = SignUtil.getBackBlock(getSign().getBlock());
+            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             String soundName = getSign().getLine(3).trim();
             if (soundName.length() > 0) {
                 b.getWorld().playSound(b.getLocation(), Sound.valueOf(soundName), volume, pitch);
@@ -62,7 +69,7 @@ public class SoundEffect extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SoundEffect(getServer(), sign, this);
         }

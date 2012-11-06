@@ -19,9 +19,9 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 
 /**
@@ -32,10 +32,10 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 public abstract class AbstractIC implements IC {
 
     private final Server server;
-    private final Sign sign;
+    private final ChangedSign sign;
     private final ICFactory factory;
 
-    public AbstractIC(Server server, Sign sign, ICFactory factory) {
+    public AbstractIC(Server server, ChangedSign sign, ICFactory factory) {
 
         this.factory = factory;
         this.server = server;
@@ -47,7 +47,7 @@ public abstract class AbstractIC implements IC {
         return server;
     }
 
-    protected Sign getSign() {
+    protected ChangedSign getSign() {
 
         return sign;
     }

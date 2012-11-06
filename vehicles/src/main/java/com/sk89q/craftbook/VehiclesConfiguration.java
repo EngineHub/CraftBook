@@ -64,6 +64,7 @@ public class VehiclesConfiguration extends BaseConfiguration {
         minecartRemoveEntities = getBoolean("minecart-remove-entities", false);
         minecartRemoveEntitiesOtherCarts = getBoolean("minecart-remove-entities-othercarts", false);
         minecartMaxSpeedModifier = getDouble("minecart-max-speed-modifier", 1);
+        minecartOffRailSpeedModifier = getDouble("minecart-off-rail-speed-modifier", 1);
 
         boatRemoveEntities = getBoolean("boat-remove-entities", false);
         boatNoCrash = getBoolean("boat-no-crash", false);
@@ -94,6 +95,7 @@ public class VehiclesConfiguration extends BaseConfiguration {
     public boolean minecartRemoveEntities;
     public boolean minecartRemoveEntitiesOtherCarts;
     public double minecartMaxSpeedModifier;
+    public double minecartOffRailSpeedModifier;
     public boolean minecartTrackMessages;
     public boolean minecartDecayWhenEmpty;
     public boolean minecartEnterOnImpact;

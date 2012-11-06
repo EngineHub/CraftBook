@@ -21,9 +21,10 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -34,7 +35,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
-    public ItemDispenser(Server server, Sign sign, ICFactory factory) {
+    public ItemDispenser(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -72,20 +73,20 @@ public class ItemDispenser extends AbstractIC {
             if (mat == null) return;
             int id = mat.getId();
             if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
-                Location loc = getSign().getBlock().getLocation();
-                int maxY = Math.min(getSign().getWorld().getMaxHeight(), loc.getBlockY() + 10);
+                Location loc = BukkitUtil.toSign(getSign()).getBlock().getLocation();
+                int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
 
                 for (int y = loc.getBlockY() + 1; y <= maxY; y++)
-                    if (BlockType.canPassThrough(getSign().getWorld()
+                    if (BlockType.canPassThrough(BukkitUtil.toSign(getSign()).getWorld()
                             .getBlockTypeIdAt(x, y, z))) {
 
                         ItemStack stack = new ItemStack(id, amount, data);
                         stack.setDurability(data);
 
-                        getSign().getWorld().dropItemNaturally(
-                                new Location(getSign().getWorld(), x, y, z),
+                        BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(
+                                new Location(BukkitUtil.toSign(getSign()).getWorld(), x, y, z),
                                 stack);
                         return;
                     }
@@ -102,7 +103,7 @@ public class ItemDispenser extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ItemDispenser(getServer(), sign, this);
         }

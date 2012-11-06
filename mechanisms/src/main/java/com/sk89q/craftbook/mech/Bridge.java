@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanismsConfiguration;
@@ -93,7 +94,7 @@ public class Bridge extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Bridge detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public Bridge detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Bridge]")) {

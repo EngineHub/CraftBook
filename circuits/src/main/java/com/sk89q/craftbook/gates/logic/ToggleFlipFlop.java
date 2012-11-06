@@ -19,8 +19,8 @@
 package com.sk89q.craftbook.gates.logic;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -31,7 +31,7 @@ public class ToggleFlipFlop extends AbstractIC {
 
     protected final boolean risingEdge;
 
-    public ToggleFlipFlop(Server server, Sign sign, boolean risingEdge, ICFactory factory) {
+    public ToggleFlipFlop(Server server, ChangedSign sign, boolean risingEdge, ICFactory factory) {
 
         super(server, sign, factory);
         this.risingEdge = risingEdge;
@@ -69,7 +69,7 @@ public class ToggleFlipFlop extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ToggleFlipFlop(getServer(), sign, risingEdge, this);
         }

@@ -1,15 +1,20 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
  */
 public class LowPulser extends Pulser {
 
-    public LowPulser(Server server, Sign block, ICFactory factory) {
+    public LowPulser(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -40,7 +45,7 @@ public class LowPulser extends Pulser {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new LowPulser(getServer(), sign, this);
         }

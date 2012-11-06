@@ -18,8 +18,8 @@
 
 package com.sk89q.craftbook.ic;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.worldedit.BlockWorldVector;
-import org.bukkit.block.Sign;
 
 /**
  * IC families handle the logic required in figuring out where pins are
@@ -39,18 +39,18 @@ public interface ICFamily {
      *
      * @return
      */
-    public ChipState detect(BlockWorldVector source, Sign sign);
+    public ChipState detect(BlockWorldVector source, ChangedSign sign);
 
-	/**
-	 * Return a {@link ChipState} that provides an interface to access
-	 * the I/O pins.
-	 *
-	 * @param source
-	 * @param sign
-	 *
-	 * @return
-	 */
-	public ChipState detectSelfTriggered(BlockWorldVector source, Sign sign);
+    /**
+     * Return a {@link ChipState} that provides an interface to access
+     * the I/O pins.
+     *
+     * @param source
+     * @param sign
+     *
+     * @return
+     */
+    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign);
 
     /**
      * Gets the sign modifier of the family. In case of the base ic thats MC.

@@ -1,19 +1,26 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
 
 /**
  * @author Me4502
  */
 public class PlayerDetection extends AbstractIC {
 
-    public PlayerDetection(Server server, Sign block, ICFactory factory) {
+    public PlayerDetection(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -42,7 +49,7 @@ public class PlayerDetection extends AbstractIC {
     protected boolean isDetected() {
 
         int radius = 10; //Default Radius
-        Location location = getSign().getLocation();
+        Location location = BukkitUtil.toSign(getSign()).getLocation();
         try {
             radius = Integer.parseInt(getSign().getLine(2).split("=")[0]);
             if (getSign().getLine(2).contains("=")) {
@@ -58,7 +65,7 @@ public class PlayerDetection extends AbstractIC {
 
         for (Player e : getServer().getOnlinePlayers()) {
             if (e == null || !e.isValid()
-                    || !LocationUtil.isWithinRadius(getSign().getLocation(), e.getLocation(), radius)) {
+                    || !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(), e.getLocation(), radius)) {
                 continue;
             }
 
@@ -85,7 +92,7 @@ public class PlayerDetection extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new PlayerDetection(getServer(), sign, this);
         }

@@ -18,15 +18,16 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class Random3Bit extends RandomBit {
 
-    public Random3Bit(Server server, Sign sign, ICFactory factory) {
+    public Random3Bit(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -52,7 +53,7 @@ public class Random3Bit extends RandomBit {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Random3Bit(getServer(), sign, this);
         }

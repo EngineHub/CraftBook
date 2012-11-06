@@ -3,8 +3,9 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -19,7 +20,7 @@ public class FlameThrower extends AbstractIC {
 
     int distance = 5;
 
-    public FlameThrower(Server server, Sign sign, ICFactory factory) {
+    public FlameThrower(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
         load();
@@ -53,8 +54,8 @@ public class FlameThrower extends AbstractIC {
 
     public void sendFlames(boolean make) {
 
-        BlockFace direction = SignUtil.getBack(getSign().getBlock());
-        Block fire = getSign().getBlock().getRelative(direction).getRelative(direction);
+        BlockFace direction = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+        Block fire = BukkitUtil.toSign(getSign()).getBlock().getRelative(direction).getRelative(direction);
         for (int i = 0; i < distance; i++) {
             if (make) {
                 if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {
@@ -76,7 +77,7 @@ public class FlameThrower extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new FlameThrower(getServer(), sign, this);
         }
@@ -88,7 +89,7 @@ public class FlameThrower extends AbstractIC {
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 int distance = Integer.parseInt(sign.getLine(2));

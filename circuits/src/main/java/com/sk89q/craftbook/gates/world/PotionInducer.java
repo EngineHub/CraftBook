@@ -1,18 +1,27 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
  */
 public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
 
-    public PotionInducer(Server server, Sign sign, ICFactory factory) {
+    public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -44,7 +53,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
     public void think(ChipState state) {
 
         if (state.getInput(0)) {
-            for (Player p : getSign().getWorld().getPlayers()) {
+            for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
                 int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
                 try {
                     effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
@@ -53,7 +62,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
                     radius = Integer.parseInt(getSign().getLine(3));
                 } catch (Exception ignored) {
                 }
-                if (p.getLocation().distanceSquared(getSign().getLocation()) > radius * radius) {
+                if (p.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius) {
                     continue;
                 }
                 p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
@@ -70,13 +79,13 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new PotionInducer(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 int effectId = Integer.parseInt(sign.getLine(2).split(":")[0]);

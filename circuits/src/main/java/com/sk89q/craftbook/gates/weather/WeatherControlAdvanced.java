@@ -1,13 +1,19 @@
 package com.sk89q.craftbook.gates.weather;
 
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class WeatherControlAdvanced extends AbstractIC {
 
-    public WeatherControlAdvanced(Server server, Sign sign, ICFactory factory) {
+    public WeatherControlAdvanced(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -51,13 +57,13 @@ public class WeatherControlAdvanced extends AbstractIC {
 
         if (chip.isTriggered(0) && chip.getInput(0)) {
 
-            getSign().getWorld().setStorm(chip.getInput(1));
+            BukkitUtil.toSign(getSign()).getWorld().setStorm(chip.getInput(1));
             if (chip.getInput(1)) {
-                getSign().getWorld().setWeatherDuration(duration);
+                BukkitUtil.toSign(getSign()).getWorld().setWeatherDuration(duration);
             }
-            getSign().getWorld().setThundering(chip.getInput(2));
+            BukkitUtil.toSign(getSign()).getWorld().setThundering(chip.getInput(2));
             if (chip.getInput(2)) {
-                getSign().getWorld().setThunderDuration(thunderDuration);
+                BukkitUtil.toSign(getSign()).getWorld().setThunderDuration(thunderDuration);
             }
         }
     }
@@ -71,7 +77,7 @@ public class WeatherControlAdvanced extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new WeatherControlAdvanced(getServer(), sign, this);
         }

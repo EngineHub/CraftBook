@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -14,7 +14,7 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
  */
 public class PlayerDetectionST extends PlayerDetection implements SelfTriggeredIC {
 
-    public PlayerDetectionST(Server server, Sign block, ICFactory factory) {
+    public PlayerDetectionST(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -51,7 +51,7 @@ public class PlayerDetectionST extends PlayerDetection implements SelfTriggeredI
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new PlayerDetectionST(getServer(), sign, this);
         }

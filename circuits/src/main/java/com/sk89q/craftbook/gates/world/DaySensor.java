@@ -18,13 +18,19 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class DaySensor extends AbstractIC {
 
-    public DaySensor(Server server, Sign sign, ICFactory factory) {
+    public DaySensor(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -70,7 +76,7 @@ public class DaySensor extends AbstractIC {
             } catch (Exception ignored) {
             }
         }
-        long time = getSign().getBlock().getWorld().getTime() % 24000;
+        long time = BukkitUtil.toSign(getSign()).getWorld().getTime() % 24000;
         if (time < 0) {
             time += 24000;
         }
@@ -89,7 +95,7 @@ public class DaySensor extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new DaySensor(getServer(), sign, this);
         }

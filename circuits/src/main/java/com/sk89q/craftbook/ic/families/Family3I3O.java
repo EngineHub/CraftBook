@@ -18,14 +18,16 @@
 
 package com.sk89q.craftbook.ic.families;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractChipState;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the triple-input triple-output family.
@@ -35,42 +37,42 @@ import org.bukkit.block.Sign;
 public class Family3I3O extends AbstractICFamily {
 
     @Override
-    public ChipState detect(BlockWorldVector source, Sign sign) {
+    public ChipState detect(BlockWorldVector source, ChangedSign sign) {
 
         return new ChipState3I3O(source, sign);
     }
 
-	@Override
-	public ChipState detectSelfTriggered(BlockWorldVector source, Sign sign) {
+    @Override
+    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign) {
 
-		return new ChipState3I3O(source, sign, true);
-	}
+        return new ChipState3I3O(source, sign, true);
+    }
 
-	public static class ChipState3I3O extends AbstractChipState {
+    public static class ChipState3I3O extends AbstractChipState {
 
-        public ChipState3I3O(BlockWorldVector source, Sign sign) {
+        public ChipState3I3O(BlockWorldVector source, ChangedSign sign) {
 
             super(source, sign, false);
         }
 
-		public ChipState3I3O(BlockWorldVector source,Sign sign, boolean selfTriggered) {
+        public ChipState3I3O(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
 
-			super(source, sign, selfTriggered);
-		}
+            super(source, sign, selfTriggered);
+        }
 
-		@Override
+        @Override
         protected Block getBlock(int pin) {
 
-            BlockFace fback = SignUtil.getBack(sign.getBlock());
-            Block backBlock = SignUtil.getBackBlock(sign.getBlock()).getRelative(fback);
+            BlockFace fback = SignUtil.getBack(BukkitUtil.toSign(sign).getBlock());
+            Block backBlock = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()).getRelative(fback);
 
             switch (pin) {
                 case 0:
-                    return SignUtil.getFrontBlock(sign.getBlock());
+                    return SignUtil.getFrontBlock(BukkitUtil.toSign(sign).getBlock());
                 case 1:
-                    return SignUtil.getLeftBlock(sign.getBlock());
+                    return SignUtil.getLeftBlock(BukkitUtil.toSign(sign).getBlock());
                 case 2:
-                    return SignUtil.getRightBlock(sign.getBlock());
+                    return SignUtil.getRightBlock(BukkitUtil.toSign(sign).getBlock());
                 case 3:
                     return backBlock.getRelative(fback);
                 case 4:

@@ -31,11 +31,11 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this
@@ -82,7 +82,7 @@ public class ICMechanic extends PersistentMechanic {
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
                     ChipState chipState = family.detect(
-                            BukkitUtil.toWorldVector(source), (Sign) state);
+                            BukkitUtil.toWorldVector(source), BukkitUtil.toChangedSign((Sign) state));
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
                         if (chipState.isTriggered(i)) {

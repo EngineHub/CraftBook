@@ -18,14 +18,16 @@
 
 package com.sk89q.craftbook.ic.families;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractChipState;
 import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
 /**
  * Handles detection for the single input single output family.
@@ -35,34 +37,34 @@ import org.bukkit.block.Sign;
 public class FamilySI3O extends AbstractICFamily {
 
     @Override
-    public ChipState detect(BlockWorldVector source, Sign sign) {
+    public ChipState detect(BlockWorldVector source, ChangedSign sign) {
 
         return new ChipStateSI3O(source, sign);
     }
 
-	@Override
-	public ChipState detectSelfTriggered(BlockWorldVector source, Sign sign) {
+    @Override
+    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign) {
 
-		return new ChipStateSI3O(source, sign, true);
-	}
+        return new ChipStateSI3O(source, sign, true);
+    }
 
 
-	public static class ChipStateSI3O extends AbstractChipState {
+    public static class ChipStateSI3O extends AbstractChipState {
 
-        public ChipStateSI3O(BlockWorldVector source, Sign sign) {
+        public ChipStateSI3O(BlockWorldVector source, ChangedSign sign) {
 
             super(source, sign, false);
         }
 
-	    public ChipStateSI3O(BlockWorldVector source, Sign sign, boolean selfTriggered) {
+        public ChipStateSI3O(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
 
-		    super(source, sign, selfTriggered);
-	    }
+            super(source, sign, selfTriggered);
+        }
 
-	    @Override
+        @Override
         protected Block getBlock(int pin) {
 
-            Block bsign = sign.getBlock();
+            Block bsign = BukkitUtil.toSign(sign).getBlock();
             BlockFace fback = SignUtil.getBack(bsign);
 
             switch (pin) {

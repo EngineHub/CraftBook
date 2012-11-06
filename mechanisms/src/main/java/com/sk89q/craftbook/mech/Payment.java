@@ -13,6 +13,7 @@ import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
@@ -177,7 +178,7 @@ public class Payment extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Payment detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public Payment detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Pay]")) {

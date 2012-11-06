@@ -18,19 +18,24 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
-    final Sign sign;
     //"Temp docs": nn:[HL] nn - time for pulse (1 = 2t) H: trigger on high 	L: trigger on low
 
-    public Monostable(Server server, Sign psign, ICFactory factory) {
+    public Monostable(Server server, ChangedSign psign, ICFactory factory) {
 
         super(server, psign, factory);
-        sign = psign;
     }
 
     @Override
@@ -48,14 +53,13 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        String setting = sign.getLine(2).toUpperCase();
+        String setting = getSign().getLine(2).toUpperCase();
         if (chip.getInput(0) && setting.contains("H") || !chip.getInput(0) && setting.contains("L")) {
             //Trigger condition!
             if (setting.indexOf(":") <= 0) return;
 
             chip.setOutput(0, true);
-            sign.setLine(3, setting.substring(0, setting.indexOf(":")));
-            sign.update();
+            getSign().setLine(3, setting.substring(0, setting.indexOf(":")));
         }
 
     }
@@ -66,7 +70,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
         int tick;
 
         try {
-            tick = Integer.parseInt(sign.getLine(3));
+            tick = Integer.parseInt(getSign().getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
         }
@@ -77,8 +81,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
             tick--;
         }
 
-        sign.setLine(3, Integer.toString(tick));
-        sign.update();
+        getSign().setLine(3, Integer.toString(tick));
     }
 
     @Override
@@ -95,13 +98,13 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Monostable(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             int ticks;
             boolean hi;
@@ -132,7 +135,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
             sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
             sign.setLine(3, "0");
-            sign.update();
+            sign.update(false);
         }
     }
 

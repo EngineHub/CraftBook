@@ -6,7 +6,6 @@ import com.sk89q.worldedit.Location;
 
 public interface ChangedSign {
 
-
     //Location
     public int getX();
 

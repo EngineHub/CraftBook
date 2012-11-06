@@ -11,10 +11,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -112,11 +113,11 @@ public final class LocationUtil {
         return block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
     }
 
-    public static Block getRelativeOffset(Sign sign, int offsetX, int offsetY, int offsetZ) {
+    public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
 
         return getRelativeOffset(
-                SignUtil.getBackBlock(sign.getBlock()),
-                SignUtil.getFacing(sign.getBlock()),
+                SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()),
+                SignUtil.getFacing(BukkitUtil.toSign(sign).getBlock()),
                 offsetX,
                 offsetY,
                 offsetZ);

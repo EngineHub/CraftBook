@@ -19,8 +19,8 @@
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
@@ -31,13 +31,10 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
 
     protected final String band;
 
-    protected final Sign iSign;
-
-    public WirelessReceiverST(Server server, Sign sign, ICFactory factory) {
+    public WirelessReceiverST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
 
-        iSign = sign;
         if (sign != null) {
             band = sign.getLine(2);
         } else {
@@ -75,7 +72,7 @@ public class WirelessReceiverST extends AbstractIC implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new WirelessReceiverST(getServer(), sign, this);
         }

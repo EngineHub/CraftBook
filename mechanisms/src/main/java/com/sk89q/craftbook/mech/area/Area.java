@@ -1,11 +1,9 @@
 package com.sk89q.craftbook.mech.area;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.data.DataException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
+
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -14,9 +12,18 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.data.DataException;
 
 /**
  * Area.
@@ -41,7 +48,7 @@ public class Area extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Area detect(BlockWorldVector pt, LocalPlayer player, Sign sign)
+        public Area detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!plugin.getLocalConfiguration().areaSettings.enable) return null;
@@ -59,7 +66,7 @@ public class Area extends AbstractMechanic {
                     player.checkPermission("craftbook.mech.area.sign.savearea");
                     sign.setLine(1, "[SaveArea]");
                 }
-                sign.update();
+                sign.update(false);
                 // check if the namespace and area exists
                 isValidArea(sign);
                 player.print("Toggle area created.");
@@ -90,9 +97,9 @@ public class Area extends AbstractMechanic {
             if (SignUtil.isSign(block.getTypeId())) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
-                    Sign sign = (Sign) state;
+                    ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
                     if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-                        sign.update();
+                        sign.update(false);
                         // check if the namespace and area exists
                         isValidArea(sign);
                         boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
@@ -103,7 +110,7 @@ public class Area extends AbstractMechanic {
             return null;
         }
 
-        private void isValidArea(Sign sign) throws InvalidMechanismException {
+        private void isValidArea(ChangedSign sign) throws InvalidMechanismException {
 
             String namespace = sign.getLine(0).trim();
             String areaOn = sign.getLine(2).trim();

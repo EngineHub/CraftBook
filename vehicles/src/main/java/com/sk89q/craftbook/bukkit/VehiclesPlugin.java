@@ -88,7 +88,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
         languageManager = new LanguageManager(this);
         
-        //registerCommand(VehicleCommands.class);
+        registerCommand(VehicleCommands.class);
         
         try {
             Metrics metrics = new Metrics(this);
@@ -190,6 +190,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             VehiclesConfiguration config = getLocalConfiguration();
             Minecart minecart = (Minecart) vehicle;
             minecart.setSlowWhenEmpty(config.minecartSlowWhenEmpty);
+            minecart.setDerailedVelocityMod(new Vector(config.minecartOffRailSpeedModifier,config.minecartOffRailSpeedModifier,config.minecartOffRailSpeedModifier));
             minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
         }
 

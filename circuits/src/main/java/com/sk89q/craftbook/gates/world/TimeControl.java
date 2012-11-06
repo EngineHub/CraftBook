@@ -18,13 +18,20 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeControl extends AbstractIC {
 
-    public TimeControl(Server server, Sign sign, ICFactory factory) {
+    public TimeControl(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -50,7 +57,7 @@ public class TimeControl extends AbstractIC {
         } else {
             time = 13000L;
         }
-        getSign().getWorld().setTime(time);
+        BukkitUtil.toSign(getSign()).getWorld().setTime(time);
 
         chip.setOutput(0, chip.getInput(0));
     }
@@ -63,7 +70,7 @@ public class TimeControl extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new TimeControl(getServer(), sign, this);
         }

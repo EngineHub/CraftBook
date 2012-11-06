@@ -1,13 +1,19 @@
 package com.sk89q.craftbook.gates.weather;
 
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class RainSensor extends AbstractIC {
 
-    public RainSensor(Server server, Sign sign, ICFactory factory) {
+    public RainSensor(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -28,7 +34,7 @@ public class RainSensor extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, getSign().getWorld().hasStorm());
+            chip.setOutput(0, BukkitUtil.toSign(getSign()).getWorld().hasStorm());
         }
     }
 
@@ -41,7 +47,7 @@ public class RainSensor extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new RainSensor(getServer(), sign, this);
         }

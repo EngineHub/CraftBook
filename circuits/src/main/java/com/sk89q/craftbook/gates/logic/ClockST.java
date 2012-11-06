@@ -18,18 +18,21 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class ClockST extends Clock implements SelfTriggeredIC {
 
-    final Sign sign;
-
-    public ClockST(Server server, Sign psign, ICFactory factory) {
+    public ClockST(Server server, ChangedSign psign, ICFactory factory) {
 
         super(server, psign, factory);
-        sign = psign;
     }
 
     @Override
@@ -69,13 +72,13 @@ public class ClockST extends Clock implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ClockST(getServer(), sign, this);
         }
 
         @Override
-        public void verify(Sign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             int lol;
             try {
@@ -89,7 +92,7 @@ public class ClockST extends Clock implements SelfTriggeredIC {
 
             sign.setLine(2, Integer.toString(lol));
             sign.setLine(3, "0");
-            sign.update();
+            sign.update(false);
         }
 
         @Override

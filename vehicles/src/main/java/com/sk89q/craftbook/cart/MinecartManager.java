@@ -28,18 +28,31 @@ public class MinecartManager {
     public void reloadConfiguration(VehiclesConfiguration cfg) {
 
         mechanisms = new HashMap<Integer, CartMechanism>();
-        mechanisms.put(cfg.matBoostMax, new CartBooster(100));
-        mechanisms.put(cfg.matBoost25x, new CartBooster(1.25));
-        mechanisms.put(cfg.matSlow20x, new CartBooster(0.8));
-        mechanisms.put(cfg.matSlow50x, new CartBooster(0.5));
-        mechanisms.put(cfg.matReverse, new CartReverser());
-        mechanisms.put(cfg.matSorter, new CartSorter(plugin));
-        mechanisms.put(cfg.matStation, new CartStation());
-        mechanisms.put(cfg.matEjector, new CartEjector());
-        mechanisms.put(cfg.matDeposit, new CartDeposit());
-        mechanisms.put(cfg.matTeleport, new CartTeleporter());
-        mechanisms.put(cfg.matDispenser, new CartDispenser());
-        mechanisms.put(cfg.matMessager, new CartMessager(plugin));
+        if(cfg.matBoostMax > 0)
+            mechanisms.put(cfg.matBoostMax, new CartBooster(100));
+        if(cfg.matBoost25x > 0)
+            mechanisms.put(cfg.matBoost25x, new CartBooster(1.25));
+        if(cfg.matSlow20x > 0)
+            mechanisms.put(cfg.matSlow20x, new CartBooster(0.8));
+        if(cfg.matSlow50x > 0)
+            mechanisms.put(cfg.matSlow50x, new CartBooster(0.5));
+        if(cfg.matReverse > 0)
+            mechanisms.put(cfg.matReverse, new CartReverser());
+        if(cfg.matSorter > 0)
+            mechanisms.put(cfg.matSorter, new CartSorter(plugin));
+        if(cfg.matStation > 0)
+            mechanisms.put(cfg.matStation, new CartStation());
+        if(cfg.matEjector > 0)
+            mechanisms.put(cfg.matEjector, new CartEjector());
+        if(cfg.matDeposit > 0)
+            mechanisms.put(cfg.matDeposit, new CartDeposit());
+        if(cfg.matTeleport > 0)
+            mechanisms.put(cfg.matTeleport, new CartTeleporter());
+        if(cfg.matDispenser > 0)
+            mechanisms.put(cfg.matDispenser, new CartDispenser());
+        if(cfg.matMessager > 0)
+            mechanisms.put(cfg.matMessager, new CartMessager(plugin));
+        
         for (Map.Entry<Integer, CartMechanism> ent : mechanisms.entrySet()) {
             ent.getValue().setMaterial(ent.getKey());
         }
@@ -70,7 +83,7 @@ public class MinecartManager {
         try {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getVehicle().getLocation().getBlock());
             cmb.setFromBlock(event.getVehicle().getLocation().getBlock()); // WAI
-            CartMechanism thingy = mechanisms.get(cmb.base.getType());
+            CartMechanism thingy = mechanisms.get(cmb.base.getTypeId());
             if (thingy != null) {
                 Location to = event.getVehicle().getLocation();
                 Location from = event.getEntered().getLocation();
@@ -110,7 +123,7 @@ public class MinecartManager {
 
             try {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(huh);
-                CartMechanism thingy = mechanisms.get(cmb.base.getType());
+                CartMechanism thingy = mechanisms.get(cmb.base.getTypeId());
                 if (thingy != null) {
                     thingy.impact(CartMechanism.getCart(cmb.rail), cmb, false);
                 }

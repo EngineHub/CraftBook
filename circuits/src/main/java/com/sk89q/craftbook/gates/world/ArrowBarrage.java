@@ -19,13 +19,18 @@
 package com.sk89q.craftbook.gates.world;
 
 
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class ArrowBarrage extends ArrowShooter {
 
-    public ArrowBarrage(Server server, Sign sign, ICFactory factory) {
+    public ArrowBarrage(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -59,7 +64,7 @@ public class ArrowBarrage extends ArrowShooter {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ArrowBarrage(getServer(), sign, this);
         }

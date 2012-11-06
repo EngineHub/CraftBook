@@ -1,15 +1,16 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
-import org.bukkit.block.Sign;
 
 public class BlockBreakerST extends BlockBreaker implements SelfTriggeredIC {
 
-    public BlockBreakerST(Server server, Sign block, boolean above, ICFactory factory) {
+    public BlockBreakerST(Server server, ChangedSign block, boolean above, ICFactory factory) {
 
         super(server, block, above, factory);
     }
@@ -46,7 +47,7 @@ public class BlockBreakerST extends BlockBreaker implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BlockBreakerST(getServer(), sign, above, this);
         }

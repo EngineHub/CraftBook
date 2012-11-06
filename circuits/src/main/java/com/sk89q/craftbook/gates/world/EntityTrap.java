@@ -2,7 +2,6 @@ package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -14,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
@@ -70,7 +71,7 @@ public class EntityTrap extends AbstractIC {
         }
     }
 
-    public EntityTrap(Server server, Sign sign, ICFactory factory) {
+    public EntityTrap(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -104,7 +105,7 @@ public class EntityTrap extends AbstractIC {
 
         int radius = 10; //Default Radius
         int damage = 2;
-        Location location = getSign().getLocation();
+        Location location = BukkitUtil.toSign(getSign()).getLocation();
         Type type = Type.MOB_HOSTILE;
         try {
             radius = Integer.parseInt(getSign().getLine(2).split("=")[0]);
@@ -156,7 +157,7 @@ public class EntityTrap extends AbstractIC {
         }
 
         @Override
-        public IC create(Sign sign) {
+        public IC create(ChangedSign sign) {
 
             return new EntityTrap(getServer(), sign, this);
         }
