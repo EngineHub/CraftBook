@@ -1,14 +1,13 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.ArrayList;
-
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import java.util.ArrayList;
 
 public class CartMessager extends CartMechanism {
 
@@ -26,7 +25,7 @@ public class CartMessager extends CartMechanism {
 
         // care?
         if (cart.getPassenger() == null) return;
-        if (!(blocks.sign != null) && !(blocks.sign.getState() instanceof Sign)) return;
+        if (blocks.sign == null || !(blocks.sign.getState() instanceof Sign)) return;
 
         if (!plugin.getLocalConfiguration().minecartTrackMessages) return;
 
