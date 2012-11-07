@@ -65,7 +65,7 @@ public class PlayerDetection extends AbstractIC {
 
         for (Player e : getServer().getOnlinePlayers()) {
             if (e == null || !e.isValid()
-                    || !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(), e.getLocation(), radius)) {
+                    || !LocationUtil.isWithinRadius(location, e.getLocation(), radius)) {
                 continue;
             }
 
