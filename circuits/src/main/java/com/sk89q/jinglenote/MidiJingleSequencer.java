@@ -131,7 +131,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                 Thread.sleep(1000);
             }
 
-            if (sequencer.isOpen()) {
+            if (sequencer.isRunning()) {
                 sequencer.stop();
             }
         } catch (MidiUnavailableException e) {
