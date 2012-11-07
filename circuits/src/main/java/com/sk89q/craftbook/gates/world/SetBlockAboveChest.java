@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;

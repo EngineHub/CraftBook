@@ -23,8 +23,6 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-import java.util.regex.Pattern;
-
 /**
  * Teleporter Mechanism. Based off Elevator
  *
