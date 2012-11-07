@@ -19,9 +19,9 @@
 package com.sk89q.craftbook;
 
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -74,6 +74,8 @@ public class VehiclesConfiguration extends BaseConfiguration {
         minecartTrackMessages = getBoolean("minecart-track-messages", true);
 
         minecartDecayTime = getInt("minecart-decay-time", 20);
+
+        minecartConstantSpeed = getDouble("minecart-constant-speed", 0);
     }
 
     public final File dataFolder;
@@ -108,5 +110,7 @@ public class VehiclesConfiguration extends BaseConfiguration {
     public boolean boatBreakReturn;
 
     public int minecartDecayTime;
+
+    public double minecartConstantSpeed;
 
 }
