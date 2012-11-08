@@ -69,9 +69,16 @@ public class ItemDispenser extends AbstractIC {
                 item = item.split(":")[0];
             }
 
-            Material mat = Material.matchMaterial(item);
-            if (mat == null) return;
-            int id = mat.getId();
+            int id = -1;
+            try {
+                id = Integer.parseInt(item);
+            }
+            catch(Exception e){}
+            if(id < 0) {
+                Material mat = Material.matchMaterial(item);
+                if (mat == null) return;
+                id = mat.getId();
+            }
             if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
                 Location loc = BukkitUtil.toSign(getSign()).getBlock().getLocation();
                 int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);

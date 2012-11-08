@@ -97,7 +97,6 @@ public class BlockBreaker extends AbstractIC {
         }
         broken.setTypeId(0);
 
-
         return true;
     }
 
