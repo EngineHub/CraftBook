@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Entity;
@@ -33,11 +34,12 @@ public class Fan extends Recipe {
 
         MaterialData d = dis.getBlock().getState().getData();
         BlockFace face = ((org.bukkit.material.Dispenser) d).getFacing();
-        for (Entity e : dis.getWorld().getChunkAt(dis.getBlock().getRelative(face).getLocation()).getEntities())
-            if (e.getLocation().getBlock().getLocation().distanceSquared(dis.getBlock().getRelative(face).getLocation
-                    ()) <= 2 * 2) {
+        Location dispenserLoc = dis.getBlock().getRelative(face).getLocation().add(0.5, 0.5, 0.5);
+        for (Entity e : dis.getWorld().getChunkAt(dispenserLoc).getEntities()) {
+            if (e.getLocation().distanceSquared(dispenserLoc) <= 2 * 2) {
                 e.setVelocity(e.getVelocity().add(velocity).multiply(10));
             }
+        }
         return true;
     }
 }

@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech.dispenser;
 
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Arrow;
@@ -32,10 +33,10 @@ public class FireArrows extends Recipe {
     @Override
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
-        MaterialData d = dis.getBlock().getState().getData();
-        org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) d;
+        org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) dis.getData();
         BlockFace face = disp.getFacing();
-        Arrow a = dis.getWorld().spawnArrow(dis.getBlock().getRelative(face).getLocation(), velocity, 1.0f, 0.0f);
+        Location location = dis.getBlock().getRelative(face).getLocation().add(0.5, 0.5, 0.5);
+        Arrow a = dis.getWorld().spawnArrow(location, velocity, 1.0f, 0.0f);
         a.setFireTicks(5000);
         return true;
     }
