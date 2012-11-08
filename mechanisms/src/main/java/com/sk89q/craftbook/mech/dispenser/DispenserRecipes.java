@@ -18,9 +18,9 @@ import com.sk89q.craftbook.util.ItemUtil;
  */
 public class DispenserRecipes implements Listener {
 
-    final MechanismsPlugin plugin;
+    private final MechanismsPlugin plugin;
 
-    final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+    private final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
     public DispenserRecipes(MechanismsPlugin plugin) {
 
@@ -49,48 +49,41 @@ public class DispenserRecipes implements Listener {
 
         if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
         ItemStack[] stacks = dis.getInventory().getContents();
-        boolean toReturn = false;
-        try {
-            for (Recipe r : recipes) {
-                if (r == null) {
-                    recipes.remove(recipes.indexOf(r)); //Invalid recipe (save CPU cycles a little) (Should never occur)
-                    continue;
-                }
-                current:
-                {
-                    if (r.recipe[0] == 0 && stacks[0] == null || r.recipe[0] == stacks[0].getTypeId()) {
-                        for (int i = 1; i < stacks.length; i++)
-                            if (!(!(r.recipe[i] != 0 && stacks[i] == null) && (r.recipe[i] == 0 && stacks[i] ==
-                            null || r.recipe[i] == stacks[i].getTypeId()))) {
-                                break current; //This recipe is wrong. Do normal dispenser stuff...
-                            }
-                        toReturn = r.doAction(dis, item, velocity, event);
-                        for (int i = 1; i < stacks.length; i++)
-                            if (r.recipe[i] == 0 && stacks[i] == null || r.recipe[i] == stacks[i].getTypeId()) {
-                                if (stacks[i] == null || stacks[i].getTypeId() == 0 || r.recipe[i] == 0) {
-                                    continue;
-                                }
-                                stacks[i] = ItemUtil.getUsedItem(stacks[i]);
-                            } else
-                                return true; //Cancel the event, as obviously something went wrong.
-                        dis.getInventory().setContents(stacks);
+        for (Recipe r : recipes) {
+            int[] recipe = r.getRecipe();
+            if (checkRecipe(stacks, recipe)) {
+                boolean toReturn = r.doAction(dis, item, velocity, event);
+                for (int i = 0; i < stacks.length; i++) {
+                    if (recipe[i] != 0) {
+                        stacks[i] = ItemUtil.getUsedItem(stacks[i]);
                     }
-                    break current;
                 }
+                dis.getInventory().setContents(stacks);
+                return toReturn;
             }
-            return toReturn; //Leave it be.
-        } catch (Exception e) {
-            return false;
         }
+        return false;
+    }
+
+    private static boolean checkRecipe(ItemStack[] stacks, int[] recipe) {
+        for (int i = 0; i < stacks.length; i++) {
+            ItemStack stack = stacks[i];
+            int id = stack == null ? 0 : stack.getTypeId();
+            if (recipe[i] != id) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
      * Adds a dispenser recipe.
      *
-     * @param recipe
+     * @param recipe the recipe to add
      */
     public boolean addRecipe(Recipe recipe) {
 
+        if (recipe == null) throw new NullPointerException("Dispenser recipe must not be null.");
         if (recipes.contains(recipe)) return false;
         recipes.add(recipe);
         return true;

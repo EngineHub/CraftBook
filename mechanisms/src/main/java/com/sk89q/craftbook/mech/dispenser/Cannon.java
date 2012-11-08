@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech.dispenser;
 
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.EntityType;
@@ -30,11 +31,10 @@ public class Cannon extends Recipe {
     @Override
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
-        MaterialData d = dis.getBlock().getState().getData();
-        org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) d;
+        org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) dis.getData();
         BlockFace face = disp.getFacing();
-        TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(dis.getBlock().getRelative(face).getLocation(),
-                EntityType.PRIMED_TNT);
+        Location location = dis.getBlock().getRelative(face).getLocation().add(0.5, 0.5, 0.5);
+        TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
         a.setVelocity(velocity);
         a.setIsIncendiary(true);
         a.setYield(0.4f);

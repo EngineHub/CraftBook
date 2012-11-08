@@ -29,7 +29,7 @@ public class SnowShooter extends Recipe {
     @Override
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
-        event.setItem(new ItemStack(332, 1));
+        event.setItem(new ItemStack(ItemID.SNOWBALL, 1));
         return true;
     }
 }
