@@ -176,7 +176,7 @@ public class EntitySensor extends AbstractIC {
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities())
-                    if (!entity.isDead() && entity.isValid()) {
+                    if (entity.isValid()) {
                         for (Type type : types)
                             // Check Type
                             if (type.is(entity)) {
