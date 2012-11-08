@@ -159,16 +159,16 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         if (id == 269) {
             mutliplier = 1;
         }
-        if (id == 273) {
+        else if (id == 273) {
             mutliplier = 2;
         }
-        if (id == 256) {
+        else if (id == 256) {
             mutliplier = 3;
         }
-        if (id == 277) {
+        else if (id == 277) {
             mutliplier = 4;
         }
-        if (id == 284) {
+        else if (id == 284) {
             mutliplier = 5;
         }
         mutliplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);

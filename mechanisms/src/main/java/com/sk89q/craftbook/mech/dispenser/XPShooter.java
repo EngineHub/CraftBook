@@ -29,7 +29,7 @@ public class XPShooter extends Recipe {
     @Override
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
-        event.setItem(new ItemStack(384, 1));
+        event.setItem(new ItemStack(ItemID.BOTTLE_O_ENCHANTING, 1));
         return true;
     }
 }

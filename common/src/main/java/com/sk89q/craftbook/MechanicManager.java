@@ -574,6 +574,7 @@ public class MechanicManager {
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);
+            t.printStackTrace();
         }
 
         synchronized (this) {
@@ -605,6 +606,7 @@ public class MechanicManager {
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);
+            t.printStackTrace();
         }
 
         synchronized (this) {
@@ -634,9 +636,10 @@ public class MechanicManager {
             if (mechanic.isActive()) {
                 try {
                     mechanic.think();
-                } catch (Throwable t) { // Mechanic failed to unload for some reason
+                } catch (Throwable t) { // Mechanic failed to think for some reason
                     logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
                             .getCanonicalName(), t);
+                    t.printStackTrace();
                 }
             } else {
                 unload(mechanic);
