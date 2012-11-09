@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -14,6 +15,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * @author Me4502
@@ -73,12 +75,36 @@ public class Pump extends AbstractIC {
         if (!liquid.isLiquid())
             return false;
         if (liquid.getData() == 0x0) {
-            if (c.getInventory().addItem(new ItemStack(parse(liquid.getTypeId()), 1)).size() == 0) {
+            if (addToChest(c,liquid)) {
                 liquid.setTypeId(0);
                 return true;
             }
         } else if (searchNear(c, liquid, depth + 1))
             return true;
+        return false;
+    }
+
+    public boolean addToChest(Chest c, Block liquid) {
+        if(((Factory)getFactory()).buckets) {
+            if(c.getInventory().contains(ItemID.BUCKET)) {
+                c.getInventory().remove(ItemID.BUCKET);
+                if(c.getInventory().addItem(new ItemStack(parse(liquid.getTypeId()) == BlockID.LAVA ?
+                        ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1)).size() < 1) {
+                    return true;
+                }
+                else {
+                    c.getInventory().addItem(new ItemStack(ItemID.BUCKET));
+                    return false;
+                }
+            }
+            else
+                return false;
+        }
+        else {
+            if(c.getInventory().addItem(new ItemStack(parse(liquid.getTypeId()))).size() < 1)
+                return true;
+        }
+
         return false;
     }
 
@@ -92,6 +118,8 @@ public class Pump extends AbstractIC {
     }
 
     public static class Factory extends AbstractICFactory {
+
+        public boolean buckets;
 
         public Factory(Server server) {
 
@@ -118,6 +146,17 @@ public class Pump extends AbstractIC {
                     null
             };
             return lines;
+        }
+
+        @Override
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+
+            buckets = section.getBoolean("requires-buckets", false);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+            return true;
         }
     }
 }
