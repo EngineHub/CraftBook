@@ -155,7 +155,7 @@ public class Spigot extends AbstractIC {
 
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1));
                 if (over.size() == 0)
-                    return m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET;
+                    return m;
             }
             else {
                 if (m == BlockID.STATIONARY_WATER)
