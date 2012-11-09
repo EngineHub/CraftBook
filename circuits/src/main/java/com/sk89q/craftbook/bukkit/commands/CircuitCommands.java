@@ -174,7 +174,7 @@ public class CircuitCommands {
                 col = !col;
                 RegisteredICFactory ric = plugin.icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
-                if(search != null && !tic.getTitle().contains(search))
+                if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()))
                     continue;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
