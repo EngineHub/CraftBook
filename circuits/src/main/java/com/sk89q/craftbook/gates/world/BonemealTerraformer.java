@@ -85,7 +85,7 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
-                        if ((b.getTypeId() == BlockID.CROPS || b.getTypeId() == BlockID.MELON_STEM || b.getTypeId() ==
+                        if ((b.getTypeId() == BlockID.CROPS || b.getTypeId() == BlockID.CARROTS || b.getTypeId() == BlockID.POTATOES || b.getTypeId() == BlockID.MELON_STEM || b.getTypeId() ==
                                 BlockID.PUMPKIN_STEM) && b.getData() < 0x7) {
                             if (consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x1));
