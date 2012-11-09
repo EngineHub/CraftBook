@@ -98,6 +98,12 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
+                        if (b.getTypeId() == BlockID.SAPLING) {
+                            if (consumeBonemeal()) {
+                                b.setData((byte) (b.getData() | 0x8));
+                            }
+                            return;
+                        }
                         if ((b.getTypeId() == BlockID.REED || b.getTypeId() == BlockID.CACTUS) && b.getData
                                 () < 0x14 && b.getRelative(0, 1, 0).getTypeId() == 0 && b.getRelative(0, -2,
                                         0).getTypeId() != b.getTypeId() && b.getRelative(0, -1,
