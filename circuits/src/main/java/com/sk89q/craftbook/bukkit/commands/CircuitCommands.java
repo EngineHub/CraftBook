@@ -1,18 +1,10 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.RegisteredICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
@@ -99,7 +91,7 @@ public class CircuitCommands {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        String[] lines = generateICText(player, null);
+        String[] lines = plugin.generateICText(player, null);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
 
@@ -131,7 +123,7 @@ public class CircuitCommands {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        String[] lines = generateICText(player, context.getString(0));
+        String[] lines = plugin.generateICText(player, context.getString(0));
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
 
@@ -151,53 +143,5 @@ public class CircuitCommands {
         for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
             player.sendMessage(lines[i]);
         }
-    }
-
-    /**
-     * Used for the /listics command.
-     *
-     * @param p
-     *
-     * @return
-     */
-    private String[] generateICText(Player p, String search) {
-
-        ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(plugin.icManager.registered.keySet());
-
-        Collections.sort(icNameList);
-
-        ArrayList<String> strings = new ArrayList<String>();
-        boolean col = true;
-        for (String ic : icNameList) {
-            try {
-                col = !col;
-                RegisteredICFactory ric = plugin.icManager.registered.get(ic);
-                IC tic = ric.getFactory().create(null);
-                if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()))
-                    continue;
-                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
-
-                if (ric.getFactory() instanceof RestrictedIC) {
-                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
-                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                    }
-                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
-                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                }
-                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
-                        SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor
-                                .DARK_RED + "R " : ""));
-            } catch (Exception e) {
-                if (ic.endsWith("5001") || ic.endsWith("5000")) {
-                    //Stuff
-                } else {
-                    Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" +
-                            " it to Me4502");
-                }
-            }
-        }
-
-        return strings.toArray(new String[strings.size()]);
     }
 }

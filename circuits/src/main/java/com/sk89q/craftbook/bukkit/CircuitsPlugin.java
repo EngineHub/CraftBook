@@ -21,10 +21,12 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
@@ -90,86 +92,15 @@ import com.sk89q.craftbook.gates.weather.TStormSensorST;
 import com.sk89q.craftbook.gates.weather.WeatherControl;
 import com.sk89q.craftbook.gates.weather.WeatherControlAdvanced;
 import com.sk89q.craftbook.gates.weather.WeatherFaker;
-import com.sk89q.craftbook.gates.world.AdvancedEntitySpawner;
-import com.sk89q.craftbook.gates.world.ArrowBarrage;
-import com.sk89q.craftbook.gates.world.ArrowShooter;
-import com.sk89q.craftbook.gates.world.AutomaticCrafter;
-import com.sk89q.craftbook.gates.world.AutomaticCrafterST;
-import com.sk89q.craftbook.gates.world.BlockBreaker;
-import com.sk89q.craftbook.gates.world.BlockBreakerST;
-import com.sk89q.craftbook.gates.world.BlockLauncher;
-import com.sk89q.craftbook.gates.world.BlockSensor;
-import com.sk89q.craftbook.gates.world.BlockSensorST;
-import com.sk89q.craftbook.gates.world.BonemealTerraformer;
-import com.sk89q.craftbook.gates.world.BonemealTerraformerST;
-import com.sk89q.craftbook.gates.world.CombinationLock;
-import com.sk89q.craftbook.gates.world.ContainerCollector;
-import com.sk89q.craftbook.gates.world.ContainerCollectorST;
-import com.sk89q.craftbook.gates.world.ContainerDispenser;
-import com.sk89q.craftbook.gates.world.CreatureSpawner;
-import com.sk89q.craftbook.gates.world.DaySensor;
-import com.sk89q.craftbook.gates.world.DaySensorST;
-import com.sk89q.craftbook.gates.world.EntityCannon;
-import com.sk89q.craftbook.gates.world.EntityCannonST;
-import com.sk89q.craftbook.gates.world.EntitySensor;
-import com.sk89q.craftbook.gates.world.EntitySensorST;
-import com.sk89q.craftbook.gates.world.EntityTrap;
-import com.sk89q.craftbook.gates.world.EntityTrapST;
-import com.sk89q.craftbook.gates.world.FireBarrage;
-import com.sk89q.craftbook.gates.world.FireShooter;
-import com.sk89q.craftbook.gates.world.FlameThrower;
-import com.sk89q.craftbook.gates.world.FlexibleSetBlock;
-import com.sk89q.craftbook.gates.world.ItemDispenser;
-import com.sk89q.craftbook.gates.world.ItemNotSensor;
-import com.sk89q.craftbook.gates.world.ItemNotSensorST;
-import com.sk89q.craftbook.gates.world.ItemSensor;
-import com.sk89q.craftbook.gates.world.ItemSensorST;
-import com.sk89q.craftbook.gates.world.LavaSensor;
-import com.sk89q.craftbook.gates.world.LavaSensorST;
-import com.sk89q.craftbook.gates.world.LightSensor;
-import com.sk89q.craftbook.gates.world.LightSensorST;
-import com.sk89q.craftbook.gates.world.LightningSummon;
-import com.sk89q.craftbook.gates.world.LiquidFlood;
-import com.sk89q.craftbook.gates.world.LiquidFloodST;
-import com.sk89q.craftbook.gates.world.Melody;
-import com.sk89q.craftbook.gates.world.MessageSender;
-import com.sk89q.craftbook.gates.world.MultipleSetBlock;
-import com.sk89q.craftbook.gates.world.ParticleEffect;
-import com.sk89q.craftbook.gates.world.ParticleEffectST;
-import com.sk89q.craftbook.gates.world.PlayerDetection;
-import com.sk89q.craftbook.gates.world.PlayerDetectionST;
-import com.sk89q.craftbook.gates.world.PotionInducer;
-import com.sk89q.craftbook.gates.world.PowerSensor;
-import com.sk89q.craftbook.gates.world.PowerSensorST;
-import com.sk89q.craftbook.gates.world.Pump;
-import com.sk89q.craftbook.gates.world.PumpST;
-import com.sk89q.craftbook.gates.world.RangedOutput;
-import com.sk89q.craftbook.gates.world.ServerTimeModulus;
-import com.sk89q.craftbook.gates.world.SetBlockAbove;
-import com.sk89q.craftbook.gates.world.SetBlockAboveChest;
-import com.sk89q.craftbook.gates.world.SetBlockBelow;
-import com.sk89q.craftbook.gates.world.SetBlockBelowChest;
-import com.sk89q.craftbook.gates.world.SetBridge;
-import com.sk89q.craftbook.gates.world.SetDoor;
-import com.sk89q.craftbook.gates.world.SoundEffect;
-import com.sk89q.craftbook.gates.world.Spigot;
-import com.sk89q.craftbook.gates.world.TimeControl;
-import com.sk89q.craftbook.gates.world.TimeControlAdvanced;
-import com.sk89q.craftbook.gates.world.TimeFaker;
-import com.sk89q.craftbook.gates.world.TimeSet;
-import com.sk89q.craftbook.gates.world.TimeSetST;
-import com.sk89q.craftbook.gates.world.TimedExplosion;
-import com.sk89q.craftbook.gates.world.WaterSensor;
-import com.sk89q.craftbook.gates.world.WaterSensorST;
-import com.sk89q.craftbook.gates.world.WirelessReceiver;
-import com.sk89q.craftbook.gates.world.WirelessReceiverST;
-import com.sk89q.craftbook.gates.world.WirelessTransmitter;
+import com.sk89q.craftbook.gates.world.*;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICFamily;
 import com.sk89q.craftbook.ic.ICManager;
 import com.sk89q.craftbook.ic.ICMechanicFactory;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.ic.families.Family3I3O;
 import com.sk89q.craftbook.ic.families.Family3ISO;
 import com.sk89q.craftbook.ic.families.FamilyAISO;
@@ -570,8 +501,17 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             }
         }*/
         if (ric == null) {
-            player.sendMessage(ChatColor.RED + "Invalid IC!");
-            return;
+            try {
+                ric = icManager.registered.get(generateICText(player, id)[0].split("(")[1].split(")")[0]);
+                if (ric == null) {
+                    player.sendMessage(ChatColor.RED + "Invalid IC!");
+                    return;
+                }
+            }
+            catch(Exception e) {
+                player.sendMessage(ChatColor.RED + "Invalid IC!");
+                return;
+            }
         }
         try {
             IC ic = ric.getFactory().create(null);
@@ -595,6 +535,54 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                     .toUpperCase());
         } catch (Exception ignored) {
         }
+    }
+
+    /**
+     * Used for the /listics command.
+     *
+     * @param p
+     *
+     * @return
+     */
+    public String[] generateICText(Player p, String search) {
+
+        ArrayList<String> icNameList = new ArrayList<String>();
+        icNameList.addAll(icManager.registered.keySet());
+
+        Collections.sort(icNameList);
+
+        ArrayList<String> strings = new ArrayList<String>();
+        boolean col = true;
+        for (String ic : icNameList) {
+            try {
+                col = !col;
+                RegisteredICFactory ric = icManager.registered.get(ic);
+                IC tic = ric.getFactory().create(null);
+                if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()))
+                    continue;
+                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
+
+                if (ric.getFactory() instanceof RestrictedIC) {
+                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
+                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                    }
+                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                }
+                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
+                        SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor
+                                .DARK_RED + "R " : ""));
+            } catch (Exception e) {
+                if (ic.endsWith("5001") || ic.endsWith("5000")) {
+                    //Stuff
+                } else {
+                    Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" +
+                            " it to Me4502");
+                }
+            }
+        }
+
+        return strings.toArray(new String[strings.size()]);
     }
 
     @Override
