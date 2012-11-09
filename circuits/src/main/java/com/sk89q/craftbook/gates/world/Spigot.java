@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -18,6 +19,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class Spigot extends AbstractIC {
 
@@ -117,12 +119,22 @@ public class Spigot extends AbstractIC {
 
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
-            if (over.size() == 0)
-                return BlockID.WATER;
-            over = c.getInventory().removeItem(new ItemStack(BlockID.LAVA, 1));
-            if (over.size() == 0)
-                return BlockID.LAVA;
+            if(((Factory)getFactory()).buckets) {
+                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.WATER_BUCKET, 1));
+                if (over.size() == 0)
+                    return ItemID.WATER_BUCKET;
+                over = c.getInventory().removeItem(new ItemStack(ItemID.LAVA_BUCKET, 1));
+                if (over.size() == 0)
+                    return ItemID.LAVA_BUCKET;
+            }
+            else {
+                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
+                if (over.size() == 0)
+                    return BlockID.WATER;
+                over = c.getInventory().removeItem(new ItemStack(BlockID.LAVA, 1));
+                if (over.size() == 0)
+                    return BlockID.LAVA;
+            }
         }
 
         return BlockID.AIR;
@@ -132,24 +144,37 @@ public class Spigot extends AbstractIC {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
 
-        if (m == BlockID.STATIONARY_WATER) {
-            m = BlockID.WATER;
-        }
-        if (m == BlockID.STATIONARY_LAVA) {
-            m = BlockID.LAVA;
-        }
-
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m, 1));
-            if (over.size() == 0)
-                return m;
+
+            if(((Factory)getFactory()).buckets) {
+                if (m == BlockID.STATIONARY_WATER)
+                    m = BlockID.WATER;
+                else if (m == BlockID.STATIONARY_LAVA)
+                    m = BlockID.LAVA;
+
+                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1));
+                if (over.size() == 0)
+                    return m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET;
+            }
+            else {
+                if (m == BlockID.STATIONARY_WATER)
+                    m = BlockID.WATER;
+                else if (m == BlockID.STATIONARY_LAVA)
+                    m = BlockID.LAVA;
+
+                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m, 1));
+                if (over.size() == 0)
+                    return m;
+            }
         }
 
         return BlockID.AIR;
     }
 
     public static class Factory extends AbstractICFactory {
+
+        public boolean buckets;
 
         public Factory(Server server) {
 
@@ -176,6 +201,18 @@ public class Spigot extends AbstractIC {
                     "y offset"
             };
             return lines;
+        }
+
+
+        @Override
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+
+            buckets = section.getBoolean("requires-buckets", false);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+            return true;
         }
     }
 }
