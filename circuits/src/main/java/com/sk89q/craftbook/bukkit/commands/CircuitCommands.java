@@ -99,7 +99,7 @@ public class CircuitCommands {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        String[] lines = generateICText(player);
+        String[] lines = generateICText(player, null);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
 
@@ -121,6 +121,38 @@ public class CircuitCommands {
         }
     }
 
+    @Command(
+            aliases = {"searchics"},
+            desc = "Search available IC's with names",
+            min = 0,
+            max = 2
+            )
+    public void searchics(CommandContext context, CommandSender sender) {
+
+        if (!(sender instanceof Player)) return;
+        Player player = (Player) sender;
+        String[] lines = generateICText(player, context.getString(0));
+        int pages = (lines.length - 1) / 9 + 1;
+        int accessedPage;
+
+        try {
+            accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(1) - 1;
+            if (accessedPage < 0 || accessedPage >= pages) {
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(1) + "\"");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(1) + "\"");
+            return;
+        }
+
+        player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page " + (accessedPage + 1) + " of " + pages + "):");
+
+        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
+            player.sendMessage(lines[i]);
+        }
+    }
+
     /**
      * Used for the /listics command.
      *
@@ -128,7 +160,7 @@ public class CircuitCommands {
      *
      * @return
      */
-    private String[] generateICText(Player p) {
+    private String[] generateICText(Player p, String search) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
         icNameList.addAll(plugin.icManager.registered.keySet());
@@ -142,6 +174,8 @@ public class CircuitCommands {
                 col = !col;
                 RegisteredICFactory ric = plugin.icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
+                if(search != null && !tic.getTitle().contains(search))
+                    continue;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
                 if (ric.getFactory() instanceof RestrictedIC) {
