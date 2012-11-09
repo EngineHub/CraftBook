@@ -558,7 +558,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                 col = !col;
                 RegisteredICFactory ric = icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
-                if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()))
+                if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()) &&
+                        !ric.getId().toLowerCase().contains(search.toLowerCase()))
                     continue;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
