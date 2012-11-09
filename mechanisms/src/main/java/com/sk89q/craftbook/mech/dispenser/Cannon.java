@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
@@ -9,8 +7,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
+
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class Cannon extends Recipe {
 
