@@ -1,3 +1,20 @@
+3.3.6
++ Advanced Entity Spawner IC.
+* Many bug fixes.
++ Many random tweaks.
++ Entity Cannon IC.
++ Line stacking for Messager Vehicle Mechanic.
+* Improved NON-ST Bonemeal Terraformer
+* Vehicle mechancis can now be removes bys etting material to something below 0.
++ Added derailed velocity modifier to vehicles.
++ Added Stations to Minecart Mechanics (Sorter Mechanic) (/st command)
++ Added Minecart Lift.
+* Fixed XP-Storer Infinite XP Bug.
++ Added constant minecart speed setting.
+* Fixed Player Detection IC offset not working.
+* Item Dispenser can now use items from tekkit etc.
++ Added Carrots, Potatoes and Saplings to Bonemeal Terraformer.
+
 3.3.5
 * Neated code for configurations.
 + Added filter support to Block Breakers
