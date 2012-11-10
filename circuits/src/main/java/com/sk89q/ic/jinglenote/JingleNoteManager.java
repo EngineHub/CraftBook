@@ -5,7 +5,7 @@
  * All rights reserved.
  */
 
-package com.sk89q.jinglenote;
+package com.sk89q.ic.jinglenote;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

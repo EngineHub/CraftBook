@@ -19,8 +19,8 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.jinglenote.JingleNoteComponent;
-import com.sk89q.jinglenote.MidiJingleSequencer;
+import com.sk89q.ic.jinglenote.JingleNoteComponent;
+import com.sk89q.ic.jinglenote.MidiJingleSequencer;
 
 /**
  * @author Me4502
