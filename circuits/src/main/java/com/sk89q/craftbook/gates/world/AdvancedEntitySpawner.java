@@ -50,29 +50,32 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
     public void load() {
 
-        type = EntityType.fromName(getSign().getLine(3).trim().split("\\*")[0]);
-
         try {
-            amount = Integer.parseInt(getSign().getLine(3).trim().split("\\*")[1]);
-        }
-        catch(Exception e) {
-            amount = 1;
-        }
+            type = EntityType.fromName(getSign().getLine(3).trim().split("\\*")[0]);
 
-        try {
-            double x, y, z;
-            x = Double.parseDouble(getSign().getLine(2).split(":")[0]);
-            y = Double.parseDouble(getSign().getLine(2).split(":")[1]);
-            z = Double.parseDouble(getSign().getLine(2).split(":")[2]);
-            x += getSign().getX();
-            y += getSign().getY();
-            z += getSign().getZ();
-            location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()), new Vector(x,y,z));
+            try {
+                amount = Integer.parseInt(getSign().getLine(3).trim().split("\\*")[1]);
+            }
+            catch(Exception e) {
+                amount = 1;
+            }
+
+            try {
+                double x, y, z;
+                x = Double.parseDouble(getSign().getLine(2).split(":")[0]);
+                y = Double.parseDouble(getSign().getLine(2).split(":")[1]);
+                z = Double.parseDouble(getSign().getLine(2).split(":")[2]);
+                x += getSign().getX();
+                y += getSign().getY();
+                z += getSign().getZ();
+                location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()), new Vector(x,y,z));
+            }
+            catch(Exception e){
+                location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()),
+                        new Vector(getSign().getX(),getSign().getY(),getSign().getZ()));
+            }
         }
-        catch(Exception e){
-            location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()),
-                    new Vector(getSign().getX(),getSign().getY(),getSign().getZ()));
-        }
+        catch(Exception e){}
     }
 
     @Override
