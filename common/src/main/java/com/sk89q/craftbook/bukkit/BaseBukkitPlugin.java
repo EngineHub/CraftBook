@@ -124,8 +124,8 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public boolean canBuildInArea(Location loc, Player p) {
 
-        return !useWorldGuard || loc == null || p == null || !CraftBookPlugin.getInstance().getLocalConfiguration()
-                .checkWGRegions || getWorldGuard() == null || getWorldGuard().canBuild(p, loc);
+        return !useWorldGuard || loc == null || p == null || getWorldGuard() == null || !CraftBookPlugin.getInstance().getLocalConfiguration()
+                .checkWGRegions || getWorldGuard().canBuild(p, loc);
     }
 
     /**
