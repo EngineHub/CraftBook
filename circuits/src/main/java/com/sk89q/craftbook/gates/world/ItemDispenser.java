@@ -19,7 +19,6 @@
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
@@ -76,9 +75,7 @@ public class ItemDispenser extends AbstractIC {
             }
             catch(Exception e){}
             if(id < 0) {
-                Material mat = Material.matchMaterial(item);
-                if (mat == null) return;
-                id = mat.getId();
+                id = BlockType.lookup(item).getID();
             }
             if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
