@@ -1,13 +1,14 @@
 package com.sk89q.craftbook.bukkit.events;
+import com.sk89q.craftbook.CraftBlock;
 import com.sk89q.craftbook.EventTrigger;
-import org.bukkit.block.Block;
 
 public class CraftBookBlockChangeEvent extends CraftBookEvent {
 
-    private final Block block;
-    private final Block toBlock;
+    private final CraftBlock block;
+    private final CraftBlock toBlock;
 
-    public CraftBookBlockChangeEvent(Block block, Block toBlock, EventTrigger trigger, boolean isDupeSafe) {
+    public CraftBookBlockChangeEvent(CraftBlock block, CraftBlock toBlock,
+                                     EventTrigger trigger, boolean isDupeSafe) {
 
         super(trigger, isDupeSafe);
         this.block = block;
@@ -19,7 +20,7 @@ public class CraftBookBlockChangeEvent extends CraftBookEvent {
      *
      * @return the original block
      */
-    public Block getBlock() {
+    public CraftBlock getBlock() {
 
         return block;
     }
@@ -29,7 +30,7 @@ public class CraftBookBlockChangeEvent extends CraftBookEvent {
      *
      * @return the new block
      */
-    public Block getToBlock() {
+    public CraftBlock getToBlock() {
 
         return toBlock;
     }

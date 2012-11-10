@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.bukkit.events;
 import com.sk89q.craftbook.EventTrigger;
-import org.bukkit.inventory.ItemStack;
+import com.sk89q.worldedit.blocks.BaseItemStack;
 
 public class CraftBookItemChangeEvent extends CraftBookEvent {
 
-    private ItemStack itemStack;
-    private ItemStack toItemStack;
+    private BaseItemStack itemStack;
+    private BaseItemStack toItemStack;
 
-    public CraftBookItemChangeEvent(ItemStack itemStack, ItemStack toItemStack,
+    public CraftBookItemChangeEvent(BaseItemStack itemStack, BaseItemStack toItemStack,
                                     EventTrigger trigger, boolean isDupeSafe) {
 
         super(trigger, isDupeSafe);
@@ -20,7 +20,7 @@ public class CraftBookItemChangeEvent extends CraftBookEvent {
      *
      * @return the original ItemStack
      */
-    public ItemStack getItemStack() {
+    public BaseItemStack getItemStack() {
 
         return itemStack;
     }
@@ -30,7 +30,7 @@ public class CraftBookItemChangeEvent extends CraftBookEvent {
      *
      * @return the modified ItemStack
      */
-    public ItemStack getToItemStack() {
+    public BaseItemStack getToItemStack() {
 
         return toItemStack;
     }
