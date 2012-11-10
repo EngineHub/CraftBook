@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -10,6 +8,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 
 public class CustomDrops implements Listener {
 
@@ -42,8 +43,10 @@ public class CustomDrops implements Listener {
                         w.dropItemNaturally(l, dropDefinition.getItemStack());
                     }
 
-                event.getBlock().setTypeId(0);
-                event.setCancelled(true);
+                if(!drops[0].append) {
+                    event.getBlock().setTypeId(0);
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -56,7 +59,8 @@ public class CustomDrops implements Listener {
         CustomDropManager.DropDefinition[] drops =
                 plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
         if (drops != null) {
-            event.getDrops().clear();
+            if(!drops[0].append)
+                event.getDrops().clear();
             // Add the custom drops
             for (CustomDropManager.DropDefinition dropDefinition : drops) {
                 event.getDrops().add(dropDefinition.getItemStack());

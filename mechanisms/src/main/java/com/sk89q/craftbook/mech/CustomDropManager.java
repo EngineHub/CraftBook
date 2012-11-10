@@ -18,10 +18,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -29,6 +25,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
 /**
  * Storage class for custom drop definitions.
@@ -112,7 +113,7 @@ public final class CustomDropManager {
                             throw new CustomDropParseException(prelude + "-> not found");
                         }
 
-                        String itemsSource = split[0].trim();
+                        String itemsSource = split[0].replace("+", "").trim();
                         String targetDrops = split[1].trim();
                         if (itemsSource.isEmpty() ||
                                 targetDrops.isEmpty()) {
@@ -120,7 +121,7 @@ public final class CustomDropManager {
                             throw new CustomDropParseException(prelude + "unexpected empty field");
                         }
 
-                        DropDefinition[] drops = readDrops(targetDrops, prelude);
+                        DropDefinition[] drops = readDrops(targetDrops, prelude, split[0].contains("+"));
 
                         if (!isMobDrop) {
                             split = itemsSource.split(":");
@@ -179,17 +180,17 @@ public final class CustomDropManager {
         }
     }
 
-    private static DropDefinition[] readDrops(String s, String prelude) throws IOException {
+    private static DropDefinition[] readDrops(String s, String prelude, boolean append) throws IOException {
 
         String[] split = s.split(",");
         DropDefinition[] drops = new DropDefinition[split.length]; //Java really needs a map function...
         for (int i = 0; i < split.length; i++) {
-            drops[i] = readDrop(split[i].trim(), prelude); //Strip excess whitespace and parse
+            drops[i] = readDrop(split[i].trim(), prelude, append); //Strip excess whitespace and parse
         }
         return drops;
     }
 
-    private static DropDefinition readDrop(String s, String prelude) throws IOException {
+    private static DropDefinition readDrop(String s, String prelude, boolean append) throws IOException {
 
         String[] split = s.split("x");
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
@@ -203,7 +204,7 @@ public final class CustomDropManager {
         if (split3.length > 2) throw new CustomDropParseException(prelude + ": invalid number drops range");
         int countMin = Integer.parseInt(split3[0]);
         int countMax = split3.length == 1 ? countMin : Integer.parseInt(split3[1]);
-        return new DropDefinition(itemId, (byte) data, countMin, countMax);
+        return new DropDefinition(itemId, (byte) data, countMin, countMax, append);
     }
 
     public static class CustomDropParseException extends IOException {
@@ -244,8 +245,9 @@ public final class CustomDropManager {
         public final byte data;
         public final int countMin;
         public final int countMax;
+        public final boolean append;
 
-        public DropDefinition(int id, byte data, int countMin, int countMax) {
+        public DropDefinition(int id, byte data, int countMin, int countMax, boolean append) {
 
             if (countMax < countMin) {
                 int temp = countMin;
@@ -257,6 +259,7 @@ public final class CustomDropManager {
             this.data = data;
             this.countMin = countMin;
             this.countMax = countMax;
+            this.append = append;
         }
 
         public ItemStack getItemStack() {
