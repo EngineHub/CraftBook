@@ -502,7 +502,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         }*/
         if (ric == null) {
             try {
-                ric = icManager.registered.get(generateICText(player, id)[0].split("(")[1].split(")")[0]);
+                ric = icManager.registered.get(getSearchID(player, id));
                 if (ric == null) {
                     player.sendMessage(ChatColor.RED + "Invalid IC!");
                     return;
@@ -537,6 +537,30 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         }
     }
 
+    public String getSearchID(Player p, String search) {
+        ArrayList<String> icNameList = new ArrayList<String>();
+        icNameList.addAll(icManager.registered.keySet());
+
+        Collections.sort(icNameList);
+
+        for (String ic : icNameList) {
+            try {
+                RegisteredICFactory ric = icManager.registered.get(ic);
+                IC tic = ric.getFactory().create(null);
+                if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()) &&
+                        !ric.getId().toLowerCase().contains(search.toLowerCase()))
+                    continue;
+
+                return ic;
+            }
+            catch(Exception e){
+                continue;
+            }
+        }
+
+        return "";
+    }
+
     /**
      * Used for the /listics command.
      *
@@ -555,12 +579,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         boolean col = true;
         for (String ic : icNameList) {
             try {
-                col = !col;
                 RegisteredICFactory ric = icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
                 if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()) &&
                         !ric.getId().toLowerCase().contains(search.toLowerCase()))
                     continue;
+                col = !col;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
                 if (ric.getFactory() instanceof RestrictedIC) {
