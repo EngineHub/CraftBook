@@ -233,10 +233,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                     && RailUtil.isTrack(event.getTo().getBlock().getTypeId())
                     && event.getVehicle().getVelocity().lengthSquared() > 0) {
                 Vector vel = event.getVehicle().getVelocity();
-                if (vel.getX() > 0) vel.setX(config.minecartConstantSpeed);
-                if (vel.getY() > 0) vel.setY(config.minecartConstantSpeed);
-                if (vel.getZ() > 0) vel.setZ(config.minecartConstantSpeed);
-                event.getVehicle().setVelocity(vel);
+                event.getVehicle().setVelocity(vel.normalize().multiply(config.minecartConstantSpeed));
             }
 
             cartman.impact(event);
