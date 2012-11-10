@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -104,18 +105,21 @@ public class Command extends AbstractMechanic {
 
         Sign s = (Sign) event.getClickedBlock().getState();
 
-        if (s.getLine(2).startsWith("/")) {
-            event.getPlayer().chat(s.getLine(2) + s.getLine(3));
-        } else {
-            event.getPlayer().chat("/" + s.getLine(2) + s.getLine(3));
-        }
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.getLine(2).replace("/", "") + s.getLine(3));
 
         event.setCancelled(true);
     }
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-        /* we only affect players, so we don't care about redstone events */
+
+        if (!plugin.getLocalConfiguration().commandSettings.enable) return;
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger)))
+            return; //wth? our manager is insane
+
+        Sign s = (Sign) event.getBlock().getState();
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.getLine(2).replace("/", "") + s.getLine(3));
     }
 
     @Override
