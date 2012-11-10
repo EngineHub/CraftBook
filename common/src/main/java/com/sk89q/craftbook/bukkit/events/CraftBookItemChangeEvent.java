@@ -2,9 +2,6 @@ package com.sk89q.craftbook.bukkit.events;
 import com.sk89q.craftbook.EventTrigger;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * Author: Turtle9598
- */
 public class CraftBookItemChangeEvent extends CraftBookEvent {
 
     private ItemStack itemStack;

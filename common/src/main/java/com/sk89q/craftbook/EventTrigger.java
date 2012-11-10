@@ -1,9 +1,6 @@
 package com.sk89q.craftbook;
 import com.sk89q.worldedit.BlockWorldVector;
 
-/**
- * Author: Turtle9598
- */
 public class EventTrigger {
 
     private BlockWorldVector triggerLocation = null;

@@ -2,9 +2,6 @@ package com.sk89q.craftbook.bukkit.events;
 import com.sk89q.craftbook.EventTrigger;
 import org.bukkit.block.Block;
 
-/**
- * Author: Turtle9598
- */
 public class CraftBookBlockChangeEvent extends CraftBookEvent {
 
     private final Block block;
