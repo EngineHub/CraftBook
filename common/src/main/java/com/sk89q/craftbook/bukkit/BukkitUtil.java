@@ -14,9 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //$Id$
 /*
@@ -57,16 +55,9 @@ public class BukkitUtil {
         return ((BukkitChangedSign)sign).sign;
     }
 
-    private static final Map<World, LocalWorld> wlw = new HashMap<World, LocalWorld>();
-
     public static LocalWorld getLocalWorld(World w) {
 
-        LocalWorld lw = wlw.get(w);
-        if (lw == null) {
-            lw = new BukkitWorld(w);
-            wlw.put(w, lw);
-        }
-        return lw;
+        return new BukkitWorld(w);
     }
 
     public static BlockVector toVector(Block block) {

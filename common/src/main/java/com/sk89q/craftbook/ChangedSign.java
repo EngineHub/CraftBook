@@ -6,6 +6,9 @@ import com.sk89q.worldedit.Location;
 
 public interface ChangedSign {
 
+    // CraftBlock
+    public CraftBlock getCraftBlock();
+
     //Location
     public int getX();
 

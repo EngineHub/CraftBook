@@ -18,12 +18,13 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBlock;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.block.Sign;
 
 public class BukkitChangedSign implements ChangedSign {
 
@@ -34,6 +35,13 @@ public class BukkitChangedSign implements ChangedSign {
 
         this.sign = sign;
         this.lines = lines;
+    }
+
+    @Override
+    public CraftBlock getCraftBlock() {
+
+        // TODO LINES?!?!?!
+        return new CraftBlock(ItemID.SIGN, new BlockWorldVector(getLocalWorld(), getX(), getY(), getZ()));
     }
 
     @Override

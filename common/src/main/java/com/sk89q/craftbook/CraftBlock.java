@@ -4,9 +4,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.foundation.Block;
 
-/**
- * Author: Turtle9598
- */
 public class CraftBlock extends Block {
 
     private final BlockWorldVector location;
