@@ -31,6 +31,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
@@ -80,7 +81,7 @@ public class ItemDispenser extends AbstractIC {
                 id = mat.getId();
             }
             if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
-                Location loc = BukkitUtil.toSign(getSign()).getBlock().getLocation();
+                Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
