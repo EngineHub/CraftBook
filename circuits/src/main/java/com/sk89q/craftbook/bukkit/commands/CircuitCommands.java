@@ -128,7 +128,7 @@ public class CircuitCommands {
         int accessedPage;
 
         try {
-            accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(1) - 1;
+            accessedPage = context.argsLength() < 2 ? 0 : context.getInteger(1) - 1;
             if (accessedPage < 0 || accessedPage >= pages) {
                 player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(1) + "\"");
                 return;
