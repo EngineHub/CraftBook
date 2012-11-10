@@ -106,6 +106,7 @@ public class CircuitCommands {
             return;
         }
 
+        player.sendMessage(ChatColor.BLUE + "  ");
         player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page " + (accessedPage + 1) + " of " + pages + "):");
 
         for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
@@ -138,7 +139,8 @@ public class CircuitCommands {
             return;
         }
 
-        player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page " + (accessedPage + 1) + " of " + pages + "):");
+        player.sendMessage(ChatColor.BLUE + "  ");
+        player.sendMessage(ChatColor.BLUE + "CraftBook ICs \"" + context.getString(0) + "\" (Page " + (accessedPage + 1) + " of " + pages + "):");
 
         for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
             player.sendMessage(lines[i]);
