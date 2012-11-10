@@ -1,11 +1,10 @@
 package com.sk89q.craftbook;
 
-import java.util.ArrayList;
-
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
 
 public class RailUtil {
 
@@ -44,5 +43,17 @@ public class RailUtil {
         }
 
         return containers;
+    }
+
+    private static final int[] trackBlocks = new int[] {
+            BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL
+    };
+
+    public static boolean isTrack(int id) {
+
+        for (int trackBlock : trackBlocks) {
+            if (id == trackBlock) return true;
+        }
+        return false;
     }
 }
