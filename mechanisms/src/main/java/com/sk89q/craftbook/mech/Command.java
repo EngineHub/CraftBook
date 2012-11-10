@@ -105,7 +105,10 @@ public class Command extends AbstractMechanic {
 
         Sign s = (Sign) event.getClickedBlock().getState();
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.getLine(2).replace("/", "") + s.getLine(3));
+        String command = s.getLine(2).replace("/", "") + s.getLine(3);
+        command = command.replace("@p", event.getPlayer().getName());
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
 
         event.setCancelled(true);
     }
@@ -119,7 +122,11 @@ public class Command extends AbstractMechanic {
 
         Sign s = (Sign) event.getBlock().getState();
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.getLine(2).replace("/", "") + s.getLine(3));
+        String command = s.getLine(2).replace("/", "") + s.getLine(3);
+        if(command.contains("@p"))
+            return; //We don't work with player commands.
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
     @Override
