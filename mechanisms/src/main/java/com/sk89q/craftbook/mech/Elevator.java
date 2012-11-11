@@ -99,7 +99,7 @@ public class Elevator extends AbstractMechanic {
         public Elevator detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
-            Direction dir = isLift(BukkitUtil.toBlock(sign.getBlockVector()));
+            Direction dir = isLift(BukkitUtil.toBlock(pt));
             switch (dir) {
                 case UP:
                     player.checkPermission("craftbook.mech.elevator");
