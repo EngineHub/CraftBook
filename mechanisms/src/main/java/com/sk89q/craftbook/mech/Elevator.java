@@ -267,6 +267,8 @@ public class Elevator extends AbstractMechanic {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
+        if(!(destination.getState() instanceof Sign))
+            return;
         String title = ((Sign) destination.getState()).getLines()[0];
         if (title.length() != 0) {
             player.print(player.translate("mech.lift.floor") + ": " + title);
