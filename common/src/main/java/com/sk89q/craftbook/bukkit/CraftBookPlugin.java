@@ -21,7 +21,6 @@ package com.sk89q.craftbook.bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.CommonConfiguration;
-import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 
@@ -57,19 +56,6 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
 
         try {
             Metrics metrics = new Metrics(this);
-
-            Graph graph = metrics.createGraph("Language");
-            for (String lan : languageManager.getLanguages()) {
-                graph.addPlotter(new Metrics.Plotter(lan) {
-
-                    @Override
-                    public int getValue() {
-
-                        return 1;
-                    }
-                });
-            }
-
             metrics.start();
         } catch (Exception ignored) {
         }
