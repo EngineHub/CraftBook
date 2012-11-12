@@ -29,7 +29,7 @@ public class Chair implements Listener {
     public Chair(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, new ChairChecker(), 40L, 40L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ChairChecker(), 40L, 40L);
     }
 
     public void addChair(Player player, Block block) {
