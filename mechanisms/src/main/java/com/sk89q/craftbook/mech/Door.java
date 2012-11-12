@@ -600,6 +600,8 @@ public class Door extends AbstractMechanic {
 
     public boolean hasEnoughBlocks(Sign s) {
 
+        if(s == null || s.getLine(0) == null)
+            return false;
         return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }
 }
