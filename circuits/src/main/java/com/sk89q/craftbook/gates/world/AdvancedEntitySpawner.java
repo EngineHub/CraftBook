@@ -5,6 +5,7 @@ import net.minecraft.server.EntityLiving;
 import net.minecraft.server.Item;
 import net.minecraft.server.ItemStack;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -22,6 +23,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
@@ -68,14 +70,17 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                 x += getSign().getX();
                 y += getSign().getY();
                 z += getSign().getZ();
-                location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()), new Vector(x,y,z));
+                location = new Location(getSign().getLocalWorld(), new Vector(x,y,z));
             }
             catch(Exception e){
-                location = new Location(BukkitUtil.getLocalWorld(BukkitUtil.toSign(getSign()).getWorld()),
+                location = new Location(getSign().getLocalWorld(),
                         new Vector(getSign().getX(),getSign().getY(),getSign().getZ()));
             }
         }
-        catch(Exception e){}
+        catch(Exception e){
+            if(getSign() != null)
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+        }
     }
 
     @Override

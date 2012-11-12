@@ -35,12 +35,12 @@ import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that
@@ -99,7 +99,7 @@ public class Elevator extends AbstractMechanic {
         public Elevator detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
                 throws InvalidMechanismException, ProcessedMechanismException {
 
-            Direction dir = isLift(BukkitUtil.toBlock(pt));
+            Direction dir = isLift(sign);
             switch (dir) {
                 case UP:
                     player.checkPermission("craftbook.mech.elevator");
@@ -279,27 +279,27 @@ public class Elevator extends AbstractMechanic {
 
         BlockState state = block.getState();
         if (!(state instanceof Sign)) {
-            if (MechanismsPlugin.getInst().getLocalConfiguration().elevatorSettings.buttons && block.getTypeId() ==
-                    BlockID.STONE_BUTTON) {
+            if (MechanismsPlugin.getInst().getLocalConfiguration().elevatorSettings.buttons && (block.getTypeId() ==
+                    BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON)) {
                 Button b = (Button) block.getState().getData();
                 Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                 if (sign.getState() instanceof Sign)
-                    return isLift((Sign) sign.getState());
+                    return isLift(BukkitUtil.toChangedSign((Sign) sign.getState(), ((Sign)sign.getState()).getLines()));
             }
             return Direction.NONE;
         }
 
-        return isLift((Sign) state);
+        return isLift(BukkitUtil.toChangedSign((Sign) state, ((Sign)state).getLines()));
     }
 
-    private static Elevator.Direction isLift(Sign sign) {
+    private static Elevator.Direction isLift(ChangedSign sign) {
         // if you were really feeling frisky this could definitely
         // be optomized by converting the string to a char[] and then
         // doing work
 
-        if (sign.getLines()[1].equalsIgnoreCase("[Lift Up]")) return Direction.UP;
-        if (sign.getLines()[1].equalsIgnoreCase("[Lift Down]")) return Direction.DOWN;
-        if (sign.getLines()[1].equalsIgnoreCase("[Lift]")) return Direction.RECV;
+        if (sign.getLine(1).equalsIgnoreCase("[Lift Up]")) return Direction.UP;
+        if (sign.getLine(1).equalsIgnoreCase("[Lift Down]")) return Direction.DOWN;
+        if (sign.getLine(1).equalsIgnoreCase("[Lift]")) return Direction.RECV;
         return Direction.NONE;
     }
 
