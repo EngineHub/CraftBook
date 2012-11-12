@@ -29,6 +29,7 @@ public class Chair implements Listener {
     public Chair(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
+        Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, new ChairChecker(), 40L, 40L);
     }
 
     public void addChair(Player player, Block block) {
@@ -119,6 +120,25 @@ public class Chair implements Listener {
                     ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
                 }
                 addChair(player.getPlayer(), event.getClickedBlock());
+            }
+        }
+    }
+
+    public class ChairChecker implements Runnable {
+
+        @Override
+        public void run () {
+            for(String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
+                Player p = Bukkit.getPlayer(pl);
+                if(!p.isOnline() || !p.getWorld().getName().equalsIgnoreCase(getChair(p).getWorld().getName())
+                        || p.getLocation().distanceSquared(getChair(p).getLocation()) > 3*3) {
+                    Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
+                            new ChairWatcher((byte) 0), true);
+                    for (Player play : LocationUtil.getNearbyPlayers(getChair(p), plugin.getServer().getViewDistance() * 16)) {
+                        ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                    }
+                    removeChair(p);
+                }
             }
         }
     }
