@@ -19,16 +19,18 @@
 
 package com.sk89q.craftbook.blockbag;
 
+import org.bukkit.World;
+import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Sign based block source system.
@@ -117,8 +119,8 @@ public class AdminBlockSource extends BlockBag {
     public void addSingleSourcePosition(WorldVector arg0) {
 
         Block e = BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(arg0.getBlockX(), arg0.getBlockY(), arg0.getBlockZ());
-        if (e.getState() instanceof Sign) {
-            Sign s = (Sign) e.getState();
+        if (e.getTypeId() == BlockID.WALL_SIGN || e.getTypeId() == BlockID.SIGN_POST) {
+            ChangedSign s = BukkitUtil.toChangedSign(e);
 
             if (store && s.getLine(2).equalsIgnoreCase("[Black Hole]")) {
                 canStore = true;

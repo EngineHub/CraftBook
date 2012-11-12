@@ -2,9 +2,10 @@ package com.sk89q.craftbook.cart;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -181,7 +182,7 @@ public class CartMechanismBlocks {
      */
     public boolean matches(String mechname) {
 
-        return sign != null && ((Sign) sign.getState()).getLine(1).equalsIgnoreCase("[" + mechname + "]");
+        return sign != null && BukkitUtil.toChangedSign(sign).getLine(1).equalsIgnoreCase("[" + mechname + "]");
         // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
         // the mold with second line definer.
     }
@@ -203,8 +204,8 @@ public class CartMechanismBlocks {
      *
      * @throws ClassCastException if there a sign block is set, but it's not *actually* a sign block.
      */
-    public Sign getSign() {
+    public ChangedSign getSign() {
 
-        return sign == null ? null : (Sign) sign.getState();
+        return sign == null ? null : BukkitUtil.toChangedSign(sign);
     }
 }

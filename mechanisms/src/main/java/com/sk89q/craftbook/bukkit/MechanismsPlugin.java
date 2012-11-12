@@ -36,6 +36,7 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.Command;
 import com.sk89q.craftbook.mech.CookingPot;
@@ -243,8 +244,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().aiSettings.enabled) {
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
         }
-        //if (getLocalConfiguration().chairSettings.enable)
-        //    getServer().getPluginManager().registerEvents(new Chair(this), this);
+        if (getLocalConfiguration().chairSettings.enable) {
+            getServer().getPluginManager().registerEvents(new Chair(this), this);
+        }
         if (getLocalConfiguration().paintingSettings.enabled) {
             getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
         }
