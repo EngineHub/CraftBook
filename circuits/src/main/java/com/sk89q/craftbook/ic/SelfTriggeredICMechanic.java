@@ -19,13 +19,12 @@
 package com.sk89q.craftbook.ic;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
 
@@ -43,11 +42,10 @@ public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggerin
 
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        BlockState state = block.getState();
 
-        if (state instanceof Sign) {
+        if (block.getTypeId() == BlockID.WALL_SIGN) {
             // Assuming that the plugin host isn't going wonky here
-            ChipState chipState = family.detectSelfTriggered(pt, BukkitUtil.toChangedSign((Sign) state));
+            ChipState chipState = family.detectSelfTriggered(pt, BukkitUtil.toChangedSign(block));
             selfTrigIC.think(chipState);
         }
     }

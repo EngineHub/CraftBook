@@ -8,7 +8,6 @@ import net.minecraft.server.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -91,13 +90,13 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
         Block left = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock());
         ChangedSign effectSign = null;
         if(left.getTypeId() == BlockID.WALL_SIGN) {
-            effectSign = BukkitUtil.toChangedSign((Sign) left.getState());
+            effectSign = BukkitUtil.toChangedSign(left);
         }
 
         Block right = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock());
         ChangedSign armourSign = null;
         if(right.getTypeId() == BlockID.WALL_SIGN) {
-            armourSign = BukkitUtil.toChangedSign((Sign) right.getState());
+            armourSign = BukkitUtil.toChangedSign(right);
         }
 
         for(int i = 0; i < amount; i++) {

@@ -23,12 +23,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -66,13 +65,12 @@ public class ICMechanic extends PersistentMechanic {
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
         BlockWorldVector pt = getTriggerPositions().get(0);
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        final Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         // abort if the current did not change
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final Block source = event.getSource();
-            final BlockState state = block.getState();
             // abort if the sign is the source or the block the sign is attached to
             if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) return;
 
@@ -82,7 +80,7 @@ public class ICMechanic extends PersistentMechanic {
                 public void run() {
                     // Assuming that the plugin host isn't going wonky here
                     ChipState chipState = family.detect(
-                            BukkitUtil.toWorldVector(source), BukkitUtil.toChangedSign((Sign) state));
+                            BukkitUtil.toWorldVector(source), BukkitUtil.toChangedSign(block));
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
                         if (chipState.isTriggered(i)) {
@@ -120,10 +118,8 @@ public class ICMechanic extends PersistentMechanic {
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = block.getState();
-
-            if (state instanceof Sign) {
-                Sign sign = (Sign) state;
+            if (block.getTypeId() == BlockID.WALL_SIGN) {
+                ChangedSign sign = BukkitUtil.toChangedSign(block);
 
                 Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(sign.getLine(1));
 

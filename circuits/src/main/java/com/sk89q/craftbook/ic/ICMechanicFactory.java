@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
@@ -70,7 +69,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
         // if we're not looking at a wall sign, it can't be an IC.
         if (block.getTypeId() != BlockID.WALL_SIGN) return null;
-        ChangedSign sign = BukkitUtil.toChangedSign((Sign) block.getState());
+        ChangedSign sign = BukkitUtil.toChangedSign(block);
 
         // detect the text on the sign to see if it's any kind of IC at all.
         Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));

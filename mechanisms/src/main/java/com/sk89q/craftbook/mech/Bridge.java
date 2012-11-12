@@ -22,8 +22,6 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -38,12 +36,12 @@ import com.sk89q.craftbook.MechanismsConfiguration;
 import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.RegionOperationException;
 
@@ -81,7 +79,7 @@ public class Bridge extends AbstractMechanic {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
-            if (!((Sign) block.getState()).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
+            if (!BukkitUtil.toChangedSign(block).getLine(1).equalsIgnoreCase("[Bridge]")) return null;
 
             // okay, now we can start doing exploration of surrounding blocks
             // and if something goes wrong in here then we throw fits.
@@ -148,8 +146,6 @@ public class Bridge extends AbstractMechanic {
         this.plugin = plugin;
         settings = plugin.getLocalConfiguration().bridgeSettings;
 
-        Sign s = (Sign) trigger.getState();
-
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above
         int mat;
@@ -157,7 +153,7 @@ public class Bridge extends AbstractMechanic {
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getTypeId();
-            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, s)) {
+            if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, BukkitUtil.toChangedSign(trigger))) {
                 break findBase; //On Top
             }
 
@@ -165,7 +161,7 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getTypeId();
             if (settings.canUseBlock(mat)) {
-                if (isValidBridge(proximalBaseCenter, mat, s)) {
+                if (isValidBridge(proximalBaseCenter, mat, BukkitUtil.toChangedSign(trigger))) {
                     break findBase; // it's below
                 } else throw new InvalidConstructionException("mech.bridge.material");
             } else
@@ -182,7 +178,7 @@ public class Bridge extends AbstractMechanic {
             // allowed to find the distal signpost
 
             if (farSide.getTypeId() == BlockID.SIGN_POST) {
-                String otherSignText = ((Sign) farSide.getState()).getLine(1);
+                String otherSignText = BukkitUtil.toChangedSign(farSide).getLine(1);
                 if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) {
                     break;
                 }
@@ -205,7 +201,7 @@ public class Bridge extends AbstractMechanic {
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter), BukkitUtil.toVector(distalBaseCenter));
         int left, right;
         try {
-            left = Integer.parseInt(s.getLine(2));
+            left = Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(2));
             if (left < 0) {
                 left = 0;   // No negatives please
             }
@@ -213,7 +209,7 @@ public class Bridge extends AbstractMechanic {
             left = 1;
         }
         try {
-            right = Integer.parseInt(s.getLine(3));
+            right = Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(3));
             if (right < 0) {
                 right = 0; // No negatives please
             }
@@ -290,14 +286,10 @@ public class Bridge extends AbstractMechanic {
             return;
         }
 
-        Sign sign = null;
+        ChangedSign sign = null;
 
-        if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST
-                || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = event.getClickedBlock().getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
+        if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+            sign = BukkitUtil.toChangedSign(event.getClickedBlock());
         }
 
         if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
@@ -376,7 +368,7 @@ public class Bridge extends AbstractMechanic {
                 if (b.getTypeId() == getBridgeMaterial() || canPassThrough(b.getTypeId())) {
                     b.setTypeId(BlockID.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                        Sign s = (Sign) trigger.getState();
+                        ChangedSign s = BukkitUtil.toChangedSign(trigger);
                         if (oldType != 0) {
                             addBlocks(s, 1);
                         }
@@ -402,7 +394,7 @@ public class Bridge extends AbstractMechanic {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
                 if (canPassThrough(b.getTypeId()))
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                        Sign s = (Sign) trigger.getState();
+                        ChangedSign s = BukkitUtil.toChangedSign(trigger);
                         if (hasEnoughBlocks(s)) {
                             b.setTypeId(getBridgeMaterial());
                             b.setData(getBridgeData());
@@ -431,7 +423,7 @@ public class Bridge extends AbstractMechanic {
         return proximalBaseCenter.getData();
     }
 
-    public boolean isValidBridge(Block baseCenter, int mat, Sign s) throws InvalidMechanismException {
+    public boolean isValidBridge(Block baseCenter, int mat, ChangedSign s) throws InvalidMechanismException {
 
         if (!s.getLine(2).equalsIgnoreCase("0")) {
             if (!(proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() == mat))
@@ -521,20 +513,17 @@ public class Bridge extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        Sign sign = null;
+        ChangedSign sign = null;
 
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = event.getBlock().getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
+        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
+            sign = BukkitUtil.toChangedSign(event.getBlock());
         }
 
         if (sign == null) return;
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getBridgeMaterial(), getBlocks(sign), getBridgeData());
-            sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+            BukkitUtil.toWorld(sign.getLocalWorld()).dropItemNaturally(BukkitUtil.toLocation(sign.getSignLocation()), toDrop);
         }
     }
 
@@ -543,25 +532,25 @@ public class Bridge extends AbstractMechanic {
 
     }
 
-    public boolean removeBlocks(Sign s, int amount) {
+    public boolean removeBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
         s.setLine(0, curBlocks + "");
-        s.update();
+        s.update(false);
         return curBlocks >= 0;
     }
 
-    public boolean addBlocks(Sign s, int amount) {
+    public boolean addBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
         s.setLine(0, curBlocks + "");
-        s.update();
+        s.update(false);
         return curBlocks >= 0;
     }
 
-    public int getBlocks(Sign s) {
+    public int getBlocks(ChangedSign s) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return 0;
         int curBlocks;
@@ -573,7 +562,7 @@ public class Bridge extends AbstractMechanic {
         return curBlocks;
     }
 
-    public boolean hasEnoughBlocks(Sign s) {
+    public boolean hasEnoughBlocks(ChangedSign s) {
 
         return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }
