@@ -235,7 +235,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
             enable = section.getBoolean("enable", true);
             requiresfuel = section.getBoolean("requires-fuel", false);
-            cooksOres = section.getBoolean("cooks-ores", false);
+            cooksOres = section.getBoolean("cooks-everything", false);
         }
     }
     public class CustomCraftingSettings {
