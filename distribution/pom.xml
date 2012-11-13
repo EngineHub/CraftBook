@@ -19,22 +19,22 @@
         <dependency>
             <groupId>com.sk89q.craftbook</groupId>
             <artifactId>common</artifactId>
-            <version>[3.2-SNAPSHOT,)</version>
+            <version>[3.3-SNAPSHOT,)</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.craftbook</groupId>
             <artifactId>mechanisms</artifactId>
-            <version>[3.2-SNAPSHOT,)</version>
+            <version>[3.3-SNAPSHOT,)</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.craftbook</groupId>
             <artifactId>circuits</artifactId>
-            <version>[3.2-SNAPSHOT,)</version>
+            <version>[3.3-SNAPSHOT,)</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.craftbook</groupId>
             <artifactId>vehicles</artifactId>
-            <version>[3.2-SNAPSHOT,)</version>
+            <version>[3.3-SNAPSHOT,)</version>
         </dependency>
     </dependencies>
 
