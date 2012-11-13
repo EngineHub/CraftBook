@@ -41,9 +41,9 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.RegionOperationException;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of
@@ -134,7 +134,6 @@ public class Bridge extends AbstractMechanic {
      *
      * @throws InvalidMechanismException
      */
-    @SuppressWarnings("deprecation")
     private Bridge(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
 
         super();
@@ -227,20 +226,12 @@ public class Bridge extends AbstractMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            try {
-                toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)));
-            } catch (RegionOperationException e) {
-                e.printStackTrace();
-            }
+            toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0,0,0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            try {
-                toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)));
-            } catch (RegionOperationException e) {
-                e.printStackTrace();
-            }
+            toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0,0,0));
         }
 
         // Don't toggle the end points
