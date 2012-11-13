@@ -133,6 +133,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign.update();
             }
             oldTick = lastTick;
+            if(lastTick < 0)
+                lastTick = 0;
             Block b = SignUtil.getBackBlock(sign.getBlock());
             int x = b.getX();
             int y = b.getY() + 2;
@@ -224,8 +226,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     public void setMultiplier(Sign sign, int amount) {
 
-        if (amount < 1 && !plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
-            amount = 1;
+        if (amount < (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1)) {
+            amount = plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
         }
         sign.setLine(3, String.valueOf(amount));
         sign.update();
@@ -253,6 +255,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             }
             setMultiplier(sign, multiplier);
         }
+        if(multiplier < 0)
+            return plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
         return multiplier;
     }
 
