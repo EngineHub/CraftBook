@@ -34,12 +34,12 @@
             <url>http://mvn2.sk89q.com/repo</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
-        </repository>
-                <repository>
             <id>zml-repo</id>
             <url>http://files.zachsthings.com/repo</url>
+        </repository>
+        <repository>
+            <id>vault-repo</id>
+            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
     </repositories>
     <dependencies>
