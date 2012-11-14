@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -40,6 +41,12 @@ public final class CustomDropManager {
 
     public static final int BLOCK_ID_COUNT = 256;
     public static final int DATA_VALUE_COUNT = 128;
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("#", Pattern.LITERAL);
+    private static final Pattern FIELD_SEPARATOR_PATTERN = Pattern.compile("->", Pattern.LITERAL);
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
+    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
+    private static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
+    private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
 
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
     private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
@@ -99,14 +106,14 @@ public final class CustomDropManager {
                         prelude = "Error on line " + currentLine + " of drop definition file " +
                                 file.getAbsolutePath() + ": " + line + "\n"; //Error prelude used for parse messages.
 
-                        line = line.split("#")[0]; //Remove comments
+                        line = COMMENT_PATTERN.split(line)[0]; //Remove comments
                         line = line.trim(); //Remove excess whitespace
 
                         if (line.isEmpty()) {
                             continue; //Don't try to parse empty lines
                         }
 
-                        String[] split = line.split("->", 2); //Split primary field separator
+                        String[] split = FIELD_SEPARATOR_PATTERN.split(line, 2); //Split primary field separator
 
                         if (split.length != 2) {
                             reader.close();
@@ -124,7 +131,7 @@ public final class CustomDropManager {
                         DropDefinition[] drops = readDrops(targetDrops, prelude, split[0].contains("+"));
 
                         if (!isMobDrop) {
-                            split = itemsSource.split(":");
+                            split = COLON_PATTERN.split(itemsSource);
                             if (split.length > 2) {
                                 reader.close();
                                 throw new CustomDropParseException(prelude + "too many source block fields");
@@ -182,7 +189,7 @@ public final class CustomDropManager {
 
     private static DropDefinition[] readDrops(String s, String prelude, boolean append) throws IOException {
 
-        String[] split = s.split(",");
+        String[] split = COMMA_PATTERN.split(s);
         DropDefinition[] drops = new DropDefinition[split.length]; //Java really needs a map function...
         for (int i = 0; i < split.length; i++) {
             drops[i] = readDrop(split[i].trim(), prelude, append); //Strip excess whitespace and parse
@@ -192,15 +199,15 @@ public final class CustomDropManager {
 
     private static DropDefinition readDrop(String s, String prelude, boolean append) throws IOException {
 
-        String[] split = s.split("x");
+        String[] split = X_PATTERN.split(s);
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
-        String[] split2 = split[0].trim().split(":");
+        String[] split2 = COLON_PATTERN.split(split[0].trim());
         if (split2.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
         int itemId = Integer.parseInt(split2[0].trim());
         int data = split2.length == 1 ? 0 : Integer.parseInt(split2[1].trim());
         if (data >= DATA_VALUE_COUNT || data < 0)
             throw new CustomDropParseException(prelude + "block data value out of range");
-        String[] split3 = split[1].trim().split("-");
+        String[] split3 = MINUS_PATTERN.split(split[1].trim());
         if (split3.length > 2) throw new CustomDropParseException(prelude + ": invalid number drops range");
         int countMin = Integer.parseInt(split3[0]);
         int countMax = split3.length == 1 ? countMin : Integer.parseInt(split3[1]);
@@ -209,9 +216,6 @@ public final class CustomDropManager {
 
     public static class CustomDropParseException extends IOException {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = -1147409575702887124L;
 
         public CustomDropParseException(String message) {

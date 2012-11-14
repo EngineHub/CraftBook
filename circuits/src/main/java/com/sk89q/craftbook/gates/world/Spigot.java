@@ -121,18 +121,18 @@ public class Spigot extends AbstractIC {
             Chest c = (Chest) chest.getState();
             if(((Factory)getFactory()).buckets) {
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.WATER_BUCKET, 1));
-                if (over.size() == 0)
+                if (over.isEmpty())
                     return BlockID.WATER;
                 over = c.getInventory().removeItem(new ItemStack(ItemID.LAVA_BUCKET, 1));
-                if (over.size() == 0)
+                if (over.isEmpty())
                     return BlockID.LAVA;
             }
             else {
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
-                if (over.size() == 0)
+                if (over.isEmpty())
                     return BlockID.WATER;
                 over = c.getInventory().removeItem(new ItemStack(BlockID.LAVA, 1));
-                if (over.size() == 0)
+                if (over.isEmpty())
                     return BlockID.LAVA;
             }
         }
@@ -154,7 +154,7 @@ public class Spigot extends AbstractIC {
                     m = BlockID.LAVA;
 
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1));
-                if (over.size() == 0)
+                if (over.isEmpty())
                     return m;
             }
             else {
@@ -164,7 +164,7 @@ public class Spigot extends AbstractIC {
                     m = BlockID.LAVA;
 
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m, 1));
-                if (over.size() == 0)
+                if (over.isEmpty())
                     return m;
             }
         }

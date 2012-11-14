@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -29,6 +30,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ItemSensor extends AbstractIC {
 
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private int item = 0;
     private short data = -1;
 
@@ -46,7 +48,7 @@ public class ItemSensor extends AbstractIC {
 
         try {
             Block block = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            String[] split = getSign().getLine(3).trim().split(":");
+            String[] split = COLON_PATTERN.split(getSign().getLine(3).trim());
             // lets get the type to detect first
             try {
                 item = Integer.parseInt(split[0]);

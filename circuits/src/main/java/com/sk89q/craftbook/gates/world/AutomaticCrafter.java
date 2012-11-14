@@ -2,8 +2,10 @@ package com.sk89q.craftbook.gates.world;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
@@ -108,9 +110,8 @@ public class AutomaticCrafter extends AbstractIC {
 
     public boolean collect(Dispenser disp) {
 
+        outer:
         for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-            check:
-            {
             if (!(en instanceof Item)) {
                 continue;
             }
@@ -118,20 +119,20 @@ public class AutomaticCrafter extends AbstractIC {
             if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
                 continue;
             }
-            int ix = item.getLocation().getBlockX();
-            int iy = item.getLocation().getBlockY();
-            int iz = item.getLocation().getBlockZ();
+            Location loc = item.getLocation();
+            int ix = loc.getBlockX();
+            int iy = loc.getBlockY();
+            int iz = loc.getBlockZ();
             if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
                 for (int i = 0; i < item.getItemStack().getAmount(); i++) {
                     ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
                             item.getItemStack());
                     if (it == null) {
-                        break check;
+                        continue outer;
                     }
                     it.setAmount(it.getAmount() + 1);
                 }
                 item.remove();
-            }
             }
         }
         return false;
@@ -161,11 +162,14 @@ public class AutomaticCrafter extends AbstractIC {
 
     public boolean isValidRecipe(Recipe r, Inventory inv) {
 
+        ItemStack[] invContents = inv.getContents();
         if (r instanceof ShapedRecipe) {
             ShapedRecipe shape = (ShapedRecipe) r;
-            boolean large = shape.getShape().length == 3;
+            Map<Character,ItemStack> ingredientMap = shape.getIngredientMap();
+            String[] shapeArr = shape.getShape();
+            boolean large = shapeArr.length == 3;
             int c = -1, in = 0;
-            for (int i = 0; i < inv.getContents().length; i++) {
+            for (ItemStack stack : invContents) {
                 try {
                     c++;
                     if (c > (large ? 2 : 1)) {
@@ -178,16 +182,15 @@ public class AutomaticCrafter extends AbstractIC {
                             continue;
                         }
                     }
-                    ItemStack it = inv.getContents()[i];
-                    String shapeSection = shape.getShape()[in];
+                    String shapeSection = shapeArr[in];
                     Character item = shapeSection.charAt(c);
-                    ItemStack require = shape.getIngredientMap().get(item);
+                    ItemStack require = ingredientMap.get(item);
                     if (require == null) {
                         require = new ItemStack(0, 0);
                     }
-                    if (it == null || it.getTypeId() == 0) {
+                    if (stack == null || stack.getTypeId() == 0) {
                         if (require.getTypeId() != 0) return false;
-                    } else if (require.getTypeId() == it.getTypeId() && require.getDurability() == it.getDurability()) {
+                    } else if (require.getTypeId() == stack.getTypeId() && require.getDurability() == stack.getDurability()) {
                     } else
                         return false;
                 } catch (Exception e) {
@@ -198,8 +201,7 @@ public class AutomaticCrafter extends AbstractIC {
         } else if (r instanceof ShapelessRecipe) {
             ShapelessRecipe shape = (ShapelessRecipe) r;
             List<ItemStack> ing = shape.getIngredientList();
-            for (int i = 0; i < inv.getContents().length; i++) {
-                ItemStack it = inv.getContents()[i];
+            for (ItemStack it : invContents) {
                 if (it == null) {
                     continue;
                 }
@@ -213,7 +215,7 @@ public class AutomaticCrafter extends AbstractIC {
                     }
                 }
             }
-            return ing.size() == 0;
+            return ing.isEmpty();
 
         } else
             return false;

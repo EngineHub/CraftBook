@@ -56,6 +56,9 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class SignUtil {
 
+    private SignUtil() {
+    }
+
     public static boolean isSign(Block keith) {
 
         return isSign(keith.getTypeId());
@@ -419,7 +422,7 @@ public class SignUtil {
      * @param line    to change
      * @param content to change line to
      */
-    public void setLine(Sign sign, int line, String content) {
+    public static void setLine(Sign sign, int line, String content) {
 
         sign.setLine(line, content);
         sign.update();

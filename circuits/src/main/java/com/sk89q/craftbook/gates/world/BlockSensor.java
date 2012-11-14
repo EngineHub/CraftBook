@@ -12,8 +12,11 @@ import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 
+import java.util.regex.Pattern;
+
 public class BlockSensor extends AbstractIC {
 
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private Block center;
     private int id = 0;
     private byte data = -1;
@@ -28,9 +31,9 @@ public class BlockSensor extends AbstractIC {
 
         try {
             center = ICUtil.parseBlockLocation(getSign());
-            String ids = getSign().getLine(3);
-            id = Integer.parseInt(ids.split(":")[0]);
-            data = Byte.parseByte(ids.split(":")[1]);
+            String[] ids = COLON_PATTERN.split(getSign().getLine(3));
+            id = Integer.parseInt(ids[0]);
+            data = Byte.parseByte(ids[1]);
         } catch (Exception ignored) {
             // use defaults
         }
@@ -87,7 +90,7 @@ public class BlockSensor extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] split = sign.getLine(3).split(":");
+                String[] split = COLON_PATTERN.split(sign.getLine(3), 2);
                 Integer.parseInt(split[0]);
             } catch (Exception ignored) {
                 throw new ICVerificationException("You need to specify an block in line four.");

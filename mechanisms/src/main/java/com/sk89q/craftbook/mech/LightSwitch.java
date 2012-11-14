@@ -64,7 +64,7 @@ public class LightSwitch extends AbstractMechanic {
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.WALL_SIGN) return null;
             String line = ((Sign) block.getState()).getLine(1);
-            if (!line.equalsIgnoreCase("[|]") && !line.equalsIgnoreCase("[I]")) return null;
+            if (!line.equals("[|]") && !line.equalsIgnoreCase("[I]")) return null;
 
             // okay, now we can start doing exploration of surrounding blocks
             // and if something goes wrong in here then we throw fits.
@@ -82,7 +82,7 @@ public class LightSwitch extends AbstractMechanic {
 
             String line = sign.getLine(1);
 
-            if (line.equalsIgnoreCase("[|]") || line.equalsIgnoreCase("[I]")) {
+            if (line.equals("[|]") || line.equalsIgnoreCase("[I]")) {
                 if (!player.hasPermission("craftbook.mech.light-switch")) throw new InsufficientPermissionsException();
 
                 sign.setLine(1, "[I]");

@@ -1,16 +1,11 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -38,18 +33,18 @@ public class Pulser extends AbstractIC {
             ChangedSign sign = getSign();
             String line2 = sign.getLine(2);
             String line3 = sign.getLine(3);
-            if (!(line2 == null) && !line2.equals("")) {
+            if (!(line2 == null) && !line2.isEmpty()) {
                 try {
-                    String[] split = line2.split(":");
+                    String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
                     pulseLength = Integer.parseInt(split[0]);
                     startDelay = Integer.parseInt(split[1]);
                 } catch (Exception e) {
                     // defaults will be used
                 }
             }
-            if (!(line3 == null) && !line3.equals("")) {
+            if (!(line3 == null) && !line3.isEmpty()) {
                 try {
-                    String[] split = line3.split(":");
+                    String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
                     pulseCount = Integer.parseInt(split[0]);
                     pauseLength = Integer.parseInt(split[1]);
                 } catch (Exception e) {
@@ -128,17 +123,17 @@ public class Pulser extends AbstractIC {
 
         public PulseTask(ChipState chip, int pulseLength, int pulseCount, int pauseLength) {
 
-            this.chip = chip;
-            this.pulseLength = pulseLength;
-            this.pulseCount = pulseCount;
-            this.pauseLength = pauseLength;
-
             if (pulseLength == 0) {
                 pulseLength = 1;
             }
             if (pauseLength == 0) {
                 pauseLength = 1;
             }
+
+            this.chip = chip;
+            this.pulseLength = pulseLength;
+            this.pulseCount = pulseCount;
+            this.pauseLength = pauseLength;
         }
 
         @Override

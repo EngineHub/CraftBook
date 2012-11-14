@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.cart;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -139,13 +140,14 @@ public abstract class CartMechanism {
             if (!(ent instanceof Minecart)) {
                 continue;
             }
-            if (ent.getLocation().getBlockX() != rail.getLocation().getBlockX()) {
+            Location entLoc = ent.getLocation();
+            if (entLoc.getBlockX() != rail.getX()) {
                 continue;
             }
-            if (ent.getLocation().getBlockY() != rail.getLocation().getBlockY()) {
+            if (entLoc.getBlockY() != rail.getY()) {
                 continue;
             }
-            if (ent.getLocation().getBlockZ() != rail.getLocation().getBlockZ()) {
+            if (entLoc.getBlockZ() != rail.getZ()) {
                 continue;
             }
             return (Minecart) ent;

@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.cart;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -26,9 +27,9 @@ public class CartLift extends CartMechanism {
 
             destination = destination.getRelative(face);
 
-            if (destination.getState() instanceof Sign
-                    && blocks.base.getTypeId() == destination.getRelative(BlockFace.UP).getTypeId()) {
-                String testLine = ((Sign) destination.getState()).getLine(2);
+            BlockState state = destination.getState();
+            if (state instanceof Sign && blocks.base.getTypeId() == destination.getRelative(BlockFace.UP).getTypeId()) {
+                String testLine = ((Sign) state).getLine(2);
 
                 if (testLine.equalsIgnoreCase("[Lift Up]") || testLine.equalsIgnoreCase("[Lift Down]")
                         || testLine.equalsIgnoreCase("[Lift]")) {

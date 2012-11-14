@@ -554,7 +554,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                 return ic;
             }
             catch(Exception e){
-                continue;
             }
         }
 
@@ -599,7 +598,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                                 .DARK_RED + "R " : ""));
             } catch (Exception e) {
                 if (ic.endsWith("5001") || ic.endsWith("5000")) {
-                    //Stuff
+                    // TODO
                 } else {
                     Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" +
                             " it to Me4502");

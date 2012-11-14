@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Animals;
@@ -15,12 +16,6 @@ import org.bukkit.entity.StorageMinecart;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 
@@ -108,19 +103,21 @@ public class EntityTrap extends AbstractIC {
         Location location = BukkitUtil.toSign(getSign()).getLocation();
         Type type = Type.MOB_HOSTILE;
         try {
-            radius = Integer.parseInt(getSign().getLine(2).split("=")[0]);
+            String[] splitLine = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 3);
+            radius = Integer.parseInt(splitLine[0]);
             if (getSign().getLine(2).contains("=")) {
-                int x = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[0]);
-                int y = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[1]);
-                int z = Integer.parseInt(getSign().getLine(2).split("=")[1].split(":")[2]);
+                String[] pos = ICUtil.COLON_PATTERN.split(splitLine[1]);
+                int x = Integer.parseInt(pos[0]);
+                int y = Integer.parseInt(pos[1]);
+                int z = Integer.parseInt(pos[2]);
                 location.add(x, y, z);
 
-                damage = Integer.parseInt(getSign().getLine(2).split("=")[2]);
+                damage = Integer.parseInt(splitLine[2]);
             }
         } catch (Exception ignored) {
         }
 
-        if (getSign().getLine(3).length() != 0) {
+        if (!getSign().getLine(3).isEmpty()) {
             type = Type.fromString(getSign().getLine(3));
         }
 

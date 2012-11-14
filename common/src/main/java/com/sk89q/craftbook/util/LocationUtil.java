@@ -24,19 +24,22 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public final class LocationUtil {
 
+    private LocationUtil() {
+    }
+
     public static void init() {
 
     }
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
-        return l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()) && getDistanceSquared(l1,
-                l2) <= radius * radius;
+        return l1.getWorld().equals(l2.getWorld())
+                && getDistanceSquared(l1, l2) <= radius * radius;
     }
 
     public static Entity[] getNearbyEntities(Location l, int radius) {
 
-        int chunkRadius = radius < 16 ? 1 : (radius - radius % 16) / 16;
+        int chunkRadius = radius < 16 ? 1 : radius / 16;
         HashSet<Entity> radiusEntities = new HashSet<Entity>();
         for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
             for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
@@ -91,11 +94,9 @@ public final class LocationUtil {
         int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
         if (x >= y && x >= z)
             return x;
-        else if (y >= x && y >= z)
+        else if (y >= z) // Since x is not the largest, either y or z must be
             return y;
-        else if (z >= x && z >= y) return z;
-        else
-            return x;
+        else return z;
     }
 
     /**
@@ -272,11 +273,7 @@ public final class LocationUtil {
      */
     public static Location getCenterOfBlock(Block block) {
 
-        Location location = block.getLocation();
-        location.setX(block.getX() + 0.5);
-        location.setZ(block.getZ() + 0.5);
-        location.setY(block.getY() + 1);
-        return location;
+        return block.getLocation().add(0.5, 1, 0.5);
     }
 
     public static List<Player> getNearbyPlayers(Block block, int radius) {

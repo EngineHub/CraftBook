@@ -3,6 +3,7 @@ package com.sk89q.craftbook.gates.world;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -10,11 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -68,14 +64,15 @@ public class BlockBreaker extends AbstractIC {
         if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK) return false;
 
         try {
-            int blockID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+            int blockID = Integer.parseInt(split[0]);
             if(blockID != broken.getTypeId())
                 return false;
-            byte data = Byte.parseByte(getSign().getLine(2).split(":")[1]);
+            byte data = Byte.parseByte(split[1]);
             if(data != broken.getData())
                 return false;
         }
-        catch(Exception e){}
+        catch (Exception e) {}
 
         broken.getDrops();
         for(ItemStack blockstack  : broken.getDrops()) {
@@ -83,7 +80,7 @@ public class BlockBreaker extends AbstractIC {
             if (hasChest) {
                 Chest c = (Chest) chest.getState();
                 HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
-                if (overflow.size() == 0)
+                if (overflow.isEmpty())
                     continue;
                 else {
                     for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {

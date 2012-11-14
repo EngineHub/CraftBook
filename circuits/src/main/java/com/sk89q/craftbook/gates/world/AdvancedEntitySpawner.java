@@ -28,7 +28,15 @@ import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
+import java.util.regex.Pattern;
+
 public class AdvancedEntitySpawner extends CreatureSpawner {
+
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
+    private static final Pattern SEMICOLON_PATTERN = Pattern.compile(";", Pattern.LITERAL);
+    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
 
     public AdvancedEntitySpawner(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -52,10 +60,11 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
     public void load() {
 
         try {
-            type = EntityType.fromName(getSign().getLine(3).trim().split("\\*")[0]);
+            String[] splitLine3 = ASTERISK_PATTERN.split(getSign().getLine(3).trim());
+            type = EntityType.fromName(splitLine3[0]);
 
             try {
-                amount = Integer.parseInt(getSign().getLine(3).trim().split("\\*")[1]);
+                amount = Integer.parseInt(splitLine3[1]);
             }
             catch(Exception e) {
                 amount = 1;
@@ -63,9 +72,10 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
             try {
                 double x, y, z;
-                x = Double.parseDouble(getSign().getLine(2).split(":")[0]);
-                y = Double.parseDouble(getSign().getLine(2).split(":")[1]);
-                z = Double.parseDouble(getSign().getLine(2).split(":")[2]);
+                String[] splitLine2 = COLON_PATTERN.split(getSign().getLine(2));
+                x = Double.parseDouble(splitLine2[0]);
+                y = Double.parseDouble(splitLine2[1]);
+                z = Double.parseDouble(splitLine2[2]);
                 x += getSign().getX();
                 y += getSign().getY();
                 z += getSign().getZ();
@@ -110,20 +120,22 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                     for(int s = 0; s < 4; s++) {
                         try {
                             String bit = armourSign.getLine(s);
-                            if(bit == null || bit.trim().length() == 0)
+                            if(bit == null || bit.trim().isEmpty())
                                 continue;
 
                             byte data = 0;
+                            String[] bitSplit = SEMICOLON_PATTERN.split(bit);
                             try {
-                                data = Byte.parseByte(bit.split(";")[0].split(":")[1]);
+                                data = Byte.parseByte(COLON_PATTERN.split(bitSplit[0])[1]);
                             }
                             catch(Exception e){}
 
-                            ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(bit.split(";")[0].split(":")[0])], 1, data);
+                            ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(COLON_PATTERN.split(bitSplit[0])[0])], 1, data);
                             try {
-                                for(int e = 1; e < bit.split(";").length; e++) {
-                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(bit.split(";")[e].split(":")[0])],
-                                            Integer.parseInt(bit.split(";")[e].split(":")[1]));
+                                for(int e = 1; e < bitSplit.length; e++) {
+                                    String[] enchantInfo = COLON_PATTERN.split(bitSplit[e]);
+                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(enchantInfo[0])],
+                                            Integer.parseInt(enchantInfo[1]));
                                 }
                             }
                             catch(Exception e){}
@@ -138,10 +150,10 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                 for(int s = 0; s < 4; s++) {
                     try {
                         String bit = effectSign.getLine(s);
-                        if(bit == null || bit.trim().length() == 0)
+                        if(bit == null || bit.trim().isEmpty())
                             continue;
 
-                        String[] data = bit.split(":");
+                        String[] data = COLON_PATTERN.split(bit);
 
                         if(data[0].equalsIgnoreCase("e"))
                             setEntityData(ent, bit.replace(data[0] + ":", ""));
@@ -153,7 +165,7 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                         else if(data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
                             for(int a = 1; a < data.length; a++) {
                                 try {
-                                    String[] potionBits = data[a].split(";");
+                                    String[] potionBits = SEMICOLON_PATTERN.split(data[a]);
                                     PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])),
                                             Integer.parseInt(potionBits[1]),Integer.parseInt(potionBits[2]));
                                     ((LivingEntity)ent).addPotionEffect(effect, true);
@@ -164,9 +176,10 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                         else if(data[0].equalsIgnoreCase("v")) {
                             try {
                                 double x, y, z;
-                                x = Double.parseDouble(data[1].split(",")[0]);
-                                y = Double.parseDouble(data[1].split(",")[1]);
-                                z = Double.parseDouble(data[1].split(",")[2]);
+                                String[] coords = COMMA_PATTERN.split(data[1]);
+                                x = Double.parseDouble(coords[0]);
+                                y = Double.parseDouble(coords[1]);
+                                z = Double.parseDouble(coords[2]);
                                 ent.setVelocity(new org.bukkit.util.Vector(x,y,z));
                             }
                             catch(Exception e){
@@ -179,16 +192,19 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                             EntityLiving eliv = cle.getHandle();
 
                             byte d = 0;
+                            String[] splitBit = SEMICOLON_PATTERN.split(bit);
+                            String[] splitEvenMore = COLON_PATTERN.split(splitBit[0]);
                             try {
-                                d = Byte.parseByte(bit.split(";")[0].split(":")[2]);
+                                d = Byte.parseByte(splitEvenMore[2]);
                             }
                             catch(Exception e){}
 
-                            ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(bit.split(";")[0].split(":")[1])], 1, d);
+                            ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(splitEvenMore[1])], 1, d);
                             try {
-                                for(int e = 1; e < bit.split(";").length; e++) {
-                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(bit.split(";")[e].split(":")[0])],
-                                            Integer.parseInt(bit.split(";")[e].split(":")[1]));
+                                for(int e = 1; e < splitBit.length; e++) {
+                                    String[] enchantInfo = COLON_PATTERN.split(splitBit[e]);
+                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(enchantInfo[0])],
+                                            Integer.parseInt(enchantInfo[1]));
                                 }
                             }
                             catch(Exception e){}

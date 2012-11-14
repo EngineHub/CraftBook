@@ -63,8 +63,8 @@ implements Comparator<BlockState> {
         Block b1 = o1.getBlock();
         Block b2 = o2.getBlock();
 
-        double dist1 = b1.getLocation().distance(BukkitUtil.toLocation(b1.getWorld(), origin));
-        double dist2 = b2.getLocation().distance(BukkitUtil.toLocation(b2.getWorld(), origin));
+        double dist1 = b1.getLocation().distanceSquared(BukkitUtil.toLocation(b1.getWorld(), origin));
+        double dist2 = b2.getLocation().distanceSquared(BukkitUtil.toLocation(b2.getWorld(), origin));
 
         if (dist1 < dist2)
             return -1;

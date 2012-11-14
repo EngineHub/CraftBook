@@ -17,13 +17,13 @@ import com.sk89q.craftbook.ic.ICVerificationException;
  */
 public class Delayer extends AbstractIC {
 
-    private int delay = 1;
+    private long delay = 1;
 
     public Delayer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         try {
-            delay = Integer.parseInt(getSign().getLine(2));
+            delay = Long.parseLong(getSign().getLine(2));
         } catch (Exception ignored) {
         }
     }

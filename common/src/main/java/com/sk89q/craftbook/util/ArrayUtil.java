@@ -7,6 +7,11 @@ import java.util.List;
  */
 public final class ArrayUtil {
 
+    public static final String[] EMPTY_STRINGS = new String[0];
+
+    private ArrayUtil() {
+    }
+
     /**
      * Turns an ArrayList into an array of the size 8.
      * This new array can be used to output every line
@@ -19,7 +24,7 @@ public final class ArrayUtil {
      */
     public static String[] getArrayPage(List<String> list, int page) {
 
-        if (list.size() < 1) return new String[0];
+        if (list.size() < 1) return EMPTY_STRINGS;
         page = Math.abs(page - 1);
         String[] array;
         if (list.size() > 8) {

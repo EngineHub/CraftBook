@@ -352,10 +352,7 @@ public class Bridge extends AbstractMechanic {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                int oldType = 0;
-                if (b != null) {
-                    oldType = b.getTypeId();
-                }
+                int oldType = b.getTypeId();
                 if (b.getTypeId() == getBridgeMaterial() || canPassThrough(b.getTypeId())) {
                     b.setTypeId(BlockID.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
@@ -416,13 +413,13 @@ public class Bridge extends AbstractMechanic {
 
     public boolean isValidBridge(Block baseCenter, int mat, ChangedSign s) throws InvalidMechanismException {
 
-        if (!s.getLine(2).equalsIgnoreCase("0")) {
+        if (!s.getLine(2).equals("0")) {
             if (!(proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() == mat))
                 return false;
         } else if (!(proximalBaseCenter.getTypeId() == mat))
             return false;
 
-        if (!s.getLine(3).equalsIgnoreCase("0")) {
+        if (!s.getLine(3).equals("0")) {
             if (!(proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == mat))
                 return false;
         } else if (!(proximalBaseCenter.getTypeId() == mat))
@@ -527,7 +524,7 @@ public class Bridge extends AbstractMechanic {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
-        s.setLine(0, curBlocks + "");
+        s.setLine(0, String.valueOf(curBlocks));
         s.update(false);
         return curBlocks >= 0;
     }
@@ -536,7 +533,7 @@ public class Bridge extends AbstractMechanic {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
-        s.setLine(0, curBlocks + "");
+        s.setLine(0, String.valueOf(curBlocks));
         s.update(false);
         return curBlocks >= 0;
     }

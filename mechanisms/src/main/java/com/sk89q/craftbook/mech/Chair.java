@@ -64,7 +64,7 @@ public class Chair implements Listener {
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
         if (hasChair(event.getBlock())) {
             Player p = getChair(event.getBlock());
-            if(!p.isOnline() || !p.getWorld().getName().equalsIgnoreCase(event.getBlock().getWorld().getName())
+            if(!p.isOnline() || !p.getWorld().equals(event.getBlock().getWorld())
                     || p.getLocation().distanceSquared(event.getBlock().getLocation()) > 3*3) {
                 removeChair(p);
             }
@@ -105,7 +105,7 @@ public class Chair implements Listener {
             } else { //Sit
                 if (hasChair(event.getClickedBlock())) {
                     Player p = getChair(event.getClickedBlock());
-                    if(!p.isOnline() || !p.getWorld().getName().equalsIgnoreCase(event.getClickedBlock().getWorld().getName())
+                    if(!p.isOnline() || !p.getWorld().equals(event.getClickedBlock().getWorld())
                             || p.getLocation().distanceSquared(event.getClickedBlock().getLocation()) > 3*3) {
                         removeChair(p);
                     }
@@ -130,7 +130,7 @@ public class Chair implements Listener {
         public void run () {
             for(String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
-                if(!p.isOnline() || !p.getWorld().getName().equalsIgnoreCase(getChair(p).getWorld().getName())
+                if(!p.isOnline() || !p.getWorld().equals(getChair(p).getWorld())
                         || p.getLocation().distanceSquared(getChair(p).getLocation()) > 3*3) {
                     Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
                             new ChairWatcher((byte) 0), true);

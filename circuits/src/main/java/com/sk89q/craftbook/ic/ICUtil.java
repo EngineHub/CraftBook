@@ -19,7 +19,9 @@
 package com.sk89q.craftbook.ic;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
+import net.minecraft.server.World;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -37,6 +39,8 @@ import com.sk89q.worldedit.blocks.BlockID;
  * @author sk89q
  */
 public class ICUtil {
+    public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
+    public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     //private static BlockFace[] REDSTONE_CONTACT_FACES =
     //    {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
@@ -129,7 +133,7 @@ public class ICUtil {
             // set the new data
             block.setData((byte) newData, true);
             // apply physics to the source block the lever is attached to
-            net.minecraft.server.World w = ((CraftWorld)block.getWorld()).getHandle();
+            World w = ((CraftWorld)block.getWorld()).getHandle();
             w.applyPhysics(source.getX(), source.getY(), source.getZ(), 0);
             return true;
         }
@@ -145,11 +149,11 @@ public class ICUtil {
         int offsetY = 0;
         int offsetZ = 0;
         if (line.contains("=")) {
-            String[] split = line.split("=");
+            String[] split = EQUALS_PATTERN.split(line);
             line = split[1];
         }
         try {
-            String[] split = line.split(":");
+            String[] split = COLON_PATTERN.split(line);
             if (split.length > 1) {
                 offsetX = Integer.parseInt(split[0]);
                 offsetY = Integer.parseInt(split[1]);
@@ -189,11 +193,13 @@ public class ICUtil {
 
         try {
             String line = sign.getLine(i);
-            String[] strings = line.split(":");
+            String[] strings;
             if (line.contains("=")) {
-                String[] split = line.split("=");
+                String[] split = EQUALS_PATTERN.split(line, 2);
                 Integer.parseInt(split[0]);
-                strings = split[1].split(":");
+                strings = COLON_PATTERN.split(split[1], 3);
+            } else {
+                strings = COLON_PATTERN.split(line);
             }
             if (strings.length > 1) {
                 Integer.parseInt(strings[1]);
@@ -215,7 +221,7 @@ public class ICUtil {
         String line = sign.getLine(lPos);
         int radius = 10; //default radius is 10.
         try {
-            return Integer.parseInt(line.split("=")[0]);
+            return Integer.parseInt(EQUALS_PATTERN.split(line, 2)[0]);
         } catch (NumberFormatException e) {
             // do nothing and use default radius
         }

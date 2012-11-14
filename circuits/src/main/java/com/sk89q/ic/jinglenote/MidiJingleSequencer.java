@@ -171,20 +171,22 @@ public class MidiJingleSequencer implements JingleSequencer {
 
     private static Sound toMCSound(byte instrument) {
 
-        if (instrument == 0)
-            return Sound.NOTE_PIANO;
-        else if (instrument == 1)
-            return Sound.NOTE_BASS_GUITAR;
-        else if (instrument == 2)
-            return Sound.NOTE_SNARE_DRUM;
-        else if (instrument == 3)
-            return Sound.NOTE_STICKS;
-        else if (instrument == 4)
-            return Sound.NOTE_BASS_DRUM;
-        else if (instrument == 5)
-            return Sound.NOTE_PLING;
-        else
-            return null;
+        switch (instrument) {
+            case 0:
+                return Sound.NOTE_PIANO;
+            case 1:
+                return Sound.NOTE_BASS_GUITAR;
+            case 2:
+                return Sound.NOTE_SNARE_DRUM;
+            case 3:
+                return Sound.NOTE_STICKS;
+            case 4:
+                return Sound.NOTE_BASS_DRUM;
+            case 5:
+                return Sound.NOTE_PLING;
+            default:
+                return null;
+        }
     }
 
     /*private static int toMCPercussion(int note) {

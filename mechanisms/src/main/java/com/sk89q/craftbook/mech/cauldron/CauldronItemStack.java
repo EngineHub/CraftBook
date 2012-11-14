@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -15,14 +16,15 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + amount;
         result = prime * result + data;
-        result = prime * result
-                + (material == null ? 0 : material.hashCode());
+        result = prime * result + (material == null ? 0 : material.hashCode());
         return result;
     }
 
@@ -41,7 +43,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
         // merge the amounts and stacks
         for (Map.Entry<String, Integer> stack : items.entrySet()) {
-            String[] split = stack.getKey().split(":");
+            String[] split = COLON_PATTERN.split(stack.getKey());
             stackSet.add(new CauldronItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]), stack.getValue()));
         }
         return stackSet;
@@ -120,8 +122,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     public boolean isSameType(CauldronItemStack stack) {
 
         if (data < 0 || stack.getData() < 0) return stack.getMaterial() == getMaterial();
-        return stack.getMaterial() == getMaterial() &&
-                stack.getData() == getData();
+        return stack.getMaterial() == getMaterial() && stack.getData() == getData();
     }
 
     @Override

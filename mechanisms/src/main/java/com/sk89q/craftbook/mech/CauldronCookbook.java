@@ -25,6 +25,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 //import java.io.*;
 
 /**
@@ -35,6 +36,11 @@ import java.util.logging.Logger;
  */
 @Deprecated
 public class CauldronCookbook {
+
+    private static final Pattern AT_PATTERN = Pattern.compile("@", Pattern.LITERAL);
+    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
+    private static final Pattern ANYTHING_MULTIPLIED_BY_NUMBER_PATTERN = Pattern.compile("^.*\\*([0-9]+)$");
 
     /**
      * Constructs a CauldronCookbook - reads recipes.
@@ -121,14 +127,14 @@ public class CauldronCookbook {
             while ((line = buff.readLine()) != null) {
                 line = line.trim();
                 // Blank lines
-                if (line.length() == 0) {
+                if (line.isEmpty()) {
                     continue;
                 }
                 // Comment
-                if (line.charAt(0) == ';' || line.charAt(0) == '#' || line.equals("")) {
+                if (line.charAt(0) == ';' || line.charAt(0) == '#' || line.isEmpty()) {
                     continue;
                 }
-                String[] parts = line.split(":");
+                String[] parts = COLON_PATTERN.split(line);
                 if (parts.length < 3) {
                     log.log(Level.WARNING, "Invalid cauldron recipe line in "
                             + file.getName() + ": '" + line + "'");
@@ -137,11 +143,11 @@ public class CauldronCookbook {
                     List<Tuple2<Integer, Short>> ingredients = parseCauldronItems(parts[1]);
                     List<Tuple2<Integer, Short>> results = parseCauldronItems(parts[2]);
                     String[] groups = null;
-                    if (parts.length >= 4 && parts[3].trim().length() > 0) {
-                        groups = parts[3].split(",");
+                    if (parts.length >= 4 && !parts[3].trim().isEmpty()) {
+                        groups = COMMA_PATTERN.split(parts[3]);
                     }
-                    CauldronCookbook.Recipe recipe =
-                            new CauldronCookbook.Recipe(name, ingredients, results, groups);
+                    Recipe recipe =
+                            new Recipe(name, ingredients, results, groups);
                     add(recipe);
                 }
             }
@@ -161,7 +167,7 @@ public class CauldronCookbook {
      */
     private List<Tuple2<Integer, Short>> parseCauldronItems(String list) {
 
-        String[] parts = list.split(",");
+        String[] parts = COMMA_PATTERN.split(list);
 
         List<Tuple2<Integer, Short>> out = new ArrayList<Tuple2<Integer, Short>>();
 
@@ -170,18 +176,18 @@ public class CauldronCookbook {
 
             try {
                 // Multiplier
-                if (part.matches("^.*\\*([0-9]+)$")) {
-                    int at = part.lastIndexOf("*");
-                    multiplier = Integer.parseInt(
-                            part.substring(at + 1, part.length()));
+                if (ANYTHING_MULTIPLIED_BY_NUMBER_PATTERN.matcher(part).matches()) {
+                    int at = part.lastIndexOf('*');
+                    multiplier = Integer.parseInt(part.substring(at + 1, part.length()));
                     part = part.substring(0, at);
                 }
 
                 try {
                     Short s = 0;
-                    Integer id = Integer.valueOf(part.split("@")[0]);
-                    if (part.split("@").length > 1) {
-                        s = Short.valueOf(part.split("@")[1]);
+                    String[] split = AT_PATTERN.split(part);
+                    Integer id = Integer.valueOf(split[0]);
+                    if (split.length > 1) {
+                        s = Short.valueOf(split[1]);
                     }
                     for (int i = 0; i < multiplier; i++) {
                         out.add(new Tuple2<Integer, Short>(id, s));

@@ -68,8 +68,9 @@ public class MinecartManager {
     public void enter(VehicleEnterEvent event) {
 
         try {
-            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getVehicle().getLocation().getBlock());
-            cmb.setFromBlock(event.getVehicle().getLocation().getBlock()); // WAI
+            Block block = event.getVehicle().getLocation().getBlock();
+            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(block);
+            cmb.setFromBlock(block); // WAI
             CartMechanism thingy = mechanisms.get(cmb.base.getTypeId());
             if (thingy != null) {
                 Location to = event.getVehicle().getLocation();

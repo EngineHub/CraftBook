@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -17,6 +18,7 @@ import java.util.Set;
 public class ImprovedCauldronCookbook extends BaseConfiguration {
 
     public static ImprovedCauldronCookbook INSTANCE;
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private Collection<Recipe> recipes;
     private File config;
     private File dataFolder;
@@ -99,7 +101,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
             try {
                 for (String item : section.getKeys(false)) {
-                    String[] split = item.split(":");
+                    String[] split = COLON_PATTERN.split(item);
                     Material material;
                     try {
                         material = Material.getMaterial(Integer.parseInt(split[0]));

@@ -40,12 +40,14 @@ public class JkFlipFlop extends AbstractIC {
 
         boolean j = chip.get(1); //Set
         boolean k = chip.get(2); //Reset
-        if (chip.isTriggered(0) && !chip.get(0)) if (j && k) {
-            chip.set(3, !chip.get(3));
-        } else if (j && !k) {
-            chip.set(3, true);
-        } else if (k) {
-            chip.set(3, false);
+        if (chip.isTriggered(0) && !chip.get(0)) {
+            if (j && k) {
+                chip.set(3, !chip.get(3));
+            } else if (j && !k) {
+                chip.set(3, true);
+            } else if (k) {
+                chip.set(3, false);
+            }
         }
     }
 

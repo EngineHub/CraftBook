@@ -2,17 +2,14 @@ package com.sk89q.craftbook.gates.world;
 
 import java.util.Collection;
 
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Item;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -54,8 +51,8 @@ public class Planter extends AbstractIC {
         int[] info = null;
         int yOffset;
 
-        if (getSign().getLine(2).length() != 0) {
-            String[] lineParts = getSign().getLine(2).split(":");
+        if (!getSign().getLine(2).isEmpty()) {
+            String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
             info = new int[] {Integer.parseInt(lineParts[0]), Integer.parseInt(lineParts[1])};
         }
 
@@ -82,29 +79,50 @@ public class Planter extends AbstractIC {
 
     protected boolean plantableItem(int itemId) {
 
-        return itemId == BlockID.SAPLING || itemId == ItemID.SEEDS || itemId == ItemID.NETHER_WART_SEED
-                || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS || itemId == BlockID.CACTUS;
+        switch (itemId) {
+            case BlockID.SAPLING:
+            case ItemID.SEEDS:
+            case ItemID.NETHER_WART_SEED:
+            case ItemID.MELON_SEEDS:
+            case ItemID.PUMPKIN_SEEDS:
+            case BlockID.CACTUS:
+            case ItemID.POTATO:
+            case ItemID.CARROT:
+            case BlockID.RED_FLOWER:
+            case BlockID.YELLOW_FLOWER:
+            case BlockID.RED_MUSHROOM:
+            case BlockID.BROWN_MUSHROOM:
+                return true;
+            default:
+                return false;
+        }
     }
 
     protected boolean itemPlantableOnBlock(int itemId, int blockId) {
 
-        boolean isPlantable = false;
-
-        if (itemId == BlockID.SAPLING && (blockId == BlockID.DIRT || blockId == BlockID.GRASS)) {
-            isPlantable = true;
-        } else if ((itemId == ItemID.SEEDS || itemId == ItemID.MELON_SEEDS || itemId == ItemID.PUMPKIN_SEEDS) &&
-                blockId == BlockID.SOIL) {
-            isPlantable = true;
-        } else if (itemId == ItemID.NETHER_WART_SEED && blockId == BlockID.SLOW_SAND) {
-            isPlantable = true;
-        } else if (itemId == BlockID.CACTUS && blockId == BlockID.SAND) {
-            isPlantable = true;
+        switch (itemId) {
+            case BlockID.SAPLING:
+            case BlockID.RED_FLOWER:
+            case BlockID.YELLOW_FLOWER:
+                return blockId == BlockID.DIRT || blockId == BlockID.GRASS;
+            case ItemID.SEEDS:
+            case ItemID.MELON_SEEDS:
+            case ItemID.PUMPKIN_SEEDS:
+            case ItemID.POTATO:
+                return blockId == BlockID.SOIL;
+            case ItemID.NETHER_WART_SEED:
+                return blockId == BlockID.SLOW_SAND;
+            case BlockID.CACTUS:
+                return blockId == BlockID.SAND;
+            case BlockID.RED_MUSHROOM:
+            case BlockID.BROWN_MUSHROOM:
+                // TODO Actually any solid block
+                return blockId == BlockID.DIRT || blockId == BlockID.GRASS || blockId == BlockID.MYCELIUM;
         }
-
-        return isPlantable;
+        return false;
     }
 
-    protected class BlockPlanter implements Runnable {
+    protected static class BlockPlanter implements Runnable {
 
         private final World world;
         private final Vector target;
@@ -132,12 +150,10 @@ public class Planter extends AbstractIC {
                             && itemEnt.getItemStack().getAmount() > 0
                             && itemEnt.getItemStack().getTypeId() == itemId
                             && (damVal == -1 || itemEnt.getItemStack().getDurability() == damVal)) {
-                        double diffX = target.getBlockX()
-                                - itemEnt.getLocation().getX();
-                        double diffY = target.getBlockY()
-                                - itemEnt.getLocation().getY();
-                        double diffZ = target.getBlockZ()
-                                - itemEnt.getLocation().getZ();
+                        Location loc = itemEnt.getLocation();
+                        double diffX = target.getBlockX() - loc.getX();
+                        double diffY = target.getBlockY() - loc.getY();
+                        double diffZ = target.getBlockZ() - loc.getZ();
 
                         if (diffX * diffX + diffY * diffY + diffZ * diffZ < 6) {
                             itemEnt.remove();
@@ -147,9 +163,7 @@ public class Planter extends AbstractIC {
                                     .setTypeId(getBlockByItem(itemId));
                             world.getBlockAt(target.getBlockX(),
                                     target.getBlockY(), target.getBlockZ())
-                                    .setData(
-                                            (byte) (damVal == -1 ? 0
-                                                    : damVal));
+                                    .setData((byte) (damVal == -1 ? 0 : damVal));
 
                             break;
                         }
@@ -173,6 +187,18 @@ public class Planter extends AbstractIC {
                     return BlockID.NETHER_WART;
                 case BlockID.CACTUS:
                     return BlockID.CACTUS;
+                case ItemID.POTATO:
+                    return BlockID.POTATOES;
+                case ItemID.CARROT:
+                    return BlockID.CARROTS;
+                case BlockID.RED_FLOWER:
+                    return BlockID.RED_FLOWER;
+                case BlockID.YELLOW_FLOWER:
+                    return BlockID.YELLOW_FLOWER;
+                case BlockID.RED_MUSHROOM:
+                    return BlockID.RED_MUSHROOM;
+                case BlockID.BROWN_MUSHROOM:
+                    return BlockID.BROWN_MUSHROOM;
                 default:
                     return BlockID.AIR;
             }

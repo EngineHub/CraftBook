@@ -20,8 +20,9 @@ public class VehicleCommands {
             desc = "Commands to manage Craftbook station selection"
             )
     public void st(CommandContext context, CommandSender sender) {
-        if(sender instanceof Player == false){
+        if(!(sender instanceof Player)){
             sender.sendMessage("This command can only used by a player");
+            return;
         }
         Player player = (Player)sender;
         if(context.argsLength() == 0){

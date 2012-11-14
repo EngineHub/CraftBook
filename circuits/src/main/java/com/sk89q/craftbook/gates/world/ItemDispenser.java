@@ -18,18 +18,13 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -65,19 +60,20 @@ public class ItemDispenser extends AbstractIC {
             }
             short data = 0;
             if (item.contains(":")) {
-                data = Short.parseShort(item.split(":")[1]);
-                item = item.split(":")[0];
+                String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
+                data = Short.parseShort(itemAndData[1]);
+                item = itemAndData[0];
             }
 
             int id = -1;
             try {
                 id = Integer.parseInt(item);
             }
-            catch(Exception e){}
+            catch (Exception e) {}
             if(id < 0) {
                 id = BlockType.lookup(item).getID();
             }
-            if (id != 0 && id != 36 && !(id >= 26 && id <= 34)) {
+            if (id != 0 && id != 36 && (id < 26 || id > 34)) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();

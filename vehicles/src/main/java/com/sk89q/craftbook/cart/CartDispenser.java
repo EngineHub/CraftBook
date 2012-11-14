@@ -99,33 +99,34 @@ public class CartDispenser extends CartMechanism {
 
     /**
      * @param blocks nuff said
-     * @param inv    the inventory to place a cart item in, or null if we don't care.
+     * @param inv    the inventory to remove a cart item from, or null if we don't care.
      */
-    @SuppressWarnings("unchecked")
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
-        if (inv != null) if (type.equals(CartType.Minecart)) {
-            if (!inv.contains(ItemType.MINECART.getID())) return;
-            inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
-        } else if (type.equals(CartType.StorageMinecart)) {
-            if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
-            inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
-        } else if (type.equals(CartType.PoweredMinecart)) {
-            if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
-            inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
+        if (inv != null) {
+            if (type.equals(CartType.Minecart)) {
+                if (!inv.contains(ItemType.MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
+            } else if (type.equals(CartType.StorageMinecart)) {
+                if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
+            } else if (type.equals(CartType.PoweredMinecart)) {
+                if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
+            }
         }
         blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
     }
 
     public enum CartType {
-        Minecart("Minecart", org.bukkit.entity.Minecart.class),
-        StorageMinecart("Storage", org.bukkit.entity.StorageMinecart.class),
-        PoweredMinecart("Powered", org.bukkit.entity.PoweredMinecart.class);
+        Minecart("Minecart", Minecart.class),
+        StorageMinecart("Storage", StorageMinecart.class),
+        PoweredMinecart("Powered", PoweredMinecart.class);
 
-        private final Class<?> cl;
+        private final Class<? extends Minecart> cl;
         private final String name;
 
-        private CartType(String name, Class<?> cl) {
+        private CartType(String name, Class<? extends Minecart> cl) {
 
             this.name = name;
             this.cl = cl;
@@ -143,8 +144,7 @@ public class CartDispenser extends CartMechanism {
             return Minecart; //Default to minecarts
         }
 
-        @SuppressWarnings("rawtypes")
-        public Class toClass() {
+        public Class<? extends Minecart> toClass() {
 
             return cl;
         }

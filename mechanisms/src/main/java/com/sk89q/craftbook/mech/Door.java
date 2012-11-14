@@ -373,10 +373,7 @@ public class Door extends AbstractMechanic {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                int oldType = 0;
-                if (b != null) {
-                    oldType = b.getTypeId();
-                }
+                int oldType = b.getTypeId();
                 if (b.getTypeId() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
                     b.setTypeId(BlockID.AIR);
                     if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
@@ -563,7 +560,7 @@ public class Door extends AbstractMechanic {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
-        s.setLine(0, curBlocks + "");
+        s.setLine(0, String.valueOf(curBlocks));
         s.update();
         return curBlocks >= 0;
     }
@@ -572,7 +569,7 @@ public class Door extends AbstractMechanic {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
-        s.setLine(0, curBlocks + "");
+        s.setLine(0, String.valueOf(curBlocks));
         s.update();
         return curBlocks >= 0;
     }

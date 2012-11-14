@@ -24,6 +24,8 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 
+import java.util.regex.Pattern;
+
 /**
  * A base abstract IC that all ICs can inherit from.
  *
@@ -31,6 +33,9 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
  */
 public abstract class AbstractIC implements IC {
 
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("[", Pattern.LITERAL);
+    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
     private final Server server;
     private final ChangedSign sign;
     private final ICFactory factory;
@@ -65,7 +70,7 @@ public abstract class AbstractIC implements IC {
     @Override
     public void onRightClick(Player p) {
         if(p.isSneaking()) {
-            CircuitsPlugin.getInst().generateICDocs(p, getSign().getLine(1).split("\\[")[1].split("\\]")[0]);
+            CircuitsPlugin.getInst().generateICDocs(p, RIGHT_BRACKET_PATTERN.split(LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
         }
     }
 

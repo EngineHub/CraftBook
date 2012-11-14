@@ -21,13 +21,11 @@ package com.sk89q.craftbook.gates.logic;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 
-public class NandGate extends AbstractIC {
+public class NandGate extends SimpleAnyInputLogicGate {
 
     public NandGate(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -47,20 +45,8 @@ public class NandGate extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
-
-        short on = 0, valid = 0;
-        for (short i = 0; i < chip.getInputCount(); i++)
-            if (chip.isValid(i)) {
-                valid++;
-
-                if (chip.getInput(i)) {
-                    on++;
-                }
-            }
-
-        // Condition; all valid must NOT be ON, at least one valid.
-        chip.setOutput(0, on != valid && valid > 0);
+    protected boolean getResult(int wires, int on) {
+        return wires > 0 && on != wires;
     }
 
     public static class Factory extends AbstractICFactory {

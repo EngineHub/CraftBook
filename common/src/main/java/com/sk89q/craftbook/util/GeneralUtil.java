@@ -6,6 +6,9 @@ import java.io.Writer;
 
 public class GeneralUtil {
 
+    private GeneralUtil() {
+    }
+
     public static String getStackTrace(Throwable ex) {
 
         Writer out = new StringWriter();

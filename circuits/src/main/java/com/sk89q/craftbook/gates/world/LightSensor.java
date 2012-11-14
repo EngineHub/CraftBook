@@ -18,16 +18,12 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractIC {
@@ -64,7 +60,7 @@ public class LightSensor extends AbstractIC {
         int z = 0;
         int min = 10;
         try {
-            String[] st = getSign().getLine(3).split(":");
+            String[] st = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             if (st.length != 3) throw new Exception();
             x = Integer.parseInt(st[0]);
             y = Integer.parseInt(st[1]);
@@ -92,12 +88,7 @@ public class LightSensor extends AbstractIC {
 
         Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         Block backBlock = signBlock.getRelative(SignUtil.getBack(signBlock));
-        int lightLevel = BukkitUtil.toSign(getSign())
-                .getWorld()
-                .getBlockAt(backBlock.getX() + x,
-                        backBlock.getY() + y,
-                        backBlock.getZ() + z)
-                        .getLightLevel();
+        int lightLevel = backBlock.getRelative(x, y, z).getLightLevel();
 
         return lightLevel >= specifiedLevel;
     }

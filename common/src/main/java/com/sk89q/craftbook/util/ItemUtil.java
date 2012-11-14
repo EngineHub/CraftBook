@@ -12,6 +12,9 @@ import com.sk89q.worldedit.blocks.ItemID;
 
 public class ItemUtil {
 
+    private ItemUtil() {
+    }
+
     public static boolean areItemsSimilar(ItemStack item, int type) {
 
         return areItemsSimilar(item, new MaterialData(type, (byte) 0));
@@ -78,6 +81,8 @@ public class ItemUtil {
                 return new ItemStack(ItemID.COOKED_FISH);
             case ItemID.RAW_PORKCHOP:
                 return new ItemStack(ItemID.COOKED_PORKCHOP);
+            case ItemID.POTATO:
+                return new ItemStack(ItemID.BAKED_POTATO);
             default:
                 return null;
         }
@@ -225,7 +230,7 @@ public class ItemUtil {
             return item.getType().name();
 
         String name = getDisplayData(item).getString("Name");
-        if (name == null || name.equals("")) {
+        if (name == null || name.isEmpty()) {
             return item.getType().name();
         }
         return name;

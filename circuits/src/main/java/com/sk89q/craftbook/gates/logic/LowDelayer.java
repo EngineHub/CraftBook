@@ -37,7 +37,7 @@ public class LowDelayer extends AbstractIC {
     @Override
     public void trigger(final ChipState chip) {
 
-        int delay = Integer.parseInt(getSign().getLine(2));
+        long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
             chip.setOutput(0, true);
         } else {

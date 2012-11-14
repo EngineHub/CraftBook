@@ -23,6 +23,8 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
+import java.util.regex.Pattern;
+
 /**
  * Teleporter Mechanism. Based off Elevator
  *
@@ -33,6 +35,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 public class Teleporter extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Teleporter> {
+
 
         public Factory(MechanismsPlugin plugin) {
 
@@ -62,7 +65,7 @@ public class Teleporter extends AbstractMechanic {
             if (block.getState() instanceof Sign) {
                 Sign s = (Sign) block.getState();
                 if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
-                String[] pos = s.getLine(2).split(":");
+                String[] pos = COLON_PATTERN.split(s.getLine(2));
                 if (pos.length > 2)
                     return new Teleporter(block, plugin);
             }
@@ -86,7 +89,7 @@ public class Teleporter extends AbstractMechanic {
             player.print("mech.teleport.create");
             sign.setLine(1, "[Teleporter]");
 
-            String[] pos = sign.getLine(2).split(":");
+            String[] pos = COLON_PATTERN.split(sign.getLine(2));
             if (!(pos.length > 2))
                 return null;
 
@@ -108,8 +111,9 @@ public class Teleporter extends AbstractMechanic {
         this.plugin = plugin;
     }
 
-    private final MechanismsPlugin plugin;
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
+    private final MechanismsPlugin plugin;
     private final Block trigger;
 
     @Override
@@ -148,7 +152,7 @@ public class Teleporter extends AbstractMechanic {
 
         if (trigger.getState() instanceof Sign) {
             Sign s = (Sign) trigger.getState();
-            String[] pos = s.getLine(2).split(":");
+            String[] pos = COLON_PATTERN.split(s.getLine(2));
             if (pos.length > 2) {
                 try {
                     toX = Double.parseDouble(pos[0]);
