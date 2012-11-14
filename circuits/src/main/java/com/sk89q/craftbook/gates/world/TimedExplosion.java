@@ -18,9 +18,9 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class TimedExplosion extends AbstractIC {
 
-    int ticks;
-    float yield;
-    boolean flamey;
+    private int ticks;
+    private float yield;
+    private boolean flamey;
 
     public TimedExplosion(Server server, ChangedSign block, ICFactory factory) {
 
@@ -64,8 +64,9 @@ public class TimedExplosion extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            Block infront = BukkitUtil.toSign(getSign()).getBlock().getRelative(SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock()).getOppositeFace());
-            TNTPrimed tnt = (TNTPrimed) BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
+            Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
+            Block infront = signBlock.getRelative(SignUtil.getBack(signBlock).getOppositeFace());
+            TNTPrimed tnt = (TNTPrimed) signBlock.getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
                     EntityType.PRIMED_TNT);
             tnt.setIsIncendiary(flamey);
             if (ticks > 0) {
@@ -77,8 +78,7 @@ public class TimedExplosion extends AbstractIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 

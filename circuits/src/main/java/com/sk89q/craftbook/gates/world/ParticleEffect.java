@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -7,12 +8,6 @@ import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
 /**
@@ -49,15 +44,16 @@ public class ParticleEffect extends AbstractIC {
 
         try {
             int effectID;
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 2);
             try {
-                effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
+                effectID = Integer.parseInt(split[0]);
             } catch (Exception e) {
-                effectID = Effect.valueOf(getSign().getLine(2).split(":")[0]).getId();
+                effectID = Effect.valueOf(split[0]).getId();
             }
             if (Effect.getById(effectID) == null) return;
             int effectData;
             try {
-                effectData = Integer.parseInt(getSign().getLine(2).split(":")[1]);
+                effectData = Integer.parseInt(split[1]);
             } catch (Exception e) {
                 effectData = 0;
             }

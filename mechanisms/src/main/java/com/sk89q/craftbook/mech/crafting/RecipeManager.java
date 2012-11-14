@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import com.sk89q.craftbook.BaseConfiguration;
 public class RecipeManager extends BaseConfiguration {
 
     public static RecipeManager INSTANCE;
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private Collection<Recipe> recipes;
     private File config;
     private File dataFolder;
@@ -101,8 +103,8 @@ public class RecipeManager extends BaseConfiguration {
             HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
             try {
                 for (String item : section.getKeys(false)) {
-                    if(item == null || item.length() == 0) continue;
-                    String[] split = item.split(":");
+                    if(item == null || item.isEmpty()) continue;
+                    String[] split = COLON_PATTERN.split(item);
                     Material material;
                     try {
                         material = Material.getMaterial(Integer.parseInt(split[0]));
@@ -133,8 +135,8 @@ public class RecipeManager extends BaseConfiguration {
             Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             try {
                 for (String item : section.getKeys(false)) {
-                    if(item == null || item.length() == 0) continue;
-                    String[] split = item.split(":");
+                    if(item == null || item.isEmpty()) continue;
+                    String[] split = COLON_PATTERN.split(item);
                     Material material;
                     try {
                         material = Material.getMaterial(Integer.parseInt(split[0]));

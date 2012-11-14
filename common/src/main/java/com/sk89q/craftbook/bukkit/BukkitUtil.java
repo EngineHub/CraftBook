@@ -144,7 +144,7 @@ public class BukkitUtil {
     public static Player matchSinglePlayer(Server server, String name) {
 
         List<Player> players = server.matchPlayer(name);
-        if (players.size() == 0) return null;
+        if (players.isEmpty()) return null;
         return players.get(0);
     }
 

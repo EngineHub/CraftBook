@@ -10,11 +10,15 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.regex.Pattern;
+
 /*
  * @contributor LordEnki
  */
 
 public class CartSorter extends CartMechanism {
+
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -141,7 +145,7 @@ public class CartSorter extends CartMechanism {
                 || line.equalsIgnoreCase("Ply"))
                 && player != null) return true;
 
-        String[] parts = line.split(":");
+        String[] parts = COLON_PATTERN.split(line);
 
         if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held")) {
             try {
@@ -153,7 +157,7 @@ public class CartSorter extends CartMechanism {
             if (parts[1].equalsIgnoreCase(player.getName())) return true;
         } else if (parts[0].equalsIgnoreCase("Mob")) {
             String testMob = parts[1];
-            test.toString().toLowerCase().equalsIgnoreCase(testMob);
+            return test.getType().toString().equalsIgnoreCase(testMob);
         } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
             StorageMinecart storageCart = (StorageMinecart) minecart;
             Inventory storageInventory = storageCart.getInventory();

@@ -27,7 +27,11 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 
+import java.util.regex.Pattern;
+
 public class Marquee extends AbstractIC {
+
+    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
     public Marquee(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -54,7 +58,7 @@ public class Marquee extends AbstractIC {
         boolean reverse = false;
         int next = 0;
         try {
-            String[] st = getSign().getLine(1).split("]");
+            String[] st = RIGHT_BRACKET_PATTERN.split(getSign().getLine(1), 2);
             if (st.length > 1) {
                 reverse = st[1].equalsIgnoreCase("r");
             }
@@ -115,7 +119,7 @@ public class Marquee extends AbstractIC {
         @Override
         public String getDescription() {
 
-            return "Sequencially sets all pins.";
+            return "Sequentially sets all pins.";
         }
 
         @Override

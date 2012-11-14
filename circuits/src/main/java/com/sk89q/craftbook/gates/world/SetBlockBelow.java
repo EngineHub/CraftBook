@@ -18,23 +18,18 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
 
-public class SetBlockBelow extends AbstractIC {
+public class SetBlockBelow extends SetBlock {
 
     public SetBlockBelow(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -53,48 +48,13 @@ public class SetBlockBelow extends AbstractIC {
         return "SET BLOCK BELOW";
     }
 
-    @Override
-    public void trigger(ChipState chip) {
-
-        String sblockdat = getSign().getLine(2).toUpperCase().trim();
-        String sblock = sblockdat.split(":")[0];
-        String smeta = "";
-        if (sblockdat.split(":").length > 1) {
-            smeta = sblockdat.split(":")[1];
-        }
-        String force = getSign().getLine(3).toUpperCase().trim();
-
-        chip.setOutput(0, chip.getInput(0));
-
-        int block;
-
-        try {
-            block = Integer.parseInt(sblock);
-        } catch (Exception e) {
-            try {
-                block = Material.getMaterial(sblock).getId();
-            }
-            catch(Exception ee) {
-                return;
-            }
-        }
-
-        byte meta = -1;
-        try {
-            if (!smeta.equalsIgnoreCase("")) {
-                meta = Byte.parseByte(smeta);
-            }
-        } catch (Exception e) {
-            return;
-        }
-
-        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+    protected void doSet(Block body, int block, byte meta, boolean force) {
 
         int x = body.getX();
         int y = body.getY();
         int z = body.getZ();
 
-        if (force.equals("FORCE") || body.getWorld().getBlockAt(x, y - 1, z).getTypeId() == BlockID.AIR) {
+        if (force || body.getWorld().getBlockAt(x, y - 1, z).getTypeId() == BlockID.AIR) {
             body.getWorld().getBlockAt(x, y - 1, z).setTypeId(block);
             if (!(meta == -1)) {
                 body.getWorld().getBlockAt(x, y - 1, z).setData(meta);

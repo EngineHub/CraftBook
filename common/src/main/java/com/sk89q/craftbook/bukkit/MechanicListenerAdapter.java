@@ -296,7 +296,7 @@ public class MechanicListenerAdapter {
                             }
                     }
                 }
-                if (!foundRepeater || repeater == null) return;
+                if (!foundRepeater) return;
 
                 manager.dispatchBlockRedstoneChange(
                         new SourcedBlockRedstoneEvent(repeater, event.getBlock(),

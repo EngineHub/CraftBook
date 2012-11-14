@@ -7,7 +7,6 @@ public final class EnumUtil {
 
     // util class
     private EnumUtil() {
-
     }
 
     /**

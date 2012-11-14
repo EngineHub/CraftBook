@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import net.minecraft.server.LocaleLanguage;
 
@@ -24,6 +25,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
  */
 public class LanguageManager {
 
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     final BaseBukkitPlugin plugin;
 
     //final HashMap<String, String> languageData = new HashMap<String, String>();
@@ -46,10 +48,11 @@ public class LanguageManager {
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    if (line.split(":").length != 2) {
+                    String[] split = COLON_PATTERN.split(line);
+                    if (split.length != 2) {
                         continue;
                     }
-                    languageData.put(line.split(":")[0], line.split(":")[1]);
+                    languageData.put(split[0], split[1]);
                 }
                 br.close();
             } catch (IOException e) {
@@ -68,8 +71,9 @@ public class LanguageManager {
                 .language);
         if (languageData == null)
             return "Missing Language File!";
-        if (languageData.get(ChatColor.stripColor(message)) == null) return message;
-        return languageData.get(ChatColor.stripColor(message));
+        String translated = languageData.get(ChatColor.stripColor(message));
+        if (translated == null) return message;
+        return translated;
     }
 
     public String getString(String message, String language) {
@@ -77,8 +81,9 @@ public class LanguageManager {
         HashMap<String, String> languageData = languageMap.get(language);
         if (languageData == null)
             return getString(message);
-        if (languageData.get(ChatColor.stripColor(message)) == null) return message;
-        return languageData.get(ChatColor.stripColor(message));
+        String translated = languageData.get(ChatColor.stripColor(message));
+        if (translated == null) return message;
+        return translated;
     }
 
     public String getPlayersLanguage(Player p) {

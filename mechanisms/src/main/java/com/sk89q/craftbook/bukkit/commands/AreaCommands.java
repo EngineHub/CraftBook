@@ -164,7 +164,7 @@ public class AreaCommands {
         if (!areas.exists()) throw new CommandException("There are no saved areas.");
 
         File folder = null;
-        if (!namespace.equals("")) {
+        if (!namespace.isEmpty()) {
             folder = new File(areas, namespace);
         }
 
@@ -204,12 +204,12 @@ public class AreaCommands {
         }
 
         // now lets list the areas with a nice pagination
-        if (areaList.size() > 0) {
-            String tmp = namespace.equals("") ? "All Areas " : "Areas for " + namespace;
+        if (!areaList.isEmpty()) {
+            String tmp = namespace.isEmpty() ? "All Areas " : "Areas for " + namespace;
             player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + (areaList.size() / 8 + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page))
-                if (str != null && !str.equals("")) {
+                if (str != null && !str.isEmpty()) {
                     player.print(str);
                 }
         } else {

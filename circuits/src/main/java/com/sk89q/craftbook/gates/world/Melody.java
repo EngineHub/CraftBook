@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -13,11 +14,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.ic.jinglenote.JingleNoteComponent;
 import com.sk89q.ic.jinglenote.MidiJingleSequencer;
@@ -64,16 +60,16 @@ public class Melody extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
         try {
-            if (sequencer != null && !sequencer.isSongPlaying() && getSign().getLine(3).split(":")[1]
-                    .equalsIgnoreCase("START"))
+            if (sequencer != null && !sequencer.isSongPlaying() && split[1].equalsIgnoreCase("START"))
                 return;
         } catch (Exception ignored) {
         }
 
         int radius = -1;
         try {
-            radius = Integer.parseInt(getSign().getLine(3).split(":")[0]);
+            radius = Integer.parseInt(split[0]);
         } catch (Exception ignored) {
         }
 

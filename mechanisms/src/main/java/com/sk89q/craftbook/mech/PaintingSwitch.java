@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 
@@ -29,9 +30,10 @@ public class PaintingSwitch implements Listener {
 
     public boolean isBeingEdited(Painting paint) {
 
-        if (paintings.get(paint) != null && players.get(paintings.get(paint)) != null) {
-            Player p = plugin.getServer().getPlayer(paintings.get(paint));
-            return !(p == null || p.isDead());
+        String player = paintings.get(paint);
+        if (player != null && players.get(player) != null) {
+            Player p = plugin.getServer().getPlayer(player);
+            return p != null && !p.isDead();
         }
         return false;
     }
@@ -56,8 +58,9 @@ public class PaintingSwitch implements Listener {
                     player.print("mech.painting.stop");
                 } else if (isBeingEdited(paint)) {
                     player.print(player.translate("mech.painting.used") + " " + paintings.get(paint));
-                } else
+                } else {
                     return;
+                }
                 event.setCancelled(true);
             }
         }
@@ -91,13 +94,25 @@ public class PaintingSwitch implements Listener {
         } else if (newID > art.length - 1) {
             newID = 0;
         }
-        while (!paint.setArt(art[newID]))
-            if (newID > 0) {
+        while (!paint.setArt(art[newID])) {
+            if (newID > 0 && !isForwards) {
                 newID--;
+            } else if (newID < art.length - 1 && isForwards) {
+                newID++;
             } else {
                 break;
             }
+        }
         paintings.put(paint, player.getName());
         players.put(player.getName(), paint);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+
+        Painting p = players.remove(event.getPlayer().getName());
+        if (p != null) {
+            paintings.remove(p);
+        }
     }
 }

@@ -3,7 +3,6 @@ package com.sk89q.craftbook.gates.world;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -41,7 +40,7 @@ public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
         doStuff(state);
     }
 
-    public static class Factory extends AbstractICFactory implements
+    public static class Factory extends LiquidFlood.Factory implements
     RestrictedIC {
 
         public Factory(Server server) {
@@ -53,22 +52,6 @@ public class LiquidFloodST extends LiquidFlood implements SelfTriggeredIC {
         public IC create(ChangedSign sign) {
 
             return new LiquidFloodST(getServer(), sign, this);
-        }
-
-        @Override
-        public String getDescription() {
-
-            return "Floods an area with a liquid.";
-        }
-
-        @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {
-                    "water/lava",
-                    "radius"
-            };
-            return lines;
         }
     }
 }

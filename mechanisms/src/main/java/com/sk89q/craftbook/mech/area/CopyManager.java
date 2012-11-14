@@ -26,6 +26,7 @@ import org.bukkit.World;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * Used to load, save, and cache cuboid copies.
@@ -35,6 +36,7 @@ import java.util.HashMap;
 public class CopyManager {
 
     private static final CopyManager INSTANCE = new CopyManager();
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[a-z0-9_]+$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Cache.
@@ -69,8 +71,7 @@ public class CopyManager {
 
         // name needs to be between 1 and 13 letters long so we can fit the - XXX - on the sides of the sign to
         // indicate what area is toggled on
-        return name.length() > 0 && name.length() <= 13
-                && name.matches("^[A-Za-z0-9_]+$");
+        return !name.isEmpty() && name.length() <= 13 && NAME_PATTERN.matcher(name).matches();
     }
 
     /**
@@ -82,8 +83,7 @@ public class CopyManager {
      */
     public static boolean isValidNamespace(String name) {
 
-        return name.length() > 0 && name.length() <= 14
-                && name.matches("^[A-Za-z0-9_]+$");
+        return !name.isEmpty() && name.length() <= 14 && NAME_PATTERN.matcher(name).matches();
     }
 
     /**
@@ -204,21 +204,25 @@ public class CopyManager {
 
     private HistoryHashMap<String, CuboidCopy> getCache(String world) {
 
-        if (cache.containsKey(world)) return cache.get(world);
-        else {
-            HistoryHashMap<String, CuboidCopy> h = new HistoryHashMap<String, CuboidCopy>(10);
-            cache.put(world, h);
-            return h;
+        HistoryHashMap<String, CuboidCopy> worldCache = cache.get(world);
+        if (worldCache != null) {
+            return worldCache;
+        } else {
+            worldCache = new HistoryHashMap<String, CuboidCopy>(10);
+            cache.put(world, worldCache);
+            return worldCache;
         }
     }
 
     private HistoryHashMap<String, Long> getMissing(String world) {
 
-        if (missing.containsKey(world)) return missing.get(world);
-        else {
-            HistoryHashMap<String, Long> h = new HistoryHashMap<String, Long>(10);
-            missing.put(world, h);
-            return h;
+        HistoryHashMap<String, Long> worldCache = missing.get(world);
+        if (worldCache != null) {
+            return worldCache;
+        } else {
+            worldCache = new HistoryHashMap<String, Long>(10);
+            missing.put(world, worldCache);
+            return worldCache;
         }
     }
 

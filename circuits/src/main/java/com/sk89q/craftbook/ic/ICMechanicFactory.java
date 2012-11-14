@@ -39,6 +39,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      */
     public static final Pattern IC_PATTERN =
             Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
     /**
      * Manager of ICs.
@@ -106,13 +107,13 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
         // extract the suffix
         String suffix = "";
-        String[] str = sign.getLine(1).split("]");
+        String[] str = RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
         if (str.length > 1) {
             suffix = str[1];
         }
 
         ICFamily family = registration.getFamilies()[0];
-        if (suffix != null && !suffix.equals("")) {
+        if (suffix != null && !suffix.isEmpty()) {
             for (ICFamily f : registration.getFamilies()) {
                 if (f.getSuffix().equalsIgnoreCase(suffix)) {
                     family = f;
@@ -173,7 +174,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             String id = matcher.group(1);
             String suffix = "";
-            String[] str = sign.getLine(1).split("]");
+            String[] str = RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
             if (str.length > 1) {
                 suffix = str[1];
             }
@@ -206,7 +207,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
 
             ICFamily family = registration.getFamilies()[0];
-            if (suffix != null && !suffix.equals("")) {
+            if (suffix != null && !suffix.isEmpty()) {
                 for (ICFamily f : registration.getFamilies()) {
                     if (f.getSuffix().equalsIgnoreCase(suffix)) {
                         family = f;
@@ -254,7 +255,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 return null;
             }
 
-            sign.setLine(1, "["+shortId+"]");
+            sign.setLine(1, "[" + shortId + "]");
 
             detect(pt, player, sign, true);
         } return null;

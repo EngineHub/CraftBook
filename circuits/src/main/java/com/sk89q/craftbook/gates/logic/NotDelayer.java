@@ -37,7 +37,7 @@ public class NotDelayer extends AbstractIC {
     @Override
     public void trigger(final ChipState chip) {
 
-        int delay = Integer.parseInt(getSign().getLine(2));
+        long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 

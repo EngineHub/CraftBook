@@ -52,8 +52,8 @@ public class MemoryAccess extends AbstractIC {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line;
             int linenum = 0;
-            while ((line = br.readLine()) != null || linenum > 2) {
-                chip.setOutput(linenum, line.equalsIgnoreCase("1"));
+            while ((line = br.readLine()) != null && linenum <= 2) {
+                chip.setOutput(linenum, line.equals("1"));
                 linenum++;
             }
             br.close();

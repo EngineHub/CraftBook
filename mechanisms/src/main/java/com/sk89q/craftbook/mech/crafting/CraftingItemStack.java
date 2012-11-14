@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
  * @author Silthus
  */
 public class CraftingItemStack implements Comparable<CraftingItemStack> {
+
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     public static Collection<CraftingItemStack> convert(Collection<Item> stacks) {
 
@@ -29,10 +32,10 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         }
         Set<CraftingItemStack> stackSet = new LinkedHashSet<CraftingItemStack>();
         // merge the amounts and stacks
-        for (String stack : items.keySet()) {
-            String[] split = stack.split(":");
+        for (Map.Entry<String, Integer> entry : items.entrySet()) {
+            String[] split = COLON_PATTERN.split(entry.getKey());
             stackSet.add(new CraftingItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
-                    items.get(stack)));
+                    entry.getValue()));
         }
         return stackSet;
     }
@@ -113,8 +116,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     public boolean isSameType(CraftingItemStack stack) {
 
         if (data == -1 || stack.getData() == -1) return stack.getMaterial() == getMaterial();
-        return stack.getMaterial() == getMaterial() &&
-                stack.getData() == getData();
+        return stack.getMaterial() == getMaterial() && stack.getData() == getData();
     }
 
     @Override
@@ -131,8 +133,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         int result = 1;
         result = prime * result + amount;
         result = prime * result + data;
-        result = prime * result
-                + (material == null ? 0 : material.hashCode());
+        result = prime * result + (material == null ? 0 : material.hashCode());
         return result;
     }
 

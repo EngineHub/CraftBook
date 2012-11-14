@@ -67,7 +67,7 @@ public abstract class BaseConfiguration {
     public List<String> getStringList(String name, List<String> def) {
 
         List<String> it = cfg.getStringList(name);
-        if (it == null || it.size() == 0) {
+        if (it == null || it.isEmpty()) {
             it = def;
         }
         cfg.set(name, it);
@@ -131,7 +131,7 @@ public abstract class BaseConfiguration {
         public List<String> getStringList(String name, List<String> def) {
 
             List<String> it = section.getStringList(name);
-            if (it == null || it.size() == 0) {
+            if (it == null || it.isEmpty()) {
                 it = def;
             }
             section.set(name, it);

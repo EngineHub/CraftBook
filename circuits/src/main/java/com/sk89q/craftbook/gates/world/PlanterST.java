@@ -1,14 +1,11 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 
@@ -48,8 +45,8 @@ public class PlanterST extends Planter implements SelfTriggeredIC {
         int[] info = null;
         int yOffset;
 
-        if (getSign().getLine(2).length() != 0) {
-            String[] lineParts = getSign().getLine(2).split(":");
+        if (!getSign().getLine(2).isEmpty()) {
+            String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
             info = new int[] {Integer.parseInt(lineParts[0]),
                     Integer.parseInt(lineParts[1])};
         }

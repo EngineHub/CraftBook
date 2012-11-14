@@ -18,20 +18,20 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
+import java.util.regex.Pattern;
+
 public class MultipleSetBlock extends AbstractIC {
+
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern PLUS_PATTERN = Pattern.compile("+", Pattern.LITERAL);
 
     public MultipleSetBlock(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -60,15 +60,13 @@ public class MultipleSetBlock extends AbstractIC {
 
         boolean inp = chip.getInput(0);
 
-        String[] dim = line4.split(":");
-
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         int x = body.getX();
         int y = body.getY();
         int z = body.getZ();
 
         String[] coords;
-        coords = line3.replaceAll("\\+", "").split(":");
+        coords = ICUtil.COLON_PATTERN.split(PLUS_PATTERN.matcher(line3).replaceAll(""));
 
         if (coords.length < 4)
             return;
@@ -97,10 +95,14 @@ public class MultipleSetBlock extends AbstractIC {
             block = 0;
         }
 
+        String[] dim = ICUtil.COLON_PATTERN.split(line4);
         if (dim.length == 3) {
-            for (int lx = 0; lx < Integer.parseInt(dim[0]); lx++) {
-                for (int ly = 0; ly < Integer.parseInt(dim[1]); ly++) {
-                    for (int lz = 0; lz < Integer.parseInt(dim[2]); lz++) {
+            int dimX = Integer.parseInt(dim[0]);
+            int dimY = Integer.parseInt(dim[1]);
+            int dimZ = Integer.parseInt(dim[2]);
+            for (int lx = 0; lx < dimX; lx++) {
+                for (int ly = 0; ly < dimY; ly++) {
+                    for (int lz = 0; lz < dimZ; lz++) {
                         body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(block, data, true);
                     }
                 }
@@ -110,8 +112,7 @@ public class MultipleSetBlock extends AbstractIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 

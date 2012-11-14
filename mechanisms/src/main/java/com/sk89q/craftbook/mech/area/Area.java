@@ -56,7 +56,7 @@ public class Area extends AbstractMechanic {
             String[] lines = sign.getLines();
 
             if (lines[1].equalsIgnoreCase("[Area]") || lines[1].equalsIgnoreCase("[SaveArea]")) {
-                if (sign.getLine(0).trim().equalsIgnoreCase("")) {
+                if (sign.getLine(0).trim().isEmpty()) {
                     sign.setLine(0, "~" + player.getName());
                 }
                 if (lines[1].equalsIgnoreCase("[Area]")) {
@@ -116,7 +116,7 @@ public class Area extends AbstractMechanic {
             String areaOn = sign.getLine(2).trim();
             String areaOff = sign.getLine(3).trim();
             if (CopyManager.isExistingArea(plugin, namespace, areaOn)) {
-                if (areaOff == null || areaOff.equals("") || areaOff.equals("--")) return;
+                if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return;
                 if (CopyManager.isExistingArea(plugin, namespace, areaOff)) return;
             }
             throw new InvalidMechanismException("The area or namespace does not exist.");
@@ -213,7 +213,7 @@ public class Area extends AbstractMechanic {
                     CopyManager.getInstance().save(world, namespace, id, copy, plugin);
                 }
                 // if we are toggling to the second area we dont clear the old area
-                if (inactiveID.length() > 0 && !inactiveID.equals("--")) {
+                if (!inactiveID.isEmpty() && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(world, namespace, inactiveID, plugin);
                     copy.paste();
                 } else {
@@ -239,8 +239,8 @@ public class Area extends AbstractMechanic {
         String namespace = sign.getLine(0);
         String id = sign.getLine(2);
 
-        if (id == null || id.equalsIgnoreCase("") || id.length() < 1) return false;
-        if (namespace == null || namespace.equalsIgnoreCase("") || namespace.length() < 1) return false;
+        if (id == null || id.isEmpty() || id.length() < 1) return false;
+        if (namespace == null || namespace.isEmpty() || namespace.length() < 1) return false;
 
         checkToggleState(sign);
         return true;

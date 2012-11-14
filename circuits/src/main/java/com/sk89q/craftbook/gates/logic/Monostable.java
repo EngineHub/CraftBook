@@ -18,16 +18,10 @@
 
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
@@ -56,10 +50,11 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
         String setting = getSign().getLine(2).toUpperCase();
         if (chip.getInput(0) && setting.contains("H") || !chip.getInput(0) && setting.contains("L")) {
             //Trigger condition!
-            if (setting.indexOf(":") <= 0) return;
+            int colon = setting.indexOf(':');
+            if (colon <= 0) return;
 
             chip.setOutput(0, true);
-            getSign().setLine(3, setting.substring(0, setting.indexOf(":")));
+            getSign().setLine(3, setting.substring(0, colon));
         }
 
     }
@@ -115,7 +110,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
                 if (!set.contains(":")) throw new ICVerificationException("Invalid syntax");
 
-                String[] settings = sign.getLine(2).split(":");
+                String[] settings = ICUtil.COLON_PATTERN.split(set);
 
                 if (settings.length != 2) throw new ICVerificationException("Invalid syntax");
 

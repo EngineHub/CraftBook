@@ -42,7 +42,7 @@ public class Tuple2<A, B> {
 
     @Override
     public int hashCode() {
-        //Constants corraspond to glibc's lcg algorithm parameters
+        // Constants correspond to glibc's lcg algorithm parameters
         return (a.hashCode() * 1103515245 + 12345 ^
                 b.hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
     }

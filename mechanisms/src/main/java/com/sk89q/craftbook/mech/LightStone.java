@@ -64,20 +64,20 @@ public class LightStone extends AbstractMechanic {
 
     private String getLightLine(int data) {
 
-        String line = "";
+        StringBuilder line = new StringBuilder(25);
         if (data >= 9) {
-            line = line + ChatColor.GREEN;
+            line.append(ChatColor.GREEN);
         } else {
-            line = line + ChatColor.DARK_RED;
+            line.append(ChatColor.DARK_RED);
         }
         for (int i = 0; i < data; i++) {
-            line = line + "|";
+            line.append("|");
         }
-        line = line + ChatColor.BLACK;
+        line.append(ChatColor.BLACK);
         for (int i = data; i < 15; i++) {
-            line = line + "|";
+            line.append("|");
         }
-        return line;
+        return line.toString();
     }
 
     @Override

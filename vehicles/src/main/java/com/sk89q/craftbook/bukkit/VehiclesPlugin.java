@@ -363,7 +363,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
 
 
-    class Decay implements Runnable {
+    static class Decay implements Runnable {
 
         Minecart cart;
 

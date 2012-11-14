@@ -10,6 +10,7 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import org.bukkit.World;
 
 public class WeatherControlAdvanced extends AbstractIC {
 
@@ -57,13 +58,14 @@ public class WeatherControlAdvanced extends AbstractIC {
 
         if (chip.isTriggered(0) && chip.getInput(0)) {
 
-            BukkitUtil.toSign(getSign()).getWorld().setStorm(chip.getInput(1));
+            World world = BukkitUtil.toSign(getSign()).getWorld();
+            world.setStorm(chip.getInput(1));
             if (chip.getInput(1)) {
-                BukkitUtil.toSign(getSign()).getWorld().setWeatherDuration(duration);
+                world.setWeatherDuration(duration);
             }
-            BukkitUtil.toSign(getSign()).getWorld().setThundering(chip.getInput(2));
+            world.setThundering(chip.getInput(2));
             if (chip.getInput(2)) {
-                BukkitUtil.toSign(getSign()).getWorld().setThunderDuration(thunderDuration);
+                world.setThunderDuration(thunderDuration);
             }
         }
     }

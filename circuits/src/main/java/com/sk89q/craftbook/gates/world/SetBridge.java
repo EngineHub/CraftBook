@@ -1,25 +1,24 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
  */
 public class SetBridge extends AbstractIC {
 
+    private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
+    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     private int onMaterial = 1;
     private int onData = 0;
 
@@ -48,14 +47,14 @@ public class SetBridge extends AbstractIC {
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
             String line = getSign().getLine(2);
-            if (!line.equals("")) {
+            if (!line.isEmpty()) {
                 try {
-                    String[] split = line.split("-");
+                    String[] split = MINUS_PATTERN.split(line);
                     // parse the material data
                     if (split.length > 0) {
                         try {
                             // parse the data that gets set when the block is toggled off
-                            String[] strings = split[1].split(":");
+                            String[] strings = ICUtil.COLON_PATTERN.split(split[1]);
                             offMaterial = Integer.parseInt(strings[0]);
                             if (strings.length > 0) {
                                 offData = Integer.parseInt(strings[1]);
@@ -67,7 +66,7 @@ public class SetBridge extends AbstractIC {
                         }
                     }
                     // parse the material and data for toggle on
-                    String[] strings = split[0].split(":");
+                    String[] strings = ICUtil.COLON_PATTERN.split(split[0]);
                     onMaterial = Integer.parseInt(strings[0]);
                     if (strings.length > 0) {
                         onData = Integer.parseInt(strings[1]);
@@ -80,15 +79,15 @@ public class SetBridge extends AbstractIC {
             }
             // parse the coordinates
             line = getSign().getLine(3);
-            if (!line.equals("")) {
+            if (!line.isEmpty()) {
                 boolean relativeOffset = !line.contains("!");
                 if (!relativeOffset) {
                     line = line.replace("!", "");
                 }
-                String[] split = line.split(":");
+                String[] split = ICUtil.COLON_PATTERN.split(line);
                 try {
                     // parse the offset
-                    String[] offsetSplit = split[0].split(",");
+                    String[] offsetSplit = COMMA_PATTERN.split(split[0]);
                     offsetX = Integer.parseInt(offsetSplit[0]);
                     offsetY = Integer.parseInt(offsetSplit[1]);
                     offsetZ = Integer.parseInt(offsetSplit[2]);
@@ -99,7 +98,7 @@ public class SetBridge extends AbstractIC {
                 }
                 try {
                     // parse the size of the door
-                    String[] sizeSplit = split[1].split(",");
+                    String[] sizeSplit = COMMA_PATTERN.split(split[1]);
                     width = Integer.parseInt(sizeSplit[0]);
                     depth = Integer.parseInt(sizeSplit[1]);
                 } catch (NumberFormatException e) {

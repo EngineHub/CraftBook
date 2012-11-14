@@ -107,14 +107,14 @@ public class HiddenSwitch extends AbstractMechanic {
 
                     int itemID = -1;
 
-                    if (!s.getLine(0).trim().equalsIgnoreCase("")) {
+                    if (!s.getLine(0).trim().isEmpty()) {
                         try {
                             itemID = Integer.parseInt(s.getLine(0).trim());
                         } catch (NumberFormatException ignored) {
                         }
                     }
 
-                    if (!s.getLine(2).trim().equalsIgnoreCase(""))
+                    if (!s.getLine(2).trim().isEmpty())
                         if (!plugin.isInGroup(event.getPlayer().getName(), s.getLine(2).trim())) {
                             player.printError("mech.group");
                             return;
@@ -141,23 +141,25 @@ public class HiddenSwitch extends AbstractMechanic {
                 }
                 passed = true;
 
-                if (face == BlockFace.WEST) {
-                    face = BlockFace.NORTH;
-                }
-                else if (face == BlockFace.NORTH) {
-                    face = BlockFace.EAST;
-                }
-                else if (face == BlockFace.EAST) {
-                    face = BlockFace.SOUTH;
-                }
-                else if (face == BlockFace.SOUTH) {
-                    face = BlockFace.UP;
-                }
-                else if (face == BlockFace.UP) {
-                    face = BlockFace.DOWN;
-                }
-                else if (face == BlockFace.DOWN) {
-                    face = BlockFace.WEST;
+                switch (face) {
+                    case WEST:
+                        face = BlockFace.NORTH;
+                        break;
+                    case NORTH:
+                        face = BlockFace.EAST;
+                        break;
+                    case EAST:
+                        face = BlockFace.SOUTH;
+                        break;
+                    case SOUTH:
+                        face = BlockFace.UP;
+                        break;
+                    case UP:
+                        face = BlockFace.DOWN;
+                        break;
+                    case DOWN:
+                        face = BlockFace.WEST;
+                        break;
                 }
 
                 testBlock = switchBlock.getRelative(face);
@@ -192,7 +194,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
             if (checkBlock.getTypeId() == BlockID.LEVER) {
                 checkBlock.setData((byte) (checkBlock.getData() ^ 0x8));
-            } else if (checkBlock.getTypeId() == BlockID.STONE_BUTTON || checkBlock.getTypeId() == 143 /*TODO change to BlockID.*/) {
+            } else if (checkBlock.getTypeId() == BlockID.STONE_BUTTON || checkBlock.getTypeId() == BlockID.WOODEN_BUTTON) {
                 checkBlock.setData((byte) (checkBlock.getData() | 0x8));
                 Runnable turnOff = new Runnable() {
 

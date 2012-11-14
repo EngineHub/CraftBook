@@ -54,8 +54,9 @@ public class FlameThrower extends AbstractIC {
 
     public void sendFlames(boolean make) {
 
-        BlockFace direction = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-        Block fire = BukkitUtil.toSign(getSign()).getBlock().getRelative(direction).getRelative(direction);
+        Block block = BukkitUtil.toSign(getSign()).getBlock();
+        BlockFace direction = SignUtil.getBack(block);
+        Block fire = block.getRelative(direction, 2);
         for (int i = 0; i < distance; i++) {
             if (make) {
                 if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {

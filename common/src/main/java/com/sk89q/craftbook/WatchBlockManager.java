@@ -88,10 +88,12 @@ class WatchBlockManager {
      */
     public void deregister(PersistentMechanic m) {
 
-        for (BlockWorldVector p : m.getWatchedPositions())
-            if (p != null && watchBlocks.get(p) != null) {
-                watchBlocks.get(p).remove(m);
+        for (BlockWorldVector p : m.getWatchedPositions()) {
+            Set<PersistentMechanic> watchBlock = watchBlocks.get(p);
+            if (p != null && watchBlock != null) {
+                watchBlock.remove(m);
             }
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Chunk;
@@ -83,23 +83,24 @@ public class EntitySensor extends AbstractIC {
             return shortName;
         }
 
-        public static HashSet<Type> getDetected(String line) {
+        public static Set<Type> getDetected(String line) {
 
-            HashSet<Type> types = new HashSet<Type>();
+            Set<Type> types = EnumSet.noneOf(Type.class);
 
             Type type = EnumUtil.getEnumFromString(Type.class, line);
             if (type != null) {
                 types.add(type);
             } else {
                 for (char aChar : line.toCharArray()) {
-                    for (Type aType : Type.values())
+                    for (Type aType : Type.values()) {
                         if (aType.getCharName() == aChar) {
                             types.add(aType);
                         }
+                    }
                 }
             }
 
-            if (types.size() == 0) {
+            if (types.isEmpty()) {
                 types.add(ANY);
             }
 
@@ -107,7 +108,7 @@ public class EntitySensor extends AbstractIC {
         }
     }
 
-    private HashSet<Type> types;
+    private Set<Type> types;
 
     private Block center;
     private Set<Chunk> chunks;
@@ -126,7 +127,7 @@ public class EntitySensor extends AbstractIC {
             types = Type.getDetected(getSign().getLine(3).trim());
 
             // Add all if no params are specified
-            if (types.size() == 0) {
+            if (types.isEmpty()) {
                 types.add(Type.ANY);
             }
 
@@ -137,10 +138,10 @@ public class EntitySensor extends AbstractIC {
             // radius=x:y:z or radius, e.g. 1=-2:5:11
             radius = ICUtil.parseRadius(getSign());
             if (getSign().getLine(2).contains("=")) {
-                getSign().setLine(2, radius + "=" + getSign().getLine(2).split("=")[1]);
+                getSign().setLine(2, radius + "=" + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
                 center = ICUtil.parseBlockLocation(getSign());
             } else {
-                getSign().setLine(2, radius + "");
+                getSign().setLine(2, String.valueOf(radius));
                 center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             }
             chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
