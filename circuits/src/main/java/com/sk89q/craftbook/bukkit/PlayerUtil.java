@@ -105,7 +105,7 @@ public class PlayerUtil {
     protected static Iterable<Player> checkPlayerMatch(List<Player> players)
             throws CommandException {
         // Check to see if there were any matches
-        if (players.size() == 0) throw new CommandException("No players matched query.");
+        if (players.isEmpty()) throw new CommandException("No players matched query.");
 
         return players;
     }
@@ -231,7 +231,7 @@ public class PlayerUtil {
         // Let's see if console is wanted
         if (filter.equalsIgnoreCase("#console")
                 || filter.equalsIgnoreCase("*console*")
-                || filter.equalsIgnoreCase("!")) return CircuitsPlugin.server.getConsoleSender();
+                || filter.equals("!")) return CircuitsPlugin.server.getConsoleSender();
 
         return matchSinglePlayer(sender, filter);
     }

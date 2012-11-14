@@ -10,11 +10,14 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
+import java.util.regex.Pattern;
+
 /**
  * @author Me4502
  */
 public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
 
+    private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     int ticks = 0;
     int maxTicks = 0;
     boolean hasStarted = false;
@@ -48,13 +51,14 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     protected boolean shouldOutput(ChipState chip) {
 
         if (chip.getInput(0)) {
-            int min = Integer.parseInt(getSign().getLine(2).split("-")[0]);
-            int max = Integer.parseInt(getSign().getLine(2).split("-")[1]);
+            String[] minmax = MINUS_PATTERN.split(getSign().getLine(2));
+            int min = Integer.parseInt(minmax[0]);
+            int max = Integer.parseInt(minmax[1]);
             maxAmount = min + (int) (Math.random() * (max - min + 1));
             amountDone = 0;
             ticks = 0;
 
-            if (getSign().getLine(3) != null || getSign().getLine(3).equals("")) {
+            if (getSign().getLine(3) != null || getSign().getLine(3).isEmpty()) {
                 maxTicks = Integer.parseInt(getSign().getLine(3));
             } else {
                 maxTicks = 10;

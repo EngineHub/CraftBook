@@ -1,17 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class SoundEffect extends AbstractIC {
@@ -44,17 +39,17 @@ public class SoundEffect extends AbstractIC {
     public void doSound() {
 
         try {
-            float volume = Integer.parseInt(getSign().getLine(2).split(":")[0]) / 100;
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+            float volume = Float.parseFloat(split[0]) / 100f;
             byte pitch;
             try {
-                pitch = (byte) (Integer.parseInt(getSign().getLine(2).split(":")[1])
-                        / 1.5873015873015873015873015873016);
+                pitch = (byte) (Integer.parseInt(split[1]) / 1.5873015873015873015873015873016);
             } catch (Exception e) {
                 pitch = 0;
             }
             Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             String soundName = getSign().getLine(3).trim();
-            if (soundName.length() > 0) {
+            if (!soundName.isEmpty()) {
                 b.getWorld().playSound(b.getLocation(), Sound.valueOf(soundName), volume, pitch);
             }
         } catch (Exception ignored) {

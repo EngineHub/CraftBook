@@ -28,8 +28,11 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
 
+import java.util.regex.Pattern;
+
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
 
+    private static final Pattern PLC_NAME_PATTERN = Pattern.compile("[-_a-z0-9]+", Pattern.CASE_INSENSITIVE);
     private Lang lang;
     private boolean selfTriggered;
     private Server s;
@@ -55,7 +58,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
         sign.setLine(2, "id:" + Math.abs(BaseBukkitPlugin.random.nextInt()));
         if (!sign.getLine(3).isEmpty()) {
             String line = sign.getLine(3);
-            if (!line.matches("[-_a-zA-Z0-9]+"))
+            if (!PLC_NAME_PATTERN.matcher(line).matches())
                 throw new ICVerificationException("illegal storage name");
         }
         sign.update(false);

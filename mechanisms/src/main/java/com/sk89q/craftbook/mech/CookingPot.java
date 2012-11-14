@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -187,20 +188,22 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int y = b.getY() + 2;
             int z = b.getZ();
             Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getTypeId() == BlockID.CHEST)
-                if (event.getPlayer().getItemInHand() != null && Ingredients.isIngredient(event.getPlayer()
-                        .getItemInHand().getTypeId()) && event.getPlayer().getItemInHand().getAmount() > 0) {
-                    increaseMultiplier(sign, Ingredients.getTime(event.getPlayer().getItemInHand().getTypeId()));
-                    if (event.getPlayer().getItemInHand().getAmount() <= 1) {
-                        event.getPlayer().getItemInHand().setTypeId(0);
-                        event.getPlayer().setItemInHand(null);
+            if (cb.getTypeId() == BlockID.CHEST) {
+                Player player = event.getPlayer();
+                ItemStack itemInHand = player.getItemInHand();
+                if (itemInHand != null && Ingredients.isIngredient(itemInHand.getTypeId()) && itemInHand.getAmount() > 0) {
+                    increaseMultiplier(sign, Ingredients.getTime(itemInHand.getTypeId()));
+                    if (itemInHand.getAmount() <= 1) {
+                        itemInHand.setTypeId(0);
+                        player.setItemInHand(null);
                     } else {
-                        event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - 1);
+                        itemInHand.setAmount(itemInHand.getAmount() - 1);
                     }
-                    event.getPlayer().sendMessage("You give the pot fuel!");
+                    player.sendMessage("You give the pot fuel!");
                 } else {
-                    event.getPlayer().openInventory(((Chest) cb.getState()).getBlockInventory());
+                    player.openInventory(((Chest) cb.getState()).getBlockInventory());
                 }
+            }
         }
     }
 
@@ -230,8 +233,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     public void setMultiplier(Sign sign, int amount) {
 
-        if (amount < (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1)) {
-            amount = plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
+        int min = plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
+        if (amount < min) {
+            amount = min;
         }
         sign.setLine(3, String.valueOf(amount));
         sign.update();

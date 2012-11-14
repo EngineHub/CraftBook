@@ -104,23 +104,24 @@ public class Ammeter extends AbstractMechanic {
 
     private String getCurrentLine(int data) {
 
-        String line = ChatColor.YELLOW + "[";
+        StringBuilder line = new StringBuilder(25);
+        line.append(ChatColor.YELLOW).append("[");
         if (data > 10) {
-            line = line + ChatColor.DARK_GREEN;
+            line.append(ChatColor.DARK_GREEN);
         } else if (data > 5) {
-            line = line + ChatColor.GOLD;
+            line.append(ChatColor.GOLD);
         } else if (data > 0) {
-            line = line + ChatColor.DARK_RED;
+            line.append(ChatColor.DARK_RED);
         }
         for (int i = 0; i < data; i++) {
-            line = line + "|";
+            line.append("|");
         }
-        line = line + ChatColor.BLACK;
+        line.append(ChatColor.BLACK);
         for (int i = data; i < 15; i++) {
-            line = line + "|";
+            line.append("|");
         }
-        line = line + ChatColor.YELLOW + "]";
-        return line;
+        line.append(ChatColor.YELLOW).append("]");
+        return line.toString();
     }
 
     @Override

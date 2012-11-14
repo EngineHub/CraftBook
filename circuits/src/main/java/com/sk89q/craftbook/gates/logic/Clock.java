@@ -94,17 +94,17 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            int lol;
+            int interval;
             try {
-                lol = Integer.parseInt(sign.getLine(2));
+                interval = Integer.parseInt(sign.getLine(2));
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("The third line must be a number between 5 and 150.");
             }
 
-            lol = Math.max(lol, 5);
-            lol = Math.min(lol, 150);
+            interval = Math.max(interval, 5);
+            interval = Math.min(interval, 150);
 
-            sign.setLine(2, Integer.toString(lol));
+            sign.setLine(2, Integer.toString(interval));
             sign.setLine(3, "0");
             sign.update(false);
         }
@@ -112,7 +112,7 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
         @Override
         public String getDescription() {
 
-            return "Outputs hight every X ticks when input is high.";
+            return "Outputs high every X ticks when input is high.";
         }
 
         @Override

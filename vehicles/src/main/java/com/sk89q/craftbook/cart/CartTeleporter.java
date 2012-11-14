@@ -1,13 +1,18 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
+import java.util.regex.Pattern;
+
 
 public class CartTeleporter extends CartMechanism {
+
+    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -19,15 +24,15 @@ public class CartTeleporter extends CartMechanism {
         // go
         World world = cart.getWorld();
         String line = blocks.getSign().getLine(2);
-        String[] pts = line.split(",");
+        String[] pts = COMMA_PATTERN.split(line);
         if (pts.length != 3) return;
-        if (!blocks.getSign().getLine(3).equals("")) {
+        if (!blocks.getSign().getLine(3).isEmpty()) {
             world = cart.getServer().getWorld(blocks.getSign().getLine(3));
         }
 
-        Double x;
-        Double y;
-        Double z;
+        double x;
+        double y;
+        double z;
         try {
             x = Double.parseDouble(pts[0]);
             y = Double.parseDouble(pts[1]);
@@ -35,18 +40,18 @@ public class CartTeleporter extends CartMechanism {
         } catch (NumberFormatException e) {
             // incorrect format, just set them still and let them figure it out
             if (blocks.from != null) {
-                x = blocks.from.getLocation().getX();
-                y = blocks.from.getLocation().getY();
-                z = blocks.from.getLocation().getZ();
+                x = blocks.from.getX();
+                y = blocks.from.getY();
+                z = blocks.from.getZ();
             } else {
-                x = (double) blocks.rail.getX();
-                y = (double) blocks.rail.getY();
-                z = (double) blocks.rail.getZ();
+                x = blocks.rail.getX();
+                y = blocks.rail.getY();
+                z = blocks.rail.getZ();
             }
             cart.setVelocity(new Vector(0D, 0D, 0D));
         }
 
-        Location loc = com.sk89q.worldedit.bukkit.BukkitUtil.center(new Location(world, x, y, z, 0, 0) {
+        Location loc = BukkitUtil.center(new Location(world, x, y, z, 0, 0) {
 
         });
         if (!loc.getChunk().isLoaded()) {

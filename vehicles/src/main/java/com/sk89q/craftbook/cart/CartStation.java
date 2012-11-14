@@ -31,10 +31,7 @@ public class CartStation extends CartMechanism {
                 // park it.
                 stop(cart);
                 // recenter it
-                Location l = blocks.rail.getLocation();
-                l.setX(l.getX() + 0.5);
-                l.setY(l.getY() + 0.5);
-                l.setZ(l.getZ() + 0.5);
+                Location l = blocks.rail.getLocation().add(0.5, 0.5, 0.5);
                 if (!cart.getLocation().equals(l)) {
                     cart.teleport(l);
                 }
@@ -77,10 +74,7 @@ public class CartStation extends CartMechanism {
                 // park it.
                 stop(cart);
                 // recenter it
-                Location l = blocks.rail.getLocation();
-                l.setX(l.getX() + 0.5);
-                l.setY(l.getY() + 0.5);
-                l.setZ(l.getZ() + 0.5);
+                Location l = blocks.rail.getLocation().add(0.5, 0.5, 0.5);
                 if (!cart.getLocation().equals(l)) {
                     cart.teleport(l);
                 }

@@ -120,7 +120,7 @@ public class Cauldron extends AbstractMechanic {
     /**
      * Thrown when a suspected formation is not actually a valid cauldron.
      */
-    private class NotACauldronException extends Exception {
+    private static class NotACauldronException extends Exception {
 
         private static final long serialVersionUID = 3091428924893050849L;
 

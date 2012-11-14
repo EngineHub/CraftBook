@@ -18,6 +18,7 @@
 
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import net.minecraft.server.EntityWolf;
 
 import org.bukkit.DyeColor;
@@ -46,12 +47,6 @@ import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -75,7 +70,7 @@ public class CreatureSpawner extends AbstractIC {
             String line = getSign().getLine(3).trim();
             // parse the amount or rider type
             try {
-                String[] entityInf = line.split(":");
+                String[] entityInf = ICUtil.COLON_PATTERN.split(line, 2);
                 data = entityInf[0];
                 amount = Integer.parseInt(entityInf[1]);
             } catch (Exception e) {
@@ -114,7 +109,7 @@ public class CreatureSpawner extends AbstractIC {
 
     public void setEntityData(Entity ent, String bit) {
 
-        String[] data = bit.split(":");
+        String[] data = ICUtil.COLON_PATTERN.split(bit);
 
         if (ent instanceof Ageable && data[0].equalsIgnoreCase("baby")) {
             ((Ageable) ent).setBaby();
@@ -224,7 +219,7 @@ public class CreatureSpawner extends AbstractIC {
                 break;
             case ARROW:
                 if (data[0].equalsIgnoreCase("fire")) {
-                    ((Arrow) ent).setFireTicks(5000);
+                    ent.setFireTicks(5000);
                 }
                 if (data[0].equalsIgnoreCase("bounce")) {
                     ((Arrow) ent).setBounce(true);

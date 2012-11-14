@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -7,14 +8,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
@@ -56,9 +49,10 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
             for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
                 int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
                 try {
-                    effectID = Integer.parseInt(getSign().getLine(2).split(":")[0]);
-                    effectAmount = Integer.parseInt(getSign().getLine(2).split(":")[1]);
-                    effectTime = Integer.parseInt(getSign().getLine(2).split(":")[2]);
+                    String[] effectInfo = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 3);
+                    effectID = Integer.parseInt(effectInfo[0]);
+                    effectAmount = Integer.parseInt(effectInfo[1]);
+                    effectTime = Integer.parseInt(effectInfo[2]);
                     radius = Integer.parseInt(getSign().getLine(3));
                 } catch (Exception ignored) {
                 }
@@ -88,7 +82,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                int effectId = Integer.parseInt(sign.getLine(2).split(":")[0]);
+                int effectId = Integer.parseInt(ICUtil.COLON_PATTERN.split(sign.getLine(2), 2)[0]);
 
                 if (PotionEffectType.getById(effectId) == null)
                     throw new ICVerificationException("The third line must be a valid potion effect id.");

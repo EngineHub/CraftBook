@@ -36,7 +36,7 @@ class BookItem {
         if (item instanceof CraftItemStack) {
             stack = (CraftItemStack) item;
             this.item = stack.getHandle();
-        } else if (item instanceof org.bukkit.inventory.ItemStack) {
+        } else if (item != null) {
             stack = new CraftItemStack(item);
             this.item = stack.getHandle();
         }
@@ -82,7 +82,7 @@ class BookItem {
             pages.add(new NBTTagString("1", ""));
         } else {
             for (int i = 0; i < newpages.length; i++) {
-                pages.add(new NBTTagString("" + i + "", newpages[i]));
+                pages.add(new NBTTagString(String.valueOf(i), newpages[i]));
             }
         }
         tags.set("pages", pages);
@@ -105,7 +105,7 @@ class BookItem {
             pages.add(new NBTTagString("1", ""));
         } else {
             for (String newpage : newpages) {
-                pages.add(new NBTTagString("" + pages.size() + "", newpage));
+                pages.add(new NBTTagString(String.valueOf(pages.size()), newpage));
             }
         }
         tags.set("pages", pages);
@@ -117,7 +117,7 @@ class BookItem {
         if (tags == null) {
             tags = item.tag = new NBTTagCompound();
         }
-        if (author != null && !author.equals("")) {
+        if (author != null && !author.isEmpty()) {
             tags.setString("author", author);
         }
     }
@@ -128,7 +128,7 @@ class BookItem {
         if (tags == null) {
             tags = item.tag = new NBTTagCompound();
         }
-        if (title != null && !title.equals("")) {
+        if (title != null && !title.isEmpty()) {
             tags.setString("title", title);
         }
     }

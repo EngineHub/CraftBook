@@ -1,13 +1,9 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 
 /**
  * Counter counts down each time clock input toggles from low to high, it starts
@@ -41,7 +37,7 @@ public class DownCounter extends AbstractIC {
         try {
             // Get IC configuration data from line 3 of sign
             String line2 = getSign().getLine(2);
-            String[] config = line2.split(":");
+            String[] config = ICUtil.COLON_PATTERN.split(line2);
 
             resetVal = 0;
             inf = false;
@@ -108,7 +104,7 @@ public class DownCounter extends AbstractIC {
 
         // Update counter value stored on sign if it's changed
         if (curVal != oldVal) {
-            getSign().setLine(3, curVal + "");
+            getSign().setLine(3, String.valueOf(curVal));
         }
     }
 

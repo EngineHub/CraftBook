@@ -2,6 +2,7 @@ package com.sk89q.craftbook.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -15,6 +16,8 @@ import com.sk89q.craftbook.RailUtil;
 import com.sk89q.craftbook.RedstoneUtil.Power;
 
 public class CartDeposit extends CartMechanism {
+
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -41,77 +44,76 @@ public class CartDeposit extends CartMechanism {
         if (containers.isEmpty()) return;
 
         // go
-        ItemStack[] trivialstackarray = {};
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         int itemID = -1;
         byte itemData = -1;
         try {
-            itemID = Integer.parseInt(((Sign) blocks.sign.getState()).getLine(2).split(":")[0]);
-            itemData = Byte.parseByte(((Sign) blocks.sign.getState()).getLine(2).split(":")[1]);
+            String[] splitLine = COLON_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2));
+            itemID = Integer.parseInt(splitLine[0]);
+            itemData = Byte.parseByte(splitLine[1]);
         } catch (Exception ignored) {
         }
 
         if (collecting) {
             // collecting
-            ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
-            if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
+            ArrayList<ItemStack> transferItems = new ArrayList<ItemStack>();
+            if (!((Sign) blocks.sign.getState()).getLine(2).isEmpty()) {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (item == null) {
                         continue;
                     }
-                    if (itemID < 0 || itemID == item.getTypeId())
+                    if (itemID < 0 || itemID == item.getTypeId()) {
                         if (itemData < 0 || itemData == item.getDurability()) {
-                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                            transferItems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                             cartinventory.remove(item);
                         }
+                    }
                 }
             } else {
-                transferitems.addAll(Arrays.asList(cartinventory.getContents()));
+                transferItems.addAll(Arrays.asList(cartinventory.getContents()));
                 cartinventory.clear();
             }
 
-            while (transferitems.remove(null)) {
-                continue;
-            }
+            while (transferItems.remove(null)) {}
 
             // is cart non-empty?
-            if (transferitems.size() <= 0) return;
+            if (transferItems.isEmpty()) return;
 
-            //System.out.println("collecting " + transferitems.size() + " item stacks");
-            //for (ItemStack stack: transferitems) System.out.println("collecting " + stack.getAmount() + " items of
+            //System.out.println("collecting " + transferItems.size() + " item stacks");
+            //for (ItemStack stack: transferItems) System.out.println("collecting " + stack.getAmount() + " items of
             // type " + stack.getType().toString());
 
             for (Chest container : containers) {
-                if (transferitems.size() <= 0) {
+                if (transferItems.isEmpty()) {
                     break;
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferitems.toArray(trivialstackarray))
+                leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()]))
                         .values());
-                transferitems.clear();
-                transferitems.addAll(leftovers);
+                transferItems.clear();
+                transferItems.addAll(leftovers);
                 leftovers.clear();
 
                 container.update();
             }
 
-            //System.out.println("collected items. " + transferitems.size() + " stacks left over.");
+            //System.out.println("collected items. " + transferItems.size() + " stacks left over.");
 
-            leftovers.addAll(cartinventory.addItem(transferitems.toArray(trivialstackarray)).values());
-            transferitems.clear();
-            transferitems.addAll(leftovers);
+            leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
+            transferItems.clear();
+            transferItems.addAll(leftovers);
             leftovers.clear();
 
-            //System.out.println("collection done. " + transferitems.size() + " stacks wouldn't fit back.");
+            //System.out.println("collection done. " + transferItems.size() + " stacks wouldn't fit back.");
         } else {
             // depositing
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
 
             for (Chest container : containers) {
                 Inventory containerinventory = container.getInventory();
-                if (((Sign) blocks.sign.getState()).getLine(2).length() > 0) {
+                if (!((Sign) blocks.sign.getState()).getLine(2).isEmpty()) {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (item == null) {
                             continue;
@@ -130,17 +132,16 @@ public class CartDeposit extends CartMechanism {
                 container.update();
             }
 
-            while (transferitems.remove(null)) {
-            }
+            while (transferitems.remove(null)) {}
 
             // are chests empty?
-            if (transferitems.size() <= 0) return;
+            if (transferitems.isEmpty()) return;
 
             //System.out.println("depositing " + transferitems.size() + " stacks");
             //for (ItemStack stack: transferitems) System.out.println("depositing " + stack.getAmount() + " items of
             // type " + stack.getType().toString());
 
-            leftovers.addAll(cartinventory.addItem(transferitems.toArray(trivialstackarray)).values());
+            leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
             transferitems.clear();
             transferitems.addAll(leftovers);
             leftovers.clear();
@@ -148,12 +149,12 @@ public class CartDeposit extends CartMechanism {
             //System.out.println("deposited, " + transferitems.size() + " items left over.");
 
             for (Chest container : containers) {
-                if (transferitems.size() <= 0) {
+                if (transferitems.isEmpty()) {
                     break;
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferitems.toArray(trivialstackarray))
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()]))
                         .values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);

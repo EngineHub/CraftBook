@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Animals;
@@ -15,12 +16,6 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 
@@ -103,7 +98,7 @@ public class EntityCannon extends AbstractIC {
         Location location = BukkitUtil.toSign(getSign()).getLocation();
         Type type = Type.MOB_HOSTILE;
 
-        if (getSign().getLine(3).length() != 0) {
+        if (!getSign().getLine(3).isEmpty()) {
             type = Type.fromString(getSign().getLine(3));
         }
 
@@ -116,13 +111,12 @@ public class EntityCannon extends AbstractIC {
                     continue;
                 }
 
-                double x, y, z;
+                String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+                double x = Double.parseDouble(split[0]);
+                double y = Double.parseDouble(split[1]);
+                double z = Double.parseDouble(split[2]);
 
-                x = Double.parseDouble(getSign().getLine(2).split(":")[0]);
-                y = Double.parseDouble(getSign().getLine(2).split(":")[1]);
-                z = Double.parseDouble(getSign().getLine(2).split(":")[2]);
-
-                e.setVelocity(new Vector(x,y,z).add(e.getVelocity()));
+                e.setVelocity(new Vector(x, y, z).add(e.getVelocity()));
 
                 return true;
             }

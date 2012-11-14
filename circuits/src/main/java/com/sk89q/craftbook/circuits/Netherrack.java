@@ -74,7 +74,7 @@ public class Netherrack extends AbstractMechanic {
 
         Block above = event.getBlock().getRelative(0, 1, 0);
 
-        if (event.getNewCurrent() > 0 && canPassThrough(above.getTypeId())) {
+        if (event.getNewCurrent() > 0 && canReplaceWithFire(above.getTypeId())) {
             above.setTypeId(BlockID.FIRE, false);
         } else if (event.getNewCurrent() < 1 && above != null && above.getTypeId() == BlockID.FIRE) {
             above.setTypeId(BlockID.AIR, false);
@@ -129,22 +129,17 @@ public class Netherrack extends AbstractMechanic {
 
     }
 
-    private boolean canPassThrough(int t) {
+    private boolean canReplaceWithFire(int t) {
 
-        int[] passableBlocks = new int[9];
-        passableBlocks[0] = BlockID.WATER;
-        passableBlocks[1] = BlockID.STATIONARY_WATER;
-        passableBlocks[2] = BlockID.LAVA;
-        passableBlocks[3] = BlockID.STATIONARY_LAVA;
-        passableBlocks[4] = BlockID.SNOW;
-        passableBlocks[5] = BlockID.LONG_GRASS;
-        passableBlocks[6] = BlockID.VINE;
-        passableBlocks[7] = BlockID.DEAD_BUSH;
-        passableBlocks[8] = BlockID.AIR;
-
-        for (int aPassableBlock : passableBlocks)
-            if (aPassableBlock == t) return true;
-
-        return false;
+        switch (t) {
+            case BlockID.SNOW:
+            case BlockID.LONG_GRASS:
+            case BlockID.VINE:
+            case BlockID.DEAD_BUSH:
+            case BlockID.AIR:
+                return true;
+            default:
+                return false;
+        }
     }
 }

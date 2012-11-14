@@ -131,15 +131,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] digest = md.digest(code.getBytes("UTF-8"));
-            String hex = "";
+            StringBuilder hex = new StringBuilder();
             for (byte aDigest : digest) {
                 String byteHex = Integer.toHexString(aDigest & 0xFF);
                 if (byteHex.length() == 1) {
-                    byteHex = "0" + byteHex;
+                    hex.append("0");
                 }
-                hex += byteHex;
+                hex.append(byteHex);
             }
-            return hex;
+            return hex.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("insane JVM implementation", e);
         } catch (UnsupportedEncodingException e) {
@@ -232,12 +232,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         if (book == null)
             throw new CodeNotFoundException("No written books found in chest.");
         BookItem data = new BookItem(book);
-        String code = "";
+        StringBuilder code = new StringBuilder();
         for (String s : data.getPages()) {
-            code += s + "\n";
+            code.append(s).append("\n");
         }
         System.out.println(code);
-        return code;
+        return code.toString();
     }
 
     private String getCode() throws CodeNotFoundException {
@@ -262,15 +262,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
                         y--;
                         BlockState b = w.getBlockAt(x, y, z).getState();
-                        String code = "";
+                        StringBuilder code = new StringBuilder();
                         while (b instanceof Sign) {
                             s = (Sign) b;
                             for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
-                                code += s.getLine(li) + "\n";
+                                code.append(s.getLine(li)).append("\n");
                             }
                             b = w.getBlockAt(x, --y, z).getState();
                         }
-                        return code;
+                        return code.toString();
                     }
                 }
         throw new CodeNotFoundException("No code source found.");

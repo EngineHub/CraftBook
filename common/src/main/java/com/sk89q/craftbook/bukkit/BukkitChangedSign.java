@@ -97,8 +97,7 @@ public class BukkitChangedSign implements ChangedSign {
     }
 
     @Override
-    public void setLine(int index, String line)
-            throws IndexOutOfBoundsException {
+    public void setLine(int index, String line) throws IndexOutOfBoundsException {
 
         sign.setLine(index, line);
         lines[index] = line;

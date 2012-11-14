@@ -27,6 +27,20 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 @Deprecated
 public class CustomCrafting implements Listener {
 
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("#", Pattern.LITERAL);
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
+    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
+    private static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("[", Pattern.LITERAL);
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern AT_LEFT_BRACKET_PATTERN = Pattern.compile("@[", Pattern.LITERAL);
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern DOLLAR_LEFT_BRACKET_PATTERN = Pattern.compile("$[", Pattern.LITERAL);
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern AMPERSAND_LEFT_BRACKET_PATTERN = Pattern.compile("&[", Pattern.LITERAL);
+    @SuppressWarnings("MalformedRegex")
+    private static final Pattern ASTERISK_LEFT_BRACKET_PATTERN = Pattern.compile("*[", Pattern.LITERAL);
     final MechanismsPlugin plugin;
 
     public CustomCrafting(MechanismsPlugin plugin) {
@@ -78,30 +92,28 @@ public class CustomCrafting implements Listener {
             String lastLine;
             while ((lastLine = br.readLine()) != null) { //read file until the end
                 //Skip useless lines
-                lastLine = lastLine.split("#")[0];
+                lastLine = COMMENT_PATTERN.split(lastLine)[0];
                 lastLine = lastLine.trim();
-                if (lastLine.length() == 0) {
+                if (lastLine.isEmpty()) {
                     continue;
                 }
                 if (lastLine.startsWith("@[")) { //Shapeless Recipe
-                    String output = lastLine.split(Pattern.quote("@["))[1].replace("]", "");
-                    int id = Integer.parseInt(output.split(":")[0]);
-                    short data = Short.parseShort(output.split(":")[1].split("x")[0]);
-                    int amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
-                    ShapelessRecipe r = new ShapelessRecipe(new ItemStack(id, amount, data));
+                    String output = AT_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
+                    ShapelessRecipe r = new ShapelessRecipe(parseItemStack(output));
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = contents.split("#")[0];
+                    contents = COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) {
+                    if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = contents.split(",");
+                    String[] items = COMMA_PATTERN.split(contents);
                     for (String item : items) {
-                        int iid = Integer.parseInt(item.split(":")[0]);
-                        String idata = item.split(":")[1];
+                        String[] itemSplit = COLON_PATTERN.split(item);
+                        int iid = Integer.parseInt(itemSplit[0]);
+                        String idata = itemSplit[1];
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
@@ -117,28 +129,22 @@ public class CustomCrafting implements Listener {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("$[")) { //Furnace Recipe
-                    String output = lastLine.split(Pattern.quote("$["))[1].replace("]", "");
-                    int id = Integer.parseInt(output.split(":")[0]);
-                    short data = Short.parseShort(output.split(":")[1].split("x")[0]);
-                    int amount = 1;
-                    try {
-                        amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
-                    } catch (Exception ignored) {
-                    }
-                    FurnaceRecipe r = new FurnaceRecipe(new ItemStack(id, amount, data), Material.AIR);
+                    String output = DOLLAR_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
+                    FurnaceRecipe r = new FurnaceRecipe(tryParseItemStack(output), Material.AIR);
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = contents.split("#")[0];
+                    contents = COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) {
+                    if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = contents.split(",");
+                    String[] items = COMMA_PATTERN.split(contents);
                     for (String item : items) {
-                        int iid = Integer.parseInt(item.split(":")[0]);
-                        String idata = item.split(":")[1];
+                        String[] itemSplit = COLON_PATTERN.split(item);
+                        int iid = Integer.parseInt(itemSplit[0]);
+                        String idata = itemSplit[1];
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
@@ -154,42 +160,40 @@ public class CustomCrafting implements Listener {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("&[")) { //Furnace Fuel
-                    String output = lastLine.split(Pattern.quote("&["))[1].replace("]", "");
-                    int id = Integer.parseInt(output.split(":")[0]);
+                    String output = AMPERSAND_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
+                    int id = Integer.parseInt(COLON_PATTERN.split(output)[0]);
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = contents.split("#")[0];
+                    contents = COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) {
+                    if (contents.isEmpty()) {
                         continue;
                     }
                     int burnTime = Integer.parseInt(contents);
                     fuels.put(id, burnTime);
                     plugin.getLogger().info("Furnace Fuel Added!");
                 } else if (lastLine.startsWith("*[")) { //2x2 Shaped Recipe
-                    String output = lastLine.split(Pattern.quote("*["))[1].replace("]", "");
-                    int id = Integer.parseInt(output.split(":")[0]);
-                    short data = Short.parseShort(output.split(":")[1].split("x")[0]);
-                    int amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
-                    ShapedRecipe r = new ShapedRecipe(new ItemStack(id, amount, data));
+                    String output = ASTERISK_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
+                    ShapedRecipe r = new ShapedRecipe(parseItemStack(output));
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = contents.split("#")[0];
+                    contents = COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) {
+                    if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = contents.split(",");
-                    r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]),
-                            getShapeData(items[2].split(":")[0]) + getShapeData(items[3].split(":")[0]));
+                    String[] items = COMMA_PATTERN.split(contents);
+                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split(items[1])[0]),
+                            getShapeData(COLON_PATTERN.split(items[2])[0]) + getShapeData(COLON_PATTERN.split(items[3])[0]));
                     plugin.getLogger().severe(Arrays.toString(r.getShape()));
                     for (String item : items) {
-                        int iid = Integer.parseInt(item.split(":")[0]);
-                        String idata = item.split(":")[1];
+                        String[] itemSplit = COLON_PATTERN.split(item);
+                        int iid = Integer.parseInt(itemSplit[0]);
+                        String idata = itemSplit[1];
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
@@ -197,7 +201,7 @@ public class CustomCrafting implements Listener {
                             iidata = Integer.parseInt(idata);
                         }
 
-                        r.setIngredient((iid + "").charAt(0), Material.getMaterial(iid), iidata);
+                        r.setIngredient((String.valueOf(iid)).charAt(0), Material.getMaterial(iid), iidata);
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
@@ -205,30 +209,28 @@ public class CustomCrafting implements Listener {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("[")) { //Shaped Recipe
-                    String output = lastLine.split(Pattern.quote("["))[1].replace("]", "");
-                    int id = Integer.parseInt(output.split(":")[0]);
-                    short data = Short.parseShort(output.split(":")[1].split("x")[0]);
-                    int amount = Integer.parseInt(output.split(":")[1].split("x")[1]);
-                    ShapedRecipe r = new ShapedRecipe(new ItemStack(id, amount, data));
+                    String output = LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
+                    ShapedRecipe r = new ShapedRecipe(parseItemStack(output));
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = contents.split("#")[0];
+                    contents = COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
-                    if (contents.length() == 0) {
+                    if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = contents.split(",");
-                    r.shape(getShapeData(items[0].split(":")[0]) + getShapeData(items[1].split(":")[0]) +
-                            getShapeData(items[2].split(":")[0]),
-                            getShapeData(items[3].split(":")[0]) + getShapeData(items[4].split(":")[0]) +
-                            getShapeData(items[5].split(":")[0]),
-                            getShapeData(items[6].split(":")[0]) + getShapeData(items[7].split(":")[0]) +
-                            getShapeData(items[8].split(":")[0]));
+                    String[] items = COMMA_PATTERN.split(contents);
+                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split(items[1])[0]) +
+                            getShapeData(COLON_PATTERN.split(items[2])[0]),
+                            getShapeData(COLON_PATTERN.split(items[3])[0]) + getShapeData(COLON_PATTERN.split(items[4])[0]) +
+                            getShapeData(COLON_PATTERN.split(items[5])[0]),
+                            getShapeData(COLON_PATTERN.split(items[6])[0]) + getShapeData(COLON_PATTERN.split(items[7])[0]) +
+                            getShapeData(COLON_PATTERN.split(items[8])[0]));
                     for (String item : items) {
-                        int iid = Integer.parseInt(item.split(":")[0]);
-                        String idata = item.split(":")[1];
+                        String[] itemSplit = COLON_PATTERN.split(item);
+                        int iid = Integer.parseInt(itemSplit[0]);
+                        String idata = itemSplit[1];
                         int iidata;
                         if (idata.equals("*")) {
                             iidata = -1;
@@ -236,7 +238,7 @@ public class CustomCrafting implements Listener {
                             iidata = Integer.parseInt(idata);
                         }
 
-                        r.setIngredient((iid + "").charAt(0), Material.getMaterial(iid), iidata);
+                        r.setIngredient((String.valueOf(iid)).charAt(0), Material.getMaterial(iid), iidata);
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
@@ -256,6 +258,29 @@ public class CustomCrafting implements Listener {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    private ItemStack tryParseItemStack(String output) {
+        // Is this necessary?
+        String[] split = COLON_PATTERN.split(output);
+        int id = Integer.parseInt(split[0]);
+        String[] split2 = X_PATTERN.split(split[1]);
+        short data = Short.parseShort(split2[0]);
+        int amount = 1;
+        try {
+            amount = Integer.parseInt(split2[1]);
+        } catch (Exception ignored) {
+        }
+        return new ItemStack(id, amount, data);
+    }
+
+    private ItemStack parseItemStack(String output) {
+        String[] split = COLON_PATTERN.split(output);
+        int id = Integer.parseInt(split[0]);
+        String[] split2 = X_PATTERN.split(split[1]);
+        short data = Short.parseShort(split2[0]);
+        int amount = Integer.parseInt(split2[1]);
+        return new ItemStack(id, amount, data);
     }
 
     public String getShapeData(String s) {

@@ -10,8 +10,13 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import org.bukkit.World;
+
+import java.util.regex.Pattern;
 
 public class WeatherControl extends AbstractIC {
+
+    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
     public WeatherControl(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -37,7 +42,7 @@ public class WeatherControl extends AbstractIC {
         int duration = 24000;
         int thunderDuration = duration;
         try {
-            String[] st = getSign().getLine(1).split("]");
+            String[] st = RIGHT_BRACKET_PATTERN.split(getSign().getLine(1), 2);
             if (st.length > 1) {
                 tstorm = st[1].equalsIgnoreCase("t");
             }
@@ -64,17 +69,18 @@ public class WeatherControl extends AbstractIC {
         }
 
 
+        World world = BukkitUtil.toSign(getSign()).getWorld();
         if (chip.getInput(0)) {
-            BukkitUtil.toSign(getSign()).getWorld().setStorm(true);
-            BukkitUtil.toSign(getSign()).getWorld().setWeatherDuration(duration);
+            world.setStorm(true);
+            world.setWeatherDuration(duration);
             if (tstorm) {
-                BukkitUtil.toSign(getSign()).getWorld().setThundering(true);
-                BukkitUtil.toSign(getSign()).getWorld().setThunderDuration(thunderDuration);
+                world.setThundering(true);
+                world.setThunderDuration(thunderDuration);
             }
             chip.setOutput(0, true);
         } else {
-            BukkitUtil.toSign(getSign()).getWorld().setThundering(false);
-            BukkitUtil.toSign(getSign()).getWorld().setStorm(false);
+            world.setThundering(false);
+            world.setStorm(false);
             chip.setOutput(0, false);
         }
     }

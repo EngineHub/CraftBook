@@ -1,22 +1,18 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -59,122 +55,117 @@ public class ContainerCollector extends AbstractIC {
         int y = b.getY() + 1;
         int z = b.getZ();
         Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
+
+        boolean collected = false;
         for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
             if (!(en instanceof Item)) {
                 continue;
             }
             Item item = (Item) en;
-            if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
+            ItemStack stack = item.getItemStack();
+            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid()) {
                 continue;
             }
-            int ix = item.getLocation().getBlockX();
-            int iy = item.getLocation().getBlockY();
-            int iz = item.getLocation().getBlockZ();
+            Location location = item.getLocation();
+            int ix = location.getBlockX();
+            int iy = location.getBlockY();
+            int iz = location.getBlockZ();
             if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
 
                 // Create two test stacks to check against
-                ItemStack[] testStacks = new ItemStack[] {null, null};
-
-                // Create test stack #1
-                try {
-                    if (getSign().getLine(2).contains(":")) {
-                        int id = Integer.parseInt(getSign().getLine(2).split(":")[0]);
-                        int data = Integer.parseInt(getSign().getLine(2).split(":")[1]);
-                        testStacks[0] = new ItemStack(id, 0, (short) data);
-                    } else {
-                        int id = Integer.parseInt(getSign().getLine(2));
-                        testStacks[1] = new ItemStack(id, 1, (short) 0, (byte) 0);
-                    }
-                } catch (Exception ignored) {
-                }
-
-                // Create test stack #2
-                try {
-                    if (getSign().getLine(3).contains(":")) {
-                        int id = Integer.parseInt(getSign().getLine(3).split(":")[0]);
-                        int data = Integer.parseInt(getSign().getLine(3).split(":")[1]);
-                        testStacks[1] = new ItemStack(id, 0, (short) data);
-                    } else {
-                        int id = Integer.parseInt(getSign().getLine(2));
-                        testStacks[1] = new ItemStack(id, 1, (short) 0, (byte) 0);
-                    }
-                } catch (Exception ignored) {
-                }
+                ItemStack doWant = getItem(getSign().getLine(2));
+                ItemStack doNotWant = getItem(getSign().getLine(3));
 
                 // Check to see if it matches either test stack, if not stop
-                if (testStacks[0] != null) if (ItemUtil.areItemsIdentical(testStacks[0], item.getItemStack())) {
+                if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack)) {
                     continue;
                 }
-                if (testStacks[1] != null) if (!ItemUtil.areItemsIdentical(testStacks[1], item.getItemStack())) {
+                if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack)) {
                     continue;
                 }
 
                 //Add the items to a container, and destroy them.
-                if (bl.getTypeId() == BlockID.CHEST) if (((Chest) bl.getState()).getInventory().firstEmpty() != -1) {
-
-                    ((Chest) bl.getState()).getInventory().addItem(item.getItemStack());
+                if (addToContainer(bl, stack)) {
                     item.remove();
-                    return true;
-                }
-
-                if (bl.getTypeId() == BlockID.DISPENSER)
-                    if (((Dispenser) bl.getState()).getInventory().firstEmpty() != -1) {
-
-                        ((Dispenser) bl.getState()).getInventory().addItem(item.getItemStack());
-                        item.remove();
-                        return true;
-                    }
-
-                if (bl.getTypeId() == BlockID.BREWING_STAND) {
-
-                    if (!ItemUtil.isAPotionIngredient(item.getItemStack()))
-                        return false;
-                    if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null
-                            || ItemUtil.areItemsIdentical(((BrewingStand) bl.getState()).getInventory().getIngredient
-                                    (), item.getItemStack())) {
-
-                        if (((BrewingStand) bl.getState()).getInventory().getIngredient() == null) {
-                            ((BrewingStand) bl.getState()).getInventory().setIngredient(item.getItemStack());
-                        } else {
-                            ItemUtil.addToStack(((BrewingStand) bl.getState()).getInventory().getIngredient(),
-                                    item.getItemStack());
-                        }
-                        item.remove();
-                        return true;
-                    }
-                }
-
-                if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
-
-                    Furnace fur = (Furnace) bl.getState();
-
-                    if (ItemUtil.isFurnacable(item.getItemStack()) && (fur.getInventory().getSmelting() == null
-                            || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getSmelting()))) {
-                        if (fur.getInventory().getSmelting() == null) {
-                            fur.getInventory().setSmelting(item.getItemStack());
-                        } else {
-                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getSmelting(),
-                                    item.getItemStack());
-                        }
-                        item.remove();
-                        return true;
-                    }
-
-                    if (ItemUtil.isAFuel(item.getItemStack()) && (fur.getInventory().getFuel() == null
-                            || ItemUtil.areItemsIdentical(item.getItemStack(), fur.getInventory().getFuel()))) {
-                        if (fur.getInventory().getFuel() == null) {
-                            fur.getInventory().setFuel(item.getItemStack());
-                        } else {
-                            ItemUtil.addToStack(((Furnace) bl.getState()).getInventory().getFuel(),
-                                    item.getItemStack());
-                        }
-                        item.remove();
-                        return true;
-                    }
+                    collected = true;
                 }
             }
         }
+        return collected;
+    }
+
+    private static ItemStack getItem(String line) {
+        if (line.isEmpty()) {
+            return null;
+        }
+        try {
+            if (line.contains(":")) {
+                String[] split = ICUtil.COLON_PATTERN.split(line, 2);
+                int id = Integer.parseInt(split[0]);
+                int data = Integer.parseInt(split[1]);
+                return new ItemStack(id, 0, (short) data);
+            } else {
+                int id = Integer.parseInt(line);
+                return new ItemStack(id, 1, (short) 0);
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    private boolean addToContainer(Block bl, ItemStack stack) {
+        int type = bl.getTypeId();
+        if (type == BlockID.CHEST || type == BlockID.DISPENSER) {
+            BlockState state = bl.getState();
+            Inventory inventory = ((InventoryHolder) state).getInventory();
+            if (inventory.firstEmpty() != -1) {
+                inventory.addItem(stack);
+                state.update();
+                return true;
+            }
+        } else if (type == BlockID.BREWING_STAND) {
+
+            if (!ItemUtil.isAPotionIngredient(stack))
+                return false;
+            BrewingStand brewingStand = (BrewingStand) bl.getState();
+            BrewerInventory inv = brewingStand.getInventory();
+            if (fitsInSlot(stack, inv.getIngredient())) {
+                if (inv.getIngredient() == null) {
+                    inv.setIngredient(stack);
+                } else {
+                    ItemUtil.addToStack(inv.getIngredient(), stack);
+                }
+                brewingStand.update();
+                return true;
+            }
+        } else if (type == BlockID.FURNACE || type == BlockID.BURNING_FURNACE) {
+
+            Furnace furnace = (Furnace) bl.getState();
+            FurnaceInventory inv = furnace.getInventory();
+
+            if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, inv.getSmelting())) {
+                if (inv.getSmelting() == null) {
+                    inv.setSmelting(stack);
+                } else {
+                    ItemUtil.addToStack(inv.getSmelting(), stack);
+                }
+                furnace.update();
+                return true;
+            } else if (ItemUtil.isAFuel(stack) && fitsInSlot(stack, inv.getFuel())) {
+                if (inv.getFuel() == null) {
+                    inv.setFuel(stack);
+                } else {
+                    ItemUtil.addToStack(inv.getFuel(), stack);
+                }
+                furnace.update();
+                return true;
+            }
+        }
         return false;
+    }
+
+    private static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
+        return slot == null || ItemUtil.areItemsIdentical(stack, slot);
     }
 
     public static class Factory extends AbstractICFactory {

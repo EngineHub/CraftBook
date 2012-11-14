@@ -10,7 +10,11 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
+import java.util.regex.Pattern;
+
 public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
+
+    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     public BlockSensorST(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -58,7 +62,7 @@ public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] split = sign.getLine(3).split(":");
+                String[] split = COLON_PATTERN.split(sign.getLine(3));
                 Integer.parseInt(split[0]);
             } catch (Exception ignored) {
                 throw new ICVerificationException("You need to specify an block in line four.");
