@@ -160,6 +160,8 @@ public class HiddenSwitch extends AbstractMechanic {
                     case DOWN:
                         face = BlockFace.WEST;
                         break;
+                    default:
+                        break;
                 }
 
                 testBlock = switchBlock.getRelative(face);

@@ -31,15 +31,10 @@ public class CustomCrafting implements Listener {
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     private static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
-    @SuppressWarnings("MalformedRegex")
     private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("[", Pattern.LITERAL);
-    @SuppressWarnings("MalformedRegex")
     private static final Pattern AT_LEFT_BRACKET_PATTERN = Pattern.compile("@[", Pattern.LITERAL);
-    @SuppressWarnings("MalformedRegex")
     private static final Pattern DOLLAR_LEFT_BRACKET_PATTERN = Pattern.compile("$[", Pattern.LITERAL);
-    @SuppressWarnings("MalformedRegex")
     private static final Pattern AMPERSAND_LEFT_BRACKET_PATTERN = Pattern.compile("&[", Pattern.LITERAL);
-    @SuppressWarnings("MalformedRegex")
     private static final Pattern ASTERISK_LEFT_BRACKET_PATTERN = Pattern.compile("*[", Pattern.LITERAL);
     final MechanismsPlugin plugin;
 
@@ -201,7 +196,7 @@ public class CustomCrafting implements Listener {
                             iidata = Integer.parseInt(idata);
                         }
 
-                        r.setIngredient((String.valueOf(iid)).charAt(0), Material.getMaterial(iid), iidata);
+                        r.setIngredient(String.valueOf(iid).charAt(0), Material.getMaterial(iid), iidata);
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");
@@ -238,7 +233,7 @@ public class CustomCrafting implements Listener {
                             iidata = Integer.parseInt(idata);
                         }
 
-                        r.setIngredient((String.valueOf(iid)).charAt(0), Material.getMaterial(iid), iidata);
+                        r.setIngredient(String.valueOf(iid).charAt(0), Material.getMaterial(iid), iidata);
                     }
                     if (plugin.getServer().addRecipe(r)) {
                         plugin.getLogger().info("Recipe Added!");

@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.gates.world;
 
+import java.util.regex.Pattern;
+
 import net.minecraft.server.Enchantment;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.Item;
@@ -28,11 +30,8 @@ import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-import java.util.regex.Pattern;
-
 public class AdvancedEntitySpawner extends CreatureSpawner {
 
-    @SuppressWarnings("MalformedRegex")
     private static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private static final Pattern SEMICOLON_PATTERN = Pattern.compile(";", Pattern.LITERAL);
