@@ -19,6 +19,6 @@ public class ItemShooter extends Recipe {
     public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         event.setItem(new ItemStack(itemId, 1));
-        return true;
+        return false;
     }
 }
