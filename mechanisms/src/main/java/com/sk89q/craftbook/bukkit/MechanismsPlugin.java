@@ -250,6 +250,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().paintingSettings.enabled) {
             getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
         }
+        /*TODO if (getLocalConfiguration().elementalArrowSettings.enable) {
+            getServer().getPluginManager().registerEvents(new ElementalArrowsMechanic(this), this);
+        }*/
     }
 
     @Override

@@ -66,6 +66,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         customDropSettings = new CustomDropSettings(new BaseConfigurationSection("Custom Drops"));
         dispenserSettings = new DispenserSettings(new BaseConfigurationSection("Dispenser Recipes"));
         doorSettings = new DoorSettings(new BaseConfigurationSection("Door"));
+        //TODO elementalArrowSettings = new ElementalArrowsSettings(new BaseConfigurationSection("Elemental Arrows"));
         elevatorSettings = new ElevatorSettings(new BaseConfigurationSection("Elevator"));
         gateSettings = new GateSettings(new BaseConfigurationSection("Gate"));
         hiddenSwitchSettings = new HiddenSwitchSettings(new BaseConfigurationSection("Hidden Switch"));
@@ -295,6 +296,15 @@ public class MechanismsConfiguration extends BaseConfiguration {
             return allowedBlocks.contains(b);
         }
     }
+    public class ElementalArrowsSettings {
+
+        public final boolean enable;
+
+        private ElementalArrowsSettings(BaseConfigurationSection section) {
+
+            enable = section.getBoolean("enable", true);
+        }
+    }
     public class ElevatorSettings {
 
         public final boolean enable;
@@ -451,6 +461,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public DoorSettings doorSettings;
 
     public GateSettings gateSettings;
+
+    public ElementalArrowsSettings elementalArrowSettings;
 
     public ElevatorSettings elevatorSettings;
 
