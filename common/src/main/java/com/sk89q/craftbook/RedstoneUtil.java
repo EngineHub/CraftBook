@@ -1,9 +1,8 @@
 package com.sk89q.craftbook;
 
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic

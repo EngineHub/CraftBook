@@ -1,11 +1,10 @@
 package com.sk89q.craftbook;
 
-import java.io.File;
-
-import org.bukkit.configuration.file.FileConfiguration;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.RegisteredICFactory;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
 
 public class ICConfiguration extends BaseConfiguration {
 

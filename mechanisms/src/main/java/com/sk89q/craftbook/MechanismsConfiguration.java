@@ -18,18 +18,17 @@
 
 package com.sk89q.craftbook;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
-
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.sk89q.craftbook.mech.CustomDropManager;
 import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * FileConfiguration handler for CraftBook.

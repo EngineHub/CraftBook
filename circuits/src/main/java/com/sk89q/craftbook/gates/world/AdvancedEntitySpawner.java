@@ -1,12 +1,17 @@
 package com.sk89q.craftbook.gates.world;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
 import net.minecraft.server.Enchantment;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.Item;
 import net.minecraft.server.ItemStack;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -17,18 +22,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Location;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.regex.Pattern;
 
 public class AdvancedEntitySpawner extends CreatureSpawner {
 

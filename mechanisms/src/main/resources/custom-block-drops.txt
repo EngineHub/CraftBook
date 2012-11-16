@@ -10,3 +10,7 @@
 #And, to make lapis lazuli drop pink dye:
 
 #21->351:9x2-5
+
+#And, to make wood have a 1% chance to drop stone.
+
+#5->1x2-5%1

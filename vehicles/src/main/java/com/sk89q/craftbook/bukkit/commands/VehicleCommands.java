@@ -1,11 +1,10 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class VehicleCommands {
     

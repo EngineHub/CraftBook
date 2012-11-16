@@ -1,14 +1,13 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502

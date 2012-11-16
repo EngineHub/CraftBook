@@ -18,6 +18,11 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,11 +31,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 
 /**
  * Storage class for custom drop definitions.
@@ -47,6 +47,7 @@ public final class CustomDropManager {
     private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     private static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
     private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
+    private static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
 
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
     private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
@@ -199,7 +200,7 @@ public final class CustomDropManager {
 
     private static DropDefinition readDrop(String s, String prelude, boolean append) throws IOException {
 
-        String[] split = X_PATTERN.split(s);
+        String[] split = X_PATTERN.split(PERCENT_PATTERN.split(s)[0]);
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
         String[] split2 = COLON_PATTERN.split(split[0].trim());
         if (split2.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
@@ -211,7 +212,12 @@ public final class CustomDropManager {
         if (split3.length > 2) throw new CustomDropParseException(prelude + ": invalid number drops range");
         int countMin = Integer.parseInt(split3[0]);
         int countMax = split3.length == 1 ? countMin : Integer.parseInt(split3[1]);
-        return new DropDefinition(itemId, (byte) data, countMin, countMax, append);
+        int chance = 100;
+        try {
+            chance = Integer.parseInt(PERCENT_PATTERN.split(s)[1]);
+        }
+        catch(Exception e) {}
+        return new DropDefinition(itemId, (byte) data, countMin, countMax, chance, append);
     }
 
     public static class CustomDropParseException extends IOException {
@@ -250,14 +256,22 @@ public final class CustomDropManager {
         public final int countMin;
         public final int countMax;
         public final boolean append;
+        public final int chance;
 
-        public DropDefinition(int id, byte data, int countMin, int countMax, boolean append) {
+        public DropDefinition(int id, byte data, int countMin, int countMax, int chance, boolean append) {
 
             if (countMax < countMin) {
                 int temp = countMin;
                 countMin = countMax;
                 countMax = temp;
             }
+
+            if(chance < 0)
+                chance = 0;
+            if(chance > 100)
+                chance = 100;
+
+            this.chance = chance;
 
             this.id = id;
             this.data = data;
@@ -268,6 +282,8 @@ public final class CustomDropManager {
 
         public ItemStack getItemStack() {
 
+            if(MechanismsPlugin.random.nextInt(100) > chance)
+                return null;
             return new ItemStack(id, countMin == countMax ? countMin : countMin + BaseBukkitPlugin.random.nextInt(countMax - countMin +
                     1), data);
         }

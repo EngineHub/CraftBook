@@ -18,8 +18,6 @@
 
 package com.sk89q.craftbook.plc;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.BaseConfiguration.BaseConfigurationSection;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -27,6 +25,7 @@ import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
+import org.bukkit.Server;
 
 import java.util.regex.Pattern;
 

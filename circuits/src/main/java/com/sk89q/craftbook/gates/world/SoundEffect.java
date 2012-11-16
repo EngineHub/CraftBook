@@ -1,13 +1,12 @@
 package com.sk89q.craftbook.gates.world;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class SoundEffect extends AbstractIC {
 

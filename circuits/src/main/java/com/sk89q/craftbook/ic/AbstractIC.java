@@ -18,13 +18,12 @@
 
 package com.sk89q.craftbook.ic;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import java.util.regex.Pattern;
 
 /**
  * A base abstract IC that all ICs can inherit from.

@@ -23,7 +23,6 @@ package com.sk89q.craftbook.plc;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.NBTTagList;
 import net.minecraft.server.NBTTagString;
-
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 
 class BookItem {

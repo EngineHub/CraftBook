@@ -18,11 +18,10 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import org.bukkit.command.CommandSender;
-
 import com.sk89q.craftbook.CommonConfiguration;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.command.CommandSender;
 
 /**
  * Plugin for CraftBook's core.

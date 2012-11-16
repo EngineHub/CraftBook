@@ -18,20 +18,14 @@ package com.sk89q.craftbook.mech.area;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.bukkit.World;
-
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.World;
+
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Stores a copy of a cuboid.

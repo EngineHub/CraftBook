@@ -1,13 +1,12 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * <p>

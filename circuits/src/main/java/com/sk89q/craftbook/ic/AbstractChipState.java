@@ -1,13 +1,12 @@
 package com.sk89q.craftbook.ic;
 
-import org.bukkit.block.Block;
-import org.bukkit.material.Diode;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+import org.bukkit.material.Diode;
 
 /**
  * @author Silthus

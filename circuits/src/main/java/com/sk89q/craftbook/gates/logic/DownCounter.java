@@ -1,9 +1,8 @@
 package com.sk89q.craftbook.gates.logic;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
-
-import com.sk89q.craftbook.ChangedSign;
 
 /**
  * Counter counts down each time clock input toggles from low to high, it starts
