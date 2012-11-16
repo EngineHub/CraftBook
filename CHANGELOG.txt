@@ -1,3 +1,24 @@
+3.3.7
++ Added bucket-only option to Pump & Spigot IC's
+* Fixed errors with Snow mechanic.
++ Added /searchics command and added search support to /icdocs.
+* Fix IC Doc error for MC1227
+* Enhanced Command Sign Mechanic.
++ Fine tuned XP Storer & Removed dupe bug.
+* Made ItemDispenser IC spawn at top of block instead of in sign due to majority request.
++ Added appending support to Mob & Block custom drops. (Add a + to the end of the mob/block name/id)
+* Fix WG related errors.
+* Improved ItemDispenser support for names instead of IC's
+* Fix long-lasting incompatability with CommandBook
+* Major improvements for constant speed for minecarts.
+* Fix anyone can create elevator bug.
+* Fixed Metrics not working on Common
+* Fixed Door NPE's
+* Fixed Cooking Pot Bug
++ Re-added chairs.
++ Added option for cooking pots to be able to cook any furnace recipe.
+* Enhanced Dispenser Recipes
+
 3.3.6
 + Advanced Entity Spawner IC.
 * Many bug fixes.
