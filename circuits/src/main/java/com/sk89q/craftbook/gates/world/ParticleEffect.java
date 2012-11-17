@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.gates.world;
 
 import org.bukkit.Effect;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -17,6 +16,7 @@ import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * @author Me4502
@@ -51,6 +51,7 @@ public class ParticleEffect extends AbstractIC {
 
     int effectID;
     int effectData;
+    int times = 1;
     Vector offset;
 
     public void load() {
@@ -68,6 +69,11 @@ public class ParticleEffect extends AbstractIC {
                 effectData = 0;
             }
 
+            try {
+                times = Integer.parseInt(getSign().getLine(3));
+            }
+            catch(Exception e){}
+
             String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
             offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
         }
@@ -81,8 +87,7 @@ public class ParticleEffect extends AbstractIC {
         try {
             if (effectID == 0)
                 return;
-            if (effectID == 2001 && Material.getMaterial(effectData) == null) return;
-            int times = Integer.parseInt(getSign().getLine(3));
+            if (effectID == 2001 && BlockType.fromID(effectData) == null) return;
             Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             for (int i = 0; i < times; i++) {
                 b.getWorld().playEffect(b.getLocation().add(offset), Effect.getById(effectID), effectData, 50);
