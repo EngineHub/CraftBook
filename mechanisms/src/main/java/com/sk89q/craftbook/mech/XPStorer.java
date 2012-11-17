@@ -1,16 +1,14 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class XPStorer extends AbstractMechanic {
 
@@ -28,7 +26,7 @@ public class XPStorer extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.MOB_SPAWNER) return new XPStorer(pt, plugin);
+            if (type == plugin.getLocalConfiguration().xpStorerSettings.material) return new XPStorer(pt, plugin);
 
             return null;
         }
@@ -69,18 +67,8 @@ public class XPStorer extends AbstractMechanic {
     }
 
     @Override
-    public void unloadWithEvent(ChunkUnloadEvent event) {
-
-    }
-
-    @Override
     public boolean isActive() {
 
         return false;
-    }
-
-    @Override
-    public void onBlockBreak(BlockBreakEvent event) {
-
     }
 }

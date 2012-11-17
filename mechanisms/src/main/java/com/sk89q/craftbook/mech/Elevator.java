@@ -19,21 +19,25 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.material.Button;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.material.Button;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that
@@ -206,11 +210,6 @@ public class Elevator extends AbstractMechanic {
         event.setCancelled(true);
     }
 
-    @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-        /* we only affect players, so we don't care about redstone events */
-    }
-
     private void makeItSo(LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
@@ -333,15 +332,5 @@ public class Elevator extends AbstractMechanic {
 
             super("This lift has no destination.");
         }
-    }
-
-    @Override
-    public void onBlockBreak(BlockBreakEvent event) {
-
-    }
-
-    @Override
-    public void unloadWithEvent(ChunkUnloadEvent event) {
-
     }
 }

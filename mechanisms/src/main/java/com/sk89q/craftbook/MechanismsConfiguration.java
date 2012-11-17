@@ -18,17 +18,19 @@
 
 package com.sk89q.craftbook;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.sk89q.craftbook.mech.CustomDropManager;
-import com.sk89q.worldedit.blocks.ItemID;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
+
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.sk89q.craftbook.mech.CustomDropManager;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -432,10 +434,12 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public class XPStorerSettings {
 
         public final boolean enabled;
+        public final int material;
 
         private XPStorerSettings(BaseConfigurationSection section) {
 
             enabled = section.getBoolean("enable", true);
+            material = section.getInt("block", BlockID.MOB_SPAWNER);
         }
     }
     //General settings

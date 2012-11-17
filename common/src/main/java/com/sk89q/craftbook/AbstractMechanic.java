@@ -19,7 +19,9 @@
 
 package com.sk89q.craftbook;
 
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 public abstract class AbstractMechanic implements Mechanic {
 
@@ -38,4 +40,14 @@ public abstract class AbstractMechanic implements Mechanic {
 
     }
 
+    @Override
+    public void unloadWithEvent(ChunkUnloadEvent event) {
+
+    }
+
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+
+    }
 }

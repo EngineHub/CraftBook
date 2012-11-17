@@ -19,7 +19,26 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.GameMode;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockVector;
@@ -30,18 +49,6 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import org.bukkit.GameMode;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or
@@ -598,11 +605,6 @@ public class Gate extends AbstractMechanic {
             ItemStack toDrop = new ItemStack(getGateBlock(), getBlocks(sign));
             sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
         }
-    }
-
-    @Override
-    public void unloadWithEvent(ChunkUnloadEvent event) {
-
     }
 
     private boolean canPassThrough(int t) {
