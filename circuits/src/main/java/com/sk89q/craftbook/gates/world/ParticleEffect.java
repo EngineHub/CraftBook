@@ -2,6 +2,7 @@ package com.sk89q.craftbook.gates.world;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.gates.world.blocks.SetDoor;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Effect;
