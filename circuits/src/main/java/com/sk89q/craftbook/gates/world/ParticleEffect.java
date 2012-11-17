@@ -1,14 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.gates.world.blocks.SetDoor;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.gates.world.blocks.SetDoor;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -18,6 +26,7 @@ public class ParticleEffect extends AbstractIC {
     public ParticleEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+        load();
     }
 
     @Override
@@ -40,28 +49,43 @@ public class ParticleEffect extends AbstractIC {
         }
     }
 
-    public void doEffect() {
+    int effectID;
+    int effectData;
+    Vector offset;
 
+    public void load() {
         try {
-            int effectID;
-            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 2);
+            String[] eff = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
             try {
-                effectID = Integer.parseInt(split[0]);
+                effectID = Integer.parseInt(eff[0]);
             } catch (Exception e) {
-                effectID = Effect.valueOf(split[0]).getId();
+                effectID = Effect.valueOf(eff[0]).getId();
             }
             if (Effect.getById(effectID) == null) return;
-            int effectData;
             try {
-                effectData = Integer.parseInt(split[1]);
+                effectData = Integer.parseInt(eff[1]);
             } catch (Exception e) {
                 effectData = 0;
             }
+
+            String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
+            offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
+        }
+        catch(Exception e){
+            offset = new Vector(0,1,0);
+        }
+    }
+
+    public void doEffect() {
+
+        try {
+            if (effectID == 0)
+                return;
             if (effectID == 2001 && Material.getMaterial(effectData) == null) return;
             int times = Integer.parseInt(getSign().getLine(3));
             Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             for (int i = 0; i < times; i++) {
-                b.getWorld().playEffect(b.getLocation().add(0, 1, 0), Effect.getById(effectID), effectData, 50);
+                b.getWorld().playEffect(b.getLocation().add(offset), Effect.getById(effectID), effectData, 50);
             }
         } catch (Exception ignored) {
         }
@@ -98,7 +122,7 @@ public class ParticleEffect extends AbstractIC {
         public String[] getLineHelp() {
 
             String[] lines = new String[] {
-                    "effectID:effectData",
+                    "effectID:effectData=xOff:yOff:zOff",
                     "amount of particles"
             };
             return lines;
