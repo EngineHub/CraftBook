@@ -1,20 +1,25 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class Spigot extends AbstractIC {
 
@@ -80,7 +85,7 @@ public class Spigot extends AbstractIC {
             int m = getFromChest();
             if (m == BlockID.AIR)
                 return false;
-            off.setTypeId(m);
+            off.setTypeId(parse(m));
             return true;
         } else if (off.isLiquid()) {
             if (off.getData() != 0x0) { //Moving
@@ -126,7 +131,13 @@ public class Spigot extends AbstractIC {
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
                 if (over.isEmpty())
                     return BlockID.WATER;
+                over = c.getInventory().removeItem(new ItemStack(BlockID.STATIONARY_WATER, 1));
+                if (over.isEmpty())
+                    return BlockID.WATER;
                 over = c.getInventory().removeItem(new ItemStack(BlockID.LAVA, 1));
+                if (over.isEmpty())
+                    return BlockID.LAVA;
+                over = c.getInventory().removeItem(new ItemStack(BlockID.STATIONARY_LAVA, 1));
                 if (over.isEmpty())
                     return BlockID.LAVA;
             }
@@ -137,33 +148,48 @@ public class Spigot extends AbstractIC {
 
     public int getFromChest(int m) {
 
+        m = parse(m);
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
 
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
 
             if(((Factory)getFactory()).buckets) {
-                if (m == BlockID.STATIONARY_WATER)
-                    m = BlockID.WATER;
-                else if (m == BlockID.STATIONARY_LAVA)
-                    m = BlockID.LAVA;
 
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1));
                 if (over.isEmpty())
                     return m;
             }
             else {
-                if (m == BlockID.STATIONARY_WATER)
-                    m = BlockID.WATER;
-                else if (m == BlockID.STATIONARY_LAVA)
-                    m = BlockID.LAVA;
 
                 HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m, 1));
+                if (over.isEmpty())
+                    return m;
+
+                over = c.getInventory().removeItem(new ItemStack(unparse(m), 1));
                 if (over.isEmpty())
                     return m;
             }
         }
 
+        return BlockID.AIR;
+    }
+
+    public int parse(int mat) {
+
+        if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER)
+            return BlockID.WATER;
+        if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA)
+            return BlockID.LAVA;
+        return BlockID.AIR;
+    }
+
+    public int unparse(int mat) {
+
+        if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER)
+            return BlockID.STATIONARY_WATER;
+        if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA)
+            return BlockID.STATIONARY_LAVA;
         return BlockID.AIR;
     }
 

@@ -1,3 +1,8 @@
+3.3.8
+* XPStorer's block can be changed from the default via configuration.
++ Added chance support to custom drops
+* Slimmed down code. (Means slightly smaller .jar's)
+
 3.3.7
 + Added bucket-only option to Pump & Spigot IC's
 * Fixed errors with Snow mechanic.

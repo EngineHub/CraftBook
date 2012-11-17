@@ -169,5 +169,4 @@ public class Melody extends AbstractIC {
             return lines;
         }
     }
-
 }
