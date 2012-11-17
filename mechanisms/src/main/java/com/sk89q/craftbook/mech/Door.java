@@ -421,17 +421,6 @@ public class Door extends AbstractMechanic {
         }
     }
 
-    @Override
-    public void unload() {
-        /* we're not persistent */
-    }
-
-    @Override
-    public boolean isActive() {
-        /* we're not persistent */
-        return false;
-    }
-
     private int getDoorMaterial() {
 
         return proximalBaseCenter.getTypeId();

@@ -40,18 +40,6 @@ public class Payment extends AbstractMechanic {
         this.plugin = plugin;
     }
 
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
-
-
     /**
      * Raised when a block is right clicked.
      *

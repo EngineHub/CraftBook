@@ -79,18 +79,6 @@ public class LightStone extends AbstractMechanic {
         return line.toString();
     }
 
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false; // this isn't a persistent mechanic, so the manager will
-        // never keep it around long enough to even check this.
-    }
-
     public static class Factory extends AbstractMechanicFactory<LightStone> {
 
         protected final MechanismsPlugin plugin;

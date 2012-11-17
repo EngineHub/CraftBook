@@ -208,15 +208,4 @@ public class HiddenSwitch extends AbstractMechanic {
             }
         }
     }
-
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
 }

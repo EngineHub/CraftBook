@@ -129,24 +129,6 @@ public class Bookcase extends AbstractMechanic {
         }
     }
 
-    /**
-     * Unload this bookcase.
-     */
-    @Override
-    public void unload() {
-
-    }
-
-    /**
-     * Check if this bookcase is still active.
-     */
-    @Override
-    public boolean isActive() {
-
-        return false;   // this isn't a persistent mechanic, so the manager will never keep it around long enough to
-        // even check this.
-    }
-
     public static class Factory extends AbstractMechanicFactory<Bookcase> {
 
         protected final MechanismsPlugin plugin;

@@ -215,15 +215,4 @@ public class Teleporter extends AbstractMechanic {
 
         return BlockType.canPassThrough(block.getTypeId());
     }
-
-    @Override
-    public void unload() {
-        /* we're not persistent */
-    }
-
-    @Override
-    public boolean isActive() {
-        /* we're not persistent */
-        return false;
-    }
 }

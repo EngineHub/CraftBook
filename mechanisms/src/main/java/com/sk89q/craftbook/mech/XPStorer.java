@@ -60,15 +60,4 @@ public class XPStorer extends AbstractMechanic {
 
         event.setCancelled(true);
     }
-
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
 }

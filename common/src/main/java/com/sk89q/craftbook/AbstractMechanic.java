@@ -45,9 +45,13 @@ public abstract class AbstractMechanic implements Mechanic {
 
     }
 
-
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
+
+    }
+
+    @Override
+    public void unload() {
 
     }
 }

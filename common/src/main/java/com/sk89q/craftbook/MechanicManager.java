@@ -19,11 +19,17 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.blocks.ItemID;
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -35,11 +41,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have
@@ -331,7 +337,7 @@ public class MechanicManager {
 
         Mechanic ptMechanic = triggersManager.get(pos);
 
-        if (ptMechanic != null && !ptMechanic.isActive()) {
+        if (ptMechanic != null && ptMechanic instanceof PersistentMechanic && !((PersistentMechanic) ptMechanic).isActive()) {
             unload(ptMechanic);
             ptMechanic = null;
         }
@@ -399,7 +405,7 @@ public class MechanicManager {
 
         Mechanic ptMechanic = triggersManager.get(pos);
 
-        if (ptMechanic != null && !ptMechanic.isActive()) {
+        if (ptMechanic != null && ptMechanic instanceof PersistentMechanic && !((PersistentMechanic) ptMechanic).isActive()) {
             unload(ptMechanic);
             ptMechanic = null;
         }
@@ -633,7 +639,7 @@ public class MechanicManager {
         }
 
         for (SelfTriggeringMechanic mechanic : mechs)
-            if (mechanic.isActive()) {
+            if (mechanic instanceof PersistentMechanic && ((PersistentMechanic) mechanic).isActive()) {
                 try {
                     mechanic.think();
                 } catch (Throwable t) { // Mechanic failed to think for some reason

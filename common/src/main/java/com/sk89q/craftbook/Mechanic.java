@@ -56,13 +56,6 @@ public interface Mechanic {
     public void unloadWithEvent(ChunkUnloadEvent event);
 
     /**
-     * @return true if this mechanic is still active in the world; false
-     *         otherwise. For example, for a gate, it should check to see if the
-     *         [Gate] sign still exists at the trigger points.
-     */
-    public boolean isActive();
-
-    /**
      * Raised when a block is broken.
      *
      * @param event

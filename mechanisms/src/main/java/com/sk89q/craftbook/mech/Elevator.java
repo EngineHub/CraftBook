@@ -302,17 +302,6 @@ public class Elevator extends AbstractMechanic {
         return BlockType.canPassThrough(block.getTypeId());
     }
 
-    @Override
-    public void unload() {
-        /* we're not persistent */
-    }
-
-    @Override
-    public boolean isActive() {
-        /* we're not persistent */
-        return false;
-    }
-
     private static class NoDepartureException extends InvalidMechanismException {
 
         private static final long serialVersionUID = 3845311158458450314L;

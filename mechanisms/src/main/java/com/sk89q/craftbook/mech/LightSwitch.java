@@ -204,15 +204,4 @@ public class LightSwitch extends AbstractMechanic {
         }
         return false;
     }
-
-    @Override
-    public void unload() {
-        /* No persistence. */
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false; /* Keeps no state */
-    }
 }

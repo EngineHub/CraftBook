@@ -51,11 +51,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void unload() {
-
-    }
-
-    @Override
     public boolean isActive() {
 
         return true;

@@ -100,23 +100,6 @@ public class Netherrack extends AbstractMechanic {
         }
     }
 
-    /**
-     * Unload this mechanic.
-     */
-    @Override
-    public void unload() {
-
-    }
-
-    /**
-     * Check if this mechanic is still active.
-     */
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
-
     private boolean canReplaceWithFire(int t) {
 
         switch (t) {

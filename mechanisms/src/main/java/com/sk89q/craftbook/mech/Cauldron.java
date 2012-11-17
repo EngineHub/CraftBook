@@ -373,15 +373,4 @@ public class Cauldron extends AbstractMechanic {
         return new BlockWorldVector(pt.getWorld(), pt.getX() + i,
                 pt.getY() + j, pt.getZ() + k);
     }
-
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
 }

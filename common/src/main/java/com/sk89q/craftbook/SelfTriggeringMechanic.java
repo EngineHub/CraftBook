@@ -33,5 +33,4 @@ public interface SelfTriggeringMechanic extends Mechanic {
      * in the world.
      */
     public void think();
-
 }

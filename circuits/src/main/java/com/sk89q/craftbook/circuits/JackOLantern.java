@@ -87,14 +87,6 @@ public class JackOLantern extends PersistentMechanic {
         event.getBlock().setData(event.getBlock().getData(), false);
     }
 
-    /**
-     * Unload this mechanic.
-     */
-    @Override
-    public void unload() {
-
-    }
-
     public void setPowered(Block block, boolean on) {
 
         byte data = block.getData();

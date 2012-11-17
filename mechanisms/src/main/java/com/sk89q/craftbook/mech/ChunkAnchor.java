@@ -107,11 +107,6 @@ public class ChunkAnchor extends PersistentMechanic {
     }
 
     @Override
-    public void unload() {
-
-    }
-
-    @Override
     public boolean isActive() {
 
         return true;

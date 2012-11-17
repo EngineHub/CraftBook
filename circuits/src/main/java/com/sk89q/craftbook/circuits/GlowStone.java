@@ -93,14 +93,6 @@ public class GlowStone extends PersistentMechanic {
     }
 
     /**
-     * Unload this mechanic.
-     */
-    @Override
-    public void unload() {
-
-    }
-
-    /**
      * Check if this mechanic is still active.
      */
     @Override

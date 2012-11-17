@@ -126,15 +126,4 @@ public class Command extends AbstractMechanic {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
-
-    @Override
-    public void unload() {
-        /* we're not persistent */
-    }
-
-    @Override
-    public boolean isActive() {
-        /* we're not persistent */
-        return false;
-    }
 }

@@ -99,15 +99,4 @@ public class MapChanger extends AbstractMechanic {
                 event.getPlayer().getItemInHand().setDurability(id);
             }
     }
-
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false;
-    }
 }

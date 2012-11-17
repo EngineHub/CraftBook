@@ -420,17 +420,6 @@ public class Gate extends AbstractMechanic {
         }, 2);
     }
 
-    @Override
-    public void unload() {
-
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return false; //Is not persistent
-    }
-
     public static class Factory extends AbstractMechanicFactory<Gate> {
 
         protected final MechanismsPlugin plugin;

@@ -450,19 +450,6 @@ public class Bridge extends AbstractMechanic {
         return false;
     }
 
-
-    @Override
-    public void unload() {
-        /* we're not persistent */
-    }
-
-    @Override
-    public boolean isActive() {
-        /* we're not persistent */
-        return false;
-    }
-
-
     /**
      * Thrown when the sign is an invalid direction.
      */
