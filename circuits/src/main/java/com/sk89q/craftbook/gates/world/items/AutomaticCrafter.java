@@ -1,12 +1,9 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -14,11 +11,23 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class AutomaticCrafter extends AbstractIC {
 
@@ -102,31 +111,31 @@ public class AutomaticCrafter extends AbstractIC {
     public boolean collect(Dispenser disp) {
 
         outer:
-        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-            if (!(en instanceof Item)) {
-                continue;
-            }
-            Item item = (Item) en;
-            if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
-                continue;
-            }
-            Location loc = item.getLocation();
-            int ix = loc.getBlockX();
-            int iy = loc.getBlockY();
-            int iz = loc.getBlockZ();
-            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                for (int i = 0; i < item.getItemStack().getAmount(); i++) {
-                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
-                            item.getItemStack());
-                    if (it == null) {
-                        continue outer;
-                    }
-                    it.setAmount(it.getAmount() + 1);
+            for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
+                if (!(en instanceof Item)) {
+                    continue;
                 }
-                item.remove();
+                Item item = (Item) en;
+                if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
+                    continue;
+                }
+                Location loc = item.getLocation();
+                int ix = loc.getBlockX();
+                int iy = loc.getBlockY();
+                int iz = loc.getBlockZ();
+                if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+                    for (int i = 0; i < item.getItemStack().getAmount(); i++) {
+                        ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
+                                item.getItemStack());
+                        if (it == null) {
+                            continue outer;
+                        }
+                        it.setAmount(it.getAmount() + 1);
+                    }
+                    item.remove();
+                }
             }
-        }
-        return false;
+    return false;
     }
 
     /**
@@ -179,9 +188,9 @@ public class AutomaticCrafter extends AbstractIC {
                     if (require == null) {
                         require = new ItemStack(0, 0);
                     }
-                    if (stack == null || stack.getTypeId() == 0) {
+                    if (!ItemUtil.isStackValid(stack)) {
                         if (require.getTypeId() != 0) return false;
-                    } else if (require.getTypeId() == stack.getTypeId() && require.getDurability() == stack.getDurability()) {
+                    } else if (ItemUtil.areItemsIdentical(require, stack)) {
                     } else
                         return false;
                 } catch (Exception e) {
@@ -193,14 +202,14 @@ public class AutomaticCrafter extends AbstractIC {
             ShapelessRecipe shape = (ShapelessRecipe) r;
             List<ItemStack> ing = shape.getIngredientList();
             for (ItemStack it : invContents) {
-                if (it == null) {
+                if (it == null || it.getAmount() < 1) {
                     continue;
                 }
                 for (ItemStack stack : ing) {
                     if (stack == null) {
                         continue;
                     }
-                    if (it.getTypeId() == stack.getTypeId() && it.getDurability() == stack.getDurability()) {
+                    if (ItemUtil.areItemsIdentical(it, stack)) {
                         ing.remove(stack);
                         break;
                     }

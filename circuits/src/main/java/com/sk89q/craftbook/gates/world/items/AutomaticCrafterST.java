@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
 
 public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggeredIC {
 
@@ -35,7 +36,8 @@ public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggere
     @Override
     public void trigger(ChipState state) {
 
-        state.setOutput(0, doStuff(true, true));
+        if(state.getInput(0))
+            state.setOutput(0, doStuff(true, true));
     }
 
     @Override
