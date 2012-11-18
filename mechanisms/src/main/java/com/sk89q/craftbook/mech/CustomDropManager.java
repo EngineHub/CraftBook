@@ -104,16 +104,18 @@ public final class CustomDropManager {
                     String line;
                     int currentLine = 0;
                     while ((line = reader.readLine()) != null) {
-                        if(line.isEmpty())
+                        if(line.isEmpty() || line.trim().startsWith("#"))
                             continue;
                         currentLine++;
                         prelude = "Error on line " + currentLine + " of drop definition file " +
                                 file.getAbsolutePath() + ": " + line + "\n"; //Error prelude used for parse messages.
 
                         try {
-                            line = COMMENT_PATTERN.split(line)[0]; //Remove comments
+                            if(line.contains("#"))
+                                line = COMMENT_PATTERN.split(line)[0]; //Remove comments
                         }
                         catch(Exception e){}
+
                         line = line.trim(); //Remove excess whitespace
 
                         if (line.isEmpty()) {
