@@ -110,7 +110,7 @@ public final class CustomDropManager {
                         prelude = "Error on line " + currentLine + " of drop definition file " +
                                 file.getAbsolutePath() + ": " + line + "\n"; //Error prelude used for parse messages.
 
-                        line = COMMENT_PATTERN.split(line)[0]; //Remove comments
+                        line = COMMENT_PATTERN.split(line)[1]; //Remove comments
                         line = line.trim(); //Remove excess whitespace
 
                         if (line.isEmpty()) {
