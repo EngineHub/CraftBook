@@ -18,11 +18,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,6 +26,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 /**
  * Storage class for custom drop definitions.
@@ -109,7 +110,10 @@ public final class CustomDropManager {
                         prelude = "Error on line " + currentLine + " of drop definition file " +
                                 file.getAbsolutePath() + ": " + line + "\n"; //Error prelude used for parse messages.
 
-                        line = COMMENT_PATTERN.split(line)[0]; //Remove comments
+                        try {
+                            line = COMMENT_PATTERN.split(line)[0]; //Remove comments
+                        }
+                        catch(Exception e){}
                         line = line.trim(); //Remove excess whitespace
 
                         if (line.isEmpty()) {
