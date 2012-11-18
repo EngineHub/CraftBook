@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.ic.jinglenote;
+package com.sk89q.craftbook.jinglenote;
 
 public class JingleNoteComponent {
 

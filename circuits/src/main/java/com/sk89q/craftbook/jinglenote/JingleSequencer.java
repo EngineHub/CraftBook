@@ -5,7 +5,7 @@
  * All rights reserved.
  */
 
-package com.sk89q.ic.jinglenote;
+package com.sk89q.craftbook.jinglenote;
 
 /**
  * Interface for a sequencer.
