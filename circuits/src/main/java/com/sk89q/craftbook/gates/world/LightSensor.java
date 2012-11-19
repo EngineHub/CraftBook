@@ -18,18 +18,25 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractIC {
 
     public LightSensor(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+        load();
     }
 
     @Override
@@ -52,12 +59,7 @@ public class LightSensor extends AbstractIC {
         }
     }
 
-    protected boolean getTargetLighted() {
-
-        int x = 0;
-        int y = 1;
-        int z = 0;
-        int min = 10;
+    public void load() {
         try {
             String[] st = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             if (st.length != 3) throw new Exception();
@@ -73,6 +75,14 @@ public class LightSensor extends AbstractIC {
             getSign().setLine(2, Integer.toString(min));
             getSign().update(false);
         }
+    }
+
+    int x = 0;
+    int y = 1;
+    int z = 0;
+    int min = 10;
+
+    protected boolean getTargetLighted() {
 
         return hasLight(min, x, y, z);
     }
@@ -104,6 +114,21 @@ public class LightSensor extends AbstractIC {
 
             return new LightSensor(getServer(), sign, this);
         }
-    }
 
+        @Override
+        public String getDescription() {
+
+            return "Outputs high if specifiec block is above specified light level.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "minimum light",
+                    "x:y:z offset"
+            };
+            return lines;
+        }
+    }
 }

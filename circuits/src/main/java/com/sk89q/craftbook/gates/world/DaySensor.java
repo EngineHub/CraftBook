@@ -116,5 +116,4 @@ public class DaySensor extends AbstractIC {
             return lines;
         }
     }
-
 }
