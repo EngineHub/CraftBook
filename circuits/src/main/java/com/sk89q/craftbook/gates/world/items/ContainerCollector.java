@@ -34,6 +34,7 @@ public class ContainerCollector extends AbstractIC {
     public ContainerCollector(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+        load();
     }
 
     @Override
