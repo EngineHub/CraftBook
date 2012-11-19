@@ -338,7 +338,7 @@ public class MechanicManager {
         Mechanic ptMechanic = triggersManager.get(pos);
 
         if (ptMechanic != null && ptMechanic instanceof PersistentMechanic && !((PersistentMechanic) ptMechanic).isActive()) {
-            unload(ptMechanic);
+            unload(ptMechanic, null);
             ptMechanic = null;
         }
 
@@ -406,7 +406,7 @@ public class MechanicManager {
         Mechanic ptMechanic = triggersManager.get(pos);
 
         if (ptMechanic != null && ptMechanic instanceof PersistentMechanic && !((PersistentMechanic) ptMechanic).isActive()) {
-            unload(ptMechanic);
+            unload(ptMechanic, null);
             ptMechanic = null;
         }
 
@@ -558,7 +558,7 @@ public class MechanicManager {
         applicable.addAll(watchBlockManager.getByChunk(chunk));
 
         for (Mechanic m : applicable) {
-            unloadWithEvent(m, event);
+            unload(m, event);
         }
     }
 
@@ -568,7 +568,7 @@ public class MechanicManager {
      *
      * @param mechanic
      */
-    protected void unload(Mechanic mechanic) {
+    protected void unload(Mechanic mechanic, ChunkUnloadEvent event) {
 
         if (mechanic == null) {
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
@@ -576,39 +576,10 @@ public class MechanicManager {
         }
 
         try {
-            mechanic.unload();
-        } catch (Throwable t) { // Mechanic failed to unload for some reason
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
-                    (), t);
-            t.printStackTrace();
-        }
-
-        synchronized (this) {
-            thinkingMechanics.remove(mechanic);
-        }
-
-        if (mechanic instanceof PersistentMechanic) {
-            PersistentMechanic pm = (PersistentMechanic) mechanic;
-            triggersManager.deregister(pm);
-            watchBlockManager.deregister(pm);
-        }
-    }
-
-    /**
-     * Unload a mechanic. This will also remove the trigger points from this
-     * mechanic manager.
-     *
-     * @param mechanic
-     */
-    protected void unloadWithEvent(Mechanic mechanic, ChunkUnloadEvent event) {
-
-        if (mechanic == null) {
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
-            return;
-        }
-
-        try {
-            mechanic.unloadWithEvent(event);
+            if(event == null)
+                mechanic.unload();
+            else
+                mechanic.unloadWithEvent(event);
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);
@@ -648,7 +619,7 @@ public class MechanicManager {
                     t.printStackTrace();
                 }
             } else {
-                unload(mechanic);
+                unload(mechanic, null);
             }
     }
 

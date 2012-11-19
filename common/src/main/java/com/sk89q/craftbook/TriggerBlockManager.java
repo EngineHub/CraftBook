@@ -19,14 +19,14 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 
 /**
  * This keeps track of trigger blocks. Trigger blocks are what triggers
@@ -46,7 +46,7 @@ class TriggerBlockManager {
      */
     public TriggerBlockManager() {
 
-        triggers = new HashMap<BlockWorldVector, PersistentMechanic>();
+        triggers = new LinkedHashMap<BlockWorldVector, PersistentMechanic>();
     }
 
     /**
