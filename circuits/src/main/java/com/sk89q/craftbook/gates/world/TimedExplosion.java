@@ -1,20 +1,29 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class TimedExplosion extends AbstractIC {
 
     private int ticks;
     private float yield;
     private boolean flamey;
+
+    Block signBlock;
+    Block infront;
 
     public TimedExplosion(Server server, ChangedSign block, ICFactory factory) {
 
@@ -40,6 +49,12 @@ public class TimedExplosion extends AbstractIC {
             flamey = getSign().getLine(3).endsWith("!");
         } catch (Exception ignored) {
         }
+
+        try {
+            signBlock = BukkitUtil.toSign(getSign()).getBlock();
+            infront = signBlock.getRelative(SignUtil.getBack(signBlock).getOppositeFace());
+        }
+        catch(Exception e){}
     }
 
     @Override
@@ -58,8 +73,6 @@ public class TimedExplosion extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
-            Block infront = signBlock.getRelative(SignUtil.getBack(signBlock).getOppositeFace());
             TNTPrimed tnt = (TNTPrimed) signBlock.getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
                     EntityType.PRIMED_TNT);
             tnt.setIsIncendiary(flamey);

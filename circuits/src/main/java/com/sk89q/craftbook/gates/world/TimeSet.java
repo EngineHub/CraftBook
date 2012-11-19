@@ -1,15 +1,22 @@
 package com.sk89q.craftbook.gates.world;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import org.bukkit.Server;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeSet extends AbstractIC {
 
     public TimeSet(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+        load();
     }
 
     @Override
@@ -24,12 +31,18 @@ public class TimeSet extends AbstractIC {
         return "TIME SET";
     }
 
+    public void load() {
+        time = Long.parseLong(getSign().getLine(2));
+    }
+
+    /* it's been a */ long time;
+
     @Override
     public void trigger(ChipState chip) {
 
         try {
             if (chip.getInput(0)) {
-                BukkitUtil.toSign(getSign()).getWorld().setTime(Long.parseLong(getSign().getLine(2)));
+                BukkitUtil.toSign(getSign()).getWorld().setTime(time);
             }
         } catch (Exception ignored) {
         }
