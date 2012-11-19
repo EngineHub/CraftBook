@@ -1,11 +1,5 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -14,7 +8,23 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -46,6 +56,17 @@ public class ContainerCollector extends AbstractIC {
         }
     }
 
+    ItemStack doWant, doNotWant;
+
+    public void load() {
+
+        try {
+            doWant = getItem(getSign().getLine(2));
+            doNotWant = getItem(getSign().getLine(3));
+        }
+        catch(Exception e){}
+    }
+
     protected boolean collect() {
 
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
@@ -70,10 +91,6 @@ public class ContainerCollector extends AbstractIC {
             int iy = location.getBlockY();
             int iz = location.getBlockZ();
             if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-
-                // Create two test stacks to check against
-                ItemStack doWant = getItem(getSign().getLine(2));
-                ItemStack doNotWant = getItem(getSign().getLine(3));
 
                 // Check to see if it matches either test stack, if not stop
                 if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack)) {
