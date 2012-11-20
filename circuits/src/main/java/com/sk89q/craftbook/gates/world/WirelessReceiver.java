@@ -18,9 +18,17 @@
 
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 public class WirelessReceiver extends AbstractIC {
 
@@ -32,6 +40,7 @@ public class WirelessReceiver extends AbstractIC {
 
         try {
             band = sign.getLine(2);
+            band += sign.getLine(3);
         } catch (Exception e) {
             band = "test";
         }
@@ -62,6 +71,8 @@ public class WirelessReceiver extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
+        public boolean requirename;
+
         public Factory(Server server) {
 
             super(server);
@@ -72,7 +83,6 @@ public class WirelessReceiver extends AbstractIC {
 
             return new WirelessReceiver(getServer(), sign, this);
         }
-
 
         @Override
         public String getDescription() {
@@ -85,9 +95,28 @@ public class WirelessReceiver extends AbstractIC {
 
             String[] lines = new String[] {
                     "wireless band",
-                    null
+                    "user"
             };
             return lines;
+        }
+
+        @Override
+        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+            if(requirename)
+                sign.setLine(3, player.getName());
+            else if(!sign.getLine(3).isEmpty())
+                sign.setLine(3, player.getName());
+        }
+
+        @Override
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+
+            requirename = section.getBoolean("per-player", false);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+            return true;
         }
     }
 }
