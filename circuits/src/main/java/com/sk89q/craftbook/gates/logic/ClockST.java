@@ -18,9 +18,15 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class ClockST extends Clock implements SelfTriggeredIC {
 
@@ -49,7 +55,8 @@ public class ClockST extends Clock implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        triggerClock(chip);
+        if(!chip.getInput(0))
+            triggerClock(chip);
     }
 
     @Override
