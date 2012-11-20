@@ -32,7 +32,7 @@ public class LowPulser extends Pulser {
         return !chip.getInput(0);
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends Pulser.Factory implements RestrictedIC {
 
         public Factory(Server server) {
 
@@ -43,6 +43,13 @@ public class LowPulser extends Pulser {
         public IC create(ChangedSign sign) {
 
             return new LowPulser(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Fires a (choosable) pulse of high-signals with a choosable length of the signal " +
+                    "and the pause between the pulses when the input goes from high to low.";
         }
     }
 }
