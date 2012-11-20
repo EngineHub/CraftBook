@@ -66,7 +66,7 @@ public class BlockBreaker extends AbstractIC {
         if (chest != null && chest.getTypeId() == BlockID.CHEST) {
             hasChest = true;
         }
-        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK) return false;
+        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId() == BlockID.PISTON_MOVING_PIECE) return false;
 
         try {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
