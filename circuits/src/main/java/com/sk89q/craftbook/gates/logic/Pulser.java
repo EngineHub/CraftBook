@@ -28,33 +28,22 @@ public class Pulser extends AbstractIC {
 
     private void load() {
 
-        try {
-            ChangedSign sign = getSign();
-            String line2 = sign.getLine(2);
-            String line3 = sign.getLine(3);
-            if (!(line2 == null) && !line2.isEmpty()) {
-                try {
-                    String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
-                    pulseLength = Integer.parseInt(split[0]);
-                    startDelay = Integer.parseInt(split[1]);
-                } catch (Exception e) {
-                    // defaults will be used
-                }
-            }
-            if (!(line3 == null) && !line3.isEmpty()) {
-                try {
-                    String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
-                    pulseCount = Integer.parseInt(split[0]);
-                    pauseLength = Integer.parseInt(split[1]);
-                } catch (Exception e) {
-                    // defaults will be used
-                }
-            }
-            sign.setLine(2, pulseLength + ":" + startDelay);
-            sign.setLine(3, pulseCount + ":" + pulseLength);
-            sign.update(false);
-        } catch (Exception ignored) {
+        ChangedSign sign = getSign();
+        String line2 = sign.getLine(2);
+        String line3 = sign.getLine(3);
+        if (!(line2 == null) && !line2.isEmpty()) {
+            String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
+            pulseLength = Integer.parseInt(split[0]);
+            if (split.length > 1) startDelay = Integer.parseInt(split[1]);
         }
+        if (!(line3 == null) && !line3.isEmpty()) {
+            String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
+            pulseCount = Integer.parseInt(split[0]);
+            if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
+        }
+        sign.setLine(2, pulseLength + ":" + startDelay);
+        sign.setLine(3, pulseCount + ":" + pauseLength);
+        sign.update(false);
     }
 
     @Override
@@ -192,6 +181,45 @@ public class Pulser extends AbstractIC {
         public IC create(ChangedSign sign) {
 
             return new Pulser(getServer(), sign, this);
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            String line2 = sign.getLine(2);
+            String line3 = sign.getLine(3);
+            if (!(line2 == null) && !line2.isEmpty()) {
+                try {
+                    String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
+                    Integer.parseInt(split[0]);
+                    if (split.length > 1) Integer.parseInt(split[1]);
+                } catch (Exception e) {
+                    throw new ICVerificationException("You can only write numbers in line 3. See /icdocs for help");
+                }
+            }
+            if (!(line3 == null) && !line3.isEmpty()) {
+                try {
+                    String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
+                    Integer.parseInt(split[0]);
+                    if (split.length > 1) Integer.parseInt(split[1]);
+                } catch (Exception e) {
+                    throw new ICVerificationException("You can only write numbers in line 4. See /icdocs for help");
+                }
+            }
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Fires a (choosable) pulse of high-signals with a choosable length of the signal " +
+                    "and the pause between the pulses when the input goes from low to high.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            return new String[]{"[pulselength[:startdelay]]",
+                    "[pulsecount[:pauselength in serverticks]]"};
         }
     }
 }
