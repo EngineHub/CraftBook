@@ -11,6 +11,8 @@ import org.bukkit.Server;
  */
 public class NotLowDelayer extends AbstractIC {
 
+    private int taskId;
+
     public NotLowDelayer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
@@ -33,9 +35,10 @@ public class NotLowDelayer extends AbstractIC {
 
         long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
+            Bukkit.getScheduler().cancelTask(taskId);
             chip.setOutput(0, false);
         } else {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+            taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
                 @Override
                 public void run() {
