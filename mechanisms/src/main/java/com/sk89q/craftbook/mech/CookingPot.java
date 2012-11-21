@@ -174,7 +174,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (event.getClickedBlock().getState() instanceof Sign && plugin.getLocalConfiguration().cookingPotSettings.openClick) {
+        if (event.getClickedBlock().getState() instanceof Sign) {
             Sign sign = (Sign) event.getClickedBlock().getState();
             Block b = SignUtil.getBackBlock(sign.getBlock());
             int x = b.getX();
@@ -193,7 +193,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                         itemInHand.setAmount(itemInHand.getAmount() - 1);
                     }
                     player.sendMessage("You give the pot fuel!");
-                } else {
+                } else if (plugin.getLocalConfiguration().cookingPotSettings.openClick){
                     player.openInventory(((Chest) cb.getState()).getBlockInventory());
                 }
             }
