@@ -174,7 +174,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (event.getClickedBlock().getState() instanceof Sign) {
+        if (event.getClickedBlock().getState() instanceof Sign && plugin.getLocalConfiguration().cookingPotSettings.openClick) {
             Sign sign = (Sign) event.getClickedBlock().getState();
             Block b = SignUtil.getBackBlock(sign.getBlock());
             int x = b.getX();
