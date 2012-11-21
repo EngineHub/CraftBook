@@ -232,12 +232,14 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enable;
         public final boolean requiresfuel;
         public final boolean cooksOres;
+        public final boolean openClick;
 
         private CookingPotSettings(BaseConfigurationSection section) {
 
             enable = section.getBoolean("enable", true);
             requiresfuel = section.getBoolean("requires-fuel", false);
             cooksOres = section.getBoolean("cooks-everything", false);
+            openClick = section.getBoolean("open-on-click", false);
         }
     }
     public class CustomCraftingSettings {

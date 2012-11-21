@@ -193,7 +193,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                         itemInHand.setAmount(itemInHand.getAmount() - 1);
                     }
                     player.sendMessage("You give the pot fuel!");
-                } else {
+                } else if (plugin.getLocalConfiguration().cookingPotSettings.openClick){
                     player.openInventory(((Chest) cb.getState()).getBlockInventory());
                 }
             }
