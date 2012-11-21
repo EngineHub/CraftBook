@@ -11,6 +11,7 @@ import org.bukkit.Server;
  */
 public class Delayer extends AbstractIC {
 
+    private int taskId;
     private long delay = 1;
 
     public Delayer(Server server, ChangedSign block, ICFactory factory) {
@@ -38,7 +39,7 @@ public class Delayer extends AbstractIC {
     public void trigger(final ChipState chip) {
 
         if (chip.getInput(0)) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
+            taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
                 @Override
                 public void run() {
@@ -49,6 +50,7 @@ public class Delayer extends AbstractIC {
                 }
             }, delay * 20);
         } else {
+            Bukkit.getScheduler().cancelTask(taskId);
             chip.setOutput(0, false);
         }
     }
