@@ -1,18 +1,24 @@
 package com.sk89q.craftbook.gates.world;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.Collection;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Item;
 
-import java.util.Collection;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Sapling planter
@@ -52,7 +58,11 @@ public class Planter extends AbstractIC {
 
         if (!getSign().getLine(2).isEmpty()) {
             String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-            info = new int[] {Integer.parseInt(lineParts[0]), Integer.parseInt(lineParts[1])};
+            info = new int[] {Integer.parseInt(lineParts[0]), 0};
+            try {
+                info[1] = Integer.parseInt(lineParts[1]);
+            }
+            catch(Exception e){}
         }
 
         if (info == null || !plantableItem(info[0])) return;
