@@ -18,6 +18,7 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
 
 /**
@@ -125,8 +126,7 @@ public class Planter extends AbstractIC {
                 return blockId == BlockID.SAND;
             case BlockID.RED_MUSHROOM:
             case BlockID.BROWN_MUSHROOM:
-                // TODO Actually any solid block
-                return blockId == BlockID.DIRT || blockId == BlockID.GRASS || blockId == BlockID.MYCELIUM;
+                return !BlockType.canPassThrough(blockId);
         }
         return false;
     }
