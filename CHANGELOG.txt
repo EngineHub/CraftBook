@@ -2,6 +2,21 @@
 * XPStorer's block can be changed from the default via configuration.
 + Added chance support to custom drops
 * Slimmed down code. (Means slightly smaller .jar's)
+* Many optimizations and organisation of IC code.
+* Enhanced Spigot IC.
++ Added Sorter IC's
++ Added ItemFan IC's
+* Fixed Custom Drop errors.
+* Enhanced Auto Crafter
+* Fixed powering ST Clock not stopping it
++ Added per-player to wireless IC's (configurable)
+* Block breakers now work with pistons pushing blocks onto them.
+* Fixed Pulsar IC's and added documentation.
++ Added option to disable opening cooking pots on right click.
+* Fixed delayers not cancelling tasks when stopped.
+* Fixed Planter IC.
+* Toggle Area [SaveArea] signs save both id and inactiveID.
+* Fixed Container Collector data parsing.
 
 3.3.7
 + Added bucket-only option to Pump & Spigot IC's
