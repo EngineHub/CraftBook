@@ -128,6 +128,7 @@ public class Chair implements Listener {
         public void run () {
             for(String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
+                if (p == null) continue;
                 if(!p.isOnline() || !p.getWorld().equals(getChair(p).getWorld())
                         || p.getLocation().distanceSquared(getChair(p).getLocation()) > 3*3) {
                     Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
