@@ -77,8 +77,7 @@ public class Planter extends AbstractIC {
 
         target = onBlock.add(0, yOffset, 0);
 
-        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(),
-                target.getBlockZ()) == 0
+        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0
                 && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1,
                         target.getBlockZ()))) {
 
