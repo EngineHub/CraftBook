@@ -75,6 +75,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         lightSwitchSettings = new LightSwitchSettings(new BaseConfigurationSection("Light Switch"));
         mapChangerSettings = new MapChangerSettings(new BaseConfigurationSection("Map Changer"));
         paintingSettings = new PaintingSettings(new BaseConfigurationSection("Painting Settings"));
+        paymentSettings = new PaymentSettings(new BaseConfigurationSection("Payment Settings"));
         snowSettings = new SnowSettings(new BaseConfigurationSection("Snow"));
         teleporterSettings = new TeleporterSettings(new BaseConfigurationSection("Teleporter"));
         xpStorerSettings = new XPStorerSettings(new BaseConfigurationSection("XP Storer"));
@@ -402,6 +403,15 @@ public class MechanismsConfiguration extends BaseConfiguration {
             enabled = section.getBoolean("enable", true);
         }
     }
+    public class PaymentSettings {
+
+        public final boolean enabled;
+
+        private PaymentSettings(BaseConfigurationSection section) {
+
+            enabled = section.getBoolean("enable", true);
+        }
+    }
     public class SnowSettings {
 
         public final boolean enable;
@@ -504,6 +514,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
     public CustomCraftingSettings customCraftingSettings;
 
     public PaintingSettings paintingSettings;
+
+    public PaymentSettings paymentSettings;
 
     public XPStorerSettings xpStorerSettings;
 
