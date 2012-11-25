@@ -101,9 +101,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();
 
-        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-            setupEconomy();
-        }
+        setupEconomy();
 
         manager = new MechanicManager(this);
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
@@ -269,13 +267,18 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     private boolean setupEconomy() {
 
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
-                .milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
+        try {
+            RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net
+                    .milkbowl.vault.economy.Economy.class);
+            if (economyProvider != null) {
+                economy = economyProvider.getProvider();
+            }
 
-        return economy != null;
+            return economy != null;
+        }
+        catch(Exception e) {
+            return false;
+        }
     }
 
     public static MechanismsPlugin getInst() {
