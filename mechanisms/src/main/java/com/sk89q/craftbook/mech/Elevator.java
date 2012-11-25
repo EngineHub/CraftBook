@@ -146,7 +146,7 @@ public class Elevator extends AbstractMechanic {
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
-            if (derp != Direction.NONE) {
+            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(trigger),BukkitUtil.toChangedSign(destination))) {
                 break;   // found it!
             }
             if (destination.getY() == trigger.getY())
@@ -267,6 +267,23 @@ public class Elevator extends AbstractMechanic {
         } else {
             player.print("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
         }
+    }
+
+    public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
+        if(start.getLine(2).startsWith("To:")) {
+            try {
+                if(stop.getLine(0).equalsIgnoreCase(start.getLine(2).split(":")[1]))
+                    return true;
+                else
+                    return false;
+            }
+            catch(Exception e){
+                start.setLine(2, "");
+                return false;
+            }
+        }
+        else
+            return true;
     }
 
     private static Elevator.Direction isLift(Block block) {
