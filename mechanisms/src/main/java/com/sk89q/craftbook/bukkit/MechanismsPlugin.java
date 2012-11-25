@@ -164,15 +164,13 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().mapChangerSettings.enabled) {
             registerMechanic(new MapChanger.Factory(this));
         }
-        if (getLocalConfiguration().paymentSettings.enabled) {
-            registerMechanic(new Payment.Factory(this));
-        }
+
         if (getLocalConfiguration().customCraftingSettings.enable) {
             new CustomCrafting(this);
         }
 
         //Special mechanics.
-        if (economy != null) {
+        if (economy != null && getLocalConfiguration().paymentSettings.enabled) {
             registerMechanic(new Payment.Factory(this));
         }
 
