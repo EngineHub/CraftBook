@@ -1,10 +1,7 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.logging.Level;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -16,7 +13,11 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.logging.Level;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -166,14 +167,70 @@ public class Snow implements Listener {
 
     public void incrementData(Block block) {
 
-        byte newData = (byte) (block.getData() + 1);
-        if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-            block.setTypeId(BlockID.SNOW_BLOCK);
-            newData = (byte) 0;
-        } else if (newData > 7) {
-            newData = 7;
+        if(plugin.getLocalConfiguration().snowSettings.realistic) {
+            if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW) {
+                block = block.getRelative(1, 0, 0);
+                if(block.getData() < block.getData()) {
+                    byte newData = (byte) (block.getData() + 1);
+                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
+                        block.setTypeId(BlockID.SNOW_BLOCK);
+                        newData = (byte) 0;
+                    } else if (newData > 7) {
+                        newData = 7;
+                    }
+                    setBlockDataWithNotify(block, newData);
+                }
+            }
+            if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW) {
+                block = block.getRelative(-1, 0, 0);
+                if(block.getData() < block.getData()) {
+                    byte newData = (byte) (block.getData() + 1);
+                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
+                        block.setTypeId(BlockID.SNOW_BLOCK);
+                        newData = (byte) 0;
+                    } else if (newData > 7) {
+                        newData = 7;
+                    }
+                    setBlockDataWithNotify(block, newData);
+                }
+            }
+            if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW) {
+                block = block.getRelative(0, 0, 1);
+                if(block.getData() < block.getData()) {
+                    byte newData = (byte) (block.getData() + 1);
+                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
+                        block.setTypeId(BlockID.SNOW_BLOCK);
+                        newData = (byte) 0;
+                    } else if (newData > 7) {
+                        newData = 7;
+                    }
+                    setBlockDataWithNotify(block, newData);
+                }
+            }
+            if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW) {
+                block = block.getRelative(0, 0, -1);
+                if(block.getData() < block.getData()) {
+                    byte newData = (byte) (block.getData() + 1);
+                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
+                        block.setTypeId(BlockID.SNOW_BLOCK);
+                        newData = (byte) 0;
+                    } else if (newData > 7) {
+                        newData = 7;
+                    }
+                    setBlockDataWithNotify(block, newData);
+                }
+            }
         }
-        setBlockDataWithNotify(block, newData);
+        else {
+            byte newData = (byte) (block.getData() + 1);
+            if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
+                block.setTypeId(BlockID.SNOW_BLOCK);
+                newData = (byte) 0;
+            } else if (newData > 7) {
+                newData = 7;
+            }
+            setBlockDataWithNotify(block, newData);
+        }
     }
 
     public void setBlockDataWithNotify(Block block, byte data) {

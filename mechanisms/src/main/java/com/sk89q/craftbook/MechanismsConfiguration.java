@@ -419,6 +419,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean placeSnow;
         public final boolean jumpTrample;
         public final boolean piling;
+        public final boolean realistic;
 
         private SnowSettings(BaseConfigurationSection section) {
 
@@ -427,6 +428,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
             placeSnow = section.getBoolean("placable-snow", true);
             jumpTrample = section.getBoolean("jump-trample-only", true);
             piling = section.getBoolean("pile-high", false);
+            realistic = section.getBoolean("realistic-piling", false);
         }
     }
     public class TeleporterSettings {
