@@ -168,6 +168,12 @@ public class Snow implements Listener {
     public void incrementData(Block block) {
 
         if(plugin.getLocalConfiguration().snowSettings.realistic) {
+            if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR) {
+                if(block.getRelative(0, -1, 0).getData() < block.getData()) {
+                    incrementData(block.getRelative(1, -1, 0));
+                    return;
+                }
+            }
             if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR) {
                 if(block.getRelative(1, 0, 0).getData() < block.getData()) {
                     incrementData(block.getRelative(1, 0, 0));
