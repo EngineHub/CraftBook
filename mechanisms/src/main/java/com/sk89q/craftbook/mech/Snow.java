@@ -168,69 +168,44 @@ public class Snow implements Listener {
     public void incrementData(Block block) {
 
         if(plugin.getLocalConfiguration().snowSettings.realistic) {
-            if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW) {
-                block = block.getRelative(1, 0, 0);
-                if(block.getData() < block.getData()) {
-                    byte newData = (byte) (block.getData() + 1);
-                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-                        block.setTypeId(BlockID.SNOW_BLOCK);
-                        newData = (byte) 0;
-                    } else if (newData > 7) {
-                        newData = 7;
-                    }
-                    setBlockDataWithNotify(block, newData);
+            if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR) {
+                if(block.getRelative(1, 0, 0).getData() < block.getData()) {
+                    incrementData(block.getRelative(1, 0, 0));
+                    return;
                 }
             }
-            if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW) {
-                block = block.getRelative(-1, 0, 0);
-                if(block.getData() < block.getData()) {
-                    byte newData = (byte) (block.getData() + 1);
-                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-                        block.setTypeId(BlockID.SNOW_BLOCK);
-                        newData = (byte) 0;
-                    } else if (newData > 7) {
-                        newData = 7;
-                    }
-                    setBlockDataWithNotify(block, newData);
+            if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR) {
+                if(block.getRelative(-1, 0, 0).getData() < block.getData()) {
+                    incrementData(block.getRelative(-1, 0, 0));
+                    return;
                 }
             }
-            if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW) {
-                block = block.getRelative(0, 0, 1);
-                if(block.getData() < block.getData()) {
-                    byte newData = (byte) (block.getData() + 1);
-                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-                        block.setTypeId(BlockID.SNOW_BLOCK);
-                        newData = (byte) 0;
-                    } else if (newData > 7) {
-                        newData = 7;
-                    }
-                    setBlockDataWithNotify(block, newData);
+            if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR) {
+                if(block.getRelative(0, 0, 1).getData() < block.getData()) {
+                    incrementData(block.getRelative(0, 0, 1));
+                    return;
                 }
             }
-            if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW) {
-                block = block.getRelative(0, 0, -1);
-                if(block.getData() < block.getData()) {
-                    byte newData = (byte) (block.getData() + 1);
-                    if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-                        block.setTypeId(BlockID.SNOW_BLOCK);
-                        newData = (byte) 0;
-                    } else if (newData > 7) {
-                        newData = 7;
-                    }
-                    setBlockDataWithNotify(block, newData);
+            if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR) {
+                if(block.getRelative(0, 0, -1).getData() < block.getData()) {
+                    incrementData(block.getRelative(0, 0, -1));
+                    return;
                 }
             }
         }
-        else {
-            byte newData = (byte) (block.getData() + 1);
-            if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-                block.setTypeId(BlockID.SNOW_BLOCK);
-                newData = (byte) 0;
-            } else if (newData > 7) {
-                newData = 7;
-            }
-            setBlockDataWithNotify(block, newData);
+
+        byte newData = 0;
+        if(block.getTypeId() != BlockID.SNOW)
+            block.setTypeId(BlockID.SNOW);
+        else
+            newData = (byte) (block.getData() + 1);
+        if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
+            block.setTypeId(BlockID.SNOW_BLOCK);
+            newData = (byte) 0;
+        } else if (newData > 7) {
+            newData = 7;
         }
+        setBlockDataWithNotify(block, newData);
     }
 
     public void setBlockDataWithNotify(Block block, byte data) {
