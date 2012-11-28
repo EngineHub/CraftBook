@@ -18,6 +18,11 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.block.Block;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
@@ -26,10 +31,6 @@ import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.block.Block;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
@@ -190,12 +191,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             ICFactory factory = registration.getFactory();
 
-            if (factory instanceof RestrictedIC) {
-                if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
-                        + registration.getId() + ".");
-            }
-            else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
-                    + registration.getId() + ".");
+            checkPermissions(player,factory,id,registration);
 
             factory.verify(sign);
 
@@ -258,5 +254,20 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             detect(pt, player, sign, true);
         } return null;
+    }
+
+    public boolean checkPermissions(LocalPlayer player, ICFactory factory, String id, RegisteredICFactory registration) throws ICVerificationException {
+
+        if(player.hasPermission("craftbook.ic." + id.toLowerCase())) //Simpler overriding permission.
+            return true;
+
+        if (factory instanceof RestrictedIC) {
+            if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
+                    + registration.getId() + ".");
+        }
+        else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) throw new ICVerificationException("You don't have permission to use "
+                + registration.getId() + ".");
+
+        return true;
     }
 }
