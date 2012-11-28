@@ -1,16 +1,23 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -34,6 +41,24 @@ public class FireShooter extends AbstractIC {
             speed = Float.parseFloat(velocity[0]);
             spread = Float.parseFloat(velocity[1]);
             vert = Float.parseFloat(getSign().getLine(3).trim());
+
+            if (speed > 2.0) {
+                speed = 2F;
+            } else if (speed < 0.2) {
+                speed = 0.2F;
+            }
+
+            if (spread > 50) {
+                spread = 50;
+            } else if (spread < 0) {
+                spread = 0;
+            }
+
+            if (vert > 1) {
+                vert = 1;
+            } else if (vert < -1) {
+                vert = -1;
+            }
         } catch (Exception ignored) {
         }
     }
@@ -59,24 +84,6 @@ public class FireShooter extends AbstractIC {
     }
 
     public void shootFire(int n) {
-
-        if (speed > 2.0) {
-            speed = 2F;
-        } else if (speed < 0.2) {
-            speed = 0.2F;
-        }
-
-        if (spread > 50) {
-            spread = 50;
-        } else if (spread < 0) {
-            spread = 0;
-        }
-
-        if (vert > 1) {
-            vert = 1;
-        } else if (vert < -1) {
-            vert = -1;
-        }
 
         Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
