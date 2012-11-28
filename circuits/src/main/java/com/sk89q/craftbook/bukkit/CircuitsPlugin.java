@@ -652,7 +652,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
      *
      * @return
      */
-    public String[] generateICText(Player p, String search) {
+    public String[] generateICText(Player p, String search, char[] parameters) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
         icNameList.addAll(icManager.registered.keySet());
@@ -663,11 +663,26 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         boolean col = true;
         for (String ic : icNameList) {
             try {
+                thisIC: {
                 RegisteredICFactory ric = icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
                 if(search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase()) &&
                         !ric.getId().toLowerCase().contains(search.toLowerCase()))
                     continue;
+                if(parameters != null) {
+                    for(char c : parameters) {
+                        if(c == 'r' && !(ric.getFactory() instanceof RestrictedIC))
+                            break thisIC;
+                        else if(c == 's' && ric.getFactory() instanceof RestrictedIC)
+                            break thisIC;
+                        else if(c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks"))
+                            break thisIC;
+                        else if(c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items"))
+                            break thisIC;
+                        else if(c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
+                            break thisIC;
+                    }
+                }
                 col = !col;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
@@ -681,6 +696,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                 strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
                         SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor
                                 .DARK_RED + "R " : ""));
+            }
             } catch (Exception e) {
                 if (ic.endsWith("5001") || ic.endsWith("5000")) {
                     // TODO

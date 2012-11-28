@@ -72,8 +72,11 @@ public class LightSensor extends AbstractIC {
         try {
             min = Integer.parseInt(getSign().getLine(2));
         } catch (Exception e) {
-            getSign().setLine(2, Integer.toString(min));
-            getSign().update(false);
+            try {
+                getSign().setLine(2, Integer.toString(min));
+                getSign().update(false);
+            }
+            catch(Exception ee){}
         }
     }
 

@@ -32,7 +32,10 @@ public class TimeSet extends AbstractIC {
     }
 
     public void load() {
-        time = Long.parseLong(getSign().getLine(2));
+        try {
+            time = Long.parseLong(getSign().getLine(2));
+        }
+        catch(Exception e){}
     }
 
     /* it's been a */ long time;

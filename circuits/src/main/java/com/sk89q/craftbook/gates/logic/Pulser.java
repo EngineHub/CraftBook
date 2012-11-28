@@ -1,10 +1,18 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -28,22 +36,25 @@ public class Pulser extends AbstractIC {
 
     private void load() {
 
-        ChangedSign sign = getSign();
-        String line2 = sign.getLine(2);
-        String line3 = sign.getLine(3);
-        if (!(line2 == null) && !line2.isEmpty()) {
-            String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
-            pulseLength = Integer.parseInt(split[0]);
-            if (split.length > 1) startDelay = Integer.parseInt(split[1]);
+        try {
+            ChangedSign sign = getSign();
+            String line2 = sign.getLine(2);
+            String line3 = sign.getLine(3);
+            if (!(line2 == null) && !line2.isEmpty()) {
+                String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
+                pulseLength = Integer.parseInt(split[0]);
+                if (split.length > 1) startDelay = Integer.parseInt(split[1]);
+            }
+            if (!(line3 == null) && !line3.isEmpty()) {
+                String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
+                pulseCount = Integer.parseInt(split[0]);
+                if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
+            }
+            sign.setLine(2, pulseLength + ":" + startDelay);
+            sign.setLine(3, pulseCount + ":" + pauseLength);
+            sign.update(false);
         }
-        if (!(line3 == null) && !line3.isEmpty()) {
-            String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
-            pulseCount = Integer.parseInt(split[0]);
-            if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
-        }
-        sign.setLine(2, pulseLength + ":" + startDelay);
-        sign.setLine(3, pulseCount + ":" + pauseLength);
-        sign.update(false);
+        catch(Exception e){}
     }
 
     @Override
@@ -219,7 +230,7 @@ public class Pulser extends AbstractIC {
         public String[] getLineHelp() {
 
             return new String[]{"[pulselength[:startdelay]]",
-                    "[pulsecount[:pauselength in serverticks]]"};
+            "[pulsecount[:pauselength in serverticks]]"};
         }
     }
 }

@@ -1,13 +1,14 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class CircuitCommands {
 
@@ -84,13 +85,18 @@ public class CircuitCommands {
             aliases = {"listics"},
             desc = "List available IC's",
             min = 0,
-            max = 1
+            max = 2
             )
     public void listics(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        String[] lines = plugin.generateICText(player, null);
+        char[] ar = null;
+        try {
+            ar = context.getString(1).toCharArray();
+        }
+        catch(Exception e){}
+        String[] lines = plugin.generateICText(player, null, ar);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
 
@@ -117,13 +123,18 @@ public class CircuitCommands {
             aliases = {"searchics"},
             desc = "Search available IC's with names",
             min = 0,
-            max = 2
+            max = 3
             )
     public void searchics(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
-        String[] lines = plugin.generateICText(player, context.getString(0));
+        char[] ar = null;
+        try {
+            ar = context.getString(2).toCharArray();
+        }
+        catch(Exception e){}
+        String[] lines = plugin.generateICText(player, context.getString(0), ar);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
 
