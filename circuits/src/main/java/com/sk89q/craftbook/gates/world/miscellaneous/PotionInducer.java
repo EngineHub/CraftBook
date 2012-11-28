@@ -25,6 +25,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
     public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+        load();
     }
 
     @Override
