@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -16,6 +17,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -35,6 +37,32 @@ public class Planter extends AbstractIC {
         super(server, block, factory);
     }
 
+    World world;
+    int[] info;
+    int yOffset;
+    Vector target;
+    Vector onBlock;
+
+    @Override
+    public void load() {
+        world = BukkitUtil.toSign(getSign()).getWorld();
+        onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation());
+        info = null;
+        if (!getSign().getLine(2).isEmpty()) {
+            String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+            info = new int[] {Integer.parseInt(lineParts[0]), 0};
+            try {
+                info[1] = Integer.parseInt(lineParts[1]);
+            }
+            catch(Exception e){}
+        }
+        try {
+            yOffset = Integer.parseInt(getSign().getLine(3));
+        } catch (NumberFormatException e) {
+            return;
+        }
+    }
+
     @Override
     public String getTitle() {
 
@@ -50,29 +78,8 @@ public class Planter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        World world = BukkitUtil.toSign(getSign()).getWorld();
-        Vector onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(
-                BukkitUtil.toSign(getSign()).getBlock()).getLocation());
-        Vector target;
-        int[] info = null;
-        int yOffset;
-
-        if (!getSign().getLine(2).isEmpty()) {
-            String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-            info = new int[] {Integer.parseInt(lineParts[0]), 0};
-            try {
-                info[1] = Integer.parseInt(lineParts[1]);
-            }
-            catch(Exception e){}
-        }
-
         if (info == null || !plantableItem(info[0])) return;
 
-        try {
-            yOffset = Integer.parseInt(getSign().getLine(3));
-        } catch (NumberFormatException e) {
-            return;
-        }
         if (yOffset < 1) return;
 
         target = onBlock.add(0, yOffset, 0);
@@ -153,7 +160,12 @@ public class Planter extends AbstractIC {
 
                 if (items == null) return;
 
-                for (Item itemEnt : items)
+                for (Entity ent : BukkitUtil.toBlock(new BlockWorldVector(BukkitUtil.getLocalWorld(world), target)).getChunk().getEntities()) {
+                    if(!(ent instanceof Item))
+                        continue;
+
+                    Item itemEnt = (Item) ent;
+
                     if (!itemEnt.isDead()
                             && itemEnt.getItemStack().getAmount() > 0
                             && itemEnt.getItemStack().getTypeId() == itemId
@@ -176,6 +188,7 @@ public class Planter extends AbstractIC {
                             break;
                         }
                     }
+                }
             } catch (Exception ignored) {
             }
         }
