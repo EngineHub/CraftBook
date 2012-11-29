@@ -34,7 +34,6 @@ public class ContainerCollector extends AbstractIC {
     public ContainerCollector(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     @Override
@@ -59,13 +58,11 @@ public class ContainerCollector extends AbstractIC {
 
     ItemStack doWant, doNotWant;
 
+    @Override
     public void load() {
 
-        try {
-            doWant = getItem(getSign().getLine(2));
-            doNotWant = getItem(getSign().getLine(3));
-        }
-        catch(Exception e){}
+        doWant = getItem(getSign().getLine(2));
+        doNotWant = getItem(getSign().getLine(3));
     }
 
     protected boolean collect() {

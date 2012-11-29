@@ -1,8 +1,14 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
 
 /**
  * Counter counts down each time clock input toggles from low to high, it starts
@@ -28,31 +34,28 @@ public class DownCounter extends AbstractIC {
     public DownCounter(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
-    private void load() {
+    @Override
+    public void load() {
 
+        // Get IC configuration data from line 3 of sign
+        String line2 = getSign().getLine(2);
+        String[] config = ICUtil.COLON_PATTERN.split(line2);
+
+        resetVal = 0;
+        inf = false;
         try {
-            // Get IC configuration data from line 3 of sign
-            String line2 = getSign().getLine(2);
-            String[] config = ICUtil.COLON_PATTERN.split(line2);
-
-            resetVal = 0;
+            resetVal = Integer.parseInt(config[0]);
+            inf = config[1].equals("INF");
+        } catch (NumberFormatException e) {
+            resetVal = 5;
+        } catch (ArrayIndexOutOfBoundsException e) {
             inf = false;
-            try {
-                resetVal = Integer.parseInt(config[0]);
-                inf = config[1].equals("INF");
-            } catch (NumberFormatException e) {
-                resetVal = 5;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                inf = false;
-            } catch (Exception ignored) {
-            }
-            getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
-            getSign().update(false);
         } catch (Exception ignored) {
         }
+        getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
+        getSign().update(false);
     }
 
     @Override

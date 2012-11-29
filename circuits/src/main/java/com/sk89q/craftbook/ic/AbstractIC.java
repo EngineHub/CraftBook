@@ -44,6 +44,10 @@ public abstract class AbstractIC implements IC {
         this.factory = factory;
         this.server = server;
         this.sign = sign;
+        try {
+            load();
+        }
+        catch(Exception e){}
     }
 
     protected Server getServer() {
@@ -75,6 +79,11 @@ public abstract class AbstractIC implements IC {
 
     @Override
     public void unload() {
+
+    }
+
+    @Override
+    public void load() {
 
     }
 }

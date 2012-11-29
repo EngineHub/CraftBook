@@ -24,19 +24,16 @@ public class Sorter extends AbstractIC {
 
     public Sorter (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
-        load();
     }
 
     Block chestBlock;
     boolean inverted = false;
 
+    @Override
     public void load() {
-        try {
-            chestBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0,1,0);
 
-            inverted = getSign().getLine(2).equalsIgnoreCase("invert");
-        }
-        catch(Exception e){}
+        chestBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0,1,0);
+        inverted = getSign().getLine(2).equalsIgnoreCase("invert");
     }
 
     @Override

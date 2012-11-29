@@ -1,21 +1,26 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+
 import org.bukkit.Server;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class BonemealTerraformer extends AbstractIC {
 
@@ -25,10 +30,10 @@ public class BonemealTerraformer extends AbstractIC {
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
-    private void load() {
+    @Override
+    public void load() {
 
         if (maxradius == null) {
             maxradius = ((Factory) getFactory()).maxradius;

@@ -31,30 +31,27 @@ public class Pulser extends AbstractIC {
     public Pulser(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
-    private void load() {
+    @Override
+    public void load() {
 
-        try {
-            ChangedSign sign = getSign();
-            String line2 = sign.getLine(2);
-            String line3 = sign.getLine(3);
-            if (!(line2 == null) && !line2.isEmpty()) {
-                String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
-                pulseLength = Integer.parseInt(split[0]);
-                if (split.length > 1) startDelay = Integer.parseInt(split[1]);
-            }
-            if (!(line3 == null) && !line3.isEmpty()) {
-                String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
-                pulseCount = Integer.parseInt(split[0]);
-                if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
-            }
-            sign.setLine(2, pulseLength + ":" + startDelay);
-            sign.setLine(3, pulseCount + ":" + pauseLength);
-            sign.update(false);
+        ChangedSign sign = getSign();
+        String line2 = sign.getLine(2);
+        String line3 = sign.getLine(3);
+        if (!(line2 == null) && !line2.isEmpty()) {
+            String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
+            pulseLength = Integer.parseInt(split[0]);
+            if (split.length > 1) startDelay = Integer.parseInt(split[1]);
         }
-        catch(Exception e){}
+        if (!(line3 == null) && !line3.isEmpty()) {
+            String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
+            pulseCount = Integer.parseInt(split[0]);
+            if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
+        }
+        sign.setLine(2, pulseLength + ":" + startDelay);
+        sign.setLine(3, pulseCount + ":" + pauseLength);
+        sign.update(false);
     }
 
     @Override

@@ -25,7 +25,6 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
     public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     @Override
@@ -48,16 +47,14 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
 
     int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
 
+    @Override
     public void load() {
 
-        try {
-            String[] effectInfo = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 3);
-            effectID = Integer.parseInt(effectInfo[0]);
-            effectAmount = Integer.parseInt(effectInfo[1]);
-            effectTime = Integer.parseInt(effectInfo[2]);
-            radius = Integer.parseInt(getSign().getLine(3));
-        } catch (Exception ignored) {
-        }
+        String[] effectInfo = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 3);
+        effectID = Integer.parseInt(effectInfo[0]);
+        effectAmount = Integer.parseInt(effectInfo[1]);
+        effectTime = Integer.parseInt(effectInfo[2]);
+        radius = Integer.parseInt(getSign().getLine(3));
     }
 
     @Override

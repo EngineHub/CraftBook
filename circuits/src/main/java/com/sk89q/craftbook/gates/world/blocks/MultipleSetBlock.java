@@ -41,7 +41,6 @@ public class MultipleSetBlock extends AbstractIC {
     public MultipleSetBlock(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     int x,y,z;
@@ -51,45 +50,43 @@ public class MultipleSetBlock extends AbstractIC {
 
     String[] dim;
 
+    @Override
     public void load() {
 
+        String line3 = getSign().getLine(2).toUpperCase();
+        String line4 = getSign().getLine(3);
+
+        String[] coords;
+        coords = ICUtil.COLON_PATTERN.split(PLUS_PATTERN.matcher(line3).replaceAll(""));
+
+        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        x = body.getX();
+        y = body.getY();
+        z = body.getZ();
+
+
+        if (coords.length < 4)
+            return;
+
         try {
-            String line3 = getSign().getLine(2).toUpperCase();
-            String line4 = getSign().getLine(3);
+            block = Integer.parseInt(coords[3]);
+        } catch (Exception e) {
+            return;
+        }
 
-            String[] coords;
-            coords = ICUtil.COLON_PATTERN.split(PLUS_PATTERN.matcher(line3).replaceAll(""));
-
-            Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            x = body.getX();
-            y = body.getY();
-            z = body.getZ();
-
-
-            if (coords.length < 4)
-                return;
-
+        if (coords.length == 5) {
             try {
-                block = Integer.parseInt(coords[3]);
+                data = Byte.parseByte(coords[4]);
             } catch (Exception e) {
                 return;
             }
-
-            if (coords.length == 5) {
-                try {
-                    data = Byte.parseByte(coords[4]);
-                } catch (Exception e) {
-                    return;
-                }
-            }
-
-            x += Integer.parseInt(coords[0]);
-            y += Integer.parseInt(coords[1]);
-            z += Integer.parseInt(coords[2]);
-
-            dim = ICUtil.COLON_PATTERN.split(line4);
         }
-        catch(Exception e){}
+
+        x += Integer.parseInt(coords[0]);
+        y += Integer.parseInt(coords[1]);
+        z += Integer.parseInt(coords[2]);
+
+        dim = ICUtil.COLON_PATTERN.split(line4);
     }
 
     @Override

@@ -50,6 +50,12 @@ public class BlockBreaker extends AbstractIC {
         }
     }
 
+
+    @Override
+    public void load () {
+        //TODO
+    }
+
     public boolean breakBlock() {
 
         boolean hasChest = false;

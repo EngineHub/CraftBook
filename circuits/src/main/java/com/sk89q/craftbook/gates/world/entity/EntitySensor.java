@@ -122,38 +122,35 @@ public class EntitySensor extends AbstractIC {
     public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
-    private void load() {
+    @Override
+    public void load() {
 
-        try {
-            // lets get the types to detect first
-            types = Type.getDetected(getSign().getLine(3).trim());
+        // lets get the types to detect first
+        types = Type.getDetected(getSign().getLine(3).trim());
 
-            // Add all if no params are specified
-            if (types.isEmpty()) {
-                types.add(Type.ANY);
-            }
-
-            getSign().setLine(3, getSign().getLine(3).toUpperCase());
-
-            // if the line contains a = the offset is given
-            // the given string should look something like that:
-            // radius=x:y:z or radius, e.g. 1=-2:5:11
-            radius = ICUtil.parseRadius(getSign());
-            if (getSign().getLine(2).contains("=")) {
-                getSign().setLine(2, radius + "=" + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
-                center = ICUtil.parseBlockLocation(getSign());
-            } else {
-                getSign().setLine(2, String.valueOf(radius));
-                center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            }
-            chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
-                    radius); //Update chunks
-            getSign().update(false);
-        } catch (Exception ignored) {
+        // Add all if no params are specified
+        if (types.isEmpty()) {
+            types.add(Type.ANY);
         }
+
+        getSign().setLine(3, getSign().getLine(3).toUpperCase());
+
+        // if the line contains a = the offset is given
+        // the given string should look something like that:
+        // radius=x:y:z or radius, e.g. 1=-2:5:11
+        radius = ICUtil.parseRadius(getSign());
+        if (getSign().getLine(2).contains("=")) {
+            getSign().setLine(2, radius + "=" + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            center = ICUtil.parseBlockLocation(getSign());
+        } else {
+            getSign().setLine(2, String.valueOf(radius));
+            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        }
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
+                radius); //Update chunks
+        getSign().update(false);
     }
 
     @Override
@@ -178,7 +175,6 @@ public class EntitySensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        load();
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities())

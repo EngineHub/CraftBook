@@ -41,42 +41,39 @@ public class ArrowShooter extends AbstractIC {
     public ArrowShooter(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     float speed = 0.6F;
     float spread = 12;
     float vert = 0;
 
+    @Override
     public void load() {
         try {
-            try {
-                String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
-                speed = Float.parseFloat(velocity[0]);
-                spread = Float.parseFloat(velocity[1]);
-                vert = Float.parseFloat(getSign().getLine(3).trim());
-            } catch (Exception e) {
-                getSign().setLine(2, speed + ":" + spread + ":" + vert);
-                getSign().update(false);
-            }
-
-            if (speed > 2.0) {
-                speed = 2F;
-            } else if (speed < 0.2) {
-                speed = 0.2F;
-            }
-            if (spread > 50) {
-                spread = 50;
-            } else if (spread < 0) {
-                spread = 0;
-            }
-            if (vert > 1) {
-                vert = 1;
-            } else if (vert < -1) {
-                vert = -1;
-            }
+            String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
+            speed = Float.parseFloat(velocity[0]);
+            spread = Float.parseFloat(velocity[1]);
+            vert = Float.parseFloat(getSign().getLine(3).trim());
+        } catch (Exception e) {
+            getSign().setLine(2, speed + ":" + spread + ":" + vert);
+            getSign().update(false);
         }
-        catch(Exception e){}
+
+        if (speed > 2.0) {
+            speed = 2F;
+        } else if (speed < 0.2) {
+            speed = 0.2F;
+        }
+        if (spread > 50) {
+            spread = 50;
+        } else if (spread < 0) {
+            spread = 0;
+        }
+        if (vert > 1) {
+            vert = 1;
+        } else if (vert < -1) {
+            vert = -1;
+        }
     }
 
     @Override

@@ -28,9 +28,9 @@ public class TimedExplosion extends AbstractIC {
     public TimedExplosion(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
+    @Override
     public void load() {
 
         try {

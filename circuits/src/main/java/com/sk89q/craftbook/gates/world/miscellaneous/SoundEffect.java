@@ -20,27 +20,24 @@ public class SoundEffect extends AbstractIC {
     public SoundEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     float volume;
     byte pitch;
     Sound sound;
 
+    @Override
     public void load() {
+        String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+        volume = Float.parseFloat(split[0]) / 100f;
         try {
-            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-            volume = Float.parseFloat(split[0]) / 100f;
-            try {
-                pitch = (byte) (Integer.parseInt(split[1]) / 1.5873015873015873015873015873016);
-            } catch (Exception e) {
-                pitch = 0;
-            }
-
-            String soundName = getSign().getLine(3).trim();
-            sound = Sound.valueOf(soundName);
+            pitch = (byte) (Integer.parseInt(split[1]) / 1.5873015873015873015873015873016);
+        } catch (Exception e) {
+            pitch = 0;
         }
-        catch(Exception e){}
+
+        String soundName = getSign().getLine(3).trim();
+        sound = Sound.valueOf(soundName);
     }
 
     @Override

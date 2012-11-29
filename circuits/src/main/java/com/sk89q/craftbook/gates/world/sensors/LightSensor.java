@@ -36,7 +36,6 @@ public class LightSensor extends AbstractIC {
     public LightSensor(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     @Override
@@ -59,6 +58,7 @@ public class LightSensor extends AbstractIC {
         }
     }
 
+    @Override
     public void load() {
         try {
             String[] st = ICUtil.COLON_PATTERN.split(getSign().getLine(3));

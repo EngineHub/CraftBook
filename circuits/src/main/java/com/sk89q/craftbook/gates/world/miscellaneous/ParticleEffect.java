@@ -26,7 +26,6 @@ public class ParticleEffect extends AbstractIC {
     public ParticleEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     @Override
@@ -52,34 +51,30 @@ public class ParticleEffect extends AbstractIC {
     int effectID;
     int effectData;
     int times = 1;
-    Vector offset;
+    Vector offset = new Vector(0,1,0);
 
+    @Override
     public void load() {
+        String[] eff = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
         try {
-            String[] eff = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
-            try {
-                effectID = Integer.parseInt(eff[0]);
-            } catch (Exception e) {
-                effectID = Effect.valueOf(eff[0]).getId();
-            }
-            if (Effect.getById(effectID) == null) return;
-            try {
-                effectData = Integer.parseInt(eff[1]);
-            } catch (Exception e) {
-                effectData = 0;
-            }
-
-            try {
-                times = Integer.parseInt(getSign().getLine(3));
-            }
-            catch(Exception e){}
-
-            String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
-            offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
+            effectID = Integer.parseInt(eff[0]);
+        } catch (Exception e) {
+            effectID = Effect.valueOf(eff[0]).getId();
         }
-        catch(Exception e){
-            offset = new Vector(0,1,0);
+        if (Effect.getById(effectID) == null) return;
+        try {
+            effectData = Integer.parseInt(eff[1]);
+        } catch (Exception e) {
+            effectData = 0;
         }
+
+        try {
+            times = Integer.parseInt(getSign().getLine(3));
+        }
+        catch(Exception e){}
+
+        String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
+        offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
     }
 
     public void doEffect() {

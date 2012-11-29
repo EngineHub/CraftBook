@@ -16,7 +16,6 @@ public class TimeSet extends AbstractIC {
     public TimeSet(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        load();
     }
 
     @Override
@@ -31,11 +30,9 @@ public class TimeSet extends AbstractIC {
         return "TIME SET";
     }
 
+    @Override
     public void load() {
-        try {
-            time = Long.parseLong(getSign().getLine(2));
-        }
-        catch(Exception e){}
+        time = Long.parseLong(getSign().getLine(2));
     }
 
     /* it's been a */ long time;

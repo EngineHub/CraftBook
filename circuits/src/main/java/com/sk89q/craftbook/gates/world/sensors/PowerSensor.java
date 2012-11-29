@@ -1,9 +1,17 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -16,15 +24,12 @@ public class PowerSensor extends AbstractIC {
     public PowerSensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
-    private void load() {
+    @Override
+    public void load() {
 
-        try {
-            center = ICUtil.parseBlockLocation(getSign());
-        } catch (Exception ignored) {
-        }
+        center = ICUtil.parseBlockLocation(getSign());
     }
 
     @Override

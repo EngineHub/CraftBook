@@ -29,9 +29,9 @@ public class Spigot extends AbstractIC {
     public Spigot(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
+    @Override
     public void load() {
 
         try {

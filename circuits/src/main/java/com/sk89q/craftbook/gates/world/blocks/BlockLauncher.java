@@ -22,7 +22,6 @@ public class BlockLauncher extends AbstractIC {
     public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
     @Override
@@ -45,6 +44,7 @@ public class BlockLauncher extends AbstractIC {
         }
     }
 
+    @Override
     public void load() {
         try {
             try {

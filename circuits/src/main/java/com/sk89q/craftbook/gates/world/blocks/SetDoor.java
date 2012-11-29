@@ -1,15 +1,22 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.regex.Pattern;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -37,83 +44,80 @@ public class SetDoor extends AbstractIC {
     public SetDoor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        load();
     }
 
-    private void load() {
+    @Override
+    public void load() {
 
-        try {
-            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
-            String line = getSign().getLine(2);
-            if (!line.isEmpty()) {
-                try {
-                    String[] split = MINUS_PATTERN.split(line);
-                    // parse the material data
-                    if (split.length > 0) {
-                        try {
-                            // parse the data that gets set when the block is toggled off
-                            String[] strings = ICUtil.COLON_PATTERN.split(split[1]);
-                            offMaterial = Integer.parseInt(strings[0]);
-                            if (strings.length > 0) {
-                                offData = Integer.parseInt(strings[1]);
-                            }
-                        } catch (NumberFormatException e) {
-                            // do nothing and use the defaults
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            // do nothing and use the defaults
+        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
+        String line = getSign().getLine(2);
+        if (!line.isEmpty()) {
+            try {
+                String[] split = MINUS_PATTERN.split(line);
+                // parse the material data
+                if (split.length > 0) {
+                    try {
+                        // parse the data that gets set when the block is toggled off
+                        String[] strings = ICUtil.COLON_PATTERN.split(split[1]);
+                        offMaterial = Integer.parseInt(strings[0]);
+                        if (strings.length > 0) {
+                            offData = Integer.parseInt(strings[1]);
                         }
+                    } catch (NumberFormatException e) {
+                        // do nothing and use the defaults
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        // do nothing and use the defaults
                     }
-                    // parse the material and data for toggle on
-                    String[] strings = ICUtil.COLON_PATTERN.split(split[0]);
-                    onMaterial = Integer.parseInt(strings[0]);
-                    if (strings.length > 0) {
-                        onData = Integer.parseInt(strings[1]);
-                    }
-                } catch (NumberFormatException e) {
-                    // do nothing and use the defaults
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    // do nothing and use the defaults
                 }
+                // parse the material and data for toggle on
+                String[] strings = ICUtil.COLON_PATTERN.split(split[0]);
+                onMaterial = Integer.parseInt(strings[0]);
+                if (strings.length > 0) {
+                    onData = Integer.parseInt(strings[1]);
+                }
+            } catch (NumberFormatException e) {
+                // do nothing and use the defaults
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // do nothing and use the defaults
             }
-            // parse the coordinates
-            line = getSign().getLine(3);
-            if (!line.isEmpty()) {
-                boolean relativeOffset = !line.contains("!");
-                if (!relativeOffset) {
-                    line = line.replace("!", "");
-                }
-                String[] split = ICUtil.COLON_PATTERN.split(line);
-                try {
-                    // parse the offset
-                    String[] offsetSplit = COMMA_PATTERN.split(split[0]);
-                    offsetX = Integer.parseInt(offsetSplit[0]);
-                    offsetY = Integer.parseInt(offsetSplit[1]);
-                    offsetZ = Integer.parseInt(offsetSplit[2]);
-                } catch (NumberFormatException e) {
-                    // do nothing and use the defaults
-                } catch (IndexOutOfBoundsException e) {
-                    // do nothing and use the defaults
-                }
-                try {
-                    // parse the size of the door
-                    String[] sizeSplit = COMMA_PATTERN.split(split[1]);
-                    width = Integer.parseInt(sizeSplit[0]);
-                    height = Integer.parseInt(sizeSplit[1]);
-                } catch (NumberFormatException e) {
-                    // do nothing and use the defaults
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    // do nothing and use the defaults
-                }
-                if (relativeOffset) {
-                    center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
-                } else {
-                    center = LocationUtil.getOffset(center, offsetX, offsetY, offsetZ);
-                }
+        }
+        // parse the coordinates
+        line = getSign().getLine(3);
+        if (!line.isEmpty()) {
+            boolean relativeOffset = !line.contains("!");
+            if (!relativeOffset) {
+                line = line.replace("!", "");
+            }
+            String[] split = ICUtil.COLON_PATTERN.split(line);
+            try {
+                // parse the offset
+                String[] offsetSplit = COMMA_PATTERN.split(split[0]);
+                offsetX = Integer.parseInt(offsetSplit[0]);
+                offsetY = Integer.parseInt(offsetSplit[1]);
+                offsetZ = Integer.parseInt(offsetSplit[2]);
+            } catch (NumberFormatException e) {
+                // do nothing and use the defaults
+            } catch (IndexOutOfBoundsException e) {
+                // do nothing and use the defaults
+            }
+            try {
+                // parse the size of the door
+                String[] sizeSplit = COMMA_PATTERN.split(split[1]);
+                width = Integer.parseInt(sizeSplit[0]);
+                height = Integer.parseInt(sizeSplit[1]);
+            } catch (NumberFormatException e) {
+                // do nothing and use the defaults
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // do nothing and use the defaults
+            }
+            if (relativeOffset) {
+                center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
             } else {
-                center = center.getRelative(BlockFace.UP);
+                center = LocationUtil.getOffset(center, offsetX, offsetY, offsetZ);
             }
-        } catch (Exception ignored) {
+        } else {
+            center = center.getRelative(BlockFace.UP);
         }
     }
 
@@ -132,7 +136,6 @@ public class SetDoor extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        load();
         if (chip.getInput(0)) {
             setDoor(true);
         } else {

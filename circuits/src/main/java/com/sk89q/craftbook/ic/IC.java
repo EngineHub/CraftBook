@@ -55,4 +55,9 @@ public interface IC {
      * Proceed to unload the IC.
      */
     public void unload();
+
+    /**
+     * Called on IC load, to cache the IC's settings.
+     */
+    public void load();
 }
