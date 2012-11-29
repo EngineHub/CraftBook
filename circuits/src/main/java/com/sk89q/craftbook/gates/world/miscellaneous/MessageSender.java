@@ -18,11 +18,17 @@
 
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 public class MessageSender extends AbstractIC {
 
@@ -51,6 +57,11 @@ public class MessageSender extends AbstractIC {
         }
     }
 
+    @Override
+    public void load() {
+
+    }
+
     /**
      * Returns true if a message was sent.
      *
@@ -59,8 +70,8 @@ public class MessageSender extends AbstractIC {
     private boolean sendMessage() {
 
         boolean sent = false;
-        String name = getSign().getLine(2);
-        String message = getSign().getLine(3);
+        String name = getLine(2);
+        String message = getLine(3);
         Player player = getServer().getPlayer(name);
         // FIXME: There is a cached block problem somewhere if the sign is
         // destroyed and replaced.

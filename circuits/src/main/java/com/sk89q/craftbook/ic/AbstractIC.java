@@ -60,6 +60,11 @@ public abstract class AbstractIC implements IC {
         return sign;
     }
 
+    protected String getLine(int line) {
+
+        return sign.getLine(line);
+    }
+
     protected ICFactory getFactory() {
 
         return factory;

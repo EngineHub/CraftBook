@@ -68,11 +68,9 @@ public class LightningSummon extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            Block target = center;
-            if (target == null) {
-                target = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), BlockFace.UP);
-            }
-            target.getWorld().strikeLightning(target.getLocation());
+            if (center == null)
+                center = LocationUtil.getNextFreeSpace(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), BlockFace.UP);
+            center.getWorld().strikeLightning(center.getLocation());
         }
     }
 
