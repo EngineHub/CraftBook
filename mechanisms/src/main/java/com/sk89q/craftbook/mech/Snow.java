@@ -70,7 +70,7 @@ public class Snow implements Listener {
 
         if (!plugin.getLocalConfiguration().snowSettings.trample) return;
 
-        if(event.getFrom().distanceSquared(event.getTo()) < 0.5)
+        if(event.getFrom().distanceSquared(event.getTo()) < 0.1)
             return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.trample")) return;
