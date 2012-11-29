@@ -168,6 +168,9 @@ public class HiddenSwitch extends AbstractMechanic {
                 break;
             }
         }
+
+        if(!event.getPlayer().isSneaking())
+            event.setCancelled(true);
     }
 
     private void toggleSwitches(Block sign, BlockFace direction) {

@@ -126,6 +126,7 @@ public class LightSwitch extends AbstractMechanic {
         if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; //wth? our manager is insane
         toggleLights(pt);
+        event.setCancelled(true);
     }
 
     /**
