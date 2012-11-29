@@ -1,5 +1,13 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import java.util.regex.Pattern;
+
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -7,14 +15,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.regex.Pattern;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public abstract class SetBlock extends AbstractIC {
 
@@ -25,37 +26,31 @@ public abstract class SetBlock extends AbstractIC {
         super(server, sign, factory);
     }
 
-    @Override
-    public void trigger(ChipState chip) {
+    int block;
+    String force;
+    byte meta = -1;
 
+    @Override
+    public void load() {
         String[] splitBlockData = DATA_SEPARATOR.split(getSign().getLine(2).toUpperCase().trim(), 2);
         String strBlock = splitBlockData[0];
         String strMeta = "";
         if (splitBlockData.length > 1) {
             strMeta = splitBlockData[1];
         }
-        String force = getSign().getLine(3).toUpperCase().trim();
-
-        chip.setOutput(0, chip.getInput(0));
-
-        int block;
+        force = getSign().getLine(3).toUpperCase().trim();
 
         try {
             block = Integer.parseInt(strBlock);
         } catch (Exception e) {
             try {
-                block = Material.getMaterial(strBlock).getId();
+                block = BlockType.lookup(strBlock).getID();
             }
             catch(Exception ee) {
                 return;
             }
         }
 
-        if (Material.getMaterial(block) == null || block >= 256) {
-            return;
-        }
-
-        byte meta = -1;
         try {
             if (!strMeta.isEmpty()) {
                 meta = Byte.parseByte(strMeta);
@@ -63,7 +58,16 @@ public abstract class SetBlock extends AbstractIC {
         } catch (Exception e) {
             return;
         }
+    }
 
+    @Override
+    public void trigger(ChipState chip) {
+
+        chip.setOutput(0, chip.getInput(0));
+
+        if (BlockType.fromID(block) == null || block >= 256) {
+            return;
+        }
 
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
