@@ -50,18 +50,14 @@ public class BlockBreaker extends AbstractIC {
         }
     }
 
+    Block broken,chest;
+
+    int id;
+    byte data;
 
     @Override
     public void load () {
-        //TODO
-    }
-
-    public boolean breakBlock() {
-
-        boolean hasChest = false;
         Block bl = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-        Block chest;
-        Block broken;
         if (above) {
             chest = bl.getRelative(0, 1, 0);
             broken = bl.getRelative(0, -1, 0);
@@ -69,21 +65,28 @@ public class BlockBreaker extends AbstractIC {
             chest = bl.getRelative(0, -1, 0);
             broken = bl.getRelative(0, 1, 0);
         }
+
+        try {
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+            id = Integer.parseInt(split[0]);
+            data = Byte.parseByte(split[1]);
+        }
+        catch (Exception e) {}
+    }
+
+    public boolean breakBlock() {
+
+        boolean hasChest = false;
         if (chest != null && chest.getTypeId() == BlockID.CHEST) {
             hasChest = true;
         }
         if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId() == BlockID.PISTON_MOVING_PIECE) return false;
 
-        try {
-            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-            int blockID = Integer.parseInt(split[0]);
-            if(blockID != broken.getTypeId())
-                return false;
-            byte data = Byte.parseByte(split[1]);
-            if(data != broken.getData())
-                return false;
-        }
-        catch (Exception e) {}
+        if(id > 0 && id != broken.getTypeId())
+            return false;
+
+        if(data > 0 && data != broken.getData())
+            return false;
 
         broken.getDrops();
         for(ItemStack blockstack  : broken.getDrops()) {
