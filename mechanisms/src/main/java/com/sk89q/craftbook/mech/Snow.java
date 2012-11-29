@@ -70,12 +70,14 @@ public class Snow implements Listener {
 
         if (!plugin.getLocalConfiguration().snowSettings.trample) return;
 
+        if(event.getFrom().distanceSquared(event.getTo()) < 0.5)
+            return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.trample")) return;
 
         if (plugin.getLocalConfiguration().snowSettings.jumpTrample && event.getPlayer().getVelocity().getY() >= 0D)
             return;
-        if (BaseBukkitPlugin.random.nextInt(10) == 6) {
+        if (BaseBukkitPlugin.random.nextInt(20) == 0) {
             Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
             if (b.getTypeId() == 78) {
                 if (!plugin.canBuildInArea(event.getPlayer().getLocation(), event.getPlayer()))
