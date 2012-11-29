@@ -47,20 +47,17 @@ public class BlockLauncher extends AbstractIC {
     @Override
     public void load() {
         try {
-            try {
-                String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-                id = Integer.parseInt(split[0]);
-                data = Byte.parseByte(split[1]);
-            }
-            catch(Exception ignored){}
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+            id = Integer.parseInt(split[0]);
+            data = Byte.parseByte(split[1]);
+        }
+        catch(Exception ignored){}
 
-            try {
-                String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
-                velocity.setX(Double.parseDouble(split[0]));
-                velocity.setY(Double.parseDouble(split[1]));
-                velocity.setZ(Double.parseDouble(split[2]));
-            } catch (Exception ignored) {
-            }
+        try {
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
+            velocity.setX(Double.parseDouble(split[0]));
+            velocity.setY(Double.parseDouble(split[1]));
+            velocity.setZ(Double.parseDouble(split[2]));
         } catch (Exception ignored) {
         }
     }

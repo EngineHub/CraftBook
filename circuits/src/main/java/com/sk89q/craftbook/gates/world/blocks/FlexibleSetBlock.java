@@ -39,25 +39,14 @@ public class FlexibleSetBlock extends AbstractIC {
         super(server, sign, factory);
     }
 
+    int x,y,z;
+    Block body;
+    boolean hold;
+    int block;
+    byte data = 0;
+
     @Override
     public void load() {
-        //TODO
-    }
-
-    @Override
-    public String getTitle() {
-
-        return "Flexible Set";
-    }
-
-    @Override
-    public String getSignTitle() {
-
-        return "FLEX SET";
-    }
-
-    @Override
-    public void trigger(ChipState chip) {
 
         // Valid Line 3:
         // [axis][sign][distance]:[blockTypeId]:[blockData]
@@ -67,8 +56,6 @@ public class FlexibleSetBlock extends AbstractIC {
         String line3 = getSign().getLine(2).toUpperCase();
 
         String line4 = getSign().getLine(3);
-
-        chip.setOutput(0, chip.getInput(0));
 
         String[] params = ICUtil.COLON_PATTERN.split(line3);
         if (params.length < 2) return;
@@ -99,15 +86,12 @@ public class FlexibleSetBlock extends AbstractIC {
             dist = -dist;
         }
 
-        int block;
         try {
             block = Integer.parseInt(params[1]);
         } catch (Exception e) {
             return;
         }
 
-        // default block data is 0
-        byte data = 0;
         if (params.length > 2) {
             try {
                 data = Byte.parseByte(params[2]);
@@ -116,14 +100,13 @@ public class FlexibleSetBlock extends AbstractIC {
             }
         }
 
-        boolean hold = line4.toUpperCase().contains("H");
-        boolean inp = chip.getInput(0);
+        hold = line4.toUpperCase().contains("H");
 
-        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
-        int x = body.getX();
-        int y = body.getY();
-        int z = body.getZ();
+        x = body.getX();
+        y = body.getY();
+        z = body.getZ();
 
         if (axis.equals("X")) {
             x += dist;
@@ -132,6 +115,26 @@ public class FlexibleSetBlock extends AbstractIC {
         } else {
             z += dist;
         }
+    }
+
+    @Override
+    public String getTitle() {
+
+        return "Flexible Set";
+    }
+
+    @Override
+    public String getSignTitle() {
+
+        return "FLEX SET";
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+
+        chip.setOutput(0, chip.getInput(0));
+
+        boolean inp = chip.getInput(0);
 
         if (inp) {
             body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);

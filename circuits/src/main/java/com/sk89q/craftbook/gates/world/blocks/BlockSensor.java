@@ -29,14 +29,10 @@ public class BlockSensor extends AbstractIC {
     @Override
     public void load() {
 
-        try {
-            center = ICUtil.parseBlockLocation(getSign());
-            String[] ids = COLON_PATTERN.split(getSign().getLine(3));
-            id = Integer.parseInt(ids[0]);
-            data = Byte.parseByte(ids[1]);
-        } catch (Exception ignored) {
-            // use defaults
-        }
+        center = ICUtil.parseBlockLocation(getSign());
+        String[] ids = COLON_PATTERN.split(getSign().getLine(3));
+        id = Integer.parseInt(ids[0]);
+        data = Byte.parseByte(ids[1]);
     }
 
     @Override
