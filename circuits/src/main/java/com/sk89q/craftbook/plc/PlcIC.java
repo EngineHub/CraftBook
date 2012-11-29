@@ -363,6 +363,11 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             public void unload() {
 
             }
+
+            @Override
+            public void load () {
+
+            }
         };
     }
 
@@ -389,6 +394,11 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     @Override
     public void unload() {
+
+    }
+
+    @Override
+    public void load () {
 
     }
 }
