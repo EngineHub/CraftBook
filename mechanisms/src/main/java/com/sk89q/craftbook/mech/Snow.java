@@ -196,6 +196,10 @@ public class Snow implements Listener {
     }
 
     public boolean disperse(Block block) {
+        if(block.getRelative(0, -1, 0).getTypeId() == 0)
+            disperse(block.getRelative(0, -1, 0));
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7)
+            incrementData(block.getRelative(0, -1, 0));
         if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR) {
             if(block.getRelative(0, -1, 0).getData() < block.getData()) {
                 incrementData(block.getRelative(0, -1, 0));
