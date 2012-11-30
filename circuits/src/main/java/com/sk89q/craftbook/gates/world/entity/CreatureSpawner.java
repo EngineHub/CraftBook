@@ -20,6 +20,7 @@ package com.sk89q.craftbook.gates.world.entity;
 
 import net.minecraft.server.EntityWolf;
 
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -34,11 +35,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Tameable;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
@@ -118,6 +121,17 @@ public class CreatureSpawner extends AbstractIC {
             ((Ageable) ent).setBaby();
         }
 
+        if (ent instanceof Tameable && data[0].equalsIgnoreCase("tame")) {
+            ((Tameable) ent).setTamed(true);
+        }
+
+        try {
+            if (ent instanceof Tameable && data[0].equalsIgnoreCase("owner")) {
+                ((Tameable) ent).setOwner(Bukkit.getPlayer(data[1]));
+            }
+        }
+        catch(Exception e){}
+
         if (ent instanceof Ageable && data[0].equalsIgnoreCase("babylock")) {
             ((Ageable) ent).setBaby();
             ((Ageable) ent).setAgeLock(true);
@@ -177,9 +191,7 @@ public class CreatureSpawner extends AbstractIC {
                 }
                 break;
             case WOLF:
-                if (data[0].equalsIgnoreCase("tame")) {
-                    ((Wolf) ent).setTamed(true);
-                } else if (data[0].equalsIgnoreCase("angry")) {
+                if (data[0].equalsIgnoreCase("angry")) {
                     ((Wolf) ent).setAngry(true);
                 } else if (data[0].equalsIgnoreCase("collar")) {
                     try {
@@ -226,6 +238,20 @@ public class CreatureSpawner extends AbstractIC {
                 }
                 if (data[0].equalsIgnoreCase("bounce")) {
                     ((Arrow) ent).setBounce(true);
+                }
+                break;
+            case OCELOT:
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("WILD")) {
+                    ((Ocelot) ent).setCatType(Ocelot.Type.WILD_OCELOT);
+                }
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("BLACK")) {
+                    ((Ocelot) ent).setCatType(Ocelot.Type.BLACK_CAT);
+                }
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("RED")) {
+                    ((Ocelot) ent).setCatType(Ocelot.Type.RED_CAT);
+                }
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("SIAMESE")) {
+                    ((Ocelot) ent).setCatType(Ocelot.Type.SIAMESE_CAT);
                 }
                 break;
             case THROWN_EXP_BOTTLE:
