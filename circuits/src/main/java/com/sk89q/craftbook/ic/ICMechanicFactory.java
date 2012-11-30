@@ -258,6 +258,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
     public boolean checkPermissions(LocalPlayer player, ICFactory factory, String id, RegisteredICFactory registration) throws ICVerificationException {
 
+        if(player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName()))
+            return true;
+
         if(player.hasPermission("craftbook.ic." + id.toLowerCase())) //Simpler overriding permission.
             return true;
 
