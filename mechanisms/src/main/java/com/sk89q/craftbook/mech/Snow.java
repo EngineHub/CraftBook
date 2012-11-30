@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -116,6 +117,33 @@ public class Snow implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockPhysics(final BlockPhysicsEvent event) {
+
+        if (!plugin.getLocalConfiguration().snowSettings.enable) return;
+        if (event.getBlock().getTypeId() == BlockID.SNOW) {
+            Block block = event.getBlock();
+
+            disperse(event.getBlock());
+
+            if(event.getBlock().getWorld().hasStorm()) {
+
+                if (block.getTypeId() != BlockID.SNOW_BLOCK && block.getTypeId() != BlockID.SNOW) {
+                    Location blockLoc = block.getLocation().subtract(0, 1, 0);
+                    if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
+                            && !plugin.getLocalConfiguration().snowSettings.piling
+                            || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
+                        return;
+                    long delay = BaseBukkitPlugin.random.nextInt(100) + 60;
+                    if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+                            new MakeSnow(block.getLocation()), delay * 20L) == -1) {
+                        plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+                    }
+                }
+            }
+        }
+    }
+
     public class MakeSnow implements Runnable {
 
         final Location event;
@@ -167,39 +195,46 @@ public class Snow implements Listener {
         setBlockDataWithNotify(block, newData);
     }
 
+    public boolean disperse(Block block) {
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR) {
+            if(block.getRelative(0, -1, 0).getData() < block.getData()) {
+                incrementData(block.getRelative(0, -1, 0));
+                return true;
+            }
+        }
+        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR) {
+            if(block.getRelative(1, 0, 0).getData() < block.getData()) {
+                incrementData(block.getRelative(1, 0, 0));
+                return true;
+            }
+        }
+        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR) {
+            if(block.getRelative(-1, 0, 0).getData() < block.getData()) {
+                incrementData(block.getRelative(-1, 0, 0));
+                return true;
+            }
+        }
+        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR) {
+            if(block.getRelative(0, 0, 1).getData() < block.getData()) {
+                incrementData(block.getRelative(0, 0, 1));
+                return true;
+            }
+        }
+        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR) {
+            if(block.getRelative(0, 0, -1).getData() < block.getData()) {
+                incrementData(block.getRelative(0, 0, -1));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void incrementData(Block block) {
 
         if(plugin.getLocalConfiguration().snowSettings.realistic) {
-            if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR) {
-                if(block.getRelative(0, -1, 0).getData() < block.getData()) {
-                    incrementData(block.getRelative(0, -1, 0));
-                    return;
-                }
-            }
-            if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR) {
-                if(block.getRelative(1, 0, 0).getData() < block.getData()) {
-                    incrementData(block.getRelative(1, 0, 0));
-                    return;
-                }
-            }
-            if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR) {
-                if(block.getRelative(-1, 0, 0).getData() < block.getData()) {
-                    incrementData(block.getRelative(-1, 0, 0));
-                    return;
-                }
-            }
-            if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR) {
-                if(block.getRelative(0, 0, 1).getData() < block.getData()) {
-                    incrementData(block.getRelative(0, 0, 1));
-                    return;
-                }
-            }
-            if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR) {
-                if(block.getRelative(0, 0, -1).getData() < block.getData()) {
-                    incrementData(block.getRelative(0, 0, -1));
-                    return;
-                }
-            }
+            if(disperse(block))
+                return;
         }
 
         byte newData = 0;

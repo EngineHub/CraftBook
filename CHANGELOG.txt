@@ -1,3 +1,17 @@
+3.3.9
+* Fixed an error involving chairs.
+* Fixed Pay signs.
+* Fix WorldGuard related error.
++ Added floor filtering to elevator mechanic.
++ Added realistic snow dispersion setting to snow.
+* Fixed XPStorer
++ Added craftbook.ic.MCXXXX nodes for ease of use.
++ Added searchics and listics refining.
+* Optimized most IC's!
+* Enhanced snow trampling!
+* Fixed LightSwitch & HiddenSwitch placing blocks when used.
+* Fixed Experimental Repeater Support not working on IC's
+
 3.3.8
 * XPStorer's block can be changed from the default via configuration.
 + Added chance support to custom drops
