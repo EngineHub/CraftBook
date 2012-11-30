@@ -54,13 +54,8 @@ public class Snow implements Listener {
                 if (event.getClickedBlock().getData() < (byte) 7) {
                     incrementData(event.getClickedBlock());
                 }
-            } else if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
-                    && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
-                    .getTypeId() == 0) {
-                event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0))
-                .setTypeId(78);
-                incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation()
-                        .add(0, 1, 0)));
+            } else if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).getTypeId() == 0) {
+                incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)));
             }
         } catch (Exception ignored) {
         }
