@@ -31,7 +31,7 @@ public interface SelfTriggeredIC extends PersistentIC {
      * clock signal). The given state allows for accessing the data available
      * on the pins.
      *
-     * @param state
+     * @param chip
      */
-    public void think(ChipState state);
+    public void think(ChipState chip);
 }
