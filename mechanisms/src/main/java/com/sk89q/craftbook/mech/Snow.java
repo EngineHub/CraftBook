@@ -276,7 +276,7 @@ public class Snow implements Listener {
         }
 
         byte newData = 0;
-        if(block.getTypeId() != BlockID.SNOW)
+        if(block.getTypeId() != BlockID.SNOW && BlockType.canPassThrough(block.getTypeId()))
             block.setTypeId(BlockID.SNOW, false);
         else
             newData = (byte) (block.getData() + 1);
