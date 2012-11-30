@@ -239,11 +239,11 @@ public class Snow implements Listener {
 
         byte newData = 0;
         if(block.getTypeId() != BlockID.SNOW)
-            block.setTypeId(BlockID.SNOW);
+            block.setTypeId(BlockID.SNOW, false);
         else
             newData = (byte) (block.getData() + 1);
         if (newData > (byte) 7 && plugin.getLocalConfiguration().snowSettings.piling) {
-            block.setTypeId(BlockID.SNOW_BLOCK);
+            block.setTypeId(BlockID.SNOW_BLOCK, false);
             newData = (byte) 0;
         } else if (newData > 7) {
             newData = 7;
@@ -253,7 +253,7 @@ public class Snow implements Listener {
 
     public void setBlockDataWithNotify(Block block, byte data) {
 
-        block.setData(data);
+        block.setTypeIdAndData(block.getTypeId(), data, false);
         for (Player p : block.getWorld().getPlayers()) {
             try {
                 if (p.getLocation().distanceSquared(block.getLocation()) < plugin.getServer().getViewDistance() * 16 *
