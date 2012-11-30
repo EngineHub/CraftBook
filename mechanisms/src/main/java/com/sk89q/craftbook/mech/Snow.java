@@ -5,12 +5,14 @@ import java.util.logging.Level;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -18,6 +20,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
 
 /**
@@ -32,6 +35,22 @@ public class Snow implements Listener {
     public Snow(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onSnowballHit(ProjectileHitEvent event) {
+
+        if(event.getEntity() instanceof Snowball) {
+            if(event.getEntity().getShooter() instanceof Player) {
+                LocalPlayer player = plugin.wrap((Player) event.getEntity().getShooter());
+                if (!player.hasPermission("craftbook.mech.snow.place")) return;
+                try {
+                    Block block = event.getEntity().getLocation().getBlock();
+                    incrementData(block.getRelative(0, 1, 0));
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -119,7 +138,7 @@ public class Snow implements Listener {
         if (event.getBlock().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 
-            disperse(event.getBlock());
+            disperse(event.getBlock(), true);
 
             if(event.getBlock().getWorld().hasStorm()) {
 
@@ -190,38 +209,48 @@ public class Snow implements Listener {
         setBlockDataWithNotify(block, newData);
     }
 
-    public boolean disperse(Block block) {
+    public boolean disperse(Block block, boolean remove) {
         if(block.getRelative(0, -1, 0).getTypeId() == 0)
-            disperse(block.getRelative(0, -1, 0));
+            disperse(block.getRelative(0, -1, 0), remove);
         if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7)
             incrementData(block.getRelative(0, -1, 0));
         if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR) {
             if(block.getRelative(0, -1, 0).getData() < block.getData()) {
                 incrementData(block.getRelative(0, -1, 0));
+                if(remove)
+                    lowerData(block);
                 return true;
             }
         }
         if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR) {
             if(block.getRelative(1, 0, 0).getData() < block.getData()) {
                 incrementData(block.getRelative(1, 0, 0));
+                if(remove)
+                    lowerData(block);
                 return true;
             }
         }
         if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR) {
             if(block.getRelative(-1, 0, 0).getData() < block.getData()) {
                 incrementData(block.getRelative(-1, 0, 0));
+                if(remove)
+                    lowerData(block);
                 return true;
             }
         }
         if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR) {
             if(block.getRelative(0, 0, 1).getData() < block.getData()) {
                 incrementData(block.getRelative(0, 0, 1));
+                if(remove)
+                    lowerData(block);
                 return true;
             }
         }
         if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR) {
             if(block.getRelative(0, 0, -1).getData() < block.getData()) {
                 incrementData(block.getRelative(0, 0, -1));
+                if(remove)
+                    lowerData(block);
                 return true;
             }
         }
@@ -231,8 +260,18 @@ public class Snow implements Listener {
 
     public void incrementData(Block block) {
 
+        if(block.getTypeId() == 0 && block.getRelative(0, -1, 0).getTypeId() == 0) {
+            incrementData(block.getRelative(0, -1, 0));
+            return;
+        }
+
+        if(block.getTypeId() == 0 && BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
+            incrementData(block.getRelative(0, -1, 0));
+            return;
+        }
+
         if(plugin.getLocalConfiguration().snowSettings.realistic) {
-            if(disperse(block))
+            if(disperse(block, false))
                 return;
         }
 
