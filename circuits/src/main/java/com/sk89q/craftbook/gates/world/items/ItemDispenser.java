@@ -18,20 +18,55 @@
 
 package com.sk89q.craftbook.gates.world.items;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
 
     public ItemDispenser(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+    }
+
+    int amount = 1;
+    short data = 0;
+    int id = -1;
+
+    @Override
+    public void load() {
+        String item = getSign().getLine(2);
+        try {
+            amount = Math.min(64,
+                    Math.max(1, Integer.parseInt(getSign().getLine(3))));
+        } catch (NumberFormatException ignored) {
+            amount = 1;
+        }
+        if (item.contains(":")) {
+            String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
+            data = Short.parseShort(itemAndData[1]);
+            item = itemAndData[0];
+        }
+
+        try {
+            id = Integer.parseInt(item);
+        }
+        catch (Exception e) {}
+        if(id < 0) {
+            id = BlockType.lookup(item).getID();
+        }
     }
 
     @Override
@@ -50,28 +85,6 @@ public class ItemDispenser extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            String item = getSign().getLine(2);
-            int amount = 1;
-            try {
-                amount = Math.min(64,
-                        Math.max(-1, Integer.parseInt(getSign().getLine(3))));
-            } catch (NumberFormatException ignored) {
-            }
-            short data = 0;
-            if (item.contains(":")) {
-                String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
-                data = Short.parseShort(itemAndData[1]);
-                item = itemAndData[0];
-            }
-
-            int id = -1;
-            try {
-                id = Integer.parseInt(item);
-            }
-            catch (Exception e) {}
-            if(id < 0) {
-                id = BlockType.lookup(item).getID();
-            }
             if (id != 0 && id != 36 && (id < 26 || id > 34)) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
