@@ -276,7 +276,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
             return economy != null;
         }
-        catch(Exception e) {
+        catch(Throwable e) {
             return false;
         }
     }
