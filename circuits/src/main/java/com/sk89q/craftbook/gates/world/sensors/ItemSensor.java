@@ -1,10 +1,9 @@
-package com.sk89q.craftbook.gates.world.items;
+package com.sk89q.craftbook.gates.world.sensors;
 
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -24,6 +23,8 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.ItemType;
 
 /**
  * @author Silthus
@@ -53,9 +54,15 @@ public class ItemSensor extends AbstractIC {
             item = Integer.parseInt(split[0]);
         } catch (NumberFormatException e) {
             // seems to be the name of the item
-            Material material = Material.getMaterial(split[0]);
+            BlockType material = BlockType.lookup(split[0]);
             if (material != null) {
-                item = material.getId();
+                item = material.getID();
+            }
+            else {
+                ItemType it = ItemType.lookup(split[0]);
+                if (it != null) {
+                    item = it.getID();
+                }
             }
         }
 

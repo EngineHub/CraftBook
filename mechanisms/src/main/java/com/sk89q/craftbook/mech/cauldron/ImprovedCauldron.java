@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,6 +25,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -57,9 +57,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         private boolean isCauldron(BlockWorldVector pos) {
 
             Block block = BukkitUtil.toBlock(pos);
-            if (block.getType() == Material.CAULDRON) {
+            if (block.getTypeId() == BlockID.CAULDRON) {
                 Cauldron cauldron = (Cauldron) block.getState().getData();
-                return block.getRelative(BlockFace.DOWN).getType() == Material.FIRE && cauldron.isFull();
+                return block.getRelative(BlockFace.DOWN).getTypeId() == BlockID.FIRE && cauldron.isFull();
             }
             return false;
         }

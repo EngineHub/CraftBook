@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.gates.world.items;
+package com.sk89q.craftbook.gates.world.sensors;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.*;

@@ -18,14 +18,15 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.InsufficientPermissionsException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Vehicle;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class BukkitPlayer implements LocalPlayer {
 
@@ -123,7 +124,7 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public boolean isHoldingBlock() {
 
-        return Material.getMaterial(getTypeInHand()).isBlock();
+        return BlockType.fromID(getTypeInHand()) != null;
     }
 
     @Override

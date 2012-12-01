@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.gates.world.items;
+package com.sk89q.craftbook.gates.world.sensors;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.*;
@@ -7,9 +7,9 @@ import org.bukkit.Server;
 /**
  * @author Silthus
  */
-public class ItemSensorST extends ItemSensor implements SelfTriggeredIC {
+public class ItemNotSensor extends ItemSensor {
 
-    public ItemSensorST(Server server, ChangedSign block, ICFactory factory) {
+    public ItemNotSensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -17,25 +17,21 @@ public class ItemSensorST extends ItemSensor implements SelfTriggeredIC {
     @Override
     public String getTitle() {
 
-        return "Self Triggered Item Sensor";
+        return "Item Not Sensor";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ST ITEM SENSOR";
+        return "ITEM NOT SENSOR";
     }
 
     @Override
-    public void think(ChipState state) {
+    public void trigger(ChipState chip) {
 
-        state.setOutput(0, isDetected());
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return true;
+        if (chip.getInput(0)) {
+            chip.setOutput(0, !isDetected());
+        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -48,7 +44,7 @@ public class ItemSensorST extends ItemSensor implements SelfTriggeredIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new ItemSensorST(getServer(), sign, this);
+            return new ItemNotSensor(getServer(), sign, this);
         }
 
         @Override
