@@ -1,3 +1,13 @@
+3.3.9r2
+* Fix errors and bugs with realistic snow
++ Added cultivator IC
+* Enhanced elevator filtering
++ Add cat types to entity spawner IC's
++ Realistic snow is now actually realistic
+* Fixed RandomBitST
+* Optimized and fixed Item Dispenser
+* Fixed Mechanisms not working due to vault dependency.
+
 3.3.9
 * Fixed an error involving chairs.
 * Fixed Pay signs.
