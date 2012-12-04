@@ -1,12 +1,15 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 import net.minecraft.server.NBTTagCompound;
+
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class ItemUtil {
 
@@ -61,6 +64,25 @@ public class ItemUtil {
     public static boolean isStackValid(ItemStack item) {
 
         return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
+    }
+
+    public static boolean takeFromEntity(Item item) {
+
+        if(item == null || item.isDead())
+            return false;
+
+        if(!isStackValid(item.getItemStack())) {
+            item.remove();
+            return false;
+        }
+
+        item.getItemStack().setAmount(item.getItemStack().getAmount() - 1);
+
+        if(!isStackValid(item.getItemStack())) {
+            item.remove();
+        }
+
+        return true;
     }
 
     public static boolean isCookable(ItemStack item) {
