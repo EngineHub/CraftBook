@@ -158,6 +158,7 @@ import com.sk89q.craftbook.gates.world.sensors.ItemSensorST;
 import com.sk89q.craftbook.gates.world.sensors.LightSensor;
 import com.sk89q.craftbook.gates.world.sensors.LightSensorST;
 import com.sk89q.craftbook.gates.world.sensors.MovementSensor;
+import com.sk89q.craftbook.gates.world.sensors.MovementSensorST;
 import com.sk89q.craftbook.gates.world.sensors.PlayerDetection;
 import com.sk89q.craftbook.gates.world.sensors.PlayerDetectionST;
 import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
@@ -457,6 +458,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0264", "sense item st",new ItemSensorST.Factory(server), familySISO, familyAISO);                    // Restricted
         registerIC("MC0265", "sense n item s",new ItemNotSensorST.Factory(server), familySISO, familyAISO);                 // Restricted
         registerIC("MC0266", "sense power st",new PowerSensorST.Factory(server), familySISO, familyAISO);                   // Restricted
+        registerIC("MC0267", "sense move st", new MovementSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0270", "sense power st",new PowerSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0271", "sense entit st",new EntitySensorST.Factory(server), familySISO, familyAISO);                  // Restricted
         registerIC("MC0272", "sense playe st",new PlayerDetectionST.Factory(server), familySISO, familyAISO);               // Restricted

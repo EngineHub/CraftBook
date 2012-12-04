@@ -2,7 +2,6 @@ package com.sk89q.craftbook.gates.world.sensors;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -89,7 +88,6 @@ public class MovementSensor extends AbstractIC {
                             if (type.is(entity)) {
                                 // Check Radius
                                 if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                                    Bukkit.getLogger().severe(entity.getVelocity().lengthSquared() + "   " + (entity.getVelocity().normalize().lengthSquared() >= 0.01 ? "SUCCESS" : "FAIL"));
                                     if(entity.getVelocity().lengthSquared() >= 0.01)
                                         return true;
                                 }
@@ -111,6 +109,22 @@ public class MovementSensor extends AbstractIC {
         public IC create(ChangedSign sign) {
 
             return new MovementSensor(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Outputs high if a nearby entity is moving.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "radius=x:y:z offset",
+                    "entity type"
+            };
+            return lines;
         }
     }
 }
