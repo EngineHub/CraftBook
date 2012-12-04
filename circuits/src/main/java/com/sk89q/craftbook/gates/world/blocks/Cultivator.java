@@ -89,14 +89,15 @@ public class Cultivator extends AbstractIC {
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             for(int i = 290; i < 294; i++) {
-                int slot = c.getInventory().first(new ItemStack(i));
-                if(slot < 0)
-                    continue;
-                if(ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
-                    ItemStack item = c.getInventory().getItem(slot);
-                    item.setDurability((short) (item.getDurability() + 1));
-                    c.getInventory().setItem(slot, item);
-                    return true;
+                for(int slot = 0; slot < c.getInventory().getSize(); slot++) {
+                    if(c.getInventory().getItem(slot) == null || c.getInventory().getItem(slot).getTypeId() != i)
+                        continue;
+                    if(ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
+                        ItemStack item = c.getInventory().getItem(slot);
+                        item.setDurability((short) (item.getDurability() + 1));
+                        c.getInventory().setItem(slot, item);
+                        return true;
+                    }
                 }
             }
         }

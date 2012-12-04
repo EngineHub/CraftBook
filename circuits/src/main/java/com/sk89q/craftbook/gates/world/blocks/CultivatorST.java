@@ -31,8 +31,8 @@ public class CultivatorST extends Cultivator implements SelfTriggeredIC {
 
     @Override
     public void think (ChipState state) {
-        if(state.getInput(0))
-            state.setOutput(0, cultivate());
+
+        state.setOutput(0, cultivate());
     }
 
     public static class Factory extends Cultivator.Factory {
