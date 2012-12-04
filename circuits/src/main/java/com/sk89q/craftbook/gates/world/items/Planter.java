@@ -82,6 +82,11 @@ public class Planter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        if(chip.getInput(0))
+            plant();
+    }
+
+    public void plant() {
         if (!plantableItem(itemID)) return;
 
         if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(itemID, world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
@@ -169,7 +174,7 @@ public class Planter extends AbstractIC {
                         double diffY = target.getBlockY() - loc.getY();
                         double diffZ = target.getBlockZ() - loc.getZ();
 
-                        if (diffX * diffX + diffY * diffY + diffZ * diffZ < 6) {
+                        if (diffX * diffX + diffY * diffY + diffZ * diffZ < 36) {
                             itemEnt.remove();
 
                             world.getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()).setTypeIdAndData(getBlockByItem(itemId), (byte) (damVal == -1 ? 0 : damVal), true);
