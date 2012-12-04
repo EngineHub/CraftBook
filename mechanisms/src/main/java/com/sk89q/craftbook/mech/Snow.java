@@ -85,6 +85,8 @@ public class Snow implements Listener {
 
         if (!plugin.getLocalConfiguration().snowSettings.trample) return;
 
+        if(!event.getFrom().getWorld().getName().equalsIgnoreCase(event.getTo().getWorld().getName()))
+            return;
         if(event.getFrom().distanceSquared(event.getTo()) < 0.1)
             return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
