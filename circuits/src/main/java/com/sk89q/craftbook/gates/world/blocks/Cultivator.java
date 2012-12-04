@@ -94,9 +94,7 @@ public class Cultivator extends AbstractIC {
                     continue;
                 if(ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                     ItemStack item = c.getInventory().getItem(slot);
-                    item.setDurability((short) (item.getDurability() - 1));
-                    if(item.getDurability() <= 0)
-                        item = null;
+                    item.setDurability((short) (item.getDurability() + 1));
                     c.getInventory().setItem(slot, item);
                     return true;
                 }
