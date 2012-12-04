@@ -51,6 +51,18 @@ public class LiquidFlood extends AbstractIC {
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
                 int z = Integer.parseInt(splitCoords[2]);
+                if(x > 16)
+                    x = 16;
+                if(x < -16)
+                    x = -16;
+                if(y > 16)
+                    y = 16;
+                if(y < -16)
+                    y = -16;
+                if(z > 16)
+                    z = 16;
+                if(z < -16)
+                    z = -16;
                 centre.add(x, y, z);
             }
         } catch (Exception ignored) {
