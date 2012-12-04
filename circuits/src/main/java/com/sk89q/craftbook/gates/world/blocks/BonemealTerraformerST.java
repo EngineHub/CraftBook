@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
 
 public class BonemealTerraformerST extends BonemealTerraformer implements SelfTriggeredIC {
 
@@ -29,7 +30,7 @@ public class BonemealTerraformerST extends BonemealTerraformer implements SelfTr
     @Override
     public String getTitle() {
 
-        return "Self-Triggered Bonemeal Cultivator";
+        return "Self-Triggered Bonemeal Terraformer";
     }
 
     @Override

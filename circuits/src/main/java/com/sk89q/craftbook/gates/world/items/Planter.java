@@ -40,19 +40,20 @@ public class Planter extends AbstractIC {
 
     int itemID = 295;
     byte data = -1;
-    int yOffset = 2;
     Vector target;
     Vector onBlock;
+    Vector offset = new Vector(0,2,0);
 
     @Override
     public void load() {
         onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation());
         try {
-            yOffset = Integer.parseInt(getSign().getLine(3));
+            String[] loc = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
+            offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
         } catch (NumberFormatException e) {
         }
 
-        target = onBlock.add(0, yOffset, 0);
+        target = onBlock.add(offset);
         if (!getSign().getLine(2).isEmpty()) {
             try {
                 itemID = Integer.parseInt(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[0]);
@@ -179,10 +180,10 @@ public class Planter extends AbstractIC {
                         double diffZ = target.getBlockZ() - loc.getZ();
 
                         if (diffX * diffX + diffY * diffY + diffZ * diffZ < 36) {
-                            itemEnt.remove();
-
-                            world.getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()).setTypeIdAndData(getBlockByItem(itemId), (byte) (damVal == -1 ? 0 : damVal), true);
-                            break;
+                            if(ItemUtil.takeFromEntity(itemEnt)) {
+                                world.getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()).setTypeIdAndData(getBlockByItem(itemId), (byte) (damVal == -1 ? 0 : damVal), true);
+                                break;
+                            }
                         }
                     }
                 }
