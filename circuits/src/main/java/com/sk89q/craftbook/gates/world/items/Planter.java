@@ -38,7 +38,6 @@ public class Planter extends AbstractIC {
         super(server, block, factory);
     }
 
-    World world;
     int itemID = 295;
     byte data = -1;
     int yOffset = 2;
@@ -47,24 +46,29 @@ public class Planter extends AbstractIC {
 
     @Override
     public void load() {
-        world = BukkitUtil.toSign(getSign()).getWorld();
         onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation());
-        if (!getSign().getLine(2).isEmpty()) {
-            String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-            itemID = Integer.parseInt(lineParts[0]);
-            try {
-                data = Byte.parseByte(lineParts[1]);
-            }
-            catch(Exception e){}
-        }
         try {
             yOffset = Integer.parseInt(getSign().getLine(3));
         } catch (NumberFormatException e) {
         }
 
-        if (yOffset < 1) return;
-
         target = onBlock.add(0, yOffset, 0);
+        if (!getSign().getLine(2).isEmpty()) {
+            try {
+                itemID = Integer.parseInt(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[0]);
+                try {
+                    data = Byte.parseByte(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[1]);
+                }
+                catch(Exception e){}
+            }
+            catch(Exception e){
+                itemID = BlockType.lookup(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[0]).getID();
+                try {
+                    data = Byte.parseByte(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[1]);
+                }
+                catch(Exception ee){}
+            }
+        }
     }
 
     @Override
@@ -89,9 +93,9 @@ public class Planter extends AbstractIC {
     public void plant() {
         if (!plantableItem(itemID)) return;
 
-        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(itemID, world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
+        if (BukkitUtil.toSign(getSign()).getWorld().getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(itemID, BukkitUtil.toSign(getSign()).getWorld().getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
 
-            BlockPlanter planter = new BlockPlanter(world, target, itemID, data);
+            BlockPlanter planter = new BlockPlanter(BukkitUtil.toSign(getSign()).getWorld(), target, itemID, data);
             planter.run();
         }
     }
