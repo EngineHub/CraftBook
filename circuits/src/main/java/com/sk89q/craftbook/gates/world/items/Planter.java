@@ -39,7 +39,7 @@ public class Planter extends AbstractIC {
 
     World world;
     int[] info;
-    int yOffset;
+    int yOffset = 2;
     Vector target;
     Vector onBlock;
 
@@ -59,8 +59,11 @@ public class Planter extends AbstractIC {
         try {
             yOffset = Integer.parseInt(getSign().getLine(3));
         } catch (NumberFormatException e) {
-            return;
         }
+
+        if (yOffset < 1) return;
+
+        target = onBlock.add(0, yOffset, 0);
     }
 
     @Override
@@ -80,16 +83,10 @@ public class Planter extends AbstractIC {
 
         if (info == null || !plantableItem(info[0])) return;
 
-        if (yOffset < 1) return;
+        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
 
-        target = onBlock.add(0, yOffset, 0);
-
-        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0
-                && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1,
-                        target.getBlockZ()))) {
-
-            BlockPlanter run = new BlockPlanter(world, target, info[0], info[1]);
-            run.run();
+            BlockPlanter planter = new BlockPlanter(world, target, info[0], info[1]);
+            planter.run();
         }
     }
 
@@ -178,13 +175,7 @@ public class Planter extends AbstractIC {
                         if (diffX * diffX + diffY * diffY + diffZ * diffZ < 6) {
                             itemEnt.remove();
 
-                            world.getBlockAt(target.getBlockX(),
-                                    target.getBlockY(), target.getBlockZ())
-                                    .setTypeId(getBlockByItem(itemId));
-                            world.getBlockAt(target.getBlockX(),
-                                    target.getBlockY(), target.getBlockZ())
-                                    .setData((byte) (damVal == -1 ? 0 : damVal));
-
+                            world.getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()).setTypeIdAndData(getBlockByItem(itemId), (byte) (damVal == -1 ? 0 : damVal), true);
                             break;
                         }
                     }
