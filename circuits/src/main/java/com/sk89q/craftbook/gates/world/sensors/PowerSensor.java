@@ -11,7 +11,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
 
 /**
  * @author Silthus
@@ -57,7 +56,7 @@ public class PowerSensor extends AbstractIC {
         return center.isBlockPowered() || center.isBlockIndirectlyPowered();
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 

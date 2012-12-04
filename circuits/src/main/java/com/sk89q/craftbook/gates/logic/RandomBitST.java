@@ -4,15 +4,13 @@ import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
-public class RandomBitST extends AbstractIC implements SelfTriggeredIC {
+public class RandomBitST extends RandomBit implements SelfTriggeredIC {
 
     public RandomBitST(Server server, ChangedSign block, ICFactory factory) {
 
@@ -41,7 +39,7 @@ public class RandomBitST extends AbstractIC implements SelfTriggeredIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC { //Restricted as could lag
+    public static class Factory extends RandomBit.Factory implements RestrictedIC { //Restricted as could lag
 
         public Factory(Server server) {
 

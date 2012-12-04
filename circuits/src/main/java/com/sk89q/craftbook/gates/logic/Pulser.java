@@ -36,9 +36,8 @@ public class Pulser extends AbstractIC {
     @Override
     public void load() {
 
-        ChangedSign sign = getSign();
-        String line2 = sign.getLine(2);
-        String line3 = sign.getLine(3);
+        String line2 = getSign().getLine(2);
+        String line3 = getSign().getLine(3);
         if (!(line2 == null) && !line2.isEmpty()) {
             String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
             pulseLength = Integer.parseInt(split[0]);
@@ -49,9 +48,9 @@ public class Pulser extends AbstractIC {
             pulseCount = Integer.parseInt(split[0]);
             if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
         }
-        sign.setLine(2, pulseLength + ":" + startDelay);
-        sign.setLine(3, pulseCount + ":" + pauseLength);
-        sign.update(false);
+        getSign().setLine(2, pulseLength + ":" + startDelay);
+        getSign().setLine(3, pulseCount + ":" + pauseLength);
+        getSign().update(false);
     }
 
     @Override
@@ -226,8 +225,10 @@ public class Pulser extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[]{"[pulselength[:startdelay]]",
-            "[pulsecount[:pauselength in serverticks]]"};
+            return new String[]{
+                    "[pulselength[:startdelay]]",
+                    "[pulsecount[:pauselength in serverticks]]"
+            };
         }
     }
 }

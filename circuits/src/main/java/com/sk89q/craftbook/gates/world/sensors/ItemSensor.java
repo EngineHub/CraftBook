@@ -19,7 +19,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -108,7 +107,6 @@ public class ItemSensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        load();
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities())
@@ -124,7 +122,7 @@ public class ItemSensor extends AbstractIC {
         return false;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 

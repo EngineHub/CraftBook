@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.gates.world.blocks;
+package com.sk89q.craftbook.gates.world.sensors;
 
 import java.util.regex.Pattern;
 
@@ -29,7 +29,6 @@ public class BlockSensor extends AbstractIC {
     @Override
     public void load() {
 
-        center = ICUtil.parseBlockLocation(getSign());
         String[] ids = COLON_PATTERN.split(getSign().getLine(3));
         id = Integer.parseInt(ids[0]);
         data = Byte.parseByte(ids[1]);
@@ -62,10 +61,12 @@ public class BlockSensor extends AbstractIC {
      */
     protected boolean hasBlock() {
 
+        center = ICUtil.parseBlockLocation(getSign());
         int blockID = center.getTypeId();
 
-        if (data != (byte) -1) if (blockID == id)
-            return data == center.getData();
+        if (data != (byte) -1)
+            if (blockID == id)
+                return data == center.getData();
         return blockID == id;
     }
 

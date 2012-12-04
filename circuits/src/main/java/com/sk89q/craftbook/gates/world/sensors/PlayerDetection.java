@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.gates.world.entity;
+package com.sk89q.craftbook.gates.world.sensors;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;

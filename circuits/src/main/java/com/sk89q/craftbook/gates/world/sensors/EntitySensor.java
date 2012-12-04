@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.gates.world.entity;
+package com.sk89q.craftbook.gates.world.sensors;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -25,7 +25,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -35,7 +34,7 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class EntitySensor extends AbstractIC {
 
-    private enum Type {
+    public enum Type {
         PLAYER('P'),
         ITEM('I'),
         MOB_HOSTILE('H'),
@@ -192,7 +191,7 @@ public class EntitySensor extends AbstractIC {
         return false;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 

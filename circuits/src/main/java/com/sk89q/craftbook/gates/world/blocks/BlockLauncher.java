@@ -62,7 +62,7 @@ public class BlockLauncher extends AbstractIC {
         }
     }
 
-    Vector velocity = new Vector(0, 0.5, 0);;
+    Vector velocity = new Vector(0, 0.5, 0);
     int id = 12;
     byte data = 0;
 

@@ -90,8 +90,6 @@ import com.sk89q.craftbook.gates.logic.XorGate;
 import com.sk89q.craftbook.gates.world.blocks.BlockBreaker;
 import com.sk89q.craftbook.gates.world.blocks.BlockBreakerST;
 import com.sk89q.craftbook.gates.world.blocks.BlockLauncher;
-import com.sk89q.craftbook.gates.world.blocks.BlockSensor;
-import com.sk89q.craftbook.gates.world.blocks.BlockSensorST;
 import com.sk89q.craftbook.gates.world.blocks.BonemealTerraformer;
 import com.sk89q.craftbook.gates.world.blocks.BonemealTerraformerST;
 import com.sk89q.craftbook.gates.world.blocks.Cultivator;
@@ -117,12 +115,8 @@ import com.sk89q.craftbook.gates.world.entity.AdvancedEntitySpawner;
 import com.sk89q.craftbook.gates.world.entity.CreatureSpawner;
 import com.sk89q.craftbook.gates.world.entity.EntityCannon;
 import com.sk89q.craftbook.gates.world.entity.EntityCannonST;
-import com.sk89q.craftbook.gates.world.entity.EntitySensor;
-import com.sk89q.craftbook.gates.world.entity.EntitySensorST;
 import com.sk89q.craftbook.gates.world.entity.EntityTrap;
 import com.sk89q.craftbook.gates.world.entity.EntityTrapST;
-import com.sk89q.craftbook.gates.world.entity.PlayerDetection;
-import com.sk89q.craftbook.gates.world.entity.PlayerDetectionST;
 import com.sk89q.craftbook.gates.world.items.AutomaticCrafter;
 import com.sk89q.craftbook.gates.world.items.AutomaticCrafterST;
 import com.sk89q.craftbook.gates.world.items.ContainerCollector;
@@ -151,14 +145,21 @@ import com.sk89q.craftbook.gates.world.miscellaneous.TimedExplosion;
 import com.sk89q.craftbook.gates.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.gates.world.miscellaneous.WirelessReceiverST;
 import com.sk89q.craftbook.gates.world.miscellaneous.WirelessTransmitter;
+import com.sk89q.craftbook.gates.world.sensors.BlockSensor;
+import com.sk89q.craftbook.gates.world.sensors.BlockSensorST;
 import com.sk89q.craftbook.gates.world.sensors.DaySensor;
 import com.sk89q.craftbook.gates.world.sensors.DaySensorST;
+import com.sk89q.craftbook.gates.world.sensors.EntitySensor;
+import com.sk89q.craftbook.gates.world.sensors.EntitySensorST;
 import com.sk89q.craftbook.gates.world.sensors.ItemNotSensor;
 import com.sk89q.craftbook.gates.world.sensors.ItemNotSensorST;
 import com.sk89q.craftbook.gates.world.sensors.ItemSensor;
 import com.sk89q.craftbook.gates.world.sensors.ItemSensorST;
 import com.sk89q.craftbook.gates.world.sensors.LightSensor;
 import com.sk89q.craftbook.gates.world.sensors.LightSensorST;
+import com.sk89q.craftbook.gates.world.sensors.MovementSensor;
+import com.sk89q.craftbook.gates.world.sensors.PlayerDetection;
+import com.sk89q.craftbook.gates.world.sensors.PlayerDetectionST;
 import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
 import com.sk89q.craftbook.gates.world.sensors.PowerSensorST;
 import com.sk89q.craftbook.gates.world.weather.RainSensor;
@@ -375,11 +376,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1261", "sense lava",  new LavaSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1262", "sense light", new LightSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1263", "sense block", new BlockSensor.Factory(server), familySISO, familyAISO);
-        registerIC("MC1264", "sense item",  new ItemSensor.Factory(server), familySISO, familyAISO);          // Restricted
-        registerIC("MC1265", "inv sense item",new ItemNotSensor.Factory(server), familySISO, familyAISO);       // Restricted
-        registerIC("MC1266", "sense power", new PowerSensor.Factory(server), familySISO, familyAISO);         // Restricted
+        registerIC("MC1264", "sense item",  new ItemSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1265", "inv sense item",new ItemNotSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1266", "sense power", new PowerSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1267", "sense move",  new MovementSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1270", "melody",      new Melody.Factory(server), familySISO, familyAISO);
-        registerIC("MC1271", "sense entity",new EntitySensor.Factory(server), familySISO, familyAISO);        // Restricted
+        registerIC("MC1271", "sense entity",new EntitySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1272", "sense player",new PlayerDetection.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1420", "divide clock",new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock",       new Clock.Factory(server), familySISO, familyAISO);
