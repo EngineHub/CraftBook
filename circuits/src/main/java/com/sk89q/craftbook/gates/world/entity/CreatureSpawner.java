@@ -108,6 +108,7 @@ public class CreatureSpawner extends AbstractIC {
 
                 org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
                 sp.setCreatureTypeByName(entityType.getName());
+                sp.update();
             }
             else {
                 Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
