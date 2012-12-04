@@ -101,9 +101,9 @@ public class BonemealTerraformer extends AbstractIC {
                         if (b.getTypeId() == BlockID.COCOA_PLANT && ((b.getData() & 0x8) != 0x8 || (b.getData() & 0xC) != 0xC)) {
                             if (consumeBonemeal()) {
                                 if(BaseBukkitPlugin.random.nextInt(30) == 0)
-                                    b.setData((byte) (b.getData() ^ 0xC));
+                                    b.setData((byte) (b.getData() | 0xC));
                                 else
-                                    b.setData((byte) (b.getData() ^ 0x8));
+                                    b.setData((byte) (b.getData() | 0x8));
                             }
                             return;
                         }
@@ -115,16 +115,16 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.SAPLING) {
                             if (consumeBonemeal()) {
+                                b.setData((byte) (b.getData() | 0x8));
                                 Chunk c = ((CraftChunk)b.getChunk()).getHandle();
                                 BlockSapling sap = (BlockSapling) net.minecraft.server.Block.byId[BlockID.SAPLING];
                                 sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, false, null, null);
-                                //b.setData((byte) (b.getData() | 0x8));
                             }
                             return;
                         }
                         if ((b.getTypeId() == BlockID.REED || b.getTypeId() == BlockID.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getTypeId() == 0) {
                             if (consumeBonemeal()) {
-                                b.setData((byte) 0x15);
+                                b.getRelative(0, 1, 0).setTypeId(b.getTypeId());
                             }
                             return;
                         }
