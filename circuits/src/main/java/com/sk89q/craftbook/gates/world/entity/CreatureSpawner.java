@@ -58,6 +58,7 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -103,12 +104,19 @@ public class CreatureSpawner extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) if (entityType != null && entityType.isAlive()) {
-            Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
-                    BlockFace.UP));
-            // spawn amount of mobs
-            for (int i = 0; i < amount; i++) {
-                Entity entity = center.getWorld().spawnEntity(center, entityType);
-                setEntityData(entity, data);
+            if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
+
+                org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
+                sp.setCreatureTypeByName(entityType.getName());
+            }
+            else {
+                Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
+                        BlockFace.UP));
+                // spawn amount of mobs
+                for (int i = 0; i < amount; i++) {
+                    Entity entity = center.getWorld().spawnEntity(center, entityType);
+                    setEntityData(entity, data);
+                }
             }
         }
     }
