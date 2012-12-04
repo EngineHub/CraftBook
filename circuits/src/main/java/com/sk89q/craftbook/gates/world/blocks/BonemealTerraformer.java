@@ -94,6 +94,12 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
+                        if (b.getTypeId() == BlockID.COCOA_PLANT) {
+                            if (consumeBonemeal()) {
+                                b.setData((byte) (b.getData() ^ 0x8));
+                            }
+                            return;
+                        }
                         if (b.getTypeId() == BlockID.NETHER_WART && b.getData() < 0x3) {
                             if (consumeBonemeal()) {
                                 b.setData((byte) (b.getData() + 0x1));
@@ -102,7 +108,7 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.SAPLING) {
                             if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() | 0x8));
+                                b.setData((byte) (b.getData() ^ 0x8));
                             }
                             return;
                         }
