@@ -118,7 +118,7 @@ public class BonemealTerraformer extends AbstractIC {
                                 b.setData((byte) (b.getData() | 0x8));
                                 Chunk c = ((CraftChunk)b.getChunk()).getHandle();
                                 BlockSapling sap = (BlockSapling) net.minecraft.server.Block.byId[BlockID.SAPLING];
-                                sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, false, null, null);
+                                sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
                             }
                             return;
                         }
@@ -140,8 +140,7 @@ public class BonemealTerraformer extends AbstractIC {
                             if (consumeBonemeal()) {
                                 int t = BaseBukkitPlugin.random.nextInt(7);
                                 if (t == 0) {
-                                    b.getRelative(0, 1, 0).setTypeId(BlockID.LONG_GRASS);
-                                    b.getRelative(0, 1, 0).setData((byte) 1);
+                                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
                                 } else if (t == 1) {
                                     b.getRelative(0, 1, 0).setTypeId(BlockID.YELLOW_FLOWER);
                                 } else if (t == 2) {
@@ -149,9 +148,22 @@ public class BonemealTerraformer extends AbstractIC {
                                 } else if (t == 3) {
                                     b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 2, true);
                                 } else {
-                                    b.getRelative(0, 1, 0).setTypeId(BlockID.LONG_GRASS);
-                                    b.getRelative(0, 1, 0).setData((byte) 1);
+                                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
                                 }
+                            }
+                            return;
+                        }
+                        if (b.getTypeId() == BlockID.SAND && b.getRelative(0, 1,
+                                0).getTypeId() == BlockID.AIR && BaseBukkitPlugin.random.nextInt(15) == 0) {
+                            if (consumeBonemeal()) {
+                                b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 0, true);
+                            }
+                            return;
+                        }
+                        if (b.getTypeId() == BlockID.STATIONARY_WATER && b.getRelative(0, 1,
+                                0).getTypeId() == BlockID.AIR && BaseBukkitPlugin.random.nextInt(30) == 0) {
+                            if (consumeBonemeal()) {
+                                b.getRelative(0, 1, 0).setTypeId(BlockID.LILY_PAD);
                             }
                             return;
                         }
