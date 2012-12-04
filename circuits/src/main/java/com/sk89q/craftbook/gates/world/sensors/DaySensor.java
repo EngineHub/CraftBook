@@ -58,6 +58,7 @@ public class DaySensor extends AbstractIC {
     long day = 0L;
     long night = 13000L;
 
+    @Override
     public void load() {
         try {
             night = Long.parseLong(getSign().getLine(3));
@@ -76,15 +77,18 @@ public class DaySensor extends AbstractIC {
      */
     protected boolean isDay() {
 
-        long time = BukkitUtil.toSign(getSign()).getWorld().getFullTime() % 24000;
+        long time = BukkitUtil.toSign(getSign()).getWorld().getTime();
         if (time < 0) {
             time += 24000;
         }
 
-        if (day <= night)
+        if (day <= night) {
             return time >= day && time <= night;
-            else if (day <= night) return time >= day || time <= night;
-            return time < night;
+        }
+        else if (day >= night) {
+            return time <= day || time >= night;
+        }
+        return time < night;
     }
 
     public static class Factory extends AbstractICFactory {
