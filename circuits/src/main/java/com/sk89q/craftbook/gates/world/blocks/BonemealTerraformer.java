@@ -160,6 +160,13 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
+                        if (b.getTypeId() == BlockID.VINE && b.getRelative(0, -1,
+                                0).getTypeId() == BlockID.AIR && BaseBukkitPlugin.random.nextInt(15) == 0) {
+                            if (consumeBonemeal()) {
+                                b.getRelative(0, -1, 0).setTypeIdAndData(BlockID.VINE, b.getData(), true);
+                            }
+                            return;
+                        }
                         if (b.getTypeId() == BlockID.STATIONARY_WATER && b.getRelative(0, 1,
                                 0).getTypeId() == BlockID.AIR && BaseBukkitPlugin.random.nextInt(30) == 0) {
                             if (consumeBonemeal()) {
