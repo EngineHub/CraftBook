@@ -50,6 +50,20 @@ public class Planter extends AbstractIC {
         try {
             String[] loc = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
+            if(offset.getX() > 16)
+                offset.setX(16);
+            if(offset.getY() > 16)
+                offset.setY(16);
+            if(offset.getZ() > 16)
+                offset.setZ(16);
+
+            if(offset.getX() < -16)
+                offset.setX(-16);
+            if(offset.getY() < -16)
+                offset.setY(-16);
+            if(offset.getZ() < -16)
+                offset.setZ(-16);
+
         } catch (NumberFormatException e) {
         }
 
