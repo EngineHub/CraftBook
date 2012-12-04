@@ -2,10 +2,14 @@ package com.sk89q.craftbook.gates.world.blocks;
 
 import java.util.HashMap;
 
+import net.minecraft.server.BlockSapling;
+import net.minecraft.server.Chunk;
+
 import org.bukkit.Server;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.BaseConfiguration;
@@ -94,9 +98,12 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
-                        if (b.getTypeId() == BlockID.COCOA_PLANT) {
+                        if (b.getTypeId() == BlockID.COCOA_PLANT && ((b.getData() & 0x8) != 0x8 || (b.getData() & 0xC) != 0xC)) {
                             if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() ^ 0x8));
+                                if(BaseBukkitPlugin.random.nextInt(30) == 0)
+                                    b.setData((byte) (b.getData() ^ 0xC));
+                                else
+                                    b.setData((byte) (b.getData() ^ 0x8));
                             }
                             return;
                         }
@@ -108,7 +115,10 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.SAPLING) {
                             if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() ^ 0x8));
+                                Chunk c = ((CraftChunk)b.getChunk()).getHandle();
+                                BlockSapling sap = (BlockSapling) net.minecraft.server.Block.byId[BlockID.SAPLING];
+                                sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, false, null, null);
+                                //b.setData((byte) (b.getData() | 0x8));
                             }
                             return;
                         }
