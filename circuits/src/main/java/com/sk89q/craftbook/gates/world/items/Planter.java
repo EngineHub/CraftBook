@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import java.util.Collection;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -16,6 +15,8 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
@@ -38,7 +39,8 @@ public class Planter extends AbstractIC {
     }
 
     World world;
-    int[] info;
+    int itemID = 295;
+    byte data = -1;
     int yOffset = 2;
     Vector target;
     Vector onBlock;
@@ -47,12 +49,11 @@ public class Planter extends AbstractIC {
     public void load() {
         world = BukkitUtil.toSign(getSign()).getWorld();
         onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation());
-        info = null;
         if (!getSign().getLine(2).isEmpty()) {
             String[] lineParts = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
-            info = new int[] {Integer.parseInt(lineParts[0]), 0};
+            itemID = Integer.parseInt(lineParts[0]);
             try {
-                info[1] = Integer.parseInt(lineParts[1]);
+                data = Byte.parseByte(lineParts[1]);
             }
             catch(Exception e){}
         }
@@ -81,11 +82,11 @@ public class Planter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (info == null || !plantableItem(info[0])) return;
+        if (!plantableItem(itemID)) return;
 
-        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(info[0], world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
+        if (world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(itemID, world.getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
 
-            BlockPlanter planter = new BlockPlanter(world, target, info[0], info[1]);
+            BlockPlanter planter = new BlockPlanter(world, target, itemID, data);
             planter.run();
         }
     }
@@ -153,20 +154,16 @@ public class Planter extends AbstractIC {
         public void run() {
 
             try {
-                Collection<Item> items = world.getEntitiesByClass(Item.class);
-
-                if (items == null) return;
-
                 for (Entity ent : BukkitUtil.toBlock(new BlockWorldVector(BukkitUtil.getLocalWorld(world), target)).getChunk().getEntities()) {
                     if(!(ent instanceof Item))
                         continue;
 
                     Item itemEnt = (Item) ent;
 
-                    if (!itemEnt.isDead()
-                            && itemEnt.getItemStack().getAmount() > 0
-                            && itemEnt.getItemStack().getTypeId() == itemId
-                            && (damVal == -1 || itemEnt.getItemStack().getDurability() == damVal)) {
+                    if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
+                        continue;
+
+                    if (itemEnt.getItemStack().getTypeId() == itemId && (damVal == -1 || itemEnt.getItemStack().getDurability() == damVal)) {
                         Location loc = itemEnt.getLocation();
                         double diffX = target.getBlockX() - loc.getX();
                         double diffY = target.getBlockY() - loc.getY();
@@ -180,7 +177,8 @@ public class Planter extends AbstractIC {
                         }
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
         }
 
