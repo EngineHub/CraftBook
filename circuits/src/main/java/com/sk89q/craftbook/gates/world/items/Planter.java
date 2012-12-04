@@ -3,7 +3,7 @@ package com.sk89q.craftbook.gates.world.items;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 
@@ -18,7 +18,6 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -40,13 +39,13 @@ public class Planter extends AbstractIC {
 
     int itemID = 295;
     byte data = -1;
-    Vector target;
-    Vector onBlock;
+    Block target;
+    Block onBlock;
     Vector offset = new Vector(0,2,0);
 
     @Override
     public void load() {
-        onBlock = BukkitUtil.toVector(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation());
+        onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         try {
             String[] loc = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
@@ -64,10 +63,10 @@ public class Planter extends AbstractIC {
             if(offset.getZ() < -16)
                 offset.setZ(-16);
 
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
         }
 
-        target = onBlock.add(offset);
+        target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
         if (!getSign().getLine(2).isEmpty()) {
             try {
                 itemID = Integer.parseInt(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[0]);
@@ -106,12 +105,41 @@ public class Planter extends AbstractIC {
     }
 
     public void plant() {
+
         if (!plantableItem(itemID)) return;
 
-        if (BukkitUtil.toSign(getSign()).getWorld().getBlockTypeIdAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()) == 0 && itemPlantableOnBlock(itemID, BukkitUtil.toSign(getSign()).getWorld().getBlockTypeIdAt(target.getBlockX(), target.getBlockY() - 1, target.getBlockZ()))) {
+        if(target.getTypeId() != 0)
+            return;
 
-            BlockPlanter planter = new BlockPlanter(BukkitUtil.toSign(getSign()).getWorld(), target, itemID, data);
-            planter.run();
+        if (itemPlantableOnBlock(itemID, target.getRelative(0, -1, 0).getTypeId())) {
+
+            try {
+                for (Entity ent : target.getChunk().getEntities()) {
+                    if(!(ent instanceof Item))
+                        continue;
+
+                    Item itemEnt = (Item) ent;
+
+                    if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
+                        continue;
+
+                    if (itemEnt.getItemStack().getTypeId() == itemID && (data == -1 || itemEnt.getItemStack().getDurability() == data || itemEnt.getItemStack().getData().getData() == data)) {
+                        Location loc = itemEnt.getLocation();
+                        double diffX = target.getX() - loc.getX();
+                        double diffY = target.getY() - loc.getY();
+                        double diffZ = target.getZ() - loc.getZ();
+
+                        if (diffX * diffX + diffY * diffY + diffZ * diffZ < 36) {
+                            if(ItemUtil.takeFromEntity(itemEnt)) {
+                                target.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            }
         }
     }
 
@@ -159,83 +187,35 @@ public class Planter extends AbstractIC {
         return false;
     }
 
-    protected static class BlockPlanter implements Runnable {
+    protected int getBlockByItem(int itemId) {
 
-        private final World world;
-        private final Vector target;
-        private final int itemId;
-        private final int damVal;
-
-        public BlockPlanter(World world, Vector target, int itemId, int damVal) {
-
-            this.world = world;
-            this.target = target;
-            this.itemId = itemId;
-            this.damVal = damVal;
-        }
-
-        @Override
-        public void run() {
-
-            try {
-                for (Entity ent : BukkitUtil.toBlock(new BlockWorldVector(BukkitUtil.getLocalWorld(world), target)).getChunk().getEntities()) {
-                    if(!(ent instanceof Item))
-                        continue;
-
-                    Item itemEnt = (Item) ent;
-
-                    if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
-                        continue;
-
-                    if (itemEnt.getItemStack().getTypeId() == itemId && (damVal == -1 || itemEnt.getItemStack().getDurability() == damVal)) {
-                        Location loc = itemEnt.getLocation();
-                        double diffX = target.getBlockX() - loc.getX();
-                        double diffY = target.getBlockY() - loc.getY();
-                        double diffZ = target.getBlockZ() - loc.getZ();
-
-                        if (diffX * diffX + diffY * diffY + diffZ * diffZ < 36) {
-                            if(ItemUtil.takeFromEntity(itemEnt)) {
-                                world.getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()).setTypeIdAndData(getBlockByItem(itemId), (byte) (damVal == -1 ? 0 : damVal), true);
-                                break;
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
-            }
-        }
-
-        private int getBlockByItem(int itemId) {
-
-            switch (itemId) {
-                case ItemID.SEEDS:
-                    return BlockID.CROPS;
-                case ItemID.MELON_SEEDS:
-                    return BlockID.MELON_STEM;
-                case ItemID.PUMPKIN_SEEDS:
-                    return BlockID.PUMPKIN_STEM;
-                case BlockID.SAPLING:
-                    return BlockID.SAPLING;
-                case ItemID.NETHER_WART_SEED:
-                    return BlockID.NETHER_WART;
-                case BlockID.CACTUS:
-                    return BlockID.CACTUS;
-                case ItemID.POTATO:
-                    return BlockID.POTATOES;
-                case ItemID.CARROT:
-                    return BlockID.CARROTS;
-                case BlockID.RED_FLOWER:
-                    return BlockID.RED_FLOWER;
-                case BlockID.YELLOW_FLOWER:
-                    return BlockID.YELLOW_FLOWER;
-                case BlockID.RED_MUSHROOM:
-                    return BlockID.RED_MUSHROOM;
-                case BlockID.BROWN_MUSHROOM:
-                    return BlockID.BROWN_MUSHROOM;
-                default:
-                    return BlockID.AIR;
-            }
+        switch (itemId) {
+            case ItemID.SEEDS:
+                return BlockID.CROPS;
+            case ItemID.MELON_SEEDS:
+                return BlockID.MELON_STEM;
+            case ItemID.PUMPKIN_SEEDS:
+                return BlockID.PUMPKIN_STEM;
+            case BlockID.SAPLING:
+                return BlockID.SAPLING;
+            case ItemID.NETHER_WART_SEED:
+                return BlockID.NETHER_WART;
+            case BlockID.CACTUS:
+                return BlockID.CACTUS;
+            case ItemID.POTATO:
+                return BlockID.POTATOES;
+            case ItemID.CARROT:
+                return BlockID.CARROTS;
+            case BlockID.RED_FLOWER:
+                return BlockID.RED_FLOWER;
+            case BlockID.YELLOW_FLOWER:
+                return BlockID.YELLOW_FLOWER;
+            case BlockID.RED_MUSHROOM:
+                return BlockID.RED_MUSHROOM;
+            case BlockID.BROWN_MUSHROOM:
+                return BlockID.BROWN_MUSHROOM;
+            default:
+                return BlockID.AIR;
         }
     }
 
