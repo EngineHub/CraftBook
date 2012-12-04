@@ -28,7 +28,7 @@ import com.sk89q.worldedit.blocks.ItemID;
  * Hybrid variant of MCX206 and MCX203 chest collector
  * When there is a sapling or seed item drop in range it will auto plant it above the IC.
  *
- * @author Drathus
+ * @authors Drathus, Me4502
  */
 public class Planter extends AbstractIC {
 
@@ -45,7 +45,9 @@ public class Planter extends AbstractIC {
 
     @Override
     public void load() {
+
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+
         try {
             String[] loc = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
@@ -64,6 +66,7 @@ public class Planter extends AbstractIC {
                 offset.setZ(-16);
 
         } catch (Exception e) {
+            offset = new Vector(0,2,0);
         }
 
         target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
@@ -108,7 +111,7 @@ public class Planter extends AbstractIC {
 
         if (!plantableItem(itemID)) return;
 
-        if(target.getTypeId() != 0)
+        if (target.getTypeId() != 0)
             return;
 
         if (itemPlantableOnBlock(itemID, target.getRelative(0, -1, 0).getTypeId())) {
