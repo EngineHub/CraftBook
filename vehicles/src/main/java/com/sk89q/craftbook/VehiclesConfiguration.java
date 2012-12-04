@@ -19,9 +19,11 @@
 package com.sk89q.craftbook;
 
 
+import java.io.File;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
+import com.sk89q.craftbook.util.ItemInfo;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -44,19 +46,19 @@ public class VehiclesConfiguration extends BaseConfiguration {
     @Override
     public void load() {
 
-        matBoostMax = getInt("max-boost-block", 41);
-        matBoost25x = getInt("25x-boost-block", 14);
-        matSlow50x = getInt("50x-slow-block", 88);
-        matSlow20x = getInt("20x-slow-block", 13);
-        matReverse = getInt("reverse-block", 35);
-        matStation = getInt("station-block", 49);
-        matSorter = getInt("sort-block", 87);
-        matEjector = getInt("eject-block", 42);
-        matDeposit = getInt("deposit-block", 15);
-        matTeleport = getInt("teleport-block", 133);
-        matLift = getInt("lift-block", 112);
-        matDispenser = getInt("dispenser-block", 129);
-        matMessager = getInt("messager-block", 121);
+        matBoostMax = ItemInfo.parseFromString(getString("max-boost-block", "41"));
+        matBoost25x = ItemInfo.parseFromString(getString("25x-boost-block", "14"));
+        matSlow50x = ItemInfo.parseFromString(getString("50x-slow-block", "88"));
+        matSlow20x = ItemInfo.parseFromString(getString("20x-slow-block", "13"));
+        matReverse = ItemInfo.parseFromString(getString("reverse-block", "35"));
+        matStation = ItemInfo.parseFromString(getString("station-block", "49"));
+        matSorter = ItemInfo.parseFromString(getString("sort-block", "87"));
+        matEjector = ItemInfo.parseFromString(getString("eject-block", "42"));
+        matDeposit = ItemInfo.parseFromString(getString("deposit-block", "15"));
+        matTeleport = ItemInfo.parseFromString(getString("teleport-block", "133"));
+        matLift = ItemInfo.parseFromString(getString("lift-block", "112"));
+        matDispenser = ItemInfo.parseFromString(getString("dispenser-block", "129"));
+        matMessager = ItemInfo.parseFromString(getString("messager-block", "121"));
 
         minecartEnterOnImpact = getBoolean("minecart-enter-on-impact", true);
         minecartSlowWhenEmpty = getBoolean("minecart-slow-when-empty", true);
@@ -80,19 +82,19 @@ public class VehiclesConfiguration extends BaseConfiguration {
 
     public final File dataFolder;
 
-    public Integer matBoostMax;
-    public Integer matBoost25x;
-    public Integer matSlow50x;
-    public Integer matSlow20x;
-    public Integer matReverse;
-    public Integer matStation;
-    public Integer matSorter;
-    public Integer matEjector;
-    public Integer matDeposit;
-    public Integer matTeleport;
-    public Integer matLift;
-    public Integer matDispenser;
-    public Integer matMessager;
+    public ItemInfo matBoostMax;
+    public ItemInfo matBoost25x;
+    public ItemInfo matSlow50x;
+    public ItemInfo matSlow20x;
+    public ItemInfo matReverse;
+    public ItemInfo matStation;
+    public ItemInfo matSorter;
+    public ItemInfo matEjector;
+    public ItemInfo matDeposit;
+    public ItemInfo matTeleport;
+    public ItemInfo matLift;
+    public ItemInfo matDispenser;
+    public ItemInfo matMessager;
 
     public boolean minecartSlowWhenEmpty;
     public boolean minecartRemoveOnExit;
