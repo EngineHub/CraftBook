@@ -49,7 +49,7 @@ public class XPStorer extends AbstractMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.xpstore.use")) return;
-        if (event.getPlayer().isSneaking() || event.getPlayer().getLevel() < 1 || event.getPlayer().getLevel() < 1) {
+        if (event.getPlayer().isSneaking() || event.getPlayer().getLevel() < 1) {
             return;
         }
 
@@ -62,7 +62,12 @@ public class XPStorer extends AbstractMechanic {
             xp += event.getPlayer().getExpToLevel();
         }
 
-        event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(ItemID.BOTTLE_O_ENCHANTING, xp / 20));
+        if(xp < 16) {
+            event.getPlayer().giveExp(xp);
+            return;
+        }
+
+        event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(ItemID.BOTTLE_O_ENCHANTING, xp / 16));
 
         event.getPlayer().setLevel(0);
         event.getPlayer().setExp(0);
