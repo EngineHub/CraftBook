@@ -2,6 +2,7 @@ package com.sk89q.craftbook.gates.world.blocks;
 
 import java.util.HashMap;
 
+import net.minecraft.server.BlockMushroom;
 import net.minecraft.server.BlockSapling;
 import net.minecraft.server.Chunk;
 
@@ -118,6 +119,15 @@ public class BonemealTerraformer extends AbstractIC {
                                 b.setData((byte) (b.getData() | 0x8));
                                 Chunk c = ((CraftChunk)b.getChunk()).getHandle();
                                 BlockSapling sap = (BlockSapling) net.minecraft.server.Block.byId[BlockID.SAPLING];
+                                sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
+                            }
+                            return;
+                        }
+                        if (b.getTypeId() == BlockID.BROWN_MUSHROOM || b.getTypeId() == BlockID.RED_MUSHROOM) {
+                            if (consumeBonemeal()) {
+                                b.setData((byte) (b.getData() | 0x8));
+                                Chunk c = ((CraftChunk)b.getChunk()).getHandle();
+                                BlockMushroom sap = (BlockMushroom) net.minecraft.server.Block.byId[b.getTypeId()];
                                 sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
                             }
                             return;
