@@ -90,6 +90,8 @@ public class Cultivator extends AbstractIC {
             Chest c = (Chest) chest.getState();
             for(int i = 290; i < 294; i++) {
                 int slot = c.getInventory().first(new ItemStack(i));
+                if(slot < 0)
+                    continue;
                 if(ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                     ItemStack item = c.getInventory().getItem(slot);
                     item.setDurability((short) (item.getDurability() - 1));
