@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -10,6 +11,7 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -17,6 +19,7 @@ public class LiquidFlood extends AbstractIC {
 
     int radius;
     String liquid;
+    Location centre;
 
     public LiquidFlood(Server server, ChangedSign block, ICFactory factory) {
 
@@ -38,14 +41,19 @@ public class LiquidFlood extends AbstractIC {
     @Override
     public void load() {
 
+        centre = BukkitUtil.toSign(getSign()).getLocation();
+
         try {
-            radius = Integer.parseInt(getSign().getLine(3));
-            if (radius > 15) {
-                radius = 15;
-                getSign().setLine(3, "15");
-                getSign().update(false);
+            String[] splitEquals = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
+            radius = Integer.parseInt(splitEquals[0]);
+            if (getSign().getLine(2).contains("=")) {
+                String[] splitCoords = ICUtil.COLON_PATTERN.split(splitEquals[1]);
+                int x = Integer.parseInt(splitCoords[0]);
+                int y = Integer.parseInt(splitCoords[1]);
+                int z = Integer.parseInt(splitCoords[2]);
+                centre.add(x, y, z);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             radius = 10;
         }
 
@@ -58,9 +66,9 @@ public class LiquidFlood extends AbstractIC {
             for (int x = -radius + 1; x < radius; x++) {
                 for (int y = -radius + 1; y < radius; y++) {
                     for (int z = -radius + 1; z < radius; z++) {
-                        int rx = getSign().getSignLocation().getPosition().getBlockX() - x;
-                        int ry = getSign().getSignLocation().getPosition().getBlockY() - y;
-                        int rz = getSign().getSignLocation().getPosition().getBlockZ() - z;
+                        int rx = centre.getBlockX() - x;
+                        int ry = centre.getBlockY() - y;
+                        int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER :
                             BlockID.LAVA)) {
@@ -74,9 +82,9 @@ public class LiquidFlood extends AbstractIC {
             for (int x = -radius + 1; x < radius; x++) {
                 for (int y = -radius + 1; y < radius; y++) {
                     for (int z = -radius + 1; z < radius; z++) {
-                        int rx = getSign().getSignLocation().getPosition().getBlockX() - x;
-                        int ry = getSign().getSignLocation().getPosition().getBlockY() - y;
-                        int rz = getSign().getSignLocation().getPosition().getBlockZ() - z;
+                        int rx = centre.getBlockX() - x;
+                        int ry = centre.getBlockY() - y;
+                        int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA) || b
                                 .getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
@@ -120,7 +128,7 @@ public class LiquidFlood extends AbstractIC {
 
             String[] lines = new String[] {
                     "water/lava",
-                    "radius"
+                    "radius=x:y:z offset"
             };
             return lines;
         }
