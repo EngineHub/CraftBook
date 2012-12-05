@@ -9,11 +9,9 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.sk89q.craftbook.LocalPlayer;
@@ -21,7 +19,6 @@ import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -40,6 +37,7 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSnowballHit(ProjectileHitEvent event) {
 
+        if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
         if(event.getEntity() instanceof Snowball) {
             if(event.getEntity().getShooter() instanceof Player) {
                 LocalPlayer player = plugin.wrap((Player) event.getEntity().getShooter());
@@ -50,33 +48,6 @@ public class Snow implements Listener {
                 } catch (Exception ignored) {
                 }
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-
-        if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
-        if (event == null || event.getAction() == null) return;
-        if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
-        if (event.getPlayer() == null || event.getClickedBlock() == null || event.getClickedBlock().getTypeId() == 0)
-            return;
-
-        if (!plugin.canBuildInArea(event.getClickedBlock().getLocation(), event.getPlayer()))
-            return;
-
-        LocalPlayer player = plugin.wrap(event.getPlayer());
-        if (!player.hasPermission("craftbook.mech.snow.place")) return;
-        try {
-            if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL
-                    && event.getClickedBlock().getTypeId() == 78) {
-                if (event.getClickedBlock().getData() < (byte) 7) {
-                    incrementData(event.getClickedBlock());
-                }
-            } else if (event.getPlayer().getItemInHand().getTypeId() == ItemID.SNOWBALL && event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)).getTypeId() == 0) {
-                incrementData(event.getPlayer().getWorld().getBlockAt(event.getClickedBlock().getLocation().add(0, 1, 0)));
-            }
-        } catch (Exception ignored) {
         }
     }
 
