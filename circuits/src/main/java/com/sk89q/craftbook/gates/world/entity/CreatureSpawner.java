@@ -18,7 +18,7 @@
 
 package com.sk89q.craftbook.gates.world.entity;
 
-import net.minecraft.server.EntityWolf;
+import net.minecraft.server.v1_4_5.EntityWolf;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -26,7 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;

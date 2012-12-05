@@ -2,15 +2,15 @@ package com.sk89q.craftbook.gates.world.blocks;
 
 import java.util.HashMap;
 
-import net.minecraft.server.BlockMushroom;
-import net.minecraft.server.BlockSapling;
-import net.minecraft.server.Chunk;
+import net.minecraft.server.v1_4_5.BlockMushroom;
+import net.minecraft.server.v1_4_5.BlockSapling;
+import net.minecraft.server.v1_4_5.Chunk;
 
 import org.bukkit.Server;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.CraftChunk;
+import org.bukkit.craftbukkit.v1_4_5.CraftChunk;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.BaseConfiguration;
@@ -118,7 +118,7 @@ public class BonemealTerraformer extends AbstractIC {
                             if (consumeBonemeal()) {
                                 b.setData((byte) (b.getData() | 0x8));
                                 Chunk c = ((CraftChunk)b.getChunk()).getHandle();
-                                BlockSapling sap = (BlockSapling) net.minecraft.server.Block.byId[BlockID.SAPLING];
+                                BlockSapling sap = (BlockSapling) net.minecraft.server.v1_4_5.Block.byId[BlockID.SAPLING];
                                 sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
                             }
                             return;
@@ -127,7 +127,7 @@ public class BonemealTerraformer extends AbstractIC {
                             if (consumeBonemeal()) {
                                 b.setData((byte) (b.getData() | 0x8));
                                 Chunk c = ((CraftChunk)b.getChunk()).getHandle();
-                                BlockMushroom sap = (BlockMushroom) net.minecraft.server.Block.byId[b.getTypeId()];
+                                BlockMushroom sap = (BlockMushroom) net.minecraft.server.v1_4_5.Block.byId[b.getTypeId()];
                                 sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
                             }
                             return;

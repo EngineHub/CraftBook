@@ -20,14 +20,15 @@
 
 package com.sk89q.craftbook.plc;
 
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.NBTTagList;
-import net.minecraft.server.NBTTagString;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import net.minecraft.server.v1_4_5.NBTTagCompound;
+import net.minecraft.server.v1_4_5.NBTTagList;
+import net.minecraft.server.v1_4_5.NBTTagString;
+
+import org.bukkit.craftbukkit.v1_4_5.inventory.CraftItemStack;
 
 class BookItem {
 
-    private net.minecraft.server.ItemStack item = null;
+    private net.minecraft.server.v1_4_5.ItemStack item = null;
     private CraftItemStack stack = null;
 
     public BookItem(org.bukkit.inventory.ItemStack item) {

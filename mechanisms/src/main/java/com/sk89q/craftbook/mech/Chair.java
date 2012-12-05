@@ -1,14 +1,14 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.LocationUtil;
-import net.minecraft.server.DataWatcher;
-import net.minecraft.server.Packet40EntityMetadata;
-import net.minecraft.server.WatchableObject;
+import java.util.ArrayList;
+
+import net.minecraft.server.v1_4_5.DataWatcher;
+import net.minecraft.server.v1_4_5.Packet40EntityMetadata;
+import net.minecraft.server.v1_4_5.WatchableObject;
+
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +16,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.ArrayList;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.LocationUtil;
 
 
 /**

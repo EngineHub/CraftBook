@@ -2,15 +2,15 @@ package com.sk89q.craftbook.gates.world.entity;
 
 import java.util.regex.Pattern;
 
-import net.minecraft.server.Enchantment;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.Item;
-import net.minecraft.server.ItemStack;
+import net.minecraft.server.v1_4_5.Enchantment;
+import net.minecraft.server.v1_4_5.EntityLiving;
+import net.minecraft.server.v1_4_5.Item;
+import net.minecraft.server.v1_4_5.ItemStack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

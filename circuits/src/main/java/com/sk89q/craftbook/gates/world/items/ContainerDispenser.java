@@ -27,13 +27,15 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ContainerDispenser extends AbstractIC {
 
-    private int amount = 1;
-
     public ContainerDispenser(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
+    }
+
+    @Override
+    public void load() {
         try {
-            amount = Integer.parseInt(getSign().getLine(2));
+            //amount = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
             // use default
         }
