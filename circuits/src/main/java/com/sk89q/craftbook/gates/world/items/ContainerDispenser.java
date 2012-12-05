@@ -1,15 +1,26 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import java.util.HashMap;
+
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.Server;
-import org.bukkit.block.*;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Me4502
@@ -64,15 +75,18 @@ public class ContainerDispenser extends AbstractIC {
         int z = b.getZ();
         bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         ItemStack stack = null;
+        Inventory inv = null;
         if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
                 if (ItemUtil.isStackValid(it)) {
                     stack = it;
+                    inv = c.getInventory();
                 }
         } else if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
             stack = c.getInventory().getResult();
+            inv = c.getInventory();
         } else if (bl.getTypeId() == BlockID.BREWING_STAND) {
             BrewingStand c = (BrewingStand) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
@@ -81,37 +95,34 @@ public class ContainerDispenser extends AbstractIC {
                         continue;
                     }
                     stack = it;
+                    inv = c.getInventory();
                 }
         } else if (bl.getTypeId() == BlockID.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
             for (ItemStack it : c.getInventory().getContents())
                 if (ItemUtil.isStackValid(it)) {
                     stack = it;
+                    inv = c.getInventory();
                 }
         }
 
-        if (stack == null) return false;
-        dispenseItem(stack);
-        return true;
+        if (stack == null || inv == null) return false;
+        return dispenseItem(inv, stack);
     }
 
-    public ItemStack dispenseItem(ItemStack item) {
+    public boolean dispenseItem(Inventory inv, ItemStack item) {
 
-        int curA = item.getAmount();
-        int a = amount;
-        if (curA < a) {
-            a = curA;
+        if(inv == null)
+            return false;
+        HashMap<Integer, ItemStack> over = inv.removeItem(item);
+        if(over.isEmpty())
+            return true;
+        else {
+            for(ItemStack it : over.values()) {
+                inv.addItem(it);
+            }
         }
-        ItemStack stack = new ItemStack(item.getTypeId(), a, item.getData().getData());
-        BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), stack);
-        item.setAmount(curA - a);
-        if (item.getAmount() <= 1) {
-            item = null;
-        }
-        if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
-            ((Furnace) bl.getState()).getInventory().setResult(item);
-        }
-        return item;
+        return false;
     }
 
     public static class Factory extends AbstractICFactory {
