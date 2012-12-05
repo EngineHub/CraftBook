@@ -29,6 +29,14 @@ public class ItemInfo {
 
     public static ItemInfo parseFromString(String string) {
 
-        return new ItemInfo(Integer.parseInt(string.split(":")[0]),Byte.parseByte(string.split(":")[1]));
+        int id = Integer.parseInt(string.split(":")[0]);
+        byte data = 0;
+
+        try {
+            data = Byte.parseByte(string.split(":")[1]);
+        }
+        catch(Exception e){}
+
+        return new ItemInfo(id,data);
     }
 }
