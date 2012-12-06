@@ -18,15 +18,12 @@
 
 package com.sk89q.craftbook.gates.world.entity;
 
-import net.minecraft.server.v1_4_5.EntityWolf;
-
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creeper;
@@ -203,11 +200,7 @@ public class CreatureSpawner extends AbstractIC {
                 if (data[0].equalsIgnoreCase("angry")) {
                     ((Wolf) ent).setAngry(true);
                 } else if (data[0].equalsIgnoreCase("collar")) {
-                    try {
-                        EntityWolf wolf = (EntityWolf) ((CraftLivingEntity)ent).getHandle();
-                        wolf.setCollarColor(Integer.decode(data[1]));
-                    }
-                    catch(Exception e){}
+                    ((Wolf) ent).setCollarColor(DyeColor.valueOf(data[1]));
                 }
                 break;
             case ENDERMAN:
