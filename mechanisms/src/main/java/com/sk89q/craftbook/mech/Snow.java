@@ -115,7 +115,8 @@ public class Snow implements Listener {
         if (event.getBlock().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 
-            disperse(event.getBlock(), true);
+            if(plugin.getLocalConfiguration().snowSettings.realistic)
+                disperse(event.getBlock(), true);
 
             if(event.getBlock().getWorld().hasStorm()) {
 
