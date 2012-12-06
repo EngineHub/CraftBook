@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -33,6 +35,8 @@ public class Snow implements Listener {
 
         this.plugin = plugin;
     }
+
+    private HashMap<Location, Integer> tasks = new HashMap<Location, Integer>();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSnowballHit(ProjectileHitEvent event) {
@@ -88,19 +92,19 @@ public class Snow implements Listener {
         if (!plugin.getLocalConfiguration().snowSettings.enable) return;
         if (event.getNewState().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
+            pile(block);
+        }
+    }
 
-            if (block.getTypeId() != BlockID.SNOW_BLOCK && block.getTypeId() != BlockID.SNOW) {
-                Location blockLoc = block.getLocation().subtract(0, 1, 0);
-                if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
-                        && !plugin.getLocalConfiguration().snowSettings.piling
-                        || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
-                    return;
-                long delay = BaseBukkitPlugin.random.nextInt(100) + 60;
-                if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-                        new MakeSnow(block.getLocation()), delay * 20L) == -1) {
-                    plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
-                }
-            }
+    public void pile(Block block) {
+
+        if (block.getTypeId() != BlockID.SNOW_BLOCK && block.getTypeId() != BlockID.SNOW) {
+            Location blockLoc = block.getLocation().subtract(0, 1, 0);
+            if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
+                    && !plugin.getLocalConfiguration().snowSettings.piling
+                    || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
+                return;
+            schedule(block.getLocation());
         }
     }
 
@@ -115,20 +119,20 @@ public class Snow implements Listener {
 
             if(event.getBlock().getWorld().hasStorm()) {
 
-                if (block.getTypeId() != BlockID.SNOW_BLOCK && block.getTypeId() != BlockID.SNOW) {
-                    Location blockLoc = block.getLocation().subtract(0, 1, 0);
-                    if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK
-                            && !plugin.getLocalConfiguration().snowSettings.piling
-                            || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
-                        return;
-                    long delay = BaseBukkitPlugin.random.nextInt(100) + 60;
-                    if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
-                            new MakeSnow(block.getLocation()), delay * 20L) == -1) {
-                        plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
-                    }
-                }
+                pile(block);
             }
         }
+    }
+
+    public void schedule(Location loc) {
+        if(tasks.containsKey(loc))
+            return;
+        long delay = BaseBukkitPlugin.random.nextInt(60) + 40; //100 is max possible
+        int taskID = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new MakeSnow(loc), delay * 20L, delay * 20L);
+        if (taskID == -1)
+            plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
+        else
+            tasks.put(loc, taskID);
     }
 
     public class MakeSnow implements Runnable {
@@ -150,17 +154,11 @@ public class Snow implements Listener {
                 event.add(0, 1, 0);
                 if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80)) return;
                 incrementData(event.getBlock());
-                long delay = BaseBukkitPlugin.random.nextInt(100) + 60;
-                if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MakeSnow(event),
-                        delay * 20L) == -1) {
-                    plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
-                }
-            } else {
-                long delay = BaseBukkitPlugin.random.nextInt(100) + 600;
-                if (plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new MakeSnow(event),
-                        delay * 20L) == -1) {
-                    plugin.getLogger().log(Level.SEVERE, "[CraftBookMechanisms] Snow Mechanic failed to schedule!");
-                }
+            }
+            else {
+                int taskID = tasks.get(event);
+                Bukkit.getScheduler().cancelTask(taskID);
+                tasks.remove(event);
             }
         }
     }
@@ -184,7 +182,7 @@ public class Snow implements Listener {
 
     public boolean disperse(Block block, boolean remove) {
         if(block.getRelative(0, -1, 0).getTypeId() == 0)
-            disperse(block.getRelative(0, -1, 0), remove);
+            return disperse(block.getRelative(0, -1, 0), remove);
         if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7)
             incrementData(block.getRelative(0, -1, 0));
         if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR) {
