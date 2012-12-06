@@ -39,4 +39,10 @@ public class ItemInfo {
 
         return new ItemInfo(id,data);
     }
+
+    @Override
+    public int hashCode() {
+
+        return (id * 1103515245 + 12345 ^ data * 1103515245 + 12345) * 1103515245 + 12345;
+    }
 }
