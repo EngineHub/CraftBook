@@ -82,7 +82,14 @@ public class LanguageManager {
         if (languageData == null)
             return getString(message);
         String translated = languageData.get(ChatColor.stripColor(message));
-        if (translated == null) return message;
+        if (translated == null) {
+            languageData = languageMap.get(CraftBookPlugin.getInstance().getLocalConfiguration().language);
+            translated = languageData.get(ChatColor.stripColor(message));
+            if(translated == null)
+                return message;
+            else
+                return translated;
+        }
         return translated;
     }
 
