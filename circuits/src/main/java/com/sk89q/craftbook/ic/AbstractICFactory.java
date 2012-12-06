@@ -18,10 +18,11 @@
 
 package com.sk89q.craftbook.ic;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import org.bukkit.Server;
 
 /**
  * Abstract IC factory.

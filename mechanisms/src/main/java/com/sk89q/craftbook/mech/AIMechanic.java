@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.ai.*;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.util.ArrayList;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,8 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
+import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
+import com.sk89q.craftbook.mech.ai.SkeletonAIMechanic;
+import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
+import com.sk89q.craftbook.mech.ai.ZombieAIMechanic;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class AIMechanic implements Listener {
 

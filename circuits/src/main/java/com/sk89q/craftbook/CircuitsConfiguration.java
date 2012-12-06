@@ -18,10 +18,11 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.worldedit.blocks.BlockID;
+import java.io.File;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Configuration handler for CraftBook.

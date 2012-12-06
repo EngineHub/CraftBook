@@ -1,17 +1,18 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.io.File;
+import java.util.Collection;
+import java.util.Map.Entry;
+
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Map.Entry;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
+import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe.RecipeType;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * Custom Crafting Recipe Handler

@@ -1,11 +1,11 @@
 package com.sk89q.craftbook;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Silthus

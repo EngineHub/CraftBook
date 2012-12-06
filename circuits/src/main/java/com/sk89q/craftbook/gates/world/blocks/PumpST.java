@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import org.bukkit.Server;
 
 public class PumpST extends Pump implements SelfTriggeredIC {
 

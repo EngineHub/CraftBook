@@ -18,15 +18,16 @@ package com.sk89q.craftbook.mech.area;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.worldedit.data.DataException;
-import org.bukkit.World;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.regex.Pattern;
+
+import org.bukkit.World;
+
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.data.DataException;
 
 /**
  * Used to load, save, and cache cuboid copies.

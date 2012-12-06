@@ -18,12 +18,13 @@
 
 package com.sk89q.craftbook.ic;
 
+import org.bukkit.block.Block;
+
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.block.Block;
 
 public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
 

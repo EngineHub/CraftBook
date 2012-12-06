@@ -1,10 +1,11 @@
 package com.sk89q.craftbook.gates.logic;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICFactory;
-import org.bukkit.Server;
 
 public abstract class SimpleTwoInputLogicGate extends AbstractIC {
 

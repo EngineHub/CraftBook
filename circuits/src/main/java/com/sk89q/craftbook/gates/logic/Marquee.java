@@ -18,11 +18,16 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
+import java.util.regex.Pattern;
+
 import org.bukkit.Server;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
 
 public class Marquee extends AbstractIC {
 

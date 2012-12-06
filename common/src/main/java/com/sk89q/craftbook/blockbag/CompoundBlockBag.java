@@ -18,13 +18,13 @@ package com.sk89q.craftbook.blockbag;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.List;
+
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
-
-import java.util.List;
 
 /**
  * A collection of block bags.

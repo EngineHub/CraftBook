@@ -1,13 +1,14 @@
 package com.sk89q.craftbook.mech.arrows;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
+
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class FireArrow extends AbstractArrow {
 

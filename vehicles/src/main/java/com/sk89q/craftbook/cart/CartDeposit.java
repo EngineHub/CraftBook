@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -10,9 +12,8 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 
 public class CartDeposit extends CartMechanism {
 

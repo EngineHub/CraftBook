@@ -1,13 +1,14 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.regex.Pattern;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import java.util.regex.Pattern;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 
 public class CartTeleporter extends CartMechanism {

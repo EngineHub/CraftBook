@@ -1,16 +1,17 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import com.sk89q.craftbook.BaseConfiguration;
 
 /**
  * @author Silthus

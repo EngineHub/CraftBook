@@ -18,11 +18,12 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Location;
-import org.bukkit.block.Sign;
 
 public class BukkitChangedSign implements ChangedSign {
 
