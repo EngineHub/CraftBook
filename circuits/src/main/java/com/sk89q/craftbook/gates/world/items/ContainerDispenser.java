@@ -32,10 +32,12 @@ public class ContainerDispenser extends AbstractIC {
         super(server, sign, factory);
     }
 
+    int amount = 1;
+
     @Override
     public void load() {
         try {
-            //amount = Integer.parseInt(getSign().getLine(2));
+            amount = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
             // use default
         }
@@ -116,12 +118,18 @@ public class ContainerDispenser extends AbstractIC {
 
         if(inv == null)
             return false;
-        HashMap<Integer, ItemStack> over = inv.removeItem(item);
-        if(over.isEmpty())
+        HashMap<Integer, ItemStack> over = inv.removeItem(new ItemStack(item.getTypeId(), amount, item.getDurability(), item.getData().getData()));
+        if(over.isEmpty()) {
+            BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(), amount, item.getDurability(), item.getData().getData()));
             return true;
+        }
         else {
             for(ItemStack it : over.values()) {
-                inv.addItem(it);
+
+                if(amount - it.getAmount() < 1)
+                    continue;
+                BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getTypeId(), amount - it.getAmount(), it.getDurability(), it.getData().getData()));
+                return true;
             }
         }
         return false;
@@ -150,7 +158,7 @@ public class ContainerDispenser extends AbstractIC {
         public String[] getLineHelp() {
 
             String[] lines = new String[] {
-                    null,
+                    "amount to remove",
                     null
             };
             return lines;
