@@ -2,15 +2,11 @@ package com.sk89q.craftbook.gates.world.blocks;
 
 import java.util.HashMap;
 
-import net.minecraft.server.v1_4_5.BlockMushroom;
-import net.minecraft.server.v1_4_5.BlockSapling;
-import net.minecraft.server.v1_4_5.Chunk;
-
 import org.bukkit.Server;
+import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_4_5.CraftChunk;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.BaseConfiguration;
@@ -116,19 +112,47 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.SAPLING) {
                             if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() | 0x8));
-                                Chunk c = ((CraftChunk)b.getChunk()).getHandle();
-                                BlockSapling sap = (BlockSapling) net.minecraft.server.v1_4_5.Block.byId[BlockID.SAPLING];
-                                sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
+                                TreeType type = null;
+                                switch(b.getData()) {
+
+                                    case 0: //Oak
+                                        type = BaseBukkitPlugin.random.nextInt(30) == 0 ? TreeType.TREE : TreeType.BIG_TREE;
+                                    case 1: //Spruce
+                                        type = BaseBukkitPlugin.random.nextInt(30) == 0 ? TreeType.REDWOOD : TreeType.TALL_REDWOOD;
+                                    case 2: //Birch
+                                        type = TreeType.BIRCH;
+                                    case 3: //Jungle
+                                        int nearbySaplings = 0;
+                                        if(b.getRelative(1, 0, 0).getTypeId() == BlockID.SAPLING && b.getRelative(1, 0, 0).getData() == b.getData())
+                                            nearbySaplings ++;
+                                        if(b.getRelative(-1, 0, 0).getTypeId() == BlockID.SAPLING && b.getRelative(-1, 0, 0).getData() == b.getData())
+                                            nearbySaplings ++;
+                                        if(b.getRelative(0, 0, 1).getTypeId() == BlockID.SAPLING && b.getRelative(0, 0, 1).getData() == b.getData())
+                                            nearbySaplings ++;
+                                        if(b.getRelative(0, 0, -1).getTypeId() == BlockID.SAPLING && b.getRelative(0, 0, -1).getData() == b.getData())
+                                            nearbySaplings ++;
+                                        if(nearbySaplings >= 2)
+                                            type = TreeType.JUNGLE;
+                                        else
+                                            type = BaseBukkitPlugin.random.nextInt(30) == 0 ? TreeType.SMALL_JUNGLE : TreeType.JUNGLE_BUSH;
+                                }
+                                if(type != null) {
+                                    b.setTypeId(0);
+                                    b.getWorld().generateTree(b.getLocation(), type);
+                                }
                             }
                             return;
                         }
                         if (b.getTypeId() == BlockID.BROWN_MUSHROOM || b.getTypeId() == BlockID.RED_MUSHROOM) {
                             if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() | 0x8));
-                                Chunk c = ((CraftChunk)b.getChunk()).getHandle();
-                                BlockMushroom sap = (BlockMushroom) net.minecraft.server.v1_4_5.Block.byId[b.getTypeId()];
-                                sap.grow(c.world, b.getX(), b.getY(), b.getZ(), BaseBukkitPlugin.random, true, null, null);
+                                if(b.getTypeId() == BlockID.BROWN_MUSHROOM) {
+                                    b.setTypeId(0);
+                                    b.getWorld().generateTree(b.getLocation(), TreeType.BROWN_MUSHROOM);
+                                }
+                                if(b.getTypeId() == BlockID.RED_MUSHROOM) {
+                                    b.setTypeId(0);
+                                    b.getWorld().generateTree(b.getLocation(), TreeType.RED_MUSHROOM);
+                                }
                             }
                             return;
                         }

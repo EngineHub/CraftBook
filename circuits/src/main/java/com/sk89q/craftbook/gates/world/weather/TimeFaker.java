@@ -98,10 +98,9 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
         if (chip.getInput(0)) {
             for(Player p : Bukkit.getOnlinePlayers()) {
 
-                if(LocationUtil.isWithinRadius(p.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), dist)) {
+                if(!players.contains(p.getName()) && LocationUtil.isWithinRadius(p.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), dist)) {
                     p.setPlayerTime(time, false);
-                    if(!players.contains(p.getName()))
-                        players.add(p.getName());
+                    players.add(p.getName());
                 }
                 else if(players.contains(p.getName())) {
                     p.resetPlayerTime();
