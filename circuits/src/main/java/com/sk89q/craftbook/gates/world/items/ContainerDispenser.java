@@ -39,7 +39,6 @@ public class ContainerDispenser extends AbstractIC {
         try {
             amount = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
-            // use default
         }
     }
 
@@ -63,8 +62,6 @@ public class ContainerDispenser extends AbstractIC {
         }
     }
 
-    Block bl;
-
     /**
      * Returns true if the sign has water at the specified location.
      *
@@ -77,7 +74,7 @@ public class ContainerDispenser extends AbstractIC {
         int x = b.getX();
         int y = b.getY() + 1;
         int z = b.getZ();
-        bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
+        Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         ItemStack stack = null;
         Inventory inv = null;
         if (bl.getTypeId() == BlockID.CHEST) {
