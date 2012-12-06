@@ -1,11 +1,10 @@
 package com.sk89q.craftbook.gates.world.weather;
 
-import net.minecraft.server.v1_4_5.Packet4UpdateTime;
+import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_5.CraftServer;
-import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
+import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -16,7 +15,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 
 /**
  * @author Me4502
@@ -27,6 +26,8 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
 
         super(server, sign, factory);
     }
+
+    private ArrayList<String> players = new ArrayList<String>();
 
     @Override
     public String getTitle() {
@@ -70,6 +71,16 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
         }
     }
 
+    int dist;
+    long time;
+
+    @Override
+    public void load() {
+
+        dist = Integer.parseInt(getSign().getLine(2));
+        time = Long.parseLong(getSign().getLine(3));
+    }
+
     @Override
     public boolean isActive() {
 
@@ -84,16 +95,19 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        try {
-            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            if (chip.getInput(0)) {
-                int dist = Integer.parseInt(getSign().getLine(2));
-                long time = Long.parseLong(getSign().getLine(3));
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet4UpdateTime(time, time));
+        if (chip.getInput(0)) {
+            for(Player p : Bukkit.getOnlinePlayers()) {
+
+                if(LocationUtil.isWithinRadius(p.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), dist)) {
+                    p.setPlayerTime(time, false);
+                    if(!players.contains(p.getName()))
+                        players.add(p.getName());
+                }
+                else if(players.contains(p.getName())) {
+                    p.resetPlayerTime();
+                    players.remove(p.getName());
+                }
             }
-        } catch (Exception e) {
-            BukkitUtil.toSign(getSign()).getBlock().breakNaturally();
         }
     }
 }
