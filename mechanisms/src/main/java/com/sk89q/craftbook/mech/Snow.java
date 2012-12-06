@@ -194,7 +194,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR) {
+        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             if(block.getRelative(1, 0, 0).getData() < block.getData()) {
                 incrementData(block.getRelative(1, 0, 0));
                 if(remove)
@@ -203,7 +203,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR) {
+        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             if(block.getRelative(-1, 0, 0).getData() < block.getData()) {
                 incrementData(block.getRelative(-1, 0, 0));
                 if(remove)
@@ -212,7 +212,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR) {
+        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             if(block.getRelative(0, 0, 1).getData() < block.getData()) {
                 incrementData(block.getRelative(0, 0, 1));
                 if(remove)
@@ -221,7 +221,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR) {
+        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             if(block.getRelative(0, 0, -1).getData() < block.getData()) {
                 incrementData(block.getRelative(0, 0, -1));
                 if(remove)
