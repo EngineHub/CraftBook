@@ -137,7 +137,9 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                 }
             }
 
-            if(effectSign != null) { //Apply effects
+            Boolean upwards = null;
+
+            while(effectSign != null) { //Apply effects
                 for(int s = 0; s < 4; s++) {
                     try {
                         String bit = effectSign.getLine(s);
@@ -203,6 +205,24 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                         }
                     }
                     catch(Exception e){}
+                }
+                if(upwards == null) {
+                    if(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0).getTypeId() == BlockID.WALL_SIGN) {
+                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0));
+                        upwards = true;
+                    }
+                    else if(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0).getTypeId() == BlockID.WALL_SIGN) {
+                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0));
+                        upwards = false;
+                    }
+                    else
+                        break;
+                }
+                else {
+                    if(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0).getTypeId() == BlockID.WALL_SIGN)
+                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0));
+                    else
+                        break;
                 }
             }
         }
