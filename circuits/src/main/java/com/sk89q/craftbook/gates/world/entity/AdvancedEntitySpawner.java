@@ -141,70 +141,67 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
             while(effectSign != null) { //Apply effects
                 for(int s = 0; s < 4; s++) {
-                    try {
-                        String bit = effectSign.getLine(s);
-                        if(bit == null || bit.trim().isEmpty())
-                            continue;
+                    String bit = effectSign.getLine(s);
+                    if(bit == null || bit.trim().isEmpty())
+                        continue;
 
-                        String[] data = COLON_PATTERN.split(bit);
+                    String[] data = COLON_PATTERN.split(bit);
 
-                        if(data[0].equalsIgnoreCase("e"))
-                            setEntityData(ent, bit.replace(data[0] + ":", ""));
-                        else if(data[0].equalsIgnoreCase("r")) {
-                            EntityType rider = EntityType.fromName(data[1].trim());
-                            Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), rider);
-                            ent.setPassenger(rid);
-                        }
-                        else if(data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
-                            for(int a = 1; a < data.length; a++) {
-                                try {
-                                    String[] potionBits = SEMICOLON_PATTERN.split(data[a]);
-                                    PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])),
-                                            Integer.parseInt(potionBits[1]),Integer.parseInt(potionBits[2]));
-                                    ((LivingEntity)ent).addPotionEffect(effect, true);
-                                }
-                                catch(Exception e){}
-                            }
-                        }
-                        else if(data[0].equalsIgnoreCase("v")) {
+                    if(data[0].equalsIgnoreCase("e"))
+                        setEntityData(ent, bit.replace("e:", ""));
+                    else if(data[0].equalsIgnoreCase("r")) {
+                        EntityType rider = EntityType.fromName(data[1].trim());
+                        Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), rider);
+                        ent.setPassenger(rid);
+                    }
+                    else if(data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
+                        for(int a = 1; a < data.length; a++) {
                             try {
-                                double x, y, z;
-                                String[] coords = COMMA_PATTERN.split(data[1]);
-                                x = Double.parseDouble(coords[0]);
-                                y = Double.parseDouble(coords[1]);
-                                z = Double.parseDouble(coords[2]);
-                                ent.setVelocity(new org.bukkit.util.Vector(x,y,z));
-                            }
-                            catch(Exception e){
-                            }
-                        }
-                        else if(data[0].equalsIgnoreCase("s")) {
-                            if(!(ent instanceof LivingEntity))
-                                continue;
-                            CraftLivingEntity cle = (CraftLivingEntity) ent;
-                            EntityLiving eliv = cle.getHandle();
-
-                            byte d = 0;
-                            String[] splitBit = SEMICOLON_PATTERN.split(bit);
-                            String[] splitEvenMore = COLON_PATTERN.split(splitBit[0]);
-                            try {
-                                d = Byte.parseByte(splitEvenMore[2]);
+                                String[] potionBits = SEMICOLON_PATTERN.split(data[a]);
+                                PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])),
+                                        Integer.parseInt(potionBits[1]),Integer.parseInt(potionBits[2]));
+                                ((LivingEntity)ent).addPotionEffect(effect, true);
                             }
                             catch(Exception e){}
-
-                            ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(splitEvenMore[1])], 1, d);
-                            try {
-                                for(int e = 1; e < splitBit.length; e++) {
-                                    String[] enchantInfo = COLON_PATTERN.split(splitBit[e]);
-                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(enchantInfo[0])],
-                                            Integer.parseInt(enchantInfo[1]));
-                                }
-                            }
-                            catch(Exception e){}
-                            eliv.setEquipment(0, slot);
                         }
                     }
-                    catch(Exception e){}
+                    else if(data[0].equalsIgnoreCase("v")) {
+                        try {
+                            double x, y, z;
+                            String[] coords = COMMA_PATTERN.split(data[1]);
+                            x = Double.parseDouble(coords[0]);
+                            y = Double.parseDouble(coords[1]);
+                            z = Double.parseDouble(coords[2]);
+                            ent.setVelocity(new org.bukkit.util.Vector(x,y,z));
+                        }
+                        catch(Exception e){
+                        }
+                    }
+                    else if(data[0].equalsIgnoreCase("s")) {
+                        if(!(ent instanceof LivingEntity))
+                            continue;
+                        CraftLivingEntity cle = (CraftLivingEntity) ent;
+                        EntityLiving eliv = cle.getHandle();
+
+                        byte d = 0;
+                        String[] splitBit = SEMICOLON_PATTERN.split(bit);
+                        String[] splitEvenMore = COLON_PATTERN.split(splitBit[0]);
+                        try {
+                            d = Byte.parseByte(splitEvenMore[2]);
+                        }
+                        catch(Exception e){}
+
+                        ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(splitEvenMore[1])], 1, d);
+                        try {
+                            for(int e = 1; e < splitBit.length; e++) {
+                                String[] enchantInfo = COLON_PATTERN.split(splitBit[e]);
+                                slot.addEnchantment(Enchantment.byId[Integer.parseInt(enchantInfo[0])],
+                                        Integer.parseInt(enchantInfo[1]));
+                            }
+                        }
+                        catch(Exception e){}
+                        eliv.setEquipment(0, slot);
+                    }
                 }
                 if(upwards == null) {
                     if(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0).getTypeId() == BlockID.WALL_SIGN) {
