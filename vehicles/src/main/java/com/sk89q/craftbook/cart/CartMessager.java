@@ -45,15 +45,15 @@ public class CartMessager extends CartMechanism {
 
             if (s.getLine(1) != null && !s.getLine(1).trim().isEmpty() && !s.getLine(1).equalsIgnoreCase ("[print]")) {
                 messages.add(s.getLine(1).trim());
-                stack = s.getLine(1).trim().endsWith("+");
+                stack = s.getLine(1).trim().endsWith("+") || s.getLine(1).trim().endsWith(" ");
             }
             if (s.getLine(2) != null && !s.getLine(2).trim().isEmpty()) {
                 if(stack) {
                     messages.set(messages.size() - 1, messages.get(messages.size() - 1) + s.getLine(2).trim());
-                    stack = s.getLine(2).trim().endsWith("+");
+                    stack = s.getLine(2).trim().endsWith("+") || s.getLine(2).trim().endsWith(" ");
                 } else {
                     messages.add(s.getLine(2).trim());
-                    stack = s.getLine(2).trim().endsWith("+");
+                    stack = s.getLine(2).trim().endsWith("+") || s.getLine(2).trim().endsWith(" ");
                 }
             }
             if (s.getLine(3) != null && !s.getLine(3).trim().isEmpty()) {
@@ -65,6 +65,8 @@ public class CartMessager extends CartMechanism {
             }
 
             for(String mes : messages) {
+                if(stack)
+                    mes = mes.replace("+", "");
                 p.sendMessage(mes);
             }
         }

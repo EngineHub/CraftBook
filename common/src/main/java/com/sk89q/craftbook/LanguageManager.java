@@ -28,7 +28,6 @@ public class LanguageManager {
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     final BaseBukkitPlugin plugin;
 
-    //final HashMap<String, String> languageData = new HashMap<String, String>();
     HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
     public LanguageManager(BaseBukkitPlugin plugin) {
