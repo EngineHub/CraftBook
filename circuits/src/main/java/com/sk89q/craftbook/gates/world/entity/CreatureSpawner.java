@@ -133,11 +133,11 @@ public class CreatureSpawner extends AbstractIC {
         }
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("stay")) {
-            ((LivingEntity)ent).setRemoveWhenFarAway(true);
+            ((LivingEntity)ent).setRemoveWhenFarAway(false);
         }
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("despawn")) {
-            ((LivingEntity)ent).setRemoveWhenFarAway(false);
+            ((LivingEntity)ent).setRemoveWhenFarAway(true);
         }
 
         try {
