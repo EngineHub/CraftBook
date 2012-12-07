@@ -7,7 +7,6 @@ import net.minecraft.server.v1_4_5.EntityLiving;
 import net.minecraft.server.v1_4_5.Item;
 import net.minecraft.server.v1_4_5.ItemStack;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
@@ -24,7 +23,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
@@ -58,36 +56,30 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
     @Override
     public void load() {
 
+        String[] splitLine3 = ASTERISK_PATTERN.split(getSign().getLine(3).trim());
+        type = EntityType.fromName(splitLine3[0]);
+
         try {
-            String[] splitLine3 = ASTERISK_PATTERN.split(getSign().getLine(3).trim());
-            type = EntityType.fromName(splitLine3[0]);
+            amount = Integer.parseInt(splitLine3[1]);
+        }
+        catch(Exception e) {
+            amount = 1;
+        }
 
-            try {
-                amount = Integer.parseInt(splitLine3[1]);
-            }
-            catch(Exception e) {
-                amount = 1;
-            }
-
-            try {
-                double x, y, z;
-                String[] splitLine2 = COLON_PATTERN.split(getSign().getLine(2));
-                x = Double.parseDouble(splitLine2[0]);
-                y = Double.parseDouble(splitLine2[1]);
-                z = Double.parseDouble(splitLine2[2]);
-                x += getSign().getX();
-                y += getSign().getY();
-                z += getSign().getZ();
-                location = new Location(getSign().getLocalWorld(), new Vector(x,y,z));
-            }
-            catch(Exception e){
-                location = new Location(getSign().getLocalWorld(),
-                        new Vector(getSign().getX(),getSign().getY(),getSign().getZ()));
-            }
+        try {
+            double x, y, z;
+            String[] splitLine2 = COLON_PATTERN.split(getSign().getLine(2));
+            x = Double.parseDouble(splitLine2[0]);
+            y = Double.parseDouble(splitLine2[1]);
+            z = Double.parseDouble(splitLine2[2]);
+            x += getSign().getX();
+            y += getSign().getY();
+            z += getSign().getZ();
+            location = new Location(getSign().getLocalWorld(), new Vector(x,y,z));
         }
         catch(Exception e){
-            if(getSign() != null)
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            location = new Location(getSign().getLocalWorld(),
+                    new Vector(getSign().getX(),getSign().getY(),getSign().getZ()));
         }
     }
 

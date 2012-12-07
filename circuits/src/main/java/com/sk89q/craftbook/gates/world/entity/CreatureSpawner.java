@@ -100,23 +100,24 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) if (entityType != null && entityType.isAlive()) {
-            if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
+        if (chip.getInput(0))
+            if (entityType != null && entityType.isAlive()) {
+                if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
 
-                org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
-                sp.setCreatureTypeByName(entityType.getName());
-                sp.update();
-            }
-            else {
-                Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
-                        BlockFace.UP));
-                // spawn amount of mobs
-                for (int i = 0; i < amount; i++) {
-                    Entity entity = center.getWorld().spawnEntity(center, entityType);
-                    setEntityData(entity, data);
+                    org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
+                    sp.setCreatureTypeByName(entityType.getName());
+                    sp.update();
+                }
+                else {
+                    Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
+                            BlockFace.UP));
+                    // spawn amount of mobs
+                    for (int i = 0; i < amount; i++) {
+                        Entity entity = center.getWorld().spawnEntity(center, entityType);
+                        setEntityData(entity, data);
+                    }
                 }
             }
-        }
     }
 
     public void setEntityData(Entity ent, String bit) {
@@ -129,6 +130,14 @@ public class CreatureSpawner extends AbstractIC {
 
         if (ent instanceof Tameable && data[0].equalsIgnoreCase("tame")) {
             ((Tameable) ent).setTamed(true);
+        }
+
+        if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("stay")) {
+            ((LivingEntity)ent).setRemoveWhenFarAway(true);
+        }
+
+        if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("despawn")) {
+            ((LivingEntity)ent).setRemoveWhenFarAway(false);
         }
 
         try {
