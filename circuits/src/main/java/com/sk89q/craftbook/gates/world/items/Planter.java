@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -15,7 +16,6 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
@@ -122,8 +122,31 @@ public class Planter extends AbstractIC {
         if (target.getTypeId() != 0)
             return false;
 
+        if(onBlock.getRelative(0,1,0).getTypeId() == BlockID.CHEST) {
 
-        try {
+            Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
+            for(ItemStack it : c.getInventory().getContents()) {
+
+                if(!ItemUtil.isStackValid(it))
+                    continue;
+
+                if(it.getTypeId() != itemID)
+                    continue;
+
+                if(data != -1 && it.getDurability() != data)
+                    continue;
+
+                Block b = null;
+
+                if((b = searchBlocks(it)) != null) {
+                    if(c.getInventory().removeItem(new ItemStack(it.getTypeId(),1,it.getDurability(),it.getData().getData())).isEmpty()) {
+                        b.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
+                        return true;
+                    }
+                }
+            }
+        }
+        else {
             for (Entity ent : target.getChunk().getEntities()) {
                 if(!(ent instanceof Item))
                     continue;
@@ -141,35 +164,43 @@ public class Planter extends AbstractIC {
 
                     if (diffX * diffX + diffY * diffY + diffZ * diffZ < radius*radius) {
 
-                        for (int x = -radius + 1; x < radius; x++) {
-                            for (int y = -radius + 1; y < radius; y++) {
-                                for (int z = -radius + 1; z < radius; z++) {
-                                    int rx = target.getX() - x;
-                                    int ry = target.getY() - y;
-                                    int rz = target.getZ() - z;
-                                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+                        Block b = null;
 
-                                    if(b.getTypeId() != 0)
-                                        continue;
-
-                                    if (itemPlantableOnBlock(itemID, b.getRelative(0, -1, 0).getTypeId())) {
-
-                                        if(ItemUtil.takeFromEntity(itemEnt)) {
-                                            b.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
-                                            return true;
-                                        }
-                                    }
-                                }
+                        if((b = searchBlocks(itemEnt.getItemStack())) != null) {
+                            if(ItemUtil.takeFromEntity(itemEnt)) {
+                                b.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
+                                return true;
                             }
                         }
                     }
                 }
             }
-        } catch (Exception e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         }
 
         return false;
+    }
+
+    public Block searchBlocks(ItemStack stack) {
+
+        for (int x = -radius + 1; x < radius; x++) {
+            for (int y = -radius + 1; y < radius; y++) {
+                for (int z = -radius + 1; z < radius; z++) {
+                    int rx = target.getX() - x;
+                    int ry = target.getY() - y;
+                    int rz = target.getZ() - z;
+                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+
+                    if(b.getTypeId() != 0)
+                        continue;
+
+                    if (itemPlantableOnBlock(itemID, b.getRelative(0, -1, 0).getTypeId())) {
+
+                        return b;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     protected boolean plantableItem(int itemId) {
