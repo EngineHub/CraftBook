@@ -91,8 +91,7 @@ public class Chair implements Listener {
         BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
 
         //Now everything looks good, continue;
-        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() ||
-                player.getPlayer().getItemInHand().getTypeId() == 0) {
+        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() || player.getPlayer().getItemInHand().getTypeId() == 0) {
             if (plugin.getLocalConfiguration().chairSettings.requireSneak && !player.getPlayer().isSneaking())
                 return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {

@@ -42,6 +42,7 @@ public class Planter extends AbstractIC {
     Block target;
     Block onBlock;
     Vector offset = new Vector(0,2,0);
+    int radius = 10;
 
     @Override
     public void load() {
@@ -49,23 +50,30 @@ public class Planter extends AbstractIC {
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         try {
-            String[] loc = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
-            offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
-            if(offset.getX() > 16)
-                offset.setX(16);
-            if(offset.getY() > 16)
-                offset.setY(16);
-            if(offset.getZ() > 16)
-                offset.setZ(16);
+            radius = Integer.parseInt(ICUtil.EQUALS_PATTERN.split(getSign().getLine(3))[0]);
+            try {
+                String[] loc = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(3))[1]);
+                offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
+                if(offset.getX() > 16)
+                    offset.setX(16);
+                if(offset.getY() > 16)
+                    offset.setY(16);
+                if(offset.getZ() > 16)
+                    offset.setZ(16);
 
-            if(offset.getX() < -16)
-                offset.setX(-16);
-            if(offset.getY() < -16)
-                offset.setY(-16);
-            if(offset.getZ() < -16)
-                offset.setZ(-16);
+                if(offset.getX() < -16)
+                    offset.setX(-16);
+                if(offset.getY() < -16)
+                    offset.setY(-16);
+                if(offset.getZ() < -16)
+                    offset.setZ(-16);
+            }
+            catch(Exception e){
+                offset = new Vector(0,2,0);
+            }
 
         } catch (Exception e) {
+            radius = 10;
             offset = new Vector(0,2,0);
         }
 
@@ -104,46 +112,64 @@ public class Planter extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if(chip.getInput(0))
-            plant();
+            chip.setOutput(0,plant());
     }
 
-    public void plant() {
+    public boolean plant() {
 
-        if (!plantableItem(itemID)) return;
+        if (!plantableItem(itemID)) return false;
 
         if (target.getTypeId() != 0)
-            return;
+            return false;
 
-        if (itemPlantableOnBlock(itemID, target.getRelative(0, -1, 0).getTypeId())) {
 
-            try {
-                for (Entity ent : target.getChunk().getEntities()) {
-                    if(!(ent instanceof Item))
-                        continue;
+        try {
+            for (Entity ent : target.getChunk().getEntities()) {
+                if(!(ent instanceof Item))
+                    continue;
 
-                    Item itemEnt = (Item) ent;
+                Item itemEnt = (Item) ent;
 
-                    if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
-                        continue;
+                if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
+                    continue;
 
-                    if (itemEnt.getItemStack().getTypeId() == itemID && (data == -1 || itemEnt.getItemStack().getDurability() == data || itemEnt.getItemStack().getData().getData() == data)) {
-                        Location loc = itemEnt.getLocation();
-                        double diffX = target.getX() - loc.getX();
-                        double diffY = target.getY() - loc.getY();
-                        double diffZ = target.getZ() - loc.getZ();
+                if (itemEnt.getItemStack().getTypeId() == itemID && (data == -1 || itemEnt.getItemStack().getDurability() == data || itemEnt.getItemStack().getData().getData() == data)) {
+                    Location loc = itemEnt.getLocation();
+                    double diffX = target.getX() - loc.getX();
+                    double diffY = target.getY() - loc.getY();
+                    double diffZ = target.getZ() - loc.getZ();
 
-                        if (diffX * diffX + diffY * diffY + diffZ * diffZ < 36) {
-                            if(ItemUtil.takeFromEntity(itemEnt)) {
-                                target.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
-                                break;
+                    if (diffX * diffX + diffY * diffY + diffZ * diffZ < radius*radius) {
+
+                        for (int x = -radius + 1; x < radius; x++) {
+                            for (int y = -radius + 1; y < radius; y++) {
+                                for (int z = -radius + 1; z < radius; z++) {
+                                    int rx = target.getX() - x;
+                                    int ry = target.getY() - y;
+                                    int rz = target.getZ() - z;
+                                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+
+                                    if(b.getTypeId() != 0)
+                                        continue;
+
+                                    if (itemPlantableOnBlock(itemID, b.getRelative(0, -1, 0).getTypeId())) {
+
+                                        if(ItemUtil.takeFromEntity(itemEnt)) {
+                                            b.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
+                                            return true;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            } catch (Exception e) {
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
+        } catch (Exception e) {
+            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         }
+
+        return false;
     }
 
     protected boolean plantableItem(int itemId) {
@@ -246,7 +272,7 @@ public class Planter extends AbstractIC {
 
             String[] lines = new String[] {
                     "Item to plant id:data",
-                    "Y Offset"
+                    "radius=x:y:z offset"
             };
             return lines;
         }
