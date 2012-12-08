@@ -148,7 +148,7 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                     String[] data = COLON_PATTERN.split(bit);
 
                     if(data[0].equalsIgnoreCase("e"))
-                        setEntityData(ent, bit.replace("e:", ""));
+                        setEntityData(ent, bit.substring(2));
                     else if(data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
                         Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), rider);
