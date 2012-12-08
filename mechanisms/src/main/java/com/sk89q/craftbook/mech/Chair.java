@@ -7,6 +7,7 @@ import net.minecraft.server.v1_4_5.Packet40EntityMetadata;
 import net.minecraft.server.v1_4_5.WatchableObject;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -18,7 +19,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.LocationUtil;
 
 
 /**
@@ -33,10 +33,24 @@ public class Chair implements Listener {
     }
 
     public void addChair(Player player, Block block) {
+        Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte) 4), false);
+        for (Player play : plugin.getServer().getOnlinePlayers()) {
+            if(play.getWorld().equals(player.getPlayer().getWorld()))
+                ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+        }
+        if(plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName()))
+            return;
+        player.sendMessage(ChatColor.YELLOW + "You are now sitting.");
         plugin.getLocalConfiguration().chairSettings.chairs.put(player.getName(), block);
     }
 
     public void removeChair(Player player) {
+        Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 0), false);
+        for (Player play : plugin.getServer().getOnlinePlayers()) {
+            if(play.getWorld().equals(player.getPlayer().getWorld()))
+                ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+        }
+        player.sendMessage(ChatColor.YELLOW + "You are no longer sitting.");
         plugin.getLocalConfiguration().chairSettings.chairs.remove(player.getName());
     }
 
@@ -63,16 +77,7 @@ public class Chair implements Listener {
 
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
         if (hasChair(event.getBlock())) {
-            Player p = getChair(event.getBlock());
-            if(!p.isOnline() || !p.getWorld().equals(event.getBlock().getWorld())
-                    || p.getLocation().distanceSquared(event.getBlock().getLocation()) > 3*3) {
-                removeChair(p);
-            }
-            Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(), new ChairWatcher((byte) 0), true);
-            for (Player play : LocationUtil.getNearbyPlayers(event.getBlock(), plugin.getServer().getViewDistance() * 16)) {
-                ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
-            }
-            removeChair(p);
+            removeChair(getChair(event.getBlock()));
         }
     }
 
@@ -95,31 +100,21 @@ public class Chair implements Listener {
                 return;
             }
             if (hasChair(player.getPlayer())) { //Stand
-                Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(),
-                        new ChairWatcher((byte) 0), true);
-                for (Player play : LocationUtil.getNearbyPlayers(event.getClickedBlock(),
-                        plugin.getServer().getViewDistance() * 16)) {
-                    ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
-                }
                 removeChair(player.getPlayer());
             } else { //Sit
                 if (hasChair(event.getClickedBlock())) {
                     Player p = getChair(event.getClickedBlock());
-                    if(!p.isOnline() || !p.getWorld().equals(event.getClickedBlock().getWorld())
-                            || p.getLocation().distanceSquared(event.getClickedBlock().getLocation()) > 3*3) {
+                    if(!p.isOnline() || !p.getWorld().equals(event.getClickedBlock().getWorld()) || p.getLocation().distanceSquared(event.getClickedBlock().getLocation()) > 2*2) {
                         removeChair(p);
                     }
-                    else
+                    else {
+                        player.print("This seat is already occupied.");
                         return;
+                    }
                 }
                 player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 0, 0.5)); //Teleport to the seat
-                Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(),
-                        new ChairWatcher((byte) 4), true);
-                for (Player play : LocationUtil.getNearbyPlayers(event.getClickedBlock(),
-                        plugin.getServer().getViewDistance() * 16)) {
-                    ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
-                }
                 addChair(player.getPlayer(), event.getClickedBlock());
+                player.print("You are now sitting.");
             }
         }
     }
@@ -131,15 +126,10 @@ public class Chair implements Listener {
             for(String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
                 if (p == null) continue;
-                if(!p.isOnline() || !p.getWorld().equals(getChair(p).getWorld())
-                        || p.getLocation().distanceSquared(getChair(p).getLocation()) > 3*3) {
-                    Packet40EntityMetadata packet = new Packet40EntityMetadata(p.getEntityId(),
-                            new ChairWatcher((byte) 0), true);
-                    for (Player play : LocationUtil.getNearbyPlayers(getChair(p), plugin.getServer().getViewDistance() * 16)) {
-                        ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
-                    }
-                    removeChair(p);
-                }
+                if(!p.isOnline() || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation()) > 2*2)
+                    removeChair(p); //Remove it. It's unused.
+                else
+                    addChair(p, getChair(p)); //For any new players.
             }
         }
     }
