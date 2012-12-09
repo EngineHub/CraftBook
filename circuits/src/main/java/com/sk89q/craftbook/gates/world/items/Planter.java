@@ -119,9 +119,6 @@ public class Planter extends AbstractIC {
 
         if (!plantableItem(itemID)) return false;
 
-        if (target.getTypeId() != 0)
-            return false;
-
         if(onBlock.getRelative(0,1,0).getTypeId() == BlockID.CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();

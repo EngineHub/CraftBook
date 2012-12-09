@@ -103,7 +103,7 @@ public class Chair implements Listener {
             } else { //Sit
                 if (hasChair(event.getClickedBlock())) {
                     Player p = getChair(event.getClickedBlock());
-                    if(!p.isOnline() || !p.getWorld().equals(event.getClickedBlock().getWorld()) || p.getLocation().distanceSquared(event.getClickedBlock().getLocation()) > 2*2) {
+                    if(!p.isOnline() || !p.getWorld().equals(event.getClickedBlock().getWorld()) || p.getLocation().distanceSquared(event.getClickedBlock().getLocation()) > 1) {
                         removeChair(p);
                     }
                     else {
@@ -125,7 +125,7 @@ public class Chair implements Listener {
             for(String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
                 if (p == null) continue;
-                if(!p.isOnline() || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation()) > 2*2)
+                if(!plugin.getLocalConfiguration().chairSettings.canUseBlock(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation()) > 1)
                     removeChair(p); //Remove it. It's unused.
                 else
                     addChair(p, getChair(p)); //For any new players.
