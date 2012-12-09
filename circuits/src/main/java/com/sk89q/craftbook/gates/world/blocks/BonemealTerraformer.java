@@ -265,7 +265,18 @@ public class BonemealTerraformer extends AbstractIC {
             sapling.setTypeId(0);
         }
 
-        sapling.getWorld().generateTree(sapling.getRelative(i1, 0, j1).getLocation(), treeType);
+        boolean planted = sapling.getWorld().generateTree(sapling.getRelative(i1, 0, j1).getLocation(), treeType);
+
+        if(!planted) {
+            if (flag) {
+                sapling.getRelative(i1, 0, j1).setTypeIdAndData(BlockID.SAPLING, (byte) data, true);
+                sapling.getRelative(i1 + 1, 0, j1).setTypeIdAndData(BlockID.SAPLING, (byte) data, true);
+                sapling.getRelative(i1, 0, j1 + 1).setTypeIdAndData(BlockID.SAPLING, (byte) data, true);
+                sapling.getRelative(i1 + 1, 0, j1 + 1).setTypeIdAndData(BlockID.SAPLING, (byte) data, true);
+            } else {
+                sapling.setTypeIdAndData(BlockID.SAPLING, (byte) data, true);
+            }
+        }
     }
 
     public static class Factory extends AbstractICFactory {
