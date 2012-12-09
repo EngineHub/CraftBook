@@ -43,7 +43,7 @@ public class Cultivator extends AbstractIC {
             maxradius = ((Factory) getFactory()).maxradius;
         }
         try {
-            radius = Integer.parseInt(getSign().getLine(3));
+            radius = Integer.parseInt(getSign().getLine(2));
             if (radius > maxradius) {
                 radius = maxradius;
                 getSign().setLine(3, String.valueOf(maxradius));
