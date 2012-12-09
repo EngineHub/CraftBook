@@ -115,8 +115,9 @@ public class BonemealTerraformer extends AbstractIC {
                             if (consumeBonemeal()) {
                                 if(!growTree(b, BaseBukkitPlugin.random))
                                     refundBonemeal();
+                                else
+                                    return;
                             }
-                            return;
                         }
                         if (b.getTypeId() == BlockID.BROWN_MUSHROOM || b.getTypeId() == BlockID.RED_MUSHROOM) {
                             if (consumeBonemeal()) {
@@ -126,6 +127,8 @@ public class BonemealTerraformer extends AbstractIC {
                                         b.setTypeId(BlockID.BROWN_MUSHROOM);
                                         refundBonemeal();
                                     }
+                                    else
+                                        return;
                                 }
                                 if(b.getTypeId() == BlockID.RED_MUSHROOM) {
                                     b.setTypeId(0);
@@ -133,9 +136,10 @@ public class BonemealTerraformer extends AbstractIC {
                                         b.setTypeId(BlockID.RED_MUSHROOM);
                                         refundBonemeal();
                                     }
+                                    else
+                                        return;
                                 }
                             }
-                            return;
                         }
                         if ((b.getTypeId() == BlockID.REED || b.getTypeId() == BlockID.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getTypeId() == 0) {
                             if (consumeBonemeal()) {
