@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Server;
 import org.bukkit.TreeType;
@@ -112,34 +113,7 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.SAPLING) {
                             if (consumeBonemeal()) {
-                                TreeType type = null;
-                                switch(b.getData()) {
-
-                                    case 0: //Oak
-                                        type = BaseBukkitPlugin.random.nextInt(30) == 0 ? TreeType.TREE : TreeType.BIG_TREE;
-                                    case 1: //Spruce
-                                        type = BaseBukkitPlugin.random.nextInt(30) == 0 ? TreeType.REDWOOD : TreeType.TALL_REDWOOD;
-                                    case 2: //Birch
-                                        type = TreeType.BIRCH;
-                                    case 3: //Jungle
-                                        int nearbySaplings = 0;
-                                        if(b.getRelative(1, 0, 0).getTypeId() == BlockID.SAPLING && b.getRelative(1, 0, 0).getData() == b.getData())
-                                            nearbySaplings ++;
-                                        if(b.getRelative(-1, 0, 0).getTypeId() == BlockID.SAPLING && b.getRelative(-1, 0, 0).getData() == b.getData())
-                                            nearbySaplings ++;
-                                        if(b.getRelative(0, 0, 1).getTypeId() == BlockID.SAPLING && b.getRelative(0, 0, 1).getData() == b.getData())
-                                            nearbySaplings ++;
-                                        if(b.getRelative(0, 0, -1).getTypeId() == BlockID.SAPLING && b.getRelative(0, 0, -1).getData() == b.getData())
-                                            nearbySaplings ++;
-                                        if(nearbySaplings >= 2)
-                                            type = TreeType.JUNGLE;
-                                        else
-                                            type = BaseBukkitPlugin.random.nextInt(30) == 0 ? TreeType.SMALL_JUNGLE : TreeType.JUNGLE_BUSH;
-                                }
-                                if(type != null) {
-                                    b.setTypeId(0);
-                                    b.getWorld().generateTree(b.getLocation(), type);
-                                }
+                                growTree(b, BaseBukkitPlugin.random);
                             }
                             return;
                         }
@@ -237,6 +211,61 @@ public class BonemealTerraformer extends AbstractIC {
         }
 
         return false;
+    }
+
+    public boolean isSameSapling(Block sapling, Block other) {
+        return sapling.getTypeId() == other.getTypeId() && (other.getData() & 3) == (sapling.getData() & 3);
+    }
+
+    public void growTree(Block sapling, Random random) {
+        int data = (byte) (sapling.getData() & 3);
+        int i1 = 0;
+        int j1 = 0;
+        boolean flag = false;
+
+        TreeType treeType = null;
+
+        if (data == 1) {
+            treeType = TreeType.REDWOOD;
+        } else if (data == 2) {
+            treeType = TreeType.BIRCH;
+        } else if (data == 3) {
+            for (i1 = 0; i1 >= -1; --i1) {
+                for (j1 = 0; j1 >= -1; --j1) {
+                    if (isSameSapling(sapling, sapling.getRelative(i1, 0, j1)) && isSameSapling(sapling, sapling.getRelative(i1 + 1, 0, j1)) && isSameSapling(sapling, sapling.getRelative(i1, 0, j1 + 1)) && isSameSapling(sapling, sapling.getRelative(i1 + 1, 0, j1 + 1))) {
+                        treeType = TreeType.JUNGLE;
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    break;
+                }
+            }
+
+            if (!flag) {
+                j1 = 0;
+                i1 = 0;
+                treeType = TreeType.SMALL_JUNGLE;
+            }
+        } else {
+            treeType = TreeType.TREE;
+            if (random.nextInt(10) == 0) {
+                treeType = TreeType.BIG_TREE;
+            }
+        }
+
+        if (flag) {
+            sapling.getRelative(i1, 0, j1).setTypeId(0);
+            sapling.getRelative(i1 + 1, 0, j1).setTypeId(0);
+            sapling.getRelative(i1, 0, j1 + 1).setTypeId(0);
+            sapling.getRelative(i1 + 1, 0, j1 + 1).setTypeId(0);
+        } else {
+            sapling.setTypeId(0);
+        }
+
+        sapling.getWorld().generateTree(sapling.getLocation(), treeType);
     }
 
     public static class Factory extends AbstractICFactory {
