@@ -234,6 +234,9 @@ public class Snow implements Listener {
 
     public void incrementData(Block block) {
 
+        if(block.getTypeId() != 78 && block.getTypeId() != 80 && !BlockType.canPassThrough(block.getTypeId()))
+            return;
+
         if(block.getTypeId() == 0 && block.getRelative(0, -1, 0).getTypeId() == 0) {
             incrementData(block.getRelative(0, -1, 0));
             return;
