@@ -47,6 +47,26 @@ public class Planter extends AbstractIC {
     @Override
     public void load() {
 
+        String item = getSign().getLine(2);
+
+        if (item.contains(":")) {
+            String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
+            data = Byte.parseByte(itemAndData[1]);
+            item = itemAndData[0];
+        }
+
+        try {
+            itemID = Integer.parseInt(item);
+        }
+        catch (Exception e) {
+            if(getSign().getLine(2).trim().isEmpty())
+                itemID = 295;
+            else
+                itemID = -1;
+        }
+        if(itemID < 0) {
+            itemID = BlockType.lookup(item).getID();
+        }
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         try {
@@ -78,22 +98,6 @@ public class Planter extends AbstractIC {
         }
 
         target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
-        if (!getSign().getLine(2).isEmpty()) {
-            try {
-                itemID = Integer.parseInt(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[0]);
-                try {
-                    data = Byte.parseByte(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[1]);
-                }
-                catch(Exception e){}
-            }
-            catch(Exception e){
-                itemID = BlockType.lookup(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[0]).getID();
-                try {
-                    data = Byte.parseByte(ICUtil.COLON_PATTERN.split(getSign().getLine(2))[1]);
-                }
-                catch(Exception ee){}
-            }
-        }
     }
 
     @Override
