@@ -92,7 +92,7 @@ public class Chair implements Listener {
 
         //Now everything looks good, continue;
         if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() || player.getPlayer().getItemInHand().getTypeId() == 0) {
-            if (plugin.getLocalConfiguration().chairSettings.requireSneak && !player.getPlayer().isSneaking())
+            if (plugin.getLocalConfiguration().chairSettings.requireSneak != player.getPlayer().isSneaking())
                 return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {
                 player.printError("mech.use-permission");
