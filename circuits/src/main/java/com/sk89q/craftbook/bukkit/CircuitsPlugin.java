@@ -142,6 +142,7 @@ import com.sk89q.craftbook.gates.world.miscellaneous.MessageSender;
 import com.sk89q.craftbook.gates.world.miscellaneous.ParticleEffect;
 import com.sk89q.craftbook.gates.world.miscellaneous.ParticleEffectST;
 import com.sk89q.craftbook.gates.world.miscellaneous.PotionInducer;
+import com.sk89q.craftbook.gates.world.miscellaneous.PotionInducerST;
 import com.sk89q.craftbook.gates.world.miscellaneous.SoundEffect;
 import com.sk89q.craftbook.gates.world.miscellaneous.TimedExplosion;
 import com.sk89q.craftbook.gates.world.miscellaneous.WirelessReceiver;
@@ -441,6 +442,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0204", "trap st",     new EntityTrapST.Factory(server), familySISO, familyAISO);                    // Restricted
         registerIC("MC0209", "collector st",new ContainerCollectorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0210", "emitter st",  new ParticleEffectST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0217", "pot induce st",new PotionInducerST.Factory(server), familySISO, familyAISO);              //Restricted
         registerIC("MC0219", "auto craft st",new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0220", "a bl break st",new BlockBreakerST.Factory(server, false), familySISO, familyAISO);
         registerIC("MC0221", "b bl break st",new BlockBreakerST.Factory(server, true), familySISO, familyAISO);

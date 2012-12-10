@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
 import org.bukkit.Server;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -15,22 +16,15 @@ import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
  * @author Me4502
  */
-public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
+public class PotionInducer extends AbstractIC {
 
     public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return true;
     }
 
     @Override
@@ -46,6 +40,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
     }
 
     int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
+    boolean mobs = false;
 
     @Override
     public void load() {
@@ -54,26 +49,28 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
         effectID = Integer.parseInt(effectInfo[0]);
         effectAmount = Integer.parseInt(effectInfo[1]);
         effectTime = Integer.parseInt(effectInfo[2]);
-        radius = Integer.parseInt(getSign().getLine(3));
+        String line4 = getSign().getLine(3);
+        if(line4.contains("m"))
+            mobs = true;
+        line4 = line4.replace("m", "");
+        radius = Integer.parseInt(line4);
+    }
+
+    public void induce() {
+        for (LivingEntity p : BukkitUtil.toSign(getSign()).getWorld().getLivingEntities()) {
+            if(!mobs && !(p instanceof Player))
+                continue;
+            if (p.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius)
+                continue;
+            p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1), true);
+        }
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-    }
-
-    @Override
-    public void think(ChipState state) {
-
-        if (state.getInput(0)) {
-            for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-                if (p.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius) {
-                    continue;
-                }
-                p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
-                        effectAmount - 1), true);
-            }
-        }
+        if(chip.getInput(0))
+            induce();
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -105,7 +102,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
         @Override
         public String getDescription() {
 
-            return "Gives nearby players a potion effect.";
+            return "Gives nearby entities a potion effect.";
         }
 
         @Override
@@ -113,7 +110,7 @@ public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
 
             String[] lines = new String[] {
                     "id:level:time",
-                    "range"
+                    "range (add a m to the end to also induce mobs)"
             };
             return lines;
         }
