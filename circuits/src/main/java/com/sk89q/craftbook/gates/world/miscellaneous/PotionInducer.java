@@ -122,7 +122,7 @@ public class PotionInducer extends AbstractIC {
 
             String[] lines = new String[] {
                     "id:level:time",
-                    "range (add a m to the end to also induce mobs)"
+                    "range (add a m to the end to only induce mobs or p for players (pm for both))"
             };
             return lines;
         }
