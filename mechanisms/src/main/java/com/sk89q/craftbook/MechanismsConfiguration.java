@@ -195,6 +195,7 @@ public class MechanismsConfiguration extends BaseConfiguration {
     }
     public class ChairSettings {
 
+        public final boolean healthRegen;
         public final boolean enable;
         public final boolean requireSneak;
         public final Set<Integer> allowedBlocks;
@@ -204,8 +205,8 @@ public class MechanismsConfiguration extends BaseConfiguration {
 
             enable = section.getBoolean("enable", true);
             requireSneak = section.getBoolean("sneaking", true);
-            allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135,
-                    136));
+            healthRegen = section.getBoolean("health-regen", true);
+            allowedBlocks = section.getIntegerSet("blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135, 136));
         }
 
         /**

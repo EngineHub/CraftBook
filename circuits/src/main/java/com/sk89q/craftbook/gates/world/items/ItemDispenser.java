@@ -88,7 +88,7 @@ public class ItemDispenser extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            if (id > 0 && id != 36 && (id < 26 || id > 34)) {
+            if (id > 0 && id != 36) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();

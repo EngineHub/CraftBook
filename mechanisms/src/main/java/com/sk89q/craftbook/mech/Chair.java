@@ -126,8 +126,13 @@ public class Chair implements Listener {
                 if (p == null) continue;
                 if(!plugin.getLocalConfiguration().chairSettings.canUseBlock(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation()) > 1)
                     removeChair(p); //Remove it. It's unused.
-                else
+                else {
                     addChair(p, getChair(p)); //For any new players.
+
+                    if(plugin.getLocalConfiguration().chairSettings.healthRegen)
+                        p.setHealth(p.getHealth() + 1);
+                    p.setExhaustion(p.getExhaustion() - 0.1f);
+                }
             }
         }
     }
