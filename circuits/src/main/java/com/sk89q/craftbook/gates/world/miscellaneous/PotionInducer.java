@@ -41,6 +41,7 @@ public class PotionInducer extends AbstractIC {
 
     int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
     boolean mobs = false;
+    boolean players = true;
 
     @Override
     public void load() {
@@ -50,15 +51,26 @@ public class PotionInducer extends AbstractIC {
         effectAmount = Integer.parseInt(effectInfo[1]);
         effectTime = Integer.parseInt(effectInfo[2]);
         String line4 = getSign().getLine(3);
-        if(line4.contains("m"))
+        if(line4.contains("pm")) {
             mobs = true;
-        line4 = line4.replace("m", "");
+            players = true;
+        } else if(line4.contains("m")) {
+            mobs = true;
+            players = false;
+        }
+        else if(line4.contains("p")) {
+            players = true;
+            mobs = false;
+        }
+        line4 = line4.replace("m", "").replace("p", "");
         radius = Integer.parseInt(line4);
     }
 
     public void induce() {
         for (LivingEntity p : BukkitUtil.toSign(getSign()).getWorld().getLivingEntities()) {
             if(!mobs && !(p instanceof Player))
+                continue;
+            if(!players && p instanceof Player)
                 continue;
             if (p.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius)
                 continue;
