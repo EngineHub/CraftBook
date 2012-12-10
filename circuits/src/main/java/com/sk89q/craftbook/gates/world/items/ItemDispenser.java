@@ -49,11 +49,12 @@ public class ItemDispenser extends AbstractIC {
     public void load() {
         String item = getSign().getLine(2);
         try {
-            amount = Math.min(64,
-                    Math.max(1, Integer.parseInt(getSign().getLine(3))));
-        } catch (NumberFormatException ignored) {
+            amount = Math.min(64, Math.max(1, Integer.parseInt(getSign().getLine(3))));
+        } catch (Exception ignored) {
             amount = 1;
         }
+        if(amount < 1)
+            amount = 1;
         if (item.contains(":")) {
             String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
             data = Short.parseShort(itemAndData[1]);
@@ -67,6 +68,8 @@ public class ItemDispenser extends AbstractIC {
         if(id < 0) {
             id = BlockType.lookup(item).getID();
         }
+        if(data < 0)
+            data = 0;
     }
 
     @Override
@@ -85,18 +88,16 @@ public class ItemDispenser extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            if (id != 0 && id != 36 && (id < 26 || id > 34)) {
+            if (id > 0 && id != 36 && (id < 26 || id > 34)) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
                 int x = loc.getBlockX();
                 int z = loc.getBlockZ();
 
                 for (int y = loc.getBlockY() + 1; y <= maxY; y++)
-                    if (BlockType.canPassThrough(BukkitUtil.toSign(getSign()).getWorld()
-                            .getBlockTypeIdAt(x, y, z))) {
+                    if (BlockType.canPassThrough(BukkitUtil.toSign(getSign()).getWorld().getBlockTypeIdAt(x, y, z))) {
 
-                        ItemStack stack = new ItemStack(id, amount, data);
-                        stack.setDurability(data);
+                        ItemStack stack = new ItemStack(id, amount, data, (byte) data);
 
                         BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(
                                 new Location(BukkitUtil.toSign(getSign()).getWorld(), x, y, z),
