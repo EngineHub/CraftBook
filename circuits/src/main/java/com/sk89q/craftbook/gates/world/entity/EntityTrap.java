@@ -97,17 +97,15 @@ public class EntityTrap extends AbstractIC {
         }
     }
 
-    /**
-     * Returns true if the entity was damaged.
-     *
-     * @return
-     */
-    protected boolean hurt() {
+    int radius = 10;
+    int damage = 2;
+    Type type = Type.MOB_HOSTILE;
+    Location location;
 
-        int radius = 10; //Default Radius
-        int damage = 2;
+    @Override
+    public void load() {
+
         Location location = BukkitUtil.toSign(getSign()).getLocation();
-        Type type = Type.MOB_HOSTILE;
         try {
             String[] splitLine = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 3);
             radius = Integer.parseInt(splitLine[0]);
@@ -126,6 +124,16 @@ public class EntityTrap extends AbstractIC {
         if (!getSign().getLine(3).isEmpty()) {
             type = Type.fromString(getSign().getLine(3));
         }
+    }
+
+    /**
+     * Returns true if the entity was damaged.
+     *
+     * @return
+     */
+    protected boolean hurt() {
+
+        boolean hasHurt = false;
 
         try {
             for (Entity e : LocationUtil.getNearbyEntities(location, radius)) {
@@ -142,12 +150,12 @@ public class EntityTrap extends AbstractIC {
                 } else {
                     e.remove();
                 }
-                return true;
+                hasHurt = true;
             }
         } catch (Exception ignored) {
         }
 
-        return false;
+        return hasHurt;
     }
 
 
