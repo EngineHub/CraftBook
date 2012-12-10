@@ -131,7 +131,8 @@ public class Chair implements Listener {
 
                     if(plugin.getLocalConfiguration().chairSettings.healthRegen)
                         p.setHealth(p.getHealth() + 1);
-                    p.setExhaustion(p.getExhaustion() - 0.1f);
+                    if(p.getExhaustion() > -20f)
+                        p.setExhaustion(p.getExhaustion() - 0.1f);
                 }
             }
         }
