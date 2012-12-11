@@ -207,7 +207,8 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             VehiclesConfiguration config = getLocalConfiguration();
             Minecart minecart = (Minecart) vehicle;
             minecart.setSlowWhenEmpty(config.minecartSlowWhenEmpty);
-            minecart.setDerailedVelocityMod(new Vector(config.minecartOffRailSpeedModifier,config.minecartOffRailSpeedModifier,config.minecartOffRailSpeedModifier));
+            if(config.minecartOffRailSpeedModifier > 0)
+                minecart.setDerailedVelocityMod(new Vector(config.minecartOffRailSpeedModifier,config.minecartOffRailSpeedModifier,config.minecartOffRailSpeedModifier));
             minecart.setMaxSpeed(minecart.getMaxSpeed() * config.minecartMaxSpeedModifier);
         }
 
