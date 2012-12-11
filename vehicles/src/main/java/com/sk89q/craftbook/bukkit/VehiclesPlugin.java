@@ -168,8 +168,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 if (!config.boatRemoveEntitiesOtherBoats &&
                         entity instanceof Boat) return;
 
-                if (entity instanceof LivingEntity)
+                if (entity instanceof LivingEntity) {
                     ((LivingEntity) entity).damage(5);
+                    ((LivingEntity) entity).setVelocity(vehicle.getVelocity().multiply(2));
+                }
                 else
                     entity.remove();
 
@@ -180,8 +182,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 if (!config.minecartRemoveEntitiesOtherCarts &&
                         entity instanceof Minecart) return;
 
-                if (entity instanceof LivingEntity)
+                if (entity instanceof LivingEntity) {
                     ((LivingEntity) entity).damage(5);
+                    ((LivingEntity) entity).setVelocity(vehicle.getVelocity().multiply(2));
+                }
                 else
                     entity.remove();
             }
