@@ -71,7 +71,7 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void load() {
 
-        entityType = EntityType.fromName(getSign().getLine(2).trim().toUpperCase());
+        entityType = EntityType.fromName(getSign().getLine(2).trim());
         String line = getSign().getLine(3).trim();
         // parse the amount or rider type
         try {
@@ -101,20 +101,18 @@ public class CreatureSpawner extends AbstractIC {
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         if (chip.getInput(0))
-            if (entityType != null && entityType.isAlive()) {
-                if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
+            if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
 
-                    org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
-                    sp.setCreatureTypeByName(entityType.getName());
-                    sp.update();
-                }
-                else {
-                    Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
-                    // spawn amount of mobs
-                    for (int i = 0; i < amount; i++) {
-                        Entity entity = loc.getWorld().spawnEntity(loc, entityType);
-                        setEntityData(entity, data);
-                    }
+                org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
+                sp.setCreatureTypeByName(entityType.getName());
+                sp.update();
+            }
+            else {
+                Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
+                // spawn amount of mobs
+                for (int i = 0; i < amount; i++) {
+                    Entity entity = loc.getWorld().spawnEntity(loc, entityType);
+                    setEntityData(entity, data);
                 }
             }
     }
