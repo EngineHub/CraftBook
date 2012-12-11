@@ -36,7 +36,7 @@ public class BlockSensorST extends BlockSensor implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, hasBlock());
+        chip.setOutput(0, !hasBlock());
     }
 
     @Override

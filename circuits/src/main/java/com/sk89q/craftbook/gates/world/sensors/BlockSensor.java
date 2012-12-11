@@ -29,7 +29,7 @@ public class BlockSensor extends AbstractIC {
     @Override
     public void load() {
 
-        String[] ids = COLON_PATTERN.split(getSign().getLine(3));
+        String[] ids = COLON_PATTERN.split(getSign().getLine(3), 2);
         id = Integer.parseInt(ids[0]);
         data = Byte.parseByte(ids[1]);
     }
@@ -50,7 +50,7 @@ public class BlockSensor extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, hasBlock());
+            chip.setOutput(0, !hasBlock());
         }
     }
 
@@ -90,7 +90,7 @@ public class BlockSensor extends AbstractIC {
                 String[] split = COLON_PATTERN.split(sign.getLine(3), 2);
                 Integer.parseInt(split[0]);
             } catch (Exception ignored) {
-                throw new ICVerificationException("You need to specify an block in line four.");
+                throw new ICVerificationException("You need to specify a block in line four.");
             }
             ICUtil.verifySignSyntax(sign);
         }

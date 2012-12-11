@@ -238,7 +238,7 @@ public class ICUtil {
         }
         try {
             if (line.contains(":")) {
-                String[] split = ICUtil.COLON_PATTERN.split(line, 2);
+                String[] split = COLON_PATTERN.split(line, 2);
                 int id = 0;
                 int data = 0;
                 try {

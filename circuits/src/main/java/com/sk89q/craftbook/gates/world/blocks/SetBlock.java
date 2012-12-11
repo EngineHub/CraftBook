@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.regex.Pattern;
-
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -13,13 +11,12 @@ import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public abstract class SetBlock extends AbstractIC {
-
-    private static final Pattern DATA_SEPARATOR = Pattern.compile(":", Pattern.LITERAL);
 
     public SetBlock(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -32,7 +29,7 @@ public abstract class SetBlock extends AbstractIC {
 
     @Override
     public void load() {
-        String[] splitBlockData = DATA_SEPARATOR.split(getSign().getLine(2).toUpperCase().trim(), 2);
+        String[] splitBlockData = ICUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase().trim(), 2);
         String strBlock = splitBlockData[0];
         String strMeta = "";
         if (splitBlockData.length > 1) {
@@ -47,7 +44,6 @@ public abstract class SetBlock extends AbstractIC {
                 block = BlockType.lookup(strBlock).getID();
             }
             catch(Exception ee) {
-                return;
             }
         }
 
@@ -56,7 +52,6 @@ public abstract class SetBlock extends AbstractIC {
                 meta = Byte.parseByte(strMeta);
             }
         } catch (Exception e) {
-            return;
         }
     }
 
