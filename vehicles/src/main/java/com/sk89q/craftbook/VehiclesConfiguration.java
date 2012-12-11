@@ -46,19 +46,19 @@ public class VehiclesConfiguration extends BaseConfiguration {
     @Override
     public void load() {
 
-        matBoostMax = ItemInfo.parseFromString(getString("max-boost-block", "41"));
-        matBoost25x = ItemInfo.parseFromString(getString("25x-boost-block", "14"));
-        matSlow50x = ItemInfo.parseFromString(getString("50x-slow-block", "88"));
-        matSlow20x = ItemInfo.parseFromString(getString("20x-slow-block", "13"));
-        matReverse = ItemInfo.parseFromString(getString("reverse-block", "35"));
-        matStation = ItemInfo.parseFromString(getString("station-block", "49"));
-        matSorter = ItemInfo.parseFromString(getString("sort-block", "87"));
-        matEjector = ItemInfo.parseFromString(getString("eject-block", "42"));
-        matDeposit = ItemInfo.parseFromString(getString("deposit-block", "15"));
-        matTeleport = ItemInfo.parseFromString(getString("teleport-block", "133"));
-        matLift = ItemInfo.parseFromString(getString("lift-block", "112"));
-        matDispenser = ItemInfo.parseFromString(getString("dispenser-block", "129"));
-        matMessager = ItemInfo.parseFromString(getString("messager-block", "121"));
+        matBoostMax = ItemInfo.parseFromString(getString("max-boost-block", "41:0"));
+        matBoost25x = ItemInfo.parseFromString(getString("25x-boost-block", "14:0"));
+        matSlow50x = ItemInfo.parseFromString(getString("50x-slow-block", "88:0"));
+        matSlow20x = ItemInfo.parseFromString(getString("20x-slow-block", "13:0"));
+        matReverse = ItemInfo.parseFromString(getString("reverse-block", "35:0"));
+        matStation = ItemInfo.parseFromString(getString("station-block", "49:0"));
+        matSorter = ItemInfo.parseFromString(getString("sort-block", "87:0"));
+        matEjector = ItemInfo.parseFromString(getString("eject-block", "42:0"));
+        matDeposit = ItemInfo.parseFromString(getString("deposit-block", "15:0"));
+        matTeleport = ItemInfo.parseFromString(getString("teleport-block", "133:0"));
+        matLift = ItemInfo.parseFromString(getString("lift-block", "112:0"));
+        matDispenser = ItemInfo.parseFromString(getString("dispenser-block", "129:0"));
+        matMessager = ItemInfo.parseFromString(getString("messager-block", "121:0"));
 
         minecartEnterOnImpact = getBoolean("minecart-enter-on-impact", true);
         minecartSlowWhenEmpty = getBoolean("minecart-slow-when-empty", true);
