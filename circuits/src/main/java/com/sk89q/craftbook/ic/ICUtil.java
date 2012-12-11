@@ -26,6 +26,7 @@ import net.minecraft.server.v1_4_5.World;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -33,6 +34,7 @@ import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * IC utility functions.
@@ -227,5 +229,38 @@ public class ICUtil {
             // do nothing and use default radius
         }
         return radius;
+    }
+
+    public static ItemStack getItem(String line) {
+        if (line.isEmpty()) {
+            return null;
+        }
+        try {
+            if (line.contains(":")) {
+                String[] split = ICUtil.COLON_PATTERN.split(line, 2);
+                int id = 0;
+                int data = 0;
+                try {
+                    id = Integer.parseInt(split[0]);
+                    data = Integer.parseInt(split[1]);
+                }
+                catch(NumberFormatException e){
+                    id = BlockType.lookup(split[0]).getID();
+                    data = Integer.parseInt(split[1]);
+                }
+                return new ItemStack(id, 1, (short) data, (byte) data);
+            } else {
+                int id = 0;
+                try {
+                    id = Integer.parseInt(line);
+                }
+                catch(NumberFormatException e){
+                    id = BlockType.lookup(line).getID();
+                }
+                return new ItemStack(id, 1, (short) 0);
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 }

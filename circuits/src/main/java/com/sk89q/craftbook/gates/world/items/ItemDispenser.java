@@ -41,12 +41,12 @@ public class ItemDispenser extends AbstractIC {
         super(server, sign, factory);
     }
 
-    int amount = 1;
-    short data = 0;
-    int id = -1;
+    ItemStack item;
 
     @Override
     public void load() {
+        int amount = 1;
+
         try {
             amount = Math.min(64, Math.max(1, Integer.parseInt(getSign().getLine(3))));
         } catch (Exception ignored) {
@@ -54,22 +54,9 @@ public class ItemDispenser extends AbstractIC {
         }
         if(amount < 1)
             amount = 1;
-        String item = getSign().getLine(2).trim();
-        if (item.contains(":")) {
-            String[] itemAndData = ICUtil.COLON_PATTERN.split(item);
-            data = Short.parseShort(itemAndData[1]);
-            item = itemAndData[0];
-        }
 
-        try {
-            id = Integer.parseInt(item);
-        }
-        catch (Exception e) {}
-        if(id <= 0) {
-            id = BlockType.lookup(item).getID();
-        }
-        if(data < 0)
-            data = 0;
+        item = ICUtil.getItem(getLine(2));
+        item.setAmount(amount);
     }
 
     @Override
@@ -88,14 +75,14 @@ public class ItemDispenser extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            if (id > 0 && id != 36) {
+            if (item.getTypeId() != 36) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = 10;
 
                 for (int y = 1; y <= maxY; y++)
                     if (BlockType.canPassThrough(loc.getBlock().getRelative(0, y, 0).getTypeId())) {
 
-                        ItemStack stack = new ItemStack(id, amount, data, (byte) data);
+                        ItemStack stack = item.clone();
 
                         BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(loc.getBlock().getRelative(0, y, 0).getLocation(), stack);
                         return;

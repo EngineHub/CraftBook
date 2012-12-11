@@ -61,8 +61,8 @@ public class ContainerCollector extends AbstractIC {
     @Override
     public void load() {
 
-        doWant = getItem(getSign().getLine(2));
-        doNotWant = getItem(getSign().getLine(3));
+        doWant = ICUtil.getItem(getSign().getLine(2));
+        doNotWant = ICUtil.getItem(getSign().getLine(3));
     }
 
     protected boolean collect() {
@@ -106,25 +106,6 @@ public class ContainerCollector extends AbstractIC {
             }
         }
         return collected;
-    }
-
-    private static ItemStack getItem(String line) {
-        if (line.isEmpty()) {
-            return null;
-        }
-        try {
-            if (line.contains(":")) {
-                String[] split = ICUtil.COLON_PATTERN.split(line, 2);
-                int id = Integer.parseInt(split[0]);
-                int data = Integer.parseInt(split[1]);
-                return new ItemStack(id, 1, (short) data, (byte) data);
-            } else {
-                int id = Integer.parseInt(line);
-                return new ItemStack(id, 1, (short) 0);
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
     }
 
     private boolean addToContainer(Block bl, ItemStack stack) {
