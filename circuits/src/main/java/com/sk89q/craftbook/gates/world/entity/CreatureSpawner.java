@@ -59,7 +59,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class CreatureSpawner extends AbstractIC {
 
-    private EntityType entityType = EntityType.PIG;
+    private EntityType entityType = null;
     private String data;
     private int amount = 1;
 
@@ -71,7 +71,7 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void load() {
 
-        entityType = EntityType.fromName(getSign().getLine(2).trim());
+        entityType = EntityType.fromName(getSign().getLine(2).trim().toUpperCase());
         String line = getSign().getLine(3).trim();
         // parse the amount or rider type
         try {
