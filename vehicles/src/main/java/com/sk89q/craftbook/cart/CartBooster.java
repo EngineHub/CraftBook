@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
@@ -38,11 +37,5 @@ public class CartBooster extends CartMechanism {
             return;
         // go
         cart.setVelocity(newVelocity);
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
     }
 }

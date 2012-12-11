@@ -103,7 +103,7 @@ public class CartSorter extends CartMechanism {
             default:
                 //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
                 return;
-       }
+        }
         Block targetTrack = blocks.rail.getRelative(next);
 
         // now check sanity real quick that there's actually a track after this,
@@ -201,11 +201,5 @@ public class CartSorter extends CartMechanism {
         }
 
         return false;
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
     }
 }

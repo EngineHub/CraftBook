@@ -44,10 +44,4 @@ public class CartEjector extends CartMechanism {
         //  what's actually happening is that the server didn't see them enter the cart
         //  until -after- it had triggered the ejector... it's just client anticipating.
     }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
-    }
 }

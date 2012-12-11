@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.cart;
 
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
@@ -149,11 +148,5 @@ public class CartDispenser extends CartMechanism {
 
             return cl;
         }
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
     }
 }

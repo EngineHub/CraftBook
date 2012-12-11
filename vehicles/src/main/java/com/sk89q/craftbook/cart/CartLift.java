@@ -3,7 +3,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
 public class CartLift extends CartMechanism {
@@ -40,11 +39,5 @@ public class CartLift extends CartMechanism {
         }
 
         cart.teleport(destination.getLocation());
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-                      boolean minor) {
-
     }
 }

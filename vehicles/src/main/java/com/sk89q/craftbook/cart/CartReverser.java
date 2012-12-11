@@ -3,7 +3,6 @@ package com.sk89q.craftbook.cart;
 import static com.sk89q.craftbook.cart.CartUtils.reverse;
 
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
@@ -56,11 +55,5 @@ public class CartReverser extends CartMechanism {
             default:
                 reverse(cart);
         }
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
     }
 }

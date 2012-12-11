@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
@@ -163,11 +162,5 @@ public class CartDeposit extends CartMechanism {
 
             //System.out.println("deposit done. " + transferitems.size() + " items wouldn't fit back.");
         }
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
     }
 }

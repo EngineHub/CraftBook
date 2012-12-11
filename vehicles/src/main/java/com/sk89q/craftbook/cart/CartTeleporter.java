@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
-import org.bukkit.util.Vector;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
@@ -19,25 +18,23 @@ public class CartTeleporter extends CartMechanism {
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
-        if (blocks.sign == null) return;
+
         if (!blocks.matches("teleport")) return;
 
         // go
         World world = cart.getWorld();
-        String line = blocks.getSign().getLine(2);
-        String[] pts = COMMA_PATTERN.split(line);
-        if (pts.length != 3) return;
-        if (!blocks.getSign().getLine(3).isEmpty()) {
-            world = cart.getServer().getWorld(blocks.getSign().getLine(3));
+        String[] pts = COMMA_PATTERN.split(blocks.getSign().getLine(2).trim(), 3);
+        if (!blocks.getSign().getLine(3).trim().isEmpty()) {
+            world = cart.getServer().getWorld(blocks.getSign().getLine(3).trim());
         }
 
         double x;
         double y;
         double z;
         try {
-            x = Double.parseDouble(pts[0]);
-            y = Double.parseDouble(pts[1]);
-            z = Double.parseDouble(pts[2]);
+            x = Double.parseDouble(pts[0].trim());
+            y = Double.parseDouble(pts[1].trim());
+            z = Double.parseDouble(pts[2].trim());
         } catch (NumberFormatException e) {
             // incorrect format, just set them still and let them figure it out
             if (blocks.from != null) {
@@ -49,10 +46,10 @@ public class CartTeleporter extends CartMechanism {
                 y = blocks.rail.getY();
                 z = blocks.rail.getZ();
             }
-            cart.setVelocity(new Vector(0D, 0D, 0D));
+            CartUtils.stop(cart);
         }
 
-        Location loc = BukkitUtil.center(new Location(world, x, y, z, 0, 0) {
+        Location loc = BukkitUtil.center(new Location(world, x, y, z, cart.getLocation().getYaw(), cart.getLocation().getPitch()) {
 
         });
         if (!loc.getChunk().isLoaded()) {
@@ -68,15 +65,8 @@ public class CartTeleporter extends CartMechanism {
                 passenger.teleport(loc);
                 toCart.setPassenger(passenger);
             }
-            toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out <- Nice portal
-            // quote :)
+            toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
             cart.remove();
         }
-    }
-
-    @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
-
     }
 }

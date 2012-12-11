@@ -3,9 +3,9 @@ package com.sk89q.craftbook.util;
 public class ItemInfo {
 
     public int id;
-    public byte data;
+    public int data;
 
-    public ItemInfo(int id, byte data) {
+    public ItemInfo(int id, int data) {
 
         this.id = id;
         this.data = data;
@@ -19,23 +19,25 @@ public class ItemInfo {
         this.id = id;
     }
 
-    public byte getData () {
+    public int getData () {
         return data;
     }
 
-    public void setData (byte data) {
+    public void setData (int data) {
         this.data = data;
     }
 
     public static ItemInfo parseFromString(String string) {
 
         int id = Integer.parseInt(string.split(":")[0]);
-        byte data = -1;
+        int data = -1;
 
         try {
-            data = Byte.parseByte(string.split(":")[1]);
+            data = Integer.parseInt(string.split(":")[1]);
         }
-        catch(Exception e){}
+        catch(Exception e){
+            data = -1;
+        }
 
         return new ItemInfo(id,data);
     }

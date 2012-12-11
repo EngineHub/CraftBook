@@ -37,7 +37,7 @@ public abstract class CartMechanism {
      */
     public abstract void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor);
 
-    public abstract void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor);
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor) {}
 
     protected ItemInfo material;
 
