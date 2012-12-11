@@ -59,9 +59,9 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class CreatureSpawner extends AbstractIC {
 
-    private EntityType entityType = null;
-    private String data;
-    private int amount = 1;
+    EntityType type;
+    String data;
+    int amount = 1;
 
     public CreatureSpawner(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -71,7 +71,9 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void load() {
 
-        entityType = EntityType.fromName(getSign().getLine(2).trim());
+        type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase());
+        if(type == null)
+            type = EntityType.PIG;
         String line = getSign().getLine(3).trim();
         // parse the amount or rider type
         try {
@@ -104,14 +106,14 @@ public class CreatureSpawner extends AbstractIC {
             if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
 
                 org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
-                sp.setCreatureTypeByName(entityType.getName());
+                sp.setCreatureTypeByName(type.getName());
                 sp.update();
             }
             else {
                 Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
                 // spawn amount of mobs
                 for (int i = 0; i < amount; i++) {
-                    Entity entity = loc.getWorld().spawnEntity(loc, entityType);
+                    Entity entity = loc.getWorld().spawnEntity(loc, type);
                     setEntityData(entity, data);
                 }
             }

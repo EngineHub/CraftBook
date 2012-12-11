@@ -36,8 +36,6 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
     }
 
     Location location;
-    EntityType type = EntityType.PIG;
-    int amount = 1;
 
     @Override
     public String getTitle() {
@@ -53,7 +51,9 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
     public void load() {
 
         String[] splitLine3 = ASTERISK_PATTERN.split(getSign().getLine(3).trim());
-        type = EntityType.fromName(splitLine3[0]);
+        type = EntityType.fromName(splitLine3[0].toLowerCase());
+        if(type == null)
+            type = EntityType.PIG;
 
         try {
             amount = Integer.parseInt(splitLine3[1]);
