@@ -35,6 +35,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.ItemType;
 
 /**
  * IC utility functions.
@@ -245,7 +246,14 @@ public class ICUtil {
                     data = Integer.parseInt(split[1]);
                 }
                 catch(NumberFormatException e){
-                    id = BlockType.lookup(split[0]).getID();
+                    try {
+                        id = BlockType.lookup(split[0]).getID();
+                        if(id < 0)
+                            throw new NullPointerException();
+                    }
+                    catch(Exception ee){
+                        id = ItemType.lookup(split[0]).getID();
+                    }
                     data = Integer.parseInt(split[1]);
                 }
                 return new ItemStack(id, 1, (short) data, (byte) data);
@@ -255,7 +263,14 @@ public class ICUtil {
                     id = Integer.parseInt(line);
                 }
                 catch(NumberFormatException e){
-                    id = BlockType.lookup(line).getID();
+                    try {
+                        id = BlockType.lookup(line).getID();
+                        if(id < 0)
+                            throw new NullPointerException();
+                    }
+                    catch(Exception ee){
+                        id = ItemType.lookup(line).getID();
+                    }
                 }
                 return new ItemStack(id, 1, (short) 0);
             }
