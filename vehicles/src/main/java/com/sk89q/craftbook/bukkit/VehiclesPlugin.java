@@ -28,7 +28,6 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -155,7 +154,6 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             Vehicle vehicle = event.getVehicle();
             Entity entity = event.getEntity();
 
-            if (entity instanceof Player) return;
             if (!config.boatRemoveEntities && !config.minecartRemoveEntities && !config.minecartEnterOnImpact) return;
 
             if (config.minecartEnterOnImpact && vehicle instanceof Minecart) {
@@ -170,7 +168,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 if (!config.boatRemoveEntitiesOtherBoats &&
                         entity instanceof Boat) return;
 
-                entity.remove();
+                if (entity instanceof LivingEntity)
+                    ((LivingEntity) entity).damage(5);
+                else
+                    entity.remove();
 
                 return;
             }
@@ -179,7 +180,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                 if (!config.minecartRemoveEntitiesOtherCarts &&
                         entity instanceof Minecart) return;
 
-                entity.remove();
+                if (entity instanceof LivingEntity)
+                    ((LivingEntity) entity).damage(5);
+                else
+                    entity.remove();
             }
         }
 
