@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.gates.world.items;
+package com.sk89q.craftbook.gates.world.blocks;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
