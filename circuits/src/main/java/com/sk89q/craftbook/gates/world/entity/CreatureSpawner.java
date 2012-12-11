@@ -119,7 +119,7 @@ public class CreatureSpawner extends AbstractIC {
             }
     }
 
-    public void setEntityData(Entity ent, String bit) {
+    public static void setEntityData(Entity ent, String bit) {
 
         String[] data = ICUtil.COLON_PATTERN.split(bit);
 

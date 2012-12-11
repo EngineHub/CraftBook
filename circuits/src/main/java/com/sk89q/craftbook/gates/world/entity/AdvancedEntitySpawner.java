@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
@@ -24,7 +25,7 @@ import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class AdvancedEntitySpawner extends CreatureSpawner {
+public class AdvancedEntitySpawner extends AbstractIC {
 
     private static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
@@ -36,6 +37,8 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
     }
 
     Location location;
+    EntityType type;
+    int amount = 1;
 
     @Override
     public String getTitle() {
@@ -145,7 +148,7 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                     String[] data = COLON_PATTERN.split(bit);
 
                     if(data[0].equalsIgnoreCase("e"))
-                        setEntityData(ent, bit.substring(2));
+                        CreatureSpawner.setEntityData(ent, bit.substring(2));
                     else if(data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
                         Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), rider);
