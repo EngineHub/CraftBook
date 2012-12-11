@@ -44,10 +44,8 @@ public abstract class AbstractIC implements IC {
         this.factory = factory;
         this.server = server;
         this.sign = sign;
-        try {
+        if(sign != null)
             load();
-        }
-        catch(NullPointerException e){}
     }
 
     protected Server getServer() {
