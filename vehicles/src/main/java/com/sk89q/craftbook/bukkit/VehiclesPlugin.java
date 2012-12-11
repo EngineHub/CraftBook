@@ -351,6 +351,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                         continue;
                     player.checkPermission("craftbook.vehicles." + mech.getName().toLowerCase());
                     event.setLine(1, linefound);
+                    player.print(mech.getName() + " Created!");
                 }
             } catch (InsufficientPermissionsException e) {
                 player.printError("vehicles.create-permission");
