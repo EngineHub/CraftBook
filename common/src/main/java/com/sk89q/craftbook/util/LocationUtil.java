@@ -64,10 +64,7 @@ public final class LocationUtil {
      */
     public static double getDistance(Location l1, Location l2) {
 
-        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance)
-            return getBlockDistance(l1, l2);
-        else
-            return Math.sqrt(l1.distanceSquared(l2));
+        return Math.sqrt(getDistanceSquared(l1,l2));
     }
 
     public static double getDistanceSquared(Location l1, Location l2) {

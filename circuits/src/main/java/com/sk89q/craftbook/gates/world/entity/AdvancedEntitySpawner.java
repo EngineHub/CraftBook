@@ -2,17 +2,13 @@ package com.sk89q.craftbook.gates.world.entity;
 
 import java.util.regex.Pattern;
 
-import net.minecraft.server.v1_4_5.Enchantment;
-import net.minecraft.server.v1_4_5.EntityLiving;
-import net.minecraft.server.v1_4_5.Item;
-import net.minecraft.server.v1_4_5.ItemStack;
-
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -105,9 +101,8 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
 
             if(armourSign != null) { //Apply armor
                 if(ent instanceof LivingEntity) {
-                    CraftLivingEntity cle = (CraftLivingEntity) ent;
-                    EntityLiving eliv = cle.getHandle();
 
+                    ItemStack[] armour = new ItemStack[4];
                     for(int s = 0; s < 4; s++) {
                         try {
                             String bit = armourSign.getLine(s);
@@ -121,19 +116,21 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                             }
                             catch(Exception e){}
 
-                            ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(COLON_PATTERN.split(bitSplit[0])[0])], 1, data);
+                            ItemStack slot = new ItemStack(Integer.parseInt(COLON_PATTERN.split(bitSplit[0])[0]), 1, data);
                             try {
                                 for(int e = 1; e < bitSplit.length; e++) {
                                     String[] enchantInfo = COLON_PATTERN.split(bitSplit[e]);
-                                    slot.addEnchantment(Enchantment.byId[Integer.parseInt(enchantInfo[0])],
-                                            Integer.parseInt(enchantInfo[1]));
+                                    slot.addEnchantment(Enchantment.getById(Integer.parseInt(enchantInfo[0])), Integer.parseInt(enchantInfo[1]));
                                 }
                             }
                             catch(Exception e){}
-                            eliv.setEquipment(s + 1, slot);
+
+                            armour[s] = slot;
                         }
                         catch(Exception e){}
                     }
+
+                    ((LivingEntity) ent).getEquipment().setArmorContents(armour);
                 }
             }
 
@@ -180,8 +177,6 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                     else if(data[0].equalsIgnoreCase("s")) {
                         if(!(ent instanceof LivingEntity))
                             continue;
-                        CraftLivingEntity cle = (CraftLivingEntity) ent;
-                        EntityLiving eliv = cle.getHandle();
 
                         byte d = 0;
                         String[] splitBit = SEMICOLON_PATTERN.split(bit);
@@ -191,16 +186,15 @@ public class AdvancedEntitySpawner extends CreatureSpawner {
                         }
                         catch(Exception e){}
 
-                        ItemStack slot = new ItemStack(Item.byId[Integer.parseInt(splitEvenMore[1])], 1, d);
+                        ItemStack slot = new ItemStack(Integer.parseInt(splitEvenMore[1]), 1, d);
                         try {
                             for(int e = 1; e < splitBit.length; e++) {
                                 String[] enchantInfo = COLON_PATTERN.split(splitBit[e]);
-                                slot.addEnchantment(Enchantment.byId[Integer.parseInt(enchantInfo[0])],
-                                        Integer.parseInt(enchantInfo[1]));
+                                slot.addEnchantment(Enchantment.getById(Integer.parseInt(enchantInfo[0])), Integer.parseInt(enchantInfo[1]));
                             }
                         }
                         catch(Exception e){}
-                        eliv.setEquipment(0, slot);
+                        ((LivingEntity) ent).getEquipment().setItemInHand(slot);
                     }
                 }
                 if(upwards == null) {
