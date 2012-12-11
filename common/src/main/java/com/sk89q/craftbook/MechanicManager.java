@@ -539,6 +539,7 @@ public class MechanicManager {
             if (state instanceof Sign) {
                 try {
                     load(toWorldVector(state.getBlock()));
+                } catch (InvalidMechanismException e) {
                 } catch (Exception t) {
                     Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
                 }
