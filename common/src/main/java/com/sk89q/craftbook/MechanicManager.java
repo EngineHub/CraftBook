@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -43,6 +44,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -536,12 +538,9 @@ public class MechanicManager {
             if (state == null) continue;
             if (state instanceof Sign) {
                 try {
-                    try {
-                        load(toWorldVector(state.getBlock()));
-                    } catch (NullPointerException t) {
-                        t.printStackTrace();
-                    }
-                } catch (InvalidMechanismException ignored) {
+                    load(toWorldVector(state.getBlock()));
+                } catch (Exception t) {
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
                 }
             }
         }
@@ -583,7 +582,7 @@ public class MechanicManager {
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);
-            t.printStackTrace();
+            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
         }
 
         synchronized (this) {
@@ -616,7 +615,7 @@ public class MechanicManager {
                 } catch (Throwable t) { // Mechanic failed to think for some reason
                     logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
                             .getCanonicalName(), t);
-                    t.printStackTrace();
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
                 }
             } else {
                 unload(mechanic, null);

@@ -248,7 +248,7 @@ public final class LocationUtil {
      * @param block
      * @param direction
      *
-     * @return next air block vertically.
+     * @return next air block in a direction.
      */
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
 

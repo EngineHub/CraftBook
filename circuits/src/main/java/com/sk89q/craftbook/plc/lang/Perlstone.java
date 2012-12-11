@@ -25,12 +25,14 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.plc.PlcException;
 import com.sk89q.craftbook.plc.PlcLanguage;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]> {
 
@@ -227,7 +229,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     "on line " + li[i].line + " at column " + li[i].col);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                     i = li.length - 1;
                     throw new ICVerificationException("Unexpected function end " +
                             "around line " + li[i].line);

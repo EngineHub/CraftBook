@@ -62,7 +62,6 @@ public class CreatureSpawner extends AbstractIC {
     private EntityType entityType = EntityType.PIG;
     private String data;
     private int amount = 1;
-    private Block center;
 
     public CreatureSpawner(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -82,7 +81,6 @@ public class CreatureSpawner extends AbstractIC {
         } catch (Exception e) {
             data = line;
         }
-        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
     }
 
     @Override
@@ -100,6 +98,8 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+
         if (chip.getInput(0))
             if (entityType != null && entityType.isAlive()) {
                 if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
@@ -109,11 +109,10 @@ public class CreatureSpawner extends AbstractIC {
                     sp.update();
                 }
                 else {
-                    Location center = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(this.center,
-                            BlockFace.UP));
+                    Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
                     // spawn amount of mobs
                     for (int i = 0; i < amount; i++) {
-                        Entity entity = center.getWorld().spawnEntity(center, entityType);
+                        Entity entity = loc.getWorld().spawnEntity(loc, entityType);
                         setEntityData(entity, data);
                     }
                 }
@@ -144,12 +143,9 @@ public class CreatureSpawner extends AbstractIC {
             ((LivingEntity)ent).setCanPickupItems(true);
         }
 
-        try {
-            if (ent instanceof Tameable && data[0].equalsIgnoreCase("owner")) {
-                ((Tameable) ent).setOwner(Bukkit.getPlayer(data[1]));
-            }
+        if (ent instanceof Tameable && data[0].equalsIgnoreCase("owner")) {
+            ((Tameable) ent).setOwner(Bukkit.getPlayer(data[1]));
         }
-        catch(Exception e){}
 
         if (ent instanceof Ageable && data[0].equalsIgnoreCase("babylock")) {
             ((Ageable) ent).setBaby();

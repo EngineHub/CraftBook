@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -38,6 +39,7 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -227,7 +229,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                     logger.info(getDescription().getName()
                             + ": Default configuration file written: " + name);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                 } finally {
                     try {
                         input.close();
@@ -324,7 +326,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
             } else {
                 sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
-                e.printStackTrace();
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
         } catch (CommandException e) {
             sender.sendMessage(ChatColor.RED + e.getMessage());

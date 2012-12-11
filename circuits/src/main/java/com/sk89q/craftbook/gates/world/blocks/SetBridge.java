@@ -49,8 +49,6 @@ public class SetBridge extends AbstractIC {
     @Override
     public void load() {
 
-        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-        faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {
             try {
@@ -144,6 +142,9 @@ public class SetBridge extends AbstractIC {
     }
 
     private void setDoor(boolean open) {
+
+        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
 
         for (int x = 0; x < width; x++) {
             for (int z = 0; z < depth; z++) {

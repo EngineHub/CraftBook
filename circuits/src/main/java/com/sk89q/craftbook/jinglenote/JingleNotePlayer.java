@@ -7,9 +7,12 @@
 
 package com.sk89q.craftbook.jinglenote;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class JingleNotePlayer implements Runnable {
 
@@ -38,12 +41,12 @@ public class JingleNotePlayer implements Runnable {
             try {
                 sequencer.run(this);
             } catch (Throwable t) {
-                t.printStackTrace();
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
             }
 
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         } finally {
             sequencer.stop();
             sequencer = null;

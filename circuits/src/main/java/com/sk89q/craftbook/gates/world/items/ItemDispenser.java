@@ -47,7 +47,6 @@ public class ItemDispenser extends AbstractIC {
 
     @Override
     public void load() {
-        String item = getSign().getLine(2);
         try {
             amount = Math.min(64, Math.max(1, Integer.parseInt(getSign().getLine(3))));
         } catch (Exception ignored) {
@@ -55,8 +54,9 @@ public class ItemDispenser extends AbstractIC {
         }
         if(amount < 1)
             amount = 1;
+        String item = getSign().getLine(2).trim();
         if (item.contains(":")) {
-            String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
+            String[] itemAndData = ICUtil.COLON_PATTERN.split(item);
             data = Short.parseShort(itemAndData[1]);
             item = itemAndData[0];
         }
@@ -65,7 +65,7 @@ public class ItemDispenser extends AbstractIC {
             id = Integer.parseInt(item);
         }
         catch (Exception e) {}
-        if(id < 0) {
+        if(id <= 0) {
             id = BlockType.lookup(item).getID();
         }
         if(data < 0)
@@ -90,18 +90,14 @@ public class ItemDispenser extends AbstractIC {
         if (chip.getInput(0)) {
             if (id > 0 && id != 36) {
                 Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
-                int maxY = Math.min(BukkitUtil.toSign(getSign()).getWorld().getMaxHeight(), loc.getBlockY() + 10);
-                int x = loc.getBlockX();
-                int z = loc.getBlockZ();
+                int maxY = 10;
 
-                for (int y = loc.getBlockY() + 1; y <= maxY; y++)
-                    if (BlockType.canPassThrough(BukkitUtil.toSign(getSign()).getWorld().getBlockTypeIdAt(x, y, z))) {
+                for (int y = 1; y <= maxY; y++)
+                    if (BlockType.canPassThrough(loc.getBlock().getRelative(0, y, 0).getTypeId())) {
 
                         ItemStack stack = new ItemStack(id, amount, data, (byte) data);
 
-                        BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(
-                                new Location(BukkitUtil.toSign(getSign()).getWorld(), x, y, z),
-                                stack);
+                        BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(loc.getBlock().getRelative(0, y, 0).getLocation(), stack);
                         return;
                     }
             }

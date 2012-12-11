@@ -3,8 +3,6 @@ package com.sk89q.craftbook.mech;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -23,6 +21,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 @Deprecated
 public class CustomCrafting implements Listener {
@@ -246,10 +245,7 @@ public class CustomCrafting implements Listener {
         } catch (Exception e) {
             try {
                 plugin.getLogger().severe("Failed to add Custom Recipes!");
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                plugin.getLogger().severe(sw.toString());
+                plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
             } catch (Exception ignored) {
             }
         }
