@@ -52,12 +52,10 @@ public class CartTeleporter extends CartMechanism {
         Location loc = BukkitUtil.center(new Location(world, x, y, z, cart.getLocation().getYaw(), cart.getLocation().getPitch()) {
 
         });
-        if (!loc.getChunk().isLoaded()) {
-            loc.getChunk().load(true);
-        }
-        if (cart.getWorld() == world) {
+        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100*100) {
             cart.teleport(loc);
         } else {
+            loc.getChunk().load(true);
             Minecart toCart = world.spawn(loc, Minecart.class);
             Entity passenger = cart.getPassenger();
             if (passenger != null) {
@@ -65,6 +63,8 @@ public class CartTeleporter extends CartMechanism {
                 passenger.teleport(loc);
                 toCart.setPassenger(passenger);
             }
+            toCart.getLocation().setYaw(cart.getLocation().getYaw());
+            toCart.getLocation().setPitch(cart.getLocation().getPitch());
             toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
             cart.remove();
         }
