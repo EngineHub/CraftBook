@@ -24,6 +24,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -349,8 +350,10 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                     }
                     if(!found)
                         continue;
+                    if(!mech.verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines), player))
+                        return;
                     player.checkPermission("craftbook.vehicles." + mech.getName().toLowerCase());
-                    event.setLine(1, linefound);
+                    event.setLine(1, "[" + linefound + "]");
                     player.print(mech.getName() + " Created!");
                 }
             } catch (InsufficientPermissionsException e) {

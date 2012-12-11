@@ -6,6 +6,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.RedstoneUtil;
 import com.sk89q.craftbook.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -159,4 +161,9 @@ public abstract class CartMechanism {
     public abstract String getName();
 
     public abstract String[] getApplicableSigns();
+
+    public boolean verify(ChangedSign sign, LocalPlayer player){
+
+        return true;
+    }
 }

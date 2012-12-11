@@ -7,6 +7,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 
@@ -68,6 +70,21 @@ public class CartTeleporter extends CartMechanism {
             toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
             cart.remove();
         }
+    }
+
+    @Override
+    public boolean verify(ChangedSign sign, LocalPlayer player){
+
+        String[] pts = COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
+        try {
+            Double.parseDouble(pts[0].trim());
+            Double.parseDouble(pts[1].trim());
+            Double.parseDouble(pts[2].trim());
+        } catch (NumberFormatException e) {
+            player.printError("Line 3 must contain coordinates seperated by a comma! (x,y,z)");
+            return false;
+        }
+        return true;
     }
 
     @Override
