@@ -37,8 +37,7 @@ public class Planter extends AbstractIC {
         super(server, block, factory);
     }
 
-    int itemID = 295;
-    byte data = -1;
+    ItemStack item = new ItemStack(295, 1);
     Block target;
     Block onBlock;
     Vector offset = new Vector(0,2,0);
@@ -47,26 +46,10 @@ public class Planter extends AbstractIC {
     @Override
     public void load() {
 
-        String item = getSign().getLine(2);
+        item = ICUtil.getItem(getLine(2));
+        if(item == null)
+            item = new ItemStack(295, 1);
 
-        if (item.contains(":")) {
-            String[] itemAndData = ICUtil.COLON_PATTERN.split(item, 2);
-            data = Byte.parseByte(itemAndData[1]);
-            item = itemAndData[0];
-        }
-
-        try {
-            itemID = Integer.parseInt(item);
-        }
-        catch (Exception e) {
-            if(getSign().getLine(2).trim().isEmpty())
-                itemID = 295;
-            else
-                itemID = -1;
-        }
-        if(itemID < 0) {
-            itemID = BlockType.lookup(item).getID();
-        }
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         try {
@@ -121,7 +104,7 @@ public class Planter extends AbstractIC {
 
     public boolean plant() {
 
-        if (!plantableItem(itemID)) return false;
+        if (!plantableItem(item.getTypeId())) return false;
 
         if(onBlock.getRelative(0,1,0).getTypeId() == BlockID.CHEST) {
 
@@ -131,17 +114,17 @@ public class Planter extends AbstractIC {
                 if(!ItemUtil.isStackValid(it))
                     continue;
 
-                if(it.getTypeId() != itemID)
+                if(it.getTypeId() != item.getTypeId())
                     continue;
 
-                if(data != -1 && it.getDurability() != data)
+                if(item.getDurability() != 0 && it.getDurability() != item.getDurability())
                     continue;
 
                 Block b = null;
 
                 if((b = searchBlocks(it)) != null) {
                     if(c.getInventory().removeItem(new ItemStack(it.getTypeId(),1,it.getDurability(),it.getData().getData())).isEmpty()) {
-                        b.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
+                        b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
                         return true;
                     }
                 }
@@ -157,7 +140,7 @@ public class Planter extends AbstractIC {
                 if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
                     continue;
 
-                if (itemEnt.getItemStack().getTypeId() == itemID && (data == -1 || itemEnt.getItemStack().getDurability() == data || itemEnt.getItemStack().getData().getData() == data)) {
+                if (itemEnt.getItemStack().getTypeId() == item.getTypeId() && (item.getDurability() == 0 || itemEnt.getItemStack().getDurability() == item.getDurability() || itemEnt.getItemStack().getData().getData() == item.getData().getData())) {
                     Location loc = itemEnt.getLocation();
                     double diffX = target.getX() - loc.getX();
                     double diffY = target.getY() - loc.getY();
@@ -169,7 +152,7 @@ public class Planter extends AbstractIC {
 
                         if((b = searchBlocks(itemEnt.getItemStack())) != null) {
                             if(ItemUtil.takeFromEntity(itemEnt)) {
-                                b.setTypeIdAndData(getBlockByItem(itemID), data == -1 ? 0 : data, true);
+                                b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
                                 return true;
                             }
                         }
@@ -194,7 +177,7 @@ public class Planter extends AbstractIC {
                     if(b.getTypeId() != 0)
                         continue;
 
-                    if (itemPlantableOnBlock(itemID, b.getRelative(0, -1, 0).getTypeId())) {
+                    if (itemPlantableOnBlock(item.getTypeId(), b.getRelative(0, -1, 0).getTypeId())) {
 
                         return b;
                     }
