@@ -128,6 +128,7 @@ import com.sk89q.craftbook.gates.world.items.AutomaticCrafterST;
 import com.sk89q.craftbook.gates.world.items.ContainerCollector;
 import com.sk89q.craftbook.gates.world.items.ContainerCollectorST;
 import com.sk89q.craftbook.gates.world.items.ContainerDispenser;
+import com.sk89q.craftbook.gates.world.items.ContainerDispenserST;
 import com.sk89q.craftbook.gates.world.items.ItemDispenser;
 import com.sk89q.craftbook.gates.world.items.ItemFan;
 import com.sk89q.craftbook.gates.world.items.ItemFanST;
@@ -442,6 +443,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Self triggered
         registerIC("MC0020", "random 1 st", new RandomBitST.Factory(server), familySISO, familyAISO);                     //Restricted
         registerIC("MC0111", "receiver st", new WirelessReceiverST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0202", "c dispense st",new ContainerDispenserST.Factory(server), familySISO, familyAISO);
         registerIC("MC0204", "trap st",     new EntityTrapST.Factory(server), familySISO, familyAISO);                    // Restricted
         registerIC("MC0209", "collector st",new ContainerCollectorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0210", "emitter st",  new ParticleEffectST.Factory(server), familySISO, familyAISO);

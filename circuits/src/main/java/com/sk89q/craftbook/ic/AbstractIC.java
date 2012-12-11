@@ -47,7 +47,7 @@ public abstract class AbstractIC implements IC {
         try {
             load();
         }
-        catch(Exception e){}
+        catch(NullPointerException e){}
     }
 
     protected Server getServer() {

@@ -36,10 +36,7 @@ public class ContainerDispenser extends AbstractIC {
 
     @Override
     public void load() {
-        try {
-            amount = Integer.parseInt(getSign().getLine(2));
-        } catch (Exception ignored) {
-        }
+        amount = Integer.parseInt(getSign().getLine(2));
     }
 
     @Override
