@@ -140,6 +140,10 @@ public class CreatureSpawner extends AbstractIC {
             ((LivingEntity)ent).setRemoveWhenFarAway(true);
         }
 
+        if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("pickup")) {
+            ((LivingEntity)ent).setCanPickupItems(true);
+        }
+
         try {
             if (ent instanceof Tameable && data[0].equalsIgnoreCase("owner")) {
                 ((Tameable) ent).setOwner(Bukkit.getPlayer(data[1]));
