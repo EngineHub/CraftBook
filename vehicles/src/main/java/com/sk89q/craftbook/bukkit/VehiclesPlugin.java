@@ -341,19 +341,30 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                         continue;
                     boolean found = false;
                     String linefound = null;
+                    int linenum = 1;
                     for(String sign : mech.getApplicableSigns()) {
                         if(lines[1].equalsIgnoreCase("[" + sign + "]")) {
                             found = true;
                             linefound = sign;
+                            linenum = 1;
+                            break;
+                        }
+                        else if(mech.getName().equalsIgnoreCase("messager") && lines[0].equalsIgnoreCase("[" + sign + "]")) {
+                            found = true;
+                            linefound = sign;
+                            linenum = 0;
                             break;
                         }
                     }
                     if(!found)
                         continue;
-                    if(!mech.verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines), player))
+                    if(!mech.verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines), player)) {
+                        block.breakNaturally();
+                        event.setCancelled(true);
                         return;
+                    }
                     player.checkPermission("craftbook.vehicles." + mech.getName().toLowerCase());
-                    event.setLine(1, "[" + linefound + "]");
+                    event.setLine(linenum, "[" + linefound + "]");
                     player.print(mech.getName() + " Created!");
                 }
             } catch (InsufficientPermissionsException e) {
