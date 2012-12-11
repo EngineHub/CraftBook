@@ -341,7 +341,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
                     boolean found = false;
                     String linefound = null;
                     for(String sign : mech.getApplicableSigns()) {
-                        if(lines[1].equalsIgnoreCase(sign)) {
+                        if(lines[1].equalsIgnoreCase("[" + sign + "]")) {
                             found = true;
                             linefound = sign;
                             break;

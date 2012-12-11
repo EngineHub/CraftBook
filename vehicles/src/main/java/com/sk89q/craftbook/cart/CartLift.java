@@ -12,10 +12,10 @@ public class CartLift extends CartMechanism {
         // validate
         if (cart == null) return;
         if (blocks.sign == null) return;
-        if (!(blocks.matches("cart lift up") || blocks.matches("cart lift down"))) return;
+        if (!(blocks.matches("cartlift up") || blocks.matches("cartlift down"))) return;
 
         // go
-        boolean up = blocks.matches("cart lift up");
+        boolean up = blocks.matches("cartlift up");
         Block destination = blocks.sign;
 
         BlockFace face;
@@ -30,8 +30,8 @@ public class CartLift extends CartMechanism {
             if (state instanceof Sign && blocks.base.getTypeId() == destination.getRelative(BlockFace.UP).getTypeId()) {
                 String testLine = ((Sign) state).getLine(2);
 
-                if (testLine.equalsIgnoreCase("[Cart Lift Up]") || testLine.equalsIgnoreCase("[Cart Lift Down]")
-                        || testLine.equalsIgnoreCase("[Cart Lift]")) {
+                if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]")
+                        || testLine.equalsIgnoreCase("[CartLift]")) {
                     destination.getRelative(BlockFace.UP, 2);
                     break;
                 }
@@ -48,6 +48,6 @@ public class CartLift extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"Cart Lift Up","Cart Lift Down","Cart Lift"};
+        return new String[]{"CartLift Up","CartLift Down","CartLift"};
     }
 }
