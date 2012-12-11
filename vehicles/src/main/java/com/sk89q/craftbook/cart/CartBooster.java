@@ -38,4 +38,14 @@ public class CartBooster extends CartMechanism {
         // go
         cart.setVelocity(newVelocity);
     }
+
+    @Override
+    public String getName () {
+        return "Booster";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return null;
+    }
 }

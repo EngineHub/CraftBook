@@ -149,4 +149,14 @@ public class CartDispenser extends CartMechanism {
             return cl;
         }
     }
+
+    @Override
+    public String getName () {
+        return "Dispenser";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"Dispenser"};
+    }
 }

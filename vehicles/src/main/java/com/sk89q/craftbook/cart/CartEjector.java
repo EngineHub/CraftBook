@@ -44,4 +44,14 @@ public class CartEjector extends CartMechanism {
         //  what's actually happening is that the server didn't see them enter the cart
         //  until -after- it had triggered the ejector... it's just client anticipating.
     }
+
+    @Override
+    public String getName () {
+        return "Ejector";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"Eject"};
+    }
 }

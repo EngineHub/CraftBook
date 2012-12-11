@@ -69,4 +69,14 @@ public class CartTeleporter extends CartMechanism {
             cart.remove();
         }
     }
+
+    @Override
+    public String getName () {
+        return "Teleporter";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"Teleport"};
+    }
 }

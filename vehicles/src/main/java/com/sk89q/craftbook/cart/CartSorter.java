@@ -202,4 +202,14 @@ public class CartSorter extends CartMechanism {
 
         return false;
     }
+
+    @Override
+    public String getName () {
+        return "Sorter";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"Sort"};
+    }
 }

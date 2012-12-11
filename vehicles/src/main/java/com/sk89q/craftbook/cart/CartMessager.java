@@ -70,4 +70,14 @@ public class CartMessager extends CartMechanism {
             }
         }
     }
+
+    @Override
+    public String getName () {
+        return "Messager";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"Print"};
+    }
 }

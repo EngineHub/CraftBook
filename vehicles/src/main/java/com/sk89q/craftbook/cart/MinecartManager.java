@@ -24,7 +24,7 @@ public class MinecartManager {
     }
 
     private final VehiclesPlugin plugin;
-    private Map<ItemInfo, CartMechanism> mechanisms;
+    public Map<ItemInfo, CartMechanism> mechanisms;
 
     public void reloadConfiguration(VehiclesConfiguration cfg) {
 

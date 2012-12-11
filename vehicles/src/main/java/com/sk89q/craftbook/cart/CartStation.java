@@ -84,4 +84,14 @@ public class CartStation extends CartMechanism {
                 break;
         }
     }
+
+    @Override
+    public String getName () {
+        return "Station";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"station"};
+    }
 }

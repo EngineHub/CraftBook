@@ -155,4 +155,8 @@ public abstract class CartMechanism {
         }
         return null;
     }
+
+    public abstract String getName();
+
+    public abstract String[] getApplicableSigns();
 }

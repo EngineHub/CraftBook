@@ -335,22 +335,22 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
             LocalPlayer player = wrap(event.getPlayer());
 
             try {
-                if (lines[1].equalsIgnoreCase("[deposit]") || lines[1].equalsIgnoreCase("[collect]")) {
-                    player.checkPermission("craftbook.vehicles.deposit");
-                } else if (lines[1].equalsIgnoreCase("[dispenser]")) {
-                    player.checkPermission("craftbook.vehicles.dispenser");
-                } else if (lines[1].equalsIgnoreCase("[eject]")) {
-                    player.checkPermission("craftbook.vehicles.eject");
-                } else if (lines[1].equalsIgnoreCase("[print]")) {
-                    player.checkPermission("craftbook.vehicles.print");
-                } else if (lines[1].equalsIgnoreCase("[reverse]")) {
-                    player.checkPermission("craftbook.vehicles.reverse");
-                } else if (lines[1].equalsIgnoreCase("[sort]")) {
-                    player.checkPermission("craftbook.vehicles.sort");
-                } else if (lines[1].equalsIgnoreCase("[station]")) {
-                    player.checkPermission("craftbook.vehicles.station");
-                } else if (lines[1].equalsIgnoreCase("[teleport]")) {
-                    player.checkPermission("craftbook.vehicles.teleport");
+                for(CartMechanism mech : cartman.mechanisms.values()) {
+                    if(mech.getApplicableSigns() == null)
+                        continue;
+                    boolean found = false;
+                    String linefound = null;
+                    for(String sign : mech.getApplicableSigns()) {
+                        if(lines[1].equalsIgnoreCase(sign)) {
+                            found = true;
+                            linefound = sign;
+                            break;
+                        }
+                    }
+                    if(!found)
+                        continue;
+                    player.checkPermission("craftbook.vehicles." + mech.getName().toLowerCase());
+                    event.setLine(1, linefound);
                 }
             } catch (InsufficientPermissionsException e) {
                 player.printError("vehicles.create-permission");

@@ -56,4 +56,14 @@ public class CartReverser extends CartMechanism {
                 reverse(cart);
         }
     }
+
+    @Override
+    public String getName () {
+        return "Reverser";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"reverse"};
+    }
 }

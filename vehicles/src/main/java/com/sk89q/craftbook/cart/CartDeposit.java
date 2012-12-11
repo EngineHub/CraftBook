@@ -163,4 +163,14 @@ public class CartDeposit extends CartMechanism {
             //System.out.println("deposit done. " + transferitems.size() + " items wouldn't fit back.");
         }
     }
+
+    @Override
+    public String getName () {
+        return "Deposit";
+    }
+
+    @Override
+    public String[] getApplicableSigns () {
+        return new String[]{"Collect","Deposit"};
+    }
 }
