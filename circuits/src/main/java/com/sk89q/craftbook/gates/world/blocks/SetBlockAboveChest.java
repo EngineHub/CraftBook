@@ -22,7 +22,7 @@ public class SetBlockAboveChest extends SetBlock {
     @Override
     public String getTitle() {
 
-        return "Set Block Above";
+        return "Set Block Above (Chest)";
     }
 
     @Override
@@ -31,6 +31,7 @@ public class SetBlockAboveChest extends SetBlock {
         return "SET BLOCK ABOVE";
     }
 
+    @Override
     protected void doSet(Block body, int block, byte meta, boolean force) {
 
         int x = body.getX();

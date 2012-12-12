@@ -110,8 +110,12 @@ import com.sk89q.craftbook.gates.world.blocks.Pump;
 import com.sk89q.craftbook.gates.world.blocks.PumpST;
 import com.sk89q.craftbook.gates.world.blocks.SetBlockAbove;
 import com.sk89q.craftbook.gates.world.blocks.SetBlockAboveChest;
+import com.sk89q.craftbook.gates.world.blocks.SetBlockAboveChestST;
+import com.sk89q.craftbook.gates.world.blocks.SetBlockAboveST;
 import com.sk89q.craftbook.gates.world.blocks.SetBlockBelow;
 import com.sk89q.craftbook.gates.world.blocks.SetBlockBelowChest;
+import com.sk89q.craftbook.gates.world.blocks.SetBlockBelowChestST;
+import com.sk89q.craftbook.gates.world.blocks.SetBlockBelowST;
 import com.sk89q.craftbook.gates.world.blocks.SetBridge;
 import com.sk89q.craftbook.gates.world.blocks.SetDoor;
 import com.sk89q.craftbook.gates.world.blocks.Spigot;
@@ -448,8 +452,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0111", "receiver st", new WirelessReceiverST.Factory(server), familySISO, familyAISO);
         registerIC("MC0202", "c dispense st",new ContainerDispenserST.Factory(server), familySISO, familyAISO);
         registerIC("MC0204", "trap st",     new EntityTrapST.Factory(server), familySISO, familyAISO);                    // Restricted
+        registerIC("MC0205", "set above st", new SetBlockAboveST.Factory(server), familySISO, familyAISO);       // Restricted
+        registerIC("MC0206", "set below st", new SetBlockBelowST.Factory(server), familySISO, familyAISO);       // Restricted
         registerIC("MC0209", "collector st",new ContainerCollectorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0210", "emitter st",  new ParticleEffectST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0215", "set a chest st",new SetBlockAboveChestST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0216", "set b chest st",new SetBlockBelowChestST.Factory(server), familySISO, familyAISO);
         registerIC("MC0217", "pot induce st",new PotionInducerST.Factory(server), familySISO, familyAISO);              //Restricted
         registerIC("MC0219", "auto craft st",new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0220", "a bl break st",new BlockBreakerST.Factory(server, false), familySISO, familyAISO);

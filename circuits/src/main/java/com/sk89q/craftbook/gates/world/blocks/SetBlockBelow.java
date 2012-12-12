@@ -48,6 +48,7 @@ public class SetBlockBelow extends SetBlock {
         return "SET BLOCK BELOW";
     }
 
+    @Override
     protected void doSet(Block body, int block, byte meta, boolean force) {
 
         int x = body.getX();
@@ -76,5 +77,4 @@ public class SetBlockBelow extends SetBlock {
             return new SetBlockBelow(getServer(), sign, this);
         }
     }
-
 }

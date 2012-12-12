@@ -55,11 +55,7 @@ public abstract class SetBlock extends AbstractIC {
         }
     }
 
-    @Override
-    public void trigger(ChipState chip) {
-
-        chip.setOutput(0, chip.getInput(0));
-
+    public void onTrigger() {
         if (BlockType.fromID(block) == null || block >= 256) {
             return;
         }
@@ -67,6 +63,14 @@ public abstract class SetBlock extends AbstractIC {
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         doSet(body, block, meta, force.equals("FORCE"));
+    }
+
+    @Override
+    public void trigger(ChipState chip) {
+
+        chip.setOutput(0, chip.getInput(0));
+
+        onTrigger();
     }
 
     protected abstract void doSet(Block block, int id, byte meta, boolean force);
