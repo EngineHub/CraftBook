@@ -19,22 +19,15 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class ArrowShooter extends AbstractIC {
 
@@ -64,15 +57,15 @@ public class ArrowShooter extends AbstractIC {
         } else if (speed < 0.2) {
             speed = 0.2F;
         }
-        if (spread > 50) {
-            spread = 50;
+        if (spread > 5000) {
+            spread = 5000;
         } else if (spread < 0) {
             spread = 0;
         }
-        if (vert > 1) {
-            vert = 1;
-        } else if (vert < -1) {
-            vert = -1;
+        if (vert > 100) {
+            vert = 100;
+        } else if (vert < -100) {
+            vert = -100;
         }
     }
 
