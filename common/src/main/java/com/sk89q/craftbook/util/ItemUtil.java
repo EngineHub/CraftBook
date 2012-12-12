@@ -48,6 +48,8 @@ public class ItemUtil {
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
+        if(!isStackValid(item) && !isStackValid(item2))
+            return true;
         return areItemsIdentical(item.getData(), item2.getData());
     }
 

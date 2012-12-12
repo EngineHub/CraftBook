@@ -162,14 +162,16 @@ public class AutomaticCrafter extends AbstractIC {
 
     public boolean isValidRecipe(Recipe r, Inventory inv) {
 
-        ItemStack[] invContents = inv.getContents();
-        if (r instanceof ShapedRecipe) {
+        if (r instanceof ShapedRecipe && (recipe == null || recipe instanceof ShapedRecipe)) {
             ShapedRecipe shape = (ShapedRecipe) r;
             Map<Character,ItemStack> ingredientMap = shape.getIngredientMap();
             String[] shapeArr = shape.getShape();
-            boolean large = shapeArr.length == 3;
+            boolean large = shapeArr.length >= 3;
+            if(recipe != null)
+                if(((ShapedRecipe) recipe).getShape().length != shapeArr.length)
+                    return false;
             int c = -1, in = 0;
-            for (ItemStack stack : invContents) {
+            for (ItemStack stack : inv.getContents()) {
                 try {
                     c++;
                     if (c > (large ? 2 : 1)) {
@@ -185,23 +187,19 @@ public class AutomaticCrafter extends AbstractIC {
                     String shapeSection = shapeArr[in];
                     Character item = shapeSection.charAt(c);
                     ItemStack require = ingredientMap.get(item);
-                    if (require == null) {
-                        require = new ItemStack(0, 0);
+                    if (ItemUtil.areItemsIdentical(require, stack)) {
                     }
-                    if (!ItemUtil.isStackValid(stack)) {
-                        if (require.getTypeId() != 0) return false;
-                    } else if (ItemUtil.areItemsIdentical(require, stack)) {
-                    } else
+                    else
                         return false;
                 } catch (Exception e) {
                     return false;
                 }
             }
             return true;
-        } else if (r instanceof ShapelessRecipe) {
+        } else if (r instanceof ShapelessRecipe && (recipe == null || recipe instanceof ShapelessRecipe)) {
             ShapelessRecipe shape = (ShapelessRecipe) r;
             List<ItemStack> ing = shape.getIngredientList();
-            for (ItemStack it : invContents) {
+            for (ItemStack it : inv.getContents()) {
                 if (it == null || it.getAmount() < 1) {
                     continue;
                 }

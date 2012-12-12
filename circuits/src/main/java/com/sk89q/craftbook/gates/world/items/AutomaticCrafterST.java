@@ -34,16 +34,9 @@ public class AutomaticCrafterST extends AutomaticCrafter implements SelfTriggere
     }
 
     @Override
-    public void trigger(ChipState state) {
-
-        if(state.getInput(0))
-            state.setOutput(0, doStuff(true, true));
-    }
-
-    @Override
     public void think(ChipState state) {
 
-        state.setOutput(0, doStuff(false, true));
+        state.setOutput(0, doStuff(true, true));
     }
 
     public static class Factory extends AutomaticCrafter.Factory {
