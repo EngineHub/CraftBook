@@ -83,6 +83,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         lang = l;
         sign = s;
+        if(s == null)
+            return;
         try {
             codeString = getCode();
         } catch (CodeNotFoundException e) {

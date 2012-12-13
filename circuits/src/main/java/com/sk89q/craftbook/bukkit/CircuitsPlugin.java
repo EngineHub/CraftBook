@@ -612,11 +612,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     public void generateICDocs(Player player, String id) {
         RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
-        /*TODO continue work on all docs for(Map.Entry<String, RegisteredICFactory> rc : icManager.registered.entrySet()) {
-            if(rc.getValue().getFactory().getDescription().equalsIgnoreCase("No Description.")) {
-                Bukkit.getLogger().severe("IC " + rc.getValue().getId() + " MISSING DOCS!");
-            }
-        }*/
         if (ric == null) {
             try {
                 ric = icManager.registered.get(getSearchID(player, id));
@@ -739,12 +734,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                                 .DARK_RED + "R " : ""));
             }
             } catch (Exception e) {
-                if (ic.endsWith("5001") || ic.endsWith("5000")) {
-                    // TODO
-                } else {
-                    Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" +
-                            " it to Me4502");
-                }
+                Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" + " it to Me4502");
             }
         }
 
