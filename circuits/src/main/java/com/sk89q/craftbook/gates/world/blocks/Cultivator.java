@@ -15,7 +15,9 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class Cultivator extends AbstractIC {
@@ -62,17 +64,15 @@ public class Cultivator extends AbstractIC {
 
     public boolean cultivate() {
 
-        Vector position = getSign().getSignLocation().getPosition();
+        BlockWorldVector position = getSign().getBlockVector();
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
                 for (int z = -radius + 1; z < radius; z++) {
-                    int rx = position.getBlockX() - x;
-                    int ry = position.getBlockY() - y;
-                    int rz = position.getBlockZ() - z;
-                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                    if(b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
+                    BlockVector current = position.subtract(x, y, z).toBlockPoint();
+                    BaseBlock b = getSign().getLocalWorld().getBlock(current);
+                    if(b.getId() == BlockID.DIRT || b.getId() == BlockID.GRASS) {
                         if(damageHoe()) {
-                            b.setTypeId(BlockID.SOIL);
+                            b.setId(BlockID.SOIL);
                             return true;
                         }
                     }

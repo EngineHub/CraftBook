@@ -2,7 +2,6 @@ package com.sk89q.craftbook;
 
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.Location;
 
 public interface ChangedSign {
 
@@ -16,8 +15,6 @@ public interface ChangedSign {
     public LocalWorld getLocalWorld();
 
     public BlockWorldVector getBlockVector();
-
-    public Location getSignLocation();
 
     //TODO public Chunk getChunk();
 

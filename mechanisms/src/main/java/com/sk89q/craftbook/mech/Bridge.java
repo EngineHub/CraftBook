@@ -497,7 +497,7 @@ public class Bridge extends AbstractMechanic {
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getBridgeMaterial(), getBlocks(sign), getBridgeData());
-            BukkitUtil.toWorld(sign.getLocalWorld()).dropItemNaturally(BukkitUtil.toLocation(sign.getSignLocation()), toDrop);
+            BukkitUtil.toWorld(sign.getLocalWorld()).dropItemNaturally(BukkitUtil.toLocation(sign.getBlockVector()), toDrop);
         }
     }
 

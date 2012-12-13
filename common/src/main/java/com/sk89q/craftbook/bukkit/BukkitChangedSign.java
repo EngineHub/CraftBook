@@ -23,7 +23,6 @@ import org.bukkit.block.Sign;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.Location;
 
 public class BukkitChangedSign implements ChangedSign {
 
@@ -119,12 +118,6 @@ public class BukkitChangedSign implements ChangedSign {
     public byte getRawData() {
 
         return sign.getRawData();
-    }
-
-    @Override
-    public Location getSignLocation() {
-
-        return BukkitUtil.toLocation(sign.getLocation());
     }
 
     @Override
