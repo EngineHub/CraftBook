@@ -155,8 +155,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                                 if(cooked == null)
                                     continue;
                             }
-                            chest.getInventory().addItem(cooked);
-                            chest.getInventory().removeItem(new ItemStack(i.getType(), 1, i.getDurability()));
+                            if(chest.getInventory().addItem(cooked).isEmpty())
+                                chest.getInventory().removeItem(new ItemStack(i.getType(), 1, i.getDurability()));
                             chest.update();
                             break;
                         }
