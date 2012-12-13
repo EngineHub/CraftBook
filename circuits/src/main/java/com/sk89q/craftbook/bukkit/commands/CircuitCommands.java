@@ -122,7 +122,7 @@ public class CircuitCommands {
     @Command(
             aliases = {"searchics"},
             desc = "Search available IC's with names",
-            min = 0,
+            min = 1,
             max = 3
             )
     public void searchics(CommandContext context, CommandSender sender) {

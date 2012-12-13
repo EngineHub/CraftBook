@@ -127,6 +127,9 @@ import com.sk89q.craftbook.gates.world.entity.EntityCannon;
 import com.sk89q.craftbook.gates.world.entity.EntityCannonST;
 import com.sk89q.craftbook.gates.world.entity.EntityTrap;
 import com.sk89q.craftbook.gates.world.entity.EntityTrapST;
+import com.sk89q.craftbook.gates.world.entity.TeleportReciever;
+import com.sk89q.craftbook.gates.world.entity.TeleportRecieverST;
+import com.sk89q.craftbook.gates.world.entity.TeleportTransmitter;
 import com.sk89q.craftbook.gates.world.items.AutomaticCrafter;
 import com.sk89q.craftbook.gates.world.items.AutomaticCrafterST;
 import com.sk89q.craftbook.gates.world.items.ChestStocker;
@@ -343,6 +346,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1025", "server time", new ServerTimeModulus.Factory(server), familySISO, familyAISO);
         registerIC("MC1110", "transmitter", new WirelessTransmitter.Factory(server), familySISO, familyAISO);
         registerIC("MC1111", "receiver",    new WirelessReceiver.Factory(server), familySISO, familyAISO);
+        registerIC("MC1112", "tele-out",    new TeleportTransmitter.Factory(server), familySISO, familyAISO);
+        registerIC("MC1113", "tele-in",     new TeleportReciever.Factory(server), familySISO, familyAISO);
         registerIC("MC1200", "spawner",     new CreatureSpawner.Factory(server), familySISO, familyAISO);     // Restricted
         registerIC("MC1201", "dispenser",   new ItemDispenser.Factory(server), familySISO,familyAISO);       // Restricted
         registerIC("MC1202", "c dispense",  new ContainerDispenser.Factory(server), familySISO, familyAISO);      // Restricted
@@ -450,6 +455,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         //Self triggered
         registerIC("MC0020", "random 1 st", new RandomBitST.Factory(server), familySISO, familyAISO);                     //Restricted
         registerIC("MC0111", "receiver st", new WirelessReceiverST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0113", "tele-in st",   new TeleportRecieverST.Factory(server), familySISO, familyAISO);
         registerIC("MC0202", "c dispense st",new ContainerDispenserST.Factory(server), familySISO, familyAISO);
         registerIC("MC0204", "trap st",     new EntityTrapST.Factory(server), familySISO, familyAISO);                    // Restricted
         registerIC("MC0205", "set above st", new SetBlockAboveST.Factory(server), familySISO, familyAISO);       // Restricted
