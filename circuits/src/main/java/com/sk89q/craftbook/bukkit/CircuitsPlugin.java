@@ -300,7 +300,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             setupSelfTriggered();
         }
 
-        registerMechanic(pipeFactory = new Pipes.Factory(this));
+        if(config.pipeSettings.enabled) {
+            registerMechanic(pipeFactory = new Pipes.Factory(this));
+        }
 
         // Register events
         registerEvents();

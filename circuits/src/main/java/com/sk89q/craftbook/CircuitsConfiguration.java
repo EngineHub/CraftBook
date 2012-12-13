@@ -43,6 +43,7 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public boolean enableShorthandIcs;
     public int glowstoneOffBlock;
     public boolean cacheICs;
+    public PipeSettings pipeSettings;
 
     @Override
     public void load() {
@@ -54,5 +55,16 @@ public class CircuitsConfiguration extends BaseConfiguration {
         enableShorthandIcs = getBoolean("enable-shorthand-ics", false);
         glowstoneOffBlock = getInt("glowstone-off-material", BlockID.GLASS);
         cacheICs = getBoolean("cache-ics", true);
+        pipeSettings = new PipeSettings(new BaseConfiguration.BaseConfigurationSection("Pipes"));
+    }
+
+    public class PipeSettings {
+
+        public final boolean enabled;
+
+        private PipeSettings(BaseConfigurationSection section) {
+
+            enabled = section.getBoolean("enable", true);
+        }
     }
 }
