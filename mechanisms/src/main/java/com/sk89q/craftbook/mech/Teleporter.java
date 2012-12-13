@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.material.Button;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -65,6 +66,17 @@ public class Teleporter extends AbstractMechanic {
                 String[] pos = COLON_PATTERN.split(s.getLine(2));
                 if (pos.length > 2)
                     return new Teleporter(block, plugin);
+            }
+            else if(block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
+                Button b = (Button) block.getState().getData();
+                Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
+                if (sign.getState() instanceof Sign) {
+                    Sign s = (Sign) sign.getState();
+                    if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
+                    String[] pos = COLON_PATTERN.split(s.getLine(2));
+                    if (pos.length > 2)
+                        return new Teleporter(block, plugin);
+                }
             }
 
             return null;
@@ -160,8 +172,21 @@ public class Teleporter extends AbstractMechanic {
         if (plugin.getLocalConfiguration().teleporterSettings.requiresign) {
             Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
             if (location.getTypeId() != BlockID.WALL_SIGN && location.getTypeId() != BlockID.SIGN_POST) {
-                player.printError("mech.teleport.sign");
-                return;
+                if(location.getTypeId() == BlockID.STONE_BUTTON || location.getTypeId() == BlockID.WOODEN_BUTTON) {
+                    Button b = (Button) location.getState().getData();
+                    Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
+                    if (sign.getState() instanceof Sign) {
+                        Sign s = (Sign) sign.getState();
+                        if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) {
+                            player.printError("mech.teleport.sign");
+                            return;
+                        }
+                    }
+                }
+                else {
+                    player.printError("mech.teleport.sign");
+                    return;
+                }
             }
         }
 
