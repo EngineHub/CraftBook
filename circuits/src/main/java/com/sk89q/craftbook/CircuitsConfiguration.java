@@ -61,10 +61,14 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public class PipeSettings {
 
         public final boolean enabled;
+        public final boolean diagonals;
+        public final int insulator;
 
         private PipeSettings(BaseConfigurationSection section) {
 
             enabled = section.getBoolean("enable", true);
+            diagonals = section.getBoolean("allow-diagonal", true);
+            insulator = section.getInt("insulator-block", BlockID.CLOTH);
         }
     }
 }

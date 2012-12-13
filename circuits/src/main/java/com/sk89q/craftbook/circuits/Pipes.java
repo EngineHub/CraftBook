@@ -38,7 +38,7 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt);
+            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(plugin, pt);
 
             return null;
         }
@@ -47,23 +47,25 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, items);
+            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(plugin, pt, items);
 
             return null;
         }
     }
+
+    CircuitsPlugin plugin;
 
     /**
      * Construct the mechanic for a location.
      *
      * @param pt
      */
-    private Pipes(BlockWorldVector pt) {
+    private Pipes(CircuitsPlugin plugin, BlockWorldVector pt) {
 
         super();
     }
 
-    private Pipes(BlockWorldVector pt, List<ItemStack> items) {
+    private Pipes(CircuitsPlugin plugin, BlockWorldVector pt, List<ItemStack> items) {
 
         super();
         this.items.addAll(items);
@@ -79,8 +81,38 @@ public class Pipes extends AbstractMechanic {
             for(int y = -1; y < 2; y++) {
                 for(int z = -1; z < 2; z++) {
 
-                    if(x == y || x == z || y == z) //Cut out diagonals.
-                        continue;
+                    if(!plugin.getLocalConfiguration().pipeSettings.diagonals) {
+                        if(Math.abs(x) == Math.abs(y) || Math.abs(x) == Math.abs(z) || Math.abs(y) == Math.abs(z)) //Cut out diagonals.
+                            continue;
+                    }
+                    else {
+
+                        if(Math.abs(x) == Math.abs(y) && Math.abs(x) == Math.abs(z) && Math.abs(y) == Math.abs(z)) {
+                            if(block.getRelative(x,0,0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
+                                    && block.getRelative(0,y,0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
+                                    && block.getRelative(0,0,z).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                                continue;
+                            }
+                        }
+                        else if(Math.abs(x) == Math.abs(y)) {
+                            if(block.getRelative(x,0,0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
+                                    && block.getRelative(0,y,0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                                continue;
+                            }
+                        }
+                        else if(Math.abs(x) == Math.abs(z)) {
+                            if(block.getRelative(x,0,0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
+                                    && block.getRelative(0,0,z).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                                continue;
+                            }
+                        }
+                        else if(Math.abs(y) == Math.abs(z)) {
+                            if(block.getRelative(0,y,0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
+                                    && block.getRelative(0,0,z).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                                continue;
+                            }
+                        }
+                    }
 
                     Block off = block.getRelative(x, y, z);
                     BlockVector bv = BukkitUtil.toVector(off);
