@@ -270,6 +270,8 @@ public class Elevator extends AbstractMechanic {
     }
 
     public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
+        if(start == null || stop == null)
+            return true;
         if(start.getLine(2).toLowerCase().startsWith("to:")) {
             try {
                 if(stop.getLine(0).equalsIgnoreCase(start.getLine(2).split(":")[1].trim()))

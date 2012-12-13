@@ -61,6 +61,8 @@ public class BukkitUtil {
 
     public static ChangedSign toChangedSign(Block sign) {
 
+        if(!(sign.getState() instanceof Sign))
+            return null;
         return toChangedSign((Sign)sign.getState(), ((Sign)sign.getState()).getLines());
     }
 
