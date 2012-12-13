@@ -144,4 +144,8 @@ public class ICMechanic extends PersistentMechanic {
         // remove the ic from cache
         ICManager.removeCachedIC(pos);
     }
+
+    public IC getIC() {
+        return ic;
+    }
 }

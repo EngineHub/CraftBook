@@ -45,6 +45,7 @@ import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
 import com.sk89q.craftbook.circuits.Netherrack;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.gates.logic.AndGate;
 import com.sk89q.craftbook.gates.logic.Clock;
 import com.sk89q.craftbook.gates.logic.ClockDivider;
@@ -240,6 +241,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         return instance;
     }
 
+    public ICMechanicFactory icFactory;
+
+    public Pipes.Factory pipeFactory;
+
     @Override
     public void onEnable() {
 
@@ -291,9 +296,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             registerMechanic(new GlowStone.Factory(this));
         }
         if (config.enableICs) {
-            registerMechanic(new ICMechanicFactory(this, icManager));
+            registerMechanic(icFactory = new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
         }
+
+        registerMechanic(pipeFactory = new Pipes.Factory(this));
 
         // Register events
         registerEvents();

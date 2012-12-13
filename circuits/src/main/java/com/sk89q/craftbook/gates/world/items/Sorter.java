@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -8,19 +11,23 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.PipeInputIC;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class Sorter extends AbstractIC {
+public class Sorter extends AbstractIC implements PipeInputIC {
 
     public Sorter (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -81,12 +88,66 @@ public class Sorter extends AbstractIC {
                     b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
                 }
 
-                item.teleport(b.getLocation().add(0.5, 0.5, 0.5));
+                boolean pipes = false;
+
+                if(b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+
+                    PistonBaseMaterial p = (PistonBaseMaterial)b.getState().getData();
+                    Block fac = b.getRelative(p.getFacing());
+                    if(fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
+
+                        List<ItemStack> items = new ArrayList<ItemStack>();
+                        items.add(item.getItemStack());
+                        if(CircuitsPlugin.getInst().pipeFactory != null)
+                            if(CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(b), items) != null) {
+                                item.remove();
+                                pipes = true;
+                                returnValue = true;
+                            }
+                    }
+                }
+
+                if(!pipes)
+                    item.teleport(b.getLocation().add(0.5, 0.5, 0.5));
 
                 returnValue = true;
             }
         }
         return returnValue;
+    }
+
+    public void sortItem(ItemStack item) {
+
+        BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+        Block b;
+
+        if(isInAboveChest(item) || inverted) {
+            b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+        }
+        else {
+            b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+        }
+
+        boolean pipes = false;
+
+        if(b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+
+            PistonBaseMaterial p = (PistonBaseMaterial)b.getState().getData();
+            Block fac = b.getRelative(p.getFacing());
+            if(fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
+
+                List<ItemStack> items = new ArrayList<ItemStack>();
+                items.add(item);
+                if(CircuitsPlugin.getInst().pipeFactory != null)
+                    if(CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(b), items) != null) {
+                        pipes = true;
+                    }
+            }
+        }
+
+        if(!pipes) {
+            b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), item);
+        }
     }
 
     public boolean isInAboveChest(ItemStack item) {
@@ -126,5 +187,15 @@ public class Sorter extends AbstractIC {
             };
             return lines;
         }
+    }
+
+    @Override
+    public List<ItemStack> onPipeTransfer (BlockWorldVector pipe, List<ItemStack> items) {
+
+        for(ItemStack item : items)
+            if(ItemUtil.isStackValid(item))
+                sortItem(item);
+
+        return new ArrayList<ItemStack>();
     }
 }
