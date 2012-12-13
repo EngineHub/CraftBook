@@ -63,8 +63,7 @@ public class SetBlockAbove extends SetBlock {
         }
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 
@@ -75,6 +74,22 @@ public class SetBlockAbove extends SetBlock {
         public IC create(ChangedSign sign) {
 
             return new SetBlockAbove(getServer(), sign, this);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Sets block above IC block.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "id:data",
+                    "FORCE if should force setting the block"
+            };
+            return lines;
         }
     }
 }

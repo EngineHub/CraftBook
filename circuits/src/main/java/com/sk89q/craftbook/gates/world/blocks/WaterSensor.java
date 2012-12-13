@@ -94,6 +94,21 @@ public class WaterSensor extends AbstractIC {
 
             ICUtil.verifySignSyntax(sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+
+            return "Outputs high if water is at the given offset.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "x:y:z offset",
+                    null
+            };
+            return lines;
+        }
+    }
 }

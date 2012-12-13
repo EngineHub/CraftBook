@@ -140,5 +140,21 @@ public class ItemSensor extends AbstractIC {
 
             ICUtil.verifySignSyntax(sign);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Detects items within a given radius";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "radius=x:y:z offset",
+                    "id:data"
+            };
+            return lines;
+        }
     }
 }

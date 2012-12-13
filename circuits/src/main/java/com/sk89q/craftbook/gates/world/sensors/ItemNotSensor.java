@@ -3,7 +3,6 @@ package com.sk89q.craftbook.gates.world.sensors;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -40,7 +39,7 @@ public class ItemNotSensor extends ItemSensor {
         }
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends ItemSensor.Factory {
 
         public Factory(Server server) {
 
@@ -57,6 +56,12 @@ public class ItemNotSensor extends ItemSensor {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
+        }
+
+        @Override
+        public String getDescription() {
+
+            return "Detects if an item is NOT within a given radius";
         }
     }
 }

@@ -3,12 +3,10 @@ package com.sk89q.craftbook.gates.world.miscellaneous;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 /**
@@ -45,8 +43,7 @@ public class SentryGunST extends SentryGun implements SelfTriggeredIC {
         shoot();
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends SentryGun.Factory {
 
         public Factory(Server server) {
 

@@ -76,5 +76,21 @@ public class SetBlockBelow extends SetBlock {
 
             return new SetBlockBelow(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Sets block below the IC block.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "id:data",
+                    "forced or not"
+            };
+            return lines;
+        }
     }
 }

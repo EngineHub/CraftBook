@@ -106,5 +106,21 @@ public class MessageSender extends AbstractIC {
                 if (!player.hasPermission("craftbook.ic.restricted.mc1510"))
                     throw new ICVerificationException("You don't have permission to use other players!");
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Sends a pre-written message on high.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "name of player, or BROADCAST for whole server",
+                    "Message to send."
+            };
+            return lines;
+        }
     }
 }

@@ -169,5 +169,21 @@ public class PlayerDetection extends AbstractIC {
 
             return new PlayerDetection(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Detects players within a radius.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "radius=x:y:z offset, or r:regionname for WorldGuard regions",
+                    "p:playername or g:permissiongroup"
+            };
+            return lines;
+        }
     }
 }

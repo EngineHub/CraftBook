@@ -74,5 +74,21 @@ public class TimeControl extends AbstractIC {
 
             return new TimeControl(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription() {
+
+            return "Sets time based on input.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    null,
+                    null
+            };
+            return lines;
+        }
     }
 }

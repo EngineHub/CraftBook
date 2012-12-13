@@ -21,7 +21,6 @@ package com.sk89q.craftbook.gates.world.sensors;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -69,7 +68,7 @@ public class LightSensorST extends LightSensor implements SelfTriggeredIC {
      * @return
      */
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends LightSensor.Factory {
 
         public Factory(Server server) {
 
@@ -82,5 +81,4 @@ public class LightSensorST extends LightSensor implements SelfTriggeredIC {
             return new LightSensorST(getServer(), sign, this);
         }
     }
-
 }

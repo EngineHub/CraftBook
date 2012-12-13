@@ -21,7 +21,6 @@ package com.sk89q.craftbook.gates.world.blocks;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
@@ -60,7 +59,7 @@ public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
         return true;
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends LavaSensor.Factory {
 
         public Factory(Server server) {
 

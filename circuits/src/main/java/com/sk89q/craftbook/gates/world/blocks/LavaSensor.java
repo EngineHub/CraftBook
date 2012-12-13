@@ -94,6 +94,21 @@ public class LavaSensor extends AbstractIC {
 
             ICUtil.verifySignSyntax(sign);
         }
-    }
 
+        @Override
+        public String getDescription() {
+
+            return "Outputs high if lava is at given offset.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {
+                    "x:y:z Offset",
+                    null
+            };
+            return lines;
+        }
+    }
 }
