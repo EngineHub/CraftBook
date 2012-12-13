@@ -79,6 +79,9 @@ public class Pipes extends AbstractMechanic {
             for(int y = -1; y < 2; y++) {
                 for(int z = -1; z < 2; z++) {
 
+                    if(x == y || x == z || y == z) //Cut out diagonals.
+                        continue;
+
                     Block off = block.getRelative(x, y, z);
                     BlockVector bv = BukkitUtil.toVector(off);
                     if(visitedPipes.contains(bv))
