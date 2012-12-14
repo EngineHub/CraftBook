@@ -12,6 +12,7 @@ import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 
 public class TeleportReciever extends AbstractIC {
@@ -31,10 +32,14 @@ public class TeleportReciever extends AbstractIC {
     }
 
     String band;
+    String welcome;
 
     @Override
     public void load() {
         band = getLine(2);
+        welcome = getLine(3);
+        if(welcome == null || welcome.isEmpty())
+            welcome = "The Teleporter moves you here...";
     }
 
     @Override
@@ -55,8 +60,8 @@ public class TeleportReciever extends AbstractIC {
             return;
         }
 
-        p.teleport(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 1.5, 0.5));
-        p.sendMessage(ChatColor.YELLOW + "The Teleporter moves you here...");
+        p.teleport(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0.5, 1.5, 0.5));
+        p.sendMessage(ChatColor.YELLOW + welcome);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -83,7 +88,7 @@ public class TeleportReciever extends AbstractIC {
 
             String[] lines = new String[] {
                     "frequency name",
-                    null
+                    "welcome text"
             };
             return lines;
         }

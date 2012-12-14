@@ -64,16 +64,21 @@ public class TeleportTransmitter extends AbstractIC {
     public void trigger (ChipState chip) {
 
         if(chip.getInput(0)) {
+            Player closest = null;
+
             for (Player e : offset.getWorld().getPlayers()) {
-                if (e == null || !e.isValid()
-                        || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius)) {
+                if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius)) {
                     continue;
                 }
 
-                if(!setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), e.getName())))
-                    e.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
-                return;
+                if(closest == null)
+                    closest = e;
+                else if(closest.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > e.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()))
+                    closest = e;
             }
+            if(closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
+                closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
+            return;
         }
     }
 
