@@ -84,26 +84,29 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-        if (chip.getInput(0)) {
-            int dist = Integer.parseInt(getSign().getLine(2));
-            if (!BukkitUtil.toSign(getSign()).getWorld().hasStorm()) {
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
-                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(1, 0));
-            }
-        } else if (!chip.getInput(0)) {
-            int dist = Integer.parseInt(getSign().getLine(2));
-            if (!BukkitUtil.toSign(getSign()).getWorld().hasStorm()) {
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
-            } else {
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
-                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(1, 0));
-                ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                        ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
+        try {
+            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            if (chip.getInput(0)) {
+                int dist = Integer.parseInt(getSign().getLine(2));
+                if (!BukkitUtil.toSign(getSign()).getWorld().hasStorm()) {
+                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
+                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
+                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
+                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(1, 0));
+                }
+            } else if (!chip.getInput(0)) {
+                int dist = Integer.parseInt(getSign().getLine(2));
+                if (!BukkitUtil.toSign(getSign()).getWorld().hasStorm()) {
+                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
+                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
+                } else {
+                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
+                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(1, 0));
+                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
+                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension, new Packet70Bed(2, 0));
+                }
             }
         }
+        catch(Error e){}
     }
 }
