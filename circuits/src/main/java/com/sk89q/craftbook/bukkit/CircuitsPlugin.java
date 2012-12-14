@@ -748,7 +748,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                         SelfTriggeredIC ? "ST " : "T ") + (ric.getFactory() instanceof RestrictedIC ? ChatColor
                                 .DARK_RED + "R " : ""));
             }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" + " it to Me4502");
             }
         }
