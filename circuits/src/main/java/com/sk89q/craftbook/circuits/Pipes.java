@@ -63,11 +63,13 @@ public class Pipes extends AbstractMechanic {
     private Pipes(CircuitsPlugin plugin, BlockWorldVector pt) {
 
         super();
+        this.plugin = plugin;
     }
 
     private Pipes(CircuitsPlugin plugin, BlockWorldVector pt, List<ItemStack> items) {
 
         super();
+        this.plugin = plugin;
         this.items.addAll(items);
         startPipe(BukkitUtil.toBlock(pt));
     }
@@ -198,9 +200,9 @@ public class Pipes extends AbstractMechanic {
                 searchNearbyPipes(block);
                 if(!items.isEmpty())
                     for(ItemStack item : items) {
-                        block.getWorld().dropItemNaturally(block.getLocation().add(0.5,0.5,0.5), item);
                         if(item == null)
                             continue;
+                        block.getWorld().dropItemNaturally(block.getLocation().add(0.5,0.5,0.5), item);
                     }
             }
         }

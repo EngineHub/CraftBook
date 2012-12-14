@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,20 +17,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.PipeInputIC;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class AutomaticCrafter extends AbstractIC {
+public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
 
     public AutomaticCrafter(Server server, ChangedSign block, ICFactory factory) {
 
@@ -102,8 +107,29 @@ public class AutomaticCrafter extends AbstractIC {
             replace[i].setAmount(replace[i].getAmount() - 1);
         }
         disp.getInventory().clear();
-        disp.getInventory().addItem(recipe.getResult());
-        disp.dispense();
+
+        boolean pipes = false;
+
+        if(CircuitsPlugin.getInst().pipeFactory != null) {
+            Block b = disp.getBlock().getRelative(((org.bukkit.material.Dispenser)disp.getData()).getFacing());
+            if(b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+
+                PistonBaseMaterial p = (PistonBaseMaterial)b.getState().getData();
+                if(p.getFacing() == ((org.bukkit.material.Dispenser)disp.getData()).getFacing().getOppositeFace()) {
+                    List<ItemStack> items = new ArrayList<ItemStack>();
+                    items.add(recipe.getResult());
+                    if(CircuitsPlugin.getInst().pipeFactory != null)
+                        if(CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(b), items) != null) {
+                            pipes = true;
+                        }
+                }
+            }
+        }
+
+        if(!pipes) {
+            disp.getInventory().addItem(recipe.getResult());
+            disp.dispense();
+        }
         disp.getInventory().setContents(replace);
         return true;
     }
@@ -123,16 +149,30 @@ public class AutomaticCrafter extends AbstractIC {
                 int ix = loc.getBlockX();
                 int iy = loc.getBlockY();
                 int iz = loc.getBlockZ();
+                boolean delete = true;
                 if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+                    int newAmount = item.getItemStack().getAmount();
                     for (int i = 0; i < item.getItemStack().getAmount(); i++) {
                         ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
                                 item.getItemStack());
                         if (it == null) {
                             continue outer;
                         }
-                        it.setAmount(it.getAmount() + 1);
+                        if(it.getAmount() < 64) {
+                            it.setAmount(it.getAmount() + 1);
+                            newAmount -= 1;
+                        }
+                        else {
+                            if(newAmount > 0)
+                                delete = false;
+                            break;
+                        }
                     }
-                    item.remove();
+
+                    item.getItemStack().setAmount(newAmount);
+
+                    if(delete)
+                        item.remove();
                 }
             }
     return false;
@@ -247,5 +287,44 @@ public class AutomaticCrafter extends AbstractIC {
             };
             return lines;
         }
+    }
+
+    @Override
+    public List<ItemStack> onPipeTransfer (BlockWorldVector pipe, List<ItemStack> items) {
+        Block crafter = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        if (crafter.getTypeId() == BlockID.DISPENSER) {
+            Dispenser disp = (Dispenser) crafter.getState();
+
+            boolean delete = true;
+            List<ItemStack> newItems = new ArrayList<ItemStack>();
+            newItems.addAll(items);
+            for(ItemStack ite : items) {
+                if(ite == null)
+                    continue;
+                int iteind = items.indexOf(ite);
+                int newAmount = ite.getAmount();
+                for (int i = 0; i < ite.getAmount(); i++) {
+                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), ite);
+                    if(it.getAmount() < 64) {
+                        it.setAmount(it.getAmount() + 1);
+                        newAmount -= 1;
+                    }
+                    else {
+                        if(newAmount > 0) {
+                            delete = false;
+                            break;
+                        }
+                    }
+                }
+                ite.setAmount(newAmount);
+                if(delete)
+                    newItems.remove(iteind);
+                else
+                    newItems.set(iteind, ite);
+            }
+            items.clear();
+            items.addAll(newItems);
+        }
+        return items;
     }
 }
