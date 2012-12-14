@@ -308,6 +308,8 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                 int newAmount = ite.getAmount();
                 for (int i = 0; i < ite.getAmount(); i++) {
                     ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), ite);
+                    if(it == null)
+                        continue;
                     if(it.getAmount() < 64) {
                         it.setAmount(it.getAmount() + 1);
                         newAmount -= 1;

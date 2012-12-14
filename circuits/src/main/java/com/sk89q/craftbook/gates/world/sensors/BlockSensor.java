@@ -31,7 +31,10 @@ public class BlockSensor extends AbstractIC {
 
         String[] ids = COLON_PATTERN.split(getSign().getLine(3), 2);
         id = Integer.parseInt(ids[0]);
-        data = Byte.parseByte(ids[1]);
+        try {
+            data = Byte.parseByte(ids[1]);
+        }
+        catch(Exception e){}
     }
 
     @Override
