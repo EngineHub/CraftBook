@@ -21,11 +21,8 @@ package com.sk89q.craftbook.ic;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import net.minecraft.server.v1_4_5.World;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
 
@@ -137,8 +134,7 @@ public class ICUtil {
             // set the new data
             block.setData((byte) newData, true);
             // apply physics to the source block the lever is attached to
-            World w = ((CraftWorld)block.getWorld()).getHandle();
-            w.applyPhysics(source.getX(), source.getY(), source.getZ(), 0);
+            block.setData(block.getData(), true);
             return true;
         }
 

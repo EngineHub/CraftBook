@@ -171,6 +171,9 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
 
                     item.getItemStack().setAmount(newAmount);
 
+                    if(newAmount > 0)
+                        delete = false;
+
                     if(delete)
                         item.remove();
                 }
@@ -316,6 +319,8 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                         }
                     }
                 }
+                if(newAmount > 0)
+                    delete = false;
                 ite.setAmount(newAmount);
                 if(delete)
                     newItems.remove(iteind);
