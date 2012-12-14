@@ -1,3 +1,51 @@
+3.4b1
++ Added Pipes!
+ - Intergrate with IC's.
+   - Currently only auto crafter and sorter.
+ - Transfer items.
+ - Easy to use
+ - Compact
++ Added support for 1.4.5 new Cardinal Point system.
+* Fix Cultivator IC.
++ Added cocoa, sapling dead shrubs, lilly pads, vines, and giant mushroom support to Bonemeal Terraformer.
+* Fixed Day Sensor
+* Planter now works and uses a radius, instead of single block.
++ Add offset to liquid flooder.
++ Added data values to vehicle blocks.
+* Fix XPStorer.
++ Creature Spawner can set above Mob Spawners.
+* Fixed pig bugs with MC1200.
++ Add Irrigator IC's.
+* Fix ContainerDispenser dupe bug.
+* Fixed wierd snow placement.
+* Realism enhancements for realistic snow.
++ Added region support to PlayerDetector
+* Enhanced CartMessager.
++ Added 'stay' and 'despawn' flags to Advanced Entity Spawner to set if a mob can despawn.
++ Re-added chairs properly. They have been recoded to be awesome. (Require 1.4.5r0.3+)
++ Added chest support to planter IC.
+* Fix ItemDispenser
++ Added health regen to chairs.
++ Added ST Potion Inducer, and allowed it to work on mobs.
+* Optimized a few IC's and added more IC Docs.
+* Entity Trap IC can now hit more than 1 entity at a time.
+* Advanced Entity Spawner uses new API's. Armour setting only works 1.4.5r0.3+
+* Block Sensor Output fixed.
++ Added Combine Harvester IC's.
++ Added ST Container Dispenser IC.
++ Added Chest Stocker IC.
+* Optimized Vehicles.
+* Fixed CartTeleporter over long distances.
++ Added support for signs on the side of vehicle blocks.
+* Renamed Lift Up and Lift Down for vehicles to CartLift Up and CartLift Down.
++ Major changes to vehicle mechanics. They have proper perms and create messages.
+* Fixed Auto Crafter making the wrong items.
++ Add ST block setters.
+* Fix cooking pot deleting items.
++ Added button support to [Teleporter] signs.
++ Add Teleporter IC's
+* Fix elevator error on 1.4.5
+
 3.3.9r2
 * Fix errors and bugs with realistic snow
 + Added cultivator IC
