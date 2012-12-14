@@ -29,6 +29,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -336,4 +337,16 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     }
 
     public abstract void reloadConfiguration();
+
+    private static Boolean useOldBlockFace = null;
+
+    public static boolean useOldBlockFace() {
+
+        if(useOldBlockFace == null) {
+            Location loc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+            useOldBlockFace = loc.getBlock().getRelative(BlockFace.WEST).getX() == 0;
+        }
+
+        return useOldBlockFace;
+    }
 }
