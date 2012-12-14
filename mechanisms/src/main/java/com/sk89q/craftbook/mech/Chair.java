@@ -20,11 +20,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
-
 /**
  * @author Me4502
  */
 public class Chair implements Listener {
+
+    private boolean disabled = false;
 
     public Chair(MechanismsPlugin plugin) {
 
@@ -33,10 +34,19 @@ public class Chair implements Listener {
     }
 
     public void addChair(Player player, Block block) {
-        Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte) 4), false);
-        for (Player play : plugin.getServer().getOnlinePlayers()) {
-            if(play.getWorld().equals(player.getPlayer().getWorld()))
-                ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+        if(disabled)
+            return;
+        try {
+            Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte) 4), false);
+            for (Player play : plugin.getServer().getOnlinePlayers()) {
+                if(play.getWorld().equals(player.getPlayer().getWorld()))
+                    ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+            }
+        }
+        catch(Exception e){
+            Bukkit.getLogger().severe("Chairs do not work in this version of Minecraft!");
+            disabled = true;
+            return;
         }
         if(plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName()))
             return;
@@ -45,6 +55,8 @@ public class Chair implements Listener {
     }
 
     public void removeChair(Player player) {
+        if(disabled)
+            return;
         Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 0), false);
         for (Player play : plugin.getServer().getOnlinePlayers()) {
             if(play.getWorld().equals(player.getPlayer().getWorld()))
@@ -55,18 +67,26 @@ public class Chair implements Listener {
     }
 
     public Block getChair(Player player) {
+        if(disabled)
+            return null;
         return plugin.getLocalConfiguration().chairSettings.chairs.get(player.getName());
     }
 
     public Player getChair(Block player) {
+        if(disabled)
+            return null;
         return Bukkit.getPlayer(plugin.getLocalConfiguration().chairSettings.chairs.inverse().get(player));
     }
 
     public boolean hasChair(Player player) {
+        if(disabled)
+            return false;
         return plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName());
     }
 
     public boolean hasChair(Block player) {
+        if(disabled)
+            return false;
         return plugin.getLocalConfiguration().chairSettings.chairs.containsValue(player);
     }
 

@@ -20,6 +20,7 @@ package com.sk89q.craftbook.bukkit;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -243,8 +244,13 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().aiSettings.enabled) {
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
         }
-        if (getLocalConfiguration().chairSettings.enable) {
-            getServer().getPluginManager().registerEvents(new Chair(this), this);
+        try {
+            if (getLocalConfiguration().chairSettings.enable) {
+                getServer().getPluginManager().registerEvents(new Chair(this), this);
+            }
+        }
+        catch(Exception e){
+            Bukkit.getLogger().severe("Chairs do not work on this version of Minecraft!");
         }
         if (getLocalConfiguration().paintingSettings.enabled) {
             getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
