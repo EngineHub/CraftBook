@@ -249,7 +249,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
                 getServer().getPluginManager().registerEvents(new Chair(this), this);
             }
         }
-        catch(Exception e){
+        catch(Error e){
             Bukkit.getLogger().severe("Chairs do not work on this version of Minecraft!");
         }
         if (getLocalConfiguration().paintingSettings.enabled) {

@@ -107,6 +107,6 @@ public class WeatherFaker extends AbstractIC implements SelfTriggeredIC {
                 }
             }
         }
-        catch(Error e){}
+        catch(Throwable e){}
     }
 }

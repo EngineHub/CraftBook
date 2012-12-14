@@ -43,7 +43,7 @@ public class Chair implements Listener {
                     ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
             }
         }
-        catch(Exception e){
+        catch(Error e){
             Bukkit.getLogger().severe("Chairs do not work in this version of Minecraft!");
             disabled = true;
             return;
