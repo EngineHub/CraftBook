@@ -756,8 +756,19 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         return strings.toArray(new String[strings.size()]);
     }
 
+    public void reloadICConfiguration() {
+        icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(),
+                "ic-config.yml")), getDataFolder());
+        try {
+            icConfig.cfg.save(new File(getDataFolder(), "ic-config.yml"));
+        } catch (IOException ex) {
+            getLogger().log(Level.SEVERE, "Could not save IC Config", ex);
+        }
+    }
+
     @Override
     public void reloadConfiguration() {
+        reloadConfig();
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
         saveConfig();
     }

@@ -343,6 +343,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     @Override
     public void reloadConfiguration() {
+        reloadConfig();
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();
     }

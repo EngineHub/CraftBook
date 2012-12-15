@@ -40,7 +40,6 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         load(cfg.getConfigurationSection("cauldron-recipes"));
     }
 
-    @Override
     public boolean reload() {
 
         recipes.clear();

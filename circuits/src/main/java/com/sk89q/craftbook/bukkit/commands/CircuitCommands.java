@@ -33,7 +33,7 @@ public class CircuitCommands {
             )
     public void reload(CommandContext context, CommandSender sender) {
 
-        plugin.reloadConfig();
+        plugin.reloadICConfiguration();
         sender.sendMessage("The IC config has been reloaded.");
     }
 
@@ -63,7 +63,7 @@ public class CircuitCommands {
         @CommandPermissions("craftbook.circuit.reload")
         public void reload(CommandContext context, CommandSender sender) {
 
-            plugin.getLocalConfiguration().reload();
+            plugin.reloadConfiguration();
             sender.sendMessage("Config has been reloaded successfully!");
         }
     }

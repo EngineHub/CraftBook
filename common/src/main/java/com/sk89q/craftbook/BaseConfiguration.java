@@ -26,16 +26,6 @@ public abstract class BaseConfiguration {
 
     public abstract void load();
 
-    public boolean reload() {
-
-        try {
-            load();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public int getInt(String name, int def) {
 
         int it = cfg.getInt(name, def);

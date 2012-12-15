@@ -378,6 +378,7 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
     @Override
     public void reloadConfiguration() {
+        reloadConfig();
         config = new VehiclesConfiguration(getConfig(), getDataFolder());
         saveConfig();
     }

@@ -45,7 +45,6 @@ public class RecipeManager extends BaseConfiguration {
         return recipes;
     }
 
-    @Override
     public boolean reload() {
 
         recipes.clear();
