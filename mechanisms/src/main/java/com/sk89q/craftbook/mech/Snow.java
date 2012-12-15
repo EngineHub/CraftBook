@@ -146,6 +146,8 @@ public class Snow implements Listener {
         @Override
         public void run() {
 
+            if(!tasks.containsKey(event))
+                return;
             if (event.getWorld().hasStorm()) {
                 if (event.getBlock().getData() > (byte) 7) return;
                 if (event.subtract(0, 1, 0).getBlock().getTypeId() == 0) return;
@@ -155,7 +157,9 @@ public class Snow implements Listener {
                 incrementData(event.getBlock());
             }
             else {
-                int taskID = tasks.get(event);
+                Integer taskID = tasks.get(event);
+                if(taskID == null)
+                    return;
                 Bukkit.getScheduler().cancelTask(taskID);
                 tasks.remove(event);
             }
