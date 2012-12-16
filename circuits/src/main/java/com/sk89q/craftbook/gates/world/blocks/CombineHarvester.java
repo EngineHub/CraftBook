@@ -97,6 +97,7 @@ public class CombineHarvester extends AbstractIC {
                     if (harvestable(b)) {
 
                         collectDrops(b.getDrops().toArray(new ItemStack[b.getDrops().size()]));
+                        b.setTypeId(0);
                         return true;
                     }
                 }
