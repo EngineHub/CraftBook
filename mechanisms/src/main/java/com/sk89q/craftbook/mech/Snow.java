@@ -285,6 +285,6 @@ public class Snow implements Listener {
 
     public boolean canPassThrough(int id) {
 
-        return id == BlockID.DEAD_BUSH || id == BlockID.AIR;
+        return id == BlockID.DEAD_BUSH || id == BlockID.AIR || id == BlockID.SNOW;
     }
 }
