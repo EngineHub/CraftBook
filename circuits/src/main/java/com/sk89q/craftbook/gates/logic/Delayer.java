@@ -19,12 +19,14 @@ public class Delayer extends AbstractIC {
 
     private int taskId;
     private long delay = 1;
+    private boolean tickDelay;
 
     public Delayer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         try {
             delay = Long.parseLong(getSign().getLine(2));
+            tickDelay = Boolean.parseBoolean(getSign().getLine(3));
         } catch (Exception ignored) {
         }
     }
@@ -44,6 +46,10 @@ public class Delayer extends AbstractIC {
     @Override
     public void trigger(final ChipState chip) {
 
+    	long tdelay = delay * 20;
+    	if (tickDelay == true) {
+    		tdelay = delay;
+    	}
         if (chip.getInput(0)) {
             taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
@@ -54,7 +60,7 @@ public class Delayer extends AbstractIC {
                         chip.setOutput(0, true);
                     }
                 }
-            }, delay * 20);
+            }, tdelay);
         } else {
             Bukkit.getScheduler().cancelTask(taskId);
             chip.setOutput(0, false);
@@ -87,7 +93,7 @@ public class Delayer extends AbstractIC {
         @Override
         public String getDescription() {
 
-            return "Delays signal by X seconds.";
+            return "Delays signal by X seconds (or ticks if set).";
         }
 
         @Override
@@ -95,7 +101,7 @@ public class Delayer extends AbstractIC {
 
             String[] lines = new String[] {
                     "seconds",
-                    null
+                    "true to use ticks"
             };
             return lines;
         }

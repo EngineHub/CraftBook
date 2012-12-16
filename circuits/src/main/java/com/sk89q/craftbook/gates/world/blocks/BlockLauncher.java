@@ -18,7 +18,10 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockLauncher extends AbstractIC {
-
+	Vector velocity;
+	int id;
+	byte data;
+	
     public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
@@ -51,20 +54,19 @@ public class BlockLauncher extends AbstractIC {
             id = Integer.parseInt(split[0]);
             data = Byte.parseByte(split[1]);
         }
-        catch(Exception ignored){}
+        catch(Exception ignored){
+        	id = 12;
+        	data = 0;
+        }
 
         try {
-            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
-            velocity.setX(Double.parseDouble(split[0]));
-            velocity.setY(Double.parseDouble(split[1]));
-            velocity.setZ(Double.parseDouble(split[2]));
+            String[] split2 = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
+            velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
+            
         } catch (Exception ignored) {
+        	velocity = new Vector(0, 0.5, 0);
         }
     }
-
-    Vector velocity = new Vector(0, 0.5, 0);
-    int id = 12;
-    byte data = 0;
 
     public void launch() {
 
