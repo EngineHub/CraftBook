@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -8,23 +14,7 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.inventory.*;
 
 /**
  * @author Me4502
@@ -120,8 +110,7 @@ public class ContainerCollector extends AbstractIC {
             }
         } else if (type == BlockID.BREWING_STAND) {
 
-            if (!ItemUtil.isAPotionIngredient(stack))
-                return false;
+            if (!ItemUtil.isAPotionIngredient(stack)) return false;
             BrewingStand brewingStand = (BrewingStand) bl.getState();
             BrewerInventory inv = brewingStand.getInventory();
             if (fitsInSlot(stack, inv.getIngredient())) {

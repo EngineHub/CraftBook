@@ -1,26 +1,17 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import java.util.HashMap;
-
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Furnace;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.Server;
+import org.bukkit.block.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
 
 /**
  * @author Me4502
@@ -76,11 +67,12 @@ public class ContainerDispenser extends AbstractIC {
         Inventory inv = null;
         if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
-            for (ItemStack it : c.getInventory().getContents())
+            for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
                     stack = it;
                     inv = c.getInventory();
                 }
+            }
         } else if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
             stack = c.getInventory().getResult();
@@ -97,31 +89,28 @@ public class ContainerDispenser extends AbstractIC {
                 }
         } else if (bl.getTypeId() == BlockID.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
-            for (ItemStack it : c.getInventory().getContents())
+            for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
                     stack = it;
                     inv = c.getInventory();
                 }
+            }
         }
 
-        if (stack == null || inv == null) return false;
-        return dispenseItem(inv, stack);
+        return !(stack == null || inv == null) && dispenseItem(inv, stack);
     }
 
     public boolean dispenseItem(Inventory inv, ItemStack item) {
 
-        if(inv == null)
-            return false;
+        if (inv == null) return false;
         HashMap<Integer, ItemStack> over = inv.removeItem(new ItemStack(item.getTypeId(), amount, item.getDurability(), item.getData().getData()));
-        if(over.isEmpty()) {
+        if (over.isEmpty()) {
             BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(), amount, item.getDurability(), item.getData().getData()));
             return true;
-        }
-        else {
-            for(ItemStack it : over.values()) {
+        } else {
+            for (ItemStack it : over.values()) {
 
-                if(amount - it.getAmount() < 1)
-                    continue;
+                if (amount - it.getAmount() < 1) continue;
                 BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getTypeId(), amount - it.getAmount(), it.getDurability(), it.getData().getData()));
                 return true;
             }

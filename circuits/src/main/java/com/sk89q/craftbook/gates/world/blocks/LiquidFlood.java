@@ -1,19 +1,12 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class LiquidFlood extends AbstractIC {
 
@@ -51,18 +44,19 @@ public class LiquidFlood extends AbstractIC {
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
                 int z = Integer.parseInt(splitCoords[2]);
-                if(x > 16)
-                    x = 16;
-                if(x < -16)
-                    x = -16;
-                if(y > 16)
-                    y = 16;
-                if(y < -16)
-                    y = -16;
-                if(z > 16)
-                    z = 16;
-                if(z < -16)
-                    z = -16;
+
+                // X Start
+                if (x > 16) x = 16;
+                else if (x < -16) x = -16;
+
+                // Y Start
+                if (y > 16) y = 16;
+                else if (y < -16) y = -16;
+
+                // Z Start
+                if (z > 16) z = 16;
+                else if (z < -16) z = -16;
+
                 centre.add(x, y, z);
             }
         } catch (Exception ignored) {
@@ -82,8 +76,8 @@ public class LiquidFlood extends AbstractIC {
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                        if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER :
-                            BlockID.LAVA)) {
+                        if (b.getTypeId() == 0
+                                || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)) {
                             b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
                                 BlockID.STATIONARY_LAVA);
                         }
@@ -115,8 +109,7 @@ public class LiquidFlood extends AbstractIC {
         doStuff(chip);
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 

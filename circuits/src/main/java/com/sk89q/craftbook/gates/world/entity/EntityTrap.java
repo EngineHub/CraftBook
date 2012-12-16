@@ -1,29 +1,13 @@
 package com.sk89q.craftbook.gates.world.entity;
 
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.*;
 
 /**
  * @author Me4502
@@ -127,21 +111,16 @@ public class EntityTrap extends AbstractIC {
     }
 
     /**
-     * Returns true if the entity was damaged.
      *
-     * @return
+     * @return - true if a entity was damaged.
      */
     protected boolean hurt() {
 
         boolean hasHurt = false;
 
         for (Entity e : LocationUtil.getNearbyEntities(location, radius)) {
-            if (e == null || e.isDead() || !e.isValid()) {
-                continue;
-            }
-            if (!type.is(e)) {
-                continue;
-            }
+            if (e == null || e.isDead() || !e.isValid() || !type.is(e)) continue;
+
             if (e instanceof LivingEntity) {
                 ((LivingEntity) e).damage(damage);
             } else if (e instanceof Minecart) {
@@ -156,8 +135,7 @@ public class EntityTrap extends AbstractIC {
     }
 
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 

@@ -1,13 +1,19 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockBreakEvent;
 
 /**
  * @author Me4502
@@ -59,6 +65,16 @@ public class SetBlockBelowChest extends SetBlock {
         public IC create(ChangedSign sign) {
 
             return new SetBlockBelowChest(getServer(), sign, this);
+        }
+
+        @Override
+        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+
+            Block tb = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()).getRelative(BlockFace.DOWN);
+
+            BlockBreakEvent e = new BlockBreakEvent(tb, ((BukkitPlayer) player).getPlayer());
+            getServer().getPluginManager().callEvent(e);
+            if (e.isCancelled()) throw new ICVerificationException("You can't build that here.");
         }
 
         @Override

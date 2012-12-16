@@ -1,29 +1,14 @@
 package com.sk89q.craftbook.gates.world.entity;
 
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
-import org.bukkit.util.Vector;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.*;
+import org.bukkit.util.Vector;
 
 public class EntityCannon extends AbstractIC {
 
@@ -95,12 +80,12 @@ public class EntityCannon extends AbstractIC {
     }
 
     /**
-     * Returns true if the entity was damaged.
      *
-     * @return
+     * @return - true if a entity was thrown.
      */
     protected boolean shoot() {
 
+        boolean resultBoolean = false;
         Location location = BukkitUtil.toSign(getSign()).getLocation();
         Type type = Type.MOB_HOSTILE;
 
@@ -110,12 +95,7 @@ public class EntityCannon extends AbstractIC {
 
         try {
             for (Entity e : LocationUtil.getNearbyEntities(location, 3)) {
-                if (e.isDead() || !e.isValid()) {
-                    continue;
-                }
-                if (!type.is(e)) {
-                    continue;
-                }
+                if (e.isDead() || !e.isValid() || !type.is(e)) continue;
 
                 String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
                 double x = Double.parseDouble(split[0]);
@@ -124,17 +104,16 @@ public class EntityCannon extends AbstractIC {
 
                 e.setVelocity(new Vector(x, y, z).add(e.getVelocity()));
 
-                return true;
+                resultBoolean = true;
             }
         } catch (Exception ignored) {
         }
 
-        return false;
+        return resultBoolean;
     }
 
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 

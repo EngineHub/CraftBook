@@ -1,27 +1,20 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-
 public class BlockLauncher extends AbstractIC {
-	Vector velocity;
-	int id;
-	byte data;
-	
+    Vector velocity;
+    int id;
+    byte data;
+
     public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
@@ -53,18 +46,17 @@ public class BlockLauncher extends AbstractIC {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
             id = Integer.parseInt(split[0]);
             data = Byte.parseByte(split[1]);
-        }
-        catch(Exception ignored){
-        	id = 12;
-        	data = 0;
+        } catch(Exception ignored){
+            id = 12;
+            data = 0;
         }
 
         try {
             String[] split2 = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
-            
+
         } catch (Exception ignored) {
-        	velocity = new Vector(0, 0.5, 0);
+            velocity = new Vector(0, 0.5, 0);
         }
     }
 

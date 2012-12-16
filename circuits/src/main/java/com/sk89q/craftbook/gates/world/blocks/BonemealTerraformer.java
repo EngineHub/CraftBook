@@ -1,8 +1,14 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.HashMap;
-import java.util.Random;
-
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Server;
 import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
@@ -10,24 +16,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+import java.util.Random;
 
 public class BonemealTerraformer extends AbstractIC {
 
     int radius;
-    Integer maxradius;
+    Integer maxRadius;
 
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -37,14 +32,14 @@ public class BonemealTerraformer extends AbstractIC {
     @Override
     public void load() {
 
-        if (maxradius == null) {
-            maxradius = ((Factory) getFactory()).maxradius;
+        if (maxRadius == null) {
+            maxRadius = ((Factory) getFactory()).maxradius;
         }
         try {
             radius = Integer.parseInt(getSign().getLine(2));
-            if (radius > maxradius) {
-                radius = maxradius;
-                getSign().setLine(3, String.valueOf(maxradius));
+            if (radius > maxRadius) {
+                radius = maxRadius;
+                getSign().setLine(3, String.valueOf(maxRadius));
                 getSign().update(false);
             }
         } catch (Exception e) {
@@ -98,10 +93,11 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.COCOA_PLANT && ((b.getData() & 0x8) != 0x8 || (b.getData() & 0xC) != 0xC)) {
                             if (consumeBonemeal()) {
-                                if(BaseBukkitPlugin.random.nextInt(30) == 0)
+                                if(BaseBukkitPlugin.random.nextInt(30) == 0) {
                                     b.setData((byte) (b.getData() | 0xC));
-                                else
+                                } else {
                                     b.setData((byte) (b.getData() | 0x8));
+                                }
                             }
                             return;
                         }
@@ -113,31 +109,26 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.SAPLING) {
                             if (consumeBonemeal()) {
-                                if(!growTree(b, BaseBukkitPlugin.random))
+                                if (!growTree(b, BaseBukkitPlugin.random)) {
                                     refundBonemeal();
-                                else
-                                    return;
+                                } else return;
                             }
                         }
                         if (b.getTypeId() == BlockID.BROWN_MUSHROOM || b.getTypeId() == BlockID.RED_MUSHROOM) {
                             if (consumeBonemeal()) {
                                 if(b.getTypeId() == BlockID.BROWN_MUSHROOM) {
                                     b.setTypeId(0);
-                                    if(!b.getWorld().generateTree(b.getLocation(), TreeType.BROWN_MUSHROOM)) {
+                                    if (!b.getWorld().generateTree(b.getLocation(), TreeType.BROWN_MUSHROOM)) {
                                         b.setTypeId(BlockID.BROWN_MUSHROOM);
                                         refundBonemeal();
-                                    }
-                                    else
-                                        return;
+                                    } else return;
                                 }
                                 if(b.getTypeId() == BlockID.RED_MUSHROOM) {
                                     b.setTypeId(0);
-                                    if(!b.getWorld().generateTree(b.getLocation(), TreeType.RED_MUSHROOM)) {
+                                    if (!b.getWorld().generateTree(b.getLocation(), TreeType.RED_MUSHROOM)) {
                                         b.setTypeId(BlockID.RED_MUSHROOM);
                                         refundBonemeal();
-                                    }
-                                    else
-                                        return;
+                                    } else return;
                                 }
                             }
                         }
@@ -217,8 +208,7 @@ public class BonemealTerraformer extends AbstractIC {
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.INK_SACK, 1, (short) 15));
-            if (over.isEmpty())
-                return true;
+            if (over.isEmpty()) return true;
         }
 
         return false;
