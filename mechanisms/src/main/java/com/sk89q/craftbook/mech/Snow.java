@@ -20,7 +20,6 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -188,7 +187,7 @@ public class Snow implements Listener {
         if(block.getRelative(0, -1, 0).getTypeId() == 0)
             return disperse(block.getRelative(0, -1, 0), remove);
 
-        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7 || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7 || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             if(block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, -1, 0));
                 if(remove)
@@ -197,7 +196,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(1, 0, 0).getTypeId())) {
+        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(1, 0, 0).getTypeId())) {
             if(block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(1, 0, 0));
                 if(remove)
@@ -206,7 +205,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(-1, 0, 0).getTypeId())) {
+        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(-1, 0, 0).getTypeId())) {
             if(block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(-1, 0, 0));
                 if(remove)
@@ -215,7 +214,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, 0, 1).getTypeId())) {
+        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(0, 0, 1).getTypeId())) {
             if(block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0, 1).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, 0, 1));
                 if(remove)
@@ -224,7 +223,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR || BlockType.canPassThrough(block.getRelative(0, 0, -1).getTypeId())) {
+        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(0, 0, -1).getTypeId())) {
             if(block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0, -1).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, 0, -1));
                 if(remove)
@@ -238,7 +237,7 @@ public class Snow implements Listener {
 
     public void incrementData(Block block) {
 
-        if(block.getTypeId() != 78 && block.getTypeId() != 80 && !BlockType.canPassThrough(block.getTypeId()))
+        if(block.getTypeId() != 78 && block.getTypeId() != 80 && !canPassThrough(block.getTypeId()))
             return;
 
         if(block.getTypeId() == 0 && block.getRelative(0, -1, 0).getTypeId() == 0) {
@@ -246,7 +245,7 @@ public class Snow implements Listener {
             return;
         }
 
-        if(block.getTypeId() == 0 && BlockType.canPassThrough(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
+        if(block.getTypeId() == 0 && canPassThrough(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
             incrementData(block.getRelative(0, -1, 0));
             return;
         }
@@ -257,7 +256,7 @@ public class Snow implements Listener {
         }
 
         byte newData = 0;
-        if(block.getTypeId() != BlockID.SNOW && BlockType.canPassThrough(block.getTypeId()))
+        if(block.getTypeId() != BlockID.SNOW && canPassThrough(block.getTypeId()))
             block.setTypeId(BlockID.SNOW, false);
         else
             newData = (byte) (block.getData() + 1);
@@ -282,5 +281,10 @@ public class Snow implements Listener {
             }
             catch(Exception e){}
         }
+    }
+
+    public boolean canPassThrough(int id) {
+
+        return id == BlockID.DEAD_BUSH || id == BlockID.AIR;
     }
 }
