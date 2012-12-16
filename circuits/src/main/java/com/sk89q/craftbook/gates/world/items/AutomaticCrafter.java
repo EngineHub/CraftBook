@@ -241,15 +241,14 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             return true;
         } else if (r instanceof ShapelessRecipe && (recipe == null || recipe instanceof ShapelessRecipe)) {
             ShapelessRecipe shape = (ShapelessRecipe) r;
-            List<ItemStack> ing = shape.getIngredientList();
+            List<ItemStack> ing = new ArrayList<ItemStack>();
+            ing.addAll(shape.getIngredientList());
             for (ItemStack it : inv.getContents()) {
-                if (it == null || it.getAmount() < 1) {
+                if (!ItemUtil.isStackValid(it))
                     continue;
-                }
                 for (ItemStack stack : ing) {
-                    if (stack == null) {
+                    if (stack == null)
                         continue;
-                    }
                     if (ItemUtil.areItemsIdentical(it, stack)) {
                         ing.remove(stack);
                         break;
