@@ -38,14 +38,10 @@
             <url>http://files.zachsthings.com/repo</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
-        </repository>
-        <repository>
             <id>comphenix-rep</id>
             <name>Comphenix Repository</name>
         <url>http://repo.comphenix.net/content/groups/public</url>
-  </repository>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -71,7 +67,7 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
-            <version>1.2.19-SNAPSHOT</version>
+            <version>1.2.16</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>

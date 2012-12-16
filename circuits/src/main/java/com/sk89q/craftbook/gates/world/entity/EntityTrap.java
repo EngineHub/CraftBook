@@ -135,24 +135,21 @@ public class EntityTrap extends AbstractIC {
 
         boolean hasHurt = false;
 
-        try {
-            for (Entity e : LocationUtil.getNearbyEntities(location, radius)) {
-                if (e.isDead() || !e.isValid()) {
-                    continue;
-                }
-                if (!type.is(e)) {
-                    continue;
-                }
-                if (e instanceof LivingEntity) {
-                    ((LivingEntity) e).damage(damage);
-                } else if (e instanceof Minecart) {
-                    ((Minecart) e).setDamage(((Minecart) e).getDamage() + damage);
-                } else {
-                    e.remove();
-                }
-                hasHurt = true;
+        for (Entity e : LocationUtil.getNearbyEntities(location, radius)) {
+            if (e == null || e.isDead() || !e.isValid()) {
+                continue;
             }
-        } catch (Exception ignored) {
+            if (!type.is(e)) {
+                continue;
+            }
+            if (e instanceof LivingEntity) {
+                ((LivingEntity) e).damage(damage);
+            } else if (e instanceof Minecart) {
+                ((Minecart) e).setDamage(((Minecart) e).getDamage() + damage);
+            } else {
+                e.remove();
+            }
+            hasHurt = true;
         }
 
         return hasHurt;

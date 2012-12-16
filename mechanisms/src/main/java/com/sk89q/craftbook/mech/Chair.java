@@ -1,15 +1,10 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-
-import net.minecraft.server.v1_4_5.DataWatcher;
-import net.minecraft.server.v1_4_5.Packet40EntityMetadata;
-import net.minecraft.server.v1_4_5.WatchableObject;
+import java.lang.reflect.InvocationTargetException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,15 +12,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * @author Me4502
  */
 public class Chair implements Listener {
-
-    private boolean disabled = false;
 
     public Chair(MechanismsPlugin plugin) {
 
@@ -33,14 +29,29 @@ public class Chair implements Listener {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ChairChecker(), 40L, 40L);
     }
 
+    private boolean disabled = false;
+
     public void addChair(Player player, Block block) {
         if(disabled)
             return;
         try {
-            Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getPlayer().getEntityId(), new ChairWatcher((byte) 4), false);
+            //TODO deck chairs. Packet17EntityLocationAction packet = new Packet17EntityLocationAction(((CraftPlayer)player).getHandle(), 0, block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
+
+            PacketContainer entitymeta = plugin.getProtocolManager().createPacket(40);
+            entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
+            entitymeta.getDataWatcherModifier().write(0, new WrappedDataWatcher((byte)4));
+            entitymeta.getSpecificModifier(boolean.class).write(0, false);
+            //Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 4), false);
             for (Player play : plugin.getServer().getOnlinePlayers()) {
-                if(play.getWorld().equals(player.getPlayer().getWorld()))
-                    ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                if(play.getWorld().equals(player.getPlayer().getWorld())) {
+                    try {
+                        plugin.getProtocolManager().sendServerPacket(play, entitymeta);
+                    }
+                    catch (InvocationTargetException e) {
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                    }
+                    //((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+                }
             }
         }
         catch(Error e){
@@ -57,10 +68,22 @@ public class Chair implements Listener {
     public void removeChair(Player player) {
         if(disabled)
             return;
-        Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 0), false);
+        PacketContainer entitymeta = plugin.getProtocolManager().createPacket(40);
+        entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
+        entitymeta.getDataWatcherModifier().write(0, new WrappedDataWatcher((byte)0));
+        entitymeta.getSpecificModifier(boolean.class).write(0, false);
+
+        //Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 0), false);
         for (Player play : plugin.getServer().getOnlinePlayers()) {
-            if(play.getWorld().equals(player.getPlayer().getWorld()))
-                ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+            if(play.getWorld().equals(player.getPlayer().getWorld())) {
+                try {
+                    plugin.getProtocolManager().sendServerPacket(play, entitymeta);
+                }
+                catch (InvocationTargetException e) {
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                }
+                //((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
+            }
         }
         player.sendMessage(ChatColor.YELLOW + "You are no longer sitting.");
         plugin.getLocalConfiguration().chairSettings.chairs.remove(player.getName());
@@ -158,7 +181,7 @@ public class Chair implements Listener {
         }
     }
 
-    public static class ChairWatcher extends DataWatcher {
+    /*public static class ChairWatcher extends DataWatcher {
 
         private byte metadata;
 
@@ -175,5 +198,5 @@ public class Chair implements Listener {
             list.add(wo);
             return list;
         }
-    }
+    }*/
 }

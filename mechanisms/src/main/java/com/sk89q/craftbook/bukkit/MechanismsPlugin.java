@@ -20,7 +20,6 @@ package com.sk89q.craftbook.bukkit;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -244,13 +243,11 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         if (getLocalConfiguration().aiSettings.enabled) {
             getServer().getPluginManager().registerEvents(new AIMechanic(this), this);
         }
-        try {
-            if (getLocalConfiguration().chairSettings.enable) {
+        if (getLocalConfiguration().chairSettings.enable) {
+            if(getProtocolManager() != null)
                 getServer().getPluginManager().registerEvents(new Chair(this), this);
-            }
-        }
-        catch(Error e){
-            Bukkit.getLogger().severe("Chairs do not work on this version of Minecraft!");
+            else
+                getLogger().severe("Chairs require ProtocolLib! They will not function without it!");
         }
         if (getLocalConfiguration().paintingSettings.enabled) {
             getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
