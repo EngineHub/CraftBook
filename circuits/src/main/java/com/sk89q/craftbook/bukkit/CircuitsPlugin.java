@@ -33,6 +33,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import com.sk89q.craftbook.CircuitsConfiguration;
 import com.sk89q.craftbook.ICConfiguration;
@@ -274,6 +275,34 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             midi.mkdir();
         }
 
+        registerMechanics();
+
+        // Register events
+        registerEvents();
+
+        languageManager = new LanguageManager(this);
+
+        try {
+            Metrics metrics = new Metrics(this);
+
+            Graph graph = metrics.createGraph("Language");
+            for (String lan : languageManager.getLanguages()) {
+                graph.addPlotter(new Metrics.Plotter(lan) {
+
+                    @Override
+                    public int getValue() {
+
+                        return 1;
+                    }
+                });
+            }
+
+            metrics.start();
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void registerMechanics() {
         if (config.enableICs) {
             registerICs();
             icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(),
@@ -299,33 +328,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             registerMechanic(icFactory = new ICMechanicFactory(this, icManager));
             setupSelfTriggered();
         }
-
         if(config.pipeSettings.enabled) {
             registerMechanic(pipeFactory = new Pipes.Factory(this));
-        }
-
-        // Register events
-        registerEvents();
-
-        languageManager = new LanguageManager(this);
-
-        try {
-            Metrics metrics = new Metrics(this);
-
-            Graph graph = metrics.createGraph("Language");
-            for (String lan : languageManager.getLanguages()) {
-                graph.addPlotter(new Metrics.Plotter(lan) {
-
-                    @Override
-                    public int getValue() {
-
-                        return 1;
-                    }
-                });
-            }
-
-            metrics.start();
-        } catch (Exception ignored) {
         }
     }
 
@@ -625,6 +629,18 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         return manager.unregister(factory);
     }
 
+    protected boolean unregisterAllMechanics() {
+
+        boolean ret = true;
+
+        for(MechanicFactory<? extends Mechanic> factory : manager.factories) {
+            if(unregisterMechanic(factory) == false)
+                ret = false;
+        }
+
+        return ret;
+    }
+
     public void generateICDocs(Player player, String id) {
         RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
         if (ric == null) {
@@ -768,8 +784,18 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     @Override
     public void reloadConfiguration() {
+
+        //Unload everything.
+        unregisterAllMechanics();
+        HandlerList.unregisterAll(this);
+
+        //Reload the config
         reloadConfig();
         config = new CircuitsConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+        //Load everything
+        registerMechanics();
+        registerEvents();
     }
 }

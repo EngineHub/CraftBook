@@ -64,7 +64,7 @@ public class CircuitCommands {
         public void reload(CommandContext context, CommandSender sender) {
 
             plugin.reloadConfiguration();
-            sender.sendMessage("Config has been reloaded successfully!");
+            sender.sendMessage("CraftBook Circuits has been reloaded successfully!");
         }
     }
 

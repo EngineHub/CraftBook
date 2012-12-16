@@ -108,7 +108,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
 
-        registerMechancs(manager);
+        registerMechanics();
 
         // Register events
         registerEvents();
@@ -135,7 +135,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         }
     }
 
-    private void registerMechancs(MechanicManager manager) {
+    private void registerMechanics() {
 
         // Let's register mechanics!
         if (getLocalConfiguration().ammeterSettings.enable) {
@@ -331,9 +331,9 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         return manager.unregister(factory);
     }
 
-    private boolean unregiserAllMechanics() {
+    private boolean unregisterAllMechanics() {
 
-        boolean ret = true;;
+        boolean ret = true;
 
         for(MechanicFactory<? extends Mechanic> factory : manager.factories) {
             if(unregisterMechanic(factory) == false)
@@ -359,7 +359,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     public void reloadConfiguration() {
 
         //Unload everything.
-        unregiserAllMechanics();
+        unregisterAllMechanics();
         HandlerList.unregisterAll(this);
 
         //Reload the config
@@ -368,7 +368,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         saveConfig();
 
         //Load everything
-        registerMechancs(manager);
+        registerMechanics();
         registerEvents();
     }
 }
