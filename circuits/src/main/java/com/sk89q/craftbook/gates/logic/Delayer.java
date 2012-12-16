@@ -47,7 +47,7 @@ public class Delayer extends AbstractIC {
     public void trigger(final ChipState chip) {
 
     	long tdelay = delay * 20;
-    	if (tickDelay = true) {
+    	if (tickDelay == true) {
     		tdelay = delay;
     	}
         if (chip.getInput(0)) {
