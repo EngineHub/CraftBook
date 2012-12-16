@@ -76,7 +76,7 @@ public class MechanicManager {
     /**
      * List of factories that will be used to detect mechanisms at a location.
      */
-    protected final LinkedList<MechanicFactory<? extends Mechanic>> factories;
+    public final LinkedList<MechanicFactory<? extends Mechanic>> factories;
 
     /**
      * Keeps track of trigger blocks. Trigger blocks are the blocks that

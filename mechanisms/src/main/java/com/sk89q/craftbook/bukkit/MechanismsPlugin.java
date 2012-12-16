@@ -22,6 +22,7 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.sk89q.craftbook.LanguageManager;
@@ -107,6 +108,35 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
 
+        registerMechancs(manager);
+
+        // Register events
+        registerEvents();
+
+        languageManager = new LanguageManager(this);
+
+        try {
+            Metrics metrics = new Metrics(this);
+
+            Graph graph = metrics.createGraph("Language");
+            for (String lan : languageManager.getLanguages()) {
+                graph.addPlotter(new Metrics.Plotter(lan) {
+
+                    @Override
+                    public int getValue() {
+
+                        return 1;
+                    }
+                });
+            }
+
+            metrics.start();
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void registerMechancs(MechanicManager manager) {
+
         // Let's register mechanics!
         if (getLocalConfiguration().ammeterSettings.enable) {
             registerMechanic(new Ammeter.Factory(this));
@@ -173,30 +203,6 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         }
 
         setupSelfTriggered(manager);
-
-        // Register events
-        registerEvents();
-
-        languageManager = new LanguageManager(this);
-
-        try {
-            Metrics metrics = new Metrics(this);
-
-            Graph graph = metrics.createGraph("Language");
-            for (String lan : languageManager.getLanguages()) {
-                graph.addPlotter(new Metrics.Plotter(lan) {
-
-                    @Override
-                    public int getValue() {
-
-                        return 1;
-                    }
-                });
-            }
-
-            metrics.start();
-        } catch (Exception ignored) {
-        }
     }
 
     /**
@@ -320,10 +326,21 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
      *
      * @return true if the mechanic was successfully unregistered.
      */
-    @SuppressWarnings("unused")
     private boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         return manager.unregister(factory);
+    }
+
+    private boolean unregiserAllMechanics() {
+
+        boolean ret = true;;
+
+        for(MechanicFactory<? extends Mechanic> factory : manager.factories) {
+            if(unregisterMechanic(factory) == false)
+                ret = false;
+        }
+
+        return ret;
     }
 
     /**
@@ -340,8 +357,18 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     @Override
     public void reloadConfiguration() {
+
+        //Unload everything.
+        unregiserAllMechanics();
+        HandlerList.unregisterAll(this);
+
+        //Reload the config
         reloadConfig();
         config = new MechanismsConfiguration(getConfig(), getDataFolder());
         saveConfig();
+
+        //Load everything
+        registerMechancs(manager);
+        registerEvents();
     }
 }

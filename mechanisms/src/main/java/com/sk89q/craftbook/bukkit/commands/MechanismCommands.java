@@ -64,7 +64,7 @@ public class MechanismCommands {
         public void reload(CommandContext context, CommandSender sender) {
 
             plugin.reloadConfiguration();
-            sender.sendMessage("Config has been reloaded successfully!");
+            sender.sendMessage("CraftBook Mechanisms has successfully been reloaded!");
         }
     }
 }
