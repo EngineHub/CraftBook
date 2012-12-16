@@ -72,8 +72,9 @@ public class CreatureSpawner extends AbstractIC {
     public void load() {
 
         type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase());
-        if(type == null)
+        if(type == null) {
             type = EntityType.PIG;
+        }
         String line = getSign().getLine(3).trim();
         // parse the amount or rider type
         try {
