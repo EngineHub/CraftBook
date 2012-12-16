@@ -39,8 +39,9 @@ public class Chair implements Listener {
 
             PacketContainer entitymeta = plugin.getProtocolManager().createPacket(40);
             entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
-            entitymeta.getDataWatcherModifier().write(0, new WrappedDataWatcher((byte)4));
-            entitymeta.getSpecificModifier(boolean.class).write(0, false);
+            WrappedDataWatcher watcher = new WrappedDataWatcher();
+            watcher.setObject(0, (byte)4);
+            entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
             //Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 4), false);
             for (Player play : plugin.getServer().getOnlinePlayers()) {
                 if(play.getWorld().equals(player.getPlayer().getWorld())) {
@@ -70,8 +71,9 @@ public class Chair implements Listener {
             return;
         PacketContainer entitymeta = plugin.getProtocolManager().createPacket(40);
         entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
-        entitymeta.getDataWatcherModifier().write(0, new WrappedDataWatcher((byte)0));
-        entitymeta.getSpecificModifier(boolean.class).write(0, false);
+        WrappedDataWatcher watcher = new WrappedDataWatcher();
+        watcher.setObject(0, (byte)0);
+        entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 
         //Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 0), false);
         for (Player play : plugin.getServer().getOnlinePlayers()) {
