@@ -110,7 +110,7 @@ public class CombineHarvester extends AbstractIC {
 
         if(onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
 
-            Chest c = (Chest) onBlock.getState();
+            Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
             HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(drops);
             for(ItemStack item : leftovers.values()) {
 

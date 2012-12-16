@@ -45,12 +45,9 @@ public class Snow implements Listener {
             if(event.getEntity().getShooter() instanceof Player) {
                 LocalPlayer player = plugin.wrap((Player) event.getEntity().getShooter());
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
-                try {
-                    Block block = event.getEntity().getLocation().getBlock();
-                    incrementData(block.getRelative(0, 1, 0));
-                } catch (Exception ignored) {
-                }
             }
+            Block block = event.getEntity().getLocation().getBlock();
+            incrementData(block.getRelative(0, 1, 0));
         }
     }
 
@@ -273,13 +270,10 @@ public class Snow implements Listener {
 
         block.setTypeIdAndData(block.getTypeId(), data, false);
         for (Player p : block.getWorld().getPlayers()) {
-            try {
-                if (p.getLocation().distanceSquared(block.getLocation()) < plugin.getServer().getViewDistance() * 16 *
-                        plugin.getServer().getViewDistance() * 16) {
-                    p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
-                }
+            if (p.getLocation().distanceSquared(block.getLocation()) < plugin.getServer().getViewDistance() * 16 *
+                    plugin.getServer().getViewDistance() * 16) {
+                p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
             }
-            catch(Exception e){}
         }
     }
 
