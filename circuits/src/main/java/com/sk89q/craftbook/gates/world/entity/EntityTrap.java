@@ -105,7 +105,7 @@ public class EntityTrap extends AbstractIC {
     @Override
     public void load() {
 
-        Location location = BukkitUtil.toSign(getSign()).getLocation();
+        location = BukkitUtil.toSign(getSign()).getLocation();
         try {
             String[] splitLine = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 3);
             radius = Integer.parseInt(splitLine[0]);
