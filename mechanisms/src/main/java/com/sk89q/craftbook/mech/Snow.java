@@ -47,7 +47,7 @@ public class Snow implements Listener {
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
             }
             Block block = event.getEntity().getLocation().getBlock();
-            incrementData(block.getRelative(0, 1, 0));
+            incrementData(block);
         }
     }
 
@@ -181,10 +181,10 @@ public class Snow implements Listener {
 
     public boolean disperse(Block block, boolean remove) {
 
-        if(block.getRelative(0, -1, 0).getTypeId() == 0)
+        if(isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7)
             return disperse(block.getRelative(0, -1, 0), remove);
 
-        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7 || block.getRelative(0, -1, 0).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7 || canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             if(block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, -1, 0));
                 if(remove)
@@ -193,7 +193,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(1, 0, 0).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(1, 0, 0).getTypeId())) {
+        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(1, 0, 0).getTypeId())) {
             if(block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(1, 0, 0));
                 if(remove)
@@ -202,7 +202,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || block.getRelative(-1, 0, 0).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(-1, 0, 0).getTypeId())) {
+        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(-1, 0, 0).getTypeId())) {
             if(block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(-1, 0, 0));
                 if(remove)
@@ -211,7 +211,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, 1).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(0, 0, 1).getTypeId())) {
+        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(0, 0, 1).getTypeId())) {
             if(block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0, 1).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, 0, 1));
                 if(remove)
@@ -220,7 +220,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || block.getRelative(0, 0, -1).getTypeId() == BlockID.AIR || canPassThrough(block.getRelative(0, 0, -1).getTypeId())) {
+        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(0, 0, -1).getTypeId())) {
             if(block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0, -1).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, 0, -1));
                 if(remove)
@@ -234,7 +234,11 @@ public class Snow implements Listener {
 
     public void incrementData(Block block) {
 
-        if(block.getTypeId() != 78 && block.getTypeId() != 80 && !canPassThrough(block.getTypeId()))
+        if(!isValidBlock(block.getTypeId()) && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
+            incrementData(block.getRelative(0, 1, 0));
+            return;
+        }
+        else if(!isValidBlock(block.getTypeId()))
             return;
 
         if(block.getTypeId() == 0 && block.getRelative(0, -1, 0).getTypeId() == 0) {
@@ -242,8 +246,13 @@ public class Snow implements Listener {
             return;
         }
 
-        if(block.getTypeId() == 0 && canPassThrough(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
+        if(block.getTypeId() == 0 && isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
             incrementData(block.getRelative(0, -1, 0));
+            return;
+        }
+
+        if(block.getTypeId() == BlockID.SNOW_BLOCK) {
+            incrementData(block.getRelative(0, 1, 0));
             return;
         }
 
@@ -270,8 +279,7 @@ public class Snow implements Listener {
 
         block.setTypeIdAndData(block.getTypeId(), data, false);
         for (Player p : block.getWorld().getPlayers()) {
-            if (p.getLocation().distanceSquared(block.getLocation()) < plugin.getServer().getViewDistance() * 16 *
-                    plugin.getServer().getViewDistance() * 16) {
+            if (p.getLocation().distanceSquared(block.getLocation()) < plugin.getServer().getViewDistance() * 16 * plugin.getServer().getViewDistance() * 16) {
                 p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
             }
         }
@@ -279,6 +287,16 @@ public class Snow implements Listener {
 
     public boolean canPassThrough(int id) {
 
-        return id == BlockID.DEAD_BUSH || id == BlockID.AIR || id == BlockID.SNOW;
+        return id == BlockID.DEAD_BUSH || id == BlockID.AIR || id == BlockID.LONG_GRASS || id == BlockID.FIRE;
+    }
+
+    public boolean isSnowBlock(int id) {
+
+        return id == BlockID.SNOW_BLOCK || id == BlockID.SNOW;
+    }
+
+    public boolean isValidBlock(int id) {
+
+        return canPassThrough(id) || isSnowBlock(id);
     }
 }
