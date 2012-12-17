@@ -246,7 +246,7 @@ public class Snow implements Listener {
             return;
         }
 
-        if(canPassThrough(block.getTypeId()) && isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
+        if(canPassThrough(block.getTypeId()) && block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7) {
             incrementData(block.getRelative(0, -1, 0));
             return;
         }
