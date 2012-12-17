@@ -63,7 +63,12 @@ public class PotionInducer extends AbstractIC {
             mobs = false;
         }
         line4 = line4.replace("m", "").replace("p", "");
-        radius = Integer.parseInt(line4);
+        try {
+            radius = Integer.parseInt(line4);
+        }
+        catch(Exception e){
+            radius = 10;
+        }
     }
 
     public void induce() {
