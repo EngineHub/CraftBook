@@ -193,7 +193,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(1, 0, 0).getTypeId())) {
+        if(block.getRelative(1, 0, 0).getTypeId() == BlockID.SNOW && block.getRelative(1, 0, 0).getData() < 0x7 || canPassThrough(block.getRelative(1, 0, 0).getTypeId())) {
             if(block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(1, 0, 0));
                 if(remove)
@@ -202,7 +202,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(-1, 0, 0).getTypeId())) {
+        if(block.getRelative(-1, 0, 0).getTypeId() == BlockID.SNOW && block.getRelative(-1, 0, 0).getData() < 0x7 || canPassThrough(block.getRelative(-1, 0, 0).getTypeId())) {
             if(block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(-1, 0, 0));
                 if(remove)
@@ -211,7 +211,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(0, 0, 1).getTypeId())) {
+        if(block.getRelative(0, 0, 1).getTypeId() == BlockID.SNOW && block.getRelative(0, 0, 1).getData() < 0x7 || canPassThrough(block.getRelative(0, 0, 1).getTypeId())) {
             if(block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0, 1).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, 0, 1));
                 if(remove)
@@ -220,7 +220,7 @@ public class Snow implements Listener {
             }
         }
 
-        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW || canPassThrough(block.getRelative(0, 0, -1).getTypeId())) {
+        if(block.getRelative(0, 0, -1).getTypeId() == BlockID.SNOW && block.getRelative(0, 0, -1).getData() < 0x7 || canPassThrough(block.getRelative(0, 0, -1).getTypeId())) {
             if(block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0, -1).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, 0, -1));
                 if(remove)
