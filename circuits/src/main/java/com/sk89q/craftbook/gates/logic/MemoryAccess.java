@@ -4,15 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class MemoryAccess extends AbstractIC {
 
@@ -44,21 +47,19 @@ public class MemoryAccess extends AbstractIC {
     public boolean readMemory(ChipState chip) {
 
         try {
-            File f = new File("plugins/CraftBookCircuits/ROM/", getSign().getLine(2));
+            File f = new File(CircuitsPlugin.getInst().romFolder, getSign().getLine(2) + ".dat");
             if (!f.exists()) {
                 f.createNewFile();
                 return false;
             }
             BufferedReader br = new BufferedReader(new FileReader(f));
-            String line;
-            int linenum = 0;
-            while ((line = br.readLine()) != null && linenum <= 2) {
-                chip.setOutput(linenum, line.equals("1"));
-                linenum++;
+            String line = br.readLine();
+            for (int i = 0; i < chip.getOutputCount(); i++) {
+                chip.setOutput(i, line.charAt(i) == '1');
             }
             br.close();
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         }
         return false;
     }

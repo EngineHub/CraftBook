@@ -246,6 +246,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     public Pipes.Factory pipeFactory;
 
+    public File romFolder;
+
     @Override
     public void onEnable() {
 
@@ -273,6 +275,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         File midi = new File(getDataFolder(), "midi/");
         if (!midi.exists()) {
             midi.mkdir();
+        }
+
+        File romFolder = new File(getDataFolder(), "rom/");
+        if (!romFolder.exists()) {
+            romFolder.mkdir();
         }
 
         registerMechanics();
