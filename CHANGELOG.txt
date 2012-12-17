@@ -1,3 +1,19 @@
+3.4b2
+* Fixed backwards compatability.
++ Added a welcome message to teleporter IC's on the last line of the reciever.
+* Teleporters now put you on top of the teleport block.
+* Fixed NPE in Snow.
++ Chairs now require ProtocolLib to function.
+* Fixed reload commands.
+* Fixed Block Launcher.
+* Fixed Entity Trap.
+* Snow now works better.
+* Fix a chair error involving health.
+* Auto Crafter enhancements.
+* Fix Cultivator IC.
+* Fix combine harvester IC.
+* Fixed ROM IC's
+
 3.4b1
 + Added Pipes!
  - Intergrate with IC's.
