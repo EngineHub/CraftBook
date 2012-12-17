@@ -56,7 +56,7 @@ public class MemorySetter extends AbstractIC {
             }
             PrintWriter pw = new PrintWriter(f);
             for (int i = 0; i < chip.getInputCount(); i++)
-                pw.print(chip.getInput(i));
+                pw.print(chip.getInput(i) ? "1" : "0");
             pw.close();
         } catch (Exception e) {
             Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
