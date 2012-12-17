@@ -277,7 +277,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             midi.mkdir();
         }
 
-        File romFolder = new File(getDataFolder(), "rom/");
+        romFolder = new File(getDataFolder(), "rom/");
         if (!romFolder.exists()) {
             romFolder.mkdir();
         }
@@ -792,17 +792,22 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     @Override
     public void reloadConfiguration() {
 
-        //Unload everything.
-        unregisterAllMechanics();
-        HandlerList.unregisterAll(this);
+        getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run () {
+                //Unload everything.
+                unregisterAllMechanics();
+                HandlerList.unregisterAll(CircuitsPlugin.getInst());
 
-        //Reload the config
-        reloadConfig();
-        config = new CircuitsConfiguration(getConfig(), getDataFolder());
-        saveConfig();
+                //Reload the config
+                reloadConfig();
+                config = new CircuitsConfiguration(getConfig(), getDataFolder());
+                saveConfig();
 
-        //Load everything
-        registerMechanics();
-        registerEvents();
+                //Load everything
+                registerMechanics();
+                registerEvents();
+            };
+        });
     }
 }

@@ -358,17 +358,23 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     @Override
     public void reloadConfiguration() {
 
-        //Unload everything.
-        unregisterAllMechanics();
-        HandlerList.unregisterAll(this);
+        getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
-        //Reload the config
-        reloadConfig();
-        config = new MechanismsConfiguration(getConfig(), getDataFolder());
-        saveConfig();
+            @Override
+            public void run() {
+                //Unload everything.
+                unregisterAllMechanics();
+                HandlerList.unregisterAll(MechanismsPlugin.getInst());
 
-        //Load everything
-        registerMechanics();
-        registerEvents();
+                //Reload the config
+                reloadConfig();
+                config = new MechanismsConfiguration(getConfig(), getDataFolder());
+                saveConfig();
+
+                //Load everything
+                registerMechanics();
+                registerEvents();
+            }
+        });
     }
 }
