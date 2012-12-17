@@ -42,7 +42,7 @@ public class Snow implements Listener {
 
         if (!plugin.getLocalConfiguration().snowSettings.placeSnow) return;
         if(event.getEntity() instanceof Snowball) {
-            if(event.getEntity().getShooter() instanceof Player) {
+            if(event.getEntity().getShooter() != null && event.getEntity().getShooter() instanceof Player) {
                 LocalPlayer player = plugin.wrap((Player) event.getEntity().getShooter());
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
             }
