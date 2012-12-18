@@ -252,7 +252,7 @@ public class ICUtil {
                     }
                     data = Integer.parseInt(split[1]);
                 }
-                return new ItemStack(id, 1, (short) data, (byte) data);
+                return new ItemStack(id, 1, (short) data);
             } else {
                 int id = 0;
                 try {

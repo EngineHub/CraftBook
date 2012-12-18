@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.util;
 
-import net.minecraft.server.v1_4_5.NBTTagCompound;
-
-import org.bukkit.craftbukkit.v1_4_5.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -232,41 +229,5 @@ public class ItemUtil {
         }
 
         return smallest;
-    }
-
-    public static ItemStack setItemName(ItemStack item, String name) {
-        if (!itemHasDisplayData(item)) {
-            createDisplayData(item);
-        }
-        NBTTagCompound data = getDisplayData(item);
-        if (name == null) {
-            data.remove("Name");
-        }
-        data.setString("Name", "§r" + name);
-
-        return item;
-    }
-
-    public static String getItemName(ItemStack item) {
-        if(!itemHasDisplayData(item))
-            return item.getType().name();
-
-        String name = getDisplayData(item).getString("Name");
-        if (name == null || name.isEmpty()) {
-            return item.getType().name();
-        }
-        return name;
-    }
-
-    public static boolean itemHasDisplayData(ItemStack item) {
-        return ((CraftItemStack)item).getHandle().getTag().hasKey("display");
-    }
-
-    public static NBTTagCompound getDisplayData(ItemStack item) {
-        return ((CraftItemStack)item).getHandle().getTag().getCompound("display");
-    }
-
-    public static void createDisplayData(ItemStack item) {
-        ((CraftItemStack)item).getHandle().getTag().setCompound("display", new NBTTagCompound());
     }
 }

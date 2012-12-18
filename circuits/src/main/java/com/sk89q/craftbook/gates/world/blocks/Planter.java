@@ -123,7 +123,7 @@ public class Planter extends AbstractIC {
                 Block b = null;
 
                 if((b = searchBlocks(it)) != null) {
-                    if(c.getInventory().removeItem(new ItemStack(it.getTypeId(),1,it.getDurability(),it.getData().getData())).isEmpty()) {
+                    if(c.getInventory().removeItem(new ItemStack(it.getTypeId(),1,it.getDurability())).isEmpty()) {
                         b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
                         return true;
                     }

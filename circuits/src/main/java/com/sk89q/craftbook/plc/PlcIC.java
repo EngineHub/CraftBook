@@ -40,6 +40,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -233,9 +234,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             }
         if (book == null)
             throw new CodeNotFoundException("No written books found in chest.");
-        BookItem data = new BookItem(book);
+
         StringBuilder code = new StringBuilder();
-        for (String s : data.getPages()) {
+        for (String s : ((BookMeta)book.getItemMeta()).getPages()) {
             code.append(s).append("\n");
         }
         System.out.println(code);

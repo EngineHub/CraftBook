@@ -154,7 +154,7 @@ public class Sorter extends AbstractIC implements PipeInputIC {
 
         if(chestBlock.getTypeId() == BlockID.CHEST) {
             Chest chest = (Chest) chestBlock.getState();
-            return chest.getInventory().contains(new ItemStack(item.getTypeId(), 1, item.getDurability(), item.getData().getData()));
+            return chest.getInventory().contains(new ItemStack(item.getTypeId(), 1, item.getDurability()));
         }
         return false;
     }
