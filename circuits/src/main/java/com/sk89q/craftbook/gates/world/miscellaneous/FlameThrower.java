@@ -28,7 +28,10 @@ public class FlameThrower extends AbstractIC {
     @Override
     public void load() {
 
-        distance = Integer.parseInt(getSign().getLine(2));
+        try {
+            distance = Integer.parseInt(getSign().getLine(2));
+        }
+        catch(Exception ignored){}
     }
 
     @Override

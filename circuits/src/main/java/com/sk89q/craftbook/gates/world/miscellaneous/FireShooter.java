@@ -37,9 +37,15 @@ public class FireShooter extends AbstractIC {
     public void load() {
 
         String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim(), 2);
-        speed = Float.parseFloat(velocity[0]);
-        spread = Float.parseFloat(velocity[1]);
-        vert = Float.parseFloat(getSign().getLine(3).trim());
+        try {
+            speed = Float.parseFloat(velocity[0]);
+            spread = Float.parseFloat(velocity[1]);
+        }
+        catch(Exception ignored){}
+        try {
+            vert = Float.parseFloat(getSign().getLine(3).trim());
+        }
+        catch(Exception ignored){}
 
         if (speed > 2.0) {
             speed = 2F;
