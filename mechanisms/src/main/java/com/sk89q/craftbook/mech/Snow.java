@@ -164,6 +164,10 @@ public class Snow implements Listener {
 
     public void lowerData(Block block) {
 
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
+            block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
+        }
+
         byte newData = (byte) (block.getData() - 1);
         if (newData < 1) {
             block.setTypeId(0, false);
@@ -180,6 +184,10 @@ public class Snow implements Listener {
     }
 
     public boolean disperse(Block block, boolean remove) {
+
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
+            block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
+        }
 
         if(isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7)
             return disperse(block.getRelative(0, -1, 0), remove);
@@ -233,6 +241,10 @@ public class Snow implements Listener {
     }
 
     public void incrementData(Block block) {
+
+        if(block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
+            block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
+        }
 
         if(!isValidBlock(block.getTypeId()) && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
             incrementData(block.getRelative(0, 1, 0));
