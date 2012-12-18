@@ -257,7 +257,7 @@ public class Snow implements Listener {
         }
 
         if(plugin.getLocalConfiguration().snowSettings.realistic) {
-            if(isSnowBlock(block.getTypeId()) && disperse(block, false))
+            if(block.getTypeId() == BlockID.SNOW && disperse(block, false))
                 return;
         }
 

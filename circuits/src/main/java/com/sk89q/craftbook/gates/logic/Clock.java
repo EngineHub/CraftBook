@@ -53,19 +53,24 @@ public class Clock extends AbstractIC implements SelfTriggeredIC {
 
     }
 
+    short tick, reset;
+
     protected void triggerClock(ChipState chip) {
 
-        short tick, reset;
         try {
             reset = Short.parseShort(getSign().getLine(2));
         } catch (NumberFormatException e) {
-            return;
+            reset = 5;
+            getSign().setLine(2, Short.toString(reset));
+            getSign().update(false);
         }
 
         try {
             tick = Short.parseShort(getSign().getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
+            getSign().setLine(3, Short.toString(tick));
+            getSign().update(false);
         }
 
         tick++;
