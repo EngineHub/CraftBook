@@ -6,6 +6,7 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -45,41 +46,36 @@ public class PlayerSensor extends AbstractIC {
 
     int radius;
 
-    int x,y,z;
-
     Location location = null;
     ProtectedRegion reg = null;
+    Type type = Type.PLAYER;
+    String nameLine = "";
 
     @Override
     public void load() {
         radius = 10; //Default Radius
         location = BukkitUtil.toSign(getSign()).getLocation();
+
+        if (getLine(3).contains(":")) {
+            type = Type.getFromChar(getLine(3).trim().toCharArray()[0]);
+        }
+
+        nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "").trim();
+
         try {
             if (getLine(2).startsWith("r:") && CircuitsPlugin.getInst().getWorldGuard() != null) {
 
                 String region = getLine(2).replace("r:", "");
                 reg = CircuitsPlugin.getInst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld()).getRegion(region);
-                if (reg == null) {
-                    String[] splitEquals = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
-                    radius = Integer.parseInt(splitEquals[0]);
-                    if (getSign().getLine(2).contains("=")) {
-                        String[] splitCoords = ICUtil.COLON_PATTERN.split(splitEquals[1]);
-                        x = Integer.parseInt(splitCoords[0]);
-                        y = Integer.parseInt(splitCoords[1]);
-                        z = Integer.parseInt(splitCoords[2]);
-                        location.add(x, y, z);
-                    }
-                }
+                if (reg != null) return;
+            }
+            radius = ICUtil.parseRadius(getSign());
+            if (getSign().getLine(2).contains("=")) {
+                getSign().setLine(2, radius + '=' + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+                location = ICUtil.parseBlockLocation(getSign()).getLocation();
             } else {
-                String[] splitEquals = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
-                radius = Integer.parseInt(splitEquals[0]);
-                if (getSign().getLine(2).contains("=")) {
-                    String[] splitCoords = ICUtil.COLON_PATTERN.split(splitEquals[1]);
-                    x = Integer.parseInt(splitCoords[0]);
-                    y = Integer.parseInt(splitCoords[1]);
-                    z = Integer.parseInt(splitCoords[2]);
-                    location.add(x, y, z);
-                }
+                getSign().setLine(2, String.valueOf(radius));
+                location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             }
         } catch (NullPointerException e) {
             Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
@@ -88,12 +84,6 @@ public class PlayerSensor extends AbstractIC {
     }
 
     protected boolean isDetected() {
-
-        Type type = Type.PLAYER;
-        if (getLine(3).contains(":")) {
-            type = Type.getFromChar(getLine(3).trim().toCharArray()[0]);
-        }
-        String nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "").trim();
 
         if (reg != null) {
 
