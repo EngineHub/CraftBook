@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -166,7 +167,9 @@ public class Chair implements Listener {
 
         @Override
         public void run () {
-            for(String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
+            Iterator<String> it = plugin.getLocalConfiguration().chairSettings.chairs.keySet().iterator();
+            while(it.hasNext()) {
+                String pl = it.next();
                 Player p = Bukkit.getPlayer(pl);
                 if (p == null) continue;
                 if(!plugin.getLocalConfiguration().chairSettings.canUseBlock(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation()) > 1)
