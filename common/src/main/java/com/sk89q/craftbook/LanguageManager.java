@@ -66,8 +66,7 @@ public class LanguageManager {
     @Deprecated
     public String getString(String message) {
 
-        HashMap<String, String> languageData = languageMap.get(CraftBookPlugin.getInstance().getLocalConfiguration()
-                .language);
+        HashMap<String, String> languageData = languageMap.get(CraftBookPlugin.getInstance().getLocalConfiguration().language);
         if (languageData == null)
             return "Missing Language File!";
         String translated = languageData.get(ChatColor.stripColor(message));
