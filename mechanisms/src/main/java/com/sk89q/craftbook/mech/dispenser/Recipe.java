@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import java.util.Arrays;
-
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import java.util.Arrays;
 
 /**
  * @author Me4502
@@ -41,10 +41,8 @@ public abstract class Recipe {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Recipe)) return false;
 
-        return Arrays.equals(recipe, ((Recipe) o).recipe);
+        return this == o || o instanceof Recipe && Arrays.equals(recipe, ((Recipe) o).recipe);
 
     }
 

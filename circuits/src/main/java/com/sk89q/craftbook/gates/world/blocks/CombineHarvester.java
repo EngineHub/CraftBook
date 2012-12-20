@@ -1,9 +1,12 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,18 +14,10 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class CombineHarvester extends AbstractIC {
 
@@ -115,27 +110,25 @@ public class CombineHarvester extends AbstractIC {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block pipe = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-        if(pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+        if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
             PistonBaseMaterial p = (PistonBaseMaterial)pipe.getState().getData();
             Block fac = pipe.getRelative(p.getFacing());
             if(fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
 
                 List<ItemStack> items = new ArrayList<ItemStack>();
-                for(ItemStack drop : drops) {
-                    items.add(drop);
-                }
-                if(CircuitsPlugin.getInst().pipeFactory != null)
-                    if(CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(pipe), items) != null) {
+                Collections.addAll(items, drops);
+                if (CircuitsPlugin.getInst().pipeFactory != null)
+                    if (CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(pipe), items) != null) {
                         return;
                     }
             }
         }
-        if(onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
+        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
             HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(drops);
-            for(ItemStack item : leftovers.values()) {
+            for (ItemStack item : leftovers.values()) {
 
                 onBlock.getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0,  0.5), item);
             }
@@ -151,9 +144,8 @@ public class CombineHarvester extends AbstractIC {
     public boolean harvestable(Block block) {
 
         //TODO add a list of things that can be harvestable, and in what circumstance.
-        if((block.getTypeId() == BlockID.CROPS || block.getTypeId() == BlockID.CARROTS || block.getTypeId() == BlockID.POTATOES) && block.getData() >= 0x7)
-            return true;
-        return false;
+        return (block.getTypeId() == BlockID.CROPS || block.getTypeId() == BlockID.CARROTS
+                || block.getTypeId() == BlockID.POTATOES) && block.getData() >= 0x7;
     }
 
     public static class Factory extends AbstractICFactory {

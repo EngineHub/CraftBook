@@ -1,7 +1,12 @@
 package com.sk89q.craftbook.gates.world.entity;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -12,18 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Location;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.regex.Pattern;
 
 public class AdvancedEntitySpawner extends AbstractIC {
 
@@ -118,7 +112,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                             try {
                                 data = Byte.parseByte(COLON_PATTERN.split(bitSplit[0])[1]);
                             }
-                            catch(Exception e){}
+                            catch(Exception ignored){}
 
                             ItemStack slot = new ItemStack(Integer.parseInt(COLON_PATTERN.split(bitSplit[0])[0]), 1, data);
                             try {
@@ -127,11 +121,11 @@ public class AdvancedEntitySpawner extends AbstractIC {
                                     slot.addEnchantment(Enchantment.getById(Integer.parseInt(enchantInfo[0])), Integer.parseInt(enchantInfo[1]));
                                 }
                             }
-                            catch(Exception e){}
+                            catch(Exception ignored){}
 
                             armour[s] = slot;
                         }
-                        catch(Exception e){}
+                        catch(Exception ignored){}
                     }
 
                     ((LivingEntity) ent).getEquipment().setArmorContents(armour);
@@ -163,7 +157,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                                         Integer.parseInt(potionBits[1]),Integer.parseInt(potionBits[2]));
                                 ((LivingEntity)ent).addPotionEffect(effect, true);
                             }
-                            catch(Exception e){}
+                            catch(Exception ignored){}
                         }
                     }
                     else if(data[0].equalsIgnoreCase("v")) {
@@ -175,7 +169,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                             z = Double.parseDouble(coords[2]);
                             ent.setVelocity(new org.bukkit.util.Vector(x,y,z));
                         }
-                        catch(Exception e){
+                        catch(Exception ignored){
                         }
                     }
                     else if(data[0].equalsIgnoreCase("s")) {
@@ -188,7 +182,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         try {
                             d = Byte.parseByte(splitEvenMore[2]);
                         }
-                        catch(Exception e){}
+                        catch(Exception ignored){}
 
                         ItemStack slot = new ItemStack(Integer.parseInt(splitEvenMore[1]), 1, d);
                         try {
@@ -197,7 +191,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                                 slot.addEnchantment(Enchantment.getById(Integer.parseInt(enchantInfo[0])), Integer.parseInt(enchantInfo[1]));
                             }
                         }
-                        catch(Exception e){}
+                        catch(Exception ignored){}
                         ((LivingEntity) ent).getEquipment().setItemInHand(slot);
                     }
                 }

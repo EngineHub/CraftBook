@@ -1,16 +1,10 @@
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 /**
  * @author Silthus
@@ -46,10 +40,8 @@ public class Delayer extends AbstractIC {
     @Override
     public void trigger(final ChipState chip) {
 
-    	long tdelay = delay * 20;
-    	if (tickDelay == true) {
-    		tdelay = delay;
-    	}
+        long tdelay = delay * 20;
+        if (tickDelay) tdelay = delay;
         if (chip.getInput(0)) {
             taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 

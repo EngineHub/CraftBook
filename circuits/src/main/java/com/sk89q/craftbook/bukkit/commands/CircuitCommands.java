@@ -1,14 +1,13 @@
 package com.sk89q.craftbook.bukkit.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class CircuitCommands {
 
@@ -95,7 +94,7 @@ public class CircuitCommands {
         try {
             ar = context.getString(1).toCharArray();
         }
-        catch(Exception e){}
+        catch(Exception ignored){}
         String[] lines = plugin.generateICText(player, null, ar);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;
@@ -133,7 +132,7 @@ public class CircuitCommands {
         try {
             ar = context.getString(2).toCharArray();
         }
-        catch(Exception e){}
+        catch(Exception ignored){}
         String[] lines = plugin.generateICText(player, context.getString(0), ar);
         int pages = (lines.length - 1) / 9 + 1;
         int accessedPage;

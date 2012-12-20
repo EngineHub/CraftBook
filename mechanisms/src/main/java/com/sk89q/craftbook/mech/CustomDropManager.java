@@ -18,6 +18,11 @@
 
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,12 +31,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 /**
  * Storage class for custom drop definitions.
@@ -114,7 +113,7 @@ public final class CustomDropManager {
                             if(line.contains("#"))
                                 line = COMMENT_PATTERN.split(line)[0]; //Remove comments
                         }
-                        catch(Exception e){}
+                        catch(Exception ignored){}
 
                         line = line.trim(); //Remove excess whitespace
 
@@ -224,7 +223,7 @@ public final class CustomDropManager {
         try {
             chance = Integer.parseInt(PERCENT_PATTERN.split(s)[1]);
         }
-        catch(Exception e) {}
+        catch(Exception ignored) {}
         return new DropDefinition(itemId, (byte) data, countMin, countMax, chance, append);
     }
 

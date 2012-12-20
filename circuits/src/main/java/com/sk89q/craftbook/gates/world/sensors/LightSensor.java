@@ -18,18 +18,12 @@
 
 package com.sk89q.craftbook.gates.world.sensors;
 
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 
 public class LightSensor extends AbstractIC {
 
@@ -76,7 +70,7 @@ public class LightSensor extends AbstractIC {
                 getSign().setLine(2, Integer.toString(min));
                 getSign().update(false);
             }
-            catch(Exception ee){}
+            catch(Exception ignored){}
         }
     }
 

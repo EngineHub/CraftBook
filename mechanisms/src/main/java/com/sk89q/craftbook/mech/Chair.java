@@ -1,8 +1,10 @@
 package com.sk89q.craftbook.mech;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -13,11 +15,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Me4502
@@ -105,15 +103,13 @@ public class Chair implements Listener {
     }
 
     public boolean hasChair(Player player) {
-        if(disabled)
-            return false;
-        return plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName());
+
+        return !disabled && plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName());
     }
 
     public boolean hasChair(Block player) {
-        if(disabled)
-            return false;
-        return plugin.getLocalConfiguration().chairSettings.chairs.containsValue(player);
+
+        return !disabled && plugin.getLocalConfiguration().chairSettings.chairs.containsValue(player);
     }
 
     private MechanismsPlugin plugin;
@@ -167,19 +163,20 @@ public class Chair implements Listener {
 
         @Override
         public void run () {
-            Iterator<String> it = plugin.getLocalConfiguration().chairSettings.chairs.keySet().iterator();
-            while(it.hasNext()) {
-                String pl = it.next();
+
+            for (String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
                 if (p == null) continue;
-                if(!plugin.getLocalConfiguration().chairSettings.canUseBlock(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation()) > 1)
+                if (!plugin.getLocalConfiguration().chairSettings.canUseBlock(getChair(p).getTypeId()) || !p.getWorld
+                        ().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair(p).getLocation
+                        ()) > 1)
                     removeChair(p); //Remove it. It's unused.
                 else {
                     addChair(p, getChair(p)); //For any new players.
 
-                    if(plugin.getLocalConfiguration().chairSettings.healthRegen && p.getHealth() < 20)
+                    if (plugin.getLocalConfiguration().chairSettings.healthRegen && p.getHealth() < 20)
                         p.setHealth(p.getHealth() + 1);
-                    if(p.getExhaustion() > -20f)
+                    if (p.getExhaustion() > -20f)
                         p.setExhaustion(p.getExhaustion() - 0.1f);
                 }
             }

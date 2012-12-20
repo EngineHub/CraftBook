@@ -1,22 +1,15 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.gates.world.blocks.SetDoor;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Effect;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.gates.world.blocks.SetDoor;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * @author Me4502
@@ -71,7 +64,7 @@ public class ParticleEffect extends AbstractIC {
         try {
             times = Integer.parseInt(getSign().getLine(3));
         }
-        catch(Exception e){}
+        catch(Exception ignored){}
 
         String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
         offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));

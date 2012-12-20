@@ -1,10 +1,14 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -12,27 +16,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.material.PistonBaseMaterial;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.PipeInputIC;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
 
@@ -155,27 +145,21 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                     for (int i = 0; i < item.getItemStack().getAmount(); i++) {
                         ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
                                 item.getItemStack());
-                        if (it == null) {
-                            continue outer;
-                        }
-                        if(it.getAmount() < 64) {
+                        if (it == null) continue outer;
+                        if (it.getAmount() < 64) {
                             it.setAmount(it.getAmount() + 1);
                             newAmount -= 1;
-                        }
-                        else {
-                            if(newAmount > 0)
-                                delete = false;
+                        } else if (newAmount > 0) {
+                            delete = false;
                             break;
                         }
                     }
 
                     item.getItemStack().setAmount(newAmount);
 
-                    if(newAmount > 0)
-                        delete = false;
+                    if(newAmount > 0) delete = false;
 
-                    if(delete)
-                        item.remove();
+                    if(delete) item.remove();
                 }
             }
     return false;

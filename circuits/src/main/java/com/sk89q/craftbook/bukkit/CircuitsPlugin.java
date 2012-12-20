@@ -479,8 +479,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         boolean ret = true;
 
         for(MechanicFactory<? extends Mechanic> factory : manager.factories) {
-            if(unregisterMechanic(factory) == false)
-                ret = false;
+            if(!unregisterMechanic(factory)) ret = false;
         }
 
         return ret;
@@ -541,7 +540,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
                 return ic;
             }
-            catch(Exception e){
+            catch(Exception ignored){
             }
         }
 
@@ -647,8 +646,6 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                 registerMechanics();
                 registerEvents();
             }
-
-            ;
         });
     }
 }

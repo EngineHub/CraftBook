@@ -1,11 +1,5 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractIC;
@@ -15,6 +9,11 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class SetBlock extends AbstractIC {
 
@@ -43,7 +42,7 @@ public abstract class SetBlock extends AbstractIC {
             try {
                 block = BlockType.lookup(strBlock).getID();
             }
-            catch(Exception ee) {
+            catch(Exception ignored) {
             }
         }
 
@@ -51,7 +50,7 @@ public abstract class SetBlock extends AbstractIC {
             if (!strMeta.isEmpty()) {
                 meta = Byte.parseByte(strMeta);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
