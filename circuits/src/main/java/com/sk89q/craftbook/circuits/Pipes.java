@@ -121,6 +121,10 @@ public class Pipes extends AbstractMechanic {
                     }
 
                     Block off = block.getRelative(x, y, z);
+
+                    if(!isValidPipeBlock(off.getTypeId()))
+                        continue;
+
                     BlockVector bv = BukkitUtil.toVector(off);
                     if(visitedPipes.contains(bv))
                         continue;
@@ -177,6 +181,13 @@ public class Pipes extends AbstractMechanic {
                 }
             }
         }
+    }
+
+    private boolean isValidPipeBlock (int typeId) {
+
+        return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE
+                || typeId == BlockID.PISTON_STICKY_BASE || typeId == BlockID.WALL_SIGN;
+
     }
 
     public void startPipe(Block block) {
