@@ -47,9 +47,12 @@ public class PotionInducer extends AbstractIC {
     public void load() {
 
         String[] effectInfo = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 3);
-        effectID = Integer.parseInt(effectInfo[0]);
-        effectAmount = Integer.parseInt(effectInfo[1]);
-        effectTime = Integer.parseInt(effectInfo[2]);
+        try {
+            effectID = Integer.parseInt(effectInfo[0]);
+            effectAmount = Integer.parseInt(effectInfo[1]);
+            effectTime = Integer.parseInt(effectInfo[2]);
+        }
+        catch(Exception e){}
         String line4 = getSign().getLine(3);
         if(line4.contains("pm")) {
             mobs = true;
