@@ -63,28 +63,31 @@ public class Melody extends AbstractIC {
     }
 
     int radius = -1;
-    File file = null;
+    File file;
     String midiName;
     boolean forceStart = false;
 
     @Override
     public void load() {
 
-        String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
-
-        forceStart = split[1].equalsIgnoreCase("START");
-
         try {
-            radius = Integer.parseInt(split[0]);
-        } catch (Exception ignored) {
+            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
+
+            try {
+                radius = Integer.parseInt(split[0]);
+            } catch (Exception ignored) {
+            }
+
+            forceStart = split[1].equalsIgnoreCase("START");
         }
+        catch(Exception e){}
 
         midiName = getSign().getLine(2);
 
         File[] trialPaths = {
-                new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName),
-                new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName + ".mid"),
-                new File(CircuitsPlugin.getInst().getDataFolder(), "midi/" + midiName + ".midi"),
+                new File(CircuitsPlugin.getInst().midiFolder, midiName),
+                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"),
+                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".midi"),
                 new File("midi", midiName),
                 new File("midi", midiName + ".mid"),
                 new File("midi", midiName + ".midi"),
@@ -95,15 +98,15 @@ public class Melody extends AbstractIC {
                 file = f;
                 break;
             }
-
-        if (file == null) {
-            getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
-            return;
-        }
     }
 
     @Override
     public void trigger(ChipState chip) {
+
+        if (file == null || !file.exists()) {
+            getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
+            return;
+        }
 
         try {
             if (sequencer != null && !sequencer.isSongPlaying() && forceStart)
@@ -139,7 +142,7 @@ public class Melody extends AbstractIC {
                 }
                 jNote.getJingleNoteManager().stopAll();
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
             Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         }

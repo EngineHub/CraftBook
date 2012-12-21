@@ -85,6 +85,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     public Pipes.Factory pipeFactory;
 
     public File romFolder;
+    public File midiFolder;
 
     @Override
     public void onEnable() {
@@ -110,9 +111,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         MechanicListenerAdapter adapter = new MechanicListenerAdapter(this);
         adapter.register(manager);
 
-        File midi = new File(getDataFolder(), "midi/");
-        if (!midi.exists()) {
-            midi.mkdir();
+        midiFolder = new File(getDataFolder(), "midi/");
+        if (!midiFolder.exists()) {
+            midiFolder.mkdir();
         }
 
         romFolder = new File(getDataFolder(), "rom/");
