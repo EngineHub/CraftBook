@@ -4,11 +4,11 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.SignUtil;
-import net.minecraft.server.v1_4_5.Packet70Bed;
+import net.minecraft.server.v1_4_6.Packet70Bed;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_5.CraftServer;
-import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_6.CraftServer;
+import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
 
 /**
  * @author Me4502
