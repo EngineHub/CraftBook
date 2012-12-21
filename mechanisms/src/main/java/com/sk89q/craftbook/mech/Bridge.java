@@ -286,6 +286,11 @@ public class Bridge extends AbstractMechanic {
             if (event.getPlayer().getItemInHand() != null)
                 if (getBridgeMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
+                    if (!player.hasPermission("craftbook.mech.bridge.restock")) {
+                        player.printError("mech.restock-permission");
+                        return;
+                    }
+
                     int amount = 1;
                     if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
                         amount = 5;

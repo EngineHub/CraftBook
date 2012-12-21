@@ -365,6 +365,11 @@ public class Gate extends AbstractMechanic {
 
         if (getGateBlock() == player.getTypeInHand()) {
 
+            if (!player.hasPermission("craftbook.mech.gate.restock")) {
+                player.printError("mech.restock-permission");
+                return;
+            }
+
             int amount = 1;
             if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
                 amount = 5;
