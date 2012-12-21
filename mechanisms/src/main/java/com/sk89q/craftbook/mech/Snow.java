@@ -189,9 +189,6 @@ public class Snow implements Listener {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
         }
 
-        if(isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7)
-            return disperse(block.getRelative(0, -1, 0), remove);
-
         if(isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
             if(block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1, 0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(0, -1, 0));
