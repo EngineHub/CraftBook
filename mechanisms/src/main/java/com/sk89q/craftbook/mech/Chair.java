@@ -14,8 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Me4502
@@ -29,10 +31,10 @@ public class Chair implements Listener {
     }
 
     private boolean disabled = false;
+    public ConcurrentHashMap<String, Block> chairs = new ConcurrentHashMap<String, Block>();
 
     public void addChair(Player player, Block block) {
-        if(disabled)
-            return;
+        if (disabled) return;
         try {
             //TODO deck chairs. Packet17EntityLocationAction packet = new Packet17EntityLocationAction(((CraftPlayer)player).getHandle(), 0, block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 
@@ -43,7 +45,7 @@ public class Chair implements Listener {
             entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
             //Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 4), false);
             for (Player play : plugin.getServer().getOnlinePlayers()) {
-                if(play.getWorld().equals(player.getPlayer().getWorld())) {
+                if (play.getWorld().equals(player.getPlayer().getWorld())) {
                     try {
                         plugin.getProtocolManager().sendServerPacket(play, entitymeta);
                     }
@@ -53,21 +55,18 @@ public class Chair implements Listener {
                     //((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
                 }
             }
-        }
-        catch(Error e){
+        } catch(Error e) {
             Bukkit.getLogger().severe("Chairs do not work in this version of Minecraft!");
             disabled = true;
             return;
         }
-        if(plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName()))
-            return;
-        player.sendMessage(ChatColor.YELLOW + "You are now sitting.");
-        plugin.getLocalConfiguration().chairSettings.chairs.put(player.getName(), block);
+        if (chairs.containsKey(player.getName())) return;
+        plugin.wrap(player).print(ChatColor.YELLOW + "You are now sitting.");
+        chairs.put(player.getName(), block);
     }
 
     public void removeChair(Player player) {
-        if(disabled)
-            return;
+        if (disabled) return;
         PacketContainer entitymeta = plugin.getProtocolManager().createPacket(40);
         entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
         WrappedDataWatcher watcher = new WrappedDataWatcher();
@@ -76,7 +75,7 @@ public class Chair implements Listener {
 
         //Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ChairWatcher((byte) 0), false);
         for (Player play : plugin.getServer().getOnlinePlayers()) {
-            if(play.getWorld().equals(player.getPlayer().getWorld())) {
+            if (play.getWorld().equals(player.getPlayer().getWorld())) {
                 try {
                     plugin.getProtocolManager().sendServerPacket(play, entitymeta);
                 }
@@ -86,40 +85,40 @@ public class Chair implements Listener {
                 //((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
             }
         }
-        player.sendMessage(ChatColor.YELLOW + "You are no longer sitting.");
-        plugin.getLocalConfiguration().chairSettings.chairs.remove(player.getName());
+        plugin.wrap(player).print(ChatColor.YELLOW + "You are no longer sitting.");
+        chairs.remove(player.getName());
     }
 
     public Block getChair(Player player) {
-        if(disabled)
-            return null;
-        return plugin.getLocalConfiguration().chairSettings.chairs.get(player.getName());
-    }
-
-    public Player getChair(Block player) {
-        if(disabled)
-            return null;
-        return Bukkit.getPlayer(plugin.getLocalConfiguration().chairSettings.chairs.inverse().get(player));
+        if (disabled) return null;
+        return chairs.get(player.getName());
     }
 
     public boolean hasChair(Player player) {
 
-        return !disabled && plugin.getLocalConfiguration().chairSettings.chairs.containsKey(player.getName());
+        return !disabled && chairs.containsKey(player.getName());
     }
 
     public boolean hasChair(Block player) {
 
-        return !disabled && plugin.getLocalConfiguration().chairSettings.chairs.containsValue(player);
+        return !disabled && chairs.containsValue(player);
     }
 
     private MechanismsPlugin plugin;
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+
+        if (hasChair(event.getPlayer())) chairs.remove(event.getPlayer().getName());
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if (!plugin.getLocalConfiguration().chairSettings.enable) return;
         if (hasChair(event.getBlock())) {
-            removeChair(getChair(event.getBlock()));
+            event.setCancelled(true);
+            plugin.wrap(event.getPlayer()).print("This seat is in use!");
         }
     }
 
@@ -134,8 +133,7 @@ public class Chair implements Listener {
 
         //Now everything looks good, continue;
         if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock() || player.getPlayer().getItemInHand().getTypeId() == 0) {
-            if (plugin.getLocalConfiguration().chairSettings.requireSneak != player.getPlayer().isSneaking())
-                return;
+            if (plugin.getLocalConfiguration().chairSettings.requireSneak != player.getPlayer().isSneaking()) return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {
                 player.printError("mech.use-permission");
                 return;
@@ -144,14 +142,8 @@ public class Chair implements Listener {
                 removeChair(player.getPlayer());
             } else { //Sit
                 if (hasChair(event.getClickedBlock())) {
-                    Player p = getChair(event.getClickedBlock());
-                    if(!p.isOnline() || !p.getWorld().equals(event.getClickedBlock().getWorld()) || p.getLocation().distanceSquared(event.getClickedBlock().getLocation()) > 1) {
-                        removeChair(p);
-                    }
-                    else {
-                        player.print("This seat is already occupied.");
-                        return;
-                    }
+                    player.print("This seat is already occupied.");
+                    return;
                 }
                 player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 0, 0.5)); //Teleport to the seat
                 addChair(player.getPlayer(), event.getClickedBlock());
@@ -159,12 +151,13 @@ public class Chair implements Listener {
         }
     }
 
+
     public class ChairChecker implements Runnable {
 
         @Override
         public void run () {
 
-            for (String pl : plugin.getLocalConfiguration().chairSettings.chairs.keySet()) {
+            for (String pl : chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
                 if (p == null) continue;
                 if (!plugin.getLocalConfiguration().chairSettings.canUseBlock(getChair(p).getTypeId()) || !p.getWorld

@@ -18,19 +18,14 @@
 
 package com.sk89q.craftbook;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
-
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.sk89q.craftbook.mech.CustomDropManager;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * FileConfiguration handler for CraftBook.
@@ -199,7 +194,6 @@ public class MechanismsConfiguration extends BaseConfiguration {
         public final boolean enable;
         public final boolean requireSneak;
         public final Set<Integer> allowedBlocks;
-        public BiMap<String, Block> chairs = HashBiMap.create(new HashMap<String, Block>());
 
         private ChairSettings(BaseConfigurationSection section) {
 
