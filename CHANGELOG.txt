@@ -1,3 +1,17 @@
+3.4
+* Realistic snow mechanic now works much smoother and more realistically.
+* PLC's are now version independant. But will only work as of 1.4.5+.
++ Realistic snow freezes water underneath snow for a more realistic effect.
++ Added default parameters to, Fire Barrage; Fire Shooter and Flame Thrower IC's.
++ Added pipe support to Block Breaker and Combine Harvester.
+* Fixed error with chairs.
+* Allow the entity cannon to throw more than a single mob at a time.
+* Enhanced LanguageManager.
+* Player Detector replaced with Player Sensor.
+* Melody IC now checks if the file exists before playing.
+* Performance improvements.
+* Fixed a bug where pipes wouldn't work with diagonal setting turned off.
+
 3.4b2
 * Fixed backwards compatability.
 + Added a welcome message to teleporter IC's on the last line of the reciever.
