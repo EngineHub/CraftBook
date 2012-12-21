@@ -18,12 +18,18 @@
 
 package com.sk89q.craftbook.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractIC {
 
@@ -64,7 +70,7 @@ public class LightSensor extends AbstractIC {
         }
 
         try {
-            min = Integer.parseInt(getSign().getLine(2));
+            min = Byte.parseByte(getSign().getLine(2));
         } catch (Exception e) {
             try {
                 getSign().setLine(2, Integer.toString(min));
@@ -77,7 +83,7 @@ public class LightSensor extends AbstractIC {
     int x = 0;
     int y = 1;
     int z = 0;
-    int min = 10;
+    byte min = 10;
 
     protected boolean getTargetLighted() {
 
@@ -90,11 +96,11 @@ public class LightSensor extends AbstractIC {
      *
      * @return
      */
-    private boolean hasLight(int specifiedLevel, int x, int y, int z) {
+    private boolean hasLight(byte specifiedLevel, int x, int y, int z) {
 
         Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         Block backBlock = signBlock.getRelative(SignUtil.getBack(signBlock));
-        int lightLevel = backBlock.getRelative(x, y, z).getLightLevel();
+        byte lightLevel = backBlock.getRelative(x, y, z).getLightLevel();
 
         return lightLevel >= specifiedLevel;
     }

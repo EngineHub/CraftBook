@@ -19,6 +19,14 @@ import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
+/**
+ * Movement Sensor.
+ * 
+ * This IC is incomplete due to the bukkit API not providing ample movement velocity support.
+ * 
+ * @author Me4502
+ *
+ */
 public class MovementSensor extends AbstractIC {
 
     public MovementSensor (Server server, ChangedSign sign, ICFactory factory) {
