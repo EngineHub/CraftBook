@@ -2,6 +2,7 @@ package com.sk89q.craftbook.gates.world.blocks;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,7 +16,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class Cultivator extends AbstractIC {
@@ -62,14 +62,12 @@ public class Cultivator extends AbstractIC {
 
     public boolean cultivate() {
 
-        BlockWorldVector position = getSign().getBlockVector();
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
                 for (int z = -radius + 1; z < radius; z++) {
-                    BlockWorldVector current = new BlockWorldVector(getSign().getLocalWorld(), position.subtract(x, y, z).toBlockPoint());
-                    Block b = BukkitUtil.toBlock(current);
+                    Block b = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z).getBlock();
                     if(b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
-                        if(damageHoe()) {
+                        if(b.getRelative(BlockFace.UP).getTypeId() == 0 && damageHoe()) {
                             b.setTypeId(BlockID.SOIL);
                             return true;
                         }
