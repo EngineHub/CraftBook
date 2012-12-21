@@ -84,7 +84,11 @@ public class Pipes extends AbstractMechanic {
                 for(int z = -1; z < 2; z++) {
 
                     if(!plugin.getLocalConfiguration().pipeSettings.diagonals) {
-                        if(Math.abs(x) == Math.abs(y) || Math.abs(x) == Math.abs(z) || Math.abs(y) == Math.abs(z)) //Cut out diagonals.
+                        if(Math.abs(x) != 0 && Math.abs(y) != 0)
+                            continue;
+                        if(Math.abs(x) != 0 && Math.abs(z) != 0)
+                            continue;
+                        if(Math.abs(y) != 0 && Math.abs(z) != 0)
                             continue;
                     }
                     else {
