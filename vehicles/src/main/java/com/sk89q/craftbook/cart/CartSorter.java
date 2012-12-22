@@ -53,7 +53,59 @@ public class CartSorter extends CartMechanism {
         BlockFace next = SignUtil.getFacing(blocks.sign);
         if(VehiclesPlugin.useOldBlockFace()) {
 
-            trackData = 0;
+            switch (next) {
+                case WEST:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 9;
+                            break;
+                        case RIGHT:
+                            trackData = 8;
+                            break;
+                        default:
+                            trackData = 0;
+                    }
+                    break;
+                case EAST:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 7;
+                            break;
+                        case RIGHT:
+                            trackData = 6;
+                            break;
+                        default:
+                            trackData = 0;
+                    }
+                    break;
+                case NORTH:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 6;
+                            break;
+                        case RIGHT:
+                            trackData = 9;
+                            break;
+                        default:
+                            trackData = 1;
+                    }
+                    break;
+                case SOUTH:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 8;
+                            break;
+                        case RIGHT:
+                            trackData = 7;
+                            break;
+                        default:
+                            trackData = 1;
+                    }
+                    break;
+                default:
+                    cart.remove();
+                    return;
+            }
         }
         else {
             switch (next) {
@@ -106,7 +158,7 @@ public class CartSorter extends CartMechanism {
                     }
                     break;
                 default:
-                    //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
+                    cart.remove();
                     return;
             }
         }
