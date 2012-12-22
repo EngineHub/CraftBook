@@ -1,17 +1,24 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
  * @author Me4502
@@ -63,14 +70,16 @@ public class PlayerSensor extends AbstractIC {
         nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "").trim();
 
         try {
-            if (getLine(2).startsWith("r:") && CircuitsPlugin.getInst().getWorldGuard() != null) {
+            String locInfo = getLine(2);
+            if (locInfo.startsWith("r:") && CircuitsPlugin.getInst().getWorldGuard() != null) {
 
-                String region = getLine(2).replace("r:", "");
-                reg = CircuitsPlugin.getInst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld()).getRegion(region);
-                if (reg != null) return;
+                locInfo = locInfo.replace("r:", "");
+                reg = CircuitsPlugin.getInst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld()).getRegion(locInfo);
+                if (reg != null)
+                    return;
             }
             radius = ICUtil.parseRadius(getSign());
-            if (getSign().getLine(2).contains("=")) {
+            if (locInfo.contains("=")) {
                 getSign().setLine(2, radius + '=' + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
                 location = ICUtil.parseBlockLocation(getSign()).getLocation();
             } else {
@@ -92,7 +101,7 @@ public class PlayerSensor extends AbstractIC {
                     return true;
                 }
             }
-        } else if (location != null) {
+        } else {
             if (type == Type.PLAYER) {
                 Player p = Bukkit.getPlayer(nameLine);
                 if (p != null && LocationUtil.isWithinRadius(location, p.getLocation(), radius)) return true;

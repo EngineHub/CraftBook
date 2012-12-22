@@ -29,6 +29,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -136,6 +137,9 @@ public class FlexibleSetBlock extends AbstractIC {
 
         boolean inp = chip.getInput(0);
 
+        if(body == null)
+            return;
+
         if (inp) {
             body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
         } else if (hold) {
@@ -155,6 +159,52 @@ public class FlexibleSetBlock extends AbstractIC {
 
             return new FlexibleSetBlock(getServer(), sign, this);
         }
-    }
 
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            String line3 = sign.getLine(2).toUpperCase();
+
+            String[] params = ICUtil.COLON_PATTERN.split(line3);
+            if (params.length < 2)
+                throw new ICVerificationException("Not enough parameters on second line!");
+            if (params[0].length() < 2)
+                throw new ICVerificationException("Invalid first parameter!");
+
+            // Get and validate axis
+            String axis = params[0].substring(0, 1);
+            if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
+                throw new ICVerificationException("Invalid axis!");
+
+            // Get and validate operator (default +)
+            String op = params[0].substring(1, 2);
+            int distStart = 2;
+            if (!op.equals("+") && !op.equals("-")) {
+                op = "+";
+                distStart = 1; // no op so distance starts after axis
+            }
+
+            // Get and validate distance
+            String sdist = params[0].substring(distStart);
+            try {
+                Integer.parseInt(sdist);
+            } catch (Exception e) {
+                throw new ICVerificationException("Invalid distance!");
+            }
+
+            try {
+                Integer.parseInt(params[1]);
+            } catch (Exception e) {
+                throw new ICVerificationException("Invalid block ID!");
+            }
+
+            if (params.length > 2) {
+                try {
+                    Byte.parseByte(params[2]);
+                } catch (Exception e) {
+                    throw new ICVerificationException("Invalid block data!");
+                }
+            }
+        }
+    }
 }
