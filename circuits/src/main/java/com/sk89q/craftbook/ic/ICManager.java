@@ -18,14 +18,14 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through
@@ -133,7 +133,7 @@ public class ICManager {
      */
     public static boolean isCachedIC(BlockWorldVector pt) {
 
-        return CircuitsPlugin.getInst().getLocalConfiguration().cacheICs && cachedICs.containsKey(pt);
+        return CircuitsPlugin.getInst().getLocalConfiguration().icSettings.cache && cachedICs.containsKey(pt);
     }
 
     /**
@@ -157,7 +157,7 @@ public class ICManager {
      */
     public static void addCachedIC(BlockWorldVector pt, IC ic) {
 
-        if(!CircuitsPlugin.getInst().getLocalConfiguration().cacheICs)
+        if(!CircuitsPlugin.getInst().getLocalConfiguration().icSettings.cache)
             return;
         cachedICs.put(pt, ic);
     }

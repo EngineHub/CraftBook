@@ -19,6 +19,8 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -38,24 +40,36 @@ public class CircuitsConfiguration extends BaseConfiguration {
 
     public boolean enableNetherstone;
     public boolean enablePumpkins;
-    public boolean enableICs;
     public boolean enableGlowStone;
     public boolean enableShorthandIcs;
     public int glowstoneOffBlock;
-    public boolean cacheICs;
     public PipeSettings pipeSettings;
+    public ICSettings icSettings;
 
     @Override
     public void load() {
 
         enableNetherstone = getBoolean("redstone-netherstone", false);
         enablePumpkins = getBoolean("redstone-pumpkins", true);
-        enableICs = getBoolean("redstone-ics", true);
         enableGlowStone = getBoolean("redstone-glowstone", false);
         enableShorthandIcs = getBoolean("enable-shorthand-ics", false);
         glowstoneOffBlock = getInt("glowstone-off-material", BlockID.GLASS);
-        cacheICs = getBoolean("cache-ics", true);
+        icSettings = new ICSettings(new BaseConfiguration.BaseConfigurationSection("redstone-ics"));
         pipeSettings = new PipeSettings(new BaseConfiguration.BaseConfigurationSection("Pipes"));
+    }
+
+    public class ICSettings {
+
+        public final boolean cache;
+        public final boolean enabled;
+        public final List<String> disabledICs;
+
+        private ICSettings(BaseConfigurationSection section) {
+
+            enabled = section.getBoolean("enable", true);
+            cache = section.getBoolean("cache", true);
+            disabledICs = section.getStringList("disabled-ics", new ArrayList<String>());
+        }
     }
 
     public class PipeSettings {
