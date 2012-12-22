@@ -41,7 +41,6 @@ public class CircuitsConfiguration extends BaseConfiguration {
     public boolean enableNetherstone;
     public boolean enablePumpkins;
     public boolean enableGlowStone;
-    public boolean enableShorthandIcs;
     public int glowstoneOffBlock;
     public PipeSettings pipeSettings;
     public ICSettings icSettings;
@@ -52,7 +51,6 @@ public class CircuitsConfiguration extends BaseConfiguration {
         enableNetherstone = getBoolean("redstone-netherstone", false);
         enablePumpkins = getBoolean("redstone-pumpkins", true);
         enableGlowStone = getBoolean("redstone-glowstone", false);
-        enableShorthandIcs = getBoolean("enable-shorthand-ics", false);
         glowstoneOffBlock = getInt("glowstone-off-material", BlockID.GLASS);
         icSettings = new ICSettings(new BaseConfiguration.BaseConfigurationSection("redstone-ics"));
         pipeSettings = new PipeSettings(new BaseConfiguration.BaseConfigurationSection("Pipes"));
@@ -62,12 +60,14 @@ public class CircuitsConfiguration extends BaseConfiguration {
 
         public final boolean cache;
         public final boolean enabled;
+        public final boolean shorthand;
         public final List<String> disabledICs;
 
         private ICSettings(BaseConfigurationSection section) {
 
             enabled = section.getBoolean("enable", true);
             cache = section.getBoolean("cache", true);
+            shorthand = getBoolean("enable-shorthand", false);
             disabledICs = section.getStringList("disabled-ics", new ArrayList<String>());
         }
     }
