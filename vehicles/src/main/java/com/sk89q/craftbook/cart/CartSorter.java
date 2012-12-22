@@ -51,58 +51,64 @@ public class CartSorter extends CartMechanism {
         //    this is required since there's not a north track and a south track; just a north-south track type.
         byte trackData;
         BlockFace next = SignUtil.getFacing(blocks.sign);
-        switch (next) {
-            case WEST:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 9;
-                        break;
-                    case RIGHT:
-                        trackData = 8;
-                        break;
-                    default:
-                        trackData = 0;
-                }
-                break;
-            case EAST:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 7;
-                        break;
-                    case RIGHT:
-                        trackData = 6;
-                        break;
-                    default:
-                        trackData = 0;
-                }
-                break;
-            case NORTH:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 6;
-                        break;
-                    case RIGHT:
-                        trackData = 9;
-                        break;
-                    default:
-                        trackData = 1;
-                }
-                break;
-            case SOUTH:
-                switch (dir) {
-                    case LEFT:
-                        trackData = 8;
-                        break;
-                    case RIGHT:
-                        trackData = 7;
-                        break;
-                    default:
-                        trackData = 1;
-                }
-                break;
-            default:
-                //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
-                return;
+        if(VehiclesPlugin.useOldBlockFace()) {
+
+            trackData = 0;
+        }
+        else {
+            switch (next) {
+                case SOUTH:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 9;
+                            break;
+                        case RIGHT:
+                            trackData = 8;
+                            break;
+                        default:
+                            trackData = 0;
+                    }
+                    break;
+                case NORTH:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 7;
+                            break;
+                        case RIGHT:
+                            trackData = 6;
+                            break;
+                        default:
+                            trackData = 0;
+                    }
+                    break;
+                case WEST:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 6;
+                            break;
+                        case RIGHT:
+                            trackData = 9;
+                            break;
+                        default:
+                            trackData = 1;
+                    }
+                    break;
+                case EAST:
+                    switch (dir) {
+                        case LEFT:
+                            trackData = 8;
+                            break;
+                        case RIGHT:
+                            trackData = 7;
+                            break;
+                        default:
+                            trackData = 1;
+                    }
+                    break;
+                default:
+                    //XXX ohgod the sign's not facing any sensible direction at all, who do we tell?
+                    return;
+            }
         }
         Block targetTrack = blocks.rail.getRelative(next);
 
