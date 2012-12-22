@@ -110,10 +110,25 @@ public class PotionInducer extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                int effectId = Integer.parseInt(ICUtil.COLON_PATTERN.split(sign.getLine(2), 2)[0]);
+                String[] bits = ICUtil.COLON_PATTERN.split(sign.getLine(2), 2);
+                int effectId = Integer.parseInt(bits[0]);
 
                 if (PotionEffectType.getById(effectId) == null)
                     throw new ICVerificationException("The third line must be a valid potion effect id.");
+                if(bits.length > 1) {
+                    try {
+                        Integer.parseInt(bits[1]);
+                    } catch (NumberFormatException e) {
+                        throw new ICVerificationException("Invalid potion level.");
+                    }
+                }
+                if(bits.length > 2) {
+                    try {
+                        Integer.parseInt(bits[2]);
+                    } catch (NumberFormatException e) {
+                        throw new ICVerificationException("Invalid potion length.");
+                    }
+                }
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("The third line must be a valid potion effect id.");
             }
