@@ -669,7 +669,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             IC ic = ric.getFactory().create(null);
             player.sendMessage("    "); //To space the area
             player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
-            if (getLocalConfiguration().enableShorthandIcs && ric.getShorthand() != null) {
+            if (getLocalConfiguration().icSettings.shorthand && ric.getShorthand() != null) {
                 player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
             }
             player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());

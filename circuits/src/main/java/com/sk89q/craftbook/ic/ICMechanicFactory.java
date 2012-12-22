@@ -238,7 +238,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
 
             return mechanic;
-        } else if(plugin.getLocalConfiguration().enableShorthandIcs &&
+        } else if(plugin.getLocalConfiguration().icSettings.shorthand &&
                 sign.getLine(0).startsWith("=")) {
             String id = sign.getLine(0).substring(1);
 
