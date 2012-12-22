@@ -1,17 +1,26 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.HashMap;
+
 import org.bukkit.Server;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Furnace;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -27,7 +36,12 @@ public class ContainerDispenser extends AbstractIC {
 
     @Override
     public void load() {
-        amount = Integer.parseInt(getSign().getLine(2));
+        try {
+            amount = Integer.parseInt(getSign().getLine(2));
+        }
+        catch(Exception e){
+            amount = 1;
+        }
     }
 
     @Override
