@@ -51,7 +51,7 @@ public class ItemInfo {
     @Override
     public int hashCode() {
 
-        return (id * 1103515245 + 12345 ^ data * 1103515245 + 12345) * 1103515245 + 12345;
+        return (id * 1103515245 + 12345 ^ (data == -1 ? 0 : data) * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override
