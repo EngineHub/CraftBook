@@ -53,7 +53,7 @@ public class EntitySensor extends AbstractIC {
                 case ITEM:
                     return entity instanceof Item;
                 case MOB_HOSTILE:
-                    return entity instanceof Monster;
+                    return entity instanceof Monster && !(entity instanceof Player);
                 case MOB_PEACEFUL:
                     return entity instanceof Animals;
                 case MOB_ANY:
@@ -126,10 +126,10 @@ public class EntitySensor extends AbstractIC {
     @Override
     public void load() {
 
+        getSign().setLine(3, getSign().getLine(3).toUpperCase());
+
         // lets get the types to detect first
         types = Type.getDetected(getSign().getLine(3).trim());
-
-        getSign().setLine(3, getSign().getLine(3).toUpperCase());
 
         // if the line contains a = the offset is given
         // the given string should look something like that:

@@ -53,7 +53,7 @@ public class PlayerSensor extends AbstractIC {
 
     int radius;
 
-    Location location = null;
+    Location location;
     ProtectedRegion reg = null;
     Type type = null;
     String nameLine = "";
@@ -61,7 +61,7 @@ public class PlayerSensor extends AbstractIC {
     @Override
     public void load() {
         radius = 10; //Default Radius
-        location = BukkitUtil.toSign(getSign()).getLocation();
+        location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
 
         if (getLine(3).contains(":")) {
             type = Type.getFromChar(getLine(3).trim().toCharArray()[0]);
@@ -106,7 +106,7 @@ public class PlayerSensor extends AbstractIC {
                 if (p != null && LocationUtil.isWithinRadius(location, p.getLocation(), radius)) return true;
             }
             for (Player e : getServer().getOnlinePlayers()) {
-                if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(location, e.getLocation(), radius)) {
+                if (e == null || !e.isValid() || location == null || !LocationUtil.isWithinRadius(location, e.getLocation(), radius)) {
                     continue;
                 }
 

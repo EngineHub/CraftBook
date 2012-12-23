@@ -8,7 +8,7 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
-public class PotionInducerST extends PotionInducer implements SelfTriggeredIC{
+public class PotionInducerST extends PotionInducer implements SelfTriggeredIC {
 
     public PotionInducerST (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -29,7 +29,7 @@ public class PotionInducerST extends PotionInducer implements SelfTriggeredIC{
     @Override
     public void think(ChipState state) {
 
-        induce();
+        state.setOutput(0, induce());
     }
 
 

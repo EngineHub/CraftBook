@@ -1,6 +1,10 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
+import java.util.Set;
+
+import org.bukkit.Chunk;
 import org.bukkit.Server;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -16,6 +20,8 @@ import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 import com.sk89q.craftbook.ic.ICVerificationException;
 import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -39,27 +45,28 @@ public class PotionInducer extends AbstractIC {
         return "POTION INDUCER";
     }
 
-    int radius = 10, effectID = 1, effectAmount = 1, effectTime = 10;
-    boolean mobs = false;
-    boolean players = true;
+    int radius, effectID, effectAmount, effectTime;
+    boolean mobs;
+    boolean players;
 
     @Override
     public void load() {
 
-        String[] effectInfo = ICUtil.COLON_PATTERN.split(getSign().getLine(2), 3);
-        try {
-            effectID = Integer.parseInt(effectInfo[0]);
-        }
-        catch(Exception e){}
+        String[] effectInfo = ICUtil.COLON_PATTERN.split(getLine(2), 3);
+        effectID = Integer.parseInt(effectInfo[0]);
         try {
             effectAmount = Integer.parseInt(effectInfo[1]);
         }
-        catch(Exception e){}
+        catch(Exception e){
+            effectAmount = 1;
+        }
         try {
             effectTime = Integer.parseInt(effectInfo[2]);
         }
-        catch(Exception e){}
-        String line4 = getSign().getLine(3);
+        catch(Exception e){
+            effectTime = 10;
+        }
+        String line4 = getSign().getLine(3).toLowerCase();
         if(line4.contains("pm")) {
             mobs = true;
             players = true;
@@ -68,6 +75,10 @@ public class PotionInducer extends AbstractIC {
             players = false;
         }
         else if(line4.contains("p")) {
+            players = true;
+            mobs = false;
+        }
+        else {
             players = true;
             mobs = false;
         }
@@ -80,23 +91,33 @@ public class PotionInducer extends AbstractIC {
         }
     }
 
-    public void induce() {
-        for (LivingEntity p : BukkitUtil.toSign(getSign()).getWorld().getLivingEntities()) {
-            if(!mobs && !(p instanceof Player))
-                continue;
-            if(!players && p instanceof Player)
-                continue;
-            if (p.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius)
-                continue;
-            p.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1), true);
-        }
+    public boolean induce() {
+        boolean value = false;
+        Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); //Update chunks
+        for (Chunk chunk : chunks)
+            if (chunk.isLoaded()) {
+                for (Entity entity : chunk.getEntities()) {
+                    if (entity.isValid() && entity instanceof LivingEntity) {
+                        LivingEntity liv = (LivingEntity)entity;
+                        if(!mobs && !(liv instanceof Player))
+                            continue;
+                        if(!players && liv instanceof Player)
+                            continue;
+                        if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius)
+                            continue;
+                        liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1), true);
+                        value = true;
+                    }
+                }
+            }
+        return value;
     }
 
     @Override
     public void trigger(ChipState chip) {
 
         if(chip.getInput(0))
-            induce();
+            chip.setOutput(0, induce());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -116,25 +137,11 @@ public class PotionInducer extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] bits = ICUtil.COLON_PATTERN.split(sign.getLine(2), 2);
+                String[] bits = ICUtil.COLON_PATTERN.split(sign.getLine(2), 3);
                 int effectId = Integer.parseInt(bits[0]);
 
                 if (PotionEffectType.getById(effectId) == null)
                     throw new ICVerificationException("The third line must be a valid potion effect id.");
-                if(bits.length > 1) {
-                    try {
-                        Integer.parseInt(bits[1]);
-                    } catch (NumberFormatException e) {
-                        throw new ICVerificationException("Invalid potion level.");
-                    }
-                }
-                if(bits.length > 2) {
-                    try {
-                        Integer.parseInt(bits[2]);
-                    } catch (NumberFormatException e) {
-                        throw new ICVerificationException("Invalid potion length.");
-                    }
-                }
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("The third line must be a valid potion effect id.");
             }
