@@ -34,13 +34,13 @@ import com.sk89q.craftbook.util.GeneralUtil;
 public class MidiJingleSequencer implements JingleSequencer {
 
     private static final int[] instruments = {
-        0, 0, 0, 0, 0, 0, 0, 0, //8
-        0, 0, 0, 0, 0, 0, 0, 0, //16
+        0, 0, 0, 0, 0, 0, 0, 5, //8
+        6, 0, 0, 0, 0, 0, 0, 0, //16
         0, 0, 0, 0, 0, 0, 0, 5, //24
-        5, 5, 5, 5, 5, 5, 5, 1, //32
-        1, 1, 1, 1, 1, 1, 1, 0, //40
-        0, 0, 0, 0, 0, 0, 0, 2, //48
-        0, 0, 0, 0, 0, 0, 0, 0, //56
+        5, 5, 5, 5, 5, 5, 5, 5, //32
+        6, 6, 6, 6, 6, 6, 6, 6, //40
+        5, 5, 5, 5, 5, 5, 5, 2, //48
+        5, 5, 5, 5, 0, 0, 0, 0, //56
         0, 0, 0, 0, 0, 0, 0, 0, //64
         0, 0, 0, 0, 0, 0, 0, 0, //72
         0, 0, 0, 0, 0, 0, 0, 0, //80
@@ -48,7 +48,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         0, 0, 0, 0, 0, 0, 0, 0, //96
         0, 0, 0, 0, 0, 0, 0, 0, //104
         0, 0, 0, 0, 0, 0, 0, 0, //112
-        1, 1, 1, 1, 1, 1, 1, 5, //120
+        1, 1, 1, 3, 1, 1, 1, 5, //120
         1, 1, 1, 1, 1, 2, 4, 3, //128
 
         //16
@@ -193,6 +193,8 @@ public class MidiJingleSequencer implements JingleSequencer {
                 return Sound.NOTE_BASS_DRUM;
             case 5:
                 return Sound.NOTE_PLING;
+            case 6:
+                return Sound.NOTE_BASS;
             default:
                 return null;
         }
