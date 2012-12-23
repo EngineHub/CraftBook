@@ -62,10 +62,10 @@ public class Melody extends AbstractIC {
         }
     }
 
-    int radius = -1;
+    int radius;
     File file;
     String midiName;
-    boolean forceStart = false;
+    boolean forceStart;
 
     @Override
     public void load() {
@@ -76,6 +76,7 @@ public class Melody extends AbstractIC {
             try {
                 radius = Integer.parseInt(split[0]);
             } catch (Exception ignored) {
+                radius = -1;
             }
 
             forceStart = split[1].equalsIgnoreCase("START");

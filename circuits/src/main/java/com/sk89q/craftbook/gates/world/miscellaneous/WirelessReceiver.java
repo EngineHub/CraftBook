@@ -40,7 +40,7 @@ public class WirelessReceiver extends AbstractIC {
 
         try {
             band = sign.getLine(2);
-            band += sign.getLine(3);
+            band = band + sign.getLine(3);
         } catch (Exception e) {
             band = "test";
         }
@@ -106,6 +106,7 @@ public class WirelessReceiver extends AbstractIC {
                 sign.setLine(3, player.getName());
             else if(!sign.getLine(3).isEmpty())
                 sign.setLine(3, player.getName());
+            sign.update(false);
         }
 
         @Override

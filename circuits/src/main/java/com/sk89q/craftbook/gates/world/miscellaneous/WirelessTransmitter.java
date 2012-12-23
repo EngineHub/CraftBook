@@ -43,7 +43,7 @@ public class WirelessTransmitter extends AbstractIC {
         super(server, sign, factory);
         try {
             band = sign.getLine(2);
-            band += sign.getLine(3);
+            band = band + sign.getLine(3);
         } catch (Exception e) {
             band = "test";
         }
