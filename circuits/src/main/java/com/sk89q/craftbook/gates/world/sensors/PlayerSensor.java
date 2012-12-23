@@ -92,7 +92,9 @@ public class PlayerSensor extends AbstractIC {
                     return true;
                 }
             }
-        } else if (location != null) {
+        }
+
+        if (location != null) {
             if (!nameLine.isEmpty() && type == Type.PLAYER) {
                 Player p = Bukkit.getPlayer(nameLine);
                 if (p != null && LocationUtil.isWithinRadius(location, p.getLocation(), radius)) return true;
