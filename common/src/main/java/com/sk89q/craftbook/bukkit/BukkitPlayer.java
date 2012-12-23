@@ -47,8 +47,10 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public void print(String message) {
 
-        if(message == null)
+        if(message == null || player == null || plugin == null || message.isEmpty())
             return;
+        if(plugin.getLanguageManager() == null || plugin.getLanguageManager().getPlayersLanguage(player) == null)
+            player.sendMessage(ChatColor.GOLD + message);
         player.sendMessage(ChatColor.GOLD + plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player)));
     }
 
