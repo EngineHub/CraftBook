@@ -2,6 +2,8 @@ package com.sk89q.craftbook.bukkit.commands;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -137,6 +139,12 @@ public class CircuitCommands {
         for(File f : plugin.midiFolder.listFiles())
             if(f.getName().endsWith(".mid") || f.getName().endsWith(".midi"))
                 lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
+        Collections.sort(lines, new Comparator<String>() {
+            @Override
+            public int compare(String f1, String f2) {
+                return f1.compareTo(f2);
+            }
+        });
         int pages = (lines.size() - 1) / 9 + 1;
         int accessedPage;
 
