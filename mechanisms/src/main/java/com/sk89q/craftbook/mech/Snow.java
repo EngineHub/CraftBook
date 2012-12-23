@@ -260,7 +260,7 @@ public class Snow implements Listener {
             return;
         }
 
-        if(block.getTypeId() == BlockID.SNOW_BLOCK) {
+        if(block.getTypeId() == BlockID.SNOW_BLOCK && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
             incrementData(block.getRelative(0, 1, 0));
             return;
         }
@@ -301,7 +301,7 @@ public class Snow implements Listener {
 
     public boolean isSnowBlock(int id) {
 
-        return id == BlockID.SNOW_BLOCK || id == BlockID.SNOW;
+        return id == BlockID.SNOW;// || id == BlockID.SNOW_BLOCK;
     }
 
     public boolean isValidBlock(int id) {
