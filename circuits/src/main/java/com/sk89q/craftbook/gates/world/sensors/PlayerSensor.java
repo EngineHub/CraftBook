@@ -55,7 +55,7 @@ public class PlayerSensor extends AbstractIC {
 
     Location location = null;
     ProtectedRegion reg = null;
-    Type type = Type.PLAYER;
+    Type type = null;
     String nameLine = "";
 
     @Override
@@ -102,7 +102,7 @@ public class PlayerSensor extends AbstractIC {
                 }
             }
         } else {
-            if (type == Type.PLAYER) {
+            if (!nameLine.trim().isEmpty() && type == Type.PLAYER) {
                 Player p = Bukkit.getPlayer(nameLine);
                 if (p != null && LocationUtil.isWithinRadius(location, p.getLocation(), radius)) return true;
             }
@@ -111,11 +111,11 @@ public class PlayerSensor extends AbstractIC {
                     continue;
                 }
 
-                if (nameLine.isEmpty()) {
+                if (nameLine.trim().isEmpty() && type == null) {
                     return true;
-                } else if (type == Type.PLAYER && e.getName().toLowerCase().startsWith(nameLine.toLowerCase())) {
+                } else if (type == Type.PLAYER && (nameLine.trim().isEmpty() || e.getName().toLowerCase().startsWith(nameLine.toLowerCase()))) {
                     return true;
-                } else if (type == Type.GROUP && CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine)) {
+                } else if (type == Type.GROUP && (nameLine.trim().isEmpty() || CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine))) {
                     return true;
                 }
             }
@@ -139,7 +139,7 @@ public class PlayerSensor extends AbstractIC {
         public static Type getFromChar(char c) {
             c = Character.toLowerCase(c);
             for (Type t : values()) if (t.prefix == c) return t;
-            return PLAYER;
+            return null;
         }
     }
 
