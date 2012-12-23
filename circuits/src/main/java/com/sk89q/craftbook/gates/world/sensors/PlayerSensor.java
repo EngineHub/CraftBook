@@ -86,9 +86,8 @@ public class PlayerSensor extends AbstractIC {
                 getSign().setLine(2, String.valueOf(radius));
                 location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
-        } catch (Exception ignored) {
         }
     }
 
