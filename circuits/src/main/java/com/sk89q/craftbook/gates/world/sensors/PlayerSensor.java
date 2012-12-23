@@ -46,7 +46,7 @@ public class PlayerSensor extends AbstractIC {
 
     int radius;
 
-    Location location;
+    Location location = null;
     ProtectedRegion reg = null;
     Type type = Type.PLAYER;
     String nameLine = "";
@@ -98,7 +98,7 @@ public class PlayerSensor extends AbstractIC {
                 if (p != null && LocationUtil.isWithinRadius(location, p.getLocation(), radius)) return true;
             }
             for (Player e : getServer().getOnlinePlayers()) {
-                if (e == null || !e.isValid() || location == null || !LocationUtil.isWithinRadius(location, e.getLocation(), radius)) {
+                if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(location, e.getLocation(), radius)) {
                     continue;
                 }
 
