@@ -1,13 +1,18 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class CircuitCommands {
 
@@ -115,6 +120,42 @@ public class CircuitCommands {
 
         for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
             player.sendMessage(lines[i]);
+        }
+    }
+
+    @Command(
+            aliases = {"listmidis"},
+            desc = "List MIDI's available for Melody IC",
+            min = 0,
+            max = 1
+            )
+    public void listmidis(CommandContext context, CommandSender sender) {
+
+        if (!(sender instanceof Player)) return;
+        Player player = (Player) sender;
+        List<String> lines = new ArrayList<String>();
+        for(File f : plugin.midiFolder.listFiles())
+            if(f.getName().endsWith(".mid") || f.getName().endsWith(".midi"))
+                lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
+        int pages = (lines.size() - 1) / 9 + 1;
+        int accessedPage;
+
+        try {
+            accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(0) - 1;
+            if (accessedPage < 0 || accessedPage >= pages) {
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+            return;
+        }
+
+        player.sendMessage(ChatColor.BLUE + "  ");
+        player.sendMessage(ChatColor.BLUE + "CraftBook MIDIs (Page " + (accessedPage + 1) + " of " + pages + "):");
+
+        for (int i = accessedPage * 9; i < lines.size() && i < (accessedPage + 1) * 9; i++) {
+            player.sendMessage(ChatColor.GREEN + lines.get(i));
         }
     }
 
