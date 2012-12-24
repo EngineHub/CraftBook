@@ -86,13 +86,13 @@ public class JingleNotePlayer implements Runnable {
 
         if (!player.isOnline() || instrument == null) return;
         float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
-        player.playSound(loc, instrument, instrument == Sound.NOTE_PLING ? 15F : 30F, np);
+        player.playSound(loc, instrument, instrument == Sound.NOTE_PLING ? 7.5F : 30F, np);
     }
 
     public void play(Sound instrument, int pitch, float velocity) {
 
         if (!player.isOnline() || instrument == null) return;
         float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
-        player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? velocity / 128 : velocity / 64, np);
+        player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? velocity / 256 : velocity / 64, np);
     }
 }
