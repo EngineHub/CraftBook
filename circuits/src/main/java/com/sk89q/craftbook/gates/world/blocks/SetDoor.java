@@ -25,18 +25,18 @@ public class SetDoor extends AbstractIC {
 
     private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    private int onMaterial = 1;
-    private int onData = 0;
+    private int onMaterial;
+    private int onData;
 
-    private int offMaterial = 0;
-    private int offData = 0;
+    private int offMaterial;
+    private int offData;
 
-    private int width = 1;
-    private int height = 1;
+    private int width;
+    private int height;
 
-    private int offsetX = 0;
-    private int offsetY = 0;
-    private int offsetZ = 0;
+    private int offsetX;
+    private int offsetY;
+    private int offsetZ;
 
     private Block center;
     private BlockFace faceing;
@@ -65,9 +65,10 @@ public class SetDoor extends AbstractIC {
                             offData = Integer.parseInt(strings[1]);
                         }
                     } catch (NumberFormatException e) {
-                        // do nothing and use the defaults
+                        offMaterial = 0;
+                        offData = 0;
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        // do nothing and use the defaults
+                        offData = 0;
                     }
                 }
                 // parse the material and data for toggle on
@@ -77,9 +78,10 @@ public class SetDoor extends AbstractIC {
                     onData = Integer.parseInt(strings[1]);
                 }
             } catch (NumberFormatException e) {
-                // do nothing and use the defaults
+                onMaterial = 1;
+                onData = 0;
             } catch (ArrayIndexOutOfBoundsException e) {
-                // do nothing and use the defaults
+                onData = 0;
             }
         }
         // parse the coordinates
@@ -97,9 +99,13 @@ public class SetDoor extends AbstractIC {
                 offsetY = Integer.parseInt(offsetSplit[1]);
                 offsetZ = Integer.parseInt(offsetSplit[2]);
             } catch (NumberFormatException e) {
-                // do nothing and use the defaults
+                offsetX = 0;
+                offsetY = 0;
+                offsetZ = 0;
             } catch (IndexOutOfBoundsException e) {
-                // do nothing and use the defaults
+                offsetX = 0;
+                offsetY = 0;
+                offsetZ = 0;
             }
             try {
                 // parse the size of the door
@@ -107,9 +113,10 @@ public class SetDoor extends AbstractIC {
                 width = Integer.parseInt(sizeSplit[0]);
                 height = Integer.parseInt(sizeSplit[1]);
             } catch (NumberFormatException e) {
-                // do nothing and use the defaults
+                width = 1;
+                height = 1;
             } catch (ArrayIndexOutOfBoundsException e) {
-                // do nothing and use the defaults
+                height = 1;
             }
             if (relativeOffset) {
                 center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
