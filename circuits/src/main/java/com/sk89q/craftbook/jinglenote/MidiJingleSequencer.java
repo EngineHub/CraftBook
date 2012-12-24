@@ -9,7 +9,9 @@ package com.sk89q.craftbook.jinglenote;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -25,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
 import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.Tuple3;
 
 /**
  * A sequencer that reads MIDI files.
@@ -98,6 +101,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
 
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
+        final List<Tuple3<Integer, Integer, Integer>> notes = new ArrayList<Tuple3<Integer, Integer, Integer>>();
 
         try {
             if (!sequencer.isOpen()) {
@@ -109,21 +113,34 @@ public class MidiJingleSequencer implements JingleSequencer {
                 public void send(MidiMessage message, long timeStamp) {
 
                     if ((message.getStatus() & 0xF0) == ShortMessage.PROGRAM_CHANGE) {
+
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int patch = msg.getData1();
                         patches.put(chan, patch);
                     } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_ON) {
+
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
+                        notes.add(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
                         //if (chan == 9) { // Percussion
                         // Sounds like utter crap
                         //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                         //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         //} else {
-                        notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
                         //}
+                    } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
+
+                        ShortMessage msg = (ShortMessage) message;
+                        int chan = msg.getChannel();
+                        int n = msg.getData1();
+                        notes.remove(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
+                    }
+
+                    for(Tuple3<Integer, Integer, Integer> note : notes) {
+
+                        notePlayer.play(toMCSound(toMCInstrument(patches.get(note.a))), toMCNote(note.b), note.c);
                     }
                 }
 
