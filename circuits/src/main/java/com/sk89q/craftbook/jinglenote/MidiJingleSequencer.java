@@ -123,13 +123,16 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        notes.add(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
-                        //if (chan == 9) { // Percussion
-                        // Sounds like utter crap
-                        //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
-                        //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
-                        //} else {
-                        //}
+                        if (chan == 9) { // Percussion
+                            // Sounds like utter crap
+                            //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
+                            //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
+                        } else {
+                            if(msg.getData2() == 0)
+                                notes.remove(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
+                            else
+                                notes.add(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
+                        }
                     } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
 
                         ShortMessage msg = (ShortMessage) message;
