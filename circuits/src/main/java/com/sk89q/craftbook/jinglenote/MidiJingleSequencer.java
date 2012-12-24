@@ -118,7 +118,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         int chan = msg.getChannel();
                         int patch = msg.getData1();
                         patches.put(chan, patch);
-                    } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_ON) {
+                    } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_ON || (message.getStatus() & 0xF0) == ShortMessage.PITCH_BEND) {
 
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
@@ -128,11 +128,11 @@ public class MidiJingleSequencer implements JingleSequencer {
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
-                            if(msg.getData2() == 0) {
-                                //notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
-                            }
-                            else
-                                notePlayer.play(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                            //if(msg.getData2() == 0) {
+                            //notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                            //}
+                            //else
+                            notePlayer.play(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                             //notes.add(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                         }
                     } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
