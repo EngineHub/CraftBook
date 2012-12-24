@@ -27,7 +27,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
 import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.Tuple3;
 
 /**
  * A sequencer that reads MIDI files.
@@ -101,7 +100,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
 
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
-        final List<Tuple3<Integer, Integer, Integer>> notes = new ArrayList<Tuple3<Integer, Integer, Integer>>();
+        final List<Note> notes = new ArrayList<Note>();
 
         try {
             if (!sequencer.isOpen()) {
@@ -129,21 +128,22 @@ public class MidiJingleSequencer implements JingleSequencer {
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
                             if(msg.getData2() == 0)
-                                notes.remove(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
+                                notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                             else
-                                notes.add(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
+
+                                notes.add(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                         }
                     } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
 
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        notes.remove(new Tuple3<Integer, Integer, Integer>(chan,n,msg.getData2()));
+                        notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                     }
 
-                    for(Tuple3<Integer, Integer, Integer> note : notes) {
+                    for(Note note : notes) {
 
-                        notePlayer.play(toMCSound(toMCInstrument(patches.get(note.a))), toMCNote(note.b), note.c);
+                        notePlayer.play(note.getInstrument(), note.getNote(), note.getVelocity());
                     }
                 }
 
@@ -231,5 +231,46 @@ public class MidiJingleSequencer implements JingleSequencer {
     public boolean isSongPlaying() {
 
         return sequencer.isRunning();
+    }
+
+    public class Note {
+
+        Sound instrument;
+        byte note;
+        int velocity;
+
+        public Note(Sound instrument, byte note, int velocity) {
+
+            this.instrument = instrument;
+            this.note = note;
+            this.velocity = velocity;
+        }
+
+        public Sound getInstrument() {
+
+            return instrument;
+        }
+
+        public byte getNote() {
+
+            return note;
+        }
+
+        public int getVelocity() {
+
+            return velocity;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+
+            if(o instanceof Note) {
+
+                Note n = (Note) o;
+                if(n.getInstrument() == getInstrument())
+                    return true;
+            }
+            return false;
+        }
     }
 }
