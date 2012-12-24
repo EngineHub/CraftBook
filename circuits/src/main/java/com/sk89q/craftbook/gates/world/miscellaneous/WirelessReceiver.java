@@ -62,7 +62,10 @@ public class WirelessReceiver extends AbstractIC {
 
         if (chip.getInput(0)) {
             Boolean val = WirelessTransmitter.getValue(band);
-            if (val == null) return;
+            if (val == null) {
+                chip.setOutput(0, false);
+                return;
+            }
 
             chip.setOutput(0, val);
         }

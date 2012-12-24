@@ -33,13 +33,6 @@ public class WirelessReceiverST extends WirelessReceiver implements SelfTriggere
     public WirelessReceiverST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-
-        if (sign != null) {
-            band = sign.getLine(2);
-            band += sign.getLine(3);
-        } else {
-            band = "";
-        }
     }
 
     @Override
@@ -59,7 +52,10 @@ public class WirelessReceiverST extends WirelessReceiver implements SelfTriggere
 
         Boolean val = WirelessTransmitter.getValue(band);
 
-        if (val == null) return;
+        if (val == null) {
+            chip.setOutput(0, false);
+            return;
+        }
 
         chip.setOutput(0, val);
     }
