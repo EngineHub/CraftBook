@@ -10,7 +10,6 @@ package com.sk89q.craftbook.jinglenote;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -23,29 +22,23 @@ public class JingleNoteManager {
     /**
      * List of instances.
      */
-    protected final Map<String, JingleNotePlayer> instances
-    = new HashMap<String, JingleNotePlayer>();
+    protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
-    public void play(Player player, JingleSequencer sequencer, int delay) {
+    public void play(Player player, JingleSequencer sequencer) {
 
         String name = player.getName();
-        Location loc = player.getLocation();
 
         // Existing player found!
         if (instances.containsKey(name)) {
             JingleNotePlayer existing = instances.get(name);
-            Location existingLoc = existing.getLocation();
-
-            existing.stop(
-                    existingLoc.getBlockX() == loc.getBlockX()
-                    && existingLoc.getBlockY() == loc.getBlockY()
-                    && existingLoc.getBlockZ() == loc.getBlockZ());
-
+            existing.stop();
             instances.remove(name);
         }
 
-        JingleNotePlayer notePlayer = new JingleNotePlayer(player, loc, sequencer, delay);
+        JingleNotePlayer notePlayer = new JingleNotePlayer(player, sequencer);
         Thread thread = new Thread(notePlayer);
+        thread.setDaemon(true);
+        thread.setPriority(Thread.MAX_PRIORITY);
         thread.setName("JingleNotePlayer for " + player.getName());
         thread.start();
 
@@ -59,7 +52,7 @@ public class JingleNoteManager {
         // Existing player found!
         if (instances.containsKey(name)) {
             JingleNotePlayer existing = instances.get(name);
-            existing.stop(false);
+            existing.stop();
             instances.remove(name);
             return true;
         }
@@ -69,7 +62,7 @@ public class JingleNoteManager {
     public void stopAll() {
 
         for (JingleNotePlayer notePlayer : instances.values()) {
-            notePlayer.stop(false);
+            notePlayer.stop();
         }
 
         instances.clear();

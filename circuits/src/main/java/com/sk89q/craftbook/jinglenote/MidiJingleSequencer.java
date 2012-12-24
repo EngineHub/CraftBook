@@ -95,8 +95,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public void run(final JingleNotePlayer notePlayer)
-            throws InterruptedException {
+    public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
 
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
@@ -118,13 +117,13 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        if (chan == 9) { // Percussion
-                            // Sounds like utter crap
-                            //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
-                            //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
-                        } else {
-                            notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
-                        }
+                        //if (chan == 9) { // Percussion
+                        // Sounds like utter crap
+                        //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
+                        //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
+                        //} else {
+                        notePlayer.play(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2());
+                        //}
                     }
                 }
 

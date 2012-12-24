@@ -18,7 +18,7 @@ import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.jinglenote.JingleNoteComponent;
+import com.sk89q.craftbook.jinglenote.JingleNoteManager;
 import com.sk89q.craftbook.jinglenote.MidiJingleSequencer;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -29,12 +29,11 @@ import com.sk89q.craftbook.util.LocationUtil;
 public class Melody extends AbstractIC {
 
     MidiJingleSequencer sequencer;
-    JingleNoteComponent jNote = new JingleNoteComponent();
+    JingleNoteManager jNote = new JingleNoteManager();
 
     public Melody(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        jNote.enable();
     }
 
     @Override
@@ -55,9 +54,9 @@ public class Melody extends AbstractIC {
         try {
             sequencer.stop();
             for (Player player : getServer().getOnlinePlayers()) {
-                jNote.getJingleNoteManager().stop(player);
+                jNote.stop(player);
             }
-            jNote.getJingleNoteManager().stopAll();
+            jNote.stopAll();
         } catch (Exception ignored) {
         }
     }
@@ -120,9 +119,9 @@ public class Melody extends AbstractIC {
 
                 if (sequencer != null || jNote != null) {
                     for (Player player : getServer().getOnlinePlayers()) {
-                        jNote.getJingleNoteManager().stop(player);
+                        jNote.stop(player);
                     }
-                    jNote.getJingleNoteManager().stopAll();
+                    jNote.stopAll();
                 }
                 sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
@@ -133,15 +132,15 @@ public class Melody extends AbstractIC {
                             radius)) {
                         continue;
                     }
-                    jNote.getJingleNoteManager().play(player, sequencer, 0);
+                    jNote.play(player, sequencer);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
             } else if (!chip.getInput(0) && sequencer != null) {
                 sequencer.stop();
                 for (Player player : getServer().getOnlinePlayers()) {
-                    jNote.getJingleNoteManager().stop(player);
+                    jNote.stop(player);
                 }
-                jNote.getJingleNoteManager().stopAll();
+                jNote.stopAll();
             }
         } catch (Throwable e) {
             getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
