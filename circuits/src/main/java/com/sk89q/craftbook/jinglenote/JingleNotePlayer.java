@@ -93,8 +93,6 @@ public class JingleNotePlayer implements Runnable {
 
         if (!player.isOnline() || instrument == null) return;
         float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
-        if(instrument == Sound.NOTE_PLING)
-            velocity /= 2;
-        player.playSound(player.getLocation(), instrument, velocity / 64, np);
+        player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? velocity / 128 : velocity / 64, np);
     }
 }
