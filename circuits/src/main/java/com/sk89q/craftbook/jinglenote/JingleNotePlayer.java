@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.jinglenote.MidiJingleSequencer.Note;
 import com.sk89q.craftbook.util.GeneralUtil;
 
 public class JingleNotePlayer implements Runnable {
@@ -71,14 +72,14 @@ public class JingleNotePlayer implements Runnable {
         player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? 7F : 30F, np);
     }
 
-    public void play(Sound instrument, int pitch, float velocity) {
+    public void play(Note note) {
 
-        if (!player.isOnline() || instrument == null) {
+        if (!player.isOnline() || note == null || note.getInstrument() == null) {
             if(!player.isOnline())
                 stop();
             return;
         }
-        float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
-        player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? velocity / 256 : velocity / 64, np);
+        float np = (float) Math.pow(2.0D, (note.getNote() - 12) / 12.0D);
+        player.playSound(player.getLocation(), note.getInstrument(), note.getVelocity(), np);
     }
 }

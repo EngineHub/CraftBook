@@ -9,9 +9,7 @@ package com.sk89q.craftbook.jinglenote;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -96,11 +94,14 @@ public class MidiJingleSequencer implements JingleSequencer {
         }
     }
 
+    //private long lastTime = 0;
+
     @Override
     public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
 
+        //lastTime = 0;
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
-        final List<Note> notes = new ArrayList<Note>();
+        //final List<Note> notes = new ArrayList<Note>();
 
         try {
             if (!sequencer.isOpen()) {
@@ -127,24 +128,28 @@ public class MidiJingleSequencer implements JingleSequencer {
                             //notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                             //notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
-                            if(msg.getData2() == 0)
-                                notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                            if(msg.getData2() == 0) {
+                                //notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                            }
                             else
-
-                                notes.add(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                                notePlayer.play(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                            //notes.add(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                         }
                     } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
 
-                        ShortMessage msg = (ShortMessage) message;
-                        int chan = msg.getChannel();
-                        int n = msg.getData1();
-                        notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                        //ShortMessage msg = (ShortMessage) message;
+                        //int chan = msg.getChannel();
+                        //int n = msg.getData1();
+                        //notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                     }
 
-                    for(Note note : notes) {
+                    /*if(lastTime < timeStamp) {
+                        for(Note note : notes) {
 
-                        notePlayer.play(note.getInstrument(), note.getNote(), note.getVelocity());
-                    }
+                            notePlayer.play(note);
+                        }
+                        lastTime = timeStamp;
+                    }*/
                 }
 
                 @Override
@@ -258,6 +263,8 @@ public class MidiJingleSequencer implements JingleSequencer {
 
         public int getVelocity() {
 
+            if(instrument == Sound.NOTE_PLING)
+                return velocity / 4;
             return velocity;
         }
 
@@ -271,6 +278,12 @@ public class MidiJingleSequencer implements JingleSequencer {
                     return true;
             }
             return false;
+        }
+
+        @Override
+        public int hashCode() {
+            // Constants correspond to glibc's lcg algorithm parameters
+            return (instrument.hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
         }
     }
 }
