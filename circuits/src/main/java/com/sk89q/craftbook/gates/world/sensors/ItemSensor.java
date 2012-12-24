@@ -31,8 +31,8 @@ import com.sk89q.worldedit.blocks.ItemType;
 public class ItemSensor extends AbstractIC {
 
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    private int item = 0;
-    private short data = -1;
+    private int item;
+    private short data;
 
     private Block center;
     private Set<Chunk> chunks;
@@ -72,6 +72,8 @@ public class ItemSensor extends AbstractIC {
         if (split.length > 1) {
             data = Short.parseShort(split[1]);
         }
+        else
+            data = -1;
 
         // if the line contains a = the offset is given
         // the given string should look something like that:

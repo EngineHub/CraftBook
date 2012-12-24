@@ -23,8 +23,8 @@ import com.sk89q.worldedit.blocks.ItemID;
 
 public class Spigot extends AbstractIC {
 
-    int radius = 15;
-    int yOffset = 1;
+    int radius;
+    int yOffset;
 
     public Spigot(Server server, ChangedSign block, ICFactory factory) {
 
@@ -37,11 +37,13 @@ public class Spigot extends AbstractIC {
         try {
             radius = Integer.parseInt(getSign().getLine(2));
         } catch (Exception ignored) {
+            radius = 15;
         }
 
         try {
             yOffset = Integer.parseInt(getSign().getLine(3));
         } catch (Exception ignored) {
+            yOffset = 1;
         }
     }
 

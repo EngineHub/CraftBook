@@ -44,7 +44,7 @@ public class FlexibleSetBlock extends AbstractIC {
     Block body;
     boolean hold;
     int block;
-    byte data = 0;
+    byte data;
 
     @Override
     public void load() {
@@ -97,9 +97,11 @@ public class FlexibleSetBlock extends AbstractIC {
             try {
                 data = Byte.parseByte(params[2]);
             } catch (Exception e) {
-                return;
+                data = 0;
             }
         }
+        else
+            data = 0;
 
         hold = line4.toUpperCase().contains("H");
 

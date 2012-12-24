@@ -34,7 +34,7 @@ public class Sorter extends AbstractIC implements PipeInputIC {
     }
 
     Block chestBlock;
-    boolean inverted = false;
+    boolean inverted;
 
     @Override
     public void load() {

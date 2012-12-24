@@ -37,11 +37,11 @@ public class Planter extends AbstractIC {
         super(server, block, factory);
     }
 
-    ItemStack item = new ItemStack(295, 1);
+    ItemStack item;
     Block target;
     Block onBlock;
-    Vector offset = new Vector(0,2,0);
-    int radius = 10;
+    Vector offset;
+    int radius;
 
     @Override
     public void load() {

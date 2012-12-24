@@ -67,11 +67,15 @@ public class LightSensor extends AbstractIC {
             y = Integer.parseInt(st[1]);
             z = Integer.parseInt(st[2]);
         } catch (Exception ignored) {
+            x = 0;
+            y = 1;
+            z = 0;
         }
 
         try {
             min = Byte.parseByte(getSign().getLine(2));
         } catch (Exception e) {
+            min = 10;
             try {
                 getSign().setLine(2, Integer.toString(min));
                 getSign().update(false);
@@ -80,10 +84,10 @@ public class LightSensor extends AbstractIC {
         }
     }
 
-    int x = 0;
-    int y = 1;
-    int z = 0;
-    byte min = 10;
+    int x;
+    int y;
+    int z;
+    byte min;
 
     protected boolean getTargetLighted() {
 

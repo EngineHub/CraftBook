@@ -1,18 +1,25 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
+import java.util.regex.Pattern;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
 
 public class BlockSensor extends AbstractIC {
 
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private Block center;
-    private int id = 0;
-    private byte data = -1;
+    private int id;
+    private byte data;
 
     public BlockSensor(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -27,7 +34,9 @@ public class BlockSensor extends AbstractIC {
         try {
             data = Byte.parseByte(ids[1]);
         }
-        catch(Exception ignored){}
+        catch(Exception ignored){
+            data = -1;
+        }
     }
 
     @Override

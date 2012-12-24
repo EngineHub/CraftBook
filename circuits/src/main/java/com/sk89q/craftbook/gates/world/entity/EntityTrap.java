@@ -97,9 +97,9 @@ public class EntityTrap extends AbstractIC {
         }
     }
 
-    int radius = 10;
-    int damage = 2;
-    Type type = Type.MOB_HOSTILE;
+    int radius;
+    int damage;
+    Type type;
     Location location;
 
     @Override
@@ -118,12 +118,18 @@ public class EntityTrap extends AbstractIC {
 
                 damage = Integer.parseInt(splitLine[2]);
             }
+            else
+                damage = 2;
         } catch (Exception ignored) {
+            radius = 10;
+            damage = 2;
         }
 
         if (!getSign().getLine(3).isEmpty()) {
             type = Type.fromString(getSign().getLine(3));
         }
+        else
+            type = Type.MOB_HOSTILE;
     }
 
     /**

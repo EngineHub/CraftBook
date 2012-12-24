@@ -55,18 +55,20 @@ public class DaySensor extends AbstractIC {
         }
     }
 
-    long day = 0L;
-    long night = 13000L;
+    long day;
+    long night;
 
     @Override
     public void load() {
         try {
             night = Long.parseLong(getSign().getLine(3));
         } catch (Exception ignored) {
+            night = 13000L;
         }
         try {
             day = Long.parseLong(getSign().getLine(2));
         } catch (Exception ignored) {
+            day = 0L;
         }
     }
 
