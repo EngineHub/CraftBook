@@ -34,19 +34,16 @@ public class Cultivator extends AbstractIC {
         return "CULTIVATOR";
     }
 
-    int maxradius = -1, radius;
+    int radius;
 
     @Override
     public void load() {
 
-        if (maxradius == -1) {
-            maxradius = ((Factory) getFactory()).maxradius;
-        }
         try {
             radius = Integer.parseInt(getSign().getLine(2));
-            if (radius > maxradius) {
-                radius = maxradius;
-                getSign().setLine(2, String.valueOf(maxradius));
+            if (radius > ((Factory) getFactory()).maxradius) {
+                radius = ((Factory) getFactory()).maxradius;
+                getSign().setLine(2, String.valueOf(((Factory) getFactory()).maxradius));
                 getSign().update(false);
             }
         } catch (Exception e) {

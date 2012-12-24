@@ -27,7 +27,6 @@ import com.sk89q.worldedit.blocks.ItemID;
 public class BonemealTerraformer extends AbstractIC {
 
     int radius;
-    Integer maxradius;
 
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -37,14 +36,11 @@ public class BonemealTerraformer extends AbstractIC {
     @Override
     public void load() {
 
-        if (maxradius == null) {
-            maxradius = ((Factory) getFactory()).maxradius;
-        }
         try {
             radius = Integer.parseInt(getSign().getLine(2));
-            if (radius > maxradius) {
-                radius = maxradius;
-                getSign().setLine(3, String.valueOf(maxradius));
+            if (radius > ((Factory) getFactory()).maxradius) {
+                radius = ((Factory) getFactory()).maxradius;
+                getSign().setLine(3, String.valueOf(((Factory) getFactory()).maxradius));
                 getSign().update(false);
             }
         } catch (Exception e) {

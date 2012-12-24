@@ -24,10 +24,12 @@ public class ChestStocker extends AbstractIC {
     }
 
     ItemStack item;
-    Vector offset = new Vector(0,2,0);
+    Vector offset;
 
     @Override
     public void load() {
+
+        offset = new Vector(0,2,0);
 
         item = ICUtil.getItem(getLine(2));
 

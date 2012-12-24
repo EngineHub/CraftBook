@@ -32,7 +32,7 @@ public class ContainerDispenser extends AbstractIC {
         super(server, sign, factory);
     }
 
-    int amount = 1;
+    int amount;
 
     @Override
     public void load() {
