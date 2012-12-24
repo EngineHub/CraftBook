@@ -20,10 +20,10 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 public class Pulser extends AbstractIC {
 
     // default values
-    private int pulseLength = 5;
-    private int startDelay = 1;
-    private int pulseCount = 1;
-    private int pauseLength = 5;
+    private int pulseLength;
+    private int startDelay;
+    private int pulseCount;
+    private int pauseLength;
 
     private int taskId;
     private boolean running;
@@ -42,11 +42,21 @@ public class Pulser extends AbstractIC {
             String[] split = ICUtil.COLON_PATTERN.split(line2, 2);
             pulseLength = Integer.parseInt(split[0]);
             if (split.length > 1) startDelay = Integer.parseInt(split[1]);
+            else startDelay = 1;
+        }
+        else {
+            pulseLength = 5;
+            startDelay = 1;
         }
         if (!(line3 == null) && !line3.isEmpty()) {
             String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
             pulseCount = Integer.parseInt(split[0]);
             if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
+            else pauseLength = 5;
+        }
+        else {
+            pulseCount = 1;
+            pauseLength = 5;
         }
         getSign().setLine(2, pulseLength + ":" + startDelay);
         getSign().setLine(3, pulseCount + ":" + pauseLength);
