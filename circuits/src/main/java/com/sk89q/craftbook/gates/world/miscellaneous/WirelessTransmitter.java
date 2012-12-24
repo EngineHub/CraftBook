@@ -41,12 +41,12 @@ public class WirelessTransmitter extends AbstractIC {
     public WirelessTransmitter(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
-        try {
-            band = sign.getLine(2);
-            band = band + sign.getLine(3);
-        } catch (Exception e) {
-            band = "test";
-        }
+    }
+
+    @Override
+    public void load() {
+        band = getSign().getLine(2);
+        band = band + getSign().getLine(3);
     }
 
     @Override
