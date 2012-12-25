@@ -118,7 +118,7 @@ public class BlockSensor extends AbstractIC {
         @Override
         public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
 
-            invert = section.getBoolean("invert-output", false);
+            invert = section.getBoolean("invert-output", true);
         }
 
         @Override
