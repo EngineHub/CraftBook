@@ -54,7 +54,7 @@ public class BlockSensor extends AbstractIC {
     public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, !hasBlock());
+            chip.setOutput(0, hasBlock());
         }
     }
 

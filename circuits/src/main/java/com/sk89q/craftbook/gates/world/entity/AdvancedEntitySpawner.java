@@ -2,6 +2,7 @@ package com.sk89q.craftbook.gates.world.entity;
 
 import java.util.regex.Pattern;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -21,8 +22,6 @@ import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Location;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class AdvancedEntitySpawner extends AbstractIC {
@@ -71,12 +70,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
             x = Double.parseDouble(splitLine2[0]);
             y = Double.parseDouble(splitLine2[1]);
             z = Double.parseDouble(splitLine2[2]);
-            x += getSign().getX();
-            y += getSign().getY();
-            z += getSign().getZ();
-            location = new Location(getSign().getLocalWorld(), new Vector(x, y, z));
+            location = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
         } catch (Exception e) {
-            location = new Location(getSign().getLocalWorld(), new Vector(getSign().getX(), getSign().getY(), getSign().getZ()));
+            location = BukkitUtil.toSign(getSign()).getLocation();
         }
     }
 
@@ -97,7 +93,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         }
 
         for (int i = 0; i < amount; i++) {
-            Entity ent = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), type);
+            Entity ent = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, type);
 
             if (armourSign != null) { // Apply armor
                 if (ent instanceof LivingEntity) {
@@ -149,7 +145,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                     if (data[0].equalsIgnoreCase("e")) CreatureSpawner.setEntityData(ent, bit.substring(2));
                     else if (data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
-                        Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(BukkitUtil.toLocation(location), rider);
+                        Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, rider);
                         ent.setPassenger(rid);
                     } else if (data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
                         for (int a = 1; a < data.length; a++) {
