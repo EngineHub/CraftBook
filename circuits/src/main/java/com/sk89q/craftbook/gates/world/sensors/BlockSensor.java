@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
+import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -30,6 +31,7 @@ public class BlockSensor extends AbstractIC {
     public void load () {
 
         String[] ids = COLON_PATTERN.split(getSign().getLine(3), 2);
+        center = ICUtil.parseBlockLocation(getSign());
         id = Integer.parseInt(ids[0]);
         try {
             data = Byte.parseByte(ids[1]);
@@ -54,7 +56,7 @@ public class BlockSensor extends AbstractIC {
     public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, hasBlock());
+            chip.setOutput(0, ((Factory)getFactory()).invert ? !hasBlock() : hasBlock());
         }
     }
 
@@ -65,14 +67,17 @@ public class BlockSensor extends AbstractIC {
      */
     protected boolean hasBlock () {
 
-        center = ICUtil.parseBlockLocation(getSign());
         int blockID = center.getTypeId();
 
-        if (data != (byte) -1) if (blockID == id) return data == center.getData();
+        if (data != (byte) -1)
+            if (blockID == id) return
+                    data == center.getData();
         return blockID == id;
     }
 
     public static class Factory extends AbstractICFactory {
+
+        boolean invert;
 
         public Factory (Server server) {
 
@@ -108,6 +113,17 @@ public class BlockSensor extends AbstractIC {
 
             String[] lines = new String[] { "x:y:z", "id:data" };
             return lines;
+        }
+
+        @Override
+        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
+
+            invert = section.getBoolean("invert-output", false);
+        }
+
+        @Override
+        public boolean needsConfiguration () {
+            return true;
         }
     }
 }
