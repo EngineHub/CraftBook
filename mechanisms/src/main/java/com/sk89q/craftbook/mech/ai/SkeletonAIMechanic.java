@@ -9,13 +9,13 @@ import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
 public class SkeletonAIMechanic extends BaseAIMechanic implements BowShotAIMechanic {
 
-    public SkeletonAIMechanic(MechanismsPlugin plugin, Entity entity) {
+    public SkeletonAIMechanic (MechanismsPlugin plugin, Entity entity) {
 
         super(plugin, entity);
     }
 
     @Override
-    public void onBowShot(EntityShootBowEvent event) {
+    public void onBowShot (EntityShootBowEvent event) {
 
         if (event.getEntityType() != EntityType.SKELETON) return;
         if (BaseBukkitPlugin.random.nextInt(30) == 0) {

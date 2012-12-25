@@ -37,7 +37,7 @@ public class Cultivator extends AbstractIC {
     int radius;
 
     @Override
-    public void load() {
+    public void load () {
 
         try {
             radius = Integer.parseInt(getSign().getLine(2));
@@ -53,18 +53,17 @@ public class Cultivator extends AbstractIC {
 
     @Override
     public void trigger (ChipState chip) {
-        if(chip.getInput(0))
-            chip.setOutput(0, cultivate());
+        if (chip.getInput(0)) chip.setOutput(0, cultivate());
     }
 
-    public boolean cultivate() {
+    public boolean cultivate () {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
                 for (int z = -radius + 1; z < radius; z++) {
                     Block b = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z).getBlock();
-                    if(b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
-                        if(b.getRelative(BlockFace.UP).getTypeId() == 0 && damageHoe()) {
+                    if (b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
+                        if (b.getRelative(BlockFace.UP).getTypeId() == 0 && damageHoe()) {
                             b.setTypeId(BlockID.SOIL);
                             return true;
                         }
@@ -76,16 +75,15 @@ public class Cultivator extends AbstractIC {
         return false;
     }
 
-    public boolean damageHoe() {
+    public boolean damageHoe () {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
-            for(int i = 290; i < 294; i++) {
-                for(int slot = 0; slot < c.getInventory().getSize(); slot++) {
-                    if(c.getInventory().getItem(slot) == null || c.getInventory().getItem(slot).getTypeId() != i)
-                        continue;
-                    if(ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
+            for (int i = 290; i < 294; i++) {
+                for (int slot = 0; slot < c.getInventory().getSize(); slot++) {
+                    if (c.getInventory().getItem(slot) == null || c.getInventory().getItem(slot).getTypeId() != i) continue;
+                    if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                         ItemStack item = c.getInventory().getItem(slot);
                         item.setDurability((short) (item.getDurability() + 1));
                         c.getInventory().setItem(slot, item);
@@ -102,41 +100,38 @@ public class Cultivator extends AbstractIC {
 
         int maxradius;
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new Cultivator(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Cultivates an area using a hoe.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "radius",
-                    null
-            };
+            String[] lines = new String[] { "radius", null };
             return lines;
         }
 
         @Override
-        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
 
             maxradius = section.getInt("max-radius", 15);
         }
 
         @Override
-        public boolean needsConfiguration() {
+        public boolean needsConfiguration () {
             return true;
         }
     }

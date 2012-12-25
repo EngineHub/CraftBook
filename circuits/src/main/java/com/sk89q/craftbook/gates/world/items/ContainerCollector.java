@@ -31,25 +31,25 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ContainerCollector extends AbstractIC {
 
-    public ContainerCollector(Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerCollector (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Container Collector";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "CONTAINER COLLECT";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, collect());
@@ -59,13 +59,13 @@ public class ContainerCollector extends AbstractIC {
     ItemStack doWant, doNotWant;
 
     @Override
-    public void load() {
+    public void load () {
 
         doWant = ICUtil.getItem(getSign().getLine(2));
         doNotWant = ICUtil.getItem(getSign().getLine(3));
     }
 
-    protected boolean collect() {
+    protected boolean collect () {
 
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -98,7 +98,7 @@ public class ContainerCollector extends AbstractIC {
                     continue;
                 }
 
-                //Add the items to a container, and destroy them.
+                // Add the items to a container, and destroy them.
                 if (addToContainer(bl, stack)) {
                     item.remove();
                     collected = true;
@@ -108,7 +108,7 @@ public class ContainerCollector extends AbstractIC {
         return collected;
     }
 
-    private boolean addToContainer(Block bl, ItemStack stack) {
+    private boolean addToContainer (Block bl, ItemStack stack) {
         int type = bl.getTypeId();
         if (type == BlockID.CHEST || type == BlockID.DISPENSER) {
             BlockState state = bl.getState();
@@ -120,8 +120,7 @@ public class ContainerCollector extends AbstractIC {
             }
         } else if (type == BlockID.BREWING_STAND) {
 
-            if (!ItemUtil.isAPotionIngredient(stack))
-                return false;
+            if (!ItemUtil.isAPotionIngredient(stack)) return false;
             BrewingStand brewingStand = (BrewingStand) bl.getState();
             BrewerInventory inv = brewingStand.getInventory();
             if (fitsInSlot(stack, inv.getIngredient())) {
@@ -159,36 +158,33 @@ public class ContainerCollector extends AbstractIC {
         return false;
     }
 
-    private static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
+    private static boolean fitsInSlot (ItemStack stack, ItemStack slot) {
         return slot == null || ItemUtil.areItemsIdentical(stack, slot);
     }
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ContainerCollector(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Collects items into above chest.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "included id:data",
-                    "excluded id:data"
-            };
+            String[] lines = new String[] { "included id:data", "excluded id:data" };
             return lines;
         }
     }

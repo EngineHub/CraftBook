@@ -37,7 +37,7 @@ public class CustomCrafting implements Listener {
     private static final Pattern ASTERISK_LEFT_BRACKET_PATTERN = Pattern.compile("*[", Pattern.LITERAL);
     final MechanismsPlugin plugin;
 
-    public CustomCrafting(MechanismsPlugin plugin) {
+    public CustomCrafting (MechanismsPlugin plugin) {
 
         this.plugin = plugin;
         addRecipes();
@@ -46,21 +46,20 @@ public class CustomCrafting implements Listener {
     public final HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onClick(InventoryClickEvent event) {
+    public void onClick (InventoryClickEvent event) {
 
         if (event.getInventory() instanceof FurnaceInventory) {
             if (fuels == null || fuels.size() <= 0) return;
             FurnaceInventory inv = (FurnaceInventory) event.getInventory();
-            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null)
-                if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
-                    inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
-                    inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
-                }
+            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
+                inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
+                inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onFurnaceBurn(FurnaceBurnEvent event) {
+    public void onFurnaceBurn (FurnaceBurnEvent event) {
 
         if (event.getFuel() == null) return;
         if (event.getBurnTime() > 0) return;
@@ -75,7 +74,7 @@ public class CustomCrafting implements Listener {
         }
     }
 
-    public void addRecipes() {
+    public void addRecipes () {
 
         try {
             File recipeFile = new File(plugin.getDataFolder(), "recipes.txt");
@@ -84,14 +83,14 @@ public class CustomCrafting implements Listener {
             }
             BufferedReader br = new BufferedReader(new FileReader(recipeFile));
             String lastLine;
-            while ((lastLine = br.readLine()) != null) { //read file until the end
-                //Skip useless lines
+            while ((lastLine = br.readLine()) != null) { // read file until the end
+                // Skip useless lines
                 lastLine = COMMENT_PATTERN.split(lastLine)[0];
                 lastLine = lastLine.trim();
                 if (lastLine.isEmpty()) {
                     continue;
                 }
-                if (lastLine.startsWith("@[")) { //Shapeless Recipe
+                if (lastLine.startsWith("@[")) { // Shapeless Recipe
                     String output = AT_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
                     ShapelessRecipe r = new ShapelessRecipe(parseItemStack(output));
                     String contents = br.readLine();
@@ -122,7 +121,7 @@ public class CustomCrafting implements Listener {
                     } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
-                } else if (lastLine.startsWith("$[")) { //Furnace Recipe
+                } else if (lastLine.startsWith("$[")) { // Furnace Recipe
                     String output = DOLLAR_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
                     FurnaceRecipe r = new FurnaceRecipe(tryParseItemStack(output), Material.AIR);
                     String contents = br.readLine();
@@ -153,7 +152,7 @@ public class CustomCrafting implements Listener {
                     } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
-                } else if (lastLine.startsWith("&[")) { //Furnace Fuel
+                } else if (lastLine.startsWith("&[")) { // Furnace Fuel
                     String output = AMPERSAND_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
                     int id = Integer.parseInt(COLON_PATTERN.split(output)[0]);
                     String contents = br.readLine();
@@ -168,7 +167,7 @@ public class CustomCrafting implements Listener {
                     int burnTime = Integer.parseInt(contents);
                     fuels.put(id, burnTime);
                     plugin.getLogger().info("Furnace Fuel Added!");
-                } else if (lastLine.startsWith("*[")) { //2x2 Shaped Recipe
+                } else if (lastLine.startsWith("*[")) { // 2x2 Shaped Recipe
                     String output = ASTERISK_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
                     ShapedRecipe r = new ShapedRecipe(parseItemStack(output));
                     String contents = br.readLine();
@@ -202,7 +201,7 @@ public class CustomCrafting implements Listener {
                     } else {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
-                } else if (lastLine.startsWith("[")) { //Shaped Recipe
+                } else if (lastLine.startsWith("[")) { // Shaped Recipe
                     String output = LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
                     ShapedRecipe r = new ShapedRecipe(parseItemStack(output));
                     String contents = br.readLine();
@@ -215,12 +214,11 @@ public class CustomCrafting implements Listener {
                         continue;
                     }
                     String[] items = COMMA_PATTERN.split(contents);
-                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split(items[1])[0]) +
-                            getShapeData(COLON_PATTERN.split(items[2])[0]),
-                            getShapeData(COLON_PATTERN.split(items[3])[0]) + getShapeData(COLON_PATTERN.split(items[4])[0]) +
-                            getShapeData(COLON_PATTERN.split(items[5])[0]),
-                            getShapeData(COLON_PATTERN.split(items[6])[0]) + getShapeData(COLON_PATTERN.split(items[7])[0]) +
-                            getShapeData(COLON_PATTERN.split(items[8])[0]));
+                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split(items[1])[0])
+                            + getShapeData(COLON_PATTERN.split(items[2])[0]), getShapeData(COLON_PATTERN.split(items[3])[0])
+                            + getShapeData(COLON_PATTERN.split(items[4])[0]) + getShapeData(COLON_PATTERN.split(items[5])[0]),
+                            getShapeData(COLON_PATTERN.split(items[6])[0]) + getShapeData(COLON_PATTERN.split(items[7])[0])
+                                    + getShapeData(COLON_PATTERN.split(items[8])[0]));
                     for (String item : items) {
                         String[] itemSplit = COLON_PATTERN.split(item);
                         int iid = Integer.parseInt(itemSplit[0]);
@@ -251,7 +249,7 @@ public class CustomCrafting implements Listener {
         }
     }
 
-    private ItemStack tryParseItemStack(String output) {
+    private ItemStack tryParseItemStack (String output) {
         // Is this necessary?
         String[] split = COLON_PATTERN.split(output);
         int id = Integer.parseInt(split[0]);
@@ -265,7 +263,7 @@ public class CustomCrafting implements Listener {
         return new ItemStack(id, amount, data);
     }
 
-    private ItemStack parseItemStack(String output) {
+    private ItemStack parseItemStack (String output) {
         String[] split = COLON_PATTERN.split(output);
         int id = Integer.parseInt(split[0]);
         String[] split2 = X_PATTERN.split(split[1]);
@@ -274,7 +272,7 @@ public class CustomCrafting implements Listener {
         return new ItemStack(id, amount, data);
     }
 
-    public String getShapeData(String s) {
+    public String getShapeData (String s) {
 
         s = String.valueOf(s.charAt(0));
         return s;

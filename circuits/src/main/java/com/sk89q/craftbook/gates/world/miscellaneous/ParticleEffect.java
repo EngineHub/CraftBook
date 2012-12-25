@@ -23,25 +23,25 @@ import com.sk89q.worldedit.blocks.BlockType;
  */
 public class ParticleEffect extends AbstractIC {
 
-    public ParticleEffect(Server server, ChangedSign sign, ICFactory factory) {
+    public ParticleEffect (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Particle Effect";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "PARTICLE EFFECT";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             doEffect();
@@ -54,7 +54,7 @@ public class ParticleEffect extends AbstractIC {
     Vector offset;
 
     @Override
-    public void load() {
+    public void load () {
         String[] eff = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
         try {
             effectID = Integer.parseInt(eff[0]);
@@ -70,25 +70,22 @@ public class ParticleEffect extends AbstractIC {
 
         try {
             times = Integer.parseInt(getSign().getLine(3));
-        }
-        catch(Exception ignored){
+        } catch (Exception ignored) {
             times = 1;
         }
 
         try {
             String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
             offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
-        }
-        catch(Exception e){
-            offset = new Vector(0,1,0);
+        } catch (Exception e) {
+            offset = new Vector(0, 1, 0);
         }
     }
 
-    public void doEffect() {
+    public void doEffect () {
 
         try {
-            if (effectID == 0)
-                return;
+            if (effectID == 0) return;
             if (effectID == 2001 && BlockType.fromID(effectData) == null) return;
             Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             for (int i = 0; i < times; i++) {
@@ -100,13 +97,13 @@ public class ParticleEffect extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             try {
                 if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
@@ -120,18 +117,15 @@ public class ParticleEffect extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Creates particle effects.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "effectID:effectData=xOff:yOff:zOff",
-                    "amount of particles"
-            };
+            String[] lines = new String[] { "effectID:effectData=xOff:yOff:zOff", "amount of particles" };
             return lines;
         }
     }

@@ -11,25 +11,25 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class InvertedRsNandLatch extends AbstractIC {
 
-    public InvertedRsNandLatch(Server server, ChangedSign sign, ICFactory factory) {
+    public InvertedRsNandLatch (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Inverted RS NAND latch";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "INV RS NAND LAT";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         boolean set = chip.get(0);
         boolean reset = chip.get(1);
@@ -45,16 +45,15 @@ public class InvertedRsNandLatch extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new InvertedRsNandLatch(getServer(), sign, this);
         }
     }
 }
-

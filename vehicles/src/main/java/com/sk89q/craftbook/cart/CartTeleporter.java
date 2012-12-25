@@ -11,13 +11,12 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-
 public class CartTeleporter extends CartMechanism {
 
     private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -54,7 +53,7 @@ public class CartTeleporter extends CartMechanism {
         Location loc = BukkitUtil.center(new Location(world, x, y, z, cart.getLocation().getYaw(), cart.getLocation().getPitch()) {
 
         });
-        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100*100) {
+        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100 * 100) {
             cart.teleport(loc);
         } else {
             loc.getChunk().load(true);
@@ -73,7 +72,7 @@ public class CartTeleporter extends CartMechanism {
     }
 
     @Override
-    public boolean verify(ChangedSign sign, LocalPlayer player){
+    public boolean verify (ChangedSign sign, LocalPlayer player) {
 
         String[] pts = COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
         try {
@@ -94,6 +93,6 @@ public class CartTeleporter extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"Teleport"};
+        return new String[] { "Teleport" };
     }
 }

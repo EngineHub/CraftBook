@@ -1,19 +1,14 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.world.sensors;
@@ -33,25 +28,25 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractIC {
 
-    public LightSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public LightSensor (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Light Sensor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "LIGHT SENSOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, getTargetLighted());
@@ -59,7 +54,7 @@ public class LightSensor extends AbstractIC {
     }
 
     @Override
-    public void load() {
+    public void load () {
         try {
             String[] st = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
             if (st.length != 3) throw new Exception();
@@ -79,8 +74,8 @@ public class LightSensor extends AbstractIC {
             try {
                 getSign().setLine(2, Integer.toString(min));
                 getSign().update(false);
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored){}
         }
     }
 
@@ -89,18 +84,17 @@ public class LightSensor extends AbstractIC {
     int z;
     byte min;
 
-    protected boolean getTargetLighted() {
+    protected boolean getTargetLighted () {
 
         return hasLight(min, x, y, z);
     }
 
-
     /**
      * Returns true if the sign has a light level above the specified.
-     *
+     * 
      * @return
      */
-    private boolean hasLight(byte specifiedLevel, int x, int y, int z) {
+    private boolean hasLight (byte specifiedLevel, int x, int y, int z) {
 
         Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         Block backBlock = signBlock.getRelative(SignUtil.getBack(signBlock));
@@ -111,30 +105,27 @@ public class LightSensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new LightSensor(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Outputs high if specific block is above specified light level.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "minimum light",
-                    "x:y:z offset"
-            };
+            String[] lines = new String[] { "minimum light", "x:y:z offset" };
             return lines;
         }
     }

@@ -28,19 +28,19 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class PotionInducer extends AbstractIC {
 
-    public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
+    public PotionInducer (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Potion Inducer";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "POTION INDUCER";
     }
@@ -50,61 +50,54 @@ public class PotionInducer extends AbstractIC {
     boolean players;
 
     @Override
-    public void load() {
+    public void load () {
 
         String[] effectInfo = ICUtil.COLON_PATTERN.split(getLine(2), 3);
         effectID = Integer.parseInt(effectInfo[0]);
         try {
             effectAmount = Integer.parseInt(effectInfo[1]);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             effectAmount = 1;
         }
         try {
             effectTime = Integer.parseInt(effectInfo[2]);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             effectTime = 10;
         }
         String line4 = getSign().getLine(3).toLowerCase();
-        if(line4.contains("pm")) {
+        if (line4.contains("pm")) {
             mobs = true;
             players = true;
-        } else if(line4.contains("m")) {
+        } else if (line4.contains("m")) {
             mobs = true;
             players = false;
-        }
-        else if(line4.contains("p")) {
+        } else if (line4.contains("p")) {
             players = true;
             mobs = false;
-        }
-        else {
+        } else {
             players = true;
             mobs = false;
         }
         line4 = line4.replace("m", "").replace("p", "");
         try {
             radius = Integer.parseInt(line4);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             radius = 10;
         }
     }
 
-    public boolean induce() {
+    public boolean induce () {
         boolean value = false;
-        Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); //Update chunks
+        Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); // Update
+                                                                                                                                       // chunks
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities()) {
                     if (entity.isValid() && entity instanceof LivingEntity) {
-                        LivingEntity liv = (LivingEntity)entity;
-                        if(!mobs && !(liv instanceof Player))
-                            continue;
-                        if(!players && liv instanceof Player)
-                            continue;
-                        if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius)
-                            continue;
+                        LivingEntity liv = (LivingEntity) entity;
+                        if (!mobs && !(liv instanceof Player)) continue;
+                        if (!players && liv instanceof Player) continue;
+                        if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius) continue;
                         liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1), true);
                         value = true;
                     }
@@ -114,27 +107,26 @@ public class PotionInducer extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
-        if(chip.getInput(0))
-            chip.setOutput(0, induce());
+        if (chip.getInput(0)) chip.setOutput(0, induce());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new PotionInducer(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             try {
                 String[] bits = ICUtil.COLON_PATTERN.split(sign.getLine(2), 3);
@@ -148,18 +140,15 @@ public class PotionInducer extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Gives nearby entities a potion effect.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "id:level:time",
-                    "range (add a m to the end to only induce mobs or p for players (pm for both))"
-            };
+            String[] lines = new String[] { "id:level:time", "range (add a m to the end to only induce mobs or p for players (pm for both))" };
             return lines;
         }
     }

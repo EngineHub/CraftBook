@@ -1,20 +1,14 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.blockbag;
@@ -30,18 +24,18 @@ import com.sk89q.worldedit.bags.OutOfSpaceException;
 
 /**
  * For the uninitiated.
- *
+ * 
  * @author sk89q
  */
 public class DummyBlockBag extends BlockBag {
 
     private boolean fetch = true, store = true;
 
-    public DummyBlockBag() {
+    public DummyBlockBag () {
 
     }
 
-    public DummyBlockBag(boolean fetch, boolean store) {
+    public DummyBlockBag (boolean fetch, boolean store) {
 
         this.fetch = fetch;
         this.store = store;
@@ -49,51 +43,47 @@ public class DummyBlockBag extends BlockBag {
 
     /**
      * Gets a block.
-     *
+     * 
      * @param id
-     *
      * @return
-     *
      * @throws OutOfBlocksException
      */
     @Override
-    public void fetchBlock(int id) throws BlockBagException {
+    public void fetchBlock (int id) throws BlockBagException {
 
         if (!fetch) throw new OutOfBlocksException();
     }
 
     /**
      * Stores a block.
-     *
+     * 
      * @param id
-     *
      * @return
-     *
      * @throws OutOfSpaceException
      */
     @Override
-    public void storeBlock(int id) throws BlockBagException {
+    public void storeBlock (int id) throws BlockBagException {
 
         if (!store) throw new OutOfSpaceException(id);
     }
 
     /**
      * Adds a position to be used a source.
-     *
+     * 
      * @return
      */
     @Override
-    public void addSourcePosition(WorldVector arg0) {
+    public void addSourcePosition (WorldVector arg0) {
 
     }
 
     /**
      * Adds a position to be used a source.
-     *
+     * 
      * @return
      */
     @Override
-    public void addSingleSourcePosition(WorldVector arg0) {
+    public void addSingleSourcePosition (WorldVector arg0) {
 
     }
 
@@ -101,20 +91,19 @@ public class DummyBlockBag extends BlockBag {
      * Flush changes.
      */
     @Override
-    public void flushChanges() {
+    public void flushChanges () {
 
     }
 
     /**
-     * Unlimited black hole bag that will provided unlimited blocks and
-     * discard any accepted blocks.
-     *
+     * Unlimited black hole bag that will provided unlimited blocks and discard any accepted blocks.
+     * 
      * @author sk89q
      */
     public static class UnlimitedBlackHoleFactory implements BlockBagFactory {
 
         @Override
-        public BlockBag createBlockSource(World w, Vector v) {
+        public BlockBag createBlockSource (World w, Vector v) {
 
             return new DummyBlockBag();
         }
@@ -122,13 +111,13 @@ public class DummyBlockBag extends BlockBag {
 
     /**
      * Discards all given blocks.
-     *
+     * 
      * @author sk89q
      */
     public static class BlackHoleFactory implements BlockBagFactory {
 
         @Override
-        public BlockBag createBlockSource(World w, Vector v) {
+        public BlockBag createBlockSource (World w, Vector v) {
 
             return new DummyBlockBag(false, true);
         }
@@ -136,13 +125,13 @@ public class DummyBlockBag extends BlockBag {
 
     /**
      * Provides unlimited blocks.
-     *
+     * 
      * @author sk89q
      */
     public static class UnlimitedSourceFactory implements BlockBagFactory {
 
         @Override
-        public BlockBag createBlockSource(World w, Vector v) {
+        public BlockBag createBlockSource (World w, Vector v) {
 
             return new DummyBlockBag(true, false);
         }

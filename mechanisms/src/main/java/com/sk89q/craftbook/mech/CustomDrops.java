@@ -16,16 +16,16 @@ public class CustomDrops implements Listener {
 
     final MechanismsPlugin plugin;
 
-    public CustomDrops(MechanismsPlugin plugin) {
+    public CustomDrops (MechanismsPlugin plugin) {
 
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void handleCustomBlockDrops(BlockBreakEvent event) {
+    public void handleCustomBlockDrops (BlockBreakEvent event) {
 
-        if (plugin.getLocalConfiguration().customDropSettings.requirePermissions &&
-                !plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
+        if (plugin.getLocalConfiguration().customDropSettings.requirePermissions
+                && !plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
@@ -43,7 +43,7 @@ public class CustomDrops implements Listener {
                         w.dropItemNaturally(l, dropDefinition.getItemStack());
                     }
 
-                if(!drops[0].append) {
+                if (!drops[0].append) {
                     event.getBlock().setTypeId(0);
                     event.setCancelled(true);
                 }
@@ -52,15 +52,13 @@ public class CustomDrops implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void handleCustomMobDrops(EntityDeathEvent event) {
+    public void handleCustomMobDrops (EntityDeathEvent event) {
 
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
-        CustomDropManager.DropDefinition[] drops =
-                plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
+        CustomDropManager.DropDefinition[] drops = plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
         if (drops != null) {
-            if(!drops[0].append)
-                event.getDrops().clear();
+            if (!drops[0].append) event.getDrops().clear();
             // Add the custom drops
             for (CustomDropManager.DropDefinition dropDefinition : drops) {
                 if (ItemUtil.isStackValid(dropDefinition.getItemStack())) {

@@ -41,7 +41,7 @@ public class TeleportTransmitter extends AbstractIC {
     Location offset;
 
     @Override
-    public void load() {
+    public void load () {
         band = getLine(2);
         offset = BukkitUtil.toSign(getSign()).getLocation();
         try {
@@ -54,8 +54,7 @@ public class TeleportTransmitter extends AbstractIC {
                 int z = Integer.parseInt(splitCoords[2]);
                 offset.add(x, y, z);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             radius = 3;
         }
     }
@@ -63,7 +62,7 @@ public class TeleportTransmitter extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
             Player closest = null;
 
             for (Player e : offset.getWorld().getPlayers()) {
@@ -71,42 +70,39 @@ public class TeleportTransmitter extends AbstractIC {
                     continue;
                 }
 
-                if(closest == null)
-                    closest = e;
-                else if(closest.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > e.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()))
-                    closest = e;
+                if (closest == null) closest = e;
+                else if (closest.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > e.getLocation().distanceSquared(
+                        BukkitUtil.toSign(getSign()).getLocation())) closest = e;
             }
-            if(closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
+            if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
                 closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
             return;
         }
     }
 
-    public static Tuple2<Long, String> getValue(String band) {
+    public static Tuple2<Long, String> getValue (String band) {
 
-        if(memory.containsKey(band)) {
+        if (memory.containsKey(band)) {
             long time = System.currentTimeMillis() - memory.get(band).a;
-            int seconds = (int) (time / 1000) % 60 ;
-            if(seconds > 5) { //Expired.
+            int seconds = (int) (time / 1000) % 60;
+            if (seconds > 5) { // Expired.
                 memory.remove(band);
                 return null;
             }
         }
         Tuple2<Long, String> val = memory.get(band);
-        memory.remove(band); //Remove on teleport.
+        memory.remove(band); // Remove on teleport.
         return val;
     }
 
-    public static boolean setValue(String band, Tuple2<Long, String> val) {
+    public static boolean setValue (String band, Tuple2<Long, String> val) {
 
-        if(memory.containsKey(band)) {
+        if (memory.containsKey(band)) {
             long time = System.currentTimeMillis() - memory.get(band).a;
-            int seconds = (int) (time / 1000) % 60 ;
-            if(seconds > 5) { //Expired.
+            int seconds = (int) (time / 1000) % 60;
+            if (seconds > 5) { // Expired.
                 memory.remove(band);
-            }
-            else
-                return false;
+            } else return false;
         }
         memory.put(band, val);
         return true;
@@ -114,30 +110,27 @@ public class TeleportTransmitter extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new TeleportTransmitter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Transmitter for the teleportation network.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "frequency name",
-                    "radius=x:y:z offset"
-            };
+            String[] lines = new String[] { "frequency name", "radius=x:y:z offset" };
             return lines;
         }
     }

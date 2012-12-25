@@ -41,13 +41,13 @@ public class SetBridge extends AbstractIC {
     private Block center;
     private BlockFace faceing;
 
-    public SetBridge(Server server, ChangedSign block, ICFactory factory) {
+    public SetBridge (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {
@@ -127,19 +127,19 @@ public class SetBridge extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Set P-Bridge";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "SET P-Bridge";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             setDoor(true);
@@ -148,7 +148,7 @@ public class SetBridge extends AbstractIC {
         }
     }
 
-    private void setDoor(boolean open) {
+    private void setDoor (boolean open) {
 
         center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
@@ -167,13 +167,13 @@ public class SetBridge extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SetBridge(getServer(), sign, this);
         }

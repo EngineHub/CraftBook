@@ -16,22 +16,19 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class Fan extends Recipe {
 
-    public Fan(int[] recipe) {
+    public Fan (int[] recipe) {
 
         super(recipe);
     }
 
-    public Fan() {
+    public Fan () {
 
-        super(new int[] {
-                BlockID.WEB, BlockID.LEAVES, BlockID.WEB,
-                BlockID.LEAVES, BlockID.PISTON_BASE, BlockID.LEAVES,
-                BlockID.WEB, BlockID.LEAVES, BlockID.WEB
-        });
+        super(new int[] { BlockID.WEB, BlockID.LEAVES, BlockID.WEB, BlockID.LEAVES, BlockID.PISTON_BASE, BlockID.LEAVES, BlockID.WEB, BlockID.LEAVES,
+                BlockID.WEB });
     }
 
     @Override
-    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    public boolean doAction (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         MaterialData d = dis.getBlock().getState().getData();
         BlockFace face = ((org.bukkit.material.Dispenser) d).getFacing();

@@ -18,7 +18,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
-    public static Collection<CraftingItemStack> convert(Collection<Item> stacks) {
+    public static Collection<CraftingItemStack> convert (Collection<Item> stacks) {
 
         Map<String, Integer> items = new HashMap<String, Integer>();
         for (Item item : stacks) {
@@ -34,8 +34,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         // merge the amounts and stacks
         for (Map.Entry<String, Integer> entry : items.entrySet()) {
             String[] split = COLON_PATTERN.split(entry.getKey());
-            stackSet.add(new CraftingItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
-                    entry.getValue()));
+            stackSet.add(new CraftingItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]), entry.getValue()));
         }
         return stackSet;
     }
@@ -44,68 +43,67 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     private short data;
     private int amount;
 
-    public CraftingItemStack(Material material, short data, int amount) {
+    public CraftingItemStack (Material material, short data, int amount) {
 
         this.material = material;
         this.data = data;
         this.amount = amount;
     }
 
-    public CraftingItemStack(Material material, int amount) {
+    public CraftingItemStack (Material material, int amount) {
 
         this.material = material;
         this.amount = amount;
         data = 0;
     }
 
-    public CraftingItemStack(Material material, short data) {
+    public CraftingItemStack (Material material, short data) {
 
         this(material, data, 0);
     }
 
-    public CraftingItemStack(Material material) {
+    public CraftingItemStack (Material material) {
 
         this(material, 0);
     }
 
-    public Material getMaterial() {
+    public Material getMaterial () {
 
         return material;
     }
 
-    public short getData() {
+    public short getData () {
 
         return data;
     }
 
-    public int getAmount() {
+    public int getAmount () {
 
-        if (amount < 1)
-            return 1;
+        if (amount < 1) return 1;
         return amount;
     }
 
-    public void setMaterial(Material material) {
+    public void setMaterial (Material material) {
 
         this.material = material;
     }
 
-    public void setData(short data) {
+    public void setData (short data) {
 
         this.data = data;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount (int amount) {
 
         this.amount = amount;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStack getItemStack () {
 
         return new ItemStack(material, amount, data);
     }
 
-    public CraftingItemStack add(CraftingItemStack stack) {
+    public CraftingItemStack add (CraftingItemStack stack) {
 
         if (stack.equals(this)) {
             amount += stack.getAmount();
@@ -113,14 +111,14 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         return this;
     }
 
-    public boolean isSameType(CraftingItemStack stack) {
+    public boolean isSameType (CraftingItemStack stack) {
 
         if (data == -1 || stack.getData() == -1) return stack.getMaterial() == getMaterial();
         return stack.getMaterial() == getMaterial() && stack.getData() == getData();
     }
 
     @Override
-    public int compareTo(CraftingItemStack stack) {
+    public int compareTo (CraftingItemStack stack) {
 
         if (getAmount() > stack.getAmount()) return 1;
         if (getAmount() == stack.getAmount()) return 0;
@@ -128,7 +126,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         final int prime = 31;
         int result = 1;
         result = prime * result + amount;
@@ -138,7 +136,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals (Object obj) {
 
         if (obj instanceof CraftingItemStack) {
             CraftingItemStack stack = (CraftingItemStack) obj;

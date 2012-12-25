@@ -20,7 +20,7 @@ public abstract class AbstractArrow implements ElementalArrow {
 
     String name;
 
-    public AbstractArrow(MechanismsPlugin plugin, String name) {
+    public AbstractArrow (MechanismsPlugin plugin, String name) {
         this.plugin = plugin;
         this.name = name;
     }
@@ -30,7 +30,7 @@ public abstract class AbstractArrow implements ElementalArrow {
 
     @Override
     public boolean onShoot (ProjectileLaunchEvent event) {
-        //TODO work out if its a CraftBook arrow.
+        // TODO work out if its a CraftBook arrow.
         return false;
     }
 

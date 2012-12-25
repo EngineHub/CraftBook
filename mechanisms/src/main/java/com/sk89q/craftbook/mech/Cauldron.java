@@ -2,21 +2,15 @@ package com.sk89q.craftbook.mech;
 
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import java.util.ArrayList;
@@ -44,7 +38,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Handler for cauldrons.
- *
+ * 
  * @author sk89q
  * @deprecated Use {@link com.sk89q.craftbook.mech.cauldron.ImprovedCauldron} instead
  */
@@ -56,14 +50,14 @@ public class Cauldron extends AbstractMechanic {
         protected final MechanismsPlugin plugin;
         protected final CauldronCookbook recipes;
 
-        public Factory(MechanismsPlugin plugin) {
+        public Factory (MechanismsPlugin plugin) {
 
             this.plugin = plugin;
             recipes = new CauldronCookbook();
         }
 
         @Override
-        public Cauldron detect(BlockWorldVector pt) {
+        public Cauldron detect (BlockWorldVector pt) {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in
@@ -82,13 +76,12 @@ public class Cauldron extends AbstractMechanic {
 
     /**
      * Construct the handler.
-     *
+     * 
      * @param recipes
      * @param pt
      * @param plugin
      */
-    public Cauldron(CauldronCookbook recipes, BlockWorldVector pt,
-            MechanismsPlugin plugin) {
+    public Cauldron (CauldronCookbook recipes, BlockWorldVector pt, MechanismsPlugin plugin) {
 
         super();
         this.recipes = recipes;
@@ -97,7 +90,7 @@ public class Cauldron extends AbstractMechanic {
     }
 
     @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick (PlayerInteractEvent event) {
 
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
@@ -106,8 +99,7 @@ public class Cauldron extends AbstractMechanic {
         if (!localPlayer.hasPermission("craftbook.mech.cauldron")) return;
 
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return;
-        if (event.getPlayer().getItemInHand().getTypeId() >= 255
-                || event.getPlayer().getItemInHand().getTypeId() == BlockID.AIR)
+        if (event.getPlayer().getItemInHand().getTypeId() >= 255 || event.getPlayer().getItemInHand().getTypeId() == BlockID.AIR)
             if (preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt)) {
                 event.setUseInteractedBlock(Result.DENY);
                 event.setUseItemInHand(Result.DENY);
@@ -124,10 +116,10 @@ public class Cauldron extends AbstractMechanic {
 
         /**
          * Construct the exception with a message.
-         *
+         * 
          * @param msg
          */
-        public NotACauldronException(String msg) {
+        public NotACauldronException (String msg) {
 
             super(msg);
         }
@@ -135,12 +127,12 @@ public class Cauldron extends AbstractMechanic {
 
     /**
      * Do cauldron.
-     *
+     * 
      * @param pt
      * @param player
      * @param world
      */
-    public boolean preCauldron(Player player, World world, BlockWorldVector pt) {
+    public boolean preCauldron (Player player, World world, BlockWorldVector pt) {
 
         double x = pt.getX();
         double y = pt.getY();
@@ -168,15 +160,12 @@ public class Cauldron extends AbstractMechanic {
             below2 = 10;
         }
         // Preliminary check so we don't waste CPU cycles
-        if ((below == BlockID.LAVA || below2 == BlockID.LAVA)
-                && (s1 == blockID || s2 == blockID
-                || s3 == blockID || s4 == blockID)) {
+        if ((below == BlockID.LAVA || below2 == BlockID.LAVA) && (s1 == blockID || s2 == blockID || s3 == blockID || s4 == blockID)) {
             // Cauldron is 2 units deep
             if (below == BlockID.LAVA) {
                 rootY++;
             }
-            performCauldron(player, world, new BlockWorldVector(pt.getWorld(),
-                    x, rootY, z));
+            performCauldron(player, world, new BlockWorldVector(pt.getWorld(), x, rootY, z));
             return true;
         }
         return false;
@@ -184,12 +173,12 @@ public class Cauldron extends AbstractMechanic {
 
     /**
      * Attempt to perform a cauldron recipe.
-     *
+     * 
      * @param player
      * @param world
      * @param pt
      */
-    private void performCauldron(Player player, World world, BlockWorldVector pt) {
+    private void performCauldron (Player player, World world, BlockWorldVector pt) {
         // Gotta start at a root Y then find our orientation
         int rootY = pt.getBlockY();
 
@@ -214,13 +203,11 @@ public class Cauldron extends AbstractMechanic {
             // Now we have to ignore cauldron blocks so that we get the real
             // contents of the cauldron
             for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
-                if (entry.getValue().a != blockID)
-                    if (!contents.containsKey(entry.getValue())) {
-                        contents.put(entry.getValue(), 1);
-                    } else {
-                        contents.put(entry.getValue(),
-                                contents.get(entry.getValue()) + 1);
-                    }
+                if (entry.getValue().a != blockID) if (!contents.containsKey(entry.getValue())) {
+                    contents.put(entry.getValue(), 1);
+                } else {
+                    contents.put(entry.getValue(), contents.get(entry.getValue()) + 1);
+                }
 
             // Find the recipe
             CauldronCookbook.Recipe recipe = recipes.find(contents);
@@ -241,18 +228,14 @@ public class Cauldron extends AbstractMechanic {
                     }
 
                     if (!found) {
-                        player.sendMessage(ChatColor.DARK_RED
-                                + "Doesn't seem as if you have the ability...");
+                        player.sendMessage(ChatColor.DARK_RED + "Doesn't seem as if you have the ability...");
                         return;
                     }
                 }
 
-                player.sendMessage(ChatColor.GOLD
-                        + "In a poof of smoke, you've made " + recipe.getName()
-                        + ".");
+                player.sendMessage(ChatColor.GOLD + "In a poof of smoke, you've made " + recipe.getName() + ".");
 
-                List<Tuple2<Integer, Short>> ingredients = new ArrayList<Tuple2<Integer, Short>>(
-                        recipe.getIngredients());
+                List<Tuple2<Integer, Short>> ingredients = new ArrayList<Tuple2<Integer, Short>>(recipe.getIngredients());
 
                 List<BlockWorldVector> removeQueue = new ArrayList<BlockWorldVector>();
 
@@ -267,52 +250,44 @@ public class Cauldron extends AbstractMechanic {
                         // (!BlockID.isBottomDependentBlock(entry.getValue())) {
                         // removeQueue.add(entry.getKey());
                         // } else {
-                        world.getBlockAt(entry.getKey().getBlockX(),entry.getKey().getBlockY(),entry.getKey().getBlockZ()).setTypeId(BlockID.AIR);
+                        world.getBlockAt(entry.getKey().getBlockX(), entry.getKey().getBlockY(), entry.getKey().getBlockZ()).setTypeId(BlockID.AIR);
                         // }
                         ingredients.remove(entry.getValue());
                     }
 
                 for (BlockWorldVector v : removeQueue) {
-                    world.getBlockAt(v.getBlockX(), v.getBlockY(),
-                            v.getBlockZ()).setTypeId(BlockID.AIR);
+                    world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ()).setTypeId(BlockID.AIR);
                 }
 
                 // Give results
                 for (Tuple2<Integer, Short> id : recipe.getResults()) {
-                    HashMap<Integer, ItemStack> map = player.getInventory()
-                            .addItem(new ItemStack(id.a, 1, id.b));
+                    HashMap<Integer, ItemStack> map = player.getInventory().addItem(new ItemStack(id.a, 1, id.b));
                     for (Entry<Integer, ItemStack> i : map.entrySet()) {
                         world.dropItem(player.getLocation(), i.getValue());
                     }
                 }
                 // Didn't find a recipe
             } else {
-                player.sendMessage(ChatColor.RED
-                        + "Hmm, this doesn't make anything...");
+                player.sendMessage(ChatColor.RED + "Hmm, this doesn't make anything...");
             }
         } catch (NotACauldronException ignored) {
         }
     }
 
     /**
-     * Recursively expand the search area so we can define the number of blocks
-     * that are in the cauldron. The search will not exceed 24 blocks as no pot
-     * will ever use up that many blocks. The Y are bounded both directions so
-     * we don't ever search the lava or anything above, although in the case of
-     * non-wall blocks, we also make sure that there is standing lava
-     * underneath.
-     *
+     * Recursively expand the search area so we can define the number of blocks that are in the cauldron. The search will not exceed 24 blocks as no
+     * pot will ever use up that many blocks. The Y are bounded both directions so we don't ever search the lava or anything above, although in the
+     * case of non-wall blocks, we also make sure that there is standing lava underneath.
+     * 
      * @param world
      * @param pt
      * @param minY
      * @param maxY
      * @param visited
-     *
      * @throws Cauldron.NotACauldronException
      */
-    public void findCauldronContents(World world, BlockWorldVector pt,
-            int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
-                    throws NotACauldronException {
+    public void findCauldronContents (World world, BlockWorldVector pt, int minY, int maxY, Map<BlockWorldVector, Tuple2<Integer, Short>> visited)
+            throws NotACauldronException {
 
         int blockID = plugin.getLocalConfiguration().cauldronSettings.cauldronBlock;
 
@@ -326,8 +301,7 @@ public class Cauldron extends AbstractMechanic {
         // Prevent infinite looping
         if (visited.containsKey(pt)) return;
 
-        int type = world.getBlockTypeIdAt(pt.getBlockX(), pt.getBlockY(),
-                pt.getBlockZ());
+        int type = world.getBlockTypeIdAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
 
         // Make water work reliably
         if (type == 9) {
@@ -339,8 +313,7 @@ public class Cauldron extends AbstractMechanic {
             type = 10;
         }
 
-        visited.put(pt, new Tuple2<Integer, Short>(type, (short) world.getBlockAt(pt.getBlockX(), pt.getBlockY(),
-                pt.getBlockZ()).getData()));
+        visited.put(pt, new Tuple2<Integer, Short>(type, (short) world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getData()));
 
         // It's a wall -- we only needed to remember that we visited it but
         // we don't need to recurse
@@ -348,8 +321,8 @@ public class Cauldron extends AbstractMechanic {
 
         // Must have a lava floor
         BlockWorldVector lavaPos = recurse(0, pt.getBlockY() - minY + 1, 0, pt);
-        if (world.getBlockTypeIdAt(lavaPos.getBlockX(), lavaPos.getBlockY(),
-                lavaPos.getBlockZ()) == BlockID.LAVA) throw new NotACauldronException("mech.cauldron.no-lava");
+        if (world.getBlockTypeIdAt(lavaPos.getBlockX(), lavaPos.getBlockY(), lavaPos.getBlockZ()) == BlockID.LAVA)
+            throw new NotACauldronException("mech.cauldron.no-lava");
 
         // Now we recurse!
         findCauldronContents(world, recurse(1, 0, 0, pt), minY, maxY, visited);
@@ -362,15 +335,14 @@ public class Cauldron extends AbstractMechanic {
 
     /**
      * Returns a new BlockWorldVector with i, j, and k added to pt's x, y and z.
-     *
+     * 
      * @param i
      * @param j
      * @param k
      * @param pt
      */
-    private BlockWorldVector recurse(int i, int j, int k, BlockWorldVector pt) {
+    private BlockWorldVector recurse (int i, int j, int k, BlockWorldVector pt) {
 
-        return new BlockWorldVector(pt.getWorld(), pt.getX() + i,
-                pt.getY() + j, pt.getZ() + k);
+        return new BlockWorldVector(pt.getWorld(), pt.getX() + i, pt.getY() + j, pt.getZ() + k);
     }
 }

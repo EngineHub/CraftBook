@@ -13,32 +13,32 @@ import com.sk89q.craftbook.ic.RestrictedIC;
 
 public class TimeSet extends AbstractIC {
 
-    public TimeSet(Server server, ChangedSign sign, ICFactory factory) {
+    public TimeSet (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Time Set";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "TIME SET";
     }
 
     @Override
-    public void load() {
+    public void load () {
         time = Long.parseLong(getSign().getLine(2));
     }
 
-    /* it's been a */ long time;
+    /* it's been a */long time;
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         try {
             if (chip.getInput(0)) {
@@ -50,30 +50,27 @@ public class TimeSet extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new TimeSet(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Set time when triggered.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "time to set",
-                    null
-            };
+            String[] lines = new String[] { "time to set", null };
             return lines;
         }
     }

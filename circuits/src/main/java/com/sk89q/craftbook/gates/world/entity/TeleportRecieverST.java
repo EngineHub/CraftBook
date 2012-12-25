@@ -36,13 +36,13 @@ public class TeleportRecieverST extends TeleportReciever implements SelfTriggere
 
     public static class Factory extends TeleportReciever.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new TeleportRecieverST(getServer(), sign, this);
         }

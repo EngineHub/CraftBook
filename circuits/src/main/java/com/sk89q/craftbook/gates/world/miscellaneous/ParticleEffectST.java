@@ -13,31 +13,31 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
  */
 public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC {
 
-    public ParticleEffectST(Server server, ChangedSign sign, ICFactory factory) {
+    public ParticleEffectST (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self-triggered Particle Effect";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "ST PARTICLE EFFECT";
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return true;
     }
 
     @Override
-    public void think(ChipState state) {
+    public void think (ChipState state) {
 
         if (state.getInput(0)) {
             doEffect();
@@ -46,13 +46,13 @@ public class ParticleEffectST extends ParticleEffect implements SelfTriggeredIC 
 
     public static class Factory extends ParticleEffect.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ParticleEffectST(getServer(), sign, this);
         }

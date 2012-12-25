@@ -22,7 +22,7 @@ import com.sk89q.craftbook.util.LocationUtil;
  */
 public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
 
-    public TimeFaker(Server server, ChangedSign sign, ICFactory factory) {
+    public TimeFaker (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -30,43 +30,40 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
     private ArrayList<String> players = new ArrayList<String>();
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Time Faker";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "TIME FAKER";
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new TimeFaker(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Radius based fake time.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "radius",
-                    "time"
-            };
+            String[] lines = new String[] { "radius", "time" };
             return lines;
         }
     }
@@ -75,42 +72,38 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
     long time;
 
     @Override
-    public void load() {
+    public void load () {
 
         try {
             dist = Integer.parseInt(getSign().getLine(2));
             time = Long.parseLong(getSign().getLine(3));
-        }
-        catch(Exception e){
-            if(dist == 0)
-                dist = 10;
-            if(time == 0)
-                time = 13000L;
+        } catch (Exception e) {
+            if (dist == 0) dist = 10;
+            if (time == 0) time = 13000L;
         }
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return true;
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
     }
 
     @Override
-    public void think(ChipState chip) {
+    public void think (ChipState chip) {
 
         if (chip.getInput(0)) {
-            for(Player p : Bukkit.getOnlinePlayers()) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
 
-                if(!players.contains(p.getName()) && LocationUtil.isWithinRadius(p.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), dist)) {
+                if (!players.contains(p.getName()) && LocationUtil.isWithinRadius(p.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), dist)) {
                     p.setPlayerTime(time, false);
                     players.add(p.getName());
-                }
-                else if(players.contains(p.getName())) {
+                } else if (players.contains(p.getName())) {
                     p.resetPlayerTime();
                     players.remove(p.getName());
                 }

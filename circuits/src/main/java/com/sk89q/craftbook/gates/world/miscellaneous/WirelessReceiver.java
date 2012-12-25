@@ -1,19 +1,14 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.world.miscellaneous;
@@ -34,31 +29,31 @@ public class WirelessReceiver extends AbstractIC {
 
     protected String band;
 
-    public WirelessReceiver(Server server, ChangedSign sign, ICFactory factory) {
+    public WirelessReceiver (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
         band = getSign().getLine(2);
         band = band + getSign().getLine(3);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Wireless Receiver";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "RECEIVER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             Boolean val = WirelessTransmitter.getValue(band);
@@ -75,50 +70,45 @@ public class WirelessReceiver extends AbstractIC {
 
         public boolean requirename;
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new WirelessReceiver(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Recieves signal from wireless transmitter.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "wireless band",
-                    "user"
-            };
+            String[] lines = new String[] { "wireless band", "user" };
             return lines;
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
-            if(requirename)
-                sign.setLine(3, player.getName());
-            else if(!sign.getLine(3).isEmpty())
-                sign.setLine(3, player.getName());
+        public void checkPlayer (ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+            if (requirename) sign.setLine(3, player.getName());
+            else if (!sign.getLine(3).isEmpty()) sign.setLine(3, player.getName());
             sign.update(false);
         }
 
         @Override
-        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
 
             requirename = section.getBoolean("per-player", false);
         }
 
         @Override
-        public boolean needsConfiguration() {
+        public boolean needsConfiguration () {
             return true;
         }
     }

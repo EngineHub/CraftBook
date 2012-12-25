@@ -37,13 +37,13 @@ public class CombineHarvesterST extends CombineHarvester implements SelfTriggere
 
     public static class Factory extends CombineHarvester.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new CombineHarvesterST(getServer(), sign, this);
         }

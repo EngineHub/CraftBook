@@ -17,7 +17,7 @@ import com.sk89q.craftbook.util.ItemInfo;
 
 public class MinecartManager {
 
-    public MinecartManager(VehiclesPlugin plugin) {
+    public MinecartManager (VehiclesPlugin plugin) {
 
         this.plugin = plugin;
         reloadConfiguration(plugin.getLocalConfiguration());
@@ -26,7 +26,7 @@ public class MinecartManager {
     private final VehiclesPlugin plugin;
     public Map<ItemInfo, CartMechanism> mechanisms;
 
-    public void reloadConfiguration(VehiclesConfiguration cfg) {
+    public void reloadConfiguration (VehiclesConfiguration cfg) {
 
         mechanisms = new HashMap<ItemInfo, CartMechanism>();
         if (cfg.matBoostMax.getId() > 0) mechanisms.put(cfg.matBoostMax, new CartBooster(100));
@@ -47,7 +47,7 @@ public class MinecartManager {
         }
     }
 
-    public void impact(VehicleMoveEvent event) {
+    public void impact (VehicleMoveEvent event) {
 
         try {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
@@ -56,18 +56,16 @@ public class MinecartManager {
             if (thingy != null) {
                 Location from = event.getFrom();
                 Location to = event.getTo();
-                boolean crossesBlockBoundary =
-                        from.getBlockX() == to.getBlockX()
-                        && from.getBlockY() == to.getBlockY()
+                boolean crossesBlockBoundary = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY()
                         && from.getBlockZ() == to.getBlockZ();
                 thingy.impact((Minecart) event.getVehicle(), cmb, crossesBlockBoundary);
             }
         } catch (InvalidMechanismException ignored) {
-            /* okay, so there's nothing interesting to see here.  carry on then, eh? */
+            /* okay, so there's nothing interesting to see here. carry on then, eh? */
         }
     }
 
-    public void enter(VehicleEnterEvent event) {
+    public void enter (VehicleEnterEvent event) {
 
         try {
             Block block = event.getVehicle().getLocation().getBlock();
@@ -77,31 +75,27 @@ public class MinecartManager {
             if (thingy != null) {
                 Location to = event.getVehicle().getLocation();
                 Location from = event.getEntered().getLocation();
-                boolean crossesBlockBoundary =
-                        from.getBlockX() == to.getBlockX()
-                        && from.getBlockY() == to.getBlockY()
+                boolean crossesBlockBoundary = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY()
                         && from.getBlockZ() == to.getBlockZ();
                 thingy.enter((Minecart) event.getVehicle(), event.getEntered(), cmb, crossesBlockBoundary);
             }
         } catch (InvalidMechanismException ignored) {
-            /* okay, so there's nothing interesting to see here.  carry on then, eh? */
+            /* okay, so there's nothing interesting to see here. carry on then, eh? */
         }
     }
 
-    public void impact(BlockRedstoneEvent event) {
+    public void impact (BlockRedstoneEvent event) {
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DelayedImpact(event));
     }
 
     /**
-     * Bukkit reports redstone events before updating the status of the relevant
-     * blocks... which had the rather odd effect of causing only input wires
-     * from the north causing the responses intended. Scheduling the impact
-     * check one tick later dodges the whole issue.
+     * Bukkit reports redstone events before updating the status of the relevant blocks... which had the rather odd effect of causing only input wires
+     * from the north causing the responses intended. Scheduling the impact check one tick later dodges the whole issue.
      */
     private class DelayedImpact implements Runnable {
 
-        public DelayedImpact(BlockRedstoneEvent event) {
+        public DelayedImpact (BlockRedstoneEvent event) {
 
             huh = event.getBlock();
         }
@@ -109,7 +103,7 @@ public class MinecartManager {
         private final Block huh;
 
         @Override
-        public void run() {
+        public void run () {
 
             try {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(huh);
@@ -118,7 +112,7 @@ public class MinecartManager {
                     thingy.impact(CartMechanism.getCart(cmb.rail), cmb, false);
                 }
             } catch (InvalidMechanismException ignored) {
-                /* okay, so there's nothing interesting to see here.  carry on then, eh? */
+                /* okay, so there's nothing interesting to see here. carry on then, eh? */
             }
         }
     }

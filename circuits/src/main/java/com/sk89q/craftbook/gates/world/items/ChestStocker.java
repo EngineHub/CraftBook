@@ -27,31 +27,24 @@ public class ChestStocker extends AbstractIC {
     Vector offset;
 
     @Override
-    public void load() {
+    public void load () {
 
-        offset = new Vector(0,2,0);
+        offset = new Vector(0, 2, 0);
 
         item = ICUtil.getItem(getLine(2));
 
         try {
             String[] loc = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(3))[1]);
-            offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
-            if(offset.getX() > 16)
-                offset.setX(16);
-            if(offset.getY() > 16)
-                offset.setY(16);
-            if(offset.getZ() > 16)
-                offset.setZ(16);
+            offset = new Vector(Integer.parseInt(loc[0]), Integer.parseInt(loc[1]), Integer.parseInt(loc[2]));
+            if (offset.getX() > 16) offset.setX(16);
+            if (offset.getY() > 16) offset.setY(16);
+            if (offset.getZ() > 16) offset.setZ(16);
 
-            if(offset.getX() < -16)
-                offset.setX(-16);
-            if(offset.getY() < -16)
-                offset.setY(-16);
-            if(offset.getZ() < -16)
-                offset.setZ(-16);
-        }
-        catch(Exception e){
-            offset = new Vector(0,2,0);
+            if (offset.getX() < -16) offset.setX(-16);
+            if (offset.getY() < -16) offset.setY(-16);
+            if (offset.getZ() < -16) offset.setZ(-16);
+        } catch (Exception e) {
+            offset = new Vector(0, 2, 0);
         }
     }
 
@@ -68,49 +61,44 @@ public class ChestStocker extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
-        if(chip.getInput(0))
-            chip.setOutput(0, stock());
+        if (chip.getInput(0)) chip.setOutput(0, stock());
     }
 
-    public boolean stock() {
+    public boolean stock () {
 
         Block chest = BukkitUtil.toSign(getSign()).getBlock().getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
 
-        if(chest.getTypeId() == BlockID.CHEST) {
+        if (chest.getTypeId() == BlockID.CHEST) {
 
             Chest c = (Chest) chest.getState();
-            if(c.getInventory().addItem(item.clone()).isEmpty())
-                return true;
+            if (c.getInventory().addItem(item.clone()).isEmpty()) return true;
         }
         return false;
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ChestStocker(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Adds item into above chest.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "item id:data",
-                    "x:y:z offset"
-            };
+            String[] lines = new String[] { "item id:data", "x:y:z offset" };
             return lines;
         }
     }

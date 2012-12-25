@@ -16,27 +16,26 @@ public class SetBlockAboveST extends SetBlockAbove implements SelfTriggeredIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self-Triggered Set Block Above";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "SET BLOCK ABOVE ST";
     }
 
-    public static class Factory extends SetBlockAbove.Factory implements
-    RestrictedIC {
+    public static class Factory extends SetBlockAbove.Factory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SetBlockAboveST(getServer(), sign, this);
         }

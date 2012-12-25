@@ -1,19 +1,14 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.bukkit;
@@ -58,7 +53,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 /**
  * Base plugin class for CraftBook for child CraftBook plugins.
- *
+ * 
  * @author sk89q
  */
 public abstract class BaseBukkitPlugin extends JavaPlugin {
@@ -84,19 +79,19 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     public boolean hasProtocolLib = false;
 
-    public static final Random random = new Random(); //Good random, allowing for more random numbers.
+    public static final Random random = new Random(); // Good random, allowing for more random numbers.
 
     /**
      * Logger for messages.
      */
     protected static final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
-    public BaseBukkitPlugin() {
+    public BaseBukkitPlugin () {
 
         commands = new CommandsManager<CommandSender>() {
 
             @Override
-            public boolean hasPermission(CommandSender player, String perm) {
+            public boolean hasPermission (CommandSender player, String perm) {
 
                 return player.hasPermission(perm);
             }
@@ -107,7 +102,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         commands.setInjector(new SimpleInjector(this));
     }
 
-    public WorldGuardPlugin getWorldGuard() {
+    public WorldGuardPlugin getWorldGuard () {
 
         if (!useWorldGuard) return null;
         if (worldguard == null) {
@@ -116,35 +111,32 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return worldguard;
     }
 
-    public boolean canUseInArea(Location loc, Player p) {
+    public boolean canUseInArea (Location loc, Player p) {
 
         if (!useWorldGuard) return true;
         try {
-            if (!CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions || getWorldGuard() == null)
-                return true;
+            if (!CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions || getWorldGuard() == null) return true;
             if (useFlag == null) {
                 useFlag = new StateFlag("use", true);
             }
             if (loc == null || p == null) return true;
             ApplicableRegionSet rset = getWorldGuard().getRegionManager(loc.getWorld()).getApplicableRegions(loc);
             return rset == null || rset.allows(useFlag, getWorldGuard().wrapPlayer(p));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return true;
         }
     }
 
-    public boolean canBuildInArea(Location loc, Player p) {
+    public boolean canBuildInArea (Location loc, Player p) {
 
-        return !useWorldGuard || loc == null || p == null || getWorldGuard() == null || !CraftBookPlugin.getInstance().getLocalConfiguration()
-                .checkWGRegions || getWorldGuard().canBuild(p, loc);
+        return !useWorldGuard || loc == null || p == null || getWorldGuard() == null
+                || !CraftBookPlugin.getInstance().getLocalConfiguration().checkWGRegions || getWorldGuard().canBuild(p, loc);
     }
 
     private ProtocolManager protocolManager = null;
 
-    public ProtocolManager getProtocolManager() {
-        if(!hasProtocolLib)
-            return null;
+    public ProtocolManager getProtocolManager () {
+        if (!hasProtocolLib) return null;
 
         return protocolManager;
     }
@@ -153,18 +145,16 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * Called on load.
      */
     @Override
-    public void onLoad() {
+    public void onLoad () {
         hasProtocolLib = getServer().getPluginManager().getPlugin("ProtocolLib") != null;
-        if(hasProtocolLib)
-            protocolManager = ProtocolLibrary.getProtocolManager();
+        if (hasProtocolLib) protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
     /**
-     * Called when the plugin is enabled. This is where configuration is loaded,
-     * and the plugin is setup.
+     * Called when the plugin is enabled. This is where configuration is loaded, and the plugin is setup.
      */
     @Override
-    public void onEnable() {
+    public void onEnable () {
 
         // Make the data folder for the plugin where configuration files
         // and other data files will be stored
@@ -172,14 +162,12 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         createDefaultConfiguration("en_US.txt", true);
         createDefaultConfiguration("config.yml", false);
 
-        //config = new BaseConfiguration(getConfig(), getDataFolder());
-        //saveConfig();
+        // config = new BaseConfiguration(getConfig(), getDataFolder());
+        // saveConfig();
         // init the util classes that need a plugin reference
         LocationUtil.init();
 
-        logger.info(getDescription().getName() + " "
-                + getDescription().getVersion() + " enabled.");
-
+        logger.info(getDescription().getName() + " " + getDescription().getVersion() + " enabled.");
 
         // Prepare permissions
         PermissionsResolverManager.initialize(this);
@@ -191,46 +179,44 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
     }
 
     /**
-     * Called when the plugin is disabled. Shutdown and clearing of any
-     * temporary data occurs here.
+     * Called when the plugin is disabled. Shutdown and clearing of any temporary data occurs here.
      */
     @Override
-    public void onDisable() {
+    public void onDisable () {
 
     }
 
     /**
      * Register the events that are used.
      */
-    protected abstract void registerEvents();
+    protected abstract void registerEvents ();
 
     /**
      * Register an event.
-     *
+     * 
      * @param listener
      */
-    protected void registerEvents(Listener listener) {
+    protected void registerEvents (Listener listener) {
 
         getServer().getPluginManager().registerEvents(listener, this);
     }
 
-    protected void registerCommand(Class<?> clazz) {
+    protected void registerCommand (Class<?> clazz) {
 
         commandManager.register(clazz);
     }
 
     /**
      * Create a default configuration file from the .jar.
-     *
+     * 
      * @param name
      */
-    protected void createDefaultConfiguration(String name, boolean force) {
+    protected void createDefaultConfiguration (String name, boolean force) {
 
         File actual = new File(getDataFolder(), name);
         if (!actual.exists() || force) {
 
-            InputStream input =
-                    this.getClass().getResourceAsStream("/defaults/" + name);
+            InputStream input = this.getClass().getResourceAsStream("/defaults/" + name);
             if (input != null) {
                 FileOutputStream output = null;
 
@@ -242,8 +228,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
                         output.write(buf, 0, length);
                     }
 
-                    logger.info(getDescription().getName()
-                            + ": Default configuration file written: " + name);
+                    logger.info(getDescription().getName() + ": Default configuration file written: " + name);
                 } catch (IOException e) {
                     Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                 } finally {
@@ -265,37 +250,34 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
 
     /**
      * Get a player.
-     *
-     * @param player Bukkit Player object
-     *
+     * 
+     * @param player
+     *            Bukkit Player object
      * @return a (new!) object wrapping Bukkit's player type with our own.
      */
-    public LocalPlayer wrap(Player player) {
+    public LocalPlayer wrap (Player player) {
 
         return new BukkitPlayer(this, player);
     }
 
     /**
      * Checks permissions.
-     *
+     * 
      * @param sender
      * @param perm
-     *
      * @return true if the sender has the requested permission, false otherwise
      */
-    public boolean hasPermission(CommandSender sender, String perm) {
+    public boolean hasPermission (CommandSender sender, String perm) {
 
-        if (!(sender instanceof Player)) return sender.isOp() && sender instanceof ConsoleCommandSender
-                || perms.hasPermission(sender.getName(), perm);
+        if (!(sender instanceof Player))
+            return sender.isOp() && sender instanceof ConsoleCommandSender || perms.hasPermission(sender.getName(), perm);
 
         return hasPermission(sender, ((Player) sender).getWorld(), perm);
     }
 
-    public boolean hasPermission(CommandSender sender, World world, String perm) {
+    public boolean hasPermission (CommandSender sender, World world, String perm) {
 
-        if (sender.isOp() && CraftBookPlugin.getInstance().getLocalConfiguration().opPerms || sender instanceof
-                ConsoleCommandSender)
-            return true;
+        if (sender.isOp() && CraftBookPlugin.getInstance().getLocalConfiguration().opPerms || sender instanceof ConsoleCommandSender) return true;
 
         // Invoke the permissions resolver
         if (sender instanceof Player) {
@@ -306,17 +288,17 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return false;
     }
 
-    public boolean isInGroup(String player, String group) {
+    public boolean isInGroup (String player, String group) {
 
         return perms.inGroup(player, group);
     }
 
-    public LanguageManager getLanguageManager() {
+    public LanguageManager getLanguageManager () {
 
         return languageManager;
     }
 
-    public BaseConfiguration getLocalConfiguration() {
+    public BaseConfiguration getLocalConfiguration () {
 
         return config;
     }
@@ -325,8 +307,7 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
      * Handle a command.
      */
     @Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-            String[] args) {
+    public boolean onCommand (CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
 
         try {
             commands.execute(cmd.getName(), args, sender, sender);
@@ -351,13 +332,13 @@ public abstract class BaseBukkitPlugin extends JavaPlugin {
         return true;
     }
 
-    public abstract void reloadConfiguration();
+    public abstract void reloadConfiguration ();
 
     private static Boolean useOldBlockFace = null;
 
-    public static boolean useOldBlockFace() {
+    public static boolean useOldBlockFace () {
 
-        if(useOldBlockFace == null) {
+        if (useOldBlockFace == null) {
             Location loc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
             useOldBlockFace = loc.getBlock().getRelative(BlockFace.WEST).getX() == 0;
         }

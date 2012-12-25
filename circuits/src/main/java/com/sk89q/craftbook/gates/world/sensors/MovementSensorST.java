@@ -14,7 +14,6 @@ public class MovementSensorST extends MovementSensor implements SelfTriggeredIC 
         super(server, sign, factory);
     }
 
-
     @Override
     public String getTitle () {
         return "Self-Triggered Movement Sensor";
@@ -38,13 +37,13 @@ public class MovementSensorST extends MovementSensor implements SelfTriggeredIC 
 
     public static class Factory extends MovementSensor.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new MovementSensor(getServer(), sign, this);
         }

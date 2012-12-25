@@ -5,7 +5,7 @@ public class ItemInfo {
     public int id;
     public int data;
 
-    public ItemInfo(int id, int data) {
+    public ItemInfo (int id, int data) {
 
         this.id = id;
         this.data = data;
@@ -27,42 +27,40 @@ public class ItemInfo {
         this.data = data;
     }
 
-    public static ItemInfo parseFromString(String string) {
+    public static ItemInfo parseFromString (String string) {
 
         int id = Integer.parseInt(string.split(":")[0]);
         int data = -1;
 
         try {
             data = Integer.parseInt(string.split(":")[1]);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             data = -1;
         }
 
-        return new ItemInfo(id,data);
+        return new ItemInfo(id, data);
     }
 
     @Override
-    public String toString() {
+    public String toString () {
 
         return id + ":" + data;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
 
         return (id * 1103515245 + 12345 ^ (data == -1 ? 0 : data) * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals (Object object) {
 
-        if(object instanceof ItemInfo) {
+        if (object instanceof ItemInfo) {
 
             ItemInfo it = (ItemInfo) object;
-            if(it.getId() == getId()) {
-                if(it.getData() == getData() || it.getData() == -1 || getData() == -1)
-                    return true;
+            if (it.getId() == getId()) {
+                if (it.getData() == getData() || it.getData() == -1 || getData() == -1) return true;
             }
         }
         return false;

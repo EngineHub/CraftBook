@@ -19,25 +19,25 @@ public class LowDelayer extends AbstractIC {
 
     private int taskId;
 
-    public LowDelayer(Server server, ChangedSign block, ICFactory factory) {
+    public LowDelayer (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Low Delayer";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "LOW_DELAYER";
     }
 
     @Override
-    public void trigger(final ChipState chip) {
+    public void trigger (final ChipState chip) {
 
         long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
@@ -47,7 +47,7 @@ public class LowDelayer extends AbstractIC {
             taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
                 @Override
-                public void run() {
+                public void run () {
 
                     if (!chip.getInput(0)) {
                         chip.setOutput(0, false);
@@ -59,19 +59,19 @@ public class LowDelayer extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new LowDelayer(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             try {
                 Integer.parseInt(sign.getLine(2));

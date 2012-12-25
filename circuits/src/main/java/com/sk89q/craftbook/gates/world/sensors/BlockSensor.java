@@ -21,38 +21,37 @@ public class BlockSensor extends AbstractIC {
     private int id;
     private byte data;
 
-    public BlockSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public BlockSensor (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         String[] ids = COLON_PATTERN.split(getSign().getLine(3), 2);
         id = Integer.parseInt(ids[0]);
         try {
             data = Byte.parseByte(ids[1]);
-        }
-        catch(Exception ignored){
+        } catch (Exception ignored) {
             data = -1;
         }
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Block Sensor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "BLOCK SENSOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, !hasBlock());
@@ -61,35 +60,33 @@ public class BlockSensor extends AbstractIC {
 
     /**
      * Returns true if the sign has water at the specified location.
-     *
+     * 
      * @return
      */
-    protected boolean hasBlock() {
+    protected boolean hasBlock () {
 
         center = ICUtil.parseBlockLocation(getSign());
         int blockID = center.getTypeId();
 
-        if (data != (byte) -1)
-            if (blockID == id)
-                return data == center.getData();
+        if (data != (byte) -1) if (blockID == id) return data == center.getData();
         return blockID == id;
     }
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new BlockSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             try {
                 String[] split = COLON_PATTERN.split(sign.getLine(3), 2);
@@ -101,18 +98,15 @@ public class BlockSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Checks for blocks at location.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "x:y:z",
-                    "id:data"
-            };
+            String[] lines = new String[] { "x:y:z", "id:data" };
             return lines;
         }
     }

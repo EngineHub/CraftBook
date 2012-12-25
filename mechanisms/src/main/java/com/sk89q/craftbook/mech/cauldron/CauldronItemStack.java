@@ -19,7 +19,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         final int prime = 31;
         int result = 1;
         result = prime * result + amount;
@@ -28,7 +28,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         return result;
     }
 
-    public static Collection<CauldronItemStack> convert(Collection<Item> stacks) {
+    public static Collection<CauldronItemStack> convert (Collection<Item> stacks) {
 
         Map<String, Integer> items = new HashMap<String, Integer>();
         for (Item item : stacks) {
@@ -53,65 +53,65 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     private short data;
     private int amount;
 
-    public CauldronItemStack(Material material, short data, int amount) {
+    public CauldronItemStack (Material material, short data, int amount) {
 
         this.material = material;
         this.data = data;
         this.amount = amount;
     }
 
-    public CauldronItemStack(Material material, int amount) {
+    public CauldronItemStack (Material material, int amount) {
 
         this.material = material;
         this.amount = amount;
     }
 
-    public CauldronItemStack(Material material, short data) {
+    public CauldronItemStack (Material material, short data) {
 
         this(material, data, 0);
     }
 
-    public CauldronItemStack(Material material) {
+    public CauldronItemStack (Material material) {
 
         this(material, 0);
     }
 
-    public Material getMaterial() {
+    public Material getMaterial () {
 
         return material;
     }
 
-    public short getData() {
+    public short getData () {
 
         return data;
     }
 
-    public int getAmount() {
+    public int getAmount () {
 
         return amount;
     }
 
-    public void setMaterial(Material material) {
+    public void setMaterial (Material material) {
 
         this.material = material;
     }
 
-    public void setData(short data) {
+    public void setData (short data) {
 
         this.data = data;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount (int amount) {
 
         this.amount = amount;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStack getItemStack () {
 
         return new ItemStack(material, amount, data);
     }
 
-    public CauldronItemStack add(CauldronItemStack stack) {
+    public CauldronItemStack add (CauldronItemStack stack) {
 
         if (stack.equals(this)) {
             amount += stack.getAmount();
@@ -119,14 +119,14 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         return this;
     }
 
-    public boolean isSameType(CauldronItemStack stack) {
+    public boolean isSameType (CauldronItemStack stack) {
 
         if (data < 0 || stack.getData() < 0) return stack.getMaterial() == getMaterial();
         return stack.getMaterial() == getMaterial() && stack.getData() == getData();
     }
 
     @Override
-    public int compareTo(CauldronItemStack stack) {
+    public int compareTo (CauldronItemStack stack) {
 
         if (getAmount() > stack.getAmount()) return 1;
         if (getAmount() == stack.getAmount()) return 0;
@@ -134,7 +134,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals (Object obj) {
 
         if (obj instanceof CauldronItemStack) {
             CauldronItemStack stack = (CauldronItemStack) obj;

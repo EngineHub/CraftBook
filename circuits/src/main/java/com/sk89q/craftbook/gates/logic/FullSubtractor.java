@@ -11,25 +11,25 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class FullSubtractor extends AbstractIC {
 
-    public FullSubtractor(Server server, ChangedSign block, ICFactory factory) {
+    public FullSubtractor (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Full Subtractor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "FULL SUBTRACTOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         boolean A = chip.getInput(0);
         boolean B = chip.getInput(1);
@@ -45,13 +45,13 @@ public class FullSubtractor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new FullSubtractor(getServer(), sign, this);
         }

@@ -36,13 +36,13 @@ public class SorterST extends Sorter implements SelfTriggeredIC {
 
     public static class Factory extends Sorter.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SorterST(getServer(), sign, this);
         }

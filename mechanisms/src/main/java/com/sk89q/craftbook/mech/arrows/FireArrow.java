@@ -19,7 +19,7 @@ public class FireArrow extends AbstractArrow {
     }
 
     @Override
-    public void addRecipe() {
+    public void addRecipe () {
         recipe = new ShapelessRecipe(new ItemStack(ItemID.ARROW, 4));
         recipe.addIngredient(Material.ARROW, 4);
         recipe.addIngredient(Material.FIREBALL, 1);

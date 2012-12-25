@@ -15,5 +15,5 @@ public interface PipeInputIC {
      * @param items
      * @return A list of items that it could not put into the IC.
      */
-    public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items);
+    public List<ItemStack> onPipeTransfer (BlockWorldVector pipe, List<ItemStack> items);
 }

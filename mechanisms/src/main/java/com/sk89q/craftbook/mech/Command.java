@@ -21,7 +21,7 @@ public class Command extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Command> {
 
-        public Factory(MechanismsPlugin plugin) {
+        public Factory (MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
@@ -29,19 +29,16 @@ public class Command extends AbstractMechanic {
         private final MechanismsPlugin plugin;
 
         /**
-         * Explore around the trigger to find a functional command sign; throw if
-         * things look funny.
-         *
-         * @param pt the trigger (should be a signpost)
-         *
-         * @return an Elevator if we could make a valid one, or null if this
-         *         looked nothing like an elevator.
-         *
-         * @throws InvalidMechanismException if the area looked like it was intended to be an
-         *                                   elevator, but it failed.
+         * Explore around the trigger to find a functional command sign; throw if things look funny.
+         * 
+         * @param pt
+         *            the trigger (should be a signpost)
+         * @return an Elevator if we could make a valid one, or null if this looked nothing like an elevator.
+         * @throws InvalidMechanismException
+         *             if the area looked like it was intended to be an elevator, but it failed.
          */
         @Override
-        public Command detect(BlockWorldVector pt) throws InvalidMechanismException {
+        public Command detect (BlockWorldVector pt) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toBlock(pt);
 
@@ -54,12 +51,12 @@ public class Command extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         *
+         * 
          * @throws ProcessedMechanismException
          */
         @Override
-        public Command detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
-                throws InvalidMechanismException, ProcessedMechanismException {
+        public Command detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+                ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Command]")) return null;
             if (!player.hasPermission("craftbook.mech.command")) throw new InsufficientPermissionsException();
@@ -72,11 +69,11 @@ public class Command extends AbstractMechanic {
     }
 
     /**
-     * @param trigger if you didn't already check if this is a wall sign with
-     *                appropriate text, you're going on Santa's naughty list.
+     * @param trigger
+     *            if you didn't already check if this is a wall sign with appropriate text, you're going on Santa's naughty list.
      * @throws InvalidMechanismException
      */
-    private Command(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private Command (Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
 
         super();
         this.trigger = trigger;
@@ -88,11 +85,10 @@ public class Command extends AbstractMechanic {
     private final Block trigger;
 
     @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick (PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().commandSettings.enable) return;
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-            return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; // wth? our manager is insane
 
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
@@ -112,17 +108,15 @@ public class Command extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
 
         if (!plugin.getLocalConfiguration().commandSettings.enable) return;
-        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-            return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; // wth? our manager is insane
 
         Sign s = (Sign) event.getBlock().getState();
 
         String command = s.getLine(2).replace("/", "") + s.getLine(3);
-        if(command.contains("@p"))
-            return; //We don't work with player commands.
+        if (command.contains("@p")) return; // We don't work with player commands.
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }

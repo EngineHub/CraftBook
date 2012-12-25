@@ -15,13 +15,13 @@ public class SetBlockAboveChestST extends SetBlockAboveChest implements SelfTrig
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self-Triggered Set Block Above (Chest)";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "SET BLOCK ABOVE ST";
     }
@@ -39,13 +39,13 @@ public class SetBlockAboveChestST extends SetBlockAboveChest implements SelfTrig
 
     public static class Factory extends SetBlockAboveChest.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SetBlockAboveChestST(getServer(), sign, this);
         }

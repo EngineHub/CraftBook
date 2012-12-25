@@ -12,25 +12,25 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class RandomBitST extends RandomBit implements SelfTriggeredIC {
 
-    public RandomBitST(Server server, ChangedSign block, ICFactory factory) {
+    public RandomBitST (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Random Bit";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "RANDOM BIT";
     }
 
     @Override
-    public void think(ChipState chip) {
+    public void think (ChipState chip) {
 
         if (chip.getInput(0)) {
             for (short i = 0; i < chip.getOutputCount(); i++) {
@@ -39,28 +39,28 @@ public class RandomBitST extends RandomBit implements SelfTriggeredIC {
         }
     }
 
-    public static class Factory extends RandomBit.Factory implements RestrictedIC { //Restricted as could lag
+    public static class Factory extends RandomBit.Factory implements RestrictedIC { // Restricted as could lag
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new RandomBitST(getServer(), sign, this);
         }
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return true;
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
     }
 }

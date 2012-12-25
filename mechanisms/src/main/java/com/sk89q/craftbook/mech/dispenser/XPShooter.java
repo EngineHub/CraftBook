@@ -8,17 +8,14 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class XPShooter extends ItemShooter {
 
-    public XPShooter(int[] recipe) {
+    public XPShooter (int[] recipe) {
 
         super(ItemID.BOTTLE_O_ENCHANTING, recipe);
     }
 
-    public XPShooter() {
+    public XPShooter () {
 
-        super(ItemID.BOTTLE_O_ENCHANTING, new int[] {
-                BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR,
-                ItemID.REDSTONE_DUST, ItemID.GLASS_BOTTLE, ItemID.REDSTONE_DUST,
-                BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR
-        });
+        super(ItemID.BOTTLE_O_ENCHANTING, new int[] { BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR, ItemID.REDSTONE_DUST, ItemID.GLASS_BOTTLE,
+                ItemID.REDSTONE_DUST, BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR });
     }
 }

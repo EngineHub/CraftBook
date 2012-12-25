@@ -15,39 +15,38 @@ public class PotionInducerST extends PotionInducer implements SelfTriggeredIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self-Triggered Potion Inducer";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "POTION INDUCER ST";
     }
 
     @Override
-    public void think(ChipState state) {
+    public void think (ChipState state) {
 
         state.setOutput(0, induce());
     }
 
-
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return true;
     }
 
     public static class Factory extends PotionInducer.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new PotionInducerST(getServer(), sign, this);
         }

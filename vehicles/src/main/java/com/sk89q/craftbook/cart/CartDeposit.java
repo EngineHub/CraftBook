@@ -19,7 +19,7 @@ public class CartDeposit extends CartMechanism {
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -74,13 +74,14 @@ public class CartDeposit extends CartMechanism {
                 cartinventory.clear();
             }
 
-            while (transferItems.remove(null)) {}
+            while (transferItems.remove(null)) {
+            }
 
             // is cart non-empty?
             if (transferItems.isEmpty()) return;
 
-            //System.out.println("collecting " + transferItems.size() + " item stacks");
-            //for (ItemStack stack: transferItems) System.out.println("collecting " + stack.getAmount() + " items of
+            // System.out.println("collecting " + transferItems.size() + " item stacks");
+            // for (ItemStack stack: transferItems) System.out.println("collecting " + stack.getAmount() + " items of
             // type " + stack.getType().toString());
 
             for (Chest container : containers) {
@@ -89,8 +90,7 @@ public class CartDeposit extends CartMechanism {
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()]))
-                        .values());
+                leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
                 transferItems.clear();
                 transferItems.addAll(leftovers);
                 leftovers.clear();
@@ -98,14 +98,14 @@ public class CartDeposit extends CartMechanism {
                 container.update();
             }
 
-            //System.out.println("collected items. " + transferItems.size() + " stacks left over.");
+            // System.out.println("collected items. " + transferItems.size() + " stacks left over.");
 
             leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
             transferItems.clear();
             transferItems.addAll(leftovers);
             leftovers.clear();
 
-            //System.out.println("collection done. " + transferItems.size() + " stacks wouldn't fit back.");
+            // System.out.println("collection done. " + transferItems.size() + " stacks wouldn't fit back.");
         } else {
             // depositing
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
@@ -117,12 +117,10 @@ public class CartDeposit extends CartMechanism {
                         if (item == null) {
                             continue;
                         }
-                        if (itemID < 0 || itemID == item.getTypeId())
-                            if (itemData < 0 || itemData == item.getDurability()) {
-                                transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(),
-                                        item.getDurability()));
-                                containerinventory.remove(item);
-                            }
+                        if (itemID < 0 || itemID == item.getTypeId()) if (itemData < 0 || itemData == item.getDurability()) {
+                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                            containerinventory.remove(item);
+                        }
                     }
                 } else {
                     transferitems.addAll(Arrays.asList(containerinventory.getContents()));
@@ -131,13 +129,14 @@ public class CartDeposit extends CartMechanism {
                 container.update();
             }
 
-            while (transferitems.remove(null)) {}
+            while (transferitems.remove(null)) {
+            }
 
             // are chests empty?
             if (transferitems.isEmpty()) return;
 
-            //System.out.println("depositing " + transferitems.size() + " stacks");
-            //for (ItemStack stack: transferitems) System.out.println("depositing " + stack.getAmount() + " items of
+            // System.out.println("depositing " + transferitems.size() + " stacks");
+            // for (ItemStack stack: transferitems) System.out.println("depositing " + stack.getAmount() + " items of
             // type " + stack.getType().toString());
 
             leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
@@ -145,7 +144,7 @@ public class CartDeposit extends CartMechanism {
             transferitems.addAll(leftovers);
             leftovers.clear();
 
-            //System.out.println("deposited, " + transferitems.size() + " items left over.");
+            // System.out.println("deposited, " + transferitems.size() + " items left over.");
 
             for (Chest container : containers) {
                 if (transferitems.isEmpty()) {
@@ -153,14 +152,13 @@ public class CartDeposit extends CartMechanism {
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()]))
-                        .values());
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);
                 leftovers.clear();
             }
 
-            //System.out.println("deposit done. " + transferitems.size() + " items wouldn't fit back.");
+            // System.out.println("deposit done. " + transferitems.size() + " items wouldn't fit back.");
         }
     }
 
@@ -171,6 +169,6 @@ public class CartDeposit extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"Collect","Deposit"};
+        return new String[] { "Collect", "Deposit" };
     }
 }

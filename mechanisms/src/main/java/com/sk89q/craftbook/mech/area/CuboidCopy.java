@@ -17,10 +17,8 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
 
 /**
- * Represents a cuboid copy that can be saved to disk and
- * loaded from disk. Supports multiple formats, like MCEDIT,
- * or flat file copying.
- *
+ * Represents a cuboid copy that can be saved to disk and loaded from disk. Supports multiple formats, like MCEDIT, or flat file copying.
+ * 
  * @author Silthus
  */
 public abstract class CuboidCopy {
@@ -32,7 +30,7 @@ public abstract class CuboidCopy {
     protected int height;
     protected int length;
 
-    public CuboidCopy(Vector origin, Vector size, World world) {
+    public CuboidCopy (Vector origin, Vector size, World world) {
 
         this.origin = origin;
         this.size = size;
@@ -42,21 +40,20 @@ public abstract class CuboidCopy {
         length = size.getBlockZ();
     }
 
-    protected CuboidCopy() {
+    protected CuboidCopy () {
         // used as constructor when file is loaded
     }
 
     /**
-     * Loads a cuboid copy from the given file. This acts as a factory
-     * selecting the right file type depending on the given File.
-     *
-     * @param file to load from
-     *
+     * Loads a cuboid copy from the given file. This acts as a factory selecting the right file type depending on the given File.
+     * 
+     * @param file
+     *            to load from
      * @return loaded CuboidCopy
-     *
-     * @throws CuboidCopyException is thrown when loading error occured
+     * @throws CuboidCopyException
+     *             is thrown when loading error occured
      */
-    public static CuboidCopy load(File file, World world) throws CuboidCopyException {
+    public static CuboidCopy load (File file, World world) throws CuboidCopyException {
         // we need to split off the file extenstion to check what class we need to use
         int index = file.getName().lastIndexOf('.');
         String extension = file.getName().substring(index);
@@ -84,7 +81,7 @@ public abstract class CuboidCopy {
     /**
      * Clear the area.
      */
-    public void clear() {
+    public void clear () {
 
         if (world == null || origin == null) return;
         List<Vector> queued = new ArrayList<Vector>();
@@ -124,49 +121,46 @@ public abstract class CuboidCopy {
 
     /**
      * Get the distance between a point and this cuboid.
-     *
-     * @param pos of the vector to compare
-     *
+     * 
+     * @param pos
+     *            of the vector to compare
      * @return distance between cuboid and point
      */
-    public double distance(Vector pos) {
+    public double distance (Vector pos) {
 
         Vector max = origin.add(new Vector(width, height, length));
-        int closestX = Math.max(origin.getBlockX(),
-                Math.min(max.getBlockX(), pos.getBlockX()));
-        int closestY = Math.max(origin.getBlockY(),
-                Math.min(max.getBlockY(), pos.getBlockY()));
-        int closestZ = Math.max(origin.getBlockZ(),
-                Math.min(max.getBlockZ(), pos.getBlockZ()));
+        int closestX = Math.max(origin.getBlockX(), Math.min(max.getBlockX(), pos.getBlockX()));
+        int closestY = Math.max(origin.getBlockY(), Math.min(max.getBlockY(), pos.getBlockY()));
+        int closestZ = Math.max(origin.getBlockZ(), Math.min(max.getBlockZ(), pos.getBlockZ()));
         return pos.distance(new Vector(closestX, closestY, closestZ));
     }
 
     /**
      * Saves the cuboid to file.
-     *
-     * @param file to save to
-     *
+     * 
+     * @param file
+     *            to save to
      * @throws IOException
      */
-    protected abstract void save(File file) throws IOException, DataException;
+    protected abstract void save (File file) throws IOException, DataException;
 
     /**
      * Loads the cuboid from file. This method is for all sub classes.
-     *
-     * @param file to load from
-     *
+     * 
+     * @param file
+     *            to load from
      * @throws IOException
      * @throws CuboidCopyException
      */
-    protected abstract void loadFromFile(File file) throws IOException, CuboidCopyException, DataException;
+    protected abstract void loadFromFile (File file) throws IOException, CuboidCopyException, DataException;
 
     /**
      * Pastes the cuboid copy into the world on its point of origin.
      */
-    public abstract void paste();
+    public abstract void paste ();
 
     /**
      * Copies the cuboid from the world caching its state and blocks.
      */
-    public abstract void copy();
+    public abstract void copy ();
 }

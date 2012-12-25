@@ -22,26 +22,26 @@ public class MCEditCuboidCopy extends CuboidCopy {
 
     private CuboidClipboard clipboard;
 
-    public MCEditCuboidCopy(Vector origin, Vector size, World world) {
+    public MCEditCuboidCopy (Vector origin, Vector size, World world) {
 
         super(origin, size, world);
         clipboard = new CuboidClipboard(size, origin);
     }
 
-    protected MCEditCuboidCopy(World world) {
+    protected MCEditCuboidCopy (World world) {
 
         // for loading from file
         this.world = world;
     }
 
     @Override
-    public void save(File file) throws IOException, DataException {
+    public void save (File file) throws IOException, DataException {
 
         SchematicFormat.MCEDIT.save(clipboard, file);
     }
 
     @Override
-    protected void loadFromFile(File file) throws IOException, CuboidCopyException, DataException {
+    protected void loadFromFile (File file) throws IOException, CuboidCopyException, DataException {
 
         clipboard = SchematicFormat.MCEDIT.load(file);
         origin = clipboard.getOrigin();
@@ -52,7 +52,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
     }
 
     @Override
-    public void paste() {
+    public void paste () {
 
         try {
             EditSession editSession = new EditSession(new BukkitWorld(world), -1);
@@ -65,11 +65,10 @@ public class MCEditCuboidCopy extends CuboidCopy {
     }
 
     @Override
-    public void clear() {
+    public void clear () {
 
         try {
-            CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1,
-                    size.getZ() - 1));
+            CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1, size.getZ() - 1));
             EditSession editSession = new EditSession(new BukkitWorld(world), -1);
             editSession.enableQueue();
             editSession.setBlocks(region, new BaseBlock(0));
@@ -80,7 +79,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
     }
 
     @Override
-    public void copy() {
+    public void copy () {
 
         EditSession editSession = new EditSession(new BukkitWorld(world), -1);
         editSession.enableQueue();

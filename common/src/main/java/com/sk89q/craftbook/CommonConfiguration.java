@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class CommonConfiguration extends BaseConfiguration {
 
-    public CommonConfiguration(FileConfiguration cfg, File dataFolder) {
+    public CommonConfiguration (FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
     }
@@ -26,7 +26,7 @@ public class CommonConfiguration extends BaseConfiguration {
     public boolean indirectRedstone;
 
     @Override
-    public void load() {
+    public void load () {
 
         languages = getStringList("languages", new ArrayList<String>(Arrays.asList("en_US")));
         language = getString("language", "en_US");

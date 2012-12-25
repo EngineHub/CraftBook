@@ -37,13 +37,13 @@ public class CultivatorST extends Cultivator implements SelfTriggeredIC {
 
     public static class Factory extends Cultivator.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new CultivatorST(getServer(), sign, this);
         }

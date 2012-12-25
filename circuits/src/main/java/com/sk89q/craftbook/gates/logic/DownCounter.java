@@ -11,19 +11,11 @@ import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICUtil;
 
 /**
- * Counter counts down each time clock input toggles from low to high, it starts
- * from a predefined value to 0. Output is high when counter reaches 0. If in
- * 'infinite' mode, it will automatically reset the next time clock is toggled.
- * Otherwise, it only resets when the 'reset' input toggles from low to high.
- * Configuration:
- * Line 3: ##:ONCE or ##:INF -- where ## is the counter reset value, and ONCE or INF
- * specifies if the counter should repeat or not.
- * Inputs:
- * 1 - Clock
- * 2 - Reset
- * 3 - (unused)
- * Output: HIGH when counter reaches 0, LOW otherwise
- *
+ * Counter counts down each time clock input toggles from low to high, it starts from a predefined value to 0. Output is high when counter reaches 0.
+ * If in 'infinite' mode, it will automatically reset the next time clock is toggled. Otherwise, it only resets when the 'reset' input toggles from
+ * low to high. Configuration: Line 3: ##:ONCE or ##:INF -- where ## is the counter reset value, and ONCE or INF specifies if the counter should
+ * repeat or not. Inputs: 1 - Clock 2 - Reset 3 - (unused) Output: HIGH when counter reaches 0, LOW otherwise
+ * 
  * @author davr
  */
 public class DownCounter extends AbstractIC {
@@ -31,13 +23,13 @@ public class DownCounter extends AbstractIC {
     private int resetVal;
     private boolean inf;
 
-    public DownCounter(Server server, ChangedSign sign, ICFactory factory) {
+    public DownCounter (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         // Get IC configuration data from line 3 of sign
         String line2 = getSign().getLine(2);
@@ -59,19 +51,19 @@ public class DownCounter extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Down Counter";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "DOWN COUNTER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
         // Get current counter value from line 4 of sign
         String line3 = getSign().getLine(3);
         int curVal;
@@ -112,30 +104,27 @@ public class DownCounter extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new DownCounter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Outputs high when counter reaches 0.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "start ticks:(Optional)INF",
-                    "current ticks"
-            };
+            String[] lines = new String[] { "start ticks:(Optional)INF", "current ticks" };
             return lines;
         }
     }

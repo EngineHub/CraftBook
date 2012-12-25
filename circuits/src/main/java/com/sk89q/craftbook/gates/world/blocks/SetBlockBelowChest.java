@@ -14,25 +14,25 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class SetBlockBelowChest extends SetBlock {
 
-    public SetBlockBelowChest(Server server, ChangedSign sign, ICFactory factory) {
+    public SetBlockBelowChest (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Set Block Below (Chest)";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "SET BLOCK BELOW";
     }
 
     @Override
-    protected void doSet(Block body, int block, byte meta, boolean force) {
+    protected void doSet (Block body, int block, byte meta, boolean force) {
 
         int x = body.getX();
         int y = body.getY();
@@ -50,30 +50,27 @@ public class SetBlockBelowChest extends SetBlock {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SetBlockBelowChest(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Sets below block from above chest.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "id:data",
-                    "forced or not"
-            };
+            String[] lines = new String[] { "id:data", "forced or not" };
             return lines;
         }
     }

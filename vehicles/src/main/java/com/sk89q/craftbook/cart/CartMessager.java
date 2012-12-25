@@ -13,13 +13,13 @@ public class CartMessager extends CartMechanism {
 
     VehiclesPlugin plugin;
 
-    public CartMessager(VehiclesPlugin plugin) {
+    public CartMessager (VehiclesPlugin plugin) {
 
         this.plugin = plugin;
     }
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null || minor) return;
 
@@ -42,12 +42,12 @@ public class CartMessager extends CartMechanism {
 
             boolean stack = false;
 
-            if (s.getLine(1) != null && !s.getLine(1).isEmpty() && !s.getLine(1).equalsIgnoreCase ("[print]")) {
+            if (s.getLine(1) != null && !s.getLine(1).isEmpty() && !s.getLine(1).equalsIgnoreCase("[print]")) {
                 messages.add(s.getLine(1));
                 stack = s.getLine(1).endsWith("+") || s.getLine(1).endsWith(" ");
             }
             if (s.getLine(2) != null && !s.getLine(2).isEmpty()) {
-                if(stack) {
+                if (stack) {
                     messages.set(messages.size() - 1, messages.get(messages.size() - 1) + s.getLine(2));
                     stack = s.getLine(2).endsWith("+") || s.getLine(2).endsWith(" ");
                 } else {
@@ -56,16 +56,15 @@ public class CartMessager extends CartMechanism {
                 }
             }
             if (s.getLine(3) != null && !s.getLine(3).isEmpty()) {
-                if(stack) {
+                if (stack) {
                     messages.set(messages.size() - 1, messages.get(messages.size() - 1) + s.getLine(3));
                 } else {
                     messages.add(s.getLine(3));
                 }
             }
 
-            for(String mes : messages) {
-                if(stack)
-                    mes = mes.replace("+", "");
+            for (String mes : messages) {
+                if (stack) mes = mes.replace("+", "");
                 p.sendMessage(mes);
             }
         }
@@ -78,6 +77,6 @@ public class CartMessager extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"Print"};
+        return new String[] { "Print" };
     }
 }

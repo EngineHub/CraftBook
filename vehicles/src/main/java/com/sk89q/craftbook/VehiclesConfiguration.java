@@ -1,23 +1,17 @@
 // $Id$r
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook;
-
 
 import java.io.File;
 
@@ -26,25 +20,23 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.sk89q.craftbook.util.ItemInfo;
 
 /**
- * FileConfiguration handler for CraftBook.
- * All fields are final because it is never appropriate to modify them during
- * operation, except for when the FileConfiguration is reloaded entirely, at which
- * point it is appropriate to construct an entirely new FileConfiguration instance
- * and update the plugin accordingly.
- *
+ * FileConfiguration handler for CraftBook. All fields are final because it is never appropriate to modify them during operation, except for when the
+ * FileConfiguration is reloaded entirely, at which point it is appropriate to construct an entirely new FileConfiguration instance and update the
+ * plugin accordingly.
+ * 
  * @author sk89q
  * @author hash
  */
 public class VehiclesConfiguration extends BaseConfiguration {
 
-    public VehiclesConfiguration(FileConfiguration cfg, File dataFolder) {
+    public VehiclesConfiguration (FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
         this.dataFolder = dataFolder;
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         matBoostMax = ItemInfo.parseFromString(getString("max-boost-block", "41:0"));
         matBoost25x = ItemInfo.parseFromString(getString("25x-boost-block", "14:0"));

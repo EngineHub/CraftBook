@@ -11,25 +11,25 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class HalfSubtractor extends AbstractIC {
 
-    public HalfSubtractor(Server server, ChangedSign block, ICFactory factory) {
+    public HalfSubtractor (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Half Subtractor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "HALF SUBTRACTOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         boolean B = chip.getInput(1);
         boolean C = chip.getInput(2);
@@ -44,13 +44,13 @@ public class HalfSubtractor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new HalfSubtractor(getServer(), sign, this);
         }

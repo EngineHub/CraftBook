@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.gates.world.weather;
 
-
 import org.bukkit.Server;
 import org.bukkit.World;
 
@@ -14,25 +13,25 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class WeatherControlAdvanced extends AbstractIC {
 
-    public WeatherControlAdvanced(Server server, ChangedSign sign, ICFactory factory) {
+    public WeatherControlAdvanced (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Weather Control";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "WEATHER CONTROL";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         int duration = 24000;
         int thunderDuration = duration;
@@ -55,7 +54,6 @@ public class WeatherControlAdvanced extends AbstractIC {
             thunderDuration = 1;
         }
 
-
         if (chip.isTriggered(0) && chip.getInput(0)) {
 
             World world = BukkitUtil.toSign(getSign()).getWorld();
@@ -70,33 +68,29 @@ public class WeatherControlAdvanced extends AbstractIC {
         }
     }
 
-
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new WeatherControlAdvanced(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "When centre on, set rain if left high and thunder if right high.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "rain duration",
-                    "thunder duration"
-            };
+            String[] lines = new String[] { "rain duration", "thunder duration" };
             return lines;
         }
     }

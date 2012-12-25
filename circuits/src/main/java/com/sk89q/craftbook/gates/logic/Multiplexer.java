@@ -14,25 +14,25 @@ import com.sk89q.craftbook.ic.ICFactory;
  */
 public class Multiplexer extends AbstractIC {
 
-    public Multiplexer(Server server, ChangedSign sign, ICFactory factory) {
+    public Multiplexer (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Multiplexer";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "MULTIPLEXER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         boolean swapper = chip.get(2);
         chip.set(3, swapper ? chip.get(0) : chip.get(1));
@@ -40,16 +40,15 @@ public class Multiplexer extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new Multiplexer(getServer(), sign, this);
         }
     }
 }
-

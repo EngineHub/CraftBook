@@ -30,7 +30,7 @@ public class Irrigator extends AbstractIC {
     int radius;
 
     @Override
-    public void load() {
+    public void load () {
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
         try {
@@ -41,18 +41,12 @@ public class Irrigator extends AbstractIC {
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
                 int z = Integer.parseInt(splitCoords[2]);
-                if(x > 16)
-                    x = 16;
-                if(x < -16)
-                    x = -16;
-                if(y > 16)
-                    y = 16;
-                if(y < -16)
-                    y = -16;
-                if(z > 16)
-                    z = 16;
-                if(z < -16)
-                    z = -16;
+                if (x > 16) x = 16;
+                if (x < -16) x = -16;
+                if (y > 16) y = 16;
+                if (y < -16) y = -16;
+                if (z > 16) z = 16;
+                if (z < -16) z = -16;
                 centre.add(x, y, z);
             }
         } catch (Exception ignored) {
@@ -73,11 +67,10 @@ public class Irrigator extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
-        if(chip.getInput(0))
-            chip.setOutput(0, irrigate());
+        if (chip.getInput(0)) chip.setOutput(0, irrigate());
     }
 
-    public boolean irrigate() {
+    public boolean irrigate () {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
@@ -86,8 +79,8 @@ public class Irrigator extends AbstractIC {
                     int ry = centre.getBlockY() - y;
                     int rz = centre.getBlockZ() - z;
                     Block b = centre.getWorld().getBlockAt(rx, ry, rz);
-                    if(b.getTypeId() == BlockID.SOIL && b.getData() < 0x1) {
-                        if(consumeWater()) {
+                    if (b.getTypeId() == BlockID.SOIL && b.getData() < 0x1) {
+                        if (consumeWater()) {
                             b.setData((byte) 0x8, false);
                             return true;
                         }
@@ -98,17 +91,15 @@ public class Irrigator extends AbstractIC {
         return false;
     }
 
-    public boolean consumeWater() {
+    public boolean consumeWater () {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
-            if (over.isEmpty())
-                return true;
+            if (over.isEmpty()) return true;
             over = c.getInventory().removeItem(new ItemStack(BlockID.STATIONARY_WATER, 1));
-            if (over.isEmpty())
-                return true;
+            if (over.isEmpty()) return true;
             over = c.getInventory().removeItem(new ItemStack(ItemID.WATER_BUCKET, 1));
             if (over.isEmpty()) {
                 c.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
@@ -121,30 +112,27 @@ public class Irrigator extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new Irrigator(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Irrigates nearby farmland using water in above chest.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "radius=x:y:z offset",
-                    null
-            };
+            String[] lines = new String[] { "radius=x:y:z offset", null };
             return lines;
         }
     }

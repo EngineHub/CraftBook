@@ -26,11 +26,10 @@ public class ItemFan extends AbstractIC {
     double force;
 
     @Override
-    public void load() {
+    public void load () {
         try {
             force = Double.parseDouble(getSign().getLine(2));
-        }
-        catch(Exception ignored){
+        } catch (Exception ignored) {
             force = 1;
         }
     }
@@ -47,11 +46,10 @@ public class ItemFan extends AbstractIC {
 
     @Override
     public void trigger (ChipState chip) {
-        if(chip.getInput(0))
-            chip.setOutput(0, push());
+        if (chip.getInput(0)) chip.setOutput(0, push());
     }
 
-    public boolean push() {
+    public boolean push () {
 
         boolean returnValue = false;
 
@@ -83,30 +81,27 @@ public class ItemFan extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ItemFan(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Gently pushes items upwards.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "force (default 1)",
-                    null
-            };
+            String[] lines = new String[] { "force (default 1)", null };
             return lines;
         }
     }

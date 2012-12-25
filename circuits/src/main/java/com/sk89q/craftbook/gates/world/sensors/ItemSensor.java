@@ -38,13 +38,13 @@ public class ItemSensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public ItemSensor(Server server, ChangedSign block, ICFactory factory) {
+    public ItemSensor (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         Block block = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         String[] split = COLON_PATTERN.split(getSign().getLine(3).trim());
@@ -56,8 +56,7 @@ public class ItemSensor extends AbstractIC {
             BlockType material = BlockType.lookup(split[0]);
             if (material != null) {
                 item = material.getID();
-            }
-            else {
+            } else {
                 ItemType it = ItemType.lookup(split[0]);
                 if (it != null) {
                     item = it.getID();
@@ -71,9 +70,7 @@ public class ItemSensor extends AbstractIC {
 
         if (split.length > 1) {
             data = Short.parseShort(split[1]);
-        }
-        else
-            data = -1;
+        } else data = -1;
 
         // if the line contains a = the offset is given
         // the given string should look something like that:
@@ -88,26 +85,26 @@ public class ItemSensor extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Item Detection";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "ITEM DETECTION";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
     }
 
-    protected boolean isDetected() {
+    protected boolean isDetected () {
 
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
@@ -116,8 +113,7 @@ public class ItemSensor extends AbstractIC {
                         ItemStack itemStack = ((Item) entity).getItemStack();
                         if (itemStack.getTypeId() == item) {
                             if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
-                                return true;
+                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
                         }
                     }
             }
@@ -126,36 +122,33 @@ public class ItemSensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ItemSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Detects items within a given radius";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "radius=x:y:z offset",
-                    "id:data"
-            };
+            String[] lines = new String[] { "radius=x:y:z offset", "id:data" };
             return lines;
         }
     }

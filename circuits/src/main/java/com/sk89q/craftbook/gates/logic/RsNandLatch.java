@@ -14,25 +14,25 @@ import com.sk89q.craftbook.ic.ICFactory;
  */
 public class RsNandLatch extends AbstractIC {
 
-    public RsNandLatch(Server server, ChangedSign sign, ICFactory factory) {
+    public RsNandLatch (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "RS NAND latch";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "RS NAND LATCH";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         boolean set = !chip.get(0);
         boolean reset = !chip.get(1);
@@ -47,16 +47,15 @@ public class RsNandLatch extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new RsNandLatch(getServer(), sign, this);
         }
     }
 }
-

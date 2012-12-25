@@ -1,20 +1,14 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.util;
@@ -29,11 +23,10 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Used to compare ComplexBlocks based on distance to a point.
- *
+ * 
  * @author sk89q
  */
-public class DistanceComparator<T extends BlockState>
-implements Comparator<BlockState> {
+public class DistanceComparator<T extends BlockState> implements Comparator<BlockState> {
 
     /**
      * Origin to compare from.
@@ -42,24 +35,23 @@ implements Comparator<BlockState> {
 
     /**
      * Construct the object.
-     *
+     * 
      * @param origin
      */
-    public DistanceComparator(Vector origin) {
+    public DistanceComparator (Vector origin) {
 
         this.origin = origin;
     }
 
     /**
      * Compares two objects.
-     *
+     * 
      * @param o1
      * @param o2
-     *
      * @return
      */
     @Override
-    public int compare(BlockState o1, BlockState o2) {
+    public int compare (BlockState o1, BlockState o2) {
 
         Block b1 = o1.getBlock();
         Block b2 = o2.getBlock();
@@ -67,10 +59,8 @@ implements Comparator<BlockState> {
         double dist1 = b1.getLocation().distanceSquared(BukkitUtil.toLocation(b1.getWorld(), origin));
         double dist2 = b2.getLocation().distanceSquared(BukkitUtil.toLocation(b2.getWorld(), origin));
 
-        if (dist1 < dist2)
-            return -1;
+        if (dist1 < dist2) return -1;
         else if (dist1 > dist2) return 1;
-        else
-            return 0;
+        else return 0;
     }
 }

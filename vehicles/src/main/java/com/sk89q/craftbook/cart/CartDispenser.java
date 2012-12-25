@@ -14,32 +14,29 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * <p>
- * Collects carts when carts pass over an unpowered chest marked as a dispenser;
- * dispenses carts when power flips on if no cart is already above the
- * dispenser. The dispenser does not impart velocity to dispensed carts, so it
- * is typical to simply place the track above the dispenser so as to be at an
- * angle.
+ * Collects carts when carts pass over an unpowered chest marked as a dispenser; dispenses carts when power flips on if no cart is already above the
+ * dispenser. The dispenser does not impart velocity to dispensed carts, so it is typical to simply place the track above the dispenser so as to be at
+ * an angle.
  * </p>
  * <p>
- * Carts of all types (including powered and storage carts) will be collected by
- * this mechanism, but only regular minecarts are dispensed. This may be changed
- * in a future version.
+ * Carts of all types (including powered and storage carts) will be collected by this mechanism, but only regular minecarts are dispensed. This may be
+ * changed in a future version.
  * </p>
  * <p>
- * Dispenser signs which contain "inf" on the third line will collect carts
- * without storing them and create carts without requiring them from inventory.
+ * Dispenser signs which contain "inf" on the third line will collect carts without storing them and create carts without requiring them from
+ * inventory.
  * </p>
  * <p>
- * Note that this is not an exact reimplementation of the mechanics from hmod;
- * this is something new and more consistent with other modern cart mechanisms.
+ * Note that this is not an exact reimplementation of the mechanics from hmod; this is something new and more consistent with other modern cart
+ * mechanisms.
  * </p>
- *
+ * 
  * @author hash
  */
 public class CartDispenser extends CartMechanism {
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // care?
         if (minor) return;
 
@@ -60,12 +57,12 @@ public class CartDispenser extends CartMechanism {
                     case ON:
                         dispense(blocks, inv, type);
                         return;
-                    case OFF:       // power going off doesn't eat a cart unless the cart moves.
+                    case OFF: // power going off doesn't eat a cart unless the cart moves.
                     case NA:
                 }
             } else {
                 switch (pow) {
-                    case ON:            // there's already a cart moving on the dispenser so don't spam.
+                    case ON: // there's already a cart moving on the dispenser so don't spam.
                         return;
                     case OFF:
                     case NA:
@@ -77,10 +74,12 @@ public class CartDispenser extends CartMechanism {
     }
 
     /**
-     * @param cart the cart to be destroyed/collected
-     * @param inv  the inventory to place a cart item in, or null if we don't care.
+     * @param cart
+     *            the cart to be destroyed/collected
+     * @param inv
+     *            the inventory to place a cart item in, or null if we don't care.
      */
-    private void collect(Minecart cart, Inventory inv) {
+    private void collect (Minecart cart, Inventory inv) {
 
         if (cart == null || cart.isDead()) return;
         cart.eject();
@@ -98,10 +97,12 @@ public class CartDispenser extends CartMechanism {
     }
 
     /**
-     * @param blocks nuff said
-     * @param inv    the inventory to remove a cart item from, or null if we don't care.
+     * @param blocks
+     *            nuff said
+     * @param inv
+     *            the inventory to remove a cart item from, or null if we don't care.
      */
-    private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
+    private void dispense (CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
         if (inv != null) {
             if (type.equals(CartType.Minecart)) {
@@ -119,32 +120,29 @@ public class CartDispenser extends CartMechanism {
     }
 
     public enum CartType {
-        Minecart("Minecart", Minecart.class),
-        StorageMinecart("Storage", StorageMinecart.class),
-        PoweredMinecart("Powered", PoweredMinecart.class);
+        Minecart("Minecart", Minecart.class), StorageMinecart("Storage", StorageMinecart.class), PoweredMinecart("Powered", PoweredMinecart.class);
 
         private final Class<? extends Minecart> cl;
         private final String name;
 
-        private CartType(String name, Class<? extends Minecart> cl) {
+        private CartType (String name, Class<? extends Minecart> cl) {
 
             this.name = name;
             this.cl = cl;
         }
 
-        public static CartType fromString(String s) {
+        public static CartType fromString (String s) {
 
             for (CartType ct : CartType.values()) {
                 if (ct == null) {
                     continue;
                 }
-                if (ct.name.equalsIgnoreCase(s))
-                    return ct;
+                if (ct.name.equalsIgnoreCase(s)) return ct;
             }
-            return Minecart; //Default to minecarts
+            return Minecart; // Default to minecarts
         }
 
-        public Class<? extends Minecart> toClass() {
+        public Class<? extends Minecart> toClass () {
 
             return cl;
         }
@@ -157,6 +155,6 @@ public class CartDispenser extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"Dispenser"};
+        return new String[] { "Dispenser" };
     }
 }

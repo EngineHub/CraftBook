@@ -14,22 +14,19 @@ import com.sk89q.worldedit.blocks.ItemID;
 
 public class Cannon extends Recipe {
 
-    public Cannon(int[] recipe) {
+    public Cannon (int[] recipe) {
 
         super(recipe);
     }
 
-    public Cannon() {
+    public Cannon () {
 
-        super(new int[] {
-                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE,
-                ItemID.SULPHUR, BlockID.TNT, ItemID.SULPHUR,
-                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE
-        });
+        super(new int[] { ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE, ItemID.SULPHUR, BlockID.TNT, ItemID.SULPHUR, ItemID.FIRE_CHARGE,
+                ItemID.SULPHUR, ItemID.FIRE_CHARGE });
     }
 
     @Override
-    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    public boolean doAction (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) dis.getData();
         BlockFace face = disp.getFacing();

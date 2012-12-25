@@ -1,8 +1,6 @@
 // $Id$
 /*
- * Tetsuuuu plugin for SK's Minecraft Server
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * All rights reserved.
+ * Tetsuuuu plugin for SK's Minecraft Server Copyright (C) 2010 sk89q <http://www.sk89q.com> All rights reserved.
  */
 
 package com.sk89q.craftbook.jinglenote;
@@ -19,14 +17,14 @@ public class JingleNotePlayer implements Runnable {
     protected final Player player;
     protected JingleSequencer sequencer;
 
-    public JingleNotePlayer(Player player, JingleSequencer seq) {
+    public JingleNotePlayer (Player player, JingleSequencer seq) {
 
         this.player = player;
         sequencer = seq;
     }
 
     @Override
-    public void run() {
+    public void run () {
 
         try {
             try {
@@ -44,39 +42,37 @@ public class JingleNotePlayer implements Runnable {
         }
     }
 
-    public boolean isActive() {
+    public boolean isActive () {
 
         return player.isOnline();
     }
 
-    public Player getPlayer() {
+    public Player getPlayer () {
 
         return player;
     }
 
-    public void stop() {
+    public void stop () {
 
         if (sequencer != null) {
             sequencer.stop();
         }
     }
 
-    public void play(Sound instrument, int pitch) {
+    public void play (Sound instrument, int pitch) {
 
         if (!player.isOnline() || instrument == null) {
-            if(!player.isOnline())
-                stop();
+            if (!player.isOnline()) stop();
             return;
         }
         float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
         player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? 7F : 30F, np);
     }
 
-    public void play(Note note) {
+    public void play (Note note) {
 
         if (!player.isOnline() || note == null || note.getInstrument() == null) {
-            if(!player.isOnline())
-                stop();
+            if (!player.isOnline()) stop();
             return;
         }
         float np = (float) Math.pow(2.0D, (note.getNote() - 12) / 12.0D);

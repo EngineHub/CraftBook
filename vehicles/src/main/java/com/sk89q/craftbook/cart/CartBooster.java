@@ -7,7 +7,7 @@ import com.sk89q.craftbook.RedstoneUtil.Power;
 
 public class CartBooster extends CartMechanism {
 
-    public CartBooster(double multiplier) {
+    public CartBooster (double multiplier) {
 
         super();
         this.multiplier = multiplier;
@@ -16,7 +16,7 @@ public class CartBooster extends CartMechanism {
     private final double multiplier;
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -26,15 +26,13 @@ public class CartBooster extends CartMechanism {
         // enabled?
         if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
 
-
         // speed up or down
         Vector newVelocity;
         if (multiplier > 1) {
             newVelocity = cart.getVelocity().normalize().multiply(multiplier);
         } else if (multiplier < 1) {
             newVelocity = cart.getVelocity().multiply(multiplier);
-        } else
-            return;
+        } else return;
         // go
         cart.setVelocity(newVelocity);
     }

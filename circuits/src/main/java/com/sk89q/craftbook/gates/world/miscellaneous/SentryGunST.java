@@ -14,50 +14,50 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
  */
 public class SentryGunST extends SentryGun implements SelfTriggeredIC {
 
-    public SentryGunST(Server server, ChangedSign block, ICFactory factory) {
+    public SentryGunST (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self Triggered Sentry Gun";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "SENTRY GUN ST";
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return false;
     }
 
     @Override
-    public void think(ChipState state) {
+    public void think (ChipState state) {
 
         shoot();
     }
 
     public static class Factory extends SentryGun.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SentryGunST(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             try {
                 String line = sign.getLine(3);

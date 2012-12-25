@@ -1,20 +1,14 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook;
@@ -34,7 +28,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Holds the blocks that are watched by mechanics.
- *
+ * 
  * @author hash
  */
 class WatchBlockManager {
@@ -47,17 +41,17 @@ class WatchBlockManager {
     /**
      * Construct the object.
      */
-    public WatchBlockManager() {
+    public WatchBlockManager () {
 
         watchBlocks = new HashMap<BlockWorldVector, Set<PersistentMechanic>>();
     }
 
     /**
      * Register a mechanic.
-     *
+     * 
      * @param m
      */
-    public void register(PersistentMechanic m) {
+    public void register (PersistentMechanic m) {
 
         for (BlockWorldVector p : m.getWatchedPositions()) {
             Set<PersistentMechanic> set = watchBlocks.get(p);
@@ -71,12 +65,11 @@ class WatchBlockManager {
 
     /**
      * Update a mechanic.
-     *
+     * 
      * @param m
      * @param oldWatchBlocks
      */
-    public void update(PersistentMechanic m,
-            List<BlockWorldVector> oldWatchBlocks) {
+    public void update (PersistentMechanic m, List<BlockWorldVector> oldWatchBlocks) {
 
         // This could be more efficient.
         for (BlockWorldVector p : oldWatchBlocks) {
@@ -88,10 +81,10 @@ class WatchBlockManager {
 
     /**
      * De-registers a mechanic.
-     *
+     * 
      * @param m
      */
-    public void deregister(PersistentMechanic m) {
+    public void deregister (PersistentMechanic m) {
 
         for (BlockWorldVector p : m.getWatchedPositions()) {
             Set<PersistentMechanic> watchBlock = watchBlocks.get(p);
@@ -103,13 +96,12 @@ class WatchBlockManager {
 
     /**
      * Notify mechanics about a changed block that they are watching.
-     *
+     * 
      * @param event
      */
-    public void notify(BlockEvent event) {
+    public void notify (BlockEvent event) {
 
-        Set<PersistentMechanic> pms =
-                watchBlocks.get(BukkitUtil.toWorldVector(event.getBlock()));
+        Set<PersistentMechanic> pms = watchBlocks.get(BukkitUtil.toWorldVector(event.getBlock()));
 
         if (pms == null) return;
 
@@ -120,18 +112,16 @@ class WatchBlockManager {
 
     /**
      * Get the set of mechanics in a specified chunk.
-     *
+     * 
      * @param chunk
-     *
      * @return the set of mechanics in a specified chunk.
      */
-    public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
+    public Set<PersistentMechanic> getByChunk (BlockWorldVector2D chunk) {
 
         Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
         int chunkX = chunk.getBlockX();
         int chunkZ = chunk.getBlockZ();
-        for (Entry<BlockWorldVector, Set<PersistentMechanic>> entry : watchBlocks
-                .entrySet()) {
+        for (Entry<BlockWorldVector, Set<PersistentMechanic>> entry : watchBlocks.entrySet()) {
             BlockWorldVector pos = entry.getKey();
 
             // Different world! Abort

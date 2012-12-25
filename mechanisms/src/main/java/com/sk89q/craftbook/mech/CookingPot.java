@@ -43,7 +43,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     /**
      * Construct a cooking pot for a location.
      */
-    public CookingPot(BlockWorldVector pt, MechanismsPlugin plugin) {
+    public CookingPot (BlockWorldVector pt, MechanismsPlugin plugin) {
 
         super();
         this.pt = pt;
@@ -51,7 +51,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return true;
     }
@@ -60,13 +60,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         protected final MechanismsPlugin plugin;
 
-        public Factory(MechanismsPlugin plugin) {
+        public Factory (MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public CookingPot detect(BlockWorldVector pt) {
+        public CookingPot detect (BlockWorldVector pt) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN) {
@@ -85,12 +85,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         /**
          * Detect the mechanic at a placed sign.
-         *
+         * 
          * @throws ProcessedMechanismException
          */
         @Override
-        public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        public CookingPot detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+                ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
@@ -99,14 +99,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign.setLine(1, "[Cook]");
                 if (plugin.getLocalConfiguration().cookingPotSettings.requiresfuel) {
                     sign.setLine(3, "0");
-                }
-                else {
+                } else {
                     sign.setLine(3, "1");
                 }
                 sign.update(false);
                 player.print("mech.cook.create");
-            } else
-                return null;
+            } else return null;
 
             throw new ProcessedMechanismException();
         }
@@ -114,7 +112,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void think() {
+    public void think () {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         if (block.getState() instanceof Sign) {
@@ -127,8 +125,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign.update();
             }
             oldTick = lastTick;
-            if(lastTick < 0)
-                lastTick = 0;
+            if (lastTick < 0) lastTick = 0;
             Block b = SignUtil.getBackBlock(sign.getBlock());
             int x = b.getX();
             int y = b.getY() + 2;
@@ -136,7 +133,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             Block cb = sign.getWorld().getBlockAt(x, y, z);
             if (cb.getTypeId() == BlockID.CHEST) {
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
-                        || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory()) && plugin.getLocalConfiguration().cookingPotSettings.cooksOres) {
+                        || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
+                        && plugin.getLocalConfiguration().cookingPotSettings.cooksOres) {
                     decreaseMultiplier(sign, 1);
                     lastTick += getMultiplier(sign);
                 }
@@ -150,12 +148,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                             }
                             ItemStack cooked = ItemUtil.getCookedResult(i);
                             if (cooked == null) {
-                                if(plugin.getLocalConfiguration().cookingPotSettings.cooksOres)
-                                    cooked = ItemUtil.getSmeletedResult(i);
-                                if(cooked == null)
-                                    continue;
+                                if (plugin.getLocalConfiguration().cookingPotSettings.cooksOres) cooked = ItemUtil.getSmeletedResult(i);
+                                if (cooked == null) continue;
                             }
-                            if(chest.getInventory().addItem(cooked).isEmpty())
+                            if (chest.getInventory().addItem(cooked).isEmpty())
                                 chest.getInventory().removeItem(new ItemStack(i.getType(), 1, i.getDurability()));
                             chest.update();
                             break;
@@ -172,7 +168,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick (PlayerInteractEvent event) {
 
         if (event.getClickedBlock().getState() instanceof Sign) {
             Sign sign = (Sign) event.getClickedBlock().getState();
@@ -193,7 +189,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                         itemInHand.setAmount(itemInHand.getAmount() - 1);
                     }
                     player.sendMessage("You give the pot fuel!");
-                } else if (plugin.getLocalConfiguration().cookingPotSettings.openClick){
+                } else if (plugin.getLocalConfiguration().cookingPotSettings.openClick) {
                     player.openInventory(((Chest) cb.getState()).getBlockInventory());
                 }
             }
@@ -201,7 +197,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onLeftClick(PlayerInteractEvent event) {
+    public void onLeftClick (PlayerInteractEvent event) {
 
         event.getPlayer().setFireTicks(20);
         LocalPlayer player = plugin.wrap(event.getPlayer());
@@ -209,7 +205,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
 
         Block block = event.getBlock();
         if (block.getState() instanceof Sign) {
@@ -224,7 +220,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         }
     }
 
-    public void setMultiplier(Sign sign, int amount) {
+    public void setMultiplier (Sign sign, int amount) {
 
         int min = plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
         if (amount < min) {
@@ -234,17 +230,17 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         sign.update();
     }
 
-    public void increaseMultiplier(Sign sign, int amount) {
+    public void increaseMultiplier (Sign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
-    public void decreaseMultiplier(Sign sign, int amount) {
+    public void decreaseMultiplier (Sign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) - amount);
     }
 
-    public int getMultiplier(Sign sign) {
+    public int getMultiplier (Sign sign) {
 
         int multiplier;
         try {
@@ -256,13 +252,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             }
             setMultiplier(sign, multiplier);
         }
-        if(multiplier < 0)
-            return plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
+        if (multiplier < 0) return plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
         return multiplier;
     }
 
     @Override
-    public List<BlockWorldVector> getWatchedPositions() {
+    public List<BlockWorldVector> getWatchedPositions () {
 
         List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
         bwv.add(pt);
@@ -270,31 +265,29 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     private enum Ingredients {
-        COAL(ItemID.COAL, 10), LAVA(ItemID.LAVA_BUCKET, 500), BLAZE(ItemID.BLAZE_ROD, 200),
-        SNOWBALL(ItemID.SNOWBALL, -20), SNOW(BlockID.SNOW_BLOCK, -100);
+        COAL(ItemID.COAL, 10), LAVA(ItemID.LAVA_BUCKET, 500), BLAZE(ItemID.BLAZE_ROD, 200), SNOWBALL(ItemID.SNOWBALL, -20), SNOW(BlockID.SNOW_BLOCK,
+                -100);
 
         private int id;
         private int mult;
 
-        private Ingredients(int id, int mult) {
+        private Ingredients (int id, int mult) {
 
             this.id = id;
             this.mult = mult;
         }
 
-        public static boolean isIngredient(int id) {
+        public static boolean isIngredient (int id) {
 
             for (Ingredients in : values())
-                if (in.id == id)
-                    return true;
+                if (in.id == id) return true;
             return false;
         }
 
-        public static int getTime(int id) {
+        public static int getTime (int id) {
 
             for (Ingredients in : values())
-                if (in.id == id)
-                    return in.mult;
+                if (in.id == id) return in.mult;
             return 0;
         }
     }

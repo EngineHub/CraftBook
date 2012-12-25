@@ -12,7 +12,7 @@ import com.sk89q.craftbook.util.SignUtil;
 public class CartReverser extends CartMechanism {
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -64,6 +64,6 @@ public class CartReverser extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"reverse"};
+        return new String[] { "reverse" };
     }
 }

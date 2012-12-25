@@ -25,7 +25,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Teleporter Mechanism. Based off Elevator
- *
+ * 
  * @author sk89q
  * @author hash
  * @author Me4502
@@ -34,8 +34,7 @@ public class Teleporter extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Teleporter> {
 
-
-        public Factory(MechanismsPlugin plugin) {
+        public Factory (MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
@@ -43,19 +42,16 @@ public class Teleporter extends AbstractMechanic {
         private final MechanismsPlugin plugin;
 
         /**
-         * Explore around the trigger to find a functional elevator; throw if
-         * things look funny.
-         *
-         * @param pt the trigger (should be a signpost)
-         *
-         * @return an Elevator if we could make a valid one, or null if this
-         *         looked nothing like an elevator.
-         *
-         * @throws InvalidMechanismException if the area looked like it was intended to be an
-         *                                   elevator, but it failed.
+         * Explore around the trigger to find a functional elevator; throw if things look funny.
+         * 
+         * @param pt
+         *            the trigger (should be a signpost)
+         * @return an Elevator if we could make a valid one, or null if this looked nothing like an elevator.
+         * @throws InvalidMechanismException
+         *             if the area looked like it was intended to be an elevator, but it failed.
          */
         @Override
-        public Teleporter detect(BlockWorldVector pt) throws InvalidMechanismException {
+        public Teleporter detect (BlockWorldVector pt) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
@@ -64,18 +60,15 @@ public class Teleporter extends AbstractMechanic {
                 Sign s = (Sign) block.getState();
                 if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                 String[] pos = COLON_PATTERN.split(s.getLine(2));
-                if (pos.length > 2)
-                    return new Teleporter(block, plugin);
-            }
-            else if(block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
+                if (pos.length > 2) return new Teleporter(block, plugin);
+            } else if (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
                 Button b = (Button) block.getState().getData();
                 Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                 if (sign.getState() instanceof Sign) {
                     Sign s = (Sign) sign.getState();
                     if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                     String[] pos = COLON_PATTERN.split(s.getLine(2));
-                    if (pos.length > 2)
-                        return new Teleporter(block, plugin);
+                    if (pos.length > 2) return new Teleporter(block, plugin);
                 }
             }
 
@@ -84,12 +77,12 @@ public class Teleporter extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         *
+         * 
          * @throws ProcessedMechanismException
          */
         @Override
-        public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        public Teleporter detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+                ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 
@@ -99,21 +92,20 @@ public class Teleporter extends AbstractMechanic {
             sign.setLine(1, "[Teleporter]");
 
             String[] pos = COLON_PATTERN.split(sign.getLine(2));
-            if (!(pos.length > 2))
-                return null;
+            if (!(pos.length > 2)) return null;
 
             throw new ProcessedMechanismException();
         }
     }
 
     /**
-     * @param trigger if you didn't already check if this is a wall sign with
-     *                appropriate text, you're going on Santa's naughty list.
-     * @param plugin  the direction (UP or DOWN) in which we're looking for a destination
-     *
+     * @param trigger
+     *            if you didn't already check if this is a wall sign with appropriate text, you're going on Santa's naughty list.
+     * @param plugin
+     *            the direction (UP or DOWN) in which we're looking for a destination
      * @throws InvalidMechanismException
      */
-    private Teleporter(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private Teleporter (Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
 
         super();
         this.trigger = trigger;
@@ -126,12 +118,11 @@ public class Teleporter extends AbstractMechanic {
     private final Block trigger;
 
     @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick (PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().teleporterSettings.enable) return;
 
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-            return; //wth? our manager is insane. ikr.
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; // wth? our manager is insane. ikr.
 
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
@@ -145,7 +136,7 @@ public class Teleporter extends AbstractMechanic {
         event.setCancelled(true);
     }
 
-    private void makeItSo(LocalPlayer player) {
+    private void makeItSo (LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         // check if this looks at all like something we're interested in first
@@ -165,14 +156,13 @@ public class Teleporter extends AbstractMechanic {
                 } catch (Exception e) {
                     return;
                 }
-            } else
-                return;
+            } else return;
         }
 
         if (plugin.getLocalConfiguration().teleporterSettings.requiresign) {
             Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
             if (location.getTypeId() != BlockID.WALL_SIGN && location.getTypeId() != BlockID.SIGN_POST) {
-                if(location.getTypeId() == BlockID.STONE_BUTTON || location.getTypeId() == BlockID.WOODEN_BUTTON) {
+                if (location.getTypeId() == BlockID.STONE_BUTTON || location.getTypeId() == BlockID.WOODEN_BUTTON) {
                     Button b = (Button) location.getState().getData();
                     Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                     if (sign.getState() instanceof Sign) {
@@ -182,16 +172,14 @@ public class Teleporter extends AbstractMechanic {
                             return;
                         }
                     }
-                }
-                else {
+                } else {
                     player.printError("mech.teleport.sign");
                     return;
                 }
             }
         }
 
-        Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
-                (int) Math.floor(toZ));
+        Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1), (int) Math.floor(toZ));
         // well, unless that's already a ceiling.
         if (!occupiable(floor)) {
             floor = floor.getRelative(BlockFace.DOWN);
@@ -224,9 +212,9 @@ public class Teleporter extends AbstractMechanic {
             subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 2, floor.getZ() + 0.5));
             player.getVehicle().teleport(subspaceRift);
         }
-        if (plugin.getLocalConfiguration().teleporterSettings.maxrange > 0 && subspaceRift.getPosition().distanceSq
-                (player.getPosition().getPosition()) > plugin.getLocalConfiguration().teleporterSettings.maxrange *
-                plugin.getLocalConfiguration().teleporterSettings.maxrange) {
+        if (plugin.getLocalConfiguration().teleporterSettings.maxrange > 0
+                && subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > plugin.getLocalConfiguration().teleporterSettings.maxrange
+                        * plugin.getLocalConfiguration().teleporterSettings.maxrange) {
             player.print("mech.teleport.range");
             return;
         }
@@ -236,7 +224,7 @@ public class Teleporter extends AbstractMechanic {
         player.print("mech.teleport.alert");
     }
 
-    private static boolean occupiable(Block block) {
+    private static boolean occupiable (Block block) {
 
         return BlockType.canPassThrough(block.getTypeId());
     }

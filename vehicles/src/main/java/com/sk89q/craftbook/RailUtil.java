@@ -9,7 +9,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class RailUtil {
 
-    public static ArrayList<Chest> getNearbyChests(Block body) {
+    public static ArrayList<Chest> getNearbyChests (Block body) {
 
         int x = body.getX();
         int y = body.getY();
@@ -46,11 +46,9 @@ public class RailUtil {
         return containers;
     }
 
-    private static final int[] trackBlocks = new int[] {
-            BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL
-    };
+    private static final int[] trackBlocks = new int[] { BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL };
 
-    public static boolean isTrack(int id) {
+    public static boolean isTrack (int id) {
 
         for (int trackBlock : trackBlocks) {
             if (id == trackBlock) return true;

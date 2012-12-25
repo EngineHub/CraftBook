@@ -17,77 +17,73 @@ import com.sk89q.craftbook.ic.ICVerificationException;
  */
 public class PowerSensor extends AbstractIC {
 
-
     private Block center;
 
-    public PowerSensor(Server server, ChangedSign block, ICFactory factory) {
+    public PowerSensor (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         center = ICUtil.parseBlockLocation(getSign());
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Power Sensor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "POWER SENSOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isPowered());
         }
     }
 
-    protected boolean isPowered() {
+    protected boolean isPowered () {
 
         return center.isBlockPowered() || center.isBlockIndirectlyPowered();
     }
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new PowerSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Detects if offset block is powered.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "x:y:z offset",
-                    null
-            };
+            String[] lines = new String[] { "x:y:z offset", null };
             return lines;
         }
     }

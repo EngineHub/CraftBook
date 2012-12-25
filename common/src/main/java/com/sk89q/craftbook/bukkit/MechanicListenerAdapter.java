@@ -1,20 +1,14 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.bukkit;
@@ -48,7 +42,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
- *
+ * 
  * @author sk89q
  */
 public class MechanicListenerAdapter {
@@ -60,20 +54,20 @@ public class MechanicListenerAdapter {
 
     /**
      * Constructs the adapter.
-     *
+     * 
      * @param plugin
      */
-    public MechanicListenerAdapter(BaseBukkitPlugin plugin) {
+    public MechanicListenerAdapter (BaseBukkitPlugin plugin) {
 
         this.plugin = plugin;
     }
 
     /**
      * Register events.
-     *
+     * 
      * @param manager
      */
-    public void register(MechanicManager manager) {
+    public void register (MechanicManager manager) {
 
         PluginManager pluginManager = plugin.getServer().getPluginManager();
         Listener playerListener = new MechanicPlayerListener(manager, plugin);
@@ -87,7 +81,7 @@ public class MechanicListenerAdapter {
 
     /**
      * Player listener for detecting interactions with mechanic triggers.
-     *
+     * 
      * @author hash
      */
     protected static class MechanicPlayerListener implements Listener {
@@ -97,18 +91,18 @@ public class MechanicListenerAdapter {
 
         /**
          * Construct the listener.
-         *
+         * 
          * @param manager
          * @param plugin
          */
-        public MechanicPlayerListener(MechanicManager manager, BaseBukkitPlugin plugin) {
+        public MechanicPlayerListener (MechanicManager manager, BaseBukkitPlugin plugin) {
 
             this.manager = manager;
             this.plugin = plugin;
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onPlayerInteract(PlayerInteractEvent event) {
+        public void onPlayerInteract (PlayerInteractEvent event) {
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 manager.dispatchBlockRightClick(event);
@@ -122,7 +116,7 @@ public class MechanicListenerAdapter {
 
     /**
      * Block listener for processing block events.
-     *
+     * 
      * @author sk89q
      */
     protected static class MechanicBlockListener implements Listener {
@@ -132,35 +126,35 @@ public class MechanicListenerAdapter {
 
         /**
          * Construct the listener.
-         *
+         * 
          * @param manager
          * @param plugin
          */
-        public MechanicBlockListener(MechanicManager manager, BaseBukkitPlugin plugin) {
+        public MechanicBlockListener (MechanicManager manager, BaseBukkitPlugin plugin) {
 
             this.manager = manager;
             this.plugin = plugin;
         }
 
-        //@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-        //public void onEvent(Event event) {
+        // @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+        // public void onEvent(Event event) {
         //
-        //}
+        // }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onSignChange(SignChangeEvent event) {
+        public void onSignChange (SignChangeEvent event) {
 
             manager.dispatchSignChange(event);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onBlockBreak(BlockBreakEvent event) {
+        public void onBlockBreak (BlockBreakEvent event) {
 
             manager.dispatchBlockBreak(event);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        public void onBlockRedstoneChange (BlockRedstoneEvent event) {
 
             int oldLevel = event.getOldCurrent();
             int newLevel = event.getNewCurrent();
@@ -225,8 +219,7 @@ public class MechanicListenerAdapter {
                     int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
 
                     // Make sure that the wire points to only this block
-                    if (!BlockType.isRedstoneBlock(westSide)
-                            && !BlockType.isRedstoneBlock(eastSide)
+                    if (!BlockType.isRedstoneBlock(westSide) && !BlockType.isRedstoneBlock(eastSide)
                             && (!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0 || above != 0)
                             && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0 || above != 0)
                             && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
@@ -238,8 +231,7 @@ public class MechanicListenerAdapter {
                         handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), isOn, block, oldLevel, newLevel);
                     }
 
-                    if (!BlockType.isRedstoneBlock(northSide)
-                            && !BlockType.isRedstoneBlock(southSide)
+                    if (!BlockType.isRedstoneBlock(northSide) && !BlockType.isRedstoneBlock(southSide)
                             && (!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0 || above != 0)
                             && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0 || above != 0)
                             && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
@@ -273,7 +265,7 @@ public class MechanicListenerAdapter {
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onPhysicsUpdate(BlockPhysicsEvent event) {
+        public void onPhysicsUpdate (BlockPhysicsEvent event) {
 
             if (!CraftBookPlugin.getInstance().getLocalConfiguration().experimentalRepeaters) return;
             int type = event.getChangedTypeId();
@@ -281,12 +273,12 @@ public class MechanicListenerAdapter {
 
                 boolean foundRepeater = false;
                 Block repeater = null;
-                //Search for the repeater.
+                // Search for the repeater.
                 for (int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++) {
                     for (int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++) {
                         for (int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++)
                             if (event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
-                                //Found a repeater.
+                                // Found a repeater.
                                 repeater = event.getBlock().getWorld().getBlockAt(x, y, z);
                                 Diode rep = (Diode) repeater.getState().getData();
                                 if (repeater.getRelative(rep.getFacing()).equals(event.getBlock())) {
@@ -298,35 +290,30 @@ public class MechanicListenerAdapter {
                 }
                 if (!foundRepeater) return;
 
-                manager.dispatchBlockRedstoneChange(
-                        new SourcedBlockRedstoneEvent(repeater, event.getBlock(),
-                                type == BlockID.REDSTONE_REPEATER_ON ? 0 : 15, type == BlockID.REDSTONE_REPEATER_ON ?
-                                        15 : 0));
+                manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(repeater, event.getBlock(),
+                        type == BlockID.REDSTONE_REPEATER_ON ? 0 : 15, type == BlockID.REDSTONE_REPEATER_ON ? 15 : 0));
             }
         }
 
         /**
          * Handle the direct wire input.
-         *
+         * 
          * @param pt
          * @param isOn
          * @param sourceBlock
          * @param oldLevel
          * @param newLevel
          */
-        protected void handleDirectWireInput(WorldVector pt,
-                boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
+        protected void handleDirectWireInput (WorldVector pt, boolean isOn, Block sourceBlock, int oldLevel, int newLevel) {
 
-            Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
-                    pt.getBlockZ());
-            manager.dispatchBlockRedstoneChange(
-                    new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
+            Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+            manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
         }
     }
 
     /**
      * Block listener for processing block events.
-     *
+     * 
      * @author sk89q
      */
     protected class MechanicWorldListener implements Listener {
@@ -336,10 +323,10 @@ public class MechanicListenerAdapter {
 
         /**
          * Construct the listener.
-         *
+         * 
          * @param manager
          */
-        public MechanicWorldListener(MechanicManager manager, BaseBukkitPlugin plugin) {
+        public MechanicWorldListener (MechanicManager manager, BaseBukkitPlugin plugin) {
 
             this.manager = manager;
             this.plugin = plugin;
@@ -349,12 +336,12 @@ public class MechanicListenerAdapter {
          * Called when a chunk is loaded.
          */
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onChunkLoad(final ChunkLoadEvent event) {
+        public void onChunkLoad (final ChunkLoadEvent event) {
 
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
                 @Override
-                public void run() {
+                public void run () {
 
                     manager.enumerate(event.getChunk());
                 }
@@ -365,7 +352,7 @@ public class MechanicListenerAdapter {
          * Called when a chunk is unloaded.
          */
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onChunkUnload(ChunkUnloadEvent event) {
+        public void onChunkUnload (ChunkUnloadEvent event) {
 
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();

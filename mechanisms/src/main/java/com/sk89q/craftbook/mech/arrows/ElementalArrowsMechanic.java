@@ -13,15 +13,14 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 
-//TODO finish
+// TODO finish
 public class ElementalArrowsMechanic implements Listener {
 
     /*
      * How I propose they work.
      * 
-     * On Craft, they are given a special name. (Eg, Fire Arrows)
-     * On Shoot, somehow we check the name and if it's one of those arrows, we add the entityID to the list.
-     * On hit, we check the list for entityID. If it's there, we do the stuff and remove it.
+     * On Craft, they are given a special name. (Eg, Fire Arrows) On Shoot, somehow we check the name and if it's one of those arrows, we add the
+     * entityID to the list. On hit, we check the list for entityID. If it's there, we do the stuff and remove it.
      */
 
     MechanismsPlugin plugin;
@@ -34,34 +33,31 @@ public class ElementalArrowsMechanic implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onArrowHit(ProjectileHitEvent event) {
-        if(event.getEntity() instanceof Arrow) {
-            for(ElementalArrow e : arrows) {
-                if(e.onHit(event))
-                    return;
+    public void onArrowHit (ProjectileHitEvent event) {
+        if (event.getEntity() instanceof Arrow) {
+            for (ElementalArrow e : arrows) {
+                if (e.onHit(event)) return;
             }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onArrowShot(ProjectileLaunchEvent event) {
-        if(event.getEntity() instanceof Arrow) {
-            for(ElementalArrow e : arrows) {
-                if(e.onShoot(event))
-                    return;
+    public void onArrowShot (ProjectileLaunchEvent event) {
+        if (event.getEntity() instanceof Arrow) {
+            for (ElementalArrow e : arrows) {
+                if (e.onShoot(event)) return;
             }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onItemCraft(PrepareItemCraftEvent event) {
-        for(ElementalArrow e : arrows) {
-            if(e.onCraft(event))
-                return;
+    public void onItemCraft (PrepareItemCraftEvent event) {
+        for (ElementalArrow e : arrows) {
+            if (e.onCraft(event)) return;
         }
     }
 
-    public void registerArrow(ElementalArrow arrow) {
+    public void registerArrow (ElementalArrow arrow) {
 
         arrow.addRecipe();
         arrows.add(arrow);

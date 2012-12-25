@@ -1,19 +1,14 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.world.entity;
@@ -63,16 +58,16 @@ public class CreatureSpawner extends AbstractIC {
     String data;
     int amount;
 
-    public CreatureSpawner(Server server, ChangedSign sign, ICFactory factory) {
+    public CreatureSpawner (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase());
-        if(type == null) {
+        if (type == null) {
             type = EntityType.PIG;
         }
         String line = getSign().getLine(3).trim();
@@ -88,40 +83,38 @@ public class CreatureSpawner extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Creature Spawner";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "CREATURE SPAWNER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
-        if (chip.getInput(0))
-            if(center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
+        if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
 
-                org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
-                sp.setCreatureTypeByName(type.getName());
-                sp.update();
+            org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
+            sp.setCreatureTypeByName(type.getName());
+            sp.update();
+        } else {
+            Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
+            // spawn amount of mobs
+            for (int i = 0; i < amount; i++) {
+                Entity entity = loc.getWorld().spawnEntity(loc, type);
+                setEntityData(entity, data);
             }
-            else {
-                Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
-                // spawn amount of mobs
-                for (int i = 0; i < amount; i++) {
-                    Entity entity = loc.getWorld().spawnEntity(loc, type);
-                    setEntityData(entity, data);
-                }
-            }
+        }
     }
 
-    public static void setEntityData(Entity ent, String bit) {
+    public static void setEntityData (Entity ent, String bit) {
 
         String[] data = ICUtil.COLON_PATTERN.split(bit);
 
@@ -134,15 +127,15 @@ public class CreatureSpawner extends AbstractIC {
         }
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("stay")) {
-            ((LivingEntity)ent).setRemoveWhenFarAway(false);
+            ((LivingEntity) ent).setRemoveWhenFarAway(false);
         }
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("despawn")) {
-            ((LivingEntity)ent).setRemoveWhenFarAway(true);
+            ((LivingEntity) ent).setRemoveWhenFarAway(true);
         }
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("pickup")) {
-            ((LivingEntity)ent).setCanPickupItems(true);
+            ((LivingEntity) ent).setCanPickupItems(true);
         }
 
         if (ent instanceof Tameable && data[0].equalsIgnoreCase("owner")) {
@@ -158,8 +151,8 @@ public class CreatureSpawner extends AbstractIC {
             try {
                 int health = Integer.parseInt(data[1]);
                 ((LivingEntity) ent).setHealth(health);
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored){}
         }
 
         switch (ent.getType()) {
@@ -182,12 +175,12 @@ public class CreatureSpawner extends AbstractIC {
                     ((Slime) ent).setSize(6);
                 } else if (data[0].equalsIgnoreCase("small")) {
                     ((Slime) ent).setSize(3);
-                } else if (data[0].equalsIgnoreCase("size")){
+                } else if (data[0].equalsIgnoreCase("size")) {
                     try {
                         int size = Integer.parseInt(data[1]);
                         ((Slime) ent).setSize(size);
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
                 }
                 break;
             case MAGMA_CUBE:
@@ -199,12 +192,12 @@ public class CreatureSpawner extends AbstractIC {
                     ((MagmaCube) ent).setSize(6);
                 } else if (data[0].equalsIgnoreCase("small")) {
                     ((MagmaCube) ent).setSize(3);
-                } else if (data[0].equalsIgnoreCase("size")){
+                } else if (data[0].equalsIgnoreCase("size")) {
                     try {
                         int size = Integer.parseInt(data[1]);
                         ((MagmaCube) ent).setSize(size);
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
                 }
                 break;
             case WOLF:
@@ -219,11 +212,10 @@ public class CreatureSpawner extends AbstractIC {
                     try {
                         int id = Integer.parseInt(data[1]);
                         byte d = 0;
-                        if(data.length > 2)
-                            d = Byte.parseByte(data[2]);
+                        if (data.length > 2) d = Byte.parseByte(data[2]);
                         ((Enderman) ent).setCarriedMaterial(new MaterialData(id, d));
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
                 }
                 break;
             case PRIMED_TNT:
@@ -231,17 +223,15 @@ public class CreatureSpawner extends AbstractIC {
                     try {
                         int length = Integer.parseInt(data[1]);
                         ((TNTPrimed) ent).setFuseTicks(length);
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
-                }
-                else if (data[0].equalsIgnoreCase("yield")) {
+                } else if (data[0].equalsIgnoreCase("yield")) {
                     try {
                         float yield = Float.parseFloat(data[1]);
                         ((TNTPrimed) ent).setYield(yield);
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
-                }
-                else if (data[0].equalsIgnoreCase("fire")) {
+                } else if (data[0].equalsIgnoreCase("fire")) {
                     ((TNTPrimed) ent).setIsIncendiary(true);
                 }
                 break;
@@ -332,30 +322,27 @@ public class CreatureSpawner extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new CreatureSpawner(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Spawns a mob with specified data.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "entitytype",
-                    "data:amount"
-            };
+            String[] lines = new String[] { "entitytype", "data:amount" };
             return lines;
         }
     }

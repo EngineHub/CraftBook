@@ -35,17 +35,9 @@ import com.sk89q.craftbook.util.SignUtil;
 public class EntitySensor extends AbstractIC {
 
     public enum Type {
-        PLAYER('P'),
-        ITEM('I'),
-        MOB_HOSTILE('H'),
-        MOB_PEACEFUL('A'),
-        MOB_ANY('M'),
-        ANY('L'),
-        CART('C'),
-        CART_STORAGE('S'),
-        CART_POWERED('E');
+        PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'), CART_STORAGE('S'), CART_POWERED('E');
 
-        public boolean is(Entity entity) {
+        public boolean is (Entity entity) {
 
             switch (this) {
                 case PLAYER:
@@ -72,21 +64,21 @@ public class EntitySensor extends AbstractIC {
 
         private final char shortName;
 
-        private Type(char shortName) {
+        private Type (char shortName) {
 
             this.shortName = shortName;
         }
 
-        public char getCharName() {
+        public char getCharName () {
 
             return shortName;
         }
 
-        public static Set<Type> getDetected(String line) {
+        public static Set<Type> getDetected (String line) {
 
             Set<Type> types = EnumSet.noneOf(Type.class);
 
-            if(line.trim().isEmpty()) {
+            if (line.trim().isEmpty()) {
                 types.add(ANY);
                 return types;
             }
@@ -118,13 +110,13 @@ public class EntitySensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
+    public EntitySensor (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         getSign().setLine(3, getSign().getLine(3).toUpperCase());
 
@@ -146,28 +138,28 @@ public class EntitySensor extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Entity Sensor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "ENTITY SENSOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
     }
 
-    protected boolean isDetected() {
+    protected boolean isDetected () {
 
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); //Update chunks
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); // Update chunks
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities())
@@ -176,8 +168,7 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
-                                    return true;
+                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
                                 break;
                             }
                     }
@@ -187,36 +178,33 @@ public class EntitySensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new EntitySensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Detects specific entity types in a given radius.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "radius=x:y:z offset",
-                    "Entity Types"
-            };
+            String[] lines = new String[] { "radius=x:y:z offset", "Entity Types" };
             return lines;
         }
     }

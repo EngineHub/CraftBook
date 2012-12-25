@@ -11,25 +11,25 @@ import com.sk89q.craftbook.ic.ICFactory;
 
 public class HalfAdder extends AbstractIC {
 
-    public HalfAdder(Server server, ChangedSign block, ICFactory factory) {
+    public HalfAdder (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Half Adder";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "HALF ADDER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         boolean B = chip.getInput(1);
         boolean C = chip.getInput(2);
@@ -44,13 +44,13 @@ public class HalfAdder extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new HalfAdder(getServer(), sign, this);
         }

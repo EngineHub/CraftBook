@@ -28,24 +28,24 @@ public class FireShooter extends AbstractIC {
     private float spread = 4;
     private float vert = 0;
 
-    public FireShooter(Server server, ChangedSign sign, ICFactory factory) {
+    public FireShooter (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim(), 2);
         try {
             speed = Float.parseFloat(velocity[0]);
             spread = Float.parseFloat(velocity[1]);
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored){}
         try {
             vert = Float.parseFloat(getSign().getLine(3).trim());
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored){}
 
         if (speed > 2.0) {
             speed = 2F;
@@ -67,26 +67,26 @@ public class FireShooter extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Fire Shooter";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "FIRE SHOOTER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             shootFire(1);
         }
     }
 
-    public void shootFire(int n) {
+    public void shootFire (int n) {
 
         Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
@@ -110,37 +110,33 @@ public class FireShooter extends AbstractIC {
         }
     }
 
-    private static float randomFloat(float width) {
+    private static float randomFloat (float width) {
         return (BaseBukkitPlugin.random.nextFloat() - 0.5f) * width;
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new FireShooter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Shoots a fireball.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "speed:spread",
-                    "vertical gain"
-            };
+            String[] lines = new String[] { "speed:spread", "vertical gain" };
             return lines;
         }
     }

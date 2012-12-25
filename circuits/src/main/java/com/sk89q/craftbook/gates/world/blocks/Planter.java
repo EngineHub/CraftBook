@@ -24,15 +24,14 @@ import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
 
 /**
- * Sapling planter
- * Hybrid variant of MCX206 and MCX203 chest collector
- * When there is a sapling or seed item drop in range it will auto plant it above the IC.
- *
+ * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in range it will auto plant it above
+ * the IC.
+ * 
  * @authors Drathus, Me4502
  */
 public class Planter extends AbstractIC {
 
-    public Planter(Server server, ChangedSign block, ICFactory factory) {
+    public Planter (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -44,11 +43,10 @@ public class Planter extends AbstractIC {
     int radius;
 
     @Override
-    public void load() {
+    public void load () {
 
         item = ICUtil.getItem(getLine(2));
-        if(item == null)
-            item = new ItemStack(295, 1);
+        if (item == null) item = new ItemStack(295, 1);
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -56,102 +54,90 @@ public class Planter extends AbstractIC {
             radius = Integer.parseInt(ICUtil.EQUALS_PATTERN.split(getSign().getLine(3))[0]);
             try {
                 String[] loc = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(3))[1]);
-                offset = new Vector(Integer.parseInt(loc[0]),Integer.parseInt(loc[1]),Integer.parseInt(loc[2]));
-                if(offset.getX() > 16)
-                    offset.setX(16);
-                if(offset.getY() > 16)
-                    offset.setY(16);
-                if(offset.getZ() > 16)
-                    offset.setZ(16);
+                offset = new Vector(Integer.parseInt(loc[0]), Integer.parseInt(loc[1]), Integer.parseInt(loc[2]));
+                if (offset.getX() > 16) offset.setX(16);
+                if (offset.getY() > 16) offset.setY(16);
+                if (offset.getZ() > 16) offset.setZ(16);
 
-                if(offset.getX() < -16)
-                    offset.setX(-16);
-                if(offset.getY() < -16)
-                    offset.setY(-16);
-                if(offset.getZ() < -16)
-                    offset.setZ(-16);
-            }
-            catch(Exception e){
-                offset = new Vector(0,2,0);
+                if (offset.getX() < -16) offset.setX(-16);
+                if (offset.getY() < -16) offset.setY(-16);
+                if (offset.getZ() < -16) offset.setZ(-16);
+            } catch (Exception e) {
+                offset = new Vector(0, 2, 0);
             }
 
         } catch (Exception e) {
             radius = 10;
-            offset = new Vector(0,2,0);
+            offset = new Vector(0, 2, 0);
         }
 
         target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Planter";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "PLANTER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
-        if(chip.getInput(0))
-            chip.setOutput(0,plant());
+        if (chip.getInput(0)) chip.setOutput(0, plant());
     }
 
-    public boolean plant() {
+    public boolean plant () {
 
         if (!plantableItem(item.getTypeId())) return false;
 
-        if(onBlock.getRelative(0,1,0).getTypeId() == BlockID.CHEST) {
+        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
-            for(ItemStack it : c.getInventory().getContents()) {
+            for (ItemStack it : c.getInventory().getContents()) {
 
-                if(!ItemUtil.isStackValid(it))
-                    continue;
+                if (!ItemUtil.isStackValid(it)) continue;
 
-                if(it.getTypeId() != item.getTypeId())
-                    continue;
+                if (it.getTypeId() != item.getTypeId()) continue;
 
-                if(item.getDurability() != 0 && it.getDurability() != item.getDurability())
-                    continue;
+                if (item.getDurability() != 0 && it.getDurability() != item.getDurability()) continue;
 
                 Block b = null;
 
-                if((b = searchBlocks(it)) != null) {
-                    if(c.getInventory().removeItem(new ItemStack(it.getTypeId(),1,it.getDurability())).isEmpty()) {
+                if ((b = searchBlocks(it)) != null) {
+                    if (c.getInventory().removeItem(new ItemStack(it.getTypeId(), 1, it.getDurability())).isEmpty()) {
                         b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
                         return true;
                     }
                 }
             }
-        }
-        else {
+        } else {
             for (Entity ent : target.getChunk().getEntities()) {
-                if(!(ent instanceof Item))
-                    continue;
+                if (!(ent instanceof Item)) continue;
 
                 Item itemEnt = (Item) ent;
 
-                if(!ItemUtil.isStackValid(itemEnt.getItemStack()))
-                    continue;
+                if (!ItemUtil.isStackValid(itemEnt.getItemStack())) continue;
 
-                if (itemEnt.getItemStack().getTypeId() == item.getTypeId() && (item.getDurability() == 0 || itemEnt.getItemStack().getDurability() == item.getDurability() || itemEnt.getItemStack().getData().getData() == item.getData().getData())) {
+                if (itemEnt.getItemStack().getTypeId() == item.getTypeId()
+                        && (item.getDurability() == 0 || itemEnt.getItemStack().getDurability() == item.getDurability() || itemEnt.getItemStack()
+                                .getData().getData() == item.getData().getData())) {
                     Location loc = itemEnt.getLocation();
                     double diffX = target.getX() - loc.getX();
                     double diffY = target.getY() - loc.getY();
                     double diffZ = target.getZ() - loc.getZ();
 
-                    if (diffX * diffX + diffY * diffY + diffZ * diffZ < radius*radius) {
+                    if (diffX * diffX + diffY * diffY + diffZ * diffZ < radius * radius) {
 
                         Block b = null;
 
-                        if((b = searchBlocks(itemEnt.getItemStack())) != null) {
-                            if(ItemUtil.takeFromEntity(itemEnt)) {
+                        if ((b = searchBlocks(itemEnt.getItemStack())) != null) {
+                            if (ItemUtil.takeFromEntity(itemEnt)) {
                                 b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
                                 return true;
                             }
@@ -164,7 +150,7 @@ public class Planter extends AbstractIC {
         return false;
     }
 
-    public Block searchBlocks(ItemStack stack) {
+    public Block searchBlocks (ItemStack stack) {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
@@ -174,20 +160,18 @@ public class Planter extends AbstractIC {
                     int rz = target.getZ() - z;
                     Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
 
-                    if(b.getTypeId() != 0)
-                        continue;
+                    if (b.getTypeId() != 0) continue;
 
                     if (itemPlantableOnBlock(item.getTypeId(), b.getRelative(0, -1, 0).getTypeId())) {
 
-                        return b;
-                    }
+                    return b; }
                 }
             }
         }
         return null;
     }
 
-    protected boolean plantableItem(int itemId) {
+    protected boolean plantableItem (int itemId) {
 
         switch (itemId) {
             case BlockID.SAPLING:
@@ -208,7 +192,7 @@ public class Planter extends AbstractIC {
         }
     }
 
-    protected boolean itemPlantableOnBlock(int itemId, int blockId) {
+    protected boolean itemPlantableOnBlock (int itemId, int blockId) {
 
         switch (itemId) {
             case BlockID.SAPLING:
@@ -231,7 +215,7 @@ public class Planter extends AbstractIC {
         return false;
     }
 
-    protected int getBlockByItem(int itemId) {
+    protected int getBlockByItem (int itemId) {
 
         switch (itemId) {
             case ItemID.SEEDS:
@@ -265,30 +249,27 @@ public class Planter extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new Planter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Plants plantable things at set offset.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "Item to plant id:data",
-                    "radius=x:y:z offset"
-            };
+            String[] lines = new String[] { "Item to plant id:data", "radius=x:y:z offset" };
             return lines;
         }
     }

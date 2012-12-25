@@ -14,32 +14,31 @@ import com.sk89q.worldedit.BlockWorldVector;
 public class FamilySI5O extends AbstractICFamily {
 
     @Override
-    public ChipState detect(BlockWorldVector source, ChangedSign sign) {
+    public ChipState detect (BlockWorldVector source, ChangedSign sign) {
 
         return new ChipStateSI5O(source, sign);
     }
 
     @Override
-    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign) {
+    public ChipState detectSelfTriggered (BlockWorldVector source, ChangedSign sign) {
 
         return new ChipStateSI5O(source, sign, true);
     }
 
-
     public static class ChipStateSI5O extends AbstractChipState {
 
-        public ChipStateSI5O(BlockWorldVector source, ChangedSign sign) {
+        public ChipStateSI5O (BlockWorldVector source, ChangedSign sign) {
 
             super(source, sign, false);
         }
 
-        public ChipStateSI5O(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
+        public ChipStateSI5O (BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
 
             super(source, sign, selfTriggered);
         }
 
         @Override
-        protected Block getBlock(int pin) {
+        protected Block getBlock (int pin) {
 
             BlockFace fback = SignUtil.getBack(BukkitUtil.toSign(sign).getBlock());
             Block backBlock = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()).getRelative(fback);
@@ -65,31 +64,31 @@ public class FamilySI5O extends AbstractICFamily {
         }
 
         @Override
-        public boolean getInput(int inputIndex) {
+        public boolean getInput (int inputIndex) {
 
             return get(inputIndex);
         }
 
         @Override
-        public boolean getOutput(int outputIndex) {
+        public boolean getOutput (int outputIndex) {
 
             return get(outputIndex + 1);
         }
 
         @Override
-        public void setOutput(int outputIndex, boolean value) {
+        public void setOutput (int outputIndex, boolean value) {
 
             set(outputIndex + 1, value);
         }
 
         @Override
-        public int getInputCount() {
+        public int getInputCount () {
 
             return 1;
         }
 
         @Override
-        public int getOutputCount() {
+        public int getOutputCount () {
 
             return 5;
         }

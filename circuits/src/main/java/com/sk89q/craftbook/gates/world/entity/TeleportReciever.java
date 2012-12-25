@@ -35,11 +35,10 @@ public class TeleportReciever extends AbstractIC {
     String welcome;
 
     @Override
-    public void load() {
+    public void load () {
         band = getLine(2);
         welcome = getLine(3);
-        if(welcome == null || welcome.isEmpty())
-            welcome = "The Teleporter moves you here...";
+        if (welcome == null || welcome.isEmpty()) welcome = "The Teleporter moves you here...";
     }
 
     @Override
@@ -50,15 +49,13 @@ public class TeleportReciever extends AbstractIC {
         }
     }
 
-    public void check() {
+    public void check () {
         Tuple2<Long, String> val = TeleportTransmitter.getValue(band);
         if (val == null) return;
 
         Player p = Bukkit.getServer().getPlayer(val.b);
 
-        if(p == null || !p.isOnline()) {
-            return;
-        }
+        if (p == null || !p.isOnline()) { return; }
 
         p.teleport(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0.5, 1.5, 0.5));
         p.sendMessage(ChatColor.YELLOW + welcome);
@@ -66,30 +63,27 @@ public class TeleportReciever extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new TeleportReciever(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Reciever for the teleportation network.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "frequency name",
-                    "welcome text"
-            };
+            String[] lines = new String[] { "frequency name", "welcome text" };
             return lines;
         }
     }

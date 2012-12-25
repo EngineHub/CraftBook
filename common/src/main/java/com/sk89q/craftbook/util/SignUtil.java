@@ -1,20 +1,14 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.util;
@@ -31,70 +25,58 @@ import com.sk89q.worldedit.blocks.BlockID;
  * Convenience methods for dealing with some sign block data.
  * </p>
  * <p>
- * If you intend to care about the eight further directions (as opposed to the
- * four cardinal directions and the four ordinal directions), this isn't for you
- * -- since BlockFace has no such directions, those will be rounded to the
- * nearest ordinal direction. (If the term "further direction" confuses you,
- * see https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions).
+ * If you intend to care about the eight further directions (as opposed to the four cardinal directions and the four ordinal directions), this isn't
+ * for you -- since BlockFace has no such directions, those will be rounded to the nearest ordinal direction. (If the term "further direction"
+ * confuses you, see https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions).
  * </p>
  * <p>
- * This is direly close to being a replicate of things you can access via
- * org.bukkit.material.Sign (which extends MaterialData). However, that thing:
+ * This is direly close to being a replicate of things you can access via org.bukkit.material.Sign (which extends MaterialData). However, that thing:
  * <ul>
  * <li>doesn't provide the relative direction methods.
- * <li>rounds the further divisions to cardinal/ordinal differently (and wrong,
- * in my book).
- * <li>has the same class name for that MaterialData thing as the BlockState,
- * which is annoying as hell import-wise.
- * <li>requires allocating an object and copying two bytes in a fashion that I
- * consider kinda unnecessary.
+ * <li>rounds the further divisions to cardinal/ordinal differently (and wrong, in my book).
+ * <li>has the same class name for that MaterialData thing as the BlockState, which is annoying as hell import-wise.
+ * <li>requires allocating an object and copying two bytes in a fashion that I consider kinda unnecessary.
  * </ul>
- * Ideally, I think I'd like to see if I can get something like these methods
- * pushed to bukkit.
+ * Ideally, I think I'd like to see if I can get something like these methods pushed to bukkit.
  * </p>
- *
+ * 
  * @author hash
  */
 public class SignUtil {
 
-    private SignUtil() {
+    private SignUtil () {
     }
 
-    public static boolean isSign(Block keith) {
+    public static boolean isSign (Block keith) {
 
         return isSign(keith.getTypeId());
     }
 
-    public static boolean isSign(int typeid) {
+    public static boolean isSign (int typeid) {
 
         return typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN;
     }
 
     /**
-     * @param sign treated as sign post if it is such, or else assumed to be a
-     *             wall sign (i.e., if you ask about a stone block, it's
-     *             considered a wall sign).
-     *
-     * @return the direction a player would be facing when reading the sign;
-     *         i.e. the face that is actually the back side of the sign.
+     * @param sign
+     *            treated as sign post if it is such, or else assumed to be a wall sign (i.e., if you ask about a stone block, it's considered a wall
+     *            sign).
+     * @return the direction a player would be facing when reading the sign; i.e. the face that is actually the back side of the sign.
      */
-    public static BlockFace getFacing(Block sign) {
+    public static BlockFace getFacing (Block sign) {
 
         return getBack(sign);
     }
 
     /**
-     * @param sign treated as sign post if it is such, or else assumed to be a
-     *             wall sign (i.e., if you ask about a stone block, it's
-     *             considered a wall sign).
-     *
-     * @return the side of the sign containing the text (in other words, when a
-     *         player places a new sign, while facing north, this will return
-     *         south).
+     * @param sign
+     *            treated as sign post if it is such, or else assumed to be a wall sign (i.e., if you ask about a stone block, it's considered a wall
+     *            sign).
+     * @return the side of the sign containing the text (in other words, when a player places a new sign, while facing north, this will return south).
      */
-    public static BlockFace getFront(Block sign) {
+    public static BlockFace getFront (Block sign) {
 
-        if(BaseBukkitPlugin.useOldBlockFace()) {
+        if (BaseBukkitPlugin.useOldBlockFace()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -138,8 +120,7 @@ public class SignUtil {
                         return BlockFace.SELF;
                 }
             }
-        }
-        else {
+        } else {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -186,24 +167,21 @@ public class SignUtil {
         }
     }
 
-    public static Block getFrontBlock(Block sign) {
+    public static Block getFrontBlock (Block sign) {
 
         return sign.getRelative(getFront(sign));
     }
 
     /**
-     * @param sign treated as sign post if it is such, or else assumed to be a
-     *             wall sign (i.e., if you ask about a stone block, it's
-     *             considered a wall sign).
-     *
-     * @return the blank side of the sign opposite the text. In the case of a
-     *         wall sign, the block in this direction is the block to which the
-     *         sign is attached. This is also the direction a player would be
-     *         facing when reading the sign; see {@link #getFacing(Block)}.
+     * @param sign
+     *            treated as sign post if it is such, or else assumed to be a wall sign (i.e., if you ask about a stone block, it's considered a wall
+     *            sign).
+     * @return the blank side of the sign opposite the text. In the case of a wall sign, the block in this direction is the block to which the sign is
+     *         attached. This is also the direction a player would be facing when reading the sign; see {@link #getFacing(Block)}.
      */
-    public static BlockFace getBack(Block sign) {
+    public static BlockFace getBack (Block sign) {
 
-        if(BaseBukkitPlugin.useOldBlockFace()) {
+        if (BaseBukkitPlugin.useOldBlockFace()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -247,8 +225,7 @@ public class SignUtil {
                         return BlockFace.SELF;
                 }
             }
-        }
-        else {
+        } else {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -295,12 +272,12 @@ public class SignUtil {
         }
     }
 
-    public static Block getBackBlock(Block sign) {
+    public static Block getBackBlock (Block sign) {
 
         return sign.getRelative(getBack(sign));
     }
 
-    public static Sign getNextSign(Sign sign, String criterea, int searchRadius) {
+    public static Sign getNextSign (Sign sign, String criterea, int searchRadius) {
 
         Sign otherSign = sign;
         Block otherBlock = otherSign.getBlock();
@@ -314,24 +291,20 @@ public class SignUtil {
             }
             otherBlock = otherBlock.getRelative(way);
         }
-        if (otherSign.equals(sign))
-            return null;
+        if (otherSign.equals(sign)) return null;
         return otherSign;
     }
 
     /**
-     * @param sign treated as sign post if it is such, or else assumed to be a
-     *             wall sign (i.e., if you ask about a stone block, it's
-     *             considered a wall sign).
-     *
-     * @return the cardinal or ordinal direction to a player's left as they face
-     *         the sign to read it; if the sign is oriented in a further
-     *         direction, the result is rounded to the nearest ordinal
-     *         direction.
+     * @param sign
+     *            treated as sign post if it is such, or else assumed to be a wall sign (i.e., if you ask about a stone block, it's considered a wall
+     *            sign).
+     * @return the cardinal or ordinal direction to a player's left as they face the sign to read it; if the sign is oriented in a further direction,
+     *         the result is rounded to the nearest ordinal direction.
      */
-    public static BlockFace getRight(Block sign) {
+    public static BlockFace getRight (Block sign) {
 
-        if(BaseBukkitPlugin.useOldBlockFace()) {
+        if (BaseBukkitPlugin.useOldBlockFace()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -375,8 +348,7 @@ public class SignUtil {
                         return BlockFace.SELF;
                 }
             }
-        }
-        else {
+        } else {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -423,24 +395,21 @@ public class SignUtil {
         }
     }
 
-    public static Block getLeftBlock(Block sign) {
+    public static Block getLeftBlock (Block sign) {
 
         return sign.getRelative(getLeft(sign));
     }
 
     /**
-     * @param sign treated as sign post if it is such, or else assumed to be a
-     *             wall sign (i.e., if you ask about a stone block, it's
-     *             considered a wall sign).
-     *
-     * @return the cardinal or ordinal direction to a player's right they face
-     *         the sign to read it; if the sign is oriented in a further
-     *         direction, the result is rounded to the nearest ordinal
-     *         direction.
+     * @param sign
+     *            treated as sign post if it is such, or else assumed to be a wall sign (i.e., if you ask about a stone block, it's considered a wall
+     *            sign).
+     * @return the cardinal or ordinal direction to a player's right they face the sign to read it; if the sign is oriented in a further direction, the
+     *         result is rounded to the nearest ordinal direction.
      */
-    public static BlockFace getLeft(Block sign) {
+    public static BlockFace getLeft (Block sign) {
 
-        if(BaseBukkitPlugin.useOldBlockFace()) {
+        if (BaseBukkitPlugin.useOldBlockFace()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -484,8 +453,7 @@ public class SignUtil {
                         return BlockFace.SELF;
                 }
             }
-        }
-        else {
+        } else {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -532,21 +500,19 @@ public class SignUtil {
         }
     }
 
-    public static Block getRightBlock(Block sign) {
+    public static Block getRightBlock (Block sign) {
 
         return sign.getRelative(getRight(sign));
     }
 
     /**
-     * @param sign treated as sign post if it is such, or else assumed to be a
-     *             wall sign (i.e., if you ask about a stone block, it's
-     *             considered a wall sign).
-     *
-     * @return true if the sign is oriented along a cardinal direction (or if
-     *         it's a wall sign, since those are always oriented along cardinal
+     * @param sign
+     *            treated as sign post if it is such, or else assumed to be a wall sign (i.e., if you ask about a stone block, it's considered a wall
+     *            sign).
+     * @return true if the sign is oriented along a cardinal direction (or if it's a wall sign, since those are always oriented along cardinal
      *         directions); false otherwise.
      */
-    public static boolean isCardinal(Block sign) {
+    public static boolean isCardinal (Block sign) {
 
         if (sign.getTypeId() == BlockID.SIGN_POST) {
             switch (sign.getData()) {
@@ -558,16 +524,15 @@ public class SignUtil {
                 default:
                     return false;
             }
-        } else
-            return true;
+        } else return true;
     }
 
     /**
-     * @param face Start from direction
-     *
+     * @param face
+     *            Start from direction
      * @return clockwise direction
      */
-    public static BlockFace getClockWise(BlockFace face) {
+    public static BlockFace getClockWise (BlockFace face) {
 
         switch (face) {
             case NORTH:
@@ -585,11 +550,11 @@ public class SignUtil {
     }
 
     /**
-     * @param face Start from direction
-     *
+     * @param face
+     *            Start from direction
      * @return clockwise direction
      */
-    public static BlockFace getCounterClockWise(BlockFace face) {
+    public static BlockFace getCounterClockWise (BlockFace face) {
 
         switch (face) {
             case NORTH:
@@ -607,11 +572,14 @@ public class SignUtil {
     }
 
     /**
-     * @param sign    to change
-     * @param line    to change
-     * @param content to change line to
+     * @param sign
+     *            to change
+     * @param line
+     *            to change
+     * @param content
+     *            to change line to
      */
-    public static void setLine(Sign sign, int line, String content) {
+    public static void setLine (Sign sign, int line, String content) {
 
         sign.setLine(line, content);
         sign.update();

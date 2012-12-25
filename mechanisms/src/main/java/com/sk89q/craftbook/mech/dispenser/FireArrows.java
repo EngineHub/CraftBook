@@ -16,22 +16,19 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class FireArrows extends Recipe {
 
-    public FireArrows(int[] recipe) {
+    public FireArrows (int[] recipe) {
 
         super(recipe);
     }
 
-    public FireArrows() {
+    public FireArrows () {
 
-        super(new int[] {
-                BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR,
-                ItemID.FIRE_CHARGE, ItemID.ARROW, ItemID.FIRE_CHARGE,
-                BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR
-        });
+        super(new int[] { BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR, ItemID.FIRE_CHARGE, ItemID.ARROW, ItemID.FIRE_CHARGE, BlockID.AIR,
+                ItemID.FIRE_CHARGE, BlockID.AIR });
     }
 
     @Override
-    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    public boolean doAction (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) dis.getData();
         BlockFace face = disp.getFacing();

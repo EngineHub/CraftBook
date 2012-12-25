@@ -24,7 +24,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Payment Mech, takes payment. (Requires Vault.)
- *
+ * 
  * @author Me4502
  */
 public class Payment extends AbstractMechanic {
@@ -33,8 +33,7 @@ public class Payment extends AbstractMechanic {
 
     protected final BlockWorldVector pt;
 
-
-    public Payment(BlockWorldVector pt, MechanismsPlugin plugin) {
+    public Payment (BlockWorldVector pt, MechanismsPlugin plugin) {
 
         this.pt = pt;
         this.plugin = plugin;
@@ -42,11 +41,11 @@ public class Payment extends AbstractMechanic {
 
     /**
      * Raised when a block is right clicked.
-     *
+     * 
      * @param event
      */
     @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick (PlayerInteractEvent event) {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
@@ -90,20 +89,20 @@ public class Payment extends AbstractMechanic {
 
         final Block block;
 
-        public TurnOff(Block block) {
+        public TurnOff (Block block) {
 
             this.block = block;
         }
 
         @Override
-        public void run() {
+        public void run () {
 
             setState(block, false);
         }
 
     }
 
-    public static boolean setState(Block block, boolean state) {
+    public static boolean setState (Block block, boolean state) {
 
         if (block.getTypeId() != BlockID.LEVER) return false;
         byte data = block.getData();
@@ -132,16 +131,15 @@ public class Payment extends AbstractMechanic {
 
         protected final MechanismsPlugin plugin;
 
-        public Factory(MechanismsPlugin plugin) {
+        public Factory (MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public Payment detect(BlockWorldVector pt) {
+        public Payment detect (BlockWorldVector pt) {
 
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(
-                    BukkitUtil.toLocation(pt));
+            Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
@@ -155,20 +153,19 @@ public class Payment extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         *
+         * 
          * @throws ProcessedMechanismException
          */
         @Override
-        public Payment detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
-                throws InvalidMechanismException, ProcessedMechanismException {
+        public Payment detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+                ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Pay]")) {
                 if (!player.hasPermission("craftbook.mech.pay")) throw new InsufficientPermissionsException();
 
                 sign.setLine(1, "[Pay]");
                 player.print("mech.pay.create");
-            } else
-                return null;
+            } else return null;
 
             throw new ProcessedMechanismException();
         }

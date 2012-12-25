@@ -28,7 +28,7 @@ public class CartSorter extends CartMechanism {
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // care?
         if (minor) return;
 
@@ -38,7 +38,7 @@ public class CartSorter extends CartMechanism {
         Sign sign = (Sign) blocks.sign.getState();
 
         // pi(sign)hich sort conditions apply
-        //  (left dominates if both apply)
+        // (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
         if (isSortApplicable(sign.getLine(2), cart)) {
             dir = Hand.LEFT;
@@ -47,11 +47,11 @@ public class CartSorter extends CartMechanism {
         }
 
         // pick the track block to modify and the curve to give it.
-        //   perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
-        //    this is required since there's not a north track and a south track; just a north-south track type.
+        // perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
+        // this is required since there's not a north track and a south track; just a north-south track type.
         byte trackData;
         BlockFace next = SignUtil.getFacing(blocks.sign);
-        if(VehiclesPlugin.useOldBlockFace()) {
+        if (VehiclesPlugin.useOldBlockFace()) {
 
             switch (next) {
                 case WEST:
@@ -106,8 +106,7 @@ public class CartSorter extends CartMechanism {
                     cart.remove();
                     return;
             }
-        }
-        else {
+        } else {
             switch (next) {
                 case SOUTH:
                     switch (dir) {
@@ -175,7 +174,7 @@ public class CartSorter extends CartMechanism {
         STRAIGHT, LEFT, RIGHT
     }
 
-    public static boolean isSortApplicable(String line, Minecart minecart) {
+    public static boolean isSortApplicable (String line, Minecart minecart) {
         if (line.equalsIgnoreCase("All")) return true;
         Entity test = minecart.getPassenger();
         Player player = null;
@@ -183,32 +182,19 @@ public class CartSorter extends CartMechanism {
             player = (Player) test;
         }
 
-        if ((line.equalsIgnoreCase("Unoccupied")
-                || line.equalsIgnoreCase("Empty"))
-                && minecart.getPassenger() == null) return true;
+        if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty")) && minecart.getPassenger() == null) return true;
 
-        if (line.equalsIgnoreCase("Storage")
-                && minecart instanceof StorageMinecart)
-            return true;
-        else if (line.equalsIgnoreCase("Powered")
-                && minecart instanceof PoweredMinecart)
-            return true;
-        else if (line.equalsIgnoreCase("Minecart")
-                && minecart instanceof Minecart) return true;
+        if (line.equalsIgnoreCase("Storage") && minecart instanceof StorageMinecart) return true;
+        else if (line.equalsIgnoreCase("Powered") && minecart instanceof PoweredMinecart) return true;
+        else if (line.equalsIgnoreCase("Minecart") && minecart instanceof Minecart) return true;
 
-        if ((line.equalsIgnoreCase("Occupied")
-                || line.equalsIgnoreCase("Full"))
-                && minecart.getPassenger() != null) return true;
+        if ((line.equalsIgnoreCase("Occupied") || line.equalsIgnoreCase("Full")) && minecart.getPassenger() != null) return true;
 
-        if (line.equalsIgnoreCase("Animal")
-                && test instanceof Animals) return true;
+        if (line.equalsIgnoreCase("Animal") && test instanceof Animals) return true;
 
-        if (line.equalsIgnoreCase("Mob")
-                && test instanceof Monster) return true;
+        if (line.equalsIgnoreCase("Mob") && test instanceof Monster) return true;
 
-        if ((line.equalsIgnoreCase("Player")
-                || line.equalsIgnoreCase("Ply"))
-                && player != null) return true;
+        if ((line.equalsIgnoreCase("Player") || line.equalsIgnoreCase("Ply")) && player != null) return true;
 
         String[] parts = COLON_PATTERN.split(line);
 
@@ -252,7 +238,7 @@ public class CartSorter extends CartMechanism {
             }
         }
         if (line.startsWith("#")) {
-            if (player != null){
+            if (player != null) {
                 String selectedStation = VehiclesPlugin.getInstance().getStation(player.getName());
                 return line.equalsIgnoreCase("#" + selectedStation);
             }
@@ -268,6 +254,6 @@ public class CartSorter extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"Sort"};
+        return new String[] { "Sort" };
     }
 }

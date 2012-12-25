@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.cart;
 
-
 import static com.sk89q.craftbook.cart.CartUtils.stop;
 
 import org.bukkit.Location;
@@ -16,7 +15,7 @@ import com.sk89q.craftbook.util.SignUtil;
 public class CartStation extends CartMechanism {
 
     @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;
@@ -42,22 +41,21 @@ public class CartStation extends CartMechanism {
         }
     }
 
-    private void launch(Minecart cart, Block director) {
+    private void launch (Minecart cart, Block director) {
 
         cart.setVelocity(FUUUUUUUUUUUUUUUUU(SignUtil.getFacing(director)));
     }
 
     /**
-     * WorldEdit's Vector type collides with Bukkit's Vector type here.  It's not pleasant.
+     * WorldEdit's Vector type collides with Bukkit's Vector type here. It's not pleasant.
      */
-    public static Vector FUUUUUUUUUUUUUUUUU(BlockFace face) {
+    public static Vector FUUUUUUUUUUUUUUUUU (BlockFace face) {
 
         return new Vector(face.getModX() * 0.05, face.getModY() * 0.05, face.getModZ() * 0.05);
     }
 
     @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks,
-            boolean minor) {
+    public void enter (Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;
@@ -92,6 +90,6 @@ public class CartStation extends CartMechanism {
 
     @Override
     public String[] getApplicableSigns () {
-        return new String[]{"station"};
+        return new String[] { "station" };
     }
 }

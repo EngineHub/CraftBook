@@ -14,25 +14,25 @@ import com.sk89q.craftbook.ic.ICFactory;
  */
 public class LevelTriggeredDFlipFlop extends AbstractIC {
 
-    public LevelTriggeredDFlipFlop(Server server, ChangedSign sign, ICFactory factory) {
+    public LevelTriggeredDFlipFlop (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Level-triggered D flip flop";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "D LEVL FLIPFLOP";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.get(0)) {
             chip.set(3, chip.get(1));
@@ -45,16 +45,15 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new LevelTriggeredDFlipFlop(getServer(), sign, this);
         }
     }
 }
-

@@ -1,20 +1,14 @@
 // $Id$
 /*
- * CraftBook
- * Copyright (C) 2010 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.mech;
@@ -45,16 +39,15 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
 /**
- * The default bridge mechanism -- signposts on either side of a 3xN plane of
- * (or 1xN plane if 1 on second line) blocks.
- *
+ * The default bridge mechanism -- signposts on either side of a 3xN plane of (or 1xN plane if 1 on second line) blocks.
+ * 
  * @author hash
  */
 public class Bridge extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Bridge> {
 
-        public Factory(MechanismsPlugin plugin) {
+        public Factory (MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
@@ -63,17 +56,15 @@ public class Bridge extends AbstractMechanic {
 
         /**
          * Explore around the trigger to find a Bridge; throw if things look funny.
-         *
-         * @param pt the trigger (should be a signpost)
-         *
-         * @return a Bridge if we could make a valid one, or null if this looked
-         *         nothing like a bridge.
-         *
-         * @throws InvalidMechanismException if the area looked like it was intended to be a bridge, but
-         *                                   it failed.
+         * 
+         * @param pt
+         *            the trigger (should be a signpost)
+         * @return a Bridge if we could make a valid one, or null if this looked nothing like a bridge.
+         * @throws InvalidMechanismException
+         *             if the area looked like it was intended to be a bridge, but it failed.
          */
         @Override
-        public Bridge detect(BlockWorldVector pt) throws InvalidMechanismException {
+        public Bridge detect (BlockWorldVector pt) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
@@ -87,19 +78,18 @@ public class Bridge extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         *
+         * 
          * @throws ProcessedMechanismException
          */
         @Override
-        public Bridge detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign)
-                throws InvalidMechanismException, ProcessedMechanismException {
+        public Bridge detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+                ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Bridge]")) {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" + ".infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -110,30 +100,28 @@ public class Bridge extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge End]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" + ".infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
                 }
                 sign.update(false);
                 player.print("mech.bridge.end-create");
-            } else
-                return null;
+            } else return null;
 
             throw new ProcessedMechanismException();
         }
     }
-    //Factory ends here
+
+    // Factory ends here
 
     /**
-     * @param trigger if you didn't already check if this is a signpost with appropriate
-     *                text, you're going on Santa's naughty list.
+     * @param trigger
+     *            if you didn't already check if this is a signpost with appropriate text, you're going on Santa's naughty list.
      * @param plugin
-     *
      * @throws InvalidMechanismException
      */
-    private Bridge(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private Bridge (Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
 
         super();
 
@@ -152,7 +140,7 @@ public class Bridge extends AbstractMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getTypeId();
             if (settings.canUseBlock(mat) && isValidBridge(proximalBaseCenter, mat, BukkitUtil.toChangedSign(trigger))) {
-                break findBase; //On Top
+                break findBase; // On Top
             }
 
             // If we've reached this point nothing was found on the top, check the bottom
@@ -162,8 +150,7 @@ public class Bridge extends AbstractMechanic {
                 if (isValidBridge(proximalBaseCenter, mat, BukkitUtil.toChangedSign(trigger))) {
                     break findBase; // it's below
                 } else throw new InvalidConstructionException("mech.bridge.material");
-            } else
-                throw new UnacceptableMaterialException("mech.bridge.unusable");
+            } else throw new UnacceptableMaterialException("mech.bridge.unusable");
         }
 
         // Find the other side
@@ -189,10 +176,10 @@ public class Bridge extends AbstractMechanic {
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farSide.getRelative(trigger.getFace(proximalBaseCenter));
         if (distalBaseCenter.getTypeId() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData()
-                || distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() != mat && distalBaseCenter
-                .getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData()
-                || distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() != mat && distalBaseCenter
-                .getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())
+                || distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() != mat
+                && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData()
+                || distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() != mat
+                && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())
             throw new InvalidConstructionException("mech.bridge.material");
 
         // Select the togglable region
@@ -201,7 +188,7 @@ public class Bridge extends AbstractMechanic {
         try {
             left = Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(2));
             if (left < 0) {
-                left = 0;   // No negatives please
+                left = 0; // No negatives please
             }
         } catch (Exception ignored) {
             left = 1;
@@ -225,17 +212,16 @@ public class Bridge extends AbstractMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0,0,0));
+            toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0,0,0));
+            toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }
 
         // Don't toggle the end points
-        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)),
-                BukkitUtil.toVector(SignUtil.getFront(trigger)));
+        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront(trigger)));
     }
 
     private MechanismsPlugin plugin;
@@ -257,18 +243,17 @@ public class Bridge extends AbstractMechanic {
      * The rectangle that we toggle.
      */
     private CuboidRegion toggle;
+
     // we don't store anything about the blocks on the ends because
     // we never poke them; just check that they're sane when we're building
-    // the bridge.  if this were a PersistentMechanic, those six blocks
+    // the bridge. if this were a PersistentMechanic, those six blocks
     // would be considered defining blocks, though.
 
-
     @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick (PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().bridgeSettings.enable) return;
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-            return; //wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; // wth? our manager is insane
 
         LocalPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if (!player.hasPermission("craftbook.mech.bridge.use")) {
@@ -283,32 +268,29 @@ public class Bridge extends AbstractMechanic {
         }
 
         if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
-            if (event.getPlayer().getItemInHand() != null)
-                if (getBridgeMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
+            if (event.getPlayer().getItemInHand() != null) if (getBridgeMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
-                    if (!player.hasPermission("craftbook.mech.bridge.restock")) {
-                        player.printError("mech.restock-permission");
-                        return;
-                    }
-
-                    int amount = 1;
-                    if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
-                        amount = 5;
-                    }
-                    addBlocks(sign, amount);
-
-                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
-                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                        } else {
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - amount);
-                        }
-
-                    player.print("mech.restock");
-                    event.setCancelled(true);
+                if (!player.hasPermission("craftbook.mech.bridge.restock")) {
+                    player.printError("mech.restock-permission");
                     return;
                 }
+
+                int amount = 1;
+                if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
+                    amount = 5;
+                }
+                addBlocks(sign, amount);
+
+                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) {
+                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                } else {
+                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
+                }
+
+                player.print("mech.restock");
+                event.setCancelled(true);
+                return;
+            }
 
         flipState(player);
 
@@ -318,7 +300,7 @@ public class Bridge extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
 
         if (!plugin.getLocalConfiguration().bridgeSettings.enableRedstone) return;
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
@@ -331,7 +313,7 @@ public class Bridge extends AbstractMechanic {
         }
     }
 
-    private void flipState(LocalPlayer player) {
+    private void flipState (LocalPlayer player) {
         // this is kinda funky, but we only check one position
         // to see if the bridge is open and/or closable.
         // efficiency choice :/
@@ -352,7 +334,7 @@ public class Bridge extends AbstractMechanic {
     private class ToggleRegionOpen implements Runnable {
 
         @Override
-        public void run() {
+        public void run () {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
@@ -374,68 +356,62 @@ public class Bridge extends AbstractMechanic {
 
         final LocalPlayer player;
 
-        public ToggleRegionClosed(LocalPlayer player) {
+        public ToggleRegionClosed (LocalPlayer player) {
 
             this.player = player;
         }
 
         @Override
-        public void run() {
+        public void run () {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getTypeId()))
-                    if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
-                        ChangedSign s = BukkitUtil.toChangedSign(trigger);
-                        if (hasEnoughBlocks(s)) {
-                            b.setTypeId(getBridgeMaterial());
-                            b.setData(getBridgeData());
-                            removeBlocks(s, 1);
-                        } else {
-                            if (player != null) {
-                                player.printError("Not enough blocks for mechanic to function!");
-                            }
-                            return;
-                        }
-                    } else {
+                if (canPassThrough(b.getTypeId())) if (plugin.getLocalConfiguration().mechSettings.stopDestruction) {
+                    ChangedSign s = BukkitUtil.toChangedSign(trigger);
+                    if (hasEnoughBlocks(s)) {
                         b.setTypeId(getBridgeMaterial());
                         b.setData(getBridgeData());
+                        removeBlocks(s, 1);
+                    } else {
+                        if (player != null) {
+                            player.printError("Not enough blocks for mechanic to function!");
+                        }
+                        return;
                     }
+                } else {
+                    b.setTypeId(getBridgeMaterial());
+                    b.setData(getBridgeData());
+                }
             }
         }
     }
 
-    private int getBridgeMaterial() {
+    private int getBridgeMaterial () {
 
         return proximalBaseCenter.getTypeId();
     }
 
-    private byte getBridgeData() {
+    private byte getBridgeData () {
 
         return proximalBaseCenter.getData();
     }
 
-    public boolean isValidBridge(Block baseCenter, int mat, ChangedSign s) throws InvalidMechanismException {
+    public boolean isValidBridge (Block baseCenter, int mat, ChangedSign s) throws InvalidMechanismException {
 
         if (!s.getLine(2).equals("0")) {
-            if (!(proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() == mat))
-                return false;
-        } else if (!(proximalBaseCenter.getTypeId() == mat))
-            return false;
+            if (!(proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() == mat)) return false;
+        } else if (!(proximalBaseCenter.getTypeId() == mat)) return false;
 
         if (!s.getLine(3).equals("0")) {
-            if (!(proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == mat))
-                return false;
-        } else if (!(proximalBaseCenter.getTypeId() == mat))
-            return false;
+            if (!(proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == mat)) return false;
+        } else if (!(proximalBaseCenter.getTypeId() == mat)) return false;
         return true;
     }
 
     /**
-     * @return whether the bridge can pass through this BlockType (and displace it
-     *         if needed).
+     * @return whether the bridge can pass through this BlockType (and displace it if needed).
      */
-    private static boolean canPassThrough(int t) {
+    private static boolean canPassThrough (int t) {
 
         int[] passableBlocks = new int[10];
         passableBlocks[0] = BlockID.WATER;
@@ -468,7 +444,7 @@ public class Bridge extends AbstractMechanic {
      */
     private static class UnacceptableMaterialException extends InvalidMechanismException {
 
-        public UnacceptableMaterialException(String msg) {
+        public UnacceptableMaterialException (String msg) {
 
             super(msg);
         }
@@ -483,14 +459,14 @@ public class Bridge extends AbstractMechanic {
 
         private static final long serialVersionUID = 8758644926222590049L;
 
-        public InvalidConstructionException(String msg) {
+        public InvalidConstructionException (String msg) {
 
             super(msg);
         }
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak (BlockBreakEvent event) {
 
         ChangedSign sign = null;
 
@@ -506,7 +482,7 @@ public class Bridge extends AbstractMechanic {
         }
     }
 
-    public boolean removeBlocks(ChangedSign s, int amount) {
+    public boolean removeBlocks (ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
@@ -515,7 +491,7 @@ public class Bridge extends AbstractMechanic {
         return curBlocks >= 0;
     }
 
-    public boolean addBlocks(ChangedSign s, int amount) {
+    public boolean addBlocks (ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
@@ -524,7 +500,7 @@ public class Bridge extends AbstractMechanic {
         return curBlocks >= 0;
     }
 
-    public int getBlocks(ChangedSign s) {
+    public int getBlocks (ChangedSign s) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return 0;
         int curBlocks;
@@ -536,7 +512,7 @@ public class Bridge extends AbstractMechanic {
         return curBlocks;
     }
 
-    public boolean hasEnoughBlocks(ChangedSign s) {
+    public boolean hasEnoughBlocks (ChangedSign s) {
 
         return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }

@@ -6,12 +6,12 @@ public class PlcException extends Exception {
 
     public final String detailedMessage;
 
-    public PlcException(String message) {
+    public PlcException (String message) {
 
         this(message, message);
     }
 
-    public PlcException(String message, String detailedMessage) {
+    public PlcException (String message, String detailedMessage) {
 
         super(message);
         this.detailedMessage = detailedMessage;

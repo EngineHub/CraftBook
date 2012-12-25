@@ -24,12 +24,12 @@ public class PaintingSwitch implements Listener {
     HashMap<Painting, String> paintings = new HashMap<Painting, String>();
     HashMap<String, Painting> players = new HashMap<String, Painting>();
 
-    public PaintingSwitch(MechanismsPlugin plugin) {
+    public PaintingSwitch (MechanismsPlugin plugin) {
 
         this.plugin = plugin;
     }
 
-    public boolean isBeingEdited(Painting paint) {
+    public boolean isBeingEdited (Painting paint) {
 
         String player = paintings.get(paint);
         if (player != null && players.get(player) != null) {
@@ -40,14 +40,13 @@ public class PaintingSwitch implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+    public void onPlayerInteractEntity (PlayerInteractEntityEvent event) {
 
         if (event.getRightClicked() instanceof Painting) {
             LocalPlayer player = plugin.wrap(event.getPlayer());
             if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
             Painting paint = (Painting) event.getRightClicked();
-            if (!plugin.canUseInArea(paint.getLocation(), event.getPlayer()))
-                return;
+            if (!plugin.canUseInArea(paint.getLocation(), event.getPlayer())) return;
             if (player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (!isBeingEdited(paint)) {
                     paintings.put(paint, player.getName());
@@ -68,14 +67,12 @@ public class PaintingSwitch implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onHeldItemChange(PlayerItemHeldEvent event) {
+    public void onHeldItemChange (PlayerItemHeldEvent event) {
 
         if (!plugin.getLocalConfiguration().paintingSettings.enabled) return;
         LocalPlayer player = plugin.wrap(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player
-                .getName()).isValid())
-            return;
+        if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player.getName()).isValid()) return;
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
             isForwards = true;
@@ -109,7 +106,7 @@ public class PaintingSwitch implements Listener {
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    public void onQuit (PlayerQuitEvent event) {
 
         Painting p = players.remove(event.getPlayer().getName());
         if (p != null) {

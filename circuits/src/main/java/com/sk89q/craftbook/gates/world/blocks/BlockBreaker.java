@@ -23,33 +23,33 @@ public class BlockBreaker extends AbstractIC {
 
     boolean above;
 
-    public BlockBreaker(Server server, ChangedSign block, boolean above, ICFactory factory) {
+    public BlockBreaker (Server server, ChangedSign block, boolean above, ICFactory factory) {
 
         super(server, block, factory);
         this.above = above;
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Block Breaker";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "BLOCK BREAK";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, breakBlock());
         }
     }
 
-    Block broken,chest;
+    Block broken, chest;
 
     int id;
     byte data;
@@ -69,39 +69,38 @@ public class BlockBreaker extends AbstractIC {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
             id = Integer.parseInt(split[0]);
             data = Byte.parseByte(split[1]);
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored) {}
     }
 
-    public boolean breakBlock() {
+    public boolean breakBlock () {
 
         boolean hasChest = false;
         if (chest != null && chest.getTypeId() == BlockID.CHEST) {
             hasChest = true;
         }
-        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId() == BlockID.PISTON_MOVING_PIECE) return false;
-
-        if(id > 0 && id != broken.getTypeId())
+        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId() == BlockID.PISTON_MOVING_PIECE)
             return false;
 
-        if(data > 0 && data != broken.getData())
-            return false;
+        if (id > 0 && id != broken.getTypeId()) return false;
+
+        if (data > 0 && data != broken.getData()) return false;
 
         broken.getDrops();
-        for(ItemStack blockstack  : broken.getDrops()) {
+        for (ItemStack blockstack : broken.getDrops()) {
 
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-            if(pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+            if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
-                PistonBaseMaterial p = (PistonBaseMaterial)pipe.getState().getData();
+                PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();
                 Block fac = pipe.getRelative(p.getFacing());
-                if(fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
+                if (fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
 
                     List<ItemStack> items = new ArrayList<ItemStack>();
                     items.add(blockstack);
-                    if(CircuitsPlugin.getInst().pipeFactory != null)
-                        if(CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(pipe), items) != null) {
+                    if (CircuitsPlugin.getInst().pipeFactory != null)
+                        if (CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(pipe), items) != null) {
                             continue;
                         }
                 }
@@ -109,8 +108,7 @@ public class BlockBreaker extends AbstractIC {
             if (hasChest) {
                 Chest c = (Chest) chest.getState();
                 HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
-                if (overflow.isEmpty())
-                    continue;
+                if (overflow.isEmpty()) continue;
                 else {
                     for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
                         dropItem(bit.getValue());
@@ -126,7 +124,7 @@ public class BlockBreaker extends AbstractIC {
         return true;
     }
 
-    public void dropItem(ItemStack item) {
+    public void dropItem (ItemStack item) {
 
         BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), item);
     }
@@ -135,31 +133,28 @@ public class BlockBreaker extends AbstractIC {
 
         boolean above;
 
-        public Factory(Server server, boolean above) {
+        public Factory (Server server, boolean above) {
 
             super(server);
             this.above = above;
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new BlockBreaker(getServer(), sign, above, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Breaks blocks above/below block sign is on.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "Optional block ID",
-                    null
-            };
+            String[] lines = new String[] { "Optional block ID", null };
             return lines;
         }
     }

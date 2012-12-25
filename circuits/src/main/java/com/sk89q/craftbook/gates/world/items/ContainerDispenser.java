@@ -27,7 +27,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class ContainerDispenser extends AbstractIC {
 
-    public ContainerDispenser(Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerDispenser (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -35,29 +35,28 @@ public class ContainerDispenser extends AbstractIC {
     int amount;
 
     @Override
-    public void load() {
+    public void load () {
         try {
             amount = Integer.parseInt(getSign().getLine(2));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             amount = 1;
         }
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Container Dispenser";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "CONTAINER DISPENSER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, dispense());
@@ -66,10 +65,10 @@ public class ContainerDispenser extends AbstractIC {
 
     /**
      * Returns true if the sign has water at the specified location.
-     *
+     * 
      * @return
      */
-    protected boolean dispense() {
+    protected boolean dispense () {
 
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -112,21 +111,23 @@ public class ContainerDispenser extends AbstractIC {
         return !(stack == null || inv == null) && dispenseItem(inv, stack);
     }
 
-    public boolean dispenseItem(Inventory inv, ItemStack item) {
+    public boolean dispenseItem (Inventory inv, ItemStack item) {
 
-        if(inv == null)
-            return false;
+        if (inv == null) return false;
         HashMap<Integer, ItemStack> over = inv.removeItem(new ItemStack(item.getTypeId(), amount, item.getDurability()));
-        if(over.isEmpty()) {
-            BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(), amount, item.getDurability()));
+        if (over.isEmpty()) {
+            BukkitUtil.toSign(getSign()).getWorld()
+                    .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(), amount, item.getDurability()));
             return true;
-        }
-        else {
-            for(ItemStack it : over.values()) {
+        } else {
+            for (ItemStack it : over.values()) {
 
-                if(amount - it.getAmount() < 1)
-                    continue;
-                BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getTypeId(), amount - it.getAmount(), it.getDurability()));
+                if (amount - it.getAmount() < 1) continue;
+                BukkitUtil
+                        .toSign(getSign())
+                        .getWorld()
+                        .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(),
+                                new ItemStack(it.getTypeId(), amount - it.getAmount(), it.getDurability()));
                 return true;
             }
         }
@@ -135,30 +136,27 @@ public class ContainerDispenser extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ContainerDispenser(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Dispenses items out of containers.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "amount to remove",
-                    null
-            };
+            String[] lines = new String[] { "amount to remove", null };
             return lines;
         }
     }

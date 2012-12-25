@@ -18,7 +18,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 public abstract class SetBlock extends AbstractIC {
 
-    public SetBlock(Server server, ChangedSign sign, ICFactory factory) {
+    public SetBlock (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -28,7 +28,7 @@ public abstract class SetBlock extends AbstractIC {
     byte meta;
 
     @Override
-    public void load() {
+    public void load () {
         String[] splitBlockData = ICUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase().trim(), 2);
         String strBlock = splitBlockData[0];
         String strMeta = "";
@@ -42,26 +42,21 @@ public abstract class SetBlock extends AbstractIC {
         } catch (Exception e) {
             try {
                 block = BlockType.lookup(strBlock).getID();
-            }
-            catch(Exception ignored) {
+            } catch (Exception ignored) {
             }
         }
 
         try {
             if (!strMeta.isEmpty()) {
                 meta = Byte.parseByte(strMeta);
-            }
-            else
-                meta = -1;
+            } else meta = -1;
         } catch (Exception ignored) {
             meta = -1;
         }
     }
 
-    public void onTrigger() {
-        if (BlockType.fromID(block) == null || block >= 256) {
-            return;
-        }
+    public void onTrigger () {
+        if (BlockType.fromID(block) == null || block >= 256) { return; }
 
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -69,24 +64,20 @@ public abstract class SetBlock extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         chip.setOutput(0, chip.getInput(0));
 
         onTrigger();
     }
 
-    protected abstract void doSet(Block block, int id, byte meta, boolean force);
+    protected abstract void doSet (Block block, int id, byte meta, boolean force);
 
-    public boolean takeFromChest(Block bl, int id, byte data) {
+    public boolean takeFromChest (Block bl, int id, byte data) {
 
-        if (bl.getTypeId() != BlockID.CHEST) {
-            return false;
-        }
+        if (bl.getTypeId() != BlockID.CHEST) { return false; }
         BlockState state = bl.getState();
-        if (!(state instanceof Chest)) {
-            return false;
-        }
+        if (!(state instanceof Chest)) { return false; }
         Chest c = (Chest) state;
         ItemStack[] is = c.getInventory().getContents();
         for (int i = 0; i < is.length; i++) {

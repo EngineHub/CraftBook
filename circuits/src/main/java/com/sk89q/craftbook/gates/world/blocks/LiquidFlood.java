@@ -21,25 +21,25 @@ public class LiquidFlood extends AbstractIC {
     String liquid;
     Location centre;
 
-    public LiquidFlood(Server server, ChangedSign block, ICFactory factory) {
+    public LiquidFlood (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Liquid Flooder";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "LIQUID FLOOD";
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
@@ -51,18 +51,12 @@ public class LiquidFlood extends AbstractIC {
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
                 int z = Integer.parseInt(splitCoords[2]);
-                if(x > 16)
-                    x = 16;
-                if(x < -16)
-                    x = -16;
-                if(y > 16)
-                    y = 16;
-                if(y < -16)
-                    y = -16;
-                if(z > 16)
-                    z = 16;
-                if(z < -16)
-                    z = -16;
+                if (x > 16) x = 16;
+                if (x < -16) x = -16;
+                if (y > 16) y = 16;
+                if (y < -16) y = -16;
+                if (z > 16) z = 16;
+                if (z < -16) z = -16;
                 centre.add(x, y, z);
             }
         } catch (Exception ignored) {
@@ -72,7 +66,7 @@ public class LiquidFlood extends AbstractIC {
         liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
     }
 
-    public void doStuff(ChipState chip) {
+    public void doStuff (ChipState chip) {
 
         if (chip.getInput(0)) {
             for (int x = -radius + 1; x < radius; x++) {
@@ -82,10 +76,8 @@ public class LiquidFlood extends AbstractIC {
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                        if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER :
-                            BlockID.LAVA)) {
-                            b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
-                                BlockID.STATIONARY_LAVA);
+                        if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)) {
+                            b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID.STATIONARY_LAVA);
                         }
                     }
                 }
@@ -98,9 +90,8 @@ public class LiquidFlood extends AbstractIC {
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                        if (b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA) || b
-                                .getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
-                                    BlockID.STATIONARY_LAVA)) {
+                        if (b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)
+                                || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID.STATIONARY_LAVA)) {
                             b.setTypeId(BlockID.AIR);
                         }
                     }
@@ -110,38 +101,34 @@ public class LiquidFlood extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         doStuff(chip);
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new LiquidFlood(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Floods an area with a liquid.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "water/lava",
-                    "radius=x:y:z offset"
-            };
+            String[] lines = new String[] { "water/lava", "radius=x:y:z offset" };
             return lines;
         }
     }

@@ -15,13 +15,13 @@ public class ContainerDispenserST extends ContainerDispenser implements SelfTrig
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self-Triggered Container Dispenser";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "CONTAINER DISPENSER ST";
     }
@@ -38,13 +38,13 @@ public class ContainerDispenserST extends ContainerDispenser implements SelfTrig
 
     public static class Factory extends ContainerDispenser.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ContainerDispenserST(getServer(), sign, this);
         }

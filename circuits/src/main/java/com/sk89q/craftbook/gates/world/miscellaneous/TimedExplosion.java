@@ -19,13 +19,13 @@ public class TimedExplosion extends AbstractIC {
     Block signBlock;
     Block infront;
 
-    public TimedExplosion(Server server, ChangedSign block, ICFactory factory) {
+    public TimedExplosion (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         try {
             ticks = Integer.parseInt(getSign().getLine(2));
@@ -47,28 +47,27 @@ public class TimedExplosion extends AbstractIC {
         try {
             signBlock = BukkitUtil.toSign(getSign()).getBlock();
             infront = signBlock.getRelative(SignUtil.getBack(signBlock).getOppositeFace());
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored){}
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Timed Explosive";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "TIME BOMB";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
-            TNTPrimed tnt = (TNTPrimed) signBlock.getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
-                    EntityType.PRIMED_TNT);
+            TNTPrimed tnt = (TNTPrimed) signBlock.getWorld().spawnEntity(BlockUtil.getBlockCentre(infront), EntityType.PRIMED_TNT);
             tnt.setIsIncendiary(flamey);
             if (ticks > 0) {
                 tnt.setFuseTicks(ticks);
@@ -81,30 +80,27 @@ public class TimedExplosion extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new TimedExplosion(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Spawn tnt with custom fuse and yield.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "time in ticks",
-                    "explosion radius (ending with ! makes fire)"
-            };
+            String[] lines = new String[] { "time in ticks", "explosion radius (ending with ! makes fire)" };
             return lines;
         }
     }

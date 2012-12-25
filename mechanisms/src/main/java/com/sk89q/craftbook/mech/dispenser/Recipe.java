@@ -14,40 +14,44 @@ public abstract class Recipe {
 
     private final int[] recipe;
 
-    public Recipe(int[] recipe) {
+    public Recipe (int[] recipe) {
 
         this.recipe = recipe.clone();
     }
 
     /**
      * Does the recipe action.
-     *
-     * @param dis the dispenser firing the item
-     * @param item the original item to be fired
-     * @param velocity the velocity the item is to be fired at
-     * @param event the BlockDispenseEvent
-     *
+     * 
+     * @param dis
+     *            the dispenser firing the item
+     * @param item
+     *            the original item to be fired
+     * @param velocity
+     *            the velocity the item is to be fired at
+     * @param event
+     *            the BlockDispenseEvent
      * @return true if event needs to be cancelled.
      */
-    public abstract boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event);
+    public abstract boolean doAction (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event);
 
     /**
      * Gets the contents of this recipe as a 9-element array representing the 3x3 dispenser grid.
+     * 
      * @return the recipe contents
      */
-    public int[] getRecipe() {
+    public int[] getRecipe () {
         return recipe;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals (Object o) {
 
         return this == o || o instanceof Recipe && Arrays.equals(recipe, ((Recipe) o).recipe);
 
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         return Arrays.hashCode(recipe);
     }
 }

@@ -28,13 +28,13 @@ public class Pulser extends AbstractIC {
     private int taskId;
     private boolean running;
 
-    public Pulser(Server server, ChangedSign block, ICFactory factory) {
+    public Pulser (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load() {
+    public void load () {
 
         String line2 = getSign().getLine(2);
         String line3 = getSign().getLine(3);
@@ -43,8 +43,7 @@ public class Pulser extends AbstractIC {
             pulseLength = Integer.parseInt(split[0]);
             if (split.length > 1) startDelay = Integer.parseInt(split[1]);
             else startDelay = 1;
-        }
-        else {
+        } else {
             pulseLength = 5;
             startDelay = 1;
         }
@@ -53,8 +52,7 @@ public class Pulser extends AbstractIC {
             pulseCount = Integer.parseInt(split[0]);
             if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
             else pauseLength = 5;
-        }
-        else {
+        } else {
             pulseCount = 1;
             pauseLength = 5;
         }
@@ -64,49 +62,47 @@ public class Pulser extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Pulser";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "PULSER";
     }
 
     @Override
-    public final void trigger(ChipState chip) {
+    public final void trigger (ChipState chip) {
 
         if (getInput(chip)) {
             startThread(chip);
         }
     }
 
-    private void startThread(ChipState chip) {
+    private void startThread (ChipState chip) {
 
         if (running) return;
         // start a pulse task and run it every tick after the given delay
         // save the given task id
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-                CircuitsPlugin.getInst(),
-                new PulseTask(chip, pulseLength, pulseCount, pauseLength),
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(CircuitsPlugin.getInst(), new PulseTask(chip, pulseLength, pulseCount, pauseLength),
                 startDelay, 1L);
         running = true;
     }
 
-    private void stopThread() {
+    private void stopThread () {
 
         Bukkit.getScheduler().cancelTask(taskId);
         running = false;
     }
 
-    protected boolean getInput(ChipState chip) {
+    protected boolean getInput (ChipState chip) {
 
         return chip.getInput(0);
     }
 
-    protected void setOutput(ChipState chip, boolean on) {
+    protected void setOutput (ChipState chip, boolean on) {
 
         chip.setOutput(0, on);
     }
@@ -126,7 +122,7 @@ public class Pulser extends AbstractIC {
         private int currentPulse;
         private boolean on = false;
 
-        public PulseTask(ChipState chip, int pulseLength, int pulseCount, int pauseLength) {
+        public PulseTask (ChipState chip, int pulseLength, int pulseCount, int pauseLength) {
 
             if (pulseLength == 0) {
                 pulseLength = 1;
@@ -142,7 +138,7 @@ public class Pulser extends AbstractIC {
         }
 
         @Override
-        public void run() {
+        public void run () {
             // first increase the current tick by one
             currentTick++;
             if (currentTick < 2) {
@@ -157,23 +153,23 @@ public class Pulser extends AbstractIC {
                     increasePulse();
                 }
             } else // start the next pulse if the pause is over
-                if (currentTick % pauseLength == 0) {
-                    startPulse();
-                }
+            if (currentTick % pauseLength == 0) {
+                startPulse();
+            }
             // if all pulses were sent stop the thread
             if (!on && currentPulseCount % pulseCount == 0) {
                 stopThread();
             }
         }
 
-        private void startPulse() {
+        private void startPulse () {
 
             setOutput(chip, true);
             currentPulse++;
             on = true;
         }
 
-        private void stopPulse() {
+        private void stopPulse () {
 
             setOutput(chip, false);
             currentPulse = 0;
@@ -181,7 +177,7 @@ public class Pulser extends AbstractIC {
             on = false;
         }
 
-        private void increasePulse() {
+        private void increasePulse () {
 
             currentPulse++;
         }
@@ -189,19 +185,19 @@ public class Pulser extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new Pulser(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             String line2 = sign.getLine(2);
             String line3 = sign.getLine(3);
@@ -226,19 +222,16 @@ public class Pulser extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
-            return "Fires a (choosable) pulse of high-signals with a choosable length of the signal " +
-                    "and the pause between the pulses when the input goes from low to high.";
+            return "Fires a (choosable) pulse of high-signals with a choosable length of the signal "
+                    + "and the pause between the pulses when the input goes from low to high.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            return new String[]{
-                    "[pulselength[:startdelay]]",
-                    "[pulsecount[:pauselength in serverticks]]"
-            };
+            return new String[] { "[pulselength[:startdelay]]", "[pulsecount[:pauselength in serverticks]]" };
         }
     }
 }

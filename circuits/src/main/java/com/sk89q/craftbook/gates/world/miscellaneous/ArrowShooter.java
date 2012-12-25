@@ -1,23 +1,17 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.world.miscellaneous;
-
 
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -38,7 +32,7 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class ArrowShooter extends AbstractIC {
 
-    public ArrowShooter(Server server, ChangedSign sign, ICFactory factory) {
+    public ArrowShooter (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -48,7 +42,7 @@ public class ArrowShooter extends AbstractIC {
     float vert = 0.2F;
 
     @Override
-    public void load() {
+    public void load () {
         try {
             String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
             speed = Float.parseFloat(velocity[0]);
@@ -77,26 +71,26 @@ public class ArrowShooter extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Arrow Shooter";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "ARROW SHOOTER";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             shootArrows(1);
         }
     }
 
-    public void shootArrows(int n) {
+    public void shootArrows (int n) {
 
         Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
@@ -113,33 +107,29 @@ public class ArrowShooter extends AbstractIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ArrowShooter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Shoots an arrow.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "speed:spread",
-                    "vertical gain"
-            };
+            String[] lines = new String[] { "speed:spread", "vertical gain" };
             return lines;
         }
     }

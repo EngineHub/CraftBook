@@ -9,7 +9,7 @@ public class BaseAIMechanic {
     public MechanismsPlugin plugin;
     public Entity entity;
 
-    public BaseAIMechanic(MechanismsPlugin plugin, Entity entity) {
+    public BaseAIMechanic (MechanismsPlugin plugin, Entity entity) {
 
         this.plugin = plugin;
         this.entity = entity;

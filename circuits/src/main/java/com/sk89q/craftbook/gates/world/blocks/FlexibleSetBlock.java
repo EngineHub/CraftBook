@@ -1,19 +1,14 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.world.blocks;
@@ -35,19 +30,19 @@ import com.sk89q.craftbook.util.SignUtil;
 
 public class FlexibleSetBlock extends AbstractIC {
 
-    public FlexibleSetBlock(Server server, ChangedSign sign, ICFactory factory) {
+    public FlexibleSetBlock (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
-    int x,y,z;
+    int x, y, z;
     Block body;
     boolean hold;
     int block;
     byte data;
 
     @Override
-    public void load() {
+    public void load () {
 
         // Valid Line 3:
         // [axis][sign][distance]:[blockTypeId]:[blockData]
@@ -99,9 +94,7 @@ public class FlexibleSetBlock extends AbstractIC {
             } catch (Exception e) {
                 data = 0;
             }
-        }
-        else
-            data = 0;
+        } else data = 0;
 
         hold = line4.toUpperCase().contains("H");
 
@@ -121,26 +114,25 @@ public class FlexibleSetBlock extends AbstractIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Flexible Set";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "FLEX SET";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         chip.setOutput(0, chip.getInput(0));
 
         boolean inp = chip.getInput(0);
 
-        if(body == null)
-            return;
+        if (body == null) return;
 
         if (inp) {
             body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
@@ -151,32 +143,29 @@ public class FlexibleSetBlock extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new FlexibleSetBlock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             String line3 = sign.getLine(2).toUpperCase();
 
             String[] params = ICUtil.COLON_PATTERN.split(line3);
-            if (params.length < 2)
-                throw new ICVerificationException("Not enough parameters on second line!");
-            if (params[0].length() < 2)
-                throw new ICVerificationException("Invalid first parameter!");
+            if (params.length < 2) throw new ICVerificationException("Not enough parameters on second line!");
+            if (params[0].length() < 2) throw new ICVerificationException("Invalid first parameter!");
 
             // Get and validate axis
             String axis = params[0].substring(0, 1);
-            if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
-                throw new ICVerificationException("Invalid axis!");
+            if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) throw new ICVerificationException("Invalid axis!");
 
             // Get and validate operator (default +)
             String op = params[0].substring(1, 2);

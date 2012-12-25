@@ -4,5 +4,5 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 public interface TargetAIMechanic {
 
-    public abstract void onEntityTarget(EntityTargetEvent event);
+    public abstract void onEntityTarget (EntityTargetEvent event);
 }

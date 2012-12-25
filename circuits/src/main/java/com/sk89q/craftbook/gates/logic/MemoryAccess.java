@@ -19,32 +19,32 @@ import com.sk89q.craftbook.util.GeneralUtil;
 
 public class MemoryAccess extends AbstractIC {
 
-    public MemoryAccess(Server server, ChangedSign block, ICFactory factory) {
+    public MemoryAccess (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "ROM Accessor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "ROM";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             readMemory(chip);
         }
     }
 
-    public boolean readMemory(ChipState chip) {
+    public boolean readMemory (ChipState chip) {
 
         try {
             File f = new File(CircuitsPlugin.getInst().romFolder, getSign().getLine(2) + ".dat");
@@ -64,16 +64,15 @@ public class MemoryAccess extends AbstractIC {
         return false;
     }
 
-    public static class Factory extends AbstractICFactory implements
-    RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new MemoryAccess(getServer(), sign, this);
         }

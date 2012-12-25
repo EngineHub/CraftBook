@@ -16,25 +16,25 @@ import com.sk89q.craftbook.ic.ICVerificationException;
  */
 public class CombinationLock extends AbstractIC {
 
-    public CombinationLock(Server server, ChangedSign block, ICFactory factory) {
+    public CombinationLock (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Combination Lock";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "COMBINATION LOCK";
     }
 
     @Override
-    public void trigger(ChipState state) {
+    public void trigger (ChipState state) {
 
         try {
             Character[] data = ArrayUtils.toObject(getSign().getLine(2).toCharArray());
@@ -61,37 +61,33 @@ public class CombinationLock extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new CombinationLock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2) == null && sign.getLine(2).isEmpty())
-                throw new ICVerificationException("Line three needs to be a combination");
+            if (sign.getLine(2) == null && sign.getLine(2).isEmpty()) throw new ICVerificationException("Line three needs to be a combination");
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Checks combination on sign against inputs.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "Combination. X = On, O = Off (XOX)",
-                    null
-            };
+            String[] lines = new String[] { "Combination. X = On, O = Off (XOX)", null };
             return lines;
         }
     }

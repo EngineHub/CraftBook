@@ -16,50 +16,50 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
  */
 public class ItemNotSensorST extends ItemSensor implements SelfTriggeredIC {
 
-    public ItemNotSensorST(Server server, ChangedSign block, ICFactory factory) {
+    public ItemNotSensorST (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self Triggered Item Not Sensor";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "ST ITEM NOT SENSOR";
     }
 
     @Override
-    public void think(ChipState state) {
+    public void think (ChipState state) {
 
         state.setOutput(0, !isDetected());
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive () {
 
         return true;
     }
 
     public static class Factory extends ItemNotSensor.Factory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ItemNotSensorST(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify (ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }

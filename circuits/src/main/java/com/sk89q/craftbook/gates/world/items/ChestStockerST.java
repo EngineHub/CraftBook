@@ -37,13 +37,13 @@ public class ChestStockerST extends ChestStocker implements SelfTriggeredIC {
 
     public static class Factory extends ChestStocker.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new ChestStockerST(getServer(), sign, this);
         }

@@ -24,7 +24,7 @@ public class AIMechanic implements Listener {
 
     MechanismsPlugin plugin;
 
-    public AIMechanic(MechanismsPlugin plugin) {
+    public AIMechanic (MechanismsPlugin plugin) {
 
         this.plugin = plugin;
 
@@ -39,7 +39,7 @@ public class AIMechanic implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityTarget(EntityTargetEvent event) {
+    public void onEntityTarget (EntityTargetEvent event) {
 
         if (event.getTarget() == null || event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
@@ -57,7 +57,7 @@ public class AIMechanic implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityShootBow(EntityShootBowEvent event) {
+    public void onEntityShootBow (EntityShootBowEvent event) {
 
         if (event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
@@ -75,10 +75,9 @@ public class AIMechanic implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean registerAIMechanic(Class<?> mechanic) {
+    public boolean registerAIMechanic (Class<?> mechanic) {
 
-        return BaseAIMechanic.class.isAssignableFrom(mechanic) && !mechanics.contains(mechanic) && mechanics.add(
-                (Class<BaseAIMechanic>) mechanic);
+        return BaseAIMechanic.class.isAssignableFrom(mechanic) && !mechanics.contains(mechanic) && mechanics.add((Class<BaseAIMechanic>) mechanic);
 
     }
 }

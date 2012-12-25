@@ -31,25 +31,25 @@ public class Melody extends AbstractIC {
     MidiJingleSequencer sequencer;
     JingleNoteManager jNote = new JingleNoteManager();
 
-    public Melody(Server server, ChangedSign block, ICFactory factory) {
+    public Melody (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Melody Player";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "MELODY";
     }
 
     @Override
-    public void unload() {
+    public void unload () {
 
         try {
             sequencer.stop();
@@ -67,7 +67,7 @@ public class Melody extends AbstractIC {
     boolean forceStart;
 
     @Override
-    public void load() {
+    public void load () {
 
         try {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
@@ -79,19 +79,14 @@ public class Melody extends AbstractIC {
             }
 
             forceStart = split[1].equalsIgnoreCase("START");
+        } catch (Exception e) {
         }
-        catch(Exception e){}
 
         midiName = getSign().getLine(2);
 
-        File[] trialPaths = {
-                new File(CircuitsPlugin.getInst().midiFolder, midiName),
-                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"),
-                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".midi"),
-                new File("midi", midiName),
-                new File("midi", midiName + ".mid"),
-                new File("midi", midiName + ".midi"),
-        };
+        File[] trialPaths = { new File(CircuitsPlugin.getInst().midiFolder, midiName),
+                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"), new File(CircuitsPlugin.getInst().midiFolder, midiName + ".midi"),
+                new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"), };
 
         for (File f : trialPaths)
             if (f.exists()) {
@@ -101,7 +96,7 @@ public class Melody extends AbstractIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (file == null || !file.exists()) {
             getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
@@ -109,8 +104,7 @@ public class Melody extends AbstractIC {
         }
 
         try {
-            if (sequencer != null && !sequencer.isSongPlaying() && forceStart)
-                return;
+            if (sequencer != null && !sequencer.isSongPlaying() && forceStart) return;
         } catch (Exception ignored) {
         }
 
@@ -128,8 +122,7 @@ public class Melody extends AbstractIC {
                     if (player == null) {
                         continue;
                     }
-                    if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(),
-                            radius)) {
+                    if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius)) {
                         continue;
                     }
                     jNote.play(player, sequencer);
@@ -150,13 +143,13 @@ public class Melody extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             try {
                 if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
@@ -170,18 +163,15 @@ public class Melody extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Plays a MIDI.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "MIDI name",
-                    "Radius"
-            };
+            String[] lines = new String[] { "MIDI name", "Radius" };
             return lines;
         }
     }

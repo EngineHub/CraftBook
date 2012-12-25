@@ -16,7 +16,7 @@ import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * Custom Crafting Recipe Handler
- *
+ * 
  * @author Me4502
  */
 public class CustomCrafting {
@@ -24,11 +24,11 @@ public class CustomCrafting {
     protected final RecipeManager recipes;
     protected final MechanismsPlugin plugin;
 
-    public CustomCrafting(MechanismsPlugin plugin) {
+    public CustomCrafting (MechanismsPlugin plugin) {
 
         this.plugin = plugin;
-        recipes = new RecipeManager(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(),
-                "crafting-recipes.yml")), plugin.getDataFolder());
+        recipes = new RecipeManager(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml")),
+                plugin.getDataFolder());
         Collection<Recipe> recipeCollection = recipes.getRecipes();
         for (Recipe r : recipeCollection) {
             try {
@@ -61,8 +61,7 @@ public class CustomCrafting {
                 }
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().severe("Corrupt or invalid recipe!");
-                plugin.getLogger().severe("Please either delete custom-crafting.yml, " +
-                        "or fix the issues with your recipes file!");
+                plugin.getLogger().severe("Please either delete custom-crafting.yml, " + "or fix the issues with your recipes file!");
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
                 plugin.getLogger().severe(GeneralUtil.getStackTrace(e));

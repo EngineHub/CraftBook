@@ -25,26 +25,25 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
  */
 public class PlayerSensor extends AbstractIC {
 
-    public PlayerSensor(Server server, ChangedSign block, ICFactory factory) {
+    public PlayerSensor (Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
-
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Player Detection";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "P-DETECTION";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
@@ -59,15 +58,14 @@ public class PlayerSensor extends AbstractIC {
     String nameLine;
 
     @Override
-    public void load() {
-        radius = 10; //Default Radius
+    public void load () {
+        radius = 10; // Default Radius
         location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
 
         if (getLine(3).contains(":")) {
             type = Type.getFromChar(getLine(3).trim().toCharArray()[0]);
         }
-        if(type == null)
-            type = Type.PLAYER;
+        if (type == null) type = Type.PLAYER;
 
         nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "").trim();
 
@@ -92,14 +90,12 @@ public class PlayerSensor extends AbstractIC {
         }
     }
 
-    protected boolean isDetected() {
+    protected boolean isDetected () {
 
         if (reg != null) {
 
             for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-                if (reg.contains(p.getLocation().getBlockX(),p.getLocation().getBlockY(),p.getLocation().getBlockZ())) {
-                    return true;
-                }
+                if (reg.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ())) { return true; }
             }
         }
 
@@ -117,9 +113,7 @@ public class PlayerSensor extends AbstractIC {
                     return true;
                 } else if (type == Type.PLAYER && e.getName().toLowerCase().startsWith(nameLine.toLowerCase())) {
                     return true;
-                } else if (type == Type.GROUP && CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine)) {
-                    return true;
-                }
+                } else if (type == Type.GROUP && CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine)) { return true; }
             }
         }
 
@@ -128,49 +122,46 @@ public class PlayerSensor extends AbstractIC {
 
     private enum Type {
 
-        PLAYER('p'),
-        GROUP('g');
+        PLAYER('p'), GROUP('g');
 
-        private Type(char prefix) {
+        private Type (char prefix) {
 
             this.prefix = prefix;
         }
 
         char prefix;
 
-        public static Type getFromChar(char c) {
+        public static Type getFromChar (char c) {
             c = Character.toLowerCase(c);
-            for (Type t : values()) if (t.prefix == c) return t;
+            for (Type t : values())
+                if (t.prefix == c) return t;
             return null;
         }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new PlayerSensor(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription () {
 
             return "Detects players within a radius.";
         }
 
         @Override
-        public String[] getLineHelp() {
+        public String[] getLineHelp () {
 
-            String[] lines = new String[] {
-                    "radius=x:y:z offset, or r:regionname for WorldGuard regions",
-                    "p:playername or g:permissiongroup"
-            };
+            String[] lines = new String[] { "radius=x:y:z offset, or r:regionname for WorldGuard regions", "p:playername or g:permissiongroup" };
             return lines;
         }
     }

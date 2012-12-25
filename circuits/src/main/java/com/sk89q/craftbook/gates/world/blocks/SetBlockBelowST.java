@@ -15,13 +15,13 @@ public class SetBlockBelowST extends SetBlockBelow implements SelfTriggeredIC {
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle () {
 
         return "Self-Triggered Set Block Below";
     }
 
     @Override
-    public String getSignTitle() {
+    public String getSignTitle () {
 
         return "SET BLOCK BELOW ST";
     }
@@ -38,13 +38,13 @@ public class SetBlockBelowST extends SetBlockBelow implements SelfTriggeredIC {
 
     public static class Factory extends SetBlockBelow.Factory {
 
-        public Factory(Server server) {
+        public Factory (Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create (ChangedSign sign) {
 
             return new SetBlockBelowST(getServer(), sign, this);
         }
