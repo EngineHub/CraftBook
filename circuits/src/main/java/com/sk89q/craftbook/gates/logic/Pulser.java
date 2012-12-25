@@ -1,18 +1,10 @@
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 /**
  * @author Silthus
@@ -49,8 +41,8 @@ public class Pulser extends AbstractIC {
         }
         if (!(line3 == null) && !line3.isEmpty()) {
             String[] split = ICUtil.COLON_PATTERN.split(line3, 2);
-            pulseCount = Integer.parseInt(split[0]);
-            if (split.length > 1) pauseLength = Integer.parseInt(split[1]);
+            pulseCount = Math.max(1, Integer.parseInt(split[0]));
+            if (split.length > 1) pauseLength = Math.max(1, Integer.parseInt(split[1]));
             else pauseLength = 5;
         } else {
             pulseCount = 1;
