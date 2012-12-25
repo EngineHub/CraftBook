@@ -352,42 +352,42 @@ public class SignUtil {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
-                        return BlockFace.WEST;
+                        return BlockFace.EAST;
                     case 0x1:
                     case 0x2:
                     case 0x3:
-                        return BlockFace.NORTH_WEST;
+                        return BlockFace.SOUTH_EAST;
                     case 0x4:
-                        return BlockFace.NORTH;
+                        return BlockFace.SOUTH;
                     case 0x5:
                     case 0x6:
                     case 0x7:
-                        return BlockFace.NORTH_EAST;
+                        return BlockFace.SOUTH_WEST;
                     case 0x8:
-                        return BlockFace.EAST;
+                        return BlockFace.WEST;
                     case 0x9:
                     case 0xA:
                     case 0xB:
-                        return BlockFace.SOUTH_EAST;
+                        return BlockFace.NORTH_WEST;
                     case 0xC:
-                        return BlockFace.SOUTH;
+                        return BlockFace.NORTH;
                     case 0xD:
                     case 0xE:
                     case 0xF:
-                        return BlockFace.SOUTH_WEST;
+                        return BlockFace.NORTH_EAST;
                     default:
                         return BlockFace.SELF;
                 }
             } else {
                 switch (sign.getData()) {
                     case 0x2:
-                        return BlockFace.EAST;
-                    case 0x3:
                         return BlockFace.WEST;
+                    case 0x3:
+                        return BlockFace.EAST;
                     case 0x4:
-                        return BlockFace.NORTH;
-                    case 0x5:
                         return BlockFace.SOUTH;
+                    case 0x5:
+                        return BlockFace.NORTH;
                     default:
                         return BlockFace.SELF;
                 }
@@ -457,42 +457,42 @@ public class SignUtil {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
-                        return BlockFace.EAST;
+                        return BlockFace.WEST;
                     case 0x1:
                     case 0x2:
                     case 0x3:
-                        return BlockFace.SOUTH_EAST;
+                        return BlockFace.NORTH_WEST;
                     case 0x4:
-                        return BlockFace.SOUTH;
+                        return BlockFace.NORTH;
                     case 0x5:
                     case 0x6:
                     case 0x7:
-                        return BlockFace.SOUTH_WEST;
+                        return BlockFace.NORTH_EAST;
                     case 0x8:
-                        return BlockFace.WEST;
+                        return BlockFace.EAST;
                     case 0x9:
                     case 0xA:
                     case 0xB:
-                        return BlockFace.NORTH_WEST;
+                        return BlockFace.SOUTH_EAST;
                     case 0xC:
-                        return BlockFace.NORTH;
+                        return BlockFace.SOUTH;
                     case 0xD:
                     case 0xE:
                     case 0xF:
-                        return BlockFace.NORTH_EAST;
+                        return BlockFace.SOUTH_WEST;
                     default:
                         return BlockFace.SELF;
                 }
             } else {
                 switch (sign.getData()) {
                     case 0x2:
-                        return BlockFace.WEST;
-                    case 0x3:
                         return BlockFace.EAST;
+                    case 0x3:
+                        return BlockFace.WEST;
                     case 0x4:
-                        return BlockFace.SOUTH;
-                    case 0x5:
                         return BlockFace.NORTH;
+                    case 0x5:
+                        return BlockFace.SOUTH;
                     default:
                         return BlockFace.SELF;
                 }
