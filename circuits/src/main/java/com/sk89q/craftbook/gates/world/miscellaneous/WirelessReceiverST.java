@@ -47,11 +47,6 @@ public class WirelessReceiverST extends WirelessReceiver implements SelfTriggere
 
         Boolean val = WirelessTransmitter.getValue(band);
 
-        if (val == null) {
-            chip.setOutput(0, false);
-            return;
-        }
-
         chip.setOutput(0, val);
     }
 
