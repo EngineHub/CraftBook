@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -634,8 +635,9 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         boolean ret = true;
 
-        for (MechanicFactory<? extends Mechanic> factory : manager.factories) {
-            if (!unregisterMechanic(factory)) ret = false;
+        Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();;
+        while (iterator.hasNext()) {
+            if (!unregisterMechanic(iterator.next())) ret = false;
         }
 
         return ret;
@@ -718,36 +720,36 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             try {
                 thisIC:
                 {
-                    RegisteredICFactory ric = icManager.registered.get(ic);
-                    IC tic = ric.getFactory().create(null);
-                    if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
-                            && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
-                    if (parameters != null) {
-                        for (char c : parameters) {
-                            if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
-                            else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
-                            else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks")) break thisIC;
-                            else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items")) break thisIC;
-                            else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity")) break thisIC;
-                            else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith("weather")) break thisIC;
-                            else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic")) break thisIC;
-                            else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith("miscellaneous")) break thisIC;
-                            else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith("sensors")) break thisIC;
+                RegisteredICFactory ric = icManager.registered.get(ic);
+                IC tic = ric.getFactory().create(null);
+                if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
+                        && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
+                if (parameters != null) {
+                    for (char c : parameters) {
+                        if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
+                        else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
+                        else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks")) break thisIC;
+                        else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items")) break thisIC;
+                        else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity")) break thisIC;
+                        else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith("weather")) break thisIC;
+                        else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic")) break thisIC;
+                        else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith("miscellaneous")) break thisIC;
+                        else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith("sensors")) break thisIC;
 
-                        }
                     }
-                    col = !col;
-                    ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
+                }
+                col = !col;
+                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                    if (ric.getFactory() instanceof RestrictedIC) {
-                        if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
-                            colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                        }
-                    } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                if (ric.getFactory() instanceof RestrictedIC) {
+                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
                         colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                     }
-                    strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
-                            + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
+                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                }
+                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
+                        + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
                 Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" + " it to Me4502");
