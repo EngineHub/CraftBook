@@ -77,8 +77,16 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
     @Override
     public void load() {
 
-        dist = Integer.parseInt(getSign().getLine(2));
-        time = Long.parseLong(getSign().getLine(3));
+        try {
+            dist = Integer.parseInt(getSign().getLine(2));
+            time = Long.parseLong(getSign().getLine(3));
+        }
+        catch(Exception e){
+            if(dist == 0)
+                dist = 10;
+            if(time == 0)
+                time = 13000L;
+        }
     }
 
     @Override
