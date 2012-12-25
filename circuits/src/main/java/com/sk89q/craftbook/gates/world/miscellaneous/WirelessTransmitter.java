@@ -40,7 +40,8 @@ public class WirelessTransmitter extends AbstractIC {
     @Override
     public void load () {
         band = getSign().getLine(2);
-        band = band + getSign().getLine(3);
+        if(!getLine(3).trim().isEmpty())
+            band = band + getSign().getLine(3);
     }
 
     @Override

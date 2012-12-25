@@ -23,8 +23,6 @@ import com.sk89q.craftbook.ic.SelfTriggeredIC;
 
 public class WirelessReceiverST extends WirelessReceiver implements SelfTriggeredIC {
 
-    protected String band;
-
     public WirelessReceiverST (Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
@@ -47,8 +45,10 @@ public class WirelessReceiverST extends WirelessReceiver implements SelfTriggere
 
         Boolean val = WirelessTransmitter.getValue(band);
 
-        if(val == null)
+        if(val == null) {
+            chip.setOutput(0, false);
             return;
+        }
 
         chip.setOutput(0, val);
     }

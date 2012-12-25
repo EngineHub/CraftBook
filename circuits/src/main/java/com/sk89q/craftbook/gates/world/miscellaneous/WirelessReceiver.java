@@ -37,7 +37,8 @@ public class WirelessReceiver extends AbstractIC {
     @Override
     public void load () {
         band = getSign().getLine(2);
-        band = band + getSign().getLine(3);
+        if(!getLine(3).trim().isEmpty())
+            band = band + getSign().getLine(3);
     }
 
     @Override
@@ -58,8 +59,10 @@ public class WirelessReceiver extends AbstractIC {
         if (chip.getInput(0)) {
             Boolean val = WirelessTransmitter.getValue(band);
 
-            if(val == null)
+            if(val == null) {
+                chip.setOutput(0, false);
                 return;
+            }
 
             chip.setOutput(0, val);
         }
