@@ -102,7 +102,6 @@ public class AdvancedEntitySpawner extends AbstractIC {
             if (armourSign != null) { // Apply armor
                 if (ent instanceof LivingEntity) {
 
-                    ItemStack[] armour = new ItemStack[4];
                     for (int s = 0; s < 4; s++) {
                         try {
                             String bit = armourSign.getLine(s);
@@ -124,12 +123,17 @@ public class AdvancedEntitySpawner extends AbstractIC {
                             } catch (Exception ignored) {
                             }
 
-                            armour[s] = slot;
+                            if(s == 0)
+                                ((LivingEntity) ent).getEquipment().setHelmet(slot);
+                            if(s == 1)
+                                ((LivingEntity) ent).getEquipment().setChestplate(slot);
+                            if(s == 2)
+                                ((LivingEntity) ent).getEquipment().setLeggings(slot);
+                            if(s == 3)
+                                ((LivingEntity) ent).getEquipment().setBoots(slot);
                         } catch (Exception ignored) {
                         }
                     }
-
-                    ((LivingEntity) ent).getEquipment().setArmorContents(armour);
                 }
             }
 
