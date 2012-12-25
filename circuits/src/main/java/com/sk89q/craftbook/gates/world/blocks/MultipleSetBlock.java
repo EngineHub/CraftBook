@@ -97,12 +97,14 @@ public class MultipleSetBlock extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
+        int setblock = block;
+
         chip.setOutput(0, chip.getInput(0));
 
         boolean inp = chip.getInput(0);
 
         if (!inp) {
-            block = 0;
+            setblock = 0;
         }
 
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
@@ -114,12 +116,12 @@ public class MultipleSetBlock extends AbstractIC {
             for (int lx = 0; lx < dimX; lx++) {
                 for (int ly = 0; ly < dimY; ly++) {
                     for (int lz = 0; lz < dimZ; lz++) {
-                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(block, data, true);
+                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(setblock, data, true);
                     }
                 }
             }
         } else {
-            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
+            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(setblock, data, true);
         }
     }
 
