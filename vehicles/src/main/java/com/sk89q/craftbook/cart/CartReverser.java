@@ -1,12 +1,14 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.SignUtil;
+import static com.sk89q.craftbook.cart.CartUtils.reverse;
+
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import static com.sk89q.craftbook.cart.CartUtils.reverse;
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class CartReverser extends CartMechanism {
 
@@ -30,29 +32,57 @@ public class CartReverser extends CartMechanism {
 
         Vector normalVelocity = cart.getVelocity().normalize();
 
-        switch (dir) {
-            case NORTH:
-                if (normalVelocity.getBlockX() != -1) {
+        if(VehiclesPlugin.useOldBlockFace()) {
+            switch (dir) {
+                case NORTH:
+                    if (normalVelocity.getBlockX() != -1) {
+                        reverse(cart);
+                    }
+                    break;
+                case SOUTH:
+                    if (normalVelocity.getBlockX() != 1) {
+                        reverse(cart);
+                    }
+                    break;
+                case EAST:
+                    if (normalVelocity.getBlockZ() != -1) {
+                        reverse(cart);
+                    }
+                    break;
+                case WEST:
+                    if (normalVelocity.getBlockZ() != 1) {
+                        reverse(cart);
+                    }
+                    break;
+                default:
                     reverse(cart);
-                }
-                break;
-            case SOUTH:
-                if (normalVelocity.getBlockX() != 1) {
+            }
+        }
+        else {
+            switch (dir) {
+                case NORTH:
+                    if (normalVelocity.getBlockZ() != -1) {
+                        reverse(cart);
+                    }
+                    break;
+                case SOUTH:
+                    if (normalVelocity.getBlockZ() != 1) {
+                        reverse(cart);
+                    }
+                    break;
+                case EAST:
+                    if (normalVelocity.getBlockX() != -1) {
+                        reverse(cart);
+                    }
+                    break;
+                case WEST:
+                    if (normalVelocity.getBlockX() != 1) {
+                        reverse(cart);
+                    }
+                    break;
+                default:
                     reverse(cart);
-                }
-                break;
-            case EAST:
-                if (normalVelocity.getBlockZ() != -1) {
-                    reverse(cart);
-                }
-                break;
-            case WEST:
-                if (normalVelocity.getBlockZ() != 1) {
-                    reverse(cart);
-                }
-                break;
-            default:
-                reverse(cart);
+            }
         }
     }
 

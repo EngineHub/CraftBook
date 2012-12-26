@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.util.SignUtil;
+import static com.sk89q.craftbook.cart.CartUtils.stop;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import static com.sk89q.craftbook.cart.CartUtils.stop;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class CartStation extends CartMechanism {
 
@@ -42,15 +43,15 @@ public class CartStation extends CartMechanism {
 
     private void launch(Minecart cart, Block director) {
 
-        cart.setVelocity(FUUUUUUUUUUUUUUUUU(SignUtil.getFacing(director)));
+        cart.setVelocity(propel(SignUtil.getFacing(director)));
     }
 
     /**
      * WorldEdit's Vector type collides with Bukkit's Vector type here. It's not pleasant.
      */
-    public static Vector FUUUUUUUUUUUUUUUUU(BlockFace face) {
+    public static Vector propel(BlockFace face) {
 
-        return new Vector(face.getModX() * 0.05, face.getModY() * 0.05, face.getModZ() * 0.05);
+        return new Vector(face.getModX() * 0.2, face.getModY() * 0.2, face.getModZ() * 0.2);
     }
 
     @Override
