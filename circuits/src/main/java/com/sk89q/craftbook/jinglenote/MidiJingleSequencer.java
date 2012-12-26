@@ -52,10 +52,19 @@ public class MidiJingleSequencer implements JingleSequencer {
         // 16
     };
 
-    /*
-     * private static int[] percussion = { 1, 1, 1, 2, 3, 2, 1, 3, 1, 3, 1, 3, 1, 1, 3, 1, 3, 3, 3, 3, 3, 0, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3,
-     * 4, 4, 3, 3, 3, 3, 3, 1, 1, 3, 3, 2, 4, 4, 3, 1, 1, };
-     */
+
+    private static int[] percussion = {
+        1, 1, 1, 2, 3, 2,
+        1, 3, 1, 3, 1, 3,
+        1, 1, 3, 1, 3, 3,
+        3, 3, 3, 0, 3, 3,
+        3, 1, 1, 1, 1, 1,
+        1, 1, 3, 3, 3, 3,
+        4, 4, 3, 3, 3, 3,
+        3, 1, 1, 3, 3, 2,
+        4, 4, 3, 1, 1,
+    };
+
 
     protected final File midiFile;
     private Sequencer sequencer = null;
@@ -118,7 +127,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                             // Sounds like utter crap
                             // notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                         } else {
-                            notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2() / 64));
+                            notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2()));
                         }
                     }
                 }
@@ -189,15 +198,20 @@ public class MidiJingleSequencer implements JingleSequencer {
             case 6:
                 return Sound.NOTE_BASS;
             default:
-                return null;
+                return Sound.NOTE_PIANO;
         }
     }
 
-    /*
-     * private static int toMCPercussion(int note) { int i = note - 35; if (i < 0 || i >= percussion.length) { return 1; }
-     * 
-     * return percussion[i]; }
-     */
+
+    @SuppressWarnings("unused")
+    private static int toMCPercussion(int note) {
+        int i = note - 35; if (i < 0 || i >= percussion.length) {
+            return 1;
+        }
+
+        return percussion[i];
+    }
+
 
     public boolean isSongPlaying () {
 
@@ -222,32 +236,15 @@ public class MidiJingleSequencer implements JingleSequencer {
             return instrument;
         }
 
-        public byte getNote () {
+        public float getNote () {
 
-            return note;
+            return (float) Math.pow(2.0D, (note - 12) / 12.0D);
         }
 
         public float getVelocity () {
 
-            if (instrument == Sound.NOTE_PLING) return velocity / 4;
-            return velocity;
-        }
-
-        @Override
-        public boolean equals (Object o) {
-
-            if (o instanceof Note) {
-
-                Note n = (Note) o;
-                if (n.getInstrument() == getInstrument()) return true;
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode () {
-            // Constants correspond to glibc's lcg algorithm parameters
-            return (instrument.hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
+            if (instrument == Sound.NOTE_PLING) return velocity / 256;
+            return velocity / 64;
         }
     }
 }

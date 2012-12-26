@@ -6,7 +6,6 @@
 package com.sk89q.craftbook.jinglenote;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.jinglenote.MidiJingleSequencer.Note;
@@ -59,21 +58,12 @@ public class JingleNotePlayer implements Runnable {
         }
     }
 
-    public void play (Sound instrument, int pitch) {
-
-        if (!player.isOnline() || instrument == null) {
-            return;
-        }
-        float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
-        player.playSound(player.getLocation(), instrument, instrument == Sound.NOTE_PLING ? 7F : 30F, np);
-    }
-
     public void play (Note note) {
 
-        if (!player.isOnline() || note == null || note.getInstrument() == null) {
+        if (!player.isOnline() || note == null) {
             return;
         }
-        float np = (float) Math.pow(2.0D, (note.getNote() - 12) / 12.0D);
-        player.playSound(player.getLocation(), note.getInstrument(), note.getVelocity(), np);
+
+        player.playSound(player.getLocation(), note.getInstrument(), note.getVelocity(), note.getNote());
     }
 }
