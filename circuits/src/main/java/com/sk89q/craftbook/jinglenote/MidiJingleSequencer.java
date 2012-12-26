@@ -31,7 +31,8 @@ import com.sk89q.craftbook.util.GeneralUtil;
  */
 public class MidiJingleSequencer implements JingleSequencer {
 
-    private static final int[] instruments = { 0, 0, 0, 0, 0, 0, 0, 5, // 8
+    private static final int[] instruments = {
+        0, 0, 0, 0, 0, 0, 0, 5, // 8
         6, 0, 0, 0, 0, 0, 0, 0, // 16
         0, 0, 0, 0, 0, 0, 0, 5, // 24
         5, 5, 5, 5, 5, 5, 5, 5, // 32
@@ -91,9 +92,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void run (final JingleNotePlayer notePlayer) throws InterruptedException {
 
-        // lastTime = 0;
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
-        // final List<Note> notes = new ArrayList<Note>();
 
         try {
             if (!sequencer.isOpen()) {
@@ -118,28 +117,10 @@ public class MidiJingleSequencer implements JingleSequencer {
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
                             // notePlayer.play(toMCPercussion(patches.get(chan)), 10);
-                            // notePlayer.play(toMCInstrument(patches.get(chan)), toMCNote(n));
                         } else {
-                            // if(msg.getData2() == 0) {
-                            // notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
-                            // }
-                            // else
-                            notePlayer.play(new Note(toMCSound(toMCInstrument(chan)), toMCNote(n), msg.getData2() / 64));
-                            // notes.add(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
+                            notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), msg.getData2() / 64));
                         }
-                    } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
-
-                        // ShortMessage msg = (ShortMessage) message;
-                        // int chan = msg.getChannel();
-                        // int n = msg.getData1();
-                        // notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                     }
-
-                    /*
-                     * if(lastTime < timeStamp) { for(Note note : notes) {
-                     * 
-                     * notePlayer.play(note); } lastTime = timeStamp; }
-                     */
                 }
 
                 @Override

@@ -62,7 +62,6 @@ public class JingleNotePlayer implements Runnable {
     public void play (Sound instrument, int pitch) {
 
         if (!player.isOnline() || instrument == null) {
-            if (!player.isOnline()) stop();
             return;
         }
         float np = (float) Math.pow(2.0D, (pitch - 12) / 12.0D);
@@ -72,7 +71,6 @@ public class JingleNotePlayer implements Runnable {
     public void play (Note note) {
 
         if (!player.isOnline() || note == null || note.getInstrument() == null) {
-            if (!player.isOnline()) stop();
             return;
         }
         float np = (float) Math.pow(2.0D, (note.getNote() - 12) / 12.0D);
