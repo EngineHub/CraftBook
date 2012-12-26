@@ -32,23 +32,23 @@ import com.sk89q.craftbook.util.GeneralUtil;
 public class MidiJingleSequencer implements JingleSequencer {
 
     private static final int[] instruments = { 0, 0, 0, 0, 0, 0, 0, 5, // 8
-            6, 0, 0, 0, 0, 0, 0, 0, // 16
-            0, 0, 0, 0, 0, 0, 0, 5, // 24
-            5, 5, 5, 5, 5, 5, 5, 5, // 32
-            6, 6, 6, 6, 6, 6, 6, 6, // 40
-            5, 5, 5, 5, 5, 5, 5, 2, // 48
-            5, 5, 5, 5, 0, 0, 0, 0, // 56
-            0, 0, 0, 0, 0, 0, 0, 0, // 64
-            0, 0, 0, 0, 0, 0, 0, 0, // 72
-            0, 0, 0, 0, 0, 0, 0, 0, // 80
-            0, 0, 0, 0, 0, 0, 0, 0, // 88
-            0, 0, 0, 0, 0, 0, 0, 0, // 96
-            0, 0, 0, 0, 0, 0, 0, 0, // 104
-            0, 0, 0, 0, 0, 0, 0, 0, // 112
-            1, 1, 1, 3, 1, 1, 1, 5, // 120
-            1, 1, 1, 1, 1, 2, 4, 3, // 128
+        6, 0, 0, 0, 0, 0, 0, 0, // 16
+        0, 0, 0, 0, 0, 0, 0, 5, // 24
+        5, 5, 5, 5, 5, 5, 5, 5, // 32
+        6, 6, 6, 6, 6, 6, 6, 6, // 40
+        5, 5, 5, 5, 5, 5, 5, 2, // 48
+        5, 5, 5, 5, 0, 0, 0, 0, // 56
+        0, 0, 0, 0, 0, 0, 0, 0, // 64
+        0, 0, 0, 0, 0, 0, 0, 0, // 72
+        0, 0, 0, 0, 0, 0, 0, 0, // 80
+        0, 0, 0, 0, 0, 0, 0, 0, // 88
+        0, 0, 0, 0, 0, 0, 0, 0, // 96
+        0, 0, 0, 0, 0, 0, 0, 0, // 104
+        0, 0, 0, 0, 0, 0, 0, 0, // 112
+        1, 1, 1, 3, 1, 1, 1, 5, // 120
+        1, 1, 1, 1, 1, 2, 4, 3, // 128
 
-    // 16
+        // 16
     };
 
     /*
@@ -110,7 +110,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         int chan = msg.getChannel();
                         int patch = msg.getData1();
                         patches.put(chan, patch);
-                    } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_ON || (message.getStatus() & 0xF0) == ShortMessage.PITCH_BEND) {
+                    } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_ON) {
 
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
