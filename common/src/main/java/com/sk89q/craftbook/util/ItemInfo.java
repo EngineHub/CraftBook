@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.RegexUtil;
+
 public class ItemInfo {
 
     public int id;
@@ -33,11 +35,11 @@ public class ItemInfo {
 
     public static ItemInfo parseFromString(String string) {
 
-        int id = Integer.parseInt(string.split(":")[0]);
+        int id = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]);
         int data = -1;
 
         try {
-            data = Integer.parseInt(string.split(":")[1]);
+            data = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]);
         } catch (Exception e) {
             data = -1;
         }
