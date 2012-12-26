@@ -176,5 +176,18 @@ public class SetDoor extends AbstractIC {
 
             return new SetDoor(getServer(), sign, this);
         }
+
+        @Override
+        public String getDescription () {
+
+            return "Generates a door out of the set materials with set size.";
+        }
+
+        @Override
+        public String[] getLineHelp () {
+
+            String[] lines = new String[] { "onID:onData-offID:offData", "offset x,y,z:width,height" };
+            return lines;
+        }
     }
 }

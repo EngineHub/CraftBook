@@ -49,6 +49,8 @@ public class SetBridge extends AbstractIC {
     @Override
     public void load () {
 
+        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {
             try {
@@ -170,6 +172,19 @@ public class SetBridge extends AbstractIC {
         public Factory (Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String getDescription () {
+
+            return "Generates a bridge out of the set materials with set size.";
+        }
+
+        @Override
+        public String[] getLineHelp () {
+
+            String[] lines = new String[] { "onID:onData-offID:offData", "offset x,y,z:width,depth" };
+            return lines;
         }
 
         @Override
