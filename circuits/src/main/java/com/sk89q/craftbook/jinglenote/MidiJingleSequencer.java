@@ -124,7 +124,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                             // notes.remove(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                             // }
                             // else
-                            notePlayer.play(new Note(toMCSound(toMCInstrument(chan)), toMCNote(n), msg.getData2()));
+                            notePlayer.play(new Note(toMCSound(toMCInstrument(chan)), toMCNote(n), msg.getData2() / 64));
                             // notes.add(new Note(toMCSound(toMCInstrument(chan)),toMCNote(n),msg.getData2()));
                         }
                     } else if ((message.getStatus() & 0xF0) == ShortMessage.NOTE_OFF) {
