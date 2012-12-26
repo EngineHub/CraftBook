@@ -1,12 +1,5 @@
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import net.minecraft.server.v1_4_6.LocaleLanguage;
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,14 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
+
+import net.minecraft.server.v1_4_6.LocaleLanguage;
+
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Me4502
  */
 public class LanguageManager {
 
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     final BaseBukkitPlugin plugin;
 
     HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
@@ -45,7 +46,7 @@ public class LanguageManager {
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] split = COLON_PATTERN.split(line);
+                    String[] split = RegexUtil.COLON_PATTERN.split(line);
                     if (split.length != 2) {
                         continue;
                     }
@@ -55,7 +56,7 @@ public class LanguageManager {
             } catch (IOException e) {
                 plugin.getLogger().log(Level.SEVERE,
                         "[CraftBook] could not find file: " + plugin.getDataFolder().getName() + File.pathSeparator +
-                                language + ".txt");
+                        language + ".txt");
             }
             languageMap.put(language, languageData);
         }

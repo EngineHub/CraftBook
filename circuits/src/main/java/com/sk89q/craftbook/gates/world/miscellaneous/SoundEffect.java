@@ -1,12 +1,19 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class SoundEffect extends AbstractIC {
 
@@ -22,7 +29,7 @@ public class SoundEffect extends AbstractIC {
     @Override
     public void load() {
 
-        String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+        String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
         volume = Float.parseFloat(split[0]) / 100f;
         try {
             pitch = (byte) (Integer.parseInt(split[1]) / 1.5873015873015873015873015873016);

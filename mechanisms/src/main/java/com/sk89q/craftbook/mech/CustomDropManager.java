@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,11 +16,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -28,7 +23,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * Storage class for custom drop definitions.
@@ -39,13 +40,6 @@ public final class CustomDropManager {
 
     public static final int BLOCK_ID_COUNT = 256;
     public static final int DATA_VALUE_COUNT = 128;
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("#", Pattern.LITERAL);
-    private static final Pattern FIELD_SEPARATOR_PATTERN = Pattern.compile("->", Pattern.LITERAL);
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    private static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
-    private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
-    private static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
 
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
     private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
@@ -96,97 +90,97 @@ public final class CustomDropManager {
             CustomItemDrop[] blockDropDefinitions = isMobDrop ? null : new CustomItemDrop[BLOCK_ID_COUNT];
             Map<String, DropDefinition[]> mobDropDefinitions = isMobDrop ? new TreeMap<String,
                     DropDefinition[]>() : null;
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            int currentLine = 0;
-            while ((line = reader.readLine()) != null) {
-                if (line.isEmpty() || line.trim().startsWith("#")) continue;
-                currentLine++;
-                prelude = "Error on line " + currentLine + " of drop definition file " + file.getAbsolutePath() + ": " +
-                        "" + line + "\n"; // Error prelude
-                // used for
-                // parse
-                // messages.
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    String line;
+                    int currentLine = 0;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.isEmpty() || line.trim().startsWith("#")) continue;
+                        currentLine++;
+                        prelude = "Error on line " + currentLine + " of drop definition file " + file.getAbsolutePath() + ": " +
+                                "" + line + "\n"; // Error prelude
+                        // used for
+                        // parse
+                        // messages.
 
-                try {
-                    if (line.contains("#")) line = COMMENT_PATTERN.split(line)[0]; // Remove comments
-                } catch (Exception ignored) {
-                }
-
-                line = line.trim(); // Remove excess whitespace
-
-                if (line.isEmpty()) {
-                    continue; // Don't try to parse empty lines
-                }
-
-                String[] split = FIELD_SEPARATOR_PATTERN.split(line, 2); // Split primary field separator
-
-                if (split.length != 2) {
-                    reader.close();
-                    throw new CustomDropParseException(prelude + "-> not found");
-                }
-
-                String itemsSource = split[0].replace("+", "").trim();
-                String targetDrops = split[1].trim();
-                if (itemsSource.isEmpty() || targetDrops.isEmpty()) {
-                    reader.close();
-                    throw new CustomDropParseException(prelude + "unexpected empty field");
-                }
-
-                DropDefinition[] drops = readDrops(targetDrops, prelude, split[0].contains("+"));
-
-                if (!isMobDrop) {
-                    split = COLON_PATTERN.split(itemsSource);
-                    if (split.length > 2) {
-                        reader.close();
-                        throw new CustomDropParseException(prelude + "too many source block fields");
-                    }
-
-                    int sourceId = Integer.parseInt(split[0]);
-                    if (sourceId >= BLOCK_ID_COUNT || sourceId < 0) {
-                        reader.close();
-                        throw new CustomDropParseException(prelude + "block id out of range");
-                    }
-                    if (blockDropDefinitions[sourceId] == null) {
-                        blockDropDefinitions[sourceId] = new CustomItemDrop();
-                    }
-                    CustomItemDrop drop = blockDropDefinitions[sourceId];
-
-                    if (split.length == 1) {
-                        if (drop.defaultDrop != null) {
-                            reader.close();
-                            throw new CustomDropParseException(prelude + "double drop definition");
+                        try {
+                            if (line.contains("#")) line = RegexUtil.COMMENT_PATTERN.split(line)[0]; // Remove comments
+                        } catch (Exception ignored) {
                         }
-                        drop.defaultDrop = drops;
+
+                        line = line.trim(); // Remove excess whitespace
+
+                        if (line.isEmpty()) {
+                            continue; // Don't try to parse empty lines
+                        }
+
+                        String[] split = RegexUtil.FIELD_SEPARATOR_PATTERN.split(line, 2); // Split primary field separator
+
+                        if (split.length != 2) {
+                            reader.close();
+                            throw new CustomDropParseException(prelude + "-> not found");
+                        }
+
+                        String itemsSource = split[0].replace("+", "").trim();
+                        String targetDrops = split[1].trim();
+                        if (itemsSource.isEmpty() || targetDrops.isEmpty()) {
+                            reader.close();
+                            throw new CustomDropParseException(prelude + "unexpected empty field");
+                        }
+
+                        DropDefinition[] drops = readDrops(targetDrops, prelude, split[0].contains("+"));
+
+                        if (!isMobDrop) {
+                            split = RegexUtil.COLON_PATTERN.split(itemsSource);
+                            if (split.length > 2) {
+                                reader.close();
+                                throw new CustomDropParseException(prelude + "too many source block fields");
+                            }
+
+                            int sourceId = Integer.parseInt(split[0]);
+                            if (sourceId >= BLOCK_ID_COUNT || sourceId < 0) {
+                                reader.close();
+                                throw new CustomDropParseException(prelude + "block id out of range");
+                            }
+                            if (blockDropDefinitions[sourceId] == null) {
+                                blockDropDefinitions[sourceId] = new CustomItemDrop();
+                            }
+                            CustomItemDrop drop = blockDropDefinitions[sourceId];
+
+                            if (split.length == 1) {
+                                if (drop.defaultDrop != null) {
+                                    reader.close();
+                                    throw new CustomDropParseException(prelude + "double drop definition");
+                                }
+                                drop.defaultDrop = drops;
+                            } else {
+                                int data = Integer.parseInt(split[1]);
+                                if (data >= DATA_VALUE_COUNT || data < 0) {
+                                    reader.close();
+                                    throw new CustomDropParseException(prelude + "block data value out of range");
+                                }
+                                if (drop.drops[data] != null) {
+                                    reader.close();
+                                    throw new CustomDropParseException(prelude + "double drop definition");
+                                }
+                                drop.drops[data] = drops;
+                            }
+                        } else {
+                            itemsSource = itemsSource.toLowerCase();
+                            if (mobDropDefinitions.containsKey(itemsSource)) {
+                                reader.close();
+                                throw new CustomDropParseException(prelude + "double drop definition");
+                            }
+                            mobDropDefinitions.put(itemsSource, drops);
+                        }
+                    }
+
+                    reader.close();
+
+                    if (isMobDrop) {
+                        this.mobDropDefinitions = mobDropDefinitions;
                     } else {
-                        int data = Integer.parseInt(split[1]);
-                        if (data >= DATA_VALUE_COUNT || data < 0) {
-                            reader.close();
-                            throw new CustomDropParseException(prelude + "block data value out of range");
-                        }
-                        if (drop.drops[data] != null) {
-                            reader.close();
-                            throw new CustomDropParseException(prelude + "double drop definition");
-                        }
-                        drop.drops[data] = drops;
+                        this.blockDropDefinitions = blockDropDefinitions;
                     }
-                } else {
-                    itemsSource = itemsSource.toLowerCase();
-                    if (mobDropDefinitions.containsKey(itemsSource)) {
-                        reader.close();
-                        throw new CustomDropParseException(prelude + "double drop definition");
-                    }
-                    mobDropDefinitions.put(itemsSource, drops);
-                }
-            }
-
-            reader.close();
-
-            if (isMobDrop) {
-                this.mobDropDefinitions = mobDropDefinitions;
-            } else {
-                this.blockDropDefinitions = blockDropDefinitions;
-            }
         } catch (NumberFormatException e) {
             throw new CustomDropParseException(prelude + "number field failed to parse", e);
         }
@@ -194,7 +188,7 @@ public final class CustomDropManager {
 
     private static DropDefinition[] readDrops(String s, String prelude, boolean append) throws IOException {
 
-        String[] split = COMMA_PATTERN.split(s);
+        String[] split = RegexUtil.COMMA_PATTERN.split(s);
         DropDefinition[] drops = new DropDefinition[split.length]; // Java really needs a map function...
         for (int i = 0; i < split.length; i++) {
             drops[i] = readDrop(split[i].trim(), prelude, append); // Strip excess whitespace and parse
@@ -204,21 +198,21 @@ public final class CustomDropManager {
 
     private static DropDefinition readDrop(String s, String prelude, boolean append) throws IOException {
 
-        String[] split = X_PATTERN.split(PERCENT_PATTERN.split(s)[0]);
+        String[] split = RegexUtil.X_PATTERN.split(RegexUtil.PERCENT_PATTERN.split(s)[0]);
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
-        String[] split2 = COLON_PATTERN.split(split[0].trim());
+        String[] split2 = RegexUtil.COLON_PATTERN.split(split[0].trim());
         if (split2.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
         int itemId = Integer.parseInt(split2[0].trim());
         int data = split2.length == 1 ? 0 : Integer.parseInt(split2[1].trim());
         if (data >= DATA_VALUE_COUNT || data < 0)
             throw new CustomDropParseException(prelude + "block data value out of range");
-        String[] split3 = MINUS_PATTERN.split(split[1].trim());
+        String[] split3 = RegexUtil.MINUS_PATTERN.split(split[1].trim());
         if (split3.length > 2) throw new CustomDropParseException(prelude + ": invalid number drops range");
         int countMin = Integer.parseInt(split3[0]);
         int countMax = split3.length == 1 ? countMin : Integer.parseInt(split3[1]);
         int chance = 100;
         try {
-            chance = Integer.parseInt(PERCENT_PATTERN.split(s)[1]);
+            chance = Integer.parseInt(RegexUtil.PERCENT_PATTERN.split(s)[1]);
         } catch (Exception ignored) {
         }
         return new DropDefinition(itemId, (byte) data, countMin, countMax, chance, append);

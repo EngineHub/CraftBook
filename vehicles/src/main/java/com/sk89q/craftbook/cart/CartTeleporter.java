@@ -1,18 +1,16 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CartTeleporter extends CartMechanism {
-
-    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -23,7 +21,7 @@ public class CartTeleporter extends CartMechanism {
 
         // go
         World world = cart.getWorld();
-        String[] pts = COMMA_PATTERN.split(blocks.getSign().getLine(2).trim(), 3);
+        String[] pts = RegexUtil.COMMA_PATTERN.split(blocks.getSign().getLine(2).trim(), 3);
         if (!blocks.getSign().getLine(3).trim().isEmpty()) {
             world = cart.getServer().getWorld(blocks.getSign().getLine(3).trim());
         }
@@ -75,7 +73,7 @@ public class CartTeleporter extends CartMechanism {
     @Override
     public boolean verify(ChangedSign sign, LocalPlayer player) {
 
-        String[] pts = COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
+        String[] pts = RegexUtil.COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
         try {
             Double.parseDouble(pts[0].trim());
             Double.parseDouble(pts[1].trim());

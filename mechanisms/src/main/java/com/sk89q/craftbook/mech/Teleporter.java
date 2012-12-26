@@ -1,20 +1,26 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.Location;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Button;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.InsufficientPermissionsException;
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -52,7 +58,7 @@ public class Teleporter extends AbstractMechanic {
             if (block.getState() instanceof Sign) {
                 Sign s = (Sign) block.getState();
                 if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
-                String[] pos = COLON_PATTERN.split(s.getLine(2));
+                String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
                 if (pos.length > 2) return new Teleporter(block, plugin);
             } else if (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
                 Button b = (Button) block.getState().getData();
@@ -60,7 +66,7 @@ public class Teleporter extends AbstractMechanic {
                 if (sign.getState() instanceof Sign) {
                     Sign s = (Sign) sign.getState();
                     if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
-                    String[] pos = COLON_PATTERN.split(s.getLine(2));
+                    String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
                     if (pos.length > 2) return new Teleporter(s.getBlock(), plugin);
                 }
             }
@@ -75,7 +81,7 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                                 ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
@@ -85,7 +91,7 @@ public class Teleporter extends AbstractMechanic {
             player.print("mech.teleport.create");
             sign.setLine(1, "[Teleporter]");
 
-            String[] pos = COLON_PATTERN.split(sign.getLine(2));
+            String[] pos = RegexUtil.COLON_PATTERN.split(sign.getLine(2));
             if (!(pos.length > 2)) return null;
 
             throw new ProcessedMechanismException();
@@ -105,8 +111,6 @@ public class Teleporter extends AbstractMechanic {
         this.trigger = trigger;
         this.plugin = plugin;
     }
-
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     private final MechanismsPlugin plugin;
     private final Block trigger;
@@ -143,7 +147,7 @@ public class Teleporter extends AbstractMechanic {
 
         if (trigger.getState() instanceof Sign) {
             Sign s = (Sign) trigger.getState();
-            String[] pos = COLON_PATTERN.split(s.getLine(2));
+            String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
             if (pos.length > 2) {
                 try {
                     toX = Double.parseDouble(pos[0]);

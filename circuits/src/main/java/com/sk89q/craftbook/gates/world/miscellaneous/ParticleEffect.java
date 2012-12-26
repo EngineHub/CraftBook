@@ -1,15 +1,22 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.gates.world.blocks.SetDoor;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Effect;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.gates.world.blocks.SetDoor;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * @author Me4502
@@ -49,7 +56,7 @@ public class ParticleEffect extends AbstractIC {
     @Override
     public void load() {
 
-        String[] eff = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
+        String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
         try {
             effectID = Integer.parseInt(eff[0]);
         } catch (Exception e) {
@@ -69,7 +76,7 @@ public class ParticleEffect extends AbstractIC {
         }
 
         try {
-            String[] off = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
+            String[] off = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
             offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
         } catch (Exception e) {
             offset = new Vector(0, 1, 0);

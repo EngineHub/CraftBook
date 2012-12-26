@@ -1,18 +1,24 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class Irrigator extends AbstractIC {
 
@@ -30,10 +36,10 @@ public class Irrigator extends AbstractIC {
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
         try {
-            String[] splitEquals = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
+            String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
             radius = Integer.parseInt(splitEquals[0]);
             if (getSign().getLine(2).contains("=")) {
-                String[] splitCoords = ICUtil.COLON_PATTERN.split(splitEquals[1]);
+                String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
                 int z = Integer.parseInt(splitCoords[2]);

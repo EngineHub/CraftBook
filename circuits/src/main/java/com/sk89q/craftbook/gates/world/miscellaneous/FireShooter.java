@@ -1,10 +1,5 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -12,14 +7,26 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+
 /**
  * @author Me4502
  */
 public class FireShooter extends AbstractIC {
 
-    private float speed = 0.6F;
-    private float spread = 4;
-    private float vert = 0;
+    private float speed;
+    private float spread;
+    private float vert;
 
     public FireShooter(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -29,15 +36,18 @@ public class FireShooter extends AbstractIC {
     @Override
     public void load() {
 
-        String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim(), 2);
+        String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim(), 2);
         try {
             speed = Float.parseFloat(velocity[0]);
             spread = Float.parseFloat(velocity[1]);
         } catch (Exception ignored) {
+            speed = 0.6f;
+            spread = 4;
         }
         try {
             vert = Float.parseFloat(getSign().getLine(3).trim());
         } catch (Exception ignored) {
+            vert = 0;
         }
 
         if (speed > 2.0) {

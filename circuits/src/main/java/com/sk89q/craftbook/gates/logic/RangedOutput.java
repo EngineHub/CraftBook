@@ -1,17 +1,21 @@
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Me4502
  */
 public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
 
-    private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     int ticks = 0;
     int maxTicks = 0;
     boolean hasStarted = false;
@@ -44,7 +48,7 @@ public class RangedOutput extends AbstractIC implements SelfTriggeredIC {
     protected boolean shouldOutput(ChipState chip) {
 
         if (chip.getInput(0)) {
-            String[] minmax = MINUS_PATTERN.split(getSign().getLine(2));
+            String[] minmax = RegexUtil.MINUS_PATTERN.split(getSign().getLine(2));
             int min = Integer.parseInt(minmax[0]);
             int max = Integer.parseInt(minmax[1]);
             maxAmount = min + (int) (Math.random() * (max - min + 1));

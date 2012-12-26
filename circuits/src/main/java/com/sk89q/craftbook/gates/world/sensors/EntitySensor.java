@@ -1,18 +1,34 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
 
-import java.util.EnumSet;
-import java.util.Set;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -114,7 +130,7 @@ public class EntitySensor extends AbstractIC {
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radius + '=' + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            getSign().setLine(2, radius + '=' + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
             getSign().setLine(2, String.valueOf(radius));
@@ -152,7 +168,7 @@ public class EntitySensor extends AbstractIC {
                 for (Entity entity : chunk.getEntities()) {
                     if (entity.isValid()) {
                         for (Type type : types)
-                        // Check Type
+                            // Check Type
                         {
                             if (type.is(entity)) {
                                 // Check Radius

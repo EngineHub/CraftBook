@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,21 +16,23 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this mechanic,
@@ -117,7 +119,7 @@ public class ICMechanic extends PersistentMechanic {
             if (block.getTypeId() == BlockID.WALL_SIGN) {
                 ChangedSign sign = BukkitUtil.toChangedSign(block);
 
-                Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(sign.getLine(1));
+                Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
 
                 return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && (
                         (PersistentIC) ic).isActive();

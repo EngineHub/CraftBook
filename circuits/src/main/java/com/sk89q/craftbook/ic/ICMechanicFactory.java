@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,27 +16,25 @@
 
 package com.sk89q.craftbook.ic;
 
+import java.util.regex.Matcher;
+
+import org.bukkit.block.Block;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.block.Block;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
     /**
      * The pattern used to match an IC on a sign.
      */
-    public static final Pattern IC_PATTERN = Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$",
-            Pattern.CASE_INSENSITIVE);
-    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
     /**
      * Manager of ICs.
@@ -70,7 +68,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         ChangedSign sign = BukkitUtil.toChangedSign(block);
 
         // detect the text on the sign to see if it's any kind of IC at all.
-        Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
+        Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
         if (!matcher.matches()) return null;
 
         String prefix = matcher.group(2);
@@ -104,7 +102,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
         // extract the suffix
         String suffix = "";
-        String[] str = RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
+        String[] str = RegexUtil.RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
         if (str.length > 1) {
             suffix = str[1];
         }
@@ -130,18 +128,18 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      */
     @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player,
-                             ChangedSign sign) throws InvalidMechanismException {
+            ChangedSign sign) throws InvalidMechanismException {
 
         return detect(pt, player, sign, false);
     }
 
     private ICMechanic detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign,
-                              boolean shortHand) throws InvalidMechanismException {
+            boolean shortHand) throws InvalidMechanismException {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         boolean matches = true;
-        Matcher matcher = IC_PATTERN.matcher(sign.getLine(1));
+        Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
         // lets check for custom ics
         if (!matcher.matches()) {
             matches = false;
@@ -159,7 +157,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             String id = matcher.group(1);
             String suffix = "";
-            String[] str = RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
+            String[] str = RegexUtil.RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
             if (str.length > 1) {
                 suffix = str[1];
             }

@@ -1,15 +1,21 @@
 package com.sk89q.craftbook.gates.world.entity;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.Tuple2;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.Tuple2;
 
 public class TeleportTransmitter extends AbstractIC {
 
@@ -44,10 +50,10 @@ public class TeleportTransmitter extends AbstractIC {
         band = getLine(2);
         offset = BukkitUtil.toSign(getSign()).getLocation();
         try {
-            String[] splitEquals = ICUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
+            String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
             radius = Integer.parseInt(splitEquals[0]);
             if (getSign().getLine(2).contains("=")) {
-                String[] splitCoords = ICUtil.COLON_PATTERN.split(splitEquals[1]);
+                String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
                 int z = Integer.parseInt(splitCoords[2]);

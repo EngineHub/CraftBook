@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,12 +16,20 @@
 
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class FlexibleSetBlock extends AbstractIC {
 
@@ -48,7 +56,7 @@ public class FlexibleSetBlock extends AbstractIC {
 
         String line4 = getSign().getLine(3);
 
-        String[] params = ICUtil.COLON_PATTERN.split(line3);
+        String[] params = RegexUtil.COLON_PATTERN.split(line3);
         if (params.length < 2) return;
         if (params[0].length() < 2) return;
 
@@ -154,7 +162,7 @@ public class FlexibleSetBlock extends AbstractIC {
 
             String line3 = sign.getLine(2).toUpperCase();
 
-            String[] params = ICUtil.COLON_PATTERN.split(line3);
+            String[] params = RegexUtil.COLON_PATTERN.split(line3);
             if (params.length < 2) throw new ICVerificationException("Not enough parameters on second line!");
             if (params[0].length() < 2) throw new ICVerificationException("Invalid first parameter!");
 

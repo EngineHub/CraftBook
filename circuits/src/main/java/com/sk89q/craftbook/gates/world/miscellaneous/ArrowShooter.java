@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,15 +16,22 @@
 
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class ArrowShooter extends AbstractIC {
 
@@ -33,19 +40,22 @@ public class ArrowShooter extends AbstractIC {
         super(server, sign, factory);
     }
 
-    float speed = 1.6F;
-    float spread = 12;
-    float vert = 0.2F;
+    float speed;
+    float spread;
+    float vert;
 
     @Override
     public void load() {
 
         try {
-            String[] velocity = ICUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
+            String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
             speed = Float.parseFloat(velocity[0]);
             spread = Float.parseFloat(velocity[1]);
             vert = Float.parseFloat(getSign().getLine(3).trim());
         } catch (Exception e) {
+            speed = 1.6f;
+            spread = 12;
+            vert = 0.2f;
             getSign().setLine(2, speed + ":" + spread + ":" + vert);
             getSign().update(false);
         }

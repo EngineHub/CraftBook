@@ -1,20 +1,24 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.*;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class RecipeManager extends BaseConfiguration {
 
     public static RecipeManager INSTANCE;
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private Collection<Recipe> recipes;
     private File config;
     private File dataFolder;
@@ -97,7 +101,7 @@ public class RecipeManager extends BaseConfiguration {
             try {
                 for (String item : section.getKeys(false)) {
                     if (item == null || item.isEmpty()) continue;
-                    String[] split = COLON_PATTERN.split(item);
+                    String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
                     try {
                         material = Material.getMaterial(Integer.parseInt(split[0]));
@@ -128,7 +132,7 @@ public class RecipeManager extends BaseConfiguration {
             try {
                 for (String item : section.getKeys(false)) {
                     if (item == null || item.isEmpty()) continue;
-                    String[] split = COLON_PATTERN.split(item);
+                    String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
                     try {
                         material = Material.getMaterial(Integer.parseInt(split[0]));

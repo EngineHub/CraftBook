@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,14 +16,15 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
+
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through CraftBook,
@@ -86,7 +87,7 @@ public class ICManager {
         // lets check if the IC ID has already been registered
         if (registered.containsKey(id.toLowerCase())) return false;
         // check if the ic matches the requirements
-        Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(id2);
+        Matcher matcher = RegexUtil.IC_PATTERN.matcher(id2);
         if (!matcher.matches()) return false;
         String prefix = matcher.group(2).toLowerCase();
         // lets get the custom prefix

@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,9 +16,17 @@
 
 package com.sk89q.craftbook.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
@@ -107,7 +115,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
                 if (!set.contains(":")) throw new ICVerificationException("Invalid syntax");
 
-                String[] settings = ICUtil.COLON_PATTERN.split(set);
+                String[] settings = RegexUtil.COLON_PATTERN.split(set);
 
                 if (settings.length != 2) throw new ICVerificationException("Invalid syntax");
 

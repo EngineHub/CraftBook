@@ -1,16 +1,21 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class BlockSensor extends AbstractIC {
 
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private Block center;
     private int id;
     private byte data;
@@ -23,7 +28,7 @@ public class BlockSensor extends AbstractIC {
     @Override
     public void load() {
 
-        String[] ids = COLON_PATTERN.split(getSign().getLine(3), 2);
+        String[] ids = RegexUtil.COLON_PATTERN.split(getSign().getLine(3), 2);
         center = ICUtil.parseBlockLocation(getSign());
         id = Integer.parseInt(ids[0]);
         try {
@@ -87,7 +92,7 @@ public class BlockSensor extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] split = COLON_PATTERN.split(sign.getLine(3), 2);
+                String[] split = RegexUtil.COLON_PATTERN.split(sign.getLine(3), 2);
                 Integer.parseInt(split[0]);
             } catch (Exception ignored) {
                 throw new ICVerificationException("You need to specify a block in line four.");

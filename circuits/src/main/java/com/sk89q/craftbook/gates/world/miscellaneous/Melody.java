@@ -1,21 +1,27 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.jinglenote.JingleNoteManager;
-import com.sk89q.craftbook.jinglenote.MidiJingleSequencer;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
+import java.io.File;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.logging.Level;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.jinglenote.JingleNoteManager;
+import com.sk89q.craftbook.jinglenote.MidiJingleSequencer;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Me4502
@@ -64,7 +70,7 @@ public class Melody extends AbstractIC {
     public void load() {
 
         try {
-            String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
+            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3));
 
             try {
                 radius = Integer.parseInt(split[0]);
@@ -81,8 +87,8 @@ public class Melody extends AbstractIC {
         File[] trialPaths = {
                 new File(CircuitsPlugin.getInst().midiFolder, midiName),
                 new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"), new File(CircuitsPlugin.getInst()
-                .midiFolder, midiName + ".midi"),
-                new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"),
+                        .midiFolder, midiName + ".midi"),
+                        new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"),
         };
 
         for (File f : trialPaths) {

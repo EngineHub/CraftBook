@@ -1,23 +1,26 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
  */
 public class SetDoor extends AbstractIC {
 
-    private static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
-    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     private int onMaterial;
     private int onData;
 
@@ -47,12 +50,12 @@ public class SetDoor extends AbstractIC {
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {
             try {
-                String[] split = MINUS_PATTERN.split(line);
+                String[] split = RegexUtil.MINUS_PATTERN.split(line);
                 // parse the material data
                 if (split.length > 0) {
                     try {
                         // parse the data that gets set when the block is toggled off
-                        String[] strings = ICUtil.COLON_PATTERN.split(split[1]);
+                        String[] strings = RegexUtil.COLON_PATTERN.split(split[1]);
                         offMaterial = Integer.parseInt(strings[0]);
                         if (strings.length > 0) {
                             offData = Integer.parseInt(strings[1]);
@@ -65,7 +68,7 @@ public class SetDoor extends AbstractIC {
                     }
                 }
                 // parse the material and data for toggle on
-                String[] strings = ICUtil.COLON_PATTERN.split(split[0]);
+                String[] strings = RegexUtil.COLON_PATTERN.split(split[0]);
                 onMaterial = Integer.parseInt(strings[0]);
                 if (strings.length > 0) {
                     onData = Integer.parseInt(strings[1]);
@@ -84,10 +87,10 @@ public class SetDoor extends AbstractIC {
             if (!relativeOffset) {
                 line = line.replace("!", "");
             }
-            String[] split = ICUtil.COLON_PATTERN.split(line);
+            String[] split = RegexUtil.COLON_PATTERN.split(line);
             try {
                 // parse the offset
-                String[] offsetSplit = COMMA_PATTERN.split(split[0]);
+                String[] offsetSplit = RegexUtil.COMMA_PATTERN.split(split[0]);
                 offsetX = Integer.parseInt(offsetSplit[0]);
                 offsetY = Integer.parseInt(offsetSplit[1]);
                 offsetZ = Integer.parseInt(offsetSplit[2]);
@@ -102,7 +105,7 @@ public class SetDoor extends AbstractIC {
             }
             try {
                 // parse the size of the door
-                String[] sizeSplit = COMMA_PATTERN.split(split[1]);
+                String[] sizeSplit = RegexUtil.COMMA_PATTERN.split(split[1]);
                 width = Integer.parseInt(sizeSplit[0]);
                 height = Integer.parseInt(sizeSplit[1]);
             } catch (NumberFormatException e) {

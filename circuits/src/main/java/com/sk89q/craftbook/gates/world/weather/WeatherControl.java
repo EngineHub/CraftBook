@@ -1,16 +1,18 @@
 package com.sk89q.craftbook.gates.world.weather;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.World;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class WeatherControl extends AbstractIC {
-
-    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
     public WeatherControl(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -36,7 +38,7 @@ public class WeatherControl extends AbstractIC {
         int duration = 24000;
         int thunderDuration = duration;
         try {
-            String[] st = RIGHT_BRACKET_PATTERN.split(getSign().getLine(1), 2);
+            String[] st = RegexUtil.RIGHT_BRACKET_PATTERN.split(getSign().getLine(1), 2);
             if (st.length > 1) {
                 tstorm = st[1].equalsIgnoreCase("t");
             }

@@ -1,18 +1,21 @@
 package com.sk89q.craftbook.mech.cauldron;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Silthus
  */
 public class CauldronItemStack implements Comparable<CauldronItemStack> {
-
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
     public int hashCode() {
@@ -40,7 +43,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
         Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
         // merge the amounts and stacks
         for (Map.Entry<String, Integer> stack : items.entrySet()) {
-            String[] split = COLON_PATTERN.split(stack.getKey());
+            String[] split = RegexUtil.COLON_PATTERN.split(stack.getKey());
             stackSet.add(new CauldronItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
                     stack.getValue()));
         }

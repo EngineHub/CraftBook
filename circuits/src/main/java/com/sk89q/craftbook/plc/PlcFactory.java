@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.plc;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.BaseConfiguration.BaseConfigurationSection;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -23,13 +25,10 @@ import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.ic.IC;
 import com.sk89q.craftbook.ic.ICFactory;
 import com.sk89q.craftbook.ic.ICVerificationException;
-import org.bukkit.Server;
-
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
 
-    private static final Pattern PLC_NAME_PATTERN = Pattern.compile("[-_a-z0-9]+", Pattern.CASE_INSENSITIVE);
     private Lang lang;
     private boolean selfTriggered;
     private Server s;
@@ -55,7 +54,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
         sign.setLine(2, "id:" + Math.abs(BaseBukkitPlugin.random.nextInt()));
         if (!sign.getLine(3).isEmpty()) {
             String line = sign.getLine(3);
-            if (!PLC_NAME_PATTERN.matcher(line).matches()) throw new ICVerificationException("illegal storage name");
+            if (!RegexUtil.PLC_NAME_PATTERN.matcher(line).matches()) throw new ICVerificationException("illegal storage name");
         }
         sign.update(false);
     }
@@ -66,9 +65,9 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT,
-            Lang> fromLang(Server s, Lang lang,
+    Lang> fromLang(Server s, Lang lang,
 
-                           boolean selfTriggered) {
+            boolean selfTriggered) {
 
         return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered);
     }

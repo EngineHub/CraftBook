@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,18 +16,21 @@
 
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class MultipleSetBlock extends AbstractIC {
-
-    private static final Pattern PLUS_PATTERN = Pattern.compile("+", Pattern.LITERAL);
 
     public MultipleSetBlock(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -48,7 +51,7 @@ public class MultipleSetBlock extends AbstractIC {
         String line4 = getSign().getLine(3);
 
         String[] coords;
-        coords = ICUtil.COLON_PATTERN.split(PLUS_PATTERN.matcher(line3).replaceAll(""));
+        coords = RegexUtil.COLON_PATTERN.split(RegexUtil.PLUS_PATTERN.matcher(line3).replaceAll(""));
 
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         x = body.getX();
@@ -75,7 +78,7 @@ public class MultipleSetBlock extends AbstractIC {
         y += Integer.parseInt(coords[1]);
         z += Integer.parseInt(coords[2]);
 
-        dim = ICUtil.COLON_PATTERN.split(line4);
+        dim = RegexUtil.COLON_PATTERN.split(line4);
     }
 
     @Override

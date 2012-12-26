@@ -1,19 +1,20 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public abstract class SetBlock extends AbstractIC {
 
@@ -29,7 +30,7 @@ public abstract class SetBlock extends AbstractIC {
     @Override
     public void load() {
 
-        String[] splitBlockData = ICUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase().trim(), 2);
+        String[] splitBlockData = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase().trim(), 2);
         String strBlock = splitBlockData[0];
         String strMeta = "";
         if (splitBlockData.length > 1) {

@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Minecart;
@@ -9,13 +10,11 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class CartDeposit extends CartMechanism {
-
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
     public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
@@ -47,7 +46,7 @@ public class CartDeposit extends CartMechanism {
         int itemID = -1;
         byte itemData = -1;
         try {
-            String[] splitLine = COLON_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2));
+            String[] splitLine = RegexUtil.COLON_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2));
             itemID = Integer.parseInt(splitLine[0]);
             itemData = Byte.parseByte(splitLine[1]);
         } catch (Exception ignored) {
@@ -90,7 +89,7 @@ public class CartDeposit extends CartMechanism {
                 Inventory containerinventory = container.getInventory();
 
                 leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()
-                        ])).values());
+                                                                                                ])).values());
                 transferItems.clear();
                 transferItems.addAll(leftovers);
                 leftovers.clear();
@@ -157,7 +156,7 @@ public class CartDeposit extends CartMechanism {
                 Inventory containerinventory = container.getInventory();
 
                 leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()
-                        ])).values());
+                                                                                                ])).values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);
                 leftovers.clear();

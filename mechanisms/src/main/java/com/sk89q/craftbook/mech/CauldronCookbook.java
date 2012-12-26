@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,13 +16,22 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.util.Tuple2;
-
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.Tuple2;
 
 // import java.io.*;
 
@@ -36,8 +45,6 @@ import java.util.regex.Pattern;
 public class CauldronCookbook {
 
     private static final Pattern AT_PATTERN = Pattern.compile("@", Pattern.LITERAL);
-    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     private static final Pattern ANYTHING_MULTIPLIED_BY_NUMBER_PATTERN = Pattern.compile("^.*\\*([0-9]+)$");
 
     /**
@@ -127,7 +134,7 @@ public class CauldronCookbook {
                 if (line.charAt(0) == ';' || line.charAt(0) == '#' || line.isEmpty()) {
                     continue;
                 }
-                String[] parts = COLON_PATTERN.split(line);
+                String[] parts = RegexUtil.COLON_PATTERN.split(line);
                 if (parts.length < 3) {
                     log.log(Level.WARNING, "Invalid cauldron recipe line in " + file.getName() + ": '" + line + "'");
                 } else {
@@ -136,7 +143,7 @@ public class CauldronCookbook {
                     List<Tuple2<Integer, Short>> results = parseCauldronItems(parts[2]);
                     String[] groups = null;
                     if (parts.length >= 4 && !parts[3].trim().isEmpty()) {
-                        groups = COMMA_PATTERN.split(parts[3]);
+                        groups = RegexUtil.COMMA_PATTERN.split(parts[3]);
                     }
                     Recipe recipe = new Recipe(name, ingredients, results, groups);
                     add(recipe);
@@ -158,7 +165,7 @@ public class CauldronCookbook {
      */
     private List<Tuple2<Integer, Short>> parseCauldronItems(String list) {
 
-        String[] parts = COMMA_PATTERN.split(list);
+        String[] parts = RegexUtil.COMMA_PATTERN.split(list);
 
         List<Tuple2<Integer, Short>> out = new ArrayList<Tuple2<Integer, Short>>();
 
@@ -235,7 +242,7 @@ public class CauldronCookbook {
          * @param groups
          */
         public Recipe(String name, List<Tuple2<Integer, Short>> ingredients, List<Tuple2<Integer, Short>> results,
-                      String[] groups) {
+                String[] groups) {
 
             this.name = name;
             this.ingredients = Collections.unmodifiableList(ingredients);

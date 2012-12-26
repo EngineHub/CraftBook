@@ -1,14 +1,29 @@
 package com.sk89q.craftbook.gates.world.entity;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
 import org.bukkit.util.Vector;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class EntityCannon extends AbstractIC {
 
@@ -95,7 +110,7 @@ public class EntityCannon extends AbstractIC {
                     continue;
                 }
 
-                String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
+                String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
                 double x = Double.parseDouble(split[0]);
                 double y = Double.parseDouble(split[1]);
                 double z = Double.parseDouble(split[2]);

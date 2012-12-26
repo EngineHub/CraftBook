@@ -1,18 +1,21 @@
 package com.sk89q.craftbook.mech.crafting;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Silthus
  */
 public class CraftingItemStack implements Comparable<CraftingItemStack> {
-
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     public static Collection<CraftingItemStack> convert(Collection<Item> stacks) {
 
@@ -29,7 +32,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         Set<CraftingItemStack> stackSet = new LinkedHashSet<CraftingItemStack>();
         // merge the amounts and stacks
         for (Map.Entry<String, Integer> entry : items.entrySet()) {
-            String[] split = COLON_PATTERN.split(entry.getKey());
+            String[] split = RegexUtil.COLON_PATTERN.split(entry.getKey());
             stackSet.add(new CraftingItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
                     entry.getValue()));
         }

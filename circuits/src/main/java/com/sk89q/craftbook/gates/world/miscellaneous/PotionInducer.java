@@ -1,10 +1,7 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
@@ -13,7 +10,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Set;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -44,7 +52,7 @@ public class PotionInducer extends AbstractIC {
     @Override
     public void load() {
 
-        String[] effectInfo = ICUtil.COLON_PATTERN.split(getLine(2), 3);
+        String[] effectInfo = RegexUtil.COLON_PATTERN.split(getLine(2), 3);
         effectID = Integer.parseInt(effectInfo[0]);
         try {
             effectAmount = Integer.parseInt(effectInfo[1]);
@@ -127,7 +135,7 @@ public class PotionInducer extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] bits = ICUtil.COLON_PATTERN.split(sign.getLine(2), 3);
+                String[] bits = RegexUtil.COLON_PATTERN.split(sign.getLine(2), 3);
                 int effectId = Integer.parseInt(bits[0]);
 
                 if (PotionEffectType.getById(effectId) == null)
@@ -148,7 +156,7 @@ public class PotionInducer extends AbstractIC {
 
             String[] lines = new String[] {
                     "id:level:time", "range (add a m to the end to only induce mobs or p for " +
-                    "players (pm for both))"
+                            "players (pm for both))"
             };
             return lines;
         }

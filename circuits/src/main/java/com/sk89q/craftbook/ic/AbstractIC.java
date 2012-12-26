@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,12 +16,12 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * A base abstract IC that all ICs can inherit from.
@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractIC implements IC {
 
-    private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("[", Pattern.LITERAL);
-    private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
     private final Server server;
     private final ChangedSign sign;
     private final ICFactory factory;
@@ -73,7 +71,7 @@ public abstract class AbstractIC implements IC {
     public void onRightClick(Player p) {
 
         if (p.isSneaking()) {
-            CircuitsPlugin.getInst().generateICDocs(p, RIGHT_BRACKET_PATTERN.split(LEFT_BRACKET_PATTERN.split(getSign
+            CircuitsPlugin.getInst().generateICDocs(p, RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign
                     ().getLine(1))[1])[0]);
         }
     }

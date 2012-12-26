@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,20 +16,21 @@
 
 package com.sk89q.craftbook.ic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemType;
+import java.util.HashMap;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
 
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.ItemType;
 
 /**
  * IC utility functions.
@@ -37,9 +38,6 @@ import java.util.regex.Pattern;
  * @author sk89q
  */
 public class ICUtil {
-
-    public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
-    public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     // private static BlockFace[] REDSTONE_CONTACT_FACES =
     // {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
@@ -140,11 +138,11 @@ public class ICUtil {
         int offsetY = 0;
         int offsetZ = 0;
         if (line.contains("=")) {
-            String[] split = EQUALS_PATTERN.split(line);
+            String[] split = RegexUtil.EQUALS_PATTERN.split(line);
             line = split[1];
         }
         try {
-            String[] split = COLON_PATTERN.split(line);
+            String[] split = RegexUtil.COLON_PATTERN.split(line);
             if (split.length > 1) {
                 offsetX = Integer.parseInt(split[0]);
                 offsetY = Integer.parseInt(split[1]);
@@ -186,11 +184,11 @@ public class ICUtil {
             String line = sign.getLine(i);
             String[] strings;
             if (line.contains("=")) {
-                String[] split = EQUALS_PATTERN.split(line, 2);
+                String[] split = RegexUtil.EQUALS_PATTERN.split(line, 2);
                 Integer.parseInt(split[0]);
-                strings = COLON_PATTERN.split(split[1], 3);
+                strings = RegexUtil.COLON_PATTERN.split(split[1], 3);
             } else {
-                strings = COLON_PATTERN.split(line);
+                strings = RegexUtil.COLON_PATTERN.split(line);
             }
             if (strings.length > 1) {
                 Integer.parseInt(strings[1]);
@@ -212,7 +210,7 @@ public class ICUtil {
         String line = sign.getLine(lPos);
         int radius = 10; // default radius is 10.
         try {
-            return Integer.parseInt(EQUALS_PATTERN.split(line, 2)[0]);
+            return Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
         } catch (NumberFormatException e) {
             // do nothing and use default radius
         }
@@ -226,7 +224,7 @@ public class ICUtil {
         }
         try {
             if (line.contains(":")) {
-                String[] split = COLON_PATTERN.split(line, 2);
+                String[] split = RegexUtil.COLON_PATTERN.split(line, 2);
                 int id = 0;
                 int data = 0;
                 try {

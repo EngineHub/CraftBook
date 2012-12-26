@@ -1,16 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
-import org.bukkit.Material;
-import org.bukkit.block.Furnace;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.FurnaceBurnEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,14 +7,26 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.bukkit.Material;
+import org.bukkit.block.Furnace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+
 @Deprecated
 public class CustomCrafting implements Listener {
 
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("#", Pattern.LITERAL);
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    private static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
-    private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("[", Pattern.LITERAL);
     private static final Pattern AT_LEFT_BRACKET_PATTERN = Pattern.compile("@[", Pattern.LITERAL);
     private static final Pattern DOLLAR_LEFT_BRACKET_PATTERN = Pattern.compile("$[", Pattern.LITERAL);
     private static final Pattern AMPERSAND_LEFT_BRACKET_PATTERN = Pattern.compile("&[", Pattern.LITERAL);
@@ -81,7 +82,7 @@ public class CustomCrafting implements Listener {
             String lastLine;
             while ((lastLine = br.readLine()) != null) { // read file until the end
                 // Skip useless lines
-                lastLine = COMMENT_PATTERN.split(lastLine)[0];
+                lastLine = RegexUtil.COMMENT_PATTERN.split(lastLine)[0];
                 lastLine = lastLine.trim();
                 if (lastLine.isEmpty()) {
                     continue;
@@ -93,14 +94,14 @@ public class CustomCrafting implements Listener {
                     if (contents == null) {
                         continue;
                     }
-                    contents = COMMENT_PATTERN.split(contents)[0];
+                    contents = RegexUtil.COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
                     if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = COMMA_PATTERN.split(contents);
+                    String[] items = RegexUtil.COMMA_PATTERN.split(contents);
                     for (String item : items) {
-                        String[] itemSplit = COLON_PATTERN.split(item);
+                        String[] itemSplit = RegexUtil.COLON_PATTERN.split(item);
                         int iid = Integer.parseInt(itemSplit[0]);
                         String idata = itemSplit[1];
                         int iidata;
@@ -124,14 +125,14 @@ public class CustomCrafting implements Listener {
                     if (contents == null) {
                         continue;
                     }
-                    contents = COMMENT_PATTERN.split(contents)[0];
+                    contents = RegexUtil.COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
                     if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = COMMA_PATTERN.split(contents);
+                    String[] items = RegexUtil.COMMA_PATTERN.split(contents);
                     for (String item : items) {
-                        String[] itemSplit = COLON_PATTERN.split(item);
+                        String[] itemSplit = RegexUtil.COLON_PATTERN.split(item);
                         int iid = Integer.parseInt(itemSplit[0]);
                         String idata = itemSplit[1];
                         int iidata;
@@ -150,12 +151,12 @@ public class CustomCrafting implements Listener {
                     }
                 } else if (lastLine.startsWith("&[")) { // Furnace Fuel
                     String output = AMPERSAND_LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
-                    int id = Integer.parseInt(COLON_PATTERN.split(output)[0]);
+                    int id = Integer.parseInt(RegexUtil.COLON_PATTERN.split(output)[0]);
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = COMMENT_PATTERN.split(contents)[0];
+                    contents = RegexUtil.COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
                     if (contents.isEmpty()) {
                         continue;
@@ -170,19 +171,19 @@ public class CustomCrafting implements Listener {
                     if (contents == null) {
                         continue;
                     }
-                    contents = COMMENT_PATTERN.split(contents)[0];
+                    contents = RegexUtil.COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
                     if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = COMMA_PATTERN.split(contents);
-                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split
+                    String[] items = RegexUtil.COMMA_PATTERN.split(contents);
+                    r.shape(getShapeData(RegexUtil.COLON_PATTERN.split(items[0])[0]) + getShapeData(RegexUtil.COLON_PATTERN.split
                             (items[1])[0]),
-                            getShapeData(COLON_PATTERN.split(items[2])[0]) + getShapeData(COLON_PATTERN.split
+                            getShapeData(RegexUtil.COLON_PATTERN.split(items[2])[0]) + getShapeData(RegexUtil.COLON_PATTERN.split
                                     (items[3])[0]));
                     plugin.getLogger().severe(Arrays.toString(r.getShape()));
                     for (String item : items) {
-                        String[] itemSplit = COLON_PATTERN.split(item);
+                        String[] itemSplit = RegexUtil.COLON_PATTERN.split(item);
                         int iid = Integer.parseInt(itemSplit[0]);
                         String idata = itemSplit[1];
                         int iidata;
@@ -200,29 +201,29 @@ public class CustomCrafting implements Listener {
                         plugin.getLogger().warning("Failed to add recipe!");
                     }
                 } else if (lastLine.startsWith("[")) { // Shaped Recipe
-                    String output = LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
+                    String output = RegexUtil.LEFT_BRACKET_PATTERN.split(lastLine)[1].replace("]", "");
                     ShapedRecipe r = new ShapedRecipe(parseItemStack(output));
                     String contents = br.readLine();
                     if (contents == null) {
                         continue;
                     }
-                    contents = COMMENT_PATTERN.split(contents)[0];
+                    contents = RegexUtil.COMMENT_PATTERN.split(contents)[0];
                     contents = contents.trim();
                     if (contents.isEmpty()) {
                         continue;
                     }
-                    String[] items = COMMA_PATTERN.split(contents);
-                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split
+                    String[] items = RegexUtil.COMMA_PATTERN.split(contents);
+                    r.shape(getShapeData(RegexUtil.COLON_PATTERN.split(items[0])[0]) + getShapeData(RegexUtil.COLON_PATTERN.split
                             (items[1])[0])
-                            + getShapeData(COLON_PATTERN.split(items[2])[0]), getShapeData(COLON_PATTERN.split
-                            (items[3])[0])
-                            + getShapeData(COLON_PATTERN.split(items[4])[0]) + getShapeData(COLON_PATTERN.split
-                            (items[5])[0]),
-                            getShapeData(COLON_PATTERN.split(items[6])[0]) + getShapeData(COLON_PATTERN.split
-                                    (items[7])[0])
-                                    + getShapeData(COLON_PATTERN.split(items[8])[0]));
+                            + getShapeData(RegexUtil.COLON_PATTERN.split(items[2])[0]), getShapeData(RegexUtil.COLON_PATTERN.split
+                                    (items[3])[0])
+                                    + getShapeData(RegexUtil.COLON_PATTERN.split(items[4])[0]) + getShapeData(RegexUtil.COLON_PATTERN.split
+                                            (items[5])[0]),
+                                            getShapeData(RegexUtil.COLON_PATTERN.split(items[6])[0]) + getShapeData(RegexUtil.COLON_PATTERN.split
+                                                    (items[7])[0])
+                                                    + getShapeData(RegexUtil.COLON_PATTERN.split(items[8])[0]));
                     for (String item : items) {
-                        String[] itemSplit = COLON_PATTERN.split(item);
+                        String[] itemSplit = RegexUtil.COLON_PATTERN.split(item);
                         int iid = Integer.parseInt(itemSplit[0]);
                         String idata = itemSplit[1];
                         int iidata;
@@ -253,9 +254,9 @@ public class CustomCrafting implements Listener {
 
     private ItemStack tryParseItemStack(String output) {
         // Is this necessary?
-        String[] split = COLON_PATTERN.split(output);
+        String[] split = RegexUtil.COLON_PATTERN.split(output);
         int id = Integer.parseInt(split[0]);
-        String[] split2 = X_PATTERN.split(split[1]);
+        String[] split2 = RegexUtil.X_PATTERN.split(split[1]);
         short data = Short.parseShort(split2[0]);
         int amount = 1;
         try {
@@ -267,9 +268,9 @@ public class CustomCrafting implements Listener {
 
     private ItemStack parseItemStack(String output) {
 
-        String[] split = COLON_PATTERN.split(output);
+        String[] split = RegexUtil.COLON_PATTERN.split(output);
         int id = Integer.parseInt(split[0]);
-        String[] split2 = X_PATTERN.split(split[1]);
+        String[] split2 = RegexUtil.X_PATTERN.split(split[1]);
         short data = Short.parseShort(split2[0]);
         int amount = Integer.parseInt(split2[1]);
         return new ItemStack(id, amount, data);

@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.RegexUtil;
 
 public class ItemInfo {
 
