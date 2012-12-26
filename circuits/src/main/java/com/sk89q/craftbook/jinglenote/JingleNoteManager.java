@@ -5,10 +5,10 @@
 
 package com.sk89q.craftbook.jinglenote;
 
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.entity.Player;
 
 /**
  * A manager of play instances.
@@ -33,7 +33,7 @@ public class JingleNoteManager {
             instances.remove(name);
         }
 
-        JingleNotePlayer notePlayer = new JingleNotePlayer(player, sequencer);
+        JingleNotePlayer notePlayer = new JingleNotePlayer(name, sequencer);
         Thread thread = new Thread(notePlayer);
         thread.setDaemon(true);
         thread.setPriority(Thread.MAX_PRIORITY);

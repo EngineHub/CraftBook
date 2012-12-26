@@ -5,17 +5,18 @@
 
 package com.sk89q.craftbook.jinglenote;
 
-import com.sk89q.craftbook.jinglenote.MidiJingleSequencer.Note;
-import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.jinglenote.MidiJingleSequencer.Note;
+import com.sk89q.craftbook.util.GeneralUtil;
+
 public class JingleNotePlayer implements Runnable {
 
-    protected final Player player;
+    protected final String player;
     protected JingleSequencer sequencer;
 
-    public JingleNotePlayer(Player player, JingleSequencer seq) {
+    public JingleNotePlayer(String player, JingleSequencer seq) {
 
         this.player = player;
         sequencer = seq;
@@ -40,7 +41,7 @@ public class JingleNotePlayer implements Runnable {
         }
     }
 
-    public Player getPlayer() {
+    public String getPlayer() {
 
         return player;
     }
@@ -52,12 +53,17 @@ public class JingleNotePlayer implements Runnable {
         }
     }
 
+    Player p = null;
+
     public void play(Note note) {
 
-        if (!player.isOnline() || note == null) {
+        if(p == null || !p.isOnline())
+            p = Bukkit.getPlayer(player);
+
+        if (p == null || !p.isOnline() || note == null) {
             return;
         }
 
-        player.playSound(player.getLocation(), note.getInstrument(), note.getVelocity(), note.getNote());
+        p.playSound(p.getLocation(), note.getInstrument(), note.getVelocity(), note.getNote());
     }
 }

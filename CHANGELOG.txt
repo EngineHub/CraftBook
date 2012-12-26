@@ -1,3 +1,27 @@
+3.4.1
++ Added a permission to restock mechanics.
+* Optimization to tonnes of IC's.
+* Cultivator will only till soil with air above them.
+* Fix issue with corrupted vehicles configuration.
+* Fix container dispenser error.
+* Fix sorter vehicle mech for 1.4.5+
++ Added the ability to disable certain IC's.
++ Added verification to a few IC's.
+* Last line of player sensor can now be blank.
+* Fixed a few million IC's not accepting sign parameters and using default instead.
++ Added new instruments and optimizations to MIDI Player IC.
++ Added a command to list midi files on the server. (/listmidis)
+* Fix wireless IC bugs.
+* Fix P-Door/Bridge.
+* Fix / 0 error.
+* Fixed circuit and mech reload commands causing errors.
+* Updated to latest PluginMetrics.
+* Fix BlockSensor.
+* Fix Elevator/Teleporter button support.
+* Melody IC won't stop playing when a player logs out.
+* Optimized the whole of CraftBook.
+* MIDI IC will keep playing a song for you if you reconnect. But new players joining won't hear it.
+
 3.4
 * Realistic snow mechanic now works much smoother and more realistically.
 * PLC's are now version independant. But will only work as of 1.4.5+.
