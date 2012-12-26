@@ -1,14 +1,10 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -16,13 +12,27 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.PistonBaseMaterial;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.PipeInputIC;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
 
@@ -127,42 +137,42 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
     public boolean collect(Dispenser disp) {
 
         outer:
-        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-            if (!(en instanceof Item)) {
-                continue;
-            }
-            Item item = (Item) en;
-            if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
-                continue;
-            }
-            Location loc = item.getLocation();
-            int ix = loc.getBlockX();
-            int iy = loc.getBlockY();
-            int iz = loc.getBlockZ();
-            boolean delete = true;
-            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                int newAmount = item.getItemStack().getAmount();
-                for (int i = 0; i < item.getItemStack().getAmount(); i++) {
-                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
-                            item.getItemStack());
-                    if (it == null) continue outer;
-                    if (it.getAmount() < 64) {
-                        it.setAmount(it.getAmount() + 1);
-                        newAmount -= 1;
-                    } else if (newAmount > 0) {
-                        delete = false;
-                        break;
-                    }
+            for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
+                if (!(en instanceof Item)) {
+                    continue;
                 }
+                Item item = (Item) en;
+                if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
+                    continue;
+                }
+                Location loc = item.getLocation();
+                int ix = loc.getBlockX();
+                int iy = loc.getBlockY();
+                int iz = loc.getBlockZ();
+                boolean delete = true;
+                if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+                    int newAmount = item.getItemStack().getAmount();
+                    for (int i = 0; i < item.getItemStack().getAmount(); i++) {
+                        ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
+                                item.getItemStack());
+                        if (it == null) continue outer;
+                        if (it.getAmount() < 64) {
+                            it.setAmount(it.getAmount() + 1);
+                            newAmount -= 1;
+                        } else if (newAmount > 0) {
+                            delete = false;
+                            break;
+                        }
+                    }
 
-                item.getItemStack().setAmount(newAmount);
+                    item.getItemStack().setAmount(newAmount);
 
-                if (newAmount > 0) delete = false;
+                    if (newAmount > 0) delete = false;
 
-                if (delete) item.remove();
+                    if (delete) item.remove();
+                }
             }
-        }
-        return false;
+    return false;
     }
 
     /**
@@ -277,7 +287,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             newItems.addAll(items);
             for (ItemStack ite : items) {
                 if (ite == null) continue;
-                int iteind = items.indexOf(ite);
+                int iteind = newItems.indexOf(ite);
                 int newAmount = ite.getAmount();
                 for (int i = 0; i < ite.getAmount(); i++) {
                     ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), ite);
