@@ -44,9 +44,10 @@ public class LiquidFlood extends AbstractIC {
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
         try {
-            String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
-            radius = Integer.parseInt(splitEquals[0]);
+
             if (getSign().getLine(2).contains("=")) {
+                String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
+                radius = Integer.parseInt(splitEquals[0]);
                 String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
@@ -59,6 +60,8 @@ public class LiquidFlood extends AbstractIC {
                 if (z < -16) z = -16;
                 centre.add(x, y, z);
             }
+            else
+                radius = Integer.parseInt(getLine(2));
         } catch (Exception ignored) {
             radius = 10;
         }
