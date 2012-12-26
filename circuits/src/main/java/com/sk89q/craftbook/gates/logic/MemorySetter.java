@@ -1,42 +1,36 @@
 package com.sk89q.craftbook.gates.logic;
 
-import java.io.File;
-import java.io.PrintWriter;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.io.File;
+import java.io.PrintWriter;
 
 public class MemorySetter extends AbstractIC {
 
-    public MemorySetter (Server server, ChangedSign block, ICFactory factory) {
+    public MemorySetter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Memory Setter";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "MEMORY SET";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         setMemory(chip);
     }
@@ -44,11 +38,12 @@ public class MemorySetter extends AbstractIC {
     File f;
 
     @Override
-    public void load () {
+    public void load() {
+
         f = new File(CircuitsPlugin.getInst().romFolder, getSign().getLine(2) + ".dat");
     }
 
-    public boolean setMemory (ChipState chip) {
+    public boolean setMemory(ChipState chip) {
 
         try {
             if (!f.exists()) {
@@ -66,13 +61,13 @@ public class MemorySetter extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new MemorySetter(getServer(), sign, this);
         }

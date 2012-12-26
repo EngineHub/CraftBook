@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.ic.families;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.ic.AbstractChipState;
@@ -10,35 +7,37 @@ import com.sk89q.craftbook.ic.AbstractICFamily;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 public class Family3I5O extends AbstractICFamily {
 
     @Override
-    public ChipState detect (BlockWorldVector source, ChangedSign sign) {
+    public ChipState detect(BlockWorldVector source, ChangedSign sign) {
 
         return new ChipState3I5O(source, sign);
     }
 
     @Override
-    public ChipState detectSelfTriggered (BlockWorldVector source, ChangedSign sign) {
+    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign) {
 
         return new ChipState3I5O(source, sign, true);
     }
 
     public static class ChipState3I5O extends AbstractChipState {
 
-        public ChipState3I5O (BlockWorldVector source, ChangedSign sign) {
+        public ChipState3I5O(BlockWorldVector source, ChangedSign sign) {
 
             super(source, sign, false);
         }
 
-        public ChipState3I5O (BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
+        public ChipState3I5O(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
 
             super(source, sign, selfTriggered);
         }
 
         @Override
-        protected Block getBlock (int pin) {
+        protected Block getBlock(int pin) {
 
             BlockFace fback = SignUtil.getBack(BukkitUtil.toSign(sign).getBlock());
             Block backBlock = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()).getRelative(fback);
@@ -67,31 +66,31 @@ public class Family3I5O extends AbstractICFamily {
         }
 
         @Override
-        public boolean getInput (int inputIndex) {
+        public boolean getInput(int inputIndex) {
 
             return get(inputIndex);
         }
 
         @Override
-        public boolean getOutput (int outputIndex) {
+        public boolean getOutput(int outputIndex) {
 
             return get(outputIndex + 3);
         }
 
         @Override
-        public void setOutput (int outputIndex, boolean value) {
+        public void setOutput(int outputIndex, boolean value) {
 
             set(outputIndex + 3, value);
         }
 
         @Override
-        public int getInputCount () {
+        public int getInputCount() {
 
             return 3;
         }
 
         @Override
-        public int getOutputCount () {
+        public int getOutputCount() {
 
             return 5;
         }

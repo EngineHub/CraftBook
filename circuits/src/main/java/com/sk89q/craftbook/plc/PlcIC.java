@@ -2,29 +2,29 @@
 /*
  * Copyright (C) 2012 Lymia Aluysia <lymiahugs@gmail.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.plc;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -38,15 +38,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements IC {
 
@@ -64,7 +60,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private boolean error = false;
     private String errorString = "no error";
 
-    PlcIC (ChangedSign s, Lang l) throws ICVerificationException {
+    PlcIC(ChangedSign s, Lang l) throws ICVerificationException {
 
         sign = s;
         try {
@@ -75,7 +71,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         l.compile(codeString);
     }
 
-    public PlcIC (Server sv, ChangedSign s, Lang l) {
+    public PlcIC(Server sv, ChangedSign s, Lang l) {
 
         lang = l;
         sign = s;
@@ -96,17 +92,17 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         tryLoadState();
     }
 
-    private boolean isShared () {
+    private boolean isShared() {
 
         return !sign.getLine(3).isEmpty() && sign.getLine(3).startsWith("id:");
     }
 
-    private String getID () {
+    private String getID() {
 
         return sign.getLine(2);
     }
 
-    private String getFileName () {
+    private String getFileName() {
 
         if (!isShared()) {
             BlockWorldVector l = sign.getBlockVector();
@@ -114,7 +110,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         } else return lang.getName() + "$" + sign.getLine(3);
     }
 
-    private File getStorageLocation () {
+    private File getStorageLocation() {
 
         World w = BukkitUtil.toWorld(sign.getLocalWorld());
         File worldDir = w.getWorldFolder();
@@ -123,7 +119,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         return new File(targetDir, getFileName());
     }
 
-    private String hashCode (String code) {
+    private String hashCode(String code) {
 
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -144,7 +140,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
     }
 
-    private void tryLoadState () {
+    private void tryLoadState() {
 
         try {
             loadState();
@@ -155,7 +151,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
     }
 
-    private void loadState () throws IOException {
+    private void loadState() throws IOException {
 
         if (!getStorageLocation().exists()) return; // Prevent error spam
 
@@ -186,7 +182,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
     }
 
-    private void trySaveState () {
+    private void trySaveState() {
 
         try {
             saveState();
@@ -196,7 +192,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
     }
 
-    private void saveState () throws IOException {
+    private void saveState() throws IOException {
 
         DataOutputStream out = new DataOutputStream(new FileOutputStream(getStorageLocation()));
         try {
@@ -212,13 +208,14 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
     }
 
-    private String getBookCode (Block chestBlock) throws CodeNotFoundException {
+    private String getBookCode(Block chestBlock) throws CodeNotFoundException {
 
         Chest c = (Chest) chestBlock.getState();
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
         for (ItemStack s : i.getContents())
-            if (s != null && s.getAmount() > 0 && (s.getTypeId() == ItemID.BOOK_AND_QUILL || s.getTypeId() == ItemID.WRITTEN_BOOK)) {
+            if (s != null && s.getAmount() > 0 && (s.getTypeId() == ItemID.BOOK_AND_QUILL || s.getTypeId() == ItemID
+                    .WRITTEN_BOOK)) {
                 if (book != null) throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
@@ -232,7 +229,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         return code.toString();
     }
 
-    private String getCode () throws CodeNotFoundException {
+    private String getCode() throws CodeNotFoundException {
 
         Sign sign = BukkitUtil.toSign(this.sign);
 
@@ -268,18 +265,18 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return lang.getName() + " PLC";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return lang.getName().toUpperCase();
     }
 
-    public void error (String shortMessage, String detailedMessage) {
+    public void error(String shortMessage, String detailedMessage) {
 
         sign.setLine(2, ChatColor.RED + "!Error!");
         sign.setLine(3, shortMessage);
@@ -292,7 +289,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         try {
             if (isShared()) {
@@ -310,66 +307,67 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
     }
 
-    public IC selfTriggered () {
+    public IC selfTriggered() {
 
         final IC self = this;
         return new SelfTriggeredIC() {
 
             @Override
-            public String getTitle () {
+            public String getTitle() {
 
                 return self.getTitle();
             }
 
             @Override
-            public String getSignTitle () {
+            public String getSignTitle() {
 
                 return self.getSignTitle();
             }
 
             @Override
-            public void trigger (ChipState chip) {
+            public void trigger(ChipState chip) {
 
             }
 
             @Override
-            public void think (ChipState chip) {
+            public void think(ChipState chip) {
 
                 self.trigger(chip);
             }
 
             @Override
-            public boolean isActive () {
+            public boolean isActive() {
 
                 return true;
             }
 
             @Override
-            public void onRightClick (Player p) {
+            public void onRightClick(Player p) {
 
                 self.onRightClick(p);
             }
 
             @Override
-            public void unload () {
+            public void unload() {
 
             }
 
             @Override
-            public void load () {
+            public void load() {
 
             }
         };
     }
 
     @Override
-    public void onRightClick (Player p) {
+    public void onRightClick(Player p) {
 
         if (p.hasPermission("craftbook.plc.debug")) {
             p.sendMessage(ChatColor.GREEN + "Programmable Logic Controller debug information");
             BlockWorldVector l = sign.getBlockVector();
             p.sendMessage(ChatColor.RED + "Status:" + ChatColor.RESET + " " + (error ? "Error Encountered" : "OK"));
-            p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET + " (" + l.getBlockX() + ", " + l.getBlockY() + ", " + l.getBlockZ() + ")");
+            p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET + " (" + l.getBlockX() + ", " +
+                    "" + l.getBlockY() + ", " + l.getBlockZ() + ")");
             p.sendMessage(ChatColor.RED + "Language:" + ChatColor.RESET + " " + lang.getName());
             p.sendMessage(ChatColor.RED + "Full Storage Name:" + ChatColor.RESET + " " + getFileName());
             if (error) {
@@ -383,12 +381,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     @Override
-    public void unload () {
+    public void unload() {
 
     }
 
     @Override
-    public void load () {
+    public void load() {
 
     }
 }

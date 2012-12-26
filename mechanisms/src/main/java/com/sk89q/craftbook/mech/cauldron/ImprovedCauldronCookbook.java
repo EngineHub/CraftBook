@@ -1,17 +1,16 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.BaseConfiguration;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -24,7 +23,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
     private File config;
     private File dataFolder;
 
-    public ImprovedCauldronCookbook (FileConfiguration cfg, File dataFolder) {
+    public ImprovedCauldronCookbook(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
         INSTANCE = this;
@@ -32,14 +31,14 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         recipes = new ArrayList<Recipe>();
         config = new File(dataFolder, "cauldron-recipes.yml");
         load(cfg.getConfigurationSection("cauldron-recipes"));
     }
 
-    public boolean reload () {
+    public boolean reload() {
 
         recipes.clear();
         load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("cauldron-recipes"));
@@ -47,7 +46,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         return true;
     }
 
-    private void load (ConfigurationSection cfg) {
+    private void load(ConfigurationSection cfg) {
         // lets load all recipes
         if (cfg == null) return; // If the config is null, it can't continue.
         Set<String> keys = cfg.getKeys(false);
@@ -58,7 +57,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         }
     }
 
-    public Recipe getRecipe (Collection<CauldronItemStack> items) throws UnknownRecipeException {
+    public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
 
         for (Recipe recipe : recipes)
             if (recipe.checkIngredients(items)) return recipe;
@@ -76,7 +75,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         private Collection<CauldronItemStack> results;
         private double chance;
 
-        private Recipe (String id, ConfigurationSection cfg) {
+        private Recipe(String id, ConfigurationSection cfg) {
 
             this.id = id;
             config = cfg.getConfigurationSection(id);
@@ -86,7 +85,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             load();
         }
 
-        private void load () {
+        private void load() {
 
             name = config.getString("name");
             description = config.getString("description");
@@ -95,7 +94,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             chance = config.getDouble("chance", 60);
         }
 
-        private Collection<CauldronItemStack> getItems (ConfigurationSection section) {
+        private Collection<CauldronItemStack> getItems(ConfigurationSection section) {
 
             Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
             try {
@@ -125,33 +124,34 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             return items;
         }
 
-        public String getId () {
+        public String getId() {
 
             return id;
         }
 
-        public String getName () {
+        public String getName() {
 
             return name;
         }
 
-        public String getDescription () {
+        public String getDescription() {
 
             return description;
         }
 
-        public double getChance () {
+        public double getChance() {
 
             return chance;
         }
 
         /**
          * Checks if the recipe
-         * 
+         *
          * @param items
+         *
          * @return
          */
-        public boolean checkIngredients (Collection<CauldronItemStack> items) {
+        public boolean checkIngredients(Collection<CauldronItemStack> items) {
 
             if (items.size() <= 0) return false;
             int count = 0;
@@ -162,7 +162,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
             return count == ingredients.size();
         }
 
-        public Collection<CauldronItemStack> getResults () {
+        public Collection<CauldronItemStack> getResults() {
 
             return results;
         }

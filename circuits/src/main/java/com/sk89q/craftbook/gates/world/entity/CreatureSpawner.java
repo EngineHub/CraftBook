@@ -2,55 +2,34 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.world.entity;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.material.MaterialData;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -58,13 +37,13 @@ public class CreatureSpawner extends AbstractIC {
     String data;
     int amount;
 
-    public CreatureSpawner (Server server, ChangedSign sign, ICFactory factory) {
+    public CreatureSpawner(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase());
         if (type == null) {
@@ -83,25 +62,26 @@ public class CreatureSpawner extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Creature Spawner";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "CREATURE SPAWNER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
         if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
 
-            org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1, 0).getState();
+            org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
+                    0).getState();
             sp.setCreatureTypeByName(type.getName());
             sp.update();
         } else {
@@ -114,7 +94,7 @@ public class CreatureSpawner extends AbstractIC {
         }
     }
 
-    public static void setEntityData (Entity ent, String bit) {
+    public static void setEntityData(Entity ent, String bit) {
 
         String[] data = ICUtil.COLON_PATTERN.split(bit);
 
@@ -322,27 +302,27 @@ public class CreatureSpawner extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new CreatureSpawner(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Spawns a mob with specified data.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "entitytype", "data:amount" };
+            String[] lines = new String[] {"entitytype", "data:amount"};
             return lines;
         }
     }

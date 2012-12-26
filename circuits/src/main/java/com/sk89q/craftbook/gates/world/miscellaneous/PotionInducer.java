@@ -1,7 +1,10 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import java.util.Set;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
@@ -10,37 +13,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Set;
 
 /**
  * @author Me4502
  */
 public class PotionInducer extends AbstractIC {
 
-    public PotionInducer (Server server, ChangedSign sign, ICFactory factory) {
+    public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Potion Inducer";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "POTION INDUCER";
     }
@@ -50,7 +42,7 @@ public class PotionInducer extends AbstractIC {
     boolean players;
 
     @Override
-    public void load () {
+    public void load() {
 
         String[] effectInfo = ICUtil.COLON_PATTERN.split(getLine(2), 3);
         effectID = Integer.parseInt(effectInfo[0]);
@@ -86,10 +78,12 @@ public class PotionInducer extends AbstractIC {
         }
     }
 
-    public boolean induce () {
+    public boolean induce() {
+
         boolean value = false;
-        Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); // Update
-                                                                                                                                       // chunks
+        Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign())
+                .getBlock()), radius); // Update
+        // chunks
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities()) {
@@ -97,8 +91,11 @@ public class PotionInducer extends AbstractIC {
                         LivingEntity liv = (LivingEntity) entity;
                         if (!mobs && !(liv instanceof Player)) continue;
                         if (!players && liv instanceof Player) continue;
-                        if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius * radius) continue;
-                        liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1), true);
+                        if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius *
+                                radius)
+                            continue;
+                        liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
+                                effectAmount - 1), true);
                         value = true;
                     }
                 }
@@ -107,26 +104,26 @@ public class PotionInducer extends AbstractIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, induce());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new PotionInducer(getServer(), sign, this);
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 String[] bits = ICUtil.COLON_PATTERN.split(sign.getLine(2), 3);
@@ -140,15 +137,16 @@ public class PotionInducer extends AbstractIC {
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Gives nearby entities a potion effect.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "id:level:time", "range (add a m to the end to only induce mobs or p for players (pm for both))" };
+            String[] lines = new String[] {"id:level:time", "range (add a m to the end to only induce mobs or p for " +
+                    "players (pm for both))"};
             return lines;
         }
     }

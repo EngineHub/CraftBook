@@ -1,20 +1,15 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.BaseConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import java.io.File;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -24,7 +19,7 @@ public class RecipeManager extends BaseConfiguration {
     private File config;
     private File dataFolder;
 
-    public RecipeManager (FileConfiguration cfg, File dataFolder) {
+    public RecipeManager(FileConfiguration cfg, File dataFolder) {
 
         super(cfg, dataFolder);
         INSTANCE = this;
@@ -32,19 +27,19 @@ public class RecipeManager extends BaseConfiguration {
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         recipes = new ArrayList<Recipe>();
         config = new File(dataFolder, "crafting-recipes.yml");
         load(cfg.getConfigurationSection("crafting-recipes"));
     }
 
-    public Collection<Recipe> getRecipes () {
+    public Collection<Recipe> getRecipes() {
 
         return recipes;
     }
 
-    public boolean reload () {
+    public boolean reload() {
 
         recipes.clear();
         load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("crafting-recipes"));
@@ -52,7 +47,7 @@ public class RecipeManager extends BaseConfiguration {
         return true;
     }
 
-    private void load (ConfigurationSection cfg) {
+    private void load(ConfigurationSection cfg) {
         // lets load all recipes
         if (cfg == null) return; // If the config is null, it can't continue.
         Set<String> keys = cfg.getKeys(false);
@@ -74,7 +69,7 @@ public class RecipeManager extends BaseConfiguration {
         private Collection<CraftingItemStack> results;
         private List<String> shape;
 
-        private Recipe (String id, ConfigurationSection cfg) {
+        private Recipe(String id, ConfigurationSection cfg) {
 
             this.id = id;
             config = cfg.getConfigurationSection(id);
@@ -84,7 +79,7 @@ public class RecipeManager extends BaseConfiguration {
             load();
         }
 
-        private void load () {
+        private void load() {
 
             type = RecipeType.getTypeFromName(config.getString("type"));
             if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
@@ -96,7 +91,7 @@ public class RecipeManager extends BaseConfiguration {
             results = getItems(config.getConfigurationSection("results"));
         }
 
-        private HashMap<CraftingItemStack, Character> getHashItems (ConfigurationSection section) {
+        private HashMap<CraftingItemStack, Character> getHashItems(ConfigurationSection section) {
 
             HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
             try {
@@ -127,7 +122,7 @@ public class RecipeManager extends BaseConfiguration {
             return items;
         }
 
-        private Collection<CraftingItemStack> getItems (ConfigurationSection section) {
+        private Collection<CraftingItemStack> getItems(ConfigurationSection section) {
 
             Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             try {
@@ -158,32 +153,32 @@ public class RecipeManager extends BaseConfiguration {
             return items;
         }
 
-        public String getId () {
+        public String getId() {
 
             return id;
         }
 
-        public RecipeType getType () {
+        public RecipeType getType() {
 
             return type;
         }
 
-        public Collection<CraftingItemStack> getIngredients () {
+        public Collection<CraftingItemStack> getIngredients() {
 
             return ingredients;
         }
 
-        public String[] getShape () {
+        public String[] getShape() {
 
             return shape.toArray(new String[shape.size()]);
         }
 
-        public HashMap<CraftingItemStack, Character> getShapedIngredients () {
+        public HashMap<CraftingItemStack, Character> getShapedIngredients() {
 
             return items;
         }
 
-        public CraftingItemStack getResult () {
+        public CraftingItemStack getResult() {
 
             try {
                 return results.iterator().next();
@@ -197,17 +192,17 @@ public class RecipeManager extends BaseConfiguration {
 
             private String name;
 
-            private RecipeType (String name) {
+            private RecipeType(String name) {
 
                 this.name = name;
             }
 
-            public String getName () {
+            public String getName() {
 
                 return name;
             }
 
-            public static RecipeType getTypeFromName (String name) {
+            public static RecipeType getTypeFromName(String name) {
 
                 for (RecipeType t : RecipeType.values())
                     if (t.getName().equalsIgnoreCase(name)) return t;

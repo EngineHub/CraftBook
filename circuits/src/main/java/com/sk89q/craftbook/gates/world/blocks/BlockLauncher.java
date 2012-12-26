@@ -1,21 +1,14 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockLauncher extends AbstractIC {
 
@@ -23,25 +16,25 @@ public class BlockLauncher extends AbstractIC {
     int id;
     byte data;
 
-    public BlockLauncher (Server server, ChangedSign block, ICFactory factory) {
+    public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Block Launcher";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "BLOCK LAUNCH";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             launch();
@@ -49,7 +42,8 @@ public class BlockLauncher extends AbstractIC {
     }
 
     @Override
-    public void load () {
+    public void load() {
+
         try {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
             id = Integer.parseInt(split[0]);
@@ -61,14 +55,15 @@ public class BlockLauncher extends AbstractIC {
 
         try {
             String[] split2 = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
-            velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
+            velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]),
+                    Double.parseDouble(split2[2]));
 
         } catch (Exception ignored) {
             velocity = new Vector(0, 0.5, 0);
         }
     }
 
-    public void launch () {
+    public void launch() {
 
         Block above = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         int timeout = 12;
@@ -86,33 +81,34 @@ public class BlockLauncher extends AbstractIC {
         }
         double y = above.getY() - 0.99D;
         FallingBlock block = BukkitUtil.toSign(getSign()).getWorld()
-                .spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), id, data);
+                .spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y,
+                        above.getZ() + 0.5D), id, data);
         block.setVelocity(velocity);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BlockLauncher(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Launches set block with set velocity.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "id:data", "velocity x:y:z" };
+            String[] lines = new String[] {"id:data", "velocity x:y:z"};
             return lines;
         }
     }

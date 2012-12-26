@@ -1,19 +1,12 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class LiquidFlood extends AbstractIC {
 
@@ -21,25 +14,25 @@ public class LiquidFlood extends AbstractIC {
     String liquid;
     Location centre;
 
-    public LiquidFlood (Server server, ChangedSign block, ICFactory factory) {
+    public LiquidFlood(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Liquid Flooder";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "LIQUID FLOOD";
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
@@ -66,7 +59,7 @@ public class LiquidFlood extends AbstractIC {
         liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
     }
 
-    public void doStuff (ChipState chip) {
+    public void doStuff(ChipState chip) {
 
         if (chip.getInput(0)) {
             for (int x = -radius + 1; x < radius; x++) {
@@ -76,8 +69,10 @@ public class LiquidFlood extends AbstractIC {
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                        if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)) {
-                            b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID.STATIONARY_LAVA);
+                        if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER
+                                : BlockID.LAVA)) {
+                            b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID
+                                    .STATIONARY_LAVA);
                         }
                     }
                 }
@@ -91,7 +86,8 @@ public class LiquidFlood extends AbstractIC {
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)
-                                || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID.STATIONARY_LAVA)) {
+                                || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
+                                BlockID.STATIONARY_LAVA)) {
                             b.setTypeId(BlockID.AIR);
                         }
                     }
@@ -101,34 +97,34 @@ public class LiquidFlood extends AbstractIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         doStuff(chip);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new LiquidFlood(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Floods an area with a liquid.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "water/lava", "radius=x:y:z offset" };
+            String[] lines = new String[] {"water/lava", "radius=x:y:z offset"};
             return lines;
         }
     }

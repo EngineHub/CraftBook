@@ -2,21 +2,19 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.ic;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
@@ -26,13 +24,18 @@ import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
     /**
      * The pattern used to match an IC on a sign.
      */
-    public static final Pattern IC_PATTERN = Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern IC_PATTERN = Pattern.compile("^\\[(([A-Z]{1,3})[0-9]{1,4})\\][A-Z]?$",
+            Pattern.CASE_INSENSITIVE);
     private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
     /**
@@ -47,18 +50,18 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
     /**
      * Construct the object.
-     * 
+     *
      * @param plugin
      * @param manager
      */
-    public ICMechanicFactory (CircuitsPlugin plugin, ICManager manager) {
+    public ICMechanicFactory(CircuitsPlugin plugin, ICManager manager) {
 
         this.plugin = plugin;
         this.manager = manager;
     }
 
     @Override
-    public ICMechanic detect (BlockWorldVector pt) throws InvalidMechanismException {
+    public ICMechanic detect(BlockWorldVector pt) throws InvalidMechanismException {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
@@ -87,7 +90,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         // now actually try to pull up an IC of that id number.
         RegisteredICFactory registration = manager.get(id);
         if (registration == null)
-            throw new InvalidMechanismException("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
+            throw new InvalidMechanismException("\"" + sign.getLine(1) + "\" should be an IC ID, " +
+                    "but no IC registered under that ID could be found.");
 
         IC ic;
         // check if the ic is cached and get that single instance instead of creating a new one
@@ -116,7 +120,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC) return new SelfTriggeredICMechanic(plugin, id, (SelfTriggeredIC) ic, family, pt);
+        if (ic instanceof SelfTriggeredIC)
+            return new SelfTriggeredICMechanic(plugin, id, (SelfTriggeredIC) ic, family, pt);
         else return new ICMechanic(plugin, id, ic, family, pt);
     }
 
@@ -124,11 +129,14 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      * Detect the mechanic at a placed sign.
      */
     @Override
-    public ICMechanic detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException {
+    public ICMechanic detect(BlockWorldVector pt, LocalPlayer player,
+                             ChangedSign sign) throws InvalidMechanismException {
+
         return detect(pt, player, sign, false);
     }
 
-    private ICMechanic detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign, boolean shortHand) throws InvalidMechanismException {
+    private ICMechanic detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign,
+                              boolean shortHand) throws InvalidMechanismException {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
@@ -156,7 +164,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 suffix = str[1];
             }
 
-            if (block.getTypeId() != BlockID.WALL_SIGN) throw new InvalidMechanismException("Only wall signs are used for ICs.");
+            if (block.getTypeId() != BlockID.WALL_SIGN)
+                throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             if (ICManager.isCachedIC(pt)) {
                 ICManager.removeCachedIC(pt);
@@ -205,7 +214,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         } else if (plugin.getLocalConfiguration().icSettings.shorthand && sign.getLine(0).startsWith("=")) {
             String id = sign.getLine(0).substring(1);
 
-            if (block.getTypeId() != BlockID.WALL_SIGN) throw new InvalidMechanismException("Only wall signs are used for ICs.");
+            if (block.getTypeId() != BlockID.WALL_SIGN)
+                throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             String shortId = manager.longRegistered.get(id.toLowerCase());
             if (shortId == null) {
@@ -220,7 +230,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         return null;
     }
 
-    public boolean checkPermissions (LocalPlayer player, ICFactory factory, String id, RegisteredICFactory registration)
+    public boolean checkPermissions(LocalPlayer player, ICFactory factory, String id, RegisteredICFactory registration)
             throws ICVerificationException {
 
         if (player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName())) return true;

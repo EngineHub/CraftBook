@@ -1,17 +1,16 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-
 public class CartEjector extends CartMechanism {
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -46,12 +45,14 @@ public class CartEjector extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Ejector";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "Eject" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"Eject"};
     }
 }

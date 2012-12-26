@@ -9,14 +9,14 @@ public class ItemShooter extends Recipe {
 
     private final int itemId;
 
-    public ItemShooter (int id, int[] recipe) {
+    public ItemShooter(int id, int[] recipe) {
 
         super(recipe);
         this.itemId = id;
     }
 
     @Override
-    public boolean doAction (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         event.setItem(new ItemStack(itemId, 1));
         return false;

@@ -2,13 +2,16 @@
 /*
  * Copyright (C) 2012 Lymia <https://lymiahugs.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.mech;
@@ -29,7 +32,7 @@ import java.util.regex.Pattern;
 
 /**
  * Storage class for custom drop definitions.
- * 
+ *
  * @author Lymia
  */
 public final class CustomDropManager {
@@ -47,7 +50,7 @@ public final class CustomDropManager {
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
     private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
 
-    public CustomDropManager (File source) {
+    public CustomDropManager(File source) {
 
         File blockDefinitions = new File(source, "custom-block-drops.txt");
         File mobDefinitions = new File(source, "custom-mob-drops.txt");
@@ -75,33 +78,35 @@ public final class CustomDropManager {
         }
     }
 
-    public CustomItemDrop getBlockDrops (int block) {
+    public CustomItemDrop getBlockDrops(int block) {
 
         if (block < 0 || block >= BLOCK_ID_COUNT) return null;
         else return blockDropDefinitions[block];
     }
 
-    public DropDefinition[] getMobDrop (String mobName) {
+    public DropDefinition[] getMobDrop(String mobName) {
 
         return mobDropDefinitions.get(mobName.toLowerCase());
     }
 
-    public void loadDropDefinitions (File file, boolean isMobDrop) throws IOException {
+    public void loadDropDefinitions(File file, boolean isMobDrop) throws IOException {
 
         String prelude = "on unknown line";
         try {
             CustomItemDrop[] blockDropDefinitions = isMobDrop ? null : new CustomItemDrop[BLOCK_ID_COUNT];
-            Map<String, DropDefinition[]> mobDropDefinitions = isMobDrop ? new TreeMap<String, DropDefinition[]>() : null;
+            Map<String, DropDefinition[]> mobDropDefinitions = isMobDrop ? new TreeMap<String,
+                    DropDefinition[]>() : null;
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             int currentLine = 0;
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty() || line.trim().startsWith("#")) continue;
                 currentLine++;
-                prelude = "Error on line " + currentLine + " of drop definition file " + file.getAbsolutePath() + ": " + line + "\n"; // Error prelude
-                                                                                                                                      // used for
-                                                                                                                                      // parse
-                                                                                                                                      // messages.
+                prelude = "Error on line " + currentLine + " of drop definition file " + file.getAbsolutePath() + ": " +
+                        "" + line + "\n"; // Error prelude
+                // used for
+                // parse
+                // messages.
 
                 try {
                     if (line.contains("#")) line = COMMENT_PATTERN.split(line)[0]; // Remove comments
@@ -187,7 +192,7 @@ public final class CustomDropManager {
         }
     }
 
-    private static DropDefinition[] readDrops (String s, String prelude, boolean append) throws IOException {
+    private static DropDefinition[] readDrops(String s, String prelude, boolean append) throws IOException {
 
         String[] split = COMMA_PATTERN.split(s);
         DropDefinition[] drops = new DropDefinition[split.length]; // Java really needs a map function...
@@ -197,7 +202,7 @@ public final class CustomDropManager {
         return drops;
     }
 
-    private static DropDefinition readDrop (String s, String prelude, boolean append) throws IOException {
+    private static DropDefinition readDrop(String s, String prelude, boolean append) throws IOException {
 
         String[] split = X_PATTERN.split(PERCENT_PATTERN.split(s)[0]);
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
@@ -205,7 +210,8 @@ public final class CustomDropManager {
         if (split2.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
         int itemId = Integer.parseInt(split2[0].trim());
         int data = split2.length == 1 ? 0 : Integer.parseInt(split2[1].trim());
-        if (data >= DATA_VALUE_COUNT || data < 0) throw new CustomDropParseException(prelude + "block data value out of range");
+        if (data >= DATA_VALUE_COUNT || data < 0)
+            throw new CustomDropParseException(prelude + "block data value out of range");
         String[] split3 = MINUS_PATTERN.split(split[1].trim());
         if (split3.length > 2) throw new CustomDropParseException(prelude + ": invalid number drops range");
         int countMin = Integer.parseInt(split3[0]);
@@ -222,12 +228,12 @@ public final class CustomDropManager {
 
         private static final long serialVersionUID = -1147409575702887124L;
 
-        public CustomDropParseException (String message) {
+        public CustomDropParseException(String message) {
 
             super(message);
         }
 
-        public CustomDropParseException (String message, Throwable cause) {
+        public CustomDropParseException(String message, Throwable cause) {
 
             super(message, cause);
         }
@@ -238,7 +244,7 @@ public final class CustomDropManager {
         public final DropDefinition[][] drops = new DropDefinition[DATA_VALUE_COUNT][];
         public DropDefinition[] defaultDrop;
 
-        public DropDefinition[] getDrop (int data) {
+        public DropDefinition[] getDrop(int data) {
 
             if (data < 0 || data >= DATA_VALUE_COUNT) return defaultDrop;
             DropDefinition[] drop = drops[data];
@@ -256,7 +262,7 @@ public final class CustomDropManager {
         public final boolean append;
         public final int chance;
 
-        public DropDefinition (int id, byte data, int countMin, int countMax, int chance, boolean append) {
+        public DropDefinition(int id, byte data, int countMin, int countMax, int chance, boolean append) {
 
             if (countMax < countMin) {
                 int temp = countMin;
@@ -276,13 +282,14 @@ public final class CustomDropManager {
             this.append = append;
         }
 
-        public ItemStack getItemStack () {
+        public ItemStack getItemStack() {
 
             if (MechanismsPlugin.random.nextInt(100) > chance) return null;
-            return new ItemStack(id, countMin == countMax ? countMin : countMin + BaseBukkitPlugin.random.nextInt(countMax - countMin + 1), data);
+            return new ItemStack(id, countMin == countMax ? countMin : countMin + BaseBukkitPlugin.random.nextInt
+                    (countMax - countMin + 1), data);
         }
 
-        public ItemStack[] getItemStacks () {
+        public ItemStack[] getItemStacks() {
 
             // TODO return item stacks with random quantities of the drop to add a more realistic feel
             return null;

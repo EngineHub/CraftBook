@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -8,48 +14,32 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.inventory.*;
 
 /**
  * @author Me4502
  */
 public class ContainerCollector extends AbstractIC {
 
-    public ContainerCollector (Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerCollector(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Container Collector";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "CONTAINER COLLECT";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, collect());
@@ -59,13 +49,13 @@ public class ContainerCollector extends AbstractIC {
     ItemStack doWant, doNotWant;
 
     @Override
-    public void load () {
+    public void load() {
 
         doWant = ICUtil.getItem(getSign().getLine(2));
         doNotWant = ICUtil.getItem(getSign().getLine(3));
     }
 
-    protected boolean collect () {
+    protected boolean collect() {
 
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -108,7 +98,8 @@ public class ContainerCollector extends AbstractIC {
         return collected;
     }
 
-    private boolean addToContainer (Block bl, ItemStack stack) {
+    private boolean addToContainer(Block bl, ItemStack stack) {
+
         int type = bl.getTypeId();
         if (type == BlockID.CHEST || type == BlockID.DISPENSER) {
             BlockState state = bl.getState();
@@ -158,33 +149,34 @@ public class ContainerCollector extends AbstractIC {
         return false;
     }
 
-    private static boolean fitsInSlot (ItemStack stack, ItemStack slot) {
+    private static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
+
         return slot == null || ItemUtil.areItemsIdentical(stack, slot);
     }
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ContainerCollector(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Collects items into above chest.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "included id:data", "excluded id:data" };
+            String[] lines = new String[] {"included id:data", "excluded id:data"};
             return lines;
         }
     }

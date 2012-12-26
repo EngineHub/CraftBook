@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -11,22 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.PersistentMechanic;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SelfTriggeringMechanic;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -43,7 +34,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     /**
      * Construct a cooking pot for a location.
      */
-    public CookingPot (BlockWorldVector pt, MechanismsPlugin plugin) {
+    public CookingPot(BlockWorldVector pt, MechanismsPlugin plugin) {
 
         super();
         this.pt = pt;
@@ -51,7 +42,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
 
         return true;
     }
@@ -60,13 +51,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         protected final MechanismsPlugin plugin;
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public CookingPot detect (BlockWorldVector pt) {
+        public CookingPot detect(BlockWorldVector pt) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN) {
@@ -85,11 +76,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
-        public CookingPot detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+        public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
+                                 ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
@@ -112,7 +104,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void think () {
+    public void think() {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
         if (block.getState() instanceof Sign) {
@@ -148,7 +140,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                             }
                             ItemStack cooked = ItemUtil.getCookedResult(i);
                             if (cooked == null) {
-                                if (plugin.getLocalConfiguration().cookingPotSettings.cooksOres) cooked = ItemUtil.getSmeletedResult(i);
+                                if (plugin.getLocalConfiguration().cookingPotSettings.cooksOres)
+                                    cooked = ItemUtil.getSmeletedResult(i);
                                 if (cooked == null) continue;
                             }
                             if (chest.getInventory().addItem(cooked).isEmpty())
@@ -168,7 +161,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         if (event.getClickedBlock().getState() instanceof Sign) {
             Sign sign = (Sign) event.getClickedBlock().getState();
@@ -180,7 +173,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             if (cb.getTypeId() == BlockID.CHEST) {
                 Player player = event.getPlayer();
                 ItemStack itemInHand = player.getItemInHand();
-                if (itemInHand != null && Ingredients.isIngredient(itemInHand.getTypeId()) && itemInHand.getAmount() > 0) {
+                if (itemInHand != null && Ingredients.isIngredient(itemInHand.getTypeId()) && itemInHand.getAmount()
+                        > 0) {
                     increaseMultiplier(sign, Ingredients.getTime(itemInHand.getTypeId()));
                     if (itemInHand.getAmount() <= 1) {
                         itemInHand.setTypeId(0);
@@ -197,7 +191,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onLeftClick (PlayerInteractEvent event) {
+    public void onLeftClick(PlayerInteractEvent event) {
 
         event.getPlayer().setFireTicks(20);
         LocalPlayer player = plugin.wrap(event.getPlayer());
@@ -205,7 +199,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         Block block = event.getBlock();
         if (block.getState() instanceof Sign) {
@@ -220,7 +214,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         }
     }
 
-    public void setMultiplier (Sign sign, int amount) {
+    public void setMultiplier(Sign sign, int amount) {
 
         int min = plugin.getLocalConfiguration().cookingPotSettings.requiresfuel ? 0 : 1;
         if (amount < min) {
@@ -230,17 +224,17 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         sign.update();
     }
 
-    public void increaseMultiplier (Sign sign, int amount) {
+    public void increaseMultiplier(Sign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
-    public void decreaseMultiplier (Sign sign, int amount) {
+    public void decreaseMultiplier(Sign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) - amount);
     }
 
-    public int getMultiplier (Sign sign) {
+    public int getMultiplier(Sign sign) {
 
         int multiplier;
         try {
@@ -257,7 +251,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public List<BlockWorldVector> getWatchedPositions () {
+    public List<BlockWorldVector> getWatchedPositions() {
 
         List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
         bwv.add(pt);
@@ -265,26 +259,27 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     private enum Ingredients {
-        COAL(ItemID.COAL, 10), LAVA(ItemID.LAVA_BUCKET, 500), BLAZE(ItemID.BLAZE_ROD, 200), SNOWBALL(ItemID.SNOWBALL, -20), SNOW(BlockID.SNOW_BLOCK,
+        COAL(ItemID.COAL, 10), LAVA(ItemID.LAVA_BUCKET, 500), BLAZE(ItemID.BLAZE_ROD, 200), SNOWBALL(ItemID.SNOWBALL,
+                -20), SNOW(BlockID.SNOW_BLOCK,
                 -100);
 
         private int id;
         private int mult;
 
-        private Ingredients (int id, int mult) {
+        private Ingredients(int id, int mult) {
 
             this.id = id;
             this.mult = mult;
         }
 
-        public static boolean isIngredient (int id) {
+        public static boolean isIngredient(int id) {
 
             for (Ingredients in : values())
                 if (in.id == id) return true;
             return false;
         }
 
-        public static int getTime (int id) {
+        public static int getTime(int id) {
 
             for (Ingredients in : values())
                 if (in.id == id) return in.mult;

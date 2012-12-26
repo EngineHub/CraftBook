@@ -1,41 +1,36 @@
 package com.sk89q.craftbook.gates.world.weather;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.World;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
+import java.util.regex.Pattern;
 
 public class WeatherControl extends AbstractIC {
 
     private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
 
-    public WeatherControl (Server server, ChangedSign sign, ICFactory factory) {
+    public WeatherControl(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Weather Control";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "WEATHER CONTROL";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         boolean tstorm = false;
         int duration = 24000;
@@ -85,27 +80,27 @@ public class WeatherControl extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new WeatherControl(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Set rain and thunder duration.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "rain duration", "thunder duration" };
+            String[] lines = new String[] {"rain duration", "thunder duration"};
             return lines;
         }
     }

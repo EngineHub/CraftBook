@@ -1,38 +1,33 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Server;
 
 /**
  * @author Me4502
  */
 public class FireBarrage extends FireShooter {
 
-    public FireBarrage (Server server, ChangedSign sign, ICFactory factory) {
+    public FireBarrage(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Fire Barrage";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "FIRE BARRAGE";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             shootFire(5);
@@ -41,27 +36,27 @@ public class FireBarrage extends FireShooter {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new FireBarrage(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Shoots a barrage of fire.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "speed:spread", "vertical gain" };
+            String[] lines = new String[] {"speed:spread", "vertical gain"};
             return lines;
         }
     }

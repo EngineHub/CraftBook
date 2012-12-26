@@ -2,24 +2,19 @@
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.mech;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -28,10 +23,13 @@ import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.io.*;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
- * 
+ *
  * @author sk89q
  */
 public class Bookcase extends AbstractMechanic {
@@ -43,11 +41,11 @@ public class Bookcase extends AbstractMechanic {
 
     /**
      * Construct a bookcase for a location.
-     * 
+     *
      * @param pt
      * @param plugin
      */
-    public Bookcase (BlockWorldVector pt, MechanismsPlugin plugin) {
+    public Bookcase(BlockWorldVector pt, MechanismsPlugin plugin) {
 
         super();
         this.plugin = plugin;
@@ -55,12 +53,11 @@ public class Bookcase extends AbstractMechanic {
 
     /**
      * Reads a book.
-     * 
+     *
      * @param player
-     * @param bookReadLine
-     *            message to print to the user
+     * @param bookReadLine message to print to the user
      */
-    public void read (LocalPlayer player, String bookReadLine) {
+    public void read(LocalPlayer player, String bookReadLine) {
 
         if (!player.hasPermission("craftbook.mech.bookshelf.use")) return;
 
@@ -80,19 +77,21 @@ public class Bookcase extends AbstractMechanic {
 
     /**
      * Get a line from the book lines file.
-     * 
+     *
      * @return a line from the book lines file.
-     * @throws IOException
-     *             if we have trouble with the "books.txt" configuration file.
+     *
+     * @throws IOException if we have trouble with the "books.txt" configuration file.
      */
-    protected String getBookLine () throws IOException {
+    protected String getBookLine() throws IOException {
 
-        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
+        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getLocalConfiguration()
+                .dataFolder, "books.txt")));
         lnr.skip(Long.MAX_VALUE);
         int lines = lnr.getLineNumber();
         lnr.close();
         int toRead = BaseBukkitPlugin.random.nextInt(lines);
-        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder, "books.txt")));
+        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getLocalConfiguration().dataFolder,
+                "books.txt")));
         String line;
         int passes = 0;
         while ((line = br.readLine()) != null) {
@@ -107,11 +106,11 @@ public class Bookcase extends AbstractMechanic {
 
     /**
      * Raised when a block is right clicked.
-     * 
+     *
      * @param event
      */
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().bookcaseSettings.enable) return;
 
@@ -125,13 +124,13 @@ public class Bookcase extends AbstractMechanic {
 
         protected final MechanismsPlugin plugin;
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public Bookcase detect (BlockWorldVector pt) {
+        public Bookcase detect(BlockWorldVector pt) {
 
             if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE) return new Bookcase(pt, plugin);
 

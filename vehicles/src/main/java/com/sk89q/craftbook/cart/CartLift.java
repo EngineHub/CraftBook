@@ -9,7 +9,7 @@ import org.bukkit.entity.Minecart;
 public class CartLift extends CartMechanism {
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         if (blocks.sign == null) return;
@@ -43,12 +43,14 @@ public class CartLift extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "CartLift";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "CartLift Up", "CartLift Down", "CartLift" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"CartLift Up", "CartLift Down", "CartLift"};
     }
 }

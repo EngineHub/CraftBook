@@ -1,38 +1,33 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Spigot extends AbstractIC {
 
     int radius;
     int yOffset;
 
-    public Spigot (Server server, ChangedSign block, ICFactory factory) {
+    public Spigot(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         try {
             radius = Integer.parseInt(getSign().getLine(2));
@@ -48,38 +43,39 @@ public class Spigot extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Spigot";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "SPIGOT";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, search());
         }
     }
 
-    public boolean search () {
+    public boolean search() {
 
         Block off = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, yOffset, 0);
         ArrayList<Location> searched = new ArrayList<Location>();
         return searchAt(searched, off);
     }
 
-    public boolean searchAt (ArrayList<Location> searched, Block off) {
+    public boolean searchAt(ArrayList<Location> searched, Block off) {
 
         if (searched.contains(off.getLocation())) return false;
         searched.add(off.getLocation());
         if (off.getLocation()
-                .distanceSquared(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock().getRelative(0, yOffset, 0)).getLocation()) > radius
+                .distanceSquared(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock().getRelative(0,
+                        yOffset, 0)).getLocation()) > radius
                 * radius) return false;
         if (off.getTypeId() == 0) {
 
@@ -107,7 +103,7 @@ public class Spigot extends AbstractIC {
         return false;
     }
 
-    public int getFromChest () {
+    public int getFromChest() {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
 
@@ -133,7 +129,7 @@ public class Spigot extends AbstractIC {
         return BlockID.AIR;
     }
 
-    public int getFromChest (int m) {
+    public int getFromChest(int m) {
 
         m = parse(m);
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
@@ -159,14 +155,14 @@ public class Spigot extends AbstractIC {
         return BlockID.AIR;
     }
 
-    public int parse (int mat) {
+    public int parse(int mat) {
 
         if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER) return BlockID.WATER;
         if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA) return BlockID.LAVA;
         return BlockID.AIR;
     }
 
-    public int unparse (int mat) {
+    public int unparse(int mat) {
 
         if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER) return BlockID.STATIONARY_WATER;
         if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA) return BlockID.STATIONARY_LAVA;
@@ -177,38 +173,39 @@ public class Spigot extends AbstractIC {
 
         public boolean buckets;
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Spigot(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Fills areas with liquid from below chest.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius", "y offset" };
+            String[] lines = new String[] {"radius", "y offset"};
             return lines;
         }
 
         @Override
-        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
 
             buckets = section.getBoolean("requires-buckets", false);
         }
 
         @Override
-        public boolean needsConfiguration () {
+        public boolean needsConfiguration() {
+
             return true;
         }
     }

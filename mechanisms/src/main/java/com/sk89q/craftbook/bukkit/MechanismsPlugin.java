@@ -2,55 +2,24 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.Iterator;
-
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Chunk;
-import org.bukkit.World;
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.RegisteredServiceProvider;
-
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.MechanismsConfiguration;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
-import com.sk89q.craftbook.mech.AIMechanic;
-import com.sk89q.craftbook.mech.Ammeter;
-import com.sk89q.craftbook.mech.Bookcase;
-import com.sk89q.craftbook.mech.Bridge;
-import com.sk89q.craftbook.mech.Cauldron;
-import com.sk89q.craftbook.mech.Chair;
-import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.Command;
-import com.sk89q.craftbook.mech.CookingPot;
-import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.Door;
-import com.sk89q.craftbook.mech.Elevator;
-import com.sk89q.craftbook.mech.Gate;
-import com.sk89q.craftbook.mech.HiddenSwitch;
-import com.sk89q.craftbook.mech.LightStone;
-import com.sk89q.craftbook.mech.LightSwitch;
-import com.sk89q.craftbook.mech.MapChanger;
-import com.sk89q.craftbook.mech.PaintingSwitch;
-import com.sk89q.craftbook.mech.Payment;
-import com.sk89q.craftbook.mech.Snow;
-import com.sk89q.craftbook.mech.Teleporter;
-import com.sk89q.craftbook.mech.XPStorer;
+import com.sk89q.craftbook.mech.*;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
@@ -58,10 +27,17 @@ import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mech.dispenser.Recipe;
 import com.sk89q.craftbook.util.GeneralUtil;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Chunk;
+import org.bukkit.World;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.Iterator;
 
 /**
  * Plugin for CraftBook's mechanisms.
- * 
+ *
  * @author sk89q
  */
 @SuppressWarnings("deprecation")
@@ -78,7 +54,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     private static MechanismsPlugin instance;
 
     @Override
-    public void onEnable () {
+    public void onEnable() {
 
         instance = this;
 
@@ -120,7 +96,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
                 graph.addPlotter(new BukkitMetrics.Plotter(lan) {
 
                     @Override
-                    public int getValue () {
+                    public int getValue() {
 
                         return 1;
                     }
@@ -133,7 +109,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         }
     }
 
-    private void registerMechanics () {
+    private void registerMechanics() {
 
         // Let's register mechanics!
         if (getLocalConfiguration().ammeterSettings.enable) {
@@ -206,7 +182,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     /**
      * Setup the required components of INSTANCE-triggered Mechanics..
      */
-    private void setupSelfTriggered (MechanicManager manager) {
+    private void setupSelfTriggered(MechanicManager manager) {
 
         logger.info("CraftBook: Enumerating chunks for INSTANCE-triggered components...");
 
@@ -225,7 +201,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + Math.round(time / 1000.0 * 10) / 10
+        logger.info("CraftBook: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + Math
+                .round(time / 1000.0 * 10) / 10
                 + "s elapsed)");
 
         // Set up the clock for INSTANCE-triggered Mechanics.
@@ -233,7 +210,7 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
     }
 
     @Override
-    protected void registerEvents () {
+    protected void registerEvents() {
 
         if (getLocalConfiguration().dispenserSettings.enable) {
             getServer().getPluginManager().registerEvents(dRecipes = new DispenserRecipes(this), this);
@@ -255,23 +232,24 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             getServer().getPluginManager().registerEvents(new PaintingSwitch(this), this);
         }
         /*
-         * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager().registerEvents(new
+         * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager()
+         * .registerEvents(new
          * ElementalArrowsMechanic(this), this); }
          */
     }
 
     @Override
-    public MechanismsConfiguration getLocalConfiguration () {
+    public MechanismsConfiguration getLocalConfiguration() {
 
         return config;
     }
 
-    public CopyManager getCopyManager () {
+    public CopyManager getCopyManager() {
 
         return copyManager;
     }
 
-    private boolean setupEconomy () {
+    private boolean setupEconomy() {
 
         try {
             RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
@@ -286,28 +264,28 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
         }
     }
 
-    public static MechanismsPlugin getInst () {
+    public static MechanismsPlugin getInst() {
 
         return instance;
     }
 
     /**
      * Register a mechanic if possible
-     * 
+     *
      * @param factory
      */
-    private void registerMechanic (MechanicFactory<? extends Mechanic> factory) {
+    private void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         manager.register(factory);
     }
 
     /**
      * Register a array of mechanics if possible
-     * 
+     *
      * @param factories
      */
     @SuppressWarnings("unused")
-    private void registerMechanic (MechanicFactory<? extends Mechanic>[] factories) {
+    private void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
         for (MechanicFactory<? extends Mechanic> aFactory : factories) {
             registerMechanic(aFactory);
@@ -316,20 +294,22 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     /**
      * Unregister a mechanic if possible TODO Ensure no remnants are left behind
-     * 
+     *
      * @param factory
+     *
      * @return true if the mechanic was successfully unregistered.
      */
-    private boolean unregisterMechanic (MechanicFactory<? extends Mechanic> factory) {
+    private boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         return manager.unregister(factory);
     }
 
-    private boolean unregisterAllMechanics () {
+    private boolean unregisterAllMechanics() {
 
         boolean ret = true;
 
-        Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();;
+        Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();
+        ;
         while (iterator.hasNext()) {
             if (!unregisterMechanic(iterator.next())) ret = false;
         }
@@ -339,22 +319,23 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
 
     /**
      * Register a Dispenser Recipe
-     * 
+     *
      * @param recipe
+     *
      * @return if successfully added.
      */
-    public boolean registerDispenserRecipe (Recipe recipe) {
+    public boolean registerDispenserRecipe(Recipe recipe) {
 
         return getLocalConfiguration().dispenserSettings.enable && dRecipes.addRecipe(recipe);
     }
 
     @Override
-    public void reloadConfiguration () {
+    public void reloadConfiguration() {
 
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
             @Override
-            public void run () {
+            public void run() {
                 // Unload everything.
                 unregisterAllMechanics();
                 HandlerList.unregisterAll(MechanismsPlugin.getInst());

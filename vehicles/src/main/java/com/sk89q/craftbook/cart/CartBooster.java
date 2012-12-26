@@ -1,13 +1,12 @@
 package com.sk89q.craftbook.cart;
 
+import com.sk89q.craftbook.RedstoneUtil.Power;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-
 public class CartBooster extends CartMechanism {
 
-    public CartBooster (double multiplier) {
+    public CartBooster(double multiplier) {
 
         super();
         this.multiplier = multiplier;
@@ -16,7 +15,7 @@ public class CartBooster extends CartMechanism {
     private final double multiplier;
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -38,12 +37,14 @@ public class CartBooster extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Booster";
     }
 
     @Override
-    public String[] getApplicableSigns () {
+    public String[] getApplicableSigns() {
+
         return null;
     }
 }

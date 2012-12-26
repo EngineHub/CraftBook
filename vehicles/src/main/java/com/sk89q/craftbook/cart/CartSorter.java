@@ -1,23 +1,16 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.regex.Pattern;
-
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.regex.Pattern;
 
 /*
  * @contributor LordEnki
@@ -28,7 +21,7 @@ public class CartSorter extends CartMechanism {
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // care?
         if (minor) return;
 
@@ -174,7 +167,8 @@ public class CartSorter extends CartMechanism {
         STRAIGHT, LEFT, RIGHT
     }
 
-    public static boolean isSortApplicable (String line, Minecart minecart) {
+    public static boolean isSortApplicable(String line, Minecart minecart) {
+
         if (line.equalsIgnoreCase("All")) return true;
         Entity test = minecart.getPassenger();
         Player player = null;
@@ -182,13 +176,15 @@ public class CartSorter extends CartMechanism {
             player = (Player) test;
         }
 
-        if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty")) && minecart.getPassenger() == null) return true;
+        if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty")) && minecart.getPassenger() == null)
+            return true;
 
         if (line.equalsIgnoreCase("Storage") && minecart instanceof StorageMinecart) return true;
         else if (line.equalsIgnoreCase("Powered") && minecart instanceof PoweredMinecart) return true;
         else if (line.equalsIgnoreCase("Minecart") && minecart instanceof Minecart) return true;
 
-        if ((line.equalsIgnoreCase("Occupied") || line.equalsIgnoreCase("Full")) && minecart.getPassenger() != null) return true;
+        if ((line.equalsIgnoreCase("Occupied") || line.equalsIgnoreCase("Full")) && minecart.getPassenger() != null)
+            return true;
 
         if (line.equalsIgnoreCase("Animal") && test instanceof Animals) return true;
 
@@ -217,7 +213,8 @@ public class CartSorter extends CartMechanism {
                 try {
                     int item = Integer.parseInt(parts[1]);
                     short durability = Short.parseShort(parts[2]);
-                    int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0), storageInventory.getContents().length - 1);
+                    int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
+                            storageInventory.getContents().length - 1);
                     ItemStack indexed = storageInventory.getContents()[index];
                     if (indexed != null && indexed.equals(new ItemStack(item, 1, durability))) return true;
                 } catch (NumberFormatException ignored) {
@@ -248,12 +245,14 @@ public class CartSorter extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Sorter";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "Sort" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"Sort"};
     }
 }

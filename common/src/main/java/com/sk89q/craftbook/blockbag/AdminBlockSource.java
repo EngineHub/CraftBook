@@ -2,19 +2,19 @@
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.blockbag;
-
-import org.bukkit.World;
-import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
@@ -25,10 +25,12 @@ import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 
 /**
  * Sign based block source system.
- * 
+ *
  * @author Lymia
  */
 public class AdminBlockSource extends BlockBag {
@@ -41,17 +43,17 @@ public class AdminBlockSource extends BlockBag {
     /**
      * Construct with the ability to both fetch and store.
      */
-    public AdminBlockSource () {
+    public AdminBlockSource() {
 
     }
 
     /**
      * Construct the source with fetch/store options.
-     * 
+     *
      * @param fetch
      * @param store
      */
-    public AdminBlockSource (boolean fetch, boolean store) {
+    public AdminBlockSource(boolean fetch, boolean store) {
 
         this.fetch = fetch;
         this.store = store;
@@ -59,37 +61,41 @@ public class AdminBlockSource extends BlockBag {
 
     /**
      * Gets a block.
-     * 
+     *
      * @param id
+     *
      * @return
+     *
      * @throws OutOfBlocksException
      */
     @Override
-    public void fetchBlock (int id) throws BlockBagException {
+    public void fetchBlock(int id) throws BlockBagException {
 
         if (!canFetch) throw new OutOfBlocksException();
     }
 
     /**
      * Stores a block.
-     * 
+     *
      * @param id
+     *
      * @return
+     *
      * @throws OutOfSpaceException
      */
     @Override
-    public void storeBlock (int id) throws BlockBagException {
+    public void storeBlock(int id) throws BlockBagException {
 
         if (!canStore) throw new OutOfSpaceException(id);
     }
 
     /**
      * Adds a position to be used a source.
-     * 
+     *
      * @return
      */
     @Override
-    public void addSourcePosition (WorldVector arg0) {
+    public void addSourcePosition(WorldVector arg0) {
 
         for (int x = -3; x <= 3; x++) {
             for (int y = -3; y <= 3; y++) {
@@ -102,11 +108,11 @@ public class AdminBlockSource extends BlockBag {
 
     /**
      * Adds a position to be used a source.
-     * 
+     *
      * @return
      */
     @Override
-    public void addSingleSourcePosition (WorldVector arg0) {
+    public void addSingleSourcePosition(WorldVector arg0) {
 
         Block e = BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(arg0.getBlockX(), arg0.getBlockY(), arg0.getBlockZ());
         if (e.getTypeId() == BlockID.WALL_SIGN || e.getTypeId() == BlockID.SIGN_POST) {
@@ -126,19 +132,19 @@ public class AdminBlockSource extends BlockBag {
      * Flush changes.
      */
     @Override
-    public void flushChanges () {
+    public void flushChanges() {
 
     }
 
     /**
      * Discards all given blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class BlackHoleFactory implements BlockBagFactory {
 
         @Override
-        public BlockBag createBlockSource (World w, Vector v) {
+        public BlockBag createBlockSource(World w, Vector v) {
 
             return new AdminBlockSource(false, true);
         }
@@ -146,13 +152,13 @@ public class AdminBlockSource extends BlockBag {
 
     /**
      * Provides unlimited blocks.
-     * 
+     *
      * @author sk89q
      */
     public static class UnlimitedSourceFactory implements BlockBagFactory {
 
         @Override
-        public BlockBag createBlockSource (World w, Vector v) {
+        public BlockBag createBlockSource(World w, Vector v) {
 
             return new AdminBlockSource(true, false);
         }
