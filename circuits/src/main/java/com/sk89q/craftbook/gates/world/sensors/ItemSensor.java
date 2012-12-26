@@ -99,9 +99,9 @@ public class ItemSensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        for (Chunk chunk : chunks)
+        for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities())
+                for (Entity entity : chunk.getEntities()) {
                     if (entity instanceof Item) {
                         ItemStack itemStack = ((Item) entity).getItemStack();
                         if (itemStack.getTypeId() == item) {
@@ -110,7 +110,9 @@ public class ItemSensor extends AbstractIC {
                                 return true;
                         }
                     }
+                }
             }
+        }
         return false;
     }
 

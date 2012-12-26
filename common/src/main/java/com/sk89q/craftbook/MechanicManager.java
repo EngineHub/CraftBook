@@ -194,11 +194,12 @@ public class MechanicManager {
 
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics)
+            for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
                     aMechanic.onBlockBreak(event);
                     returnValue++;
                 }
+            }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 player.printError(e.getMessage());
@@ -231,11 +232,12 @@ public class MechanicManager {
 
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics)
+            for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
                     aMechanic.onRightClick(event);
                     returnValue++;
                 }
+            }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 player.printError(e.getMessage());
@@ -267,11 +269,12 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics)
+            for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
                     aMechanic.onLeftClick(event);
                     returnValue++;
                 }
+            }
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 player.printError(e.getMessage());
@@ -297,11 +300,12 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getBlock());
         try {
             List<Mechanic> mechanics = load(pos);
-            for (Mechanic aMechanic : mechanics)
+            for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
                     aMechanic.onBlockRedstoneChange(event);
                     returnValue++;
                 }
+            }
         } catch (InvalidMechanismException ignored) {
         }
 
@@ -361,15 +365,17 @@ public class MechanicManager {
         if (ptMechanic != null) {
 
             List<Mechanic> removedMechanics = new ArrayList<Mechanic>();
-            for (Mechanic aMechanic : detectedMechanics)
+            for (Mechanic aMechanic : detectedMechanics) {
                 if (ptMechanic.getClass().equals(aMechanic.getClass())) {
                     removedMechanics.add(aMechanic);
                 }
+            }
 
-            for (Mechanic aMechanic : removedMechanics)
+            for (Mechanic aMechanic : removedMechanics) {
                 if (detectedMechanics.contains(aMechanic)) {
                     detectedMechanics.remove(aMechanic);
                 }
+            }
 
             detectedMechanics.add(ptMechanic);
         }
@@ -430,15 +436,17 @@ public class MechanicManager {
         if (ptMechanic != null) {
 
             List<Mechanic> removedMechanics = new ArrayList<Mechanic>();
-            for (Mechanic aMechanic : detectedMechanics)
+            for (Mechanic aMechanic : detectedMechanics) {
                 if (ptMechanic.getClass().equals(aMechanic.getClass())) {
                     removedMechanics.add(aMechanic);
                 }
+            }
 
-            for (Mechanic aMechanic : removedMechanics)
+            for (Mechanic aMechanic : removedMechanics) {
                 if (detectedMechanics.contains(aMechanic)) {
                     detectedMechanics.remove(aMechanic);
                 }
+            }
 
             detectedMechanics.add(ptMechanic);
         }
@@ -592,7 +600,7 @@ public class MechanicManager {
             mechs = thinkingMechanics.toArray(new SelfTriggeringMechanic[thinkingMechanics.size()]);
         }
 
-        for (SelfTriggeringMechanic mechanic : mechs)
+        for (SelfTriggeringMechanic mechanic : mechs) {
             if (mechanic instanceof PersistentMechanic && ((PersistentMechanic) mechanic).isActive()) {
                 try {
                     mechanic.think();
@@ -604,6 +612,7 @@ public class MechanicManager {
             } else {
                 unload(mechanic, null);
             }
+        }
     }
 
     public void registerEvent(Class<?> event, MechanicFactory<? extends Mechanic> mechanic) {

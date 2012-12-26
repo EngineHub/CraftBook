@@ -220,7 +220,7 @@ public class HmodWorldImpl extends WorldInterface$ {
         List<Mob> list = server.getMobList();
         List<MobInterface> list2 = new ArrayList<MobInterface>();
 
-        for (Mob p : list) list2.add(new HmodMobImpl(p, this));
+        for (Mob p : list) { list2.add(new HmodMobImpl(p, this)); }
 
         return list2;
     }
@@ -253,7 +253,7 @@ public class HmodWorldImpl extends WorldInterface$ {
     public List<MinecartInterface> getMinecartList() {
 
         List<MinecartInterface> list = new ArrayList<MinecartInterface>();
-        for (BaseVehicle v : server.getVehicleEntityList())
+        for (BaseVehicle v : server.getVehicleEntityList()) {
             if (v instanceof Minecart) {
                 Minecart m = (Minecart) v;
                 if (m.getStorage() == null)
@@ -261,6 +261,7 @@ public class HmodWorldImpl extends WorldInterface$ {
                 else
                     list.add(new HmodStorageMinecartImpl(m, this));
             }
+        }
         return list;
     }
 

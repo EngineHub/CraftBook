@@ -211,12 +211,13 @@ public class Gate extends AbstractMechanic {
         visitedColumns.add(pt.setY(0).toBlockVector());
 
         // Find the top most fence
-        for (int y1 = y + 1; y1 <= y + 12; y1++)
+        for (int y1 = y + 1; y1 <= y + 12; y1++) {
             if (isValidGateBlock(world.getBlockAt(x, y1, z))) {
                 y = y1;
             } else {
                 break;
             }
+        }
 
         // The block above the gate cannot be air -- it has to be some
         // non-fence block
@@ -590,8 +591,7 @@ public class Gate extends AbstractMechanic {
         passableBlocks[7] = BlockID.DEAD_BUSH;
         passableBlocks[8] = BlockID.AIR;
 
-        for (int aPassableBlock : passableBlocks)
-            if (aPassableBlock == t) return true;
+        for (int aPassableBlock : passableBlocks) { if (aPassableBlock == t) return true; }
 
         return isValidGateBlock(t);
     }
@@ -730,8 +730,9 @@ public class Gate extends AbstractMechanic {
 
         public int getEndingY() {
 
-            for (int y = bwv.getBlockY(); y > 0; y--)
+            for (int y = bwv.getBlockY(); y > 0; y--) {
                 if (!canPassThrough(bwv.getWorld().getBlockType(bwv.toBlockVector()))) return y + 1;
+            }
             return 0;
         }
 

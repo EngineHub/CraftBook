@@ -185,8 +185,7 @@ public class Sorter extends AbstractIC implements PipeInputIC {
     @Override
     public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
 
-        for (ItemStack item : items)
-            if (ItemUtil.isStackValid(item)) sortItem(item);
+        for (ItemStack item : items) { if (ItemUtil.isStackValid(item)) sortItem(item); }
 
         return new ArrayList<ItemStack>();
     }

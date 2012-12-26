@@ -204,8 +204,7 @@ public class RecipeManager extends BaseConfiguration {
 
             public static RecipeType getTypeFromName(String name) {
 
-                for (RecipeType t : RecipeType.values())
-                    if (t.getName().equalsIgnoreCase(name)) return t;
+                for (RecipeType t : RecipeType.values()) { if (t.getName().equalsIgnoreCase(name)) return t; }
                 return SHAPELESS; // Default to shapeless
             }
         }

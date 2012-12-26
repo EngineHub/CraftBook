@@ -84,7 +84,7 @@ public class PotionInducer extends AbstractIC {
         Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign())
                 .getBlock()), radius); // Update
         // chunks
-        for (Chunk chunk : chunks)
+        for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities()) {
                     if (entity.isValid() && entity instanceof LivingEntity) {
@@ -100,6 +100,7 @@ public class PotionInducer extends AbstractIC {
                     }
                 }
             }
+        }
         return value;
     }
 
@@ -145,8 +146,10 @@ public class PotionInducer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"id:level:time", "range (add a m to the end to only induce mobs or p for " +
-                    "players (pm for both))"};
+            String[] lines = new String[] {
+                    "id:level:time", "range (add a m to the end to only induce mobs or p for " +
+                    "players (pm for both))"
+            };
             return lines;
         }
     }

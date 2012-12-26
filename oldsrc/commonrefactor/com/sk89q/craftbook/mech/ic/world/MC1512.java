@@ -86,9 +86,10 @@ public class MC1512 extends BaseIC {
             String distance = chip.getText().getLine4();
             String theMessage = chip.getText().getLine3();
             Vector pos = chip.getBlockPosition();
-            for (PlayerInterface p : chip.getWorld().getPlayerList())
+            for (PlayerInterface p : chip.getWorld().getPlayerList()) {
                 if (p.getPosition().distance(pos) <= (double) Float.parseFloat(distance))
                     p.sendMessage(theMessage);
+            }
         }
     }
 }

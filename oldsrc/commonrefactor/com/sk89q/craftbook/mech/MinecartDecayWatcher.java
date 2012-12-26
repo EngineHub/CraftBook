@@ -69,7 +69,7 @@ public class MinecartDecayWatcher {
             public void run() {
 
                 WorldInterface[] worlds = minecarts.keySet().toArray(new WorldInterface[0]);
-                for (final WorldInterface world : worlds)
+                for (final WorldInterface world : worlds) {
                     world.enqueAction(new Runnable() {
 
                         /**
@@ -81,6 +81,7 @@ public class MinecartDecayWatcher {
                             performCheck(world);
                         }
                     });
+                }
             }
         }, 0, 3000);
     }

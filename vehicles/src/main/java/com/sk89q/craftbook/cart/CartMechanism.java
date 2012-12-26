@@ -48,8 +48,10 @@ public abstract class CartMechanism {
         material = mat;
     }
 
-    public static final BlockFace[] powerSupplyOptions = new BlockFace[] {BlockFace.NORTH, BlockFace.EAST,
-            BlockFace.SOUTH, BlockFace.WEST};
+    public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
+            BlockFace.NORTH, BlockFace.EAST,
+            BlockFace.SOUTH, BlockFace.WEST
+    };
 
     /**
      * Determins if a cart mechanism should be enabled.

@@ -67,12 +67,12 @@ public class CraftBookListener extends PluginListener
 
     public void run() {
 
-        for (CraftBookDelegateListener l : main.tickListeners) l.onTick(w);
+        for (CraftBookDelegateListener l : main.tickListeners) { l.onTick(w); }
     }
 
     public void onSignAdded(int x, int y, int z) {
 
-        for (CraftBookDelegateListener l : main.signCreateListeners) l.onSignCreate(w, x, y, z);
+        for (CraftBookDelegateListener l : main.signCreateListeners) { l.onSignCreate(w, x, y, z); }
     }
 
     public boolean onSignChange(Player p, Sign sp) {
@@ -80,8 +80,9 @@ public class CraftBookListener extends PluginListener
         PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector signPosition = new BlockVector(sp.getX(), sp.getY(), sp.getZ());
         SignInterface s = new HmodSignImpl(w, signPosition, sp);
-        for (CraftBookDelegateListener l : main.signChangeListeners)
+        for (CraftBookDelegateListener l : main.signChangeListeners) {
             if (l.onSignChange(player, w, signPosition, s)) return true;
+        }
         return false;
     }
 
@@ -124,8 +125,9 @@ public class CraftBookListener extends PluginListener
 
             PlayerInterface myPlayer = new HmodPlayerImpl(player, w);
 
-            for (CraftBookDelegateListener listener : main.commandListeners)
+            for (CraftBookDelegateListener listener : main.commandListeners) {
                 if (listener.onCommand(myPlayer, split)) return true;
+            }
 
             return false;
         } catch (InsufficientArgumentsException e) {
@@ -136,8 +138,9 @@ public class CraftBookListener extends PluginListener
 
     public boolean onConsoleCommand(String[] split) {
 
-        for (CraftBookDelegateListener listener : main.consoleCommandListeners)
+        for (CraftBookDelegateListener listener : main.consoleCommandListeners) {
             if (listener.onConsoleCommand(split)) return true;
+        }
 
         return false;
     }
@@ -179,26 +182,26 @@ public class CraftBookListener extends PluginListener
                 // Fake data
                 w.fakeData(x, y, z,
                         newLevel > 0
-                                ? w.getData(x, y, z) | 0x8
-                                : w.getData(x, y, z) & 0x7);
+                        ? w.getData(x, y, z) | 0x8
+                        : w.getData(x, y, z) & 0x7);
             } else if (type == BlockType.STONE_PRESSURE_PLATE) {
                 // Fake data
                 w.fakeData(x, y, z,
                         newLevel > 0
-                                ? w.getData(x, y, z) | 0x1
-                                : w.getData(x, y, z) & 0x14);
+                        ? w.getData(x, y, z) | 0x1
+                        : w.getData(x, y, z) & 0x14);
             } else if (type == BlockType.WOODEN_PRESSURE_PLATE) {
                 // Fake data
                 w.fakeData(x, y, z,
                         newLevel > 0
-                                ? w.getData(x, y, z) | 0x1
-                                : w.getData(x, y, z) & 0x14);
+                        ? w.getData(x, y, z) | 0x1
+                        : w.getData(x, y, z) & 0x14);
             } else if (type == BlockType.STONE_BUTTON) {
                 // Fake data
                 w.fakeData(x, y, z,
                         newLevel > 0
-                                ? w.getData(x, y, z) | 0x8
-                                : w.getData(x, y, z) & 0x7);
+                        ? w.getData(x, y, z) | 0x8
+                        : w.getData(x, y, z) & 0x7);
             } else if (type == BlockType.REDSTONE_WIRE) {
                 // Fake data
                 w.fakeData(x, y, z, newLevel);
@@ -284,15 +287,15 @@ public class CraftBookListener extends PluginListener
      */
     public void handleDirectWireInput(Vector pt, boolean isOn, Vector changed) {
         // Call the direct wire input hook of delegates
-        for (CraftBookDelegateListener listener : main.wireInputListeners)
+        for (CraftBookDelegateListener listener : main.wireInputListeners) {
             listener.onWireInput(w, pt, isOn, changed);
+        }
     }
 
     public void onDisconnect(Player p) {
 
         PlayerInterface player = new HmodPlayerImpl(p, w);
-        for (CraftBookDelegateListener listener : main.disconnectListeners)
-            listener.onDisconnect(player);
+        for (CraftBookDelegateListener listener : main.disconnectListeners) { listener.onDisconnect(player); }
     }
 
     public boolean onBlockPlace(Player p, Block pp, Block cp, Item itemInHand) {
@@ -300,9 +303,10 @@ public class CraftBookListener extends PluginListener
         PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector pv = new BlockVector(pp.getX(), pp.getY(), pp.getZ());
         BlockVector cv = new BlockVector(cp.getX(), cp.getY(), cp.getZ());
-        for (CraftBookDelegateListener listener : main.blockPlaceListeners)
+        for (CraftBookDelegateListener listener : main.blockPlaceListeners) {
             if (listener.onBlockPlace(w, player, pv, cv, itemInHand.getItemId()))
                 return true;
+        }
         return false;
     }
 
@@ -310,17 +314,19 @@ public class CraftBookListener extends PluginListener
 
         PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector cv = new BlockVector(cp.getX(), cp.getY(), cp.getZ());
-        for (CraftBookDelegateListener listener : main.blockRightClickListeners)
+        for (CraftBookDelegateListener listener : main.blockRightClickListeners) {
             listener.onBlockRightClicked(w, player, cv, itemInHand.getItemId());
+        }
     }
 
     public boolean onBlockDestroy(Player p, Block dp) {
 
         PlayerInterface player = new HmodPlayerImpl(p, w);
         BlockVector dv = new BlockVector(dp.getX(), dp.getY(), dp.getZ());
-        for (CraftBookDelegateListener listener : main.blockDestroyedListeners)
+        for (CraftBookDelegateListener listener : main.blockDestroyedListeners) {
             if (listener.onBlockDestroy(w, player, dv, dp.getStatus()))
                 return true;
+        }
         return false;
     }
 
@@ -329,9 +335,10 @@ public class CraftBookListener extends PluginListener
         if (!(vehicle instanceof Minecart)) return false;
         MinecartInterface m = getMinecart((Minecart) vehicle);
         BaseEntityInterface e = new HmodBaseEntityImpl(entity, w);
-        for (CraftBookDelegateListener listener : main.minecartDamageListeners)
+        for (CraftBookDelegateListener listener : main.minecartDamageListeners) {
             if (listener.onMinecartDamage(w, m, e, damage))
                 return true;
+        }
         return false;
     }
 
@@ -339,16 +346,18 @@ public class CraftBookListener extends PluginListener
 
         if (!(vehicle instanceof Minecart)) return;
         MinecartInterface m = getMinecart((Minecart) vehicle);
-        for (CraftBookDelegateListener listener : main.minecartVelocityChangeListeners)
+        for (CraftBookDelegateListener listener : main.minecartVelocityChangeListeners) {
             listener.onMinecartVelocityChange(w, m);
+        }
     }
 
     public void onVehiclePositionChange(BaseVehicle vehicle, int x, int y, int z) {
 
         if (!(vehicle instanceof Minecart)) return;
         MinecartInterface m = getMinecart((Minecart) vehicle);
-        for (CraftBookDelegateListener listener : main.minecartPositionChangeListeners)
+        for (CraftBookDelegateListener listener : main.minecartPositionChangeListeners) {
             listener.onMinecartPositionChange(w, m, x, y, z);
+        }
     }
 
     public void onVehicleEnter(BaseVehicle vehicle, HumanEntity entity) {
@@ -357,16 +366,16 @@ public class CraftBookListener extends PluginListener
         MinecartInterface m = getMinecart((Minecart) vehicle);
         BaseEntityInterface e = new HmodBaseEntityImpl(entity, w);
         boolean entering = vehicle.getPassenger() == null;
-        for (CraftBookDelegateListener listener : main.minecartEnterListeners)
+        for (CraftBookDelegateListener listener : main.minecartEnterListeners) {
             listener.onMinecartEnter(w, m, e, entering);
+        }
     }
 
     public void onVehicleDestroyed(BaseVehicle vehicle) {
 
         if (!(vehicle instanceof Minecart)) return;
         MinecartInterface m = getMinecart((Minecart) vehicle);
-        for (CraftBookDelegateListener listener : main.minecartDestroyListeners)
-            listener.onMinecartDestroyed(w, m);
+        for (CraftBookDelegateListener listener : main.minecartDestroyListeners) { listener.onMinecartDestroyed(w, m); }
     }
 
     private MinecartInterface getMinecart(Minecart m) {

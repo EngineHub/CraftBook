@@ -32,11 +32,12 @@ public final class ArrayUtil {
             array = new String[8];
         }
         int j = 0;
-        for (int i = page * 8; i < page * 8 + 8; i++)
+        for (int i = page * 8; i < page * 8 + 8; i++) {
             if (list.size() > i) {
                 array[j] = list.get(i);
                 j++;
             }
+        }
         return array;
     }
 }

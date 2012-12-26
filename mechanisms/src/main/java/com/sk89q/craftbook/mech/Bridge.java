@@ -431,8 +431,7 @@ public class Bridge extends AbstractMechanic {
         passableBlocks[8] = BlockID.DEAD_BUSH;
         passableBlocks[9] = BlockID.AIR;
 
-        for (int aPassableBlock : passableBlocks)
-            if (aPassableBlock == t) return true;
+        for (int aPassableBlock : passableBlocks) { if (aPassableBlock == t) return true; }
 
         return false;
     }

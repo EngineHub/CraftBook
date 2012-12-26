@@ -39,7 +39,7 @@ public class ChunkFinder {
 
         List<Tuple2<Integer, Integer>> chunkList = new ArrayList<Tuple2<Integer, Integer>>();
         List<me> list = (List<me>) get(get(world, "G"), "f");
-        for (me chunk : list.toArray(new me[0])) if (chunk != null) chunkList.add(getChunkCoords(chunk));
+        for (me chunk : list.toArray(new me[0])) { if (chunk != null) chunkList.add(getChunkCoords(chunk)); }
         return chunkList.toArray((Tuple2<Integer, Integer>[]) new Tuple2<?, ?>[0]);
     }
 

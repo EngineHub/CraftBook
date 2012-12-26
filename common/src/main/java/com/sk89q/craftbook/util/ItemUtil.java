@@ -172,15 +172,13 @@ public class ItemUtil {
 
     public static boolean containsRawFood(Inventory inv) {
 
-        for (ItemStack it : inv.getContents())
-            if (it != null && isCookable(it)) return true;
+        for (ItemStack it : inv.getContents()) { if (it != null && isCookable(it)) return true; }
         return false;
     }
 
     public static boolean containsRawMinerals(Inventory inv) {
 
-        for (ItemStack it : inv.getContents())
-            if (it != null && isSmeltable(it)) return true;
+        for (ItemStack it : inv.getContents()) { if (it != null && isSmeltable(it)) return true; }
         return false;
     }
 

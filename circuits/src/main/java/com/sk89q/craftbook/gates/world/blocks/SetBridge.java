@@ -1,22 +1,15 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -41,13 +34,13 @@ public class SetBridge extends AbstractIC {
     private Block center;
     private BlockFace faceing;
 
-    public SetBridge (Server server, ChangedSign block, ICFactory factory) {
+    public SetBridge(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
@@ -129,19 +122,19 @@ public class SetBridge extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Set P-Bridge";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "SET P-Bridge";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             setDoor(true);
@@ -150,7 +143,7 @@ public class SetBridge extends AbstractIC {
         }
     }
 
-    private void setDoor (boolean open) {
+    private void setDoor(boolean open) {
 
         center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
@@ -169,26 +162,26 @@ public class SetBridge extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Generates a bridge out of the set materials with set size.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "onID:onData-offID:offData", "offset x,y,z:width,depth" };
+            String[] lines = new String[] {"onID:onData-offID:offData", "offset x,y,z:width,depth"};
             return lines;
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SetBridge(getServer(), sign, this);
         }

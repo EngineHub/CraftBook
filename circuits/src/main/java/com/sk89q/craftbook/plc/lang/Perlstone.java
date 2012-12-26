@@ -267,7 +267,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         boolean b = chip.getInputCount() > 1 && chip.getInput(1);
         boolean c = chip.getInputCount() > 2 && chip.getInput(2);
 
-        for (int i = 0; i < chip.getOutputCount(); i++)
+        for (int i = 0; i < chip.getOutputCount(); i++) {
             if (i < code.length) {
                 Boolean r = executeFunction(i, state, tt, code, a, b, c, new boolean[0], new int[1], 0);
                 if (r == null) {
@@ -278,6 +278,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
             } else {
                 chip.setOutput(i, false);
             }
+        }
     }
 
     @Override

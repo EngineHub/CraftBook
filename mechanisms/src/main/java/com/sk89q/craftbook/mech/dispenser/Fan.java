@@ -22,9 +22,11 @@ public class Fan extends Recipe {
 
     public Fan() {
 
-        super(new int[] {BlockID.WEB, BlockID.LEAVES, BlockID.WEB, BlockID.LEAVES, BlockID.PISTON_BASE,
+        super(new int[] {
+                BlockID.WEB, BlockID.LEAVES, BlockID.WEB, BlockID.LEAVES, BlockID.PISTON_BASE,
                 BlockID.LEAVES, BlockID.WEB, BlockID.LEAVES,
-                BlockID.WEB});
+                BlockID.WEB
+        });
     }
 
     @Override

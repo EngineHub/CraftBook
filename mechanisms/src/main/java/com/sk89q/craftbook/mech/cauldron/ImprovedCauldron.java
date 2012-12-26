@@ -190,7 +190,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
     private Collection<Item> getItems() {
 
         List<Item> items = new ArrayList<Item>();
-        for (Entity entity : block.getChunk().getEntities())
+        for (Entity entity : block.getChunk().getEntities()) {
             if (entity instanceof Item) {
                 Location location = entity.getLocation();
                 if (location.getBlockX() == block.getX() && location.getBlockY() == block.getY() && location
@@ -198,6 +198,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                     items.add((Item) entity);
                 }
             }
+        }
         return items;
     }
 }

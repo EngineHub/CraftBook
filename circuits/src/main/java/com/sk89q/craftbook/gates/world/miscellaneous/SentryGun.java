@@ -92,7 +92,7 @@ public class SentryGun extends AbstractIC {
          * 2.0f, 0.0f); break; } } } } } }
          */
 
-        for (Entity aEntity : center.getWorld().getEntities())
+        for (Entity aEntity : center.getWorld().getEntities()) {
             if (!aEntity.isDead() && aEntity.isValid() && type.is(aEntity)
                     && aEntity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
                 Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
@@ -103,6 +103,7 @@ public class SentryGun extends AbstractIC {
                         0.0f);
                 break;
             }
+        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

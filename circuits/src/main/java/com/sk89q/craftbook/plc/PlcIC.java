@@ -213,12 +213,13 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         Chest c = (Chest) chestBlock.getState();
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
-        for (ItemStack s : i.getContents())
+        for (ItemStack s : i.getContents()) {
             if (s != null && s.getAmount() > 0 && (s.getTypeId() == ItemID.BOOK_AND_QUILL || s.getTypeId() == ItemID
                     .WRITTEN_BOOK)) {
                 if (book != null) throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
+        }
         if (book == null) throw new CodeNotFoundException("No written books found in chest.");
 
         StringBuilder code = new StringBuilder();
@@ -244,7 +245,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         int x = l.getBlockX();
         int z = l.getBlockZ();
 
-        for (int y = 0; y < w.getMaxHeight(); y++)
+        for (int y = 0; y < w.getMaxHeight(); y++) {
             if (y != l.getBlockY()) if (w.getBlockAt(x, y, z).getState() instanceof Sign) {
                 Sign s = (Sign) w.getBlockAt(x, y, z).getState();
                 if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
@@ -261,6 +262,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     return code.toString();
                 }
             }
+        }
         throw new CodeNotFoundException("No code source found.");
     }
 

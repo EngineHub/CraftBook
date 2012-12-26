@@ -71,7 +71,7 @@ public class NearbyChestBlockBag extends BlockBag {
                 ItemStack[] itemArray = chest.getInventory().getContents();
 
                 // Find the item
-                for (int i = 0; itemArray.length > i; i++)
+                for (int i = 0; itemArray.length > i; i++) {
                     if (itemArray[i] != null) // Found an item
                         if (itemArray[i].getTypeId() == id && itemArray[i].getAmount() >= 1) {
                             int newAmount = itemArray[i].getAmount() - 1;
@@ -86,6 +86,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
                             return;
                         }
+                }
             }
 
             throw new OutOfBlocksException();
@@ -113,7 +114,8 @@ public class NearbyChestBlockBag extends BlockBag {
 
                 // Find an existing slot to put it into
                 for (int i = 0; itemArray.length > i; i++)
-                    // Found an item
+                // Found an item
+                {
                     if (itemArray[i].getTypeId() == id && itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
                         itemArray[i] = new ItemStack(itemArray[i].getTypeId(), newAmount);
@@ -124,6 +126,7 @@ public class NearbyChestBlockBag extends BlockBag {
                     } else {
                         emptySlot = i;
                     }
+                }
 
                 // Didn't find an existing stack, so let's create a new one
                 if (emptySlot != -1) {

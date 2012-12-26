@@ -91,7 +91,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
                 boolean[] lvt = new boolean[32];
                 int[] jumpTable = buildJumpTable(function);
 
-                for (boolean b : args) stack.push(b);
+                for (boolean b : args) { stack.push(b); }
 
                 int l = function.length;
                 for (int i = 0; i < l; i++) {
@@ -188,7 +188,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
                             int functionId = Integer.parseInt(new String(new char[] {function[++i], function[++i]}));
                             int numargs = Integer.parseInt(new String(new char[] {function[++i]}));
                             boolean[] fArgs = new boolean[numargs];
-                            for (int j = numargs - 1; j >= 0; j--) fArgs[j] = stack.pop();
+                            for (int j = numargs - 1; j >= 0; j--) { fArgs[j] = stack.pop(); }
                             Boolean rv = callFunction(staticf[functionId], fArgs, chip, pvt, tvt, staticf, numOpcodes);
                             if (rv != null) stack.push(rv);
                             continue;
@@ -200,7 +200,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
                             function = staticf[functionId];
 
                             args = new boolean[numargs];
-                            for (int j = numargs - 1; j >= 0; j--) args[j] = stack.pop();
+                            for (int j = numargs - 1; j >= 0; j--) { args[j] = stack.pop(); }
 
                             continue outer;
 
@@ -240,8 +240,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
     public final void checkSyntax(String program) throws PerlstoneException {
 
         char[][] staticFunctions = getStaticFunctions(program);
-        for (char[] f : staticFunctions)
-            checkFunctionSyntax(f);
+        for (char[] f : staticFunctions) { checkFunctionSyntax(f); }
     }
 
     private static final void checkFunctionSyntax(char[] function) throws PerlstoneException {
@@ -250,7 +249,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
 
         try {
             loop:
-            for (int i = 0; i < function.length; i++)
+            for (int i = 0; i < function.length; i++) {
                 switch (function[i]) {
                     // No argument opcodes
                     case '+':
@@ -307,6 +306,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
                     default:
                         throw new PerlstoneException("unknown opcode");
                 }
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new PerlstoneException("premature end", e);
         } catch (NegativeArraySizeException e) {
@@ -322,8 +322,9 @@ public final class Perlstone_1_0 extends LogicPlcLang {
             String[] staticFunctionStrings = program.replace(" ", "").replace("\t", "").replace("\n", "").split(":");
             if (staticFunctionStrings.length > 100) throw new PerlstoneException("excess functions");
             staticFunctions = new char[staticFunctionStrings.length][];
-            for (int i = 0; i < staticFunctionStrings.length; i++)
+            for (int i = 0; i < staticFunctionStrings.length; i++) {
                 staticFunctions[i] = staticFunctionStrings[i].toCharArray();
+            }
         }
         return staticFunctions;
     }
@@ -355,8 +356,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
     private static char[] sub(char[] t, int s, int e) {
 
         char[] c = new char[e - s];
-        for (int i = 0; i < c.length; i++)
-            c[i] = t[s + i];
+        for (int i = 0; i < c.length; i++) { c[i] = t[s + i]; }
         return c;
     }
 
@@ -372,9 +372,11 @@ public final class Perlstone_1_0 extends LogicPlcLang {
         }
 
         boolean[] pvt = new boolean[32];
-        for (int i = 0; i < 4; i++)
-            for (int b = 0; b < 8; b++)
+        for (int i = 0; i < 4; i++) {
+            for (int b = 0; b < 8; b++) {
                 pvt[i * 8 + b] = ((persistentStorage[i] >> (7 - b)) & 1) == 1 ? true : false;
+            }
+        }
         if (debug)
             System.out.println("Read presistant storage: " + Arrays.toString(persistentStorage) + " -> " + Arrays
                     .toString(pvt));
@@ -384,9 +386,7 @@ public final class Perlstone_1_0 extends LogicPlcLang {
     private void storePresistantStorage(LogicChipState chip, boolean[] pvt) {
 
         byte[] data = new byte[4];
-        for (int i = 0; i < 4; i++)
-            for (int b = 0; b < 8; b++)
-                data[i] |= pvt[i * 8 + b] ? 1 << (7 - b) : 0;
+        for (int i = 0; i < 4; i++) { for (int b = 0; b < 8; b++) { data[i] |= pvt[i * 8 + b] ? 1 << (7 - b) : 0; } }
         if (debug)
             System.out.println("Written presistant storage: " + Arrays.toString(pvt) + " -> " + Arrays.toString(data));
         chip.getText().setLine4(Base64.encodeBytes(data));

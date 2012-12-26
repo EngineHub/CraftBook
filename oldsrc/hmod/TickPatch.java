@@ -41,7 +41,7 @@ public class TickPatch extends im {
 
         super(arg0);
         if (g.getClass() != CLASS) throw new RuntimeException("unexpected type for im instance");
-        for (Field f : FIELDS)
+        for (Field f : FIELDS) {
             try {
                 if (Modifier.isStatic(f.getModifiers())) continue;
                 f.setAccessible(true);
@@ -52,6 +52,7 @@ public class TickPatch extends im {
                 System.out.println("Failed to copy field: " + f.getName());
                 e.printStackTrace();
             }
+        }
     }
 
     /**
@@ -63,7 +64,7 @@ public class TickPatch extends im {
 
         super.a();
         Runnable[] tasks = TASK_LIST.toArray(new Runnable[0]);
-        for (int i = 0; i < tasks.length; i++) tasks[i].run();
+        for (int i = 0; i < tasks.length; i++) { tasks[i].run(); }
     }
 
     /**

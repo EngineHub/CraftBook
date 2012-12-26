@@ -131,8 +131,7 @@ public class PlayerSensor extends AbstractIC {
         public static Type getFromChar(char c) {
 
             c = Character.toLowerCase(c);
-            for (Type t : values())
-                if (t.prefix == c) return t;
+            for (Type t : values()) { if (t.prefix == c) return t; }
             return null;
         }
     }
@@ -159,8 +158,10 @@ public class PlayerSensor extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset, or r:regionname for WorldGuard regions",
-                    "p:playername or g:permissiongroup"};
+            String[] lines = new String[] {
+                    "radius=x:y:z offset, or r:regionname for WorldGuard regions",
+                    "p:playername or g:permissiongroup"
+            };
             return lines;
         }
     }

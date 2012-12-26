@@ -20,7 +20,7 @@ public abstract class SimpleTwoInputLogicGate extends AbstractIC {
         Boolean b = null;
 
         // New input handling: any/first two valid inputs discovered. Moar flexibility!
-        for (short i = 0; i < chip.getInputCount(); i++)
+        for (short i = 0; i < chip.getInputCount(); i++) {
             if (chip.isValid(i)) {
                 boolean pinval = chip.getInput(i);
                 // Got pin value, assign to first free variable, break if got both.
@@ -32,6 +32,7 @@ public abstract class SimpleTwoInputLogicGate extends AbstractIC {
                     break;
                 }
             }
+        }
 
         if (a == null || b == null) return;
 

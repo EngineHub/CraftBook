@@ -182,7 +182,7 @@ public class AreaCommands {
                 areaList.add(ChatColor.AQUA + folder.getName() + "   :   " + ChatColor.YELLOW + areaName);
             }
         } else {
-            for (File file : areas.listFiles())
+            for (File file : areas.listFiles()) {
                 if (file.isDirectory()) {
                     for (File area : file.listFiles(fnf)) {
                         String areaName = area.getName();
@@ -191,6 +191,7 @@ public class AreaCommands {
                         areaList.add(ChatColor.AQUA + folder.getName() + "   :   " + ChatColor.YELLOW + areaName);
                     }
                 }
+            }
         }
 
         // now lets list the areas with a nice pagination
@@ -198,10 +199,11 @@ public class AreaCommands {
             String tmp = namespace.isEmpty() ? "All Areas " : "Areas for " + namespace;
             player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + (areaList.size() / 8 + 1));
             // list the areas one by one
-            for (String str : ArrayUtil.getArrayPage(areaList, page))
+            for (String str : ArrayUtil.getArrayPage(areaList, page)) {
                 if (str != null && !str.isEmpty()) {
                     player.print(str);
                 }
+            }
         } else {
             player.printError("There are no saved areas in the '" + namespace + "' namespace.");
         }
@@ -273,8 +275,7 @@ public class AreaCommands {
         };
 
         if (dir.isDirectory()) {
-            for (File aChild : dir.listFiles(fnf))
-                if (!aChild.delete()) return false;
+            for (File aChild : dir.listFiles(fnf)) { if (!aChild.delete()) return false; }
         }
 
         // The directory is now empty so delete it

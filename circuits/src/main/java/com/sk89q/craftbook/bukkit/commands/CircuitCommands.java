@@ -107,9 +107,10 @@ public class CircuitCommands {
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
         List<String> lines = new ArrayList<String>();
-        for (File f : plugin.midiFolder.listFiles())
+        for (File f : plugin.midiFolder.listFiles()) {
             if (f.getName().endsWith(".mid") || f.getName().endsWith(".midi"))
                 lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
+        }
         Collections.sort(lines, new Comparator<String>() {
 
             @Override

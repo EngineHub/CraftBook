@@ -40,11 +40,12 @@ public final class LocationUtil {
         for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
             for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
-                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities())
+                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
                     if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
                             .getBlock()) {
                         radiusEntities.add(e);
                     }
+                }
             }
         }
         return radiusEntities.toArray(new Entity[radiusEntities.size()]);
@@ -266,10 +267,11 @@ public final class LocationUtil {
 
         List<Player> players = new ArrayList<Player>();
         for (Chunk chunk : getSurroundingChunks(block, radius)) {
-            for (Entity e : chunk.getEntities())
+            for (Entity e : chunk.getEntities()) {
                 if (e instanceof Player) {
                     players.add((Player) e);
                 }
+            }
         }
         return players;
     }

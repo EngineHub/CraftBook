@@ -206,12 +206,13 @@ public class Cauldron extends AbstractMechanic {
 
             // Now we have to ignore cauldron blocks so that we get the real
             // contents of the cauldron
-            for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
+            for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet()) {
                 if (entry.getValue().a != blockID) if (!contents.containsKey(entry.getValue())) {
                     contents.put(entry.getValue(), 1);
                 } else {
                     contents.put(entry.getValue(), contents.get(entry.getValue()) + 1);
                 }
+            }
 
             // Find the recipe
             CauldronCookbook.Recipe recipe = recipes.find(contents);
@@ -246,8 +247,9 @@ public class Cauldron extends AbstractMechanic {
 
                 // Get rid of the blocks in world
                 for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
-                    // This is not a fast operation, but we should not have
-                    // too many ingredients
+                // This is not a fast operation, but we should not have
+                // too many ingredients
+                {
                     if (ingredients.contains(entry.getValue())) {
                         // Some blocks need to removed first otherwise they will
                         // drop an item, so let's remove those first
@@ -260,6 +262,7 @@ public class Cauldron extends AbstractMechanic {
                         // }
                         ingredients.remove(entry.getValue());
                     }
+                }
 
                 for (BlockWorldVector v : removeQueue) {
                     world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ()).setTypeId(BlockID.AIR);

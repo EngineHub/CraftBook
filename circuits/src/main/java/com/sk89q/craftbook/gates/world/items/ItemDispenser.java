@@ -71,7 +71,7 @@ public class ItemDispenser extends AbstractIC {
                         0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = 10;
 
-                for (int y = 1; y <= maxY; y++)
+                for (int y = 1; y <= maxY; y++) {
                     if (BlockType.canPassThrough(loc.getBlock().getRelative(0, y, 0).getTypeId())) {
 
                         ItemStack stack = item.clone();
@@ -80,6 +80,7 @@ public class ItemDispenser extends AbstractIC {
                                 0).getLocation(), stack);
                         return;
                     }
+                }
             }
         }
     }

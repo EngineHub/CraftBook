@@ -95,8 +95,7 @@ public class CauldronCookbook {
      */
     public Recipe find(Map<Tuple2<Integer, Short>, Integer> ingredients) {
 
-        for (Recipe recipe : recipes)
-            if (recipe.hasAllIngredients(ingredients)) return recipe;
+        for (Recipe recipe : recipes) { if (recipe.hasAllIngredients(ingredients)) return recipe; }
         return null;
     }
 
@@ -244,12 +243,13 @@ public class CauldronCookbook {
             this.groups = groups;
 
             // Make a list of required ingredients by item ID
-            for (Tuple2<Integer, Short> id : ingredients)
+            for (Tuple2<Integer, Short> id : ingredients) {
                 if (ingredientLookup.containsKey(id)) {
                     ingredientLookup.put(id, ingredientLookup.get(id) + 1);
                 } else {
                     ingredientLookup.put(id, 1);
                 }
+            }
         }
 
         /**

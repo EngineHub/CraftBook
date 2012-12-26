@@ -78,16 +78,19 @@ public class Melody extends AbstractIC {
 
         midiName = getSign().getLine(2);
 
-        File[] trialPaths = {new File(CircuitsPlugin.getInst().midiFolder, midiName),
+        File[] trialPaths = {
+                new File(CircuitsPlugin.getInst().midiFolder, midiName),
                 new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"), new File(CircuitsPlugin.getInst()
                 .midiFolder, midiName + ".midi"),
-                new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"),};
+                new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"),
+        };
 
-        for (File f : trialPaths)
+        for (File f : trialPaths) {
             if (f.exists()) {
                 file = f;
                 break;
             }
+        }
     }
 
     @Override

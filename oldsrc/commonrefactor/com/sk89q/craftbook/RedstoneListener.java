@@ -105,16 +105,20 @@ public class RedstoneListener extends CraftBookDelegateListener
         addDefaultICs();
 
         try {
-            for (WorldInterface w : server.getWorlds())
+            for (WorldInterface w : server.getWorlds()) {
                 for (Tuple2<Integer, Integer> chunkCoord : w.getLoadedChunks()) {
                     int xs = (chunkCoord.a + 1) << 4;
                     int ys = (chunkCoord.b + 1) << 4;
-                    for (int x = chunkCoord.a << 4; x < xs; x++)
-                        for (int y = 0; y < 128; y++)
-                            for (int z = chunkCoord.b << 4; z < ys; z++)
+                    for (int x = chunkCoord.a << 4; x < xs; x++) {
+                        for (int y = 0; y < 128; y++) {
+                            for (int z = chunkCoord.b << 4; z < ys; z++) {
                                 if (w.getId(x, y, z) == BlockType.WALL_SIGN)
                                     onSignCreate(w, x, y, z);
+                            }
+                        }
+                    }
                 }
+            }
         } catch (Throwable t) {
             System.err.println("Chunk finder failed: " + t.getClass());
             t.printStackTrace();

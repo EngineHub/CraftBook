@@ -83,11 +83,11 @@ public class DefaultPLC extends PlcBase {
         int x0 = x;
         int y0 = v.getBlockY();
         int z0 = z;
-        for (int y = 0; y < 128; y++)
+        for (int y = 0; y < 128; y++) {
             if (w.getId(x, y, z) == BlockType.WALL_SIGN) {
                 if (((SignInterface) w.getBlockEntity(x, y, z)).getLine2()
                         .equalsIgnoreCase("[CODE BLOCK]"))
-                    for (y--; y >= 0; y--)
+                    for (y--; y >= 0; y--) {
                         if (!(x == x0 && y == y0 && z == z0)
                                 && w.getId(x, y, z) == BlockType.WALL_SIGN) {
                             SignInterface n = (SignInterface) w.getBlockEntity(x, y, z);
@@ -97,7 +97,9 @@ public class DefaultPLC extends PlcBase {
                             b.append(n.getLine4() + "\n");
                         } else
                             return b.toString();
+                    }
             }
+        }
         throw new PlcException("code not found");
     }
 }

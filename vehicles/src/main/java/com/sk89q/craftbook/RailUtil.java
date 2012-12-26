@@ -45,8 +45,10 @@ public class RailUtil {
         return containers;
     }
 
-    private static final int[] trackBlocks = new int[] {BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL,
-            BlockID.DETECTOR_RAIL};
+    private static final int[] trackBlocks = new int[] {
+            BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL,
+            BlockID.DETECTOR_RAIL
+    };
 
     public static boolean isTrack(int id) {
 

@@ -49,12 +49,13 @@ public class CompoundBlockBag extends BlockBag {
      */
     public void storeBlock(int id) throws BlockBagException {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             try {
                 b.storeBlock(id);
                 return;
             } catch (OutOfSpaceException e) {
             }
+        }
         throw new OutOfSpaceException(id);
     }
 
@@ -65,12 +66,13 @@ public class CompoundBlockBag extends BlockBag {
      */
     public void fetchBlock(int id) throws BlockBagException {
 
-        for (BlockBag b : sources)
+        for (BlockBag b : sources) {
             try {
                 b.fetchBlock(id);
                 return;
             } catch (OutOfBlocksException e) {
             }
+        }
         throw new OutOfBlocksException(id);
     }
 
@@ -83,8 +85,7 @@ public class CompoundBlockBag extends BlockBag {
      */
     public void addSingleSourcePosition(WorldInterface w, Vector pos) {
 
-        for (BlockBag b : sources)
-            b.addSingleSourcePosition(w, pos);
+        for (BlockBag b : sources) { b.addSingleSourcePosition(w, pos); }
     }
 
     /**
@@ -96,8 +97,7 @@ public class CompoundBlockBag extends BlockBag {
      */
     public void addSourcePosition(WorldInterface w, Vector pos) {
 
-        for (BlockBag b : sources)
-            b.addSourcePosition(w, pos);
+        for (BlockBag b : sources) { b.addSourcePosition(w, pos); }
     }
 
     /**
@@ -107,7 +107,6 @@ public class CompoundBlockBag extends BlockBag {
      */
     public void flushChanges() {
 
-        for (BlockBag b : sources)
-            b.flushChanges();
+        for (BlockBag b : sources) { b.flushChanges(); }
     }
 }

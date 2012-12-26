@@ -211,7 +211,7 @@ public class CraftBook extends Plugin implements ServerInterface {
 
     public void loadConfiguration() {
 
-        for (CraftBookDelegateListener l : listenerList.keySet()) l.loadConfiguration();
+        for (CraftBookDelegateListener l : listenerList.keySet()) { l.loadConfiguration(); }
     }
 
     @Override
@@ -329,7 +329,7 @@ public class CraftBook extends Plugin implements ServerInterface {
         List<Player> list = server.getPlayerList();
         List<PlayerInterface> list2 = new ArrayList<PlayerInterface>();
 
-        for (Player p : list) list2.add(new HmodPlayerImpl(p, world));
+        for (Player p : list) { list2.add(new HmodPlayerImpl(p, world)); }
 
         return list2;
     }

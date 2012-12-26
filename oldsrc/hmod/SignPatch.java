@@ -49,7 +49,7 @@ public class SignPatch extends hi {
 
         this.old = old;
 
-        for (Field f : FIELDS)
+        for (Field f : FIELDS) {
             try {
                 if (Modifier.isStatic(f.getModifiers()) || Modifier.isFinal(f.getModifiers())) continue;
                 f.setAccessible(true);
@@ -60,6 +60,7 @@ public class SignPatch extends hi {
                 System.out.println("Failed to copy field: " + f.getName());
                 e.printStackTrace();
             }
+        }
     }
 
     private static int nullId() {
@@ -76,7 +77,7 @@ public class SignPatch extends hi {
     public void b(fv world, int x, int y, int z) {
 
         ExtensionListener[] tasks = LISTENERS.toArray(new ExtensionListener[0]);
-        for (int i = 0; i < tasks.length; i++) tasks[i].onSignAdded(x, y, z);
+        for (int i = 0; i < tasks.length; i++) { tasks[i].onSignAdded(x, y, z); }
         super.b(world, x, y, z);
     }
 

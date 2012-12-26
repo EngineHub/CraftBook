@@ -120,12 +120,13 @@ public class MC1202 extends BaseIC {
             for (int y = pos.getBlockY() + 1; y <= maxY; y++) {
                 if (BlockType.canPassThrough(chip.getWorld().getId(x, y, z))) {
                     int n = 0;
-                    for (n = 0; n < quantity; n++)
+                    for (n = 0; n < quantity; n++) {
                         try {
                             source.fetchBlock(item);
                         } catch (BlockBagException e) {
                             break;
                         }
+                    }
                     if (n != 0) chip.getWorld().dropItem(x, y, z, item, quantity);
                     return;
                 }

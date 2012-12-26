@@ -59,8 +59,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
 
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
 
-        for (Recipe recipe : recipes)
-            if (recipe.checkIngredients(items)) return recipe;
+        for (Recipe recipe : recipes) { if (recipe.checkIngredients(items)) return recipe; }
         throw new UnknownRecipeException("Are you sure you have the right ingredients?");
     }
 

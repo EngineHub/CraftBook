@@ -50,13 +50,14 @@ public class PlayerUtil {
         if (filter.charAt(0) == '@' && filter.length() >= 2) {
             filter = filter.substring(1);
 
-            for (Player player : players)
+            for (Player player : players) {
                 if (player.getName().equalsIgnoreCase(filter) || useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter)) {
                     List<Player> list = new ArrayList<Player>();
                     list.add(player);
                     return list;
                 }
+            }
 
             return new ArrayList<Player>();
             // Allow partial name matching
@@ -65,11 +66,12 @@ public class PlayerUtil {
 
             List<Player> list = new ArrayList<Player>();
 
-            for (Player player : players)
+            for (Player player : players) {
                 if (player.getName().toLowerCase().contains(filter) || useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter)) {
                     list.add(player);
                 }
+            }
 
             return list;
 
@@ -77,11 +79,12 @@ public class PlayerUtil {
         } else {
             List<Player> list = new ArrayList<Player>();
 
-            for (Player player : players)
+            for (Player player : players) {
                 if (player.getName().toLowerCase().startsWith(filter) || useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter)) {
                     list.add(player);
                 }
+            }
 
             return list;
         }
@@ -128,10 +131,11 @@ public class PlayerUtil {
                 Player sourcePlayer = checkPlayer(source);
                 World sourceWorld = sourcePlayer.getWorld();
 
-                for (Player player : CircuitsPlugin.server.getOnlinePlayers())
+                for (Player player : CircuitsPlugin.server.getOnlinePlayers()) {
                     if (player.getWorld().equals(sourceWorld)) {
                         players.add(player);
                     }
+                }
 
                 return checkPlayerMatch(players);
 
@@ -142,11 +146,12 @@ public class PlayerUtil {
                 World sourceWorld = sourcePlayer.getWorld();
                 org.bukkit.util.Vector sourceVector = sourcePlayer.getLocation().toVector();
 
-                for (Player player : CircuitsPlugin.server.getOnlinePlayers())
+                for (Player player : CircuitsPlugin.server.getOnlinePlayers()) {
                     if (player.getWorld().equals(sourceWorld) && player.getLocation().toVector().distanceSquared
                             (sourceVector) < 900) {
                         players.add(player);
                     }
+                }
 
                 return checkPlayerMatch(players);
 
@@ -170,9 +175,10 @@ public class PlayerUtil {
     public static Player matchPlayerExactly(CommandSender sender, String filter) throws CommandException {
 
         Player[] players = CircuitsPlugin.server.getOnlinePlayers();
-        for (Player player : players)
+        for (Player player : players) {
             if (player.getName().equalsIgnoreCase(filter) || player.getDisplayName().equalsIgnoreCase(filter))
                 return player;
+        }
 
         throw new CommandException("No player found!");
     }

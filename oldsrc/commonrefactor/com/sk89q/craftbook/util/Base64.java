@@ -236,7 +236,8 @@ public class Base64 {
      * Host platform me be something funny like EBCDIC, so we hardcode these
      * values.
      */
-    private final static byte[] _STANDARD_ALPHABET = {(byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E',
+    private final static byte[] _STANDARD_ALPHABET = {
+            (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E',
             (byte) 'F', (byte) 'G', (byte) 'H', (byte) 'I', (byte) 'J', (byte) 'K', (byte) 'L', (byte) 'M',
             (byte) 'N', (byte) 'O', (byte) 'P', (byte) 'Q', (byte) 'R', (byte) 'S', (byte) 'T', (byte) 'U',
             (byte) 'V', (byte) 'W', (byte) 'X', (byte) 'Y', (byte) 'Z', (byte) 'a', (byte) 'b', (byte) 'c',
@@ -244,13 +245,15 @@ public class Base64 {
             (byte) 'l', (byte) 'm', (byte) 'n', (byte) 'o', (byte) 'p', (byte) 'q', (byte) 'r', (byte) 's',
             (byte) 't', (byte) 'u', (byte) 'v', (byte) 'w', (byte) 'x', (byte) 'y', (byte) 'z', (byte) '0',
             (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7', (byte) '8',
-            (byte) '9', (byte) '+', (byte) '/'};
+            (byte) '9', (byte) '+', (byte) '/'
+    };
 
     /**
      * Translates a Base64 value to either its 6-bit reconstruction value or a
      * negative number indicating some other meaning.
      */
-    private final static byte[] _STANDARD_DECODABET = {-9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
+    private final static byte[] _STANDARD_DECODABET = {
+            -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
             // 0
             // -
             // 8
@@ -309,7 +312,8 @@ public class Base64 {
      * /rfcs/rfc3548.html</a>. Notice that the last two bytes become "hyphen"
      * and "underscore" instead of "plus" and "slash."
      */
-    private final static byte[] _URL_SAFE_ALPHABET = {(byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E',
+    private final static byte[] _URL_SAFE_ALPHABET = {
+            (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E',
             (byte) 'F', (byte) 'G', (byte) 'H', (byte) 'I', (byte) 'J', (byte) 'K', (byte) 'L', (byte) 'M',
             (byte) 'N', (byte) 'O', (byte) 'P', (byte) 'Q', (byte) 'R', (byte) 'S', (byte) 'T', (byte) 'U',
             (byte) 'V', (byte) 'W', (byte) 'X', (byte) 'Y', (byte) 'Z', (byte) 'a', (byte) 'b', (byte) 'c',
@@ -317,12 +321,14 @@ public class Base64 {
             (byte) 'l', (byte) 'm', (byte) 'n', (byte) 'o', (byte) 'p', (byte) 'q', (byte) 'r', (byte) 's',
             (byte) 't', (byte) 'u', (byte) 'v', (byte) 'w', (byte) 'x', (byte) 'y', (byte) 'z', (byte) '0',
             (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7', (byte) '8',
-            (byte) '9', (byte) '-', (byte) '_'};
+            (byte) '9', (byte) '-', (byte) '_'
+    };
 
     /**
      * Used in decoding URL- and Filename-safe dialects of Base64.
      */
-    private final static byte[] _URL_SAFE_DECODABET = {-9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
+    private final static byte[] _URL_SAFE_DECODABET = {
+            -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
             // 0
             // -
             // 8
@@ -384,7 +390,8 @@ public class Base64 {
      * href="http://www.faqs.org/qa/rfcc-1940.html">http://
      * www.faqs.org/qa/rfcc-1940.html</a>.
      */
-    private final static byte[] _ORDERED_ALPHABET = {(byte) '-', (byte) '0', (byte) '1', (byte) '2', (byte) '3',
+    private final static byte[] _ORDERED_ALPHABET = {
+            (byte) '-', (byte) '0', (byte) '1', (byte) '2', (byte) '3',
             (byte) '4', (byte) '5', (byte) '6', (byte) '7', (byte) '8', (byte) '9', (byte) 'A', (byte) 'B',
             (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F', (byte) 'G', (byte) 'H', (byte) 'I', (byte) 'J',
             (byte) 'K', (byte) 'L', (byte) 'M', (byte) 'N', (byte) 'O', (byte) 'P', (byte) 'Q', (byte) 'R',
@@ -392,12 +399,14 @@ public class Base64 {
             (byte) '_', (byte) 'a', (byte) 'b', (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f', (byte) 'g',
             (byte) 'h', (byte) 'i', (byte) 'j', (byte) 'k', (byte) 'l', (byte) 'm', (byte) 'n', (byte) 'o',
             (byte) 'p', (byte) 'q', (byte) 'r', (byte) 's', (byte) 't', (byte) 'u', (byte) 'v', (byte) 'w',
-            (byte) 'x', (byte) 'y', (byte) 'z'};
+            (byte) 'x', (byte) 'y', (byte) 'z'
+    };
 
     /**
      * Used in decoding the "ordered" dialect of Base64.
      */
-    private final static byte[] _ORDERED_DECODABET = {-9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
+    private final static byte[] _ORDERED_DECODABET = {
+            -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
             // 0
             // -
             // 8

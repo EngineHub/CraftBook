@@ -130,8 +130,7 @@ public final class Perlstone32_1 extends LogicPlcLang {
 //                logger.log(Level.INFO, "[CraftBook] Perlstone32 - Jump Table: " + Arrays.toString(jumpTable));
             }
 
-            for (int b : args)
-                stack.push(b);
+            for (int b : args) { stack.push(b); }
 
             String[] tokens = function.split("[ ;]");
             for (int i = 0; i < tokens.length; i++) {
@@ -139,7 +138,8 @@ public final class Perlstone32_1 extends LogicPlcLang {
 
                 String errorLocation = "§2" + ((i >= 2) ? (tokens[i - 2] + " ") : "") + ((i >= 1) ? (tokens[i - 1] +
                         " ") : "") + "§4" + tokens[i] + "§e" + " " + ((i < tokens.length - 1) ? (tokens[i + 1] + " ")
-                        : "") + ((i < tokens.length - 2) ? (tokens[i + 2]) : "") + "§c";
+                                                                                              : "") + (
+                        (i < tokens.length - 2) ? (tokens[i + 2]) : "") + "§c";
 
                 numOpcodes[0]++;
                 if (numOpcodes[0] == 25000)
@@ -197,7 +197,7 @@ public final class Perlstone32_1 extends LogicPlcLang {
                                     ".");
                     } else throw new PerlstoneException(errorLocation + ": Illegal table specified.");
                     int index = (tT != 3 && tT != 'e' && token.length() > 2) ? Integer.parseInt(token.substring(2)) :
-                            stack.pop();
+                                stack.pop();
                     stack.push(table[index]);
                 } else if (token.startsWith("S")) {
                     char tT = (token.length() > 1) ? token.charAt(1) : (char) (stack.pop() + 0);
@@ -216,7 +216,7 @@ public final class Perlstone32_1 extends LogicPlcLang {
                                     ".");
                     } else throw new PerlstoneException(errorLocation + ": Illegal table specified.");
                     int index = (tT != 3 && tT != 'e' && token.length() > 2) ? Integer.parseInt(token.substring(2)) :
-                            stack.pop();
+                                stack.pop();
                     table[index] = stack.pop();
                     if (tT == 3 || tT == 'e') publicPersistentStorage.put(token.substring(2), table);
                 }
@@ -224,12 +224,10 @@ public final class Perlstone32_1 extends LogicPlcLang {
                 else if (tokenIsInt) stack.push(tokenInt);
                 else if (token.startsWith("d")) {
                     int num = token.length() > 1 ? Integer.parseInt(token.substring(1)) : stack.pop();
-                    for (int k = 0; k < num; k++)
-                        stack.push(stack.peek());
+                    for (int k = 0; k < num; k++) { stack.push(stack.peek()); }
                 } else if (token.startsWith("p")) {
                     int num = token.length() > 1 ? Integer.parseInt(token.substring(1)) : stack.pop();
-                    for (int k = 0; k < num; k++)
-                        stack.pop();
+                    for (int k = 0; k < num; k++) { stack.pop(); }
                 } else if (token.startsWith("v")) {
                     int num = token.length() > 1 ? Integer.parseInt(token.substring(1)) : stack.pop();
                     if (stack.size() < num + 1) throw new PerlstoneException(errorLocation + ": Stack too small.");
@@ -298,8 +296,7 @@ public final class Perlstone32_1 extends LogicPlcLang {
                     int functionId = (token.length() > 1) ? Integer.parseInt(token.substring(1, 3)) : stack.pop();
                     int numArgs = (token.length() > 4) ? Integer.parseInt(token.substring(4)) : stack.pop();
                     int[] fArgs = new int[numArgs];
-                    for (int j = numArgs - 1; j >= 0; j--)
-                        fArgs[j] = stack.pop();
+                    for (int j = numArgs - 1; j >= 0; j--) { fArgs[j] = stack.pop(); }
                     stack.push(callFunction(staticf[functionId], fArgs, chip, pvt, tvt, staticf, numOpcodes));
                 } else if (token.equals("[")) {
                     if (stack.pop() == 0) i = jumpTable[i];
@@ -363,7 +360,8 @@ public final class Perlstone32_1 extends LogicPlcLang {
 
                 String errorLocation = "§2" + ((i >= 2) ? (tokens[i - 2] + " ") : "") + ((i >= 1) ? (tokens[i - 1] +
                         " ") : "") + "§4" + tokens[i] + "§e" + " " + ((i < tokens.length - 1) ? (tokens[i + 1] + " ")
-                        : "") + ((i < tokens.length - 2) ? (tokens[i + 2]) : "") + "§c";
+                                                                                              : "") + (
+                        (i < tokens.length - 2) ? (tokens[i + 2]) : "") + "§c";
 
                 /* Contingencies */
                 if (token.equals(""))
@@ -520,7 +518,9 @@ public final class Perlstone32_1 extends LogicPlcLang {
         if (stack.size() != 0) {
             int i = stack.pop();
             String errorLocation = "§2" + ((i >= 2) ? (tokens[i - 2] + " ") : "") + ((i >= 1) ? (tokens[i - 1] + " ")
-                    : "") + "§4" + tokens[i] + "§e" + " " + ((i < tokens.length - 1) ? (tokens[i + 1] + " ") : "") +
+                                                                                              : "") + "§4" +
+                    tokens[i] + "§e" + " " + (
+                    (i < tokens.length - 1) ? (tokens[i + 1] + " ") : "") +
                     ((i < tokens.length - 2) ? (tokens[i + 2]) : "") + "§c";
             throw new PerlstoneException(errorLocation + ": Unmatched [ brace.");
         }
@@ -538,12 +538,13 @@ public final class Perlstone32_1 extends LogicPlcLang {
             out.writeUTF(key);
             int[] data = publicPersistentStorage.get(key);
             out.writeInt(data.length);
-            for (int i : data)
+            for (int i : data) {
                 if (i == 0) out.writeBoolean(false);
                 else {
                     out.writeBoolean(true);
                     out.writeInt(i);
                 }
+            }
         }
     }
 
@@ -558,8 +559,7 @@ public final class Perlstone32_1 extends LogicPlcLang {
         for (int j = 0; j < l; j++) {
             String name = in.readUTF();
             int[] data = new int[in.readInt()];
-            for (int k = 0; k < data.length; k++)
-                if (in.readBoolean()) data[k] = in.readInt();
+            for (int k = 0; k < data.length; k++) { if (in.readBoolean()) data[k] = in.readInt(); }
             publicPersistentStorage.put(name, data);
         }
 
@@ -587,12 +587,13 @@ public final class Perlstone32_1 extends LogicPlcLang {
             out.writeInt(key.getBlockZ());
             int[] data = worldData.get(key);
             out.writeInt(data.length);
-            for (int i : data)
+            for (int i : data) {
                 if (i == 0) out.writeBoolean(false);
                 else {
                     out.writeBoolean(true);
                     out.writeInt(i);
                 }
+            }
         }
     }
 
@@ -609,8 +610,7 @@ public final class Perlstone32_1 extends LogicPlcLang {
         for (int j = 0; j < l; j++) {
             BlockVector v = new BlockVector(in.readInt(), in.readInt(), in.readInt());
             int[] data = new int[in.readInt()];
-            for (int k = 0; k < data.length; k++)
-                if (in.readBoolean()) data[k] = in.readInt();
+            for (int k = 0; k < data.length; k++) { if (in.readBoolean()) data[k] = in.readInt(); }
             worldData.put(v, data);
         }
         privatePersistentStorage.put(worldName, worldData);

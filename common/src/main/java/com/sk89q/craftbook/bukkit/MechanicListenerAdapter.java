@@ -274,7 +274,7 @@ public class MechanicListenerAdapter {
                 // Search for the repeater.
                 for (int x = event.getBlock().getX() - 2; x < event.getBlock().getX() + 2; x++) {
                     for (int y = event.getBlock().getY() - 2; y < event.getBlock().getY() + 2; y++) {
-                        for (int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++)
+                        for (int z = event.getBlock().getZ() - 2; z < event.getBlock().getZ() + 2; z++) {
                             if (event.getBlock().getWorld().getBlockAt(x, y, z).getTypeId() == type) {
                                 // Found a repeater.
                                 repeater = event.getBlock().getWorld().getBlockAt(x, y, z);
@@ -284,6 +284,7 @@ public class MechanicListenerAdapter {
                                     break;
                                 }
                             }
+                        }
                     }
                 }
                 if (!foundRepeater) return;

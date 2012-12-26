@@ -70,7 +70,7 @@ public class LiquidFlood extends AbstractIC {
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER
-                                : BlockID.LAVA)) {
+                                                                                                     : BlockID.LAVA)) {
                             b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID
                                     .STATIONARY_LAVA);
                         }
@@ -87,7 +87,7 @@ public class LiquidFlood extends AbstractIC {
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)
                                 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
-                                BlockID.STATIONARY_LAVA)) {
+                                                     BlockID.STATIONARY_LAVA)) {
                             b.setTypeId(BlockID.AIR);
                         }
                     }

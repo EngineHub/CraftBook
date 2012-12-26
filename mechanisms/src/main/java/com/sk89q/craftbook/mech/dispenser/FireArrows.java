@@ -22,9 +22,11 @@ public class FireArrows extends Recipe {
 
     public FireArrows() {
 
-        super(new int[] {BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR, ItemID.FIRE_CHARGE, ItemID.ARROW,
+        super(new int[] {
+                BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR, ItemID.FIRE_CHARGE, ItemID.ARROW,
                 ItemID.FIRE_CHARGE, BlockID.AIR,
-                ItemID.FIRE_CHARGE, BlockID.AIR});
+                ItemID.FIRE_CHARGE, BlockID.AIR
+        });
     }
 
     @Override

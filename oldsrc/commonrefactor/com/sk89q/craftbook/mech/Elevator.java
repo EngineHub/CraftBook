@@ -163,7 +163,7 @@ public class Elevator {
             boolean foundGround = false;
 
             int startingY = BlockType.canPassThrough(w.getId(plyX, y1 + 1, plyZ))
-                    ? y1 + 1 : y1;
+                            ? y1 + 1 : y1;
 
             // Step downwards until we find a spot to stand
             for (y2 = startingY; y2 >= y1 - 5; y2--) {

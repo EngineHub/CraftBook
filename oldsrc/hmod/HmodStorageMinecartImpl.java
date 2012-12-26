@@ -70,13 +70,14 @@ public class HmodStorageMinecartImpl extends HmodMinecartImpl
 
     public void flushChanges() {
 
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             if (changed[i]) {
                 com.sk89q.craftbook.access.Item item = items[i];
                 if (item.id == 0 || item.count == 0) continue;
                 inventory.setSlot(new Item(item.id, item.count), i);
                 changed[i] = false;
             }
+        }
     }
 }
 

@@ -138,7 +138,7 @@ public class BonemealTerraformer extends AbstractIC {
                             if (consumeBonemeal()) {
                                 b.setTypeId(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome
                                         .MUSHROOM_SHORE ? BlockID.MYCELIUM
-                                        : BlockID.GRASS);
+                                                        : BlockID.GRASS);
                             }
                             return;
                         }

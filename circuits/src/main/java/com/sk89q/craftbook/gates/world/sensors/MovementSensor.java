@@ -80,12 +80,13 @@ public class MovementSensor extends AbstractIC {
 
     public boolean check() {
 
-        for (Chunk chunk : chunks)
+        for (Chunk chunk : chunks) {
             if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities())
+                for (Entity entity : chunk.getEntities()) {
                     if (entity.isValid()) {
                         for (Type type : types)
-                            // Check Type
+                        // Check Type
+                        {
                             if (type.is(entity)) {
                                 // Check Radius
                                 if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
@@ -93,8 +94,11 @@ public class MovementSensor extends AbstractIC {
                                 }
                                 break;
                             }
+                        }
                     }
+                }
             }
+        }
         return false;
     }
 

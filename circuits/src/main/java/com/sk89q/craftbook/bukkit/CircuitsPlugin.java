@@ -619,7 +619,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                         colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                     }
                     strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
-                            SelfTriggeredIC ? "ST " : "T ")
+                                                                                                     SelfTriggeredIC
+                                                                                             ? "ST " : "T ")
                             + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {

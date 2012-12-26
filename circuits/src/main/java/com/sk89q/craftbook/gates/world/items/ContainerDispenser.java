@@ -72,18 +72,19 @@ public class ContainerDispenser extends AbstractIC {
         Inventory inv = null;
         if (bl.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) bl.getState();
-            for (ItemStack it : c.getInventory().getContents())
+            for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
                     stack = it;
                     inv = c.getInventory();
                 }
+            }
         } else if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
             stack = c.getInventory().getResult();
             inv = c.getInventory();
         } else if (bl.getTypeId() == BlockID.BREWING_STAND) {
             BrewingStand c = (BrewingStand) bl.getState();
-            for (ItemStack it : c.getInventory().getContents())
+            for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
                     if (ItemUtil.areItemsIdentical(it, c.getInventory().getIngredient())) {
                         continue;
@@ -91,13 +92,15 @@ public class ContainerDispenser extends AbstractIC {
                     stack = it;
                     inv = c.getInventory();
                 }
+            }
         } else if (bl.getTypeId() == BlockID.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
-            for (ItemStack it : c.getInventory().getContents())
+            for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
                     stack = it;
                     inv = c.getInventory();
                 }
+            }
         }
 
         return !(stack == null || inv == null) && dispenseItem(inv, stack);

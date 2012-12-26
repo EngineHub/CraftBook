@@ -274,15 +274,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         public static boolean isIngredient(int id) {
 
-            for (Ingredients in : values())
-                if (in.id == id) return true;
+            for (Ingredients in : values()) { if (in.id == id) return true; }
             return false;
         }
 
         public static int getTime(int id) {
 
-            for (Ingredients in : values())
-                if (in.id == id) return in.mult;
+            for (Ingredients in : values()) { if (in.id == id) return in.mult; }
             return 0;
         }
     }

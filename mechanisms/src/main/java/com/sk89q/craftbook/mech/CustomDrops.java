@@ -37,10 +37,11 @@ public class CustomDrops implements Listener {
                 Location l = event.getBlock().getLocation();
                 World w = event.getBlock().getWorld();
                 // Add the custom drops
-                for (CustomDropManager.DropDefinition dropDefinition : drops)
+                for (CustomDropManager.DropDefinition dropDefinition : drops) {
                     if (ItemUtil.isStackValid(dropDefinition.getItemStack())) {
                         w.dropItemNaturally(l, dropDefinition.getItemStack());
                     }
+                }
 
                 if (!drops[0].append) {
                     event.getBlock().setTypeId(0);
