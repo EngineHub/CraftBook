@@ -38,7 +38,7 @@ public class ItemInfo {
         int data = -1;
 
         try {
-            data = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]);
+            data = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[1]);
         } catch (Exception e) {
             data = -1;
         }

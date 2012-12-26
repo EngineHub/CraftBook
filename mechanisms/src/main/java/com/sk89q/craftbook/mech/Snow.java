@@ -1,9 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.HashMap;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -17,8 +16,10 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.HashMap;
-import java.util.logging.Level;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -106,10 +107,7 @@ public class Snow implements Listener {
 
             if (plugin.getLocalConfiguration().snowSettings.realistic) disperse(event.getBlock(), true);
 
-            if (event.getBlock().getWorld().hasStorm()) {
-
-                pile(block);
-            }
+            if (event.getBlock().getWorld().hasStorm()) pile(block);
         }
     }
 
