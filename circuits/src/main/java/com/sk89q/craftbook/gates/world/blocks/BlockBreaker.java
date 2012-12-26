@@ -1,12 +1,10 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.*;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,10 +12,18 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.AbstractIC;
+import com.sk89q.craftbook.ic.AbstractICFactory;
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.IC;
+import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class BlockBreaker extends AbstractIC {
 
@@ -56,15 +62,6 @@ public class BlockBreaker extends AbstractIC {
 
     @Override
     public void load () {
-        Block bl = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-        if (above) {
-            chest = bl.getRelative(0, 1, 0);
-            broken = bl.getRelative(0, -1, 0);
-        } else {
-            chest = bl.getRelative(0, -1, 0);
-            broken = bl.getRelative(0, 1, 0);
-        }
-
         try {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
             id = Integer.parseInt(split[0]);
@@ -74,6 +71,19 @@ public class BlockBreaker extends AbstractIC {
     }
 
     public boolean breakBlock () {
+
+        if(chest == null || broken == null) {
+
+            Block bl = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+
+            if (above) {
+                chest = bl.getRelative(0, 1, 0);
+                broken = bl.getRelative(0, -1, 0);
+            } else {
+                chest = bl.getRelative(0, -1, 0);
+                broken = bl.getRelative(0, 1, 0);
+            }
+        }
 
         boolean hasChest = false;
         if (chest != null && chest.getTypeId() == BlockID.CHEST) {
