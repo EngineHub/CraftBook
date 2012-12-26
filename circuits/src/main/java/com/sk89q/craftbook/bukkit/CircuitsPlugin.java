@@ -206,6 +206,7 @@ import com.sk89q.craftbook.ic.families.FamilySISO;
 import com.sk89q.craftbook.ic.families.FamilyVIVO;
 import com.sk89q.craftbook.plc.PlcFactory;
 import com.sk89q.craftbook.plc.lang.Perlstone;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.wepif.PermissionsResolverManager;
 
 // import com.sk89q.bukkit.migration.*;
@@ -302,7 +303,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             }
 
             metrics.start();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            getLogger().severe(GeneralUtil.getStackTrace(e));
         }
     }
 

@@ -16,6 +16,7 @@ package com.sk89q.craftbook.bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.CommonConfiguration;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 
@@ -52,7 +53,8 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            getLogger().severe(GeneralUtil.getStackTrace(e));
         }
     }
 

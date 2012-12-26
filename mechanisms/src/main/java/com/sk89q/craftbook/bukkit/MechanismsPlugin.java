@@ -57,6 +57,7 @@ import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mech.dispenser.Recipe;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * Plugin for CraftBook's mechanisms.
@@ -127,7 +128,8 @@ public class MechanismsPlugin extends BaseBukkitPlugin {
             }
 
             metrics.start();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            getLogger().severe(GeneralUtil.getStackTrace(e));
         }
     }
 
