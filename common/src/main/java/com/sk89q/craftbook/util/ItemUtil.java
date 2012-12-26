@@ -9,60 +9,61 @@ import org.bukkit.material.MaterialData;
 
 public class ItemUtil {
 
-    private ItemUtil () {
+    private ItemUtil() {
+
     }
 
-    public static boolean areItemsSimilar (ItemStack item, int type) {
+    public static boolean areItemsSimilar(ItemStack item, int type) {
 
         return areItemsSimilar(item, new MaterialData(type, (byte) 0));
     }
 
-    public static boolean areItemsSimilar (ItemStack item, MaterialData data) {
+    public static boolean areItemsSimilar(ItemStack item, MaterialData data) {
 
         return areItemsSimilar(item.getData(), data);
     }
 
-    public static boolean areItemsSimilar (ItemStack item, ItemStack item2) {
+    public static boolean areItemsSimilar(ItemStack item, ItemStack item2) {
 
         return areItemsSimilar(item.getData(), item2.getData());
     }
 
-    public static boolean areItemsSimilar (MaterialData data, MaterialData comparedData) {
+    public static boolean areItemsSimilar(MaterialData data, MaterialData comparedData) {
 
         return data.getItemTypeId() == comparedData.getItemTypeId();
     }
 
-    public static boolean areItemsIdentical (ItemStack item, int type, byte data) {
+    public static boolean areItemsIdentical(ItemStack item, int type, byte data) {
 
         return areItemsIdentical(item, new MaterialData(type, data));
     }
 
-    public static boolean areItemsIdentical (ItemStack item, MaterialData data) {
+    public static boolean areItemsIdentical(ItemStack item, MaterialData data) {
 
         return areItemsIdentical(item.getData(), data);
     }
 
-    public static boolean areItemsIdentical (ItemStack item, ItemStack item2) {
+    public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         return !isStackValid(item) && !isStackValid(item2) || areItemsIdentical(item.getData(), item2.getData());
     }
 
-    public static boolean areItemsIdentical (MaterialData data, MaterialData comparedData) {
+    public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {
 
         return data.getItemTypeId() == comparedData.getItemTypeId() && data.getData() == data.getData();
     }
 
-    public static void setItemTypeAndData (ItemStack item, int type, byte data) {
+    public static void setItemTypeAndData(ItemStack item, int type, byte data) {
 
         item.setData(new MaterialData(type, data));
     }
 
-    public static boolean isStackValid (ItemStack item) {
+    public static boolean isStackValid(ItemStack item) {
 
         return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
     }
 
-    public static boolean takeFromEntity (Item item) {
+    public static boolean takeFromEntity(Item item) {
 
         if (item == null || item.isDead()) return false;
 
@@ -80,12 +81,12 @@ public class ItemUtil {
         return true;
     }
 
-    public static boolean isCookable (ItemStack item) {
+    public static boolean isCookable(ItemStack item) {
 
         return getCookedResult(item) != null;
     }
 
-    public static ItemStack getCookedResult (ItemStack item) {
+    public static ItemStack getCookedResult(ItemStack item) {
 
         switch (item.getTypeId()) {
             case ItemID.RAW_BEEF:
@@ -103,12 +104,12 @@ public class ItemUtil {
         }
     }
 
-    public static boolean isSmeltable (ItemStack item) {
+    public static boolean isSmeltable(ItemStack item) {
 
         return getSmeletedResult(item) != null;
     }
 
-    public static ItemStack getSmeletedResult (ItemStack item) {
+    public static ItemStack getSmeletedResult(ItemStack item) {
 
         switch (item.getTypeId()) {
             case BlockID.COBBLESTONE:
@@ -136,25 +137,31 @@ public class ItemUtil {
         }
     }
 
-    public static boolean isAFuel (ItemStack item) {
+    public static boolean isAFuel(ItemStack item) {
 
         int i = item.getTypeId();
-        return i == ItemID.COAL || i == BlockID.LOG || i == BlockID.WOOD || i == BlockID.WOODEN_STEP || i == BlockID.SAPLING || i == ItemID.WOOD_AXE
+        return i == ItemID.COAL || i == BlockID.LOG || i == BlockID.WOOD || i == BlockID.WOODEN_STEP || i == BlockID
+                .SAPLING || i == ItemID.WOOD_AXE
                 || i == ItemID.WOOD_HOE || i == ItemID.WOOD_PICKAXE || i == ItemID.WOOD_SHOVEL || i == ItemID.WOOD_SWORD
-                || i == BlockID.WOODEN_PRESSURE_PLATE || i == ItemID.STICK || i == BlockID.FENCE || i == BlockID.WOODEN_STAIRS
-                || i == BlockID.TRAP_DOOR || i == BlockID.WORKBENCH || i == BlockID.CHEST || i == BlockID.JUKEBOX || i == BlockID.NOTE_BLOCK
-                || i == BlockID.BROWN_MUSHROOM_CAP || i == BlockID.RED_MUSHROOM_CAP || i == ItemID.BLAZE_ROD || i == ItemID.LAVA_BUCKET;
+                || i == BlockID.WOODEN_PRESSURE_PLATE || i == ItemID.STICK || i == BlockID.FENCE || i == BlockID
+                .WOODEN_STAIRS
+                || i == BlockID.TRAP_DOOR || i == BlockID.WORKBENCH || i == BlockID.CHEST || i == BlockID.JUKEBOX ||
+                i == BlockID.NOTE_BLOCK
+                || i == BlockID.BROWN_MUSHROOM_CAP || i == BlockID.RED_MUSHROOM_CAP || i == ItemID.BLAZE_ROD || i ==
+                ItemID.LAVA_BUCKET;
     }
 
-    public static boolean isAPotionIngredient (ItemStack item) {
+    public static boolean isAPotionIngredient(ItemStack item) {
 
         int i = item.getTypeId();
-        return i == ItemID.NETHER_WART_SEED || i == ItemID.LIGHTSTONE_DUST || i == ItemID.REDSTONE_DUST || i == ItemID.SPIDER_EYE
-                || i == ItemID.MAGMA_CREAM || i == ItemID.SUGAR || i == ItemID.GLISTERING_MELON || i == ItemID.GHAST_TEAR || i == ItemID.BLAZE_POWDER
+        return i == ItemID.NETHER_WART_SEED || i == ItemID.LIGHTSTONE_DUST || i == ItemID.REDSTONE_DUST || i ==
+                ItemID.SPIDER_EYE
+                || i == ItemID.MAGMA_CREAM || i == ItemID.SUGAR || i == ItemID.GLISTERING_MELON || i == ItemID
+                .GHAST_TEAR || i == ItemID.BLAZE_POWDER
                 || i == ItemID.FERMENTED_SPIDER_EYE || i == ItemID.SULPHUR;
     }
 
-    public static void addToStack (ItemStack stack, ItemStack to) {
+    public static void addToStack(ItemStack stack, ItemStack to) {
 
         if (stack == null) {
             stack = new ItemStack(to.getTypeId(), to.getAmount(), to.getDurability());
@@ -163,37 +170,38 @@ public class ItemUtil {
         }
     }
 
-    public static boolean containsRawFood (Inventory inv) {
+    public static boolean containsRawFood(Inventory inv) {
 
         for (ItemStack it : inv.getContents())
             if (it != null && isCookable(it)) return true;
         return false;
     }
 
-    public static boolean containsRawMinerals (Inventory inv) {
+    public static boolean containsRawMinerals(Inventory inv) {
 
         for (ItemStack it : inv.getContents())
             if (it != null && isSmeltable(it)) return true;
         return false;
     }
 
-    public static boolean isFurnacable (ItemStack item) {
+    public static boolean isFurnacable(ItemStack item) {
 
         return isCookable(item) || isSmeltable(item);
     }
 
-    public static boolean isItemEdible (ItemStack item) {
+    public static boolean isItemEdible(ItemStack item) {
 
         return item.getType().isEdible();
     }
 
-    public static ItemStack getUsedItem (ItemStack item) {
+    public static ItemStack getUsedItem(ItemStack item) {
 
         if (item.getTypeId() == ItemID.MUSHROOM_SOUP) {
             item.setTypeId(ItemID.BOWL); // Get your bowl back
         } else if (item.getTypeId() == ItemID.POTION) {
             item.setTypeId(ItemID.GLASS_BOTTLE); // Get your bottle back
-        } else if (item.getTypeId() == ItemID.LAVA_BUCKET || item.getTypeId() == ItemID.WATER_BUCKET || item.getTypeId() == ItemID.MILK_BUCKET) {
+        } else if (item.getTypeId() == ItemID.LAVA_BUCKET || item.getTypeId() == ItemID.WATER_BUCKET || item
+                .getTypeId() == ItemID.MILK_BUCKET) {
             item.setTypeId(ItemID.BUCKET); // Get your bucket back
         } else if (item.getAmount() == 1) {
             item.setTypeId(0);
@@ -203,7 +211,7 @@ public class ItemUtil {
         return item;
     }
 
-    public static ItemStack getSmallestStackOfType (ItemStack[] stacks, ItemStack item) {
+    public static ItemStack getSmallestStackOfType(ItemStack[] stacks, ItemStack item) {
 
         ItemStack smallest = null;
         for (ItemStack it : stacks) {

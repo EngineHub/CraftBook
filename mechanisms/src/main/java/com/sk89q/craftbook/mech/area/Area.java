@@ -1,31 +1,24 @@
 package com.sk89q.craftbook.mech.area;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.data.DataException;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.data.DataException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 /**
  * Area.
- * 
+ *
  * @author Me4502, Sk89q, Silthus
  */
 
@@ -33,7 +26,7 @@ public class Area extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Area> {
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
@@ -42,11 +35,12 @@ public class Area extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
-        public Area detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        public Area detect(BlockWorldVector pt, LocalPlayer player,
+                           ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!plugin.getLocalConfiguration().areaSettings.enable) return null;
 
@@ -74,15 +68,15 @@ public class Area extends AbstractMechanic {
 
         /**
          * Explore around the trigger to find a Door; throw if things look funny.
-         * 
-         * @param pt
-         *            the trigger (should be a signpost)
+         *
+         * @param pt the trigger (should be a signpost)
+         *
          * @return a Area if we could make a valid one, or null if this looked nothing like a area.
-         * @throws InvalidMechanismException
-         *             if the area looked like it was intended to be a area, but it failed.
+         *
+         * @throws InvalidMechanismException if the area looked like it was intended to be a area, but it failed.
          */
         @Override
-        public Area detect (BlockWorldVector pt) throws InvalidMechanismException {
+        public Area detect(BlockWorldVector pt) throws InvalidMechanismException {
 
             if (!plugin.getLocalConfiguration().areaSettings.enableRedstone) return null;
 
@@ -103,7 +97,7 @@ public class Area extends AbstractMechanic {
             return null;
         }
 
-        private void isValidArea (ChangedSign sign) throws InvalidMechanismException {
+        private void isValidArea(ChangedSign sign) throws InvalidMechanismException {
 
             String namespace = sign.getLine(0).trim();
             String areaOn = sign.getLine(2).trim();
@@ -123,11 +117,11 @@ public class Area extends AbstractMechanic {
 
     /**
      * Raised when a block is right clicked.
-     * 
+     *
      * @param event
      */
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
@@ -150,11 +144,11 @@ public class Area extends AbstractMechanic {
 
     /**
      * Raised when an input redstone current changes.
-     * 
+     *
      * @param event
      */
     @Override
-    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if (!plugin.getLocalConfiguration().areaSettings.enableRedstone) return;
 
@@ -169,12 +163,13 @@ public class Area extends AbstractMechanic {
     }
 
     /**
-     * @param pt
-     *            if you didn't already check if this is a signpost with appropriate text, you're going on Santa's naughty list.
+     * @param pt     if you didn't already check if this is a signpost with appropriate text,
+     *               you're going on Santa's naughty list.
      * @param plugin
+     *
      * @throws InvalidMechanismException
      */
-    private Area (BlockWorldVector pt, MechanismsPlugin plugin, boolean save) throws InvalidMechanismException {
+    private Area(BlockWorldVector pt, MechanismsPlugin plugin, boolean save) throws InvalidMechanismException {
 
         super();
         this.plugin = plugin;
@@ -182,12 +177,12 @@ public class Area extends AbstractMechanic {
         saveOnToggle = save;
     }
 
-    public boolean isToggledOn () {
+    public boolean isToggledOn() {
 
         return toggledOn;
     }
 
-    private void toggle (Sign sign) {
+    private void toggle(Sign sign) {
 
         if (!checkSign(sign)) return;
 
@@ -232,7 +227,7 @@ public class Area extends AbstractMechanic {
         }
     }
 
-    private boolean checkSign (Sign sign) {
+    private boolean checkSign(Sign sign) {
 
         String namespace = sign.getLine(0);
         String id = sign.getLine(2);
@@ -247,14 +242,14 @@ public class Area extends AbstractMechanic {
     // pattern to check where the markers for on and off state are
     private static final Pattern pattern = Pattern.compile("^\\-[A-Za-z0-9_]*?\\-$");
 
-    private void checkToggleState (Sign sign) {
+    private void checkToggleState(Sign sign) {
 
         String line3 = sign.getLine(2);
         String line4 = sign.getLine(3);
         toggledOn = pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
-    private void setToggledState (Sign sign, boolean state) {
+    private void setToggledState(Sign sign, boolean state) {
 
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;

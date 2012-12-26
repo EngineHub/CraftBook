@@ -1,33 +1,18 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Chunk;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.entity.*;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -35,9 +20,10 @@ import com.sk89q.craftbook.util.SignUtil;
 public class EntitySensor extends AbstractIC {
 
     public enum Type {
-        PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'), CART_STORAGE('S'), CART_POWERED('E');
+        PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'),
+        CART_STORAGE('S'), CART_POWERED('E');
 
-        public boolean is (Entity entity) {
+        public boolean is(Entity entity) {
 
             switch (this) {
                 case PLAYER:
@@ -64,17 +50,17 @@ public class EntitySensor extends AbstractIC {
 
         private final char shortName;
 
-        private Type (char shortName) {
+        private Type(char shortName) {
 
             this.shortName = shortName;
         }
 
-        public char getCharName () {
+        public char getCharName() {
 
             return shortName;
         }
 
-        public static Set<Type> getDetected (String line) {
+        public static Set<Type> getDetected(String line) {
 
             Set<Type> types = EnumSet.noneOf(Type.class);
 
@@ -110,13 +96,13 @@ public class EntitySensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public EntitySensor (Server server, ChangedSign block, ICFactory factory) {
+    public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         getSign().setLine(3, getSign().getLine(3).toUpperCase());
 
@@ -138,28 +124,29 @@ public class EntitySensor extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Entity Sensor";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "ENTITY SENSOR";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
     }
 
-    protected boolean isDetected () {
+    protected boolean isDetected() {
 
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); // Update chunks
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
+                radius); // Update chunks
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
                 for (Entity entity : chunk.getEntities())
@@ -168,7 +155,8 @@ public class EntitySensor extends AbstractIC {
                             // Check Type
                             if (type.is(entity)) {
                                 // Check Radius
-                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                                    return true;
                                 break;
                             }
                     }
@@ -178,33 +166,33 @@ public class EntitySensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new EntitySensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Detects specific entity types in a given radius.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z offset", "Entity Types" };
+            String[] lines = new String[] {"radius=x:y:z offset", "Entity Types"};
             return lines;
         }
     }

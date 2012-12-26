@@ -1,29 +1,13 @@
 package com.sk89q.craftbook.gates.world.entity;
 
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.*;
 
 /**
  * @author Me4502
@@ -33,7 +17,7 @@ public class EntityTrap extends AbstractIC {
     private enum Type {
         PLAYER, MOB_HOSTILE, MOB_PEACEFUL, MOB_ANY, ANY, CART, CART_STORAGE, CART_POWERED, ITEM;
 
-        public boolean is (Entity entity) {
+        public boolean is(Entity entity) {
 
             switch (this) {
                 case PLAYER:
@@ -58,31 +42,31 @@ public class EntityTrap extends AbstractIC {
             return false;
         }
 
-        public static Type fromString (String name) {
+        public static Type fromString(String name) {
 
             return EnumUtil.getEnumFromString(EntityTrap.Type.class, name);
         }
     }
 
-    public EntityTrap (Server server, ChangedSign sign, ICFactory factory) {
+    public EntityTrap(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Entity Trap";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "ENTITY TRAP";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, hurt());
@@ -95,7 +79,7 @@ public class EntityTrap extends AbstractIC {
     Location location;
 
     @Override
-    public void load () {
+    public void load() {
 
         location = BukkitUtil.toSign(getSign()).getLocation();
         try {
@@ -122,10 +106,10 @@ public class EntityTrap extends AbstractIC {
 
     /**
      * Returns true if the entity was damaged.
-     * 
+     *
      * @return
      */
-    protected boolean hurt () {
+    protected boolean hurt() {
 
         boolean hasHurt = false;
 
@@ -151,27 +135,27 @@ public class EntityTrap extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new EntityTrap(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Damage nearby entities of type.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z=damage", "mob type" };
+            String[] lines = new String[] {"radius=x:y:z=damage", "mob type"};
             return lines;
         }
     }

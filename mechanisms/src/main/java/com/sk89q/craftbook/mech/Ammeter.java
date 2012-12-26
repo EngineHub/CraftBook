@@ -2,20 +2,19 @@
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.mech;
-
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -25,6 +24,9 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
@@ -33,14 +35,14 @@ public class Ammeter extends AbstractMechanic {
 
     protected final MechanismsPlugin plugin;
 
-    public Ammeter (MechanismsPlugin plugin) {
+    public Ammeter(MechanismsPlugin plugin) {
 
         super();
         this.plugin = plugin;
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         LocalPlayer player = plugin.wrap(event.getPlayer());
 
@@ -48,14 +50,15 @@ public class Ammeter extends AbstractMechanic {
 
         Block block = event.getClickedBlock();
         if (event.getPlayer().getItemInHand().getTypeId() == plugin.getLocalConfiguration().ammeterSettings.id
-                && (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId()))) {
+                && (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())
+        )) {
             int data = getSpecialData(block);
             String line = getCurrentLine(data);
             player.print("Ammeter: " + line + ChatColor.WHITE + " " + data + " A");
         }
     }
 
-    private int getSpecialData (Block block) {
+    private int getSpecialData(Block block) {
 
         int typeId = block.getTypeId();
         byte data = block.getData();
@@ -94,7 +97,7 @@ public class Ammeter extends AbstractMechanic {
         return current;
     }
 
-    private String getCurrentLine (int data) {
+    private String getCurrentLine(int data) {
 
         StringBuilder line = new StringBuilder(25);
         line.append(ChatColor.YELLOW).append("[");
@@ -120,16 +123,17 @@ public class Ammeter extends AbstractMechanic {
 
         protected final MechanismsPlugin plugin;
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public Ammeter detect (BlockWorldVector pt) {
+        public Ammeter detect(BlockWorldVector pt) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) return new Ammeter(plugin);
+            if (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId()))
+                return new Ammeter(plugin);
 
             return null;
         }

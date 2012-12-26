@@ -20,27 +20,29 @@ public abstract class AbstractArrow implements ElementalArrow {
 
     String name;
 
-    public AbstractArrow (MechanismsPlugin plugin, String name) {
+    public AbstractArrow(MechanismsPlugin plugin, String name) {
+
         this.plugin = plugin;
         this.name = name;
     }
 
     @Override
-    public abstract void addRecipe ();
+    public abstract void addRecipe();
 
     @Override
-    public boolean onShoot (ProjectileLaunchEvent event) {
+    public boolean onShoot(ProjectileLaunchEvent event) {
         // TODO work out if its a CraftBook arrow.
         return false;
     }
 
     @Override
-    public boolean onHit (ProjectileHitEvent event) {
+    public boolean onHit(ProjectileHitEvent event) {
+
         return false;
     }
 
     @Override
-    public boolean onCraft (PrepareItemCraftEvent event) {
+    public boolean onCraft(PrepareItemCraftEvent event) {
 
         return event.getRecipe().equals(recipe);
     }

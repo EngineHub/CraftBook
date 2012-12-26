@@ -1,49 +1,42 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
 import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
+import com.sk89q.craftbook.ic.*;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
 /**
  * @author Me4502
  */
 public class PlayerSensor extends AbstractIC {
 
-    public PlayerSensor (Server server, ChangedSign block, ICFactory factory) {
+    public PlayerSensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Player Detection";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "P-DETECTION";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
@@ -58,7 +51,8 @@ public class PlayerSensor extends AbstractIC {
     String nameLine;
 
     @Override
-    public void load () {
+    public void load() {
+
         location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
 
         if (getLine(3).contains(":")) {
@@ -73,7 +67,8 @@ public class PlayerSensor extends AbstractIC {
             if (locInfo.startsWith("r:") && CircuitsPlugin.getInst().getWorldGuard() != null) {
 
                 locInfo = locInfo.replace("r:", "");
-                reg = CircuitsPlugin.getInst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld()).getRegion(locInfo);
+                reg = CircuitsPlugin.getInst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld
+                        ()).getRegion(locInfo);
                 if (reg != null) return;
             }
             radius = ICUtil.parseRadius(getSign());
@@ -87,12 +82,15 @@ public class PlayerSensor extends AbstractIC {
         }
     }
 
-    protected boolean isDetected () {
+    protected boolean isDetected() {
 
         if (reg != null) {
 
             for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-                if (reg.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ())) { return true; }
+                if (reg.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(),
+                        p.getLocation().getBlockZ())) {
+                    return true;
+                }
             }
         }
 
@@ -110,7 +108,9 @@ public class PlayerSensor extends AbstractIC {
                     return true;
                 } else if (type == Type.PLAYER && e.getName().toLowerCase().startsWith(nameLine.toLowerCase())) {
                     return true;
-                } else if (type == Type.GROUP && CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine)) { return true; }
+                } else if (type == Type.GROUP && CircuitsPlugin.getInst().isInGroup(e.getName(), nameLine)) {
+                    return true;
+                }
             }
         }
 
@@ -121,14 +121,15 @@ public class PlayerSensor extends AbstractIC {
 
         PLAYER('p'), GROUP('g');
 
-        private Type (char prefix) {
+        private Type(char prefix) {
 
             this.prefix = prefix;
         }
 
         char prefix;
 
-        public static Type getFromChar (char c) {
+        public static Type getFromChar(char c) {
+
             c = Character.toLowerCase(c);
             for (Type t : values())
                 if (t.prefix == c) return t;
@@ -138,27 +139,28 @@ public class PlayerSensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new PlayerSensor(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Detects players within a radius.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z offset, or r:regionname for WorldGuard regions", "p:playername or g:permissiongroup" };
+            String[] lines = new String[] {"radius=x:y:z offset, or r:regionname for WorldGuard regions",
+                    "p:playername or g:permissiongroup"};
             return lines;
         }
     }

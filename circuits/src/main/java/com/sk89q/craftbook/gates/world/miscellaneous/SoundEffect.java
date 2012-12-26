@@ -1,23 +1,16 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-
 public class SoundEffect extends AbstractIC {
 
-    public SoundEffect (Server server, ChangedSign sign, ICFactory factory) {
+    public SoundEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -27,7 +20,8 @@ public class SoundEffect extends AbstractIC {
     Sound sound;
 
     @Override
-    public void load () {
+    public void load() {
+
         String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(2));
         volume = Float.parseFloat(split[0]) / 100f;
         try {
@@ -41,26 +35,26 @@ public class SoundEffect extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Sound Effect";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "SOUND EFFECT";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             doSound();
         }
     }
 
-    public void doSound () {
+    public void doSound() {
 
         try {
             Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
@@ -71,27 +65,27 @@ public class SoundEffect extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SoundEffect(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Plays a sound effect on high.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "volume:pitch", "sound name" };
+            String[] lines = new String[] {"volume:pitch", "sound name"};
             return lines;
         }
     }

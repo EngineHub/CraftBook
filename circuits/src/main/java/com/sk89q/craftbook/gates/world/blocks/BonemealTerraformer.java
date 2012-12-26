@@ -1,8 +1,14 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.HashMap;
-import java.util.Random;
-
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Server;
 import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
@@ -10,31 +16,20 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BaseBukkitPlugin;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+import java.util.Random;
 
 public class BonemealTerraformer extends AbstractIC {
 
     int radius;
 
-    public BonemealTerraformer (Server server, ChangedSign block, ICFactory factory) {
+    public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         try {
             radius = Integer.parseInt(getSign().getLine(2));
@@ -49,26 +44,26 @@ public class BonemealTerraformer extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Bonemeal Terraformer";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "TERRAFORMER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             terraform(true);
         }
     }
 
-    public void terraform (boolean overrideChance) {
+    public void terraform(boolean overrideChance) {
 
         BlockWorldVector position = getSign().getBlockVector();
         for (int x = -radius + 1; x < radius; x++) {
@@ -85,7 +80,8 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
-                        if ((b.getTypeId() == BlockID.CROPS || b.getTypeId() == BlockID.CARROTS || b.getTypeId() == BlockID.POTATOES
+                        if ((b.getTypeId() == BlockID.CROPS || b.getTypeId() == BlockID.CARROTS || b.getTypeId() ==
+                                BlockID.POTATOES
                                 || b.getTypeId() == BlockID.MELON_STEM || b.getTypeId() == BlockID.PUMPKIN_STEM)
                                 && b.getData() < 0x7) {
                             if (consumeBonemeal()) {
@@ -93,7 +89,8 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
-                        if (b.getTypeId() == BlockID.COCOA_PLANT && ((b.getData() & 0x8) != 0x8 || (b.getData() & 0xC) != 0xC)) {
+                        if (b.getTypeId() == BlockID.COCOA_PLANT && ((b.getData() & 0x8) != 0x8 || (b.getData() &
+                                0xC) != 0xC)) {
                             if (consumeBonemeal()) {
                                 if (BaseBukkitPlugin.random.nextInt(30) == 0) b.setData((byte) (b.getData() | 0xC));
                                 else b.setData((byte) (b.getData() | 0x8));
@@ -139,7 +136,8 @@ public class BonemealTerraformer extends AbstractIC {
                         }
                         if (b.getTypeId() == BlockID.DIRT && b.getRelative(0, 1, 0).getTypeId() == 0) {
                             if (consumeBonemeal()) {
-                                b.setTypeId(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome.MUSHROOM_SHORE ? BlockID.MYCELIUM
+                                b.setTypeId(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome
+                                        .MUSHROOM_SHORE ? BlockID.MYCELIUM
                                         : BlockID.GRASS);
                             }
                             return;
@@ -176,7 +174,8 @@ public class BonemealTerraformer extends AbstractIC {
                             }
                             return;
                         }
-                        if (b.getTypeId() == BlockID.STATIONARY_WATER && b.getRelative(0, 1, 0).getTypeId() == BlockID.AIR
+                        if (b.getTypeId() == BlockID.STATIONARY_WATER && b.getRelative(0, 1,
+                                0).getTypeId() == BlockID.AIR
                                 && BaseBukkitPlugin.random.nextInt(30) == 0) {
                             if (consumeBonemeal()) {
                                 b.getRelative(0, 1, 0).setTypeId(BlockID.LILY_PAD);
@@ -201,19 +200,20 @@ public class BonemealTerraformer extends AbstractIC {
         }
     }
 
-    public boolean consumeBonemeal () {
+    public boolean consumeBonemeal() {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.INK_SACK, 1, (short) 15));
+            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.INK_SACK, 1,
+                    (short) 15));
             if (over.isEmpty()) return true;
         }
 
         return false;
     }
 
-    public boolean refundBonemeal () {
+    public boolean refundBonemeal() {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
@@ -225,11 +225,13 @@ public class BonemealTerraformer extends AbstractIC {
         return false;
     }
 
-    public boolean isSameSapling (Block sapling, Block other) {
+    public boolean isSameSapling(Block sapling, Block other) {
+
         return sapling.getTypeId() == other.getTypeId() && (other.getData() & 3) == (sapling.getData() & 3);
     }
 
-    public boolean growTree (Block sapling, Random random) {
+    public boolean growTree(Block sapling, Random random) {
+
         int data = sapling.getData() & 3;
         int i1 = 0;
         int j1 = 0;
@@ -244,7 +246,8 @@ public class BonemealTerraformer extends AbstractIC {
         } else if (data == 3) {
             for (i1 = 0; i1 >= -1; --i1) {
                 for (j1 = 0; j1 >= -1; --j1) {
-                    if (isSameSapling(sapling, sapling.getRelative(i1, 0, j1)) && isSameSapling(sapling, sapling.getRelative(i1 + 1, 0, j1))
+                    if (isSameSapling(sapling, sapling.getRelative(i1, 0, j1)) && isSameSapling(sapling,
+                            sapling.getRelative(i1 + 1, 0, j1))
                             && isSameSapling(sapling, sapling.getRelative(i1, 0, j1 + 1))
                             && isSameSapling(sapling, sapling.getRelative(i1 + 1, 0, j1 + 1))) {
                         treeType = TreeType.JUNGLE;
@@ -299,38 +302,39 @@ public class BonemealTerraformer extends AbstractIC {
 
         int maxradius;
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BonemealTerraformer(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Terraforms an area using bonemeal.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius", null };
+            String[] lines = new String[] {"radius", null};
             return lines;
         }
 
         @Override
-        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
 
             maxradius = section.getInt("max-radius", 15);
         }
 
         @Override
-        public boolean needsConfiguration () {
+        public boolean needsConfiguration() {
+
             return true;
         }
     }

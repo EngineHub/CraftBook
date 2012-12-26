@@ -1,45 +1,44 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.NestedCommand;
-
 public class CircuitCommands {
 
     CircuitsPlugin plugin;
 
-    public CircuitCommands (CircuitsPlugin plugin) {
+    public CircuitCommands(CircuitsPlugin plugin) {
 
         this.plugin = plugin;
     }
 
-    @Command(aliases = { "ic" }, desc = "Commands to manage Craftbook IC's")
-    public void ic (CommandContext context, CommandSender sender) {
+    @Command(aliases = {"ic"}, desc = "Commands to manage Craftbook IC's")
+    public void ic(CommandContext context, CommandSender sender) {
 
     }
 
-    @Command(aliases = { "reloadics" }, desc = "Reloads the IC config")
-    public void reload (CommandContext context, CommandSender sender) {
+    @Command(aliases = {"reloadics"}, desc = "Reloads the IC config")
+    public void reload(CommandContext context, CommandSender sender) {
 
         plugin.reloadICConfiguration();
         sender.sendMessage("The IC config has been reloaded.");
     }
 
-    @Command(aliases = { "cbcircuits" }, desc = "Handles the basic Craftbook Circuits commands.")
+    @Command(aliases = {"cbcircuits"}, desc = "Handles the basic Craftbook Circuits commands.")
     @NestedCommand(NestedCommands.class)
-    public void cbcircuits (CommandContext context, CommandSender sender) {
+    public void cbcircuits(CommandContext context, CommandSender sender) {
 
     }
 
@@ -47,30 +46,30 @@ public class CircuitCommands {
 
         private final CircuitsPlugin plugin;
 
-        public NestedCommands (CircuitsPlugin plugin) {
+        public NestedCommands(CircuitsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
-        @Command(aliases = { "reload" }, desc = "Reloads the craftbook circuits config")
+        @Command(aliases = {"reload"}, desc = "Reloads the craftbook circuits config")
         @CommandPermissions("craftbook.circuit.reload")
-        public void reload (CommandContext context, CommandSender sender) {
+        public void reload(CommandContext context, CommandSender sender) {
 
             plugin.reloadConfiguration();
             sender.sendMessage("CraftBook Circuits has been reloaded successfully!");
         }
     }
 
-    @Command(aliases = { "icdocs" }, desc = "Documentation on CraftBook IC's", min = 1, max = 1)
-    public void icdocs (CommandContext context, CommandSender sender) {
+    @Command(aliases = {"icdocs"}, desc = "Documentation on CraftBook IC's", min = 1, max = 1)
+    public void icdocs(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
         plugin.generateICDocs(player, context.getString(0));
     }
 
-    @Command(aliases = { "listics" }, desc = "List available IC's", min = 0, max = 2)
-    public void listics (CommandContext context, CommandSender sender) {
+    @Command(aliases = {"listics"}, desc = "List available IC's", min = 0, max = 2)
+    public void listics(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
@@ -102,17 +101,20 @@ public class CircuitCommands {
         }
     }
 
-    @Command(aliases = { "listmidis" }, desc = "List MIDI's available for Melody IC", min = 0, max = 1)
-    public void listmidis (CommandContext context, CommandSender sender) {
+    @Command(aliases = {"listmidis"}, desc = "List MIDI's available for Melody IC", min = 0, max = 1)
+    public void listmidis(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
         List<String> lines = new ArrayList<String>();
         for (File f : plugin.midiFolder.listFiles())
-            if (f.getName().endsWith(".mid") || f.getName().endsWith(".midi")) lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
+            if (f.getName().endsWith(".mid") || f.getName().endsWith(".midi"))
+                lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
         Collections.sort(lines, new Comparator<String>() {
+
             @Override
-            public int compare (String f1, String f2) {
+            public int compare(String f1, String f2) {
+
                 return f1.compareTo(f2);
             }
         });
@@ -138,8 +140,8 @@ public class CircuitCommands {
         }
     }
 
-    @Command(aliases = { "searchics" }, desc = "Search available IC's with names", min = 1, max = 3)
-    public void searchics (CommandContext context, CommandSender sender) {
+    @Command(aliases = {"searchics"}, desc = "Search available IC's with names", min = 1, max = 3)
+    public void searchics(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
@@ -164,7 +166,8 @@ public class CircuitCommands {
         }
 
         player.sendMessage(ChatColor.BLUE + "  ");
-        player.sendMessage(ChatColor.BLUE + "CraftBook ICs \"" + context.getString(0) + "\" (Page " + (accessedPage + 1) + " of " + pages + "):");
+        player.sendMessage(ChatColor.BLUE + "CraftBook ICs \"" + context.getString(0) + "\" (Page " + (accessedPage +
+                1) + " of " + pages + "):");
 
         for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
             player.sendMessage(lines[i]);

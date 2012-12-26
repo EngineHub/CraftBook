@@ -5,14 +5,14 @@
 
 package com.sk89q.craftbook.jinglenote;
 
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
 /**
  * A manager of play instances.
- * 
+ *
  * @author sk89q
  */
 public class JingleNoteManager {
@@ -22,7 +22,7 @@ public class JingleNoteManager {
      */
     protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
-    public void play (Player player, JingleSequencer sequencer) {
+    public void play(Player player, JingleSequencer sequencer) {
 
         String name = player.getName();
 
@@ -43,7 +43,7 @@ public class JingleNoteManager {
         instances.put(name, notePlayer);
     }
 
-    public boolean stop (Player player) {
+    public boolean stop(Player player) {
 
         String name = player.getName();
 
@@ -57,7 +57,7 @@ public class JingleNoteManager {
         return false;
     }
 
-    public void stopAll () {
+    public void stopAll() {
 
         for (JingleNotePlayer notePlayer : instances.values()) {
             notePlayer.stop();

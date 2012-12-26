@@ -1,28 +1,23 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.HashMap;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
 
 public class Irrigator extends AbstractIC {
 
-    public Irrigator (Server server, ChangedSign sign, ICFactory factory) {
+    public Irrigator(Server server, ChangedSign sign, ICFactory factory) {
+
         super(server, sign, factory);
     }
 
@@ -30,7 +25,8 @@ public class Irrigator extends AbstractIC {
     int radius;
 
     @Override
-    public void load () {
+    public void load() {
+
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
         try {
@@ -55,22 +51,24 @@ public class Irrigator extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
+
         return "Irrigator";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
+
         return "IRRIGATOR";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, irrigate());
     }
 
-    public boolean irrigate () {
+    public boolean irrigate() {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
@@ -91,7 +89,7 @@ public class Irrigator extends AbstractIC {
         return false;
     }
 
-    public boolean consumeWater () {
+    public boolean consumeWater() {
 
         Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
@@ -112,27 +110,27 @@ public class Irrigator extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Irrigator(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Irrigates nearby farmland using water in above chest.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z offset", null };
+            String[] lines = new String[] {"radius=x:y:z offset", null};
             return lines;
         }
     }

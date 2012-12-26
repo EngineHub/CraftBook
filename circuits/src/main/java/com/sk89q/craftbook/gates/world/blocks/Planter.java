@@ -1,5 +1,14 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -8,30 +17,16 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemID;
-
 /**
- * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in range it will auto plant it above
+ * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
+ * range it will auto plant it above
  * the IC.
- * 
+ *
  * @authors Drathus, Me4502
  */
 public class Planter extends AbstractIC {
 
-    public Planter (Server server, ChangedSign block, ICFactory factory) {
+    public Planter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -43,7 +38,7 @@ public class Planter extends AbstractIC {
     int radius;
 
     @Override
-    public void load () {
+    public void load() {
 
         item = ICUtil.getItem(getLine(2));
         if (item == null) item = new ItemStack(295, 1);
@@ -75,24 +70,24 @@ public class Planter extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Planter";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "PLANTER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, plant());
     }
 
-    public boolean plant () {
+    public boolean plant() {
 
         if (!plantableItem(item.getTypeId())) return false;
 
@@ -125,8 +120,9 @@ public class Planter extends AbstractIC {
                 if (!ItemUtil.isStackValid(itemEnt.getItemStack())) continue;
 
                 if (itemEnt.getItemStack().getTypeId() == item.getTypeId()
-                        && (item.getDurability() == 0 || itemEnt.getItemStack().getDurability() == item.getDurability() || itemEnt.getItemStack()
-                                .getData().getData() == item.getData().getData())) {
+                        && (item.getDurability() == 0 || itemEnt.getItemStack().getDurability() == item.getDurability
+                        () || itemEnt.getItemStack()
+                        .getData().getData() == item.getData().getData())) {
                     Location loc = itemEnt.getLocation();
                     double diffX = target.getX() - loc.getX();
                     double diffY = target.getY() - loc.getY();
@@ -150,7 +146,7 @@ public class Planter extends AbstractIC {
         return false;
     }
 
-    public Block searchBlocks (ItemStack stack) {
+    public Block searchBlocks(ItemStack stack) {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
@@ -164,14 +160,15 @@ public class Planter extends AbstractIC {
 
                     if (itemPlantableOnBlock(item.getTypeId(), b.getRelative(0, -1, 0).getTypeId())) {
 
-                    return b; }
+                        return b;
+                    }
                 }
             }
         }
         return null;
     }
 
-    protected boolean plantableItem (int itemId) {
+    protected boolean plantableItem(int itemId) {
 
         switch (itemId) {
             case BlockID.SAPLING:
@@ -192,7 +189,7 @@ public class Planter extends AbstractIC {
         }
     }
 
-    protected boolean itemPlantableOnBlock (int itemId, int blockId) {
+    protected boolean itemPlantableOnBlock(int itemId, int blockId) {
 
         switch (itemId) {
             case BlockID.SAPLING:
@@ -215,7 +212,7 @@ public class Planter extends AbstractIC {
         return false;
     }
 
-    protected int getBlockByItem (int itemId) {
+    protected int getBlockByItem(int itemId) {
 
         switch (itemId) {
             case ItemID.SEEDS:
@@ -249,27 +246,27 @@ public class Planter extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Planter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Plants plantable things at set offset.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "Item to plant id:data", "radius=x:y:z offset" };
+            String[] lines = new String[] {"Item to plant id:data", "radius=x:y:z offset"};
             return lines;
         }
     }

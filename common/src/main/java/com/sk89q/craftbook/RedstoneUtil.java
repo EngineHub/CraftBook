@@ -1,14 +1,14 @@
 package com.sk89q.craftbook;
 
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.worldedit.blocks.BlockID;
-
 /**
- * Decorates bukkit's directional block power queries with a three-valued logic that differenciates between the wiring that is unpowered and the
+ * Decorates bukkit's directional block power queries with a three-valued logic that differenciates between the
+ * wiring that is unpowered and the
  * absense of wiring.
- * 
+ *
  * @author hash
  */
 public abstract class RedstoneUtil {
@@ -18,7 +18,8 @@ public abstract class RedstoneUtil {
      */
     public enum Power {
         /**
-         * No potential power source is connected. (This may cause a mechanism to either default to its ON or OFF behavior or do something else
+         * No potential power source is connected. (This may cause a mechanism to either default to its ON or OFF
+         * behavior or do something else
          * entirely; it depends on the mechanism.
          */
         NA,
@@ -35,10 +36,13 @@ public abstract class RedstoneUtil {
     /**
      * @param mech
      * @param face
-     * @return Power.ON if the block on mech's face is a potential power source and is powered; Power.Off if the block on mech's face is a potential
-     *         power source but it is not providing power; Power.NA if there is no potential power source at the given face.
+     *
+     * @return Power.ON if the block on mech's face is a potential power source and is powered; Power.Off if the
+     *         block on mech's face is a potential
+     *         power source but it is not providing power; Power.NA if there is no potential power source at the
+     *         given face.
      */
-    public static Power isPowered (Block mech, BlockFace face) {
+    public static Power isPowered(Block mech, BlockFace face) {
 
         Block pow = mech.getRelative(face);
         // debug(pow);
@@ -50,17 +54,20 @@ public abstract class RedstoneUtil {
     }
 
     /**
-     * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be wires).
+     * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be
+     *         wires).
      */
-    public static boolean isPotentialPowerSource (int typeId) {
+    public static boolean isPotentialPowerSource(int typeId) {
 
-        return typeId == BlockID.REDSTONE_WIRE || typeId == BlockID.REDSTONE_REPEATER_ON || typeId == BlockID.REDSTONE_REPEATER_OFF
-                || typeId == BlockID.LEVER || typeId == BlockID.REDSTONE_TORCH_ON || typeId == BlockID.REDSTONE_TORCH_OFF
+        return typeId == BlockID.REDSTONE_WIRE || typeId == BlockID.REDSTONE_REPEATER_ON || typeId == BlockID
+                .REDSTONE_REPEATER_OFF
+                || typeId == BlockID.LEVER || typeId == BlockID.REDSTONE_TORCH_ON || typeId == BlockID
+                .REDSTONE_TORCH_OFF
                 || typeId == BlockID.WOODEN_PRESSURE_PLATE || typeId == BlockID.STONE_PRESSURE_PLATE;
         // return BlockType.isRedstoneBlock(pow.getTypeId());
     }
 
-    public static boolean isPotentialPowerSource (Block pow) {
+    public static boolean isPotentialPowerSource(Block pow) {
 
         return pow.getTypeId() == BlockID.REDSTONE_WIRE || pow.getTypeId() == BlockID.REDSTONE_REPEATER_OFF
                 || pow.getTypeId() == BlockID.REDSTONE_REPEATER_ON;
@@ -70,24 +77,28 @@ public abstract class RedstoneUtil {
     /**
      * @param mech
      * @param pow
-     * @return true if a mechanism in the mech block is able to receive power from the pow block (i.e. if it's a power conductor and if it has a sense
+     *
+     * @return true if a mechanism in the mech block is able to receive power from the pow block (i.e. if it's a
+     *         power conductor and if it has a sense
      *         of directionality it is also pointing at mech).
      */
-    public static boolean isPotentialPowerSource (Block mech, Block pow) {
+    public static boolean isPotentialPowerSource(Block mech, Block pow) {
 
         return pow.getTypeId() == BlockID.REDSTONE_WIRE || pow.getTypeId() == BlockID.REDSTONE_REPEATER_OFF
                 || pow.getTypeId() == BlockID.REDSTONE_REPEATER_ON;
     }
 
-    public static void debug (Block block) {
+    public static void debug(Block block) {
 
         System.out.println("block " + block + " power debug:");
         System.out.println("\tblock.isBlockPowered() : " + block.isBlockPowered());
         System.out.println("\tblock.isBlockIndirectlyPowered() : " + block.isBlockIndirectlyPowered());
         for (BlockFace bf : BlockFace.values()) {
             System.out.println("\tblock.isBlockFacePowered(" + bf + ") : " + block.isBlockFacePowered(bf));
-            System.out.println("\tblock.getFace(" + bf + ").isBlockPowered() : " + block.getRelative(bf).isBlockPowered());
-            System.out.println("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + block.isBlockFaceIndirectlyPowered(bf));
+            System.out.println("\tblock.getFace(" + bf + ").isBlockPowered() : " + block.getRelative(bf)
+                    .isBlockPowered());
+            System.out.println("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + block
+                    .isBlockFaceIndirectlyPowered(bf));
             System.out.println("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
                     + block.getRelative(bf).isBlockIndirectlyPowered());
         }

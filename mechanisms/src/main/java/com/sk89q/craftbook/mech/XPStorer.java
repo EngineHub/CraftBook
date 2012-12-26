@@ -1,14 +1,13 @@
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class XPStorer extends AbstractMechanic {
 
@@ -16,13 +15,13 @@ public class XPStorer extends AbstractMechanic {
 
         MechanismsPlugin plugin;
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public XPStorer detect (BlockWorldVector pt) {
+        public XPStorer detect(BlockWorldVector pt) {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
@@ -36,20 +35,22 @@ public class XPStorer extends AbstractMechanic {
 
     /**
      * Construct the mechanic for a location.
-     * 
+     *
      * @param pt
      */
-    private XPStorer (BlockWorldVector pt, MechanismsPlugin plugin) {
+    private XPStorer(BlockWorldVector pt, MechanismsPlugin plugin) {
 
         super();
         this.plugin = plugin;
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.xpstore.use")) return;
-        if (event.getPlayer().isSneaking() || event.getPlayer().getLevel() < 1) { return; }
+        if (event.getPlayer().isSneaking() || event.getPlayer().getLevel() < 1) {
+            return;
+        }
 
         int xp = 0;
 
@@ -66,7 +67,8 @@ public class XPStorer extends AbstractMechanic {
         }
 
         event.getClickedBlock().getWorld()
-                .dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(ItemID.BOTTLE_O_ENCHANTING, xp / 16));
+                .dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(ItemID.BOTTLE_O_ENCHANTING,
+                        xp / 16));
 
         event.getPlayer().setLevel(0);
         event.getPlayer().setExp(0);

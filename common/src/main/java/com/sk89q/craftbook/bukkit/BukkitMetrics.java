@@ -25,25 +25,8 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-package com.sk89q.craftbook.bukkit;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
+package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -51,6 +34,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.*;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * <p> The metrics class obtains data about a plugin and submits statistics about it to the metrics backend. </p> <p>
@@ -122,6 +113,7 @@ public class BukkitMetrics {
     private volatile BukkitTask task = null;
 
     public BukkitMetrics(final Plugin plugin) throws IOException {
+
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
@@ -153,9 +145,11 @@ public class BukkitMetrics {
      * website. Plotters can be added to the graph object returned.
      *
      * @param name The name of the graph
+     *
      * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
      */
     public Graph createGraph(final String name) {
+
         if (name == null) {
             throw new IllegalArgumentException("Graph name cannot be null");
         }
@@ -176,6 +170,7 @@ public class BukkitMetrics {
      * @param graph The name of the graph
      */
     public void addGraph(final Graph graph) {
+
         if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }
@@ -189,6 +184,7 @@ public class BukkitMetrics {
      * @param plotter The plotter to use to plot custom data
      */
     public void addCustomData(final Plotter plotter) {
+
         if (plotter == null) {
             throw new IllegalArgumentException("Plotter cannot be null");
         }
@@ -208,6 +204,7 @@ public class BukkitMetrics {
      * @return True if statistics measuring is running, otherwise false.
      */
     public boolean start() {
+
         synchronized (optOutLock) {
             // Did we opt out?
             if (isOptOut()) {
@@ -226,6 +223,7 @@ public class BukkitMetrics {
 
                 @Override
                 public void run() {
+
                     try {
                         // This has to be synchronized or it can collide with the disable method.
                         synchronized (optOutLock) {
@@ -266,6 +264,7 @@ public class BukkitMetrics {
      * @return true if metrics should be opted out of it
      */
     public boolean isOptOut() {
+
         synchronized (optOutLock) {
             try {
                 // Reload the metrics file
@@ -405,7 +404,8 @@ public class BukkitMetrics {
                     // The key name to send to the metrics server
                     // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
                     // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
-                    final String key = String.format("C%s%s%s%s", CUSTOM_DATA_SEPARATOR, graph.getName(), CUSTOM_DATA_SEPARATOR, plotter.getColumnName());
+                    final String key = String.format("C%s%s%s%s", CUSTOM_DATA_SEPARATOR, graph.getName(),
+                            CUSTOM_DATA_SEPARATOR, plotter.getColumnName());
 
                     // The value to send, which for the foreseeable future is just the string
                     // value of plotter.getValue()
@@ -472,6 +472,7 @@ public class BukkitMetrics {
      * @return true if mineshafter is installed on the server
      */
     private boolean isMineshafterPresent() {
+
         try {
             Class.forName("mineshafter.MineServer");
             return true;
@@ -490,10 +491,12 @@ public class BukkitMetrics {
      * </code>
      *
      * @param buffer the stringbuilder to append the data pair onto
-     * @param key the key value
-     * @param value the value
+     * @param key    the key value
+     * @param value  the value
      */
-    private static void encodeDataPair(final StringBuilder buffer, final String key, final String value) throws UnsupportedEncodingException {
+    private static void encodeDataPair(final StringBuilder buffer, final String key,
+                                       final String value) throws UnsupportedEncodingException {
+
         buffer.append('&').append(encode(key)).append('=').append(encode(value));
     }
 
@@ -501,9 +504,11 @@ public class BukkitMetrics {
      * Encode text as UTF-8
      *
      * @param text the text to encode
+     *
      * @return the encoded text, as UTF-8
      */
     private static String encode(final String text) throws UnsupportedEncodingException {
+
         return URLEncoder.encode(text, "UTF-8");
     }
 
@@ -523,6 +528,7 @@ public class BukkitMetrics {
         private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
 
         private Graph(final String name) {
+
             this.name = name;
         }
 
@@ -532,6 +538,7 @@ public class BukkitMetrics {
          * @return the Graph's name
          */
         public String getName() {
+
             return name;
         }
 
@@ -541,6 +548,7 @@ public class BukkitMetrics {
          * @param plotter the plotter to add to the graph
          */
         public void addPlotter(final Plotter plotter) {
+
             plotters.add(plotter);
         }
 
@@ -550,6 +558,7 @@ public class BukkitMetrics {
          * @param plotter the plotter to remove from the graph
          */
         public void removePlotter(final Plotter plotter) {
+
             plotters.remove(plotter);
         }
 
@@ -559,16 +568,19 @@ public class BukkitMetrics {
          * @return an unmodifiable {@link Set} of the plotter objects
          */
         public Set<Plotter> getPlotters() {
+
             return Collections.unmodifiableSet(plotters);
         }
 
         @Override
         public int hashCode() {
+
             return name.hashCode();
         }
 
         @Override
         public boolean equals(final Object object) {
+
             if (!(object instanceof Graph)) {
                 return false;
             }
@@ -581,6 +593,7 @@ public class BukkitMetrics {
          * Called when the server owner decides to opt-out of BukkitMetrics while the server is running.
          */
         protected void onOptOut() {
+
         }
     }
 
@@ -598,6 +611,7 @@ public class BukkitMetrics {
          * Construct a plotter with the default plot name
          */
         public Plotter() {
+
             this("Default");
         }
 
@@ -607,6 +621,7 @@ public class BukkitMetrics {
          * @param name the name of the plotter to use, which will show up on the website
          */
         public Plotter(final String name) {
+
             this.name = name;
         }
 
@@ -625,6 +640,7 @@ public class BukkitMetrics {
          * @return the plotted point's column name
          */
         public String getColumnName() {
+
             return name;
         }
 
@@ -632,15 +648,18 @@ public class BukkitMetrics {
          * Called after the website graphs have been updated
          */
         public void reset() {
+
         }
 
         @Override
         public int hashCode() {
+
             return getColumnName().hashCode();
         }
 
         @Override
         public boolean equals(final Object object) {
+
             if (!(object instanceof Plotter)) {
                 return false;
             }

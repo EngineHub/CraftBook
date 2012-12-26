@@ -1,15 +1,5 @@
 package com.sk89q.craftbook.circuits;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -21,6 +11,15 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.PistonBaseMaterial;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Pipes extends AbstractMechanic {
 
@@ -28,13 +27,13 @@ public class Pipes extends AbstractMechanic {
 
         CircuitsPlugin plugin;
 
-        public Factory (CircuitsPlugin plugin) {
+        public Factory(CircuitsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public Pipes detect (BlockWorldVector pt) {
+        public Pipes detect(BlockWorldVector pt) {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
@@ -43,7 +42,7 @@ public class Pipes extends AbstractMechanic {
             return null;
         }
 
-        public Pipes detect (BlockWorldVector pt, List<ItemStack> items) {
+        public Pipes detect(BlockWorldVector pt, List<ItemStack> items) {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
@@ -57,16 +56,16 @@ public class Pipes extends AbstractMechanic {
 
     /**
      * Construct the mechanic for a location.
-     * 
+     *
      * @param pt
      */
-    private Pipes (CircuitsPlugin plugin, BlockWorldVector pt) {
+    private Pipes(CircuitsPlugin plugin, BlockWorldVector pt) {
 
         super();
         this.plugin = plugin;
     }
 
-    private Pipes (CircuitsPlugin plugin, BlockWorldVector pt, List<ItemStack> items) {
+    private Pipes(CircuitsPlugin plugin, BlockWorldVector pt, List<ItemStack> items) {
 
         super();
         this.plugin = plugin;
@@ -77,7 +76,7 @@ public class Pipes extends AbstractMechanic {
     private List<ItemStack> items = new ArrayList<ItemStack>();
     private List<BlockVector> visitedPipes = new ArrayList<BlockVector>();
 
-    public void searchNearbyPipes (Block block) {
+    public void searchNearbyPipes(Block block) {
 
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
@@ -90,24 +89,33 @@ public class Pipes extends AbstractMechanic {
                     } else {
 
                         if (Math.abs(x) == Math.abs(y) && Math.abs(x) == Math.abs(z) && Math.abs(y) == Math.abs(z)) {
-                            if (block.getRelative(x, 0, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
-                                    && block.getRelative(0, y, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
-                                    && block.getRelative(0, 0, z).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                            if (block.getRelative(x, 0, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings
+                                    .insulator
+                                    && block.getRelative(0, y, 0).getTypeId() == plugin.getLocalConfiguration()
+                                    .pipeSettings.insulator
+                                    && block.getRelative(0, 0, z).getTypeId() == plugin.getLocalConfiguration()
+                                    .pipeSettings.insulator) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(y)) {
-                            if (block.getRelative(x, 0, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
-                                    && block.getRelative(0, y, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                            if (block.getRelative(x, 0, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings
+                                    .insulator
+                                    && block.getRelative(0, y, 0).getTypeId() == plugin.getLocalConfiguration()
+                                    .pipeSettings.insulator) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(z)) {
-                            if (block.getRelative(x, 0, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
-                                    && block.getRelative(0, 0, z).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                            if (block.getRelative(x, 0, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings
+                                    .insulator
+                                    && block.getRelative(0, 0, z).getTypeId() == plugin.getLocalConfiguration()
+                                    .pipeSettings.insulator) {
                                 continue;
                             }
                         } else if (Math.abs(y) == Math.abs(z)) {
-                            if (block.getRelative(0, y, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator
-                                    && block.getRelative(0, 0, z).getTypeId() == plugin.getLocalConfiguration().pipeSettings.insulator) {
+                            if (block.getRelative(0, y, 0).getTypeId() == plugin.getLocalConfiguration().pipeSettings
+                                    .insulator
+                                    && block.getRelative(0, 0, z).getTypeId() == plugin.getLocalConfiguration()
+                                    .pipeSettings.insulator) {
                                 continue;
                             }
                         }
@@ -134,7 +142,8 @@ public class Pipes extends AbstractMechanic {
 
                             for (ItemStack item : items) {
                                 if (item == null) continue;
-                                newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
+                                newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item)
+                                        .values());
                             }
 
                             items.clear();
@@ -146,10 +155,12 @@ public class Pipes extends AbstractMechanic {
                             if (CircuitsPlugin.getInst().icFactory == null) continue;
 
                             try {
-                                ICMechanic icmech = CircuitsPlugin.getInst().icFactory.detect(BukkitUtil.toWorldVector(fac));
+                                ICMechanic icmech = CircuitsPlugin.getInst().icFactory.detect(BukkitUtil
+                                        .toWorldVector(fac));
                                 if (icmech == null) continue;
                                 if (!(icmech.getIC() instanceof PipeInputIC)) continue;
-                                List<ItemStack> newItems = ((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil.toWorldVector(off), items);
+                                List<ItemStack> newItems = ((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil
+                                        .toWorldVector(off), items);
 
                                 items.clear();
                                 items.addAll(newItems);
@@ -165,13 +176,14 @@ public class Pipes extends AbstractMechanic {
         }
     }
 
-    private boolean isValidPipeBlock (int typeId) {
+    private boolean isValidPipeBlock(int typeId) {
 
-        return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE || typeId == BlockID.PISTON_STICKY_BASE || typeId == BlockID.WALL_SIGN;
+        return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE || typeId == BlockID.PISTON_STICKY_BASE ||
+                typeId == BlockID.WALL_SIGN;
 
     }
 
-    public void startPipe (Block block) {
+    public void startPipe(Block block) {
 
         visitedPipes.clear();
 
@@ -204,7 +216,7 @@ public class Pipes extends AbstractMechanic {
      * Raised when an input redstone current changes.
      */
     @Override
-    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         startPipe(event.getBlock());
     }

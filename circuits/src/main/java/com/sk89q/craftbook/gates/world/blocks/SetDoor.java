@@ -1,22 +1,15 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -41,13 +34,13 @@ public class SetDoor extends AbstractIC {
     private Block center;
     private BlockFace faceing;
 
-    public SetDoor (Server server, ChangedSign block, ICFactory factory) {
+    public SetDoor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
@@ -129,19 +122,19 @@ public class SetDoor extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Set P-Door";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "SET P-DOOR";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             setDoor(true);
@@ -150,7 +143,7 @@ public class SetDoor extends AbstractIC {
         }
     }
 
-    private void setDoor (boolean open) {
+    private void setDoor(boolean open) {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -166,13 +159,13 @@ public class SetDoor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new SetDoor(getServer(), sign, this);
         }

@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mech;
 
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -9,20 +11,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
-
 public class CustomDrops implements Listener {
 
     final MechanismsPlugin plugin;
 
-    public CustomDrops (MechanismsPlugin plugin) {
+    public CustomDrops(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void handleCustomBlockDrops (BlockBreakEvent event) {
+    public void handleCustomBlockDrops(BlockBreakEvent event) {
 
         if (plugin.getLocalConfiguration().customDropSettings.requirePermissions
                 && !plugin.wrap(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
@@ -52,11 +51,12 @@ public class CustomDrops implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void handleCustomMobDrops (EntityDeathEvent event) {
+    public void handleCustomMobDrops(EntityDeathEvent event) {
 
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
-        CustomDropManager.DropDefinition[] drops = plugin.getLocalConfiguration().customDrops.getMobDrop(entityType.getName());
+        CustomDropManager.DropDefinition[] drops = plugin.getLocalConfiguration().customDrops.getMobDrop(entityType
+                .getName());
         if (drops != null) {
             if (!drops[0].append) event.getDrops().clear();
             // Add the custom drops

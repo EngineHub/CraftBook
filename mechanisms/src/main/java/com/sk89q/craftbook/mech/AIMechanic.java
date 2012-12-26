@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.mech.ai.*;
+import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,13 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
-import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
-import com.sk89q.craftbook.mech.ai.SkeletonAIMechanic;
-import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
-import com.sk89q.craftbook.mech.ai.ZombieAIMechanic;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class AIMechanic implements Listener {
 
@@ -24,7 +19,7 @@ public class AIMechanic implements Listener {
 
     MechanismsPlugin plugin;
 
-    public AIMechanic (MechanismsPlugin plugin) {
+    public AIMechanic(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
 
@@ -39,7 +34,7 @@ public class AIMechanic implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityTarget (EntityTargetEvent event) {
+    public void onEntityTarget(EntityTargetEvent event) {
 
         if (event.getTarget() == null || event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
@@ -47,7 +42,8 @@ public class AIMechanic implements Listener {
                 if (!TargetAIMechanic.class.isAssignableFrom(mechanic)) {
                     continue;
                 }
-                TargetAIMechanic ai = (TargetAIMechanic) mechanic.getConstructors()[0].newInstance(plugin, event.getEntity());
+                TargetAIMechanic ai = (TargetAIMechanic) mechanic.getConstructors()[0].newInstance(plugin,
+                        event.getEntity());
                 if (ai == null) return;
                 ai.onEntityTarget(event);
             } catch (Exception e) {
@@ -57,7 +53,7 @@ public class AIMechanic implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityShootBow (EntityShootBowEvent event) {
+    public void onEntityShootBow(EntityShootBowEvent event) {
 
         if (event.getEntity() == null) return;
         for (Class<BaseAIMechanic> mechanic : mechanics) {
@@ -65,7 +61,8 @@ public class AIMechanic implements Listener {
                 if (!BowShotAIMechanic.class.isAssignableFrom(mechanic)) {
                     continue;
                 }
-                BowShotAIMechanic ai = (BowShotAIMechanic) mechanic.getConstructors()[0].newInstance(plugin, event.getEntity());
+                BowShotAIMechanic ai = (BowShotAIMechanic) mechanic.getConstructors()[0].newInstance(plugin,
+                        event.getEntity());
                 if (ai == null) return;
                 ai.onBowShot(event);
             } catch (Exception e) {
@@ -75,9 +72,10 @@ public class AIMechanic implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean registerAIMechanic (Class<?> mechanic) {
+    public boolean registerAIMechanic(Class<?> mechanic) {
 
-        return BaseAIMechanic.class.isAssignableFrom(mechanic) && !mechanics.contains(mechanic) && mechanics.add((Class<BaseAIMechanic>) mechanic);
+        return BaseAIMechanic.class.isAssignableFrom(mechanic) && !mechanics.contains(mechanic) && mechanics.add(
+                (Class<BaseAIMechanic>) mechanic);
 
     }
 }

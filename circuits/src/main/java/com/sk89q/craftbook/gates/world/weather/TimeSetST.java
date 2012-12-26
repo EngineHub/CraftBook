@@ -1,42 +1,37 @@
 package com.sk89q.craftbook.gates.world.weather;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Server;
 
 public class TimeSetST extends TimeSet implements SelfTriggeredIC {
 
-    public TimeSetST (Server server, ChangedSign sign, ICFactory factory) {
+    public TimeSetST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
 
         return true;
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Time Set ST";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "TIME SET ST";
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         try {
             if (chip.getInput(0)) {
@@ -48,19 +43,19 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
 
     public static class Factory extends TimeSet.Factory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new TimeSetST(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Sets time continuously.";
         }

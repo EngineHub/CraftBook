@@ -1,32 +1,25 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class FlameThrower extends AbstractIC {
 
     int distance = 5;
 
-    public FlameThrower (Server server, ChangedSign sign, ICFactory factory) {
+    public FlameThrower(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         try {
             distance = Integer.parseInt(getSign().getLine(2));
@@ -35,24 +28,24 @@ public class FlameThrower extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Flame Thrower";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "FLAME THROWER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         sendFlames(chip.getInput(0));
     }
 
-    public void sendFlames (boolean make) {
+    public void sendFlames(boolean make) {
 
         Block block = BukkitUtil.toSign(getSign()).getBlock();
         BlockFace direction = SignUtil.getBack(block);
@@ -71,25 +64,25 @@ public class FlameThrower extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new FlameThrower(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Makes a line of fire.";
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 int distance = Integer.parseInt(sign.getLine(2));
@@ -100,9 +93,9 @@ public class FlameThrower extends AbstractIC {
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "distance", null };
+            String[] lines = new String[] {"distance", null};
             return lines;
         }
     }

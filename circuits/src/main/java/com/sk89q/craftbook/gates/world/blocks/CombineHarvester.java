@@ -1,10 +1,12 @@
 package com.sk89q.craftbook.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -12,22 +14,15 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class CombineHarvester extends AbstractIC {
 
-    public CombineHarvester (Server server, ChangedSign sign, ICFactory factory) {
+    public CombineHarvester(Server server, ChangedSign sign, ICFactory factory) {
+
         super(server, sign, factory);
     }
 
@@ -38,7 +33,7 @@ public class CombineHarvester extends AbstractIC {
     Block onBlock;
 
     @Override
-    public void load () {
+    public void load() {
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -67,22 +62,24 @@ public class CombineHarvester extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
+
         return "Combine Harvester";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
+
         return "HARVEST";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, harvest());
     }
 
-    public boolean harvest () {
+    public boolean harvest() {
 
         for (int x = -radius + 1; x < radius; x++) {
             for (int y = -radius + 1; y < radius; y++) {
@@ -104,7 +101,7 @@ public class CombineHarvester extends AbstractIC {
         return false;
     }
 
-    public void collectDrops (ItemStack[] drops) {
+    public void collectDrops(ItemStack[] drops) {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block pipe = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
@@ -117,7 +114,9 @@ public class CombineHarvester extends AbstractIC {
                 List<ItemStack> items = new ArrayList<ItemStack>();
                 Collections.addAll(items, drops);
                 if (CircuitsPlugin.getInst().pipeFactory != null)
-                    if (CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(pipe), items) != null) { return; }
+                    if (CircuitsPlugin.getInst().pipeFactory.detect(BukkitUtil.toWorldVector(pipe), items) != null) {
+                        return;
+                    }
             }
         }
         if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
@@ -136,36 +135,37 @@ public class CombineHarvester extends AbstractIC {
         }
     }
 
-    public boolean harvestable (Block block) {
+    public boolean harvestable(Block block) {
 
         // TODO add a list of things that can be harvestable, and in what circumstance.
-        return (block.getTypeId() == BlockID.CROPS || block.getTypeId() == BlockID.CARROTS || block.getTypeId() == BlockID.POTATOES)
+        return (block.getTypeId() == BlockID.CROPS || block.getTypeId() == BlockID.CARROTS || block.getTypeId() ==
+                BlockID.POTATOES)
                 && block.getData() >= 0x7;
     }
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new CombineHarvester(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Harvests nearby crops.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z offset", null };
+            String[] lines = new String[] {"radius=x:y:z offset", null};
             return lines;
         }
     }

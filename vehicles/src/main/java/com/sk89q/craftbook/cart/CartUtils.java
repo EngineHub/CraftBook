@@ -5,12 +5,12 @@ import org.bukkit.util.Vector;
 
 public abstract class CartUtils {
 
-    public static void reverse (Minecart cart) {
+    public static void reverse(Minecart cart) {
 
         cart.setVelocity(cart.getVelocity().normalize().multiply(-1));
     }
 
-    public static void stop (Minecart cart) {
+    public static void stop(Minecart cart) {
 
         cart.setVelocity(new Vector(0, 0, 0));
     }

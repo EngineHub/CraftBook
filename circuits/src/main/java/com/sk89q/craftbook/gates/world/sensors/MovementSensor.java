@@ -1,32 +1,27 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import java.util.Set;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.gates.world.sensors.EntitySensor.Type;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.gates.world.sensors.EntitySensor.Type;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Set;
 
 /**
  * Movement Sensor. This IC is incomplete due to the bukkit API not providing ample movement velocity support.
- * 
+ *
  * @author Me4502
  */
 public class MovementSensor extends AbstractIC {
 
-    public MovementSensor (Server server, ChangedSign sign, ICFactory factory) {
+    public MovementSensor(Server server, ChangedSign sign, ICFactory factory) {
+
         super(server, sign, factory);
     }
 
@@ -37,7 +32,7 @@ public class MovementSensor extends AbstractIC {
     private int radius;
 
     @Override
-    public void load () {
+    public void load() {
 
         // lets get the types to detect first
         types = Type.getDetected(getSign().getLine(3).trim());
@@ -60,27 +55,30 @@ public class MovementSensor extends AbstractIC {
             getSign().setLine(2, String.valueOf(radius));
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); // Update chunks
+        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
+                radius); // Update chunks
         getSign().update(false);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
+
         return "Movement Sensor";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
+
         return "MOVING SENSOR";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, check());
     }
 
-    public boolean check () {
+    public boolean check() {
 
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
@@ -102,27 +100,27 @@ public class MovementSensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new MovementSensor(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Outputs high if a nearby entity is moving.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z offset", "entity type" };
+            String[] lines = new String[] {"radius=x:y:z offset", "entity type"};
             return lines;
         }
     }

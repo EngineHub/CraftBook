@@ -2,24 +2,19 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.ic;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.PersistentMechanic;
@@ -29,10 +24,18 @@ import com.sk89q.craftbook.bukkit.CircuitsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 
 /**
- * Mechanic wrapper for ICs. The mechanic manager dispatches events to this mechanic, and then it is processed and passed onto the associated IC.
- * 
+ * Mechanic wrapper for ICs. The mechanic manager dispatches events to this mechanic,
+ * and then it is processed and passed onto the associated IC.
+ *
  * @author sk89q
  */
 public class ICMechanic extends PersistentMechanic {
@@ -43,7 +46,7 @@ public class ICMechanic extends PersistentMechanic {
     protected final IC ic;
     protected final BlockWorldVector pos;
 
-    public ICMechanic (CircuitsPlugin plugin, String id, IC ic, ICFamily family, BlockWorldVector pos) {
+    public ICMechanic(CircuitsPlugin plugin, String id, IC ic, ICFamily family, BlockWorldVector pos) {
 
         super(pos);
         this.plugin = plugin;
@@ -54,7 +57,7 @@ public class ICMechanic extends PersistentMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange (final SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
         BlockWorldVector pt = getTriggerPositions().get(0);
         final Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
@@ -69,11 +72,12 @@ public class ICMechanic extends PersistentMechanic {
             Runnable runnable = new Runnable() {
 
                 @Override
-                public void run () {
+                public void run() {
                     // Assuming that the plugin host isn't going wonky here
                     if (block.getTypeId() != BlockID.WALL_SIGN) // Could change between then and now.
                         return;
-                    ChipState chipState = family.detect(BukkitUtil.toWorldVector(source), BukkitUtil.toChangedSign(block));
+                    ChipState chipState = family.detect(BukkitUtil.toWorldVector(source),
+                            BukkitUtil.toChangedSign(block));
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
                         if (chipState.isTriggered(i)) {
@@ -92,19 +96,19 @@ public class ICMechanic extends PersistentMechanic {
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         ic.onRightClick(event.getPlayer());
     }
 
     @Override
-    public void unload () {
+    public void unload() {
 
         ic.unload();
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
 
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
@@ -115,7 +119,8 @@ public class ICMechanic extends PersistentMechanic {
 
                 Matcher matcher = ICMechanicFactory.IC_PATTERN.matcher(sign.getLine(1));
 
-                return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
+                return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && (
+                        (PersistentIC) ic).isActive();
             }
         }
 
@@ -123,7 +128,7 @@ public class ICMechanic extends PersistentMechanic {
     }
 
     @Override
-    public List<BlockWorldVector> getWatchedPositions () {
+    public List<BlockWorldVector> getWatchedPositions() {
         // this seems a little strange; you'd think you'd be watching the input blocks, right?
         // nope. redstone events get reported to blocks adjacent to the redstone,
         // so we don't have to do that for any single-block IC.
@@ -131,12 +136,13 @@ public class ICMechanic extends PersistentMechanic {
     }
 
     @Override
-    public void onBlockBreak (BlockBreakEvent event) {
+    public void onBlockBreak(BlockBreakEvent event) {
         // remove the ic from cache
         ICManager.removeCachedIC(pos);
     }
 
-    public IC getIC () {
+    public IC getIC() {
+
         return ic;
     }
 }

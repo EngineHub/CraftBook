@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.cart;
 
-import static com.sk89q.craftbook.cart.CartUtils.stop;
-
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -10,12 +9,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.util.SignUtil;
+import static com.sk89q.craftbook.cart.CartUtils.stop;
 
 public class CartStation extends CartMechanism {
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;
@@ -41,7 +40,7 @@ public class CartStation extends CartMechanism {
         }
     }
 
-    private void launch (Minecart cart, Block director) {
+    private void launch(Minecart cart, Block director) {
 
         cart.setVelocity(FUUUUUUUUUUUUUUUUU(SignUtil.getFacing(director)));
     }
@@ -49,13 +48,13 @@ public class CartStation extends CartMechanism {
     /**
      * WorldEdit's Vector type collides with Bukkit's Vector type here. It's not pleasant.
      */
-    public static Vector FUUUUUUUUUUUUUUUUU (BlockFace face) {
+    public static Vector FUUUUUUUUUUUUUUUUU(BlockFace face) {
 
         return new Vector(face.getModX() * 0.05, face.getModY() * 0.05, face.getModZ() * 0.05);
     }
 
     @Override
-    public void enter (Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor) {
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;
@@ -84,12 +83,14 @@ public class CartStation extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Station";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "station" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"station"};
     }
 }

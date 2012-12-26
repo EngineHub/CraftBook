@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import java.util.Set;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.ItemType;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -10,20 +15,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemType;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -38,13 +31,13 @@ public class ItemSensor extends AbstractIC {
     private Set<Chunk> chunks;
     private int radius;
 
-    public ItemSensor (Server server, ChangedSign block, ICFactory factory) {
+    public ItemSensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         Block block = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         String[] split = COLON_PATTERN.split(getSign().getLine(3).trim());
@@ -85,26 +78,26 @@ public class ItemSensor extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Item Detection";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "ITEM DETECTION";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
     }
 
-    protected boolean isDetected () {
+    protected boolean isDetected() {
 
         for (Chunk chunk : chunks)
             if (chunk.isLoaded()) {
@@ -113,7 +106,8 @@ public class ItemSensor extends AbstractIC {
                         ItemStack itemStack = ((Item) entity).getItemStack();
                         if (itemStack.getTypeId() == item) {
                             if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) return true;
+                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                                return true;
                         }
                     }
             }
@@ -122,33 +116,33 @@ public class ItemSensor extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ItemSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Detects items within a given radius";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "radius=x:y:z offset", "id:data" };
+            String[] lines = new String[] {"radius=x:y:z offset", "id:data"};
             return lines;
         }
     }

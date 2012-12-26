@@ -1,12 +1,7 @@
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
@@ -14,14 +9,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 @Deprecated
 public class CustomCrafting implements Listener {
@@ -37,7 +32,7 @@ public class CustomCrafting implements Listener {
     private static final Pattern ASTERISK_LEFT_BRACKET_PATTERN = Pattern.compile("*[", Pattern.LITERAL);
     final MechanismsPlugin plugin;
 
-    public CustomCrafting (MechanismsPlugin plugin) {
+    public CustomCrafting(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
         addRecipes();
@@ -46,20 +41,21 @@ public class CustomCrafting implements Listener {
     public final HashMap<Integer, Integer> fuels = new HashMap<Integer, Integer>();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onClick (InventoryClickEvent event) {
+    public void onClick(InventoryClickEvent event) {
 
         if (event.getInventory() instanceof FurnaceInventory) {
             if (fuels == null || fuels.size() <= 0) return;
             FurnaceInventory inv = (FurnaceInventory) event.getInventory();
-            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null) if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
-                inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
-                inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
-            }
+            if (event.getSlot() == 1 && inv.getHolder().getBurnTime() < 1 && inv.getItem(1) != null)
+                if (fuels.get(inv.getItem(1).getTypeId()) > 0) {
+                    inv.getHolder().setBurnTime(fuels.get(inv.getItem(1).getTypeId()).shortValue());
+                    inv.getItem(1).setAmount(inv.getItem(1).getAmount() - 1);
+                }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onFurnaceBurn (FurnaceBurnEvent event) {
+    public void onFurnaceBurn(FurnaceBurnEvent event) {
 
         if (event.getFuel() == null) return;
         if (event.getBurnTime() > 0) return;
@@ -74,7 +70,7 @@ public class CustomCrafting implements Listener {
         }
     }
 
-    public void addRecipes () {
+    public void addRecipes() {
 
         try {
             File recipeFile = new File(plugin.getDataFolder(), "recipes.txt");
@@ -180,8 +176,10 @@ public class CustomCrafting implements Listener {
                         continue;
                     }
                     String[] items = COMMA_PATTERN.split(contents);
-                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split(items[1])[0]),
-                            getShapeData(COLON_PATTERN.split(items[2])[0]) + getShapeData(COLON_PATTERN.split(items[3])[0]));
+                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split
+                            (items[1])[0]),
+                            getShapeData(COLON_PATTERN.split(items[2])[0]) + getShapeData(COLON_PATTERN.split
+                                    (items[3])[0]));
                     plugin.getLogger().severe(Arrays.toString(r.getShape()));
                     for (String item : items) {
                         String[] itemSplit = COLON_PATTERN.split(item);
@@ -214,10 +212,14 @@ public class CustomCrafting implements Listener {
                         continue;
                     }
                     String[] items = COMMA_PATTERN.split(contents);
-                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split(items[1])[0])
-                            + getShapeData(COLON_PATTERN.split(items[2])[0]), getShapeData(COLON_PATTERN.split(items[3])[0])
-                            + getShapeData(COLON_PATTERN.split(items[4])[0]) + getShapeData(COLON_PATTERN.split(items[5])[0]),
-                            getShapeData(COLON_PATTERN.split(items[6])[0]) + getShapeData(COLON_PATTERN.split(items[7])[0])
+                    r.shape(getShapeData(COLON_PATTERN.split(items[0])[0]) + getShapeData(COLON_PATTERN.split
+                            (items[1])[0])
+                            + getShapeData(COLON_PATTERN.split(items[2])[0]), getShapeData(COLON_PATTERN.split
+                            (items[3])[0])
+                            + getShapeData(COLON_PATTERN.split(items[4])[0]) + getShapeData(COLON_PATTERN.split
+                            (items[5])[0]),
+                            getShapeData(COLON_PATTERN.split(items[6])[0]) + getShapeData(COLON_PATTERN.split
+                                    (items[7])[0])
                                     + getShapeData(COLON_PATTERN.split(items[8])[0]));
                     for (String item : items) {
                         String[] itemSplit = COLON_PATTERN.split(item);
@@ -249,7 +251,7 @@ public class CustomCrafting implements Listener {
         }
     }
 
-    private ItemStack tryParseItemStack (String output) {
+    private ItemStack tryParseItemStack(String output) {
         // Is this necessary?
         String[] split = COLON_PATTERN.split(output);
         int id = Integer.parseInt(split[0]);
@@ -263,7 +265,8 @@ public class CustomCrafting implements Listener {
         return new ItemStack(id, amount, data);
     }
 
-    private ItemStack parseItemStack (String output) {
+    private ItemStack parseItemStack(String output) {
+
         String[] split = COLON_PATTERN.split(output);
         int id = Integer.parseInt(split[0]);
         String[] split2 = X_PATTERN.split(split[1]);
@@ -272,7 +275,7 @@ public class CustomCrafting implements Listener {
         return new ItemStack(id, amount, data);
     }
 
-    public String getShapeData (String s) {
+    public String getShapeData(String s) {
 
         s = String.valueOf(s.charAt(0));
         return s;

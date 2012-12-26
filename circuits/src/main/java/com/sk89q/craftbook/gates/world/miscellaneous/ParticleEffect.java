@@ -1,47 +1,40 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.gates.world.blocks.SetDoor;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Effect;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.gates.world.blocks.SetDoor;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * @author Me4502
  */
 public class ParticleEffect extends AbstractIC {
 
-    public ParticleEffect (Server server, ChangedSign sign, ICFactory factory) {
+    public ParticleEffect(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Particle Effect";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "PARTICLE EFFECT";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             doEffect();
@@ -54,7 +47,8 @@ public class ParticleEffect extends AbstractIC {
     Vector offset;
 
     @Override
-    public void load () {
+    public void load() {
+
         String[] eff = ICUtil.COLON_PATTERN.split(ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
         try {
             effectID = Integer.parseInt(eff[0]);
@@ -82,7 +76,7 @@ public class ParticleEffect extends AbstractIC {
         }
     }
 
-    public void doEffect () {
+    public void doEffect() {
 
         try {
             if (effectID == 0) return;
@@ -97,13 +91,13 @@ public class ParticleEffect extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             try {
                 if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
@@ -117,15 +111,15 @@ public class ParticleEffect extends AbstractIC {
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Creates particle effects.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "effectID:effectData=xOff:yOff:zOff", "amount of particles" };
+            String[] lines = new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles"};
             return lines;
         }
     }

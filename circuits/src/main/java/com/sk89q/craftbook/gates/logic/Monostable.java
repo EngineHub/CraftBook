@@ -2,52 +2,47 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Server;
 
 public class Monostable extends AbstractIC implements SelfTriggeredIC {
 
     // "Temp docs": nn:[HL] nn - time for pulse (1 = 2t) H: trigger on high L: trigger on low
 
-    public Monostable (Server server, ChangedSign psign, ICFactory factory) {
+    public Monostable(Server server, ChangedSign psign, ICFactory factory) {
 
         super(server, psign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Monostable";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "MONOSTABLE";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         String setting = getSign().getLine(2).toUpperCase();
         if (chip.getInput(0) && setting.contains("H") || !chip.getInput(0) && setting.contains("L")) {
@@ -62,7 +57,7 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         int tick;
 
@@ -82,26 +77,26 @@ public class Monostable extends AbstractIC implements SelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
 
         return true;
     }
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Monostable(getServer(), sign, this);
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             int ticks;
             boolean hi;

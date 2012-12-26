@@ -4,32 +4,19 @@ package com.sk89q.craftbook.mech;
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
-import org.bukkit.GameMode;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanismsConfiguration;
-import com.sk89q.craftbook.ProcessedMechanismException;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.SignUtil;
@@ -39,17 +26,25 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import org.bukkit.GameMode;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Door.
- * 
+ *
  * @author turtle9598
  */
 public class Door extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Door> {
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
@@ -58,17 +53,19 @@ public class Door extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
-        public Door detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        public Door detect(BlockWorldVector pt, LocalPlayer player,
+                           ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Door Down]")) {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Down]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + "" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -79,7 +76,8 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Up]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + "" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -90,7 +88,8 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + "" +
+                        ".infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -104,20 +103,21 @@ public class Door extends AbstractMechanic {
 
         /**
          * Explore around the trigger to find a Door; throw if things look funny.
-         * 
-         * @param pt
-         *            the trigger (should be a signpost)
+         *
+         * @param pt the trigger (should be a signpost)
+         *
          * @return a Door if we could make a valid one, or null if this looked nothing like a door.
-         * @throws InvalidMechanismException
-         *             if the area looked like it was intended to be a door, but it failed.
+         *
+         * @throws InvalidMechanismException if the area looked like it was intended to be a door, but it failed.
          */
         @Override
-        public Door detect (BlockWorldVector pt) throws InvalidMechanismException {
+        public Door detect(BlockWorldVector pt) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
-            if (!((Sign) block.getState()).getLine(1).contains("Door") || ((Sign) block.getState()).getLine(1).equalsIgnoreCase("[Door]"))
+            if (!((Sign) block.getState()).getLine(1).contains("Door") || ((Sign) block.getState()).getLine(1)
+                    .equalsIgnoreCase("[Door]"))
                 return null;
 
             // okay, now we can start doing exploration of surrounding blocks
@@ -127,12 +127,13 @@ public class Door extends AbstractMechanic {
     }
 
     /**
-     * @param trigger
-     *            if you didn't already check if this is a signpost with appropriate text, you're going on Santa's naughty list.
+     * @param trigger if you didn't already check if this is a signpost with appropriate text,
+     *                you're going on Santa's naughty list.
      * @param plugin
+     *
      * @throws InvalidMechanismException
      */
-    private Door (Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private Door(Block trigger, MechanismsPlugin plugin) throws InvalidMechanismException {
 
         super();
 
@@ -260,7 +261,7 @@ public class Door extends AbstractMechanic {
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         if (!settings.enable) return;
 
@@ -272,40 +273,44 @@ public class Door extends AbstractMechanic {
             return;
         }
 
-        if (event.getPlayer().getItemInHand() != null) if (getDoorMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
+        if (event.getPlayer().getItemInHand() != null)
+            if (getDoorMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
-            if (!player.hasPermission("craftbook.mech.door.restock")) {
-                player.printError("mech.restock-permission");
-                return;
-            }
-
-            Sign sign = null;
-
-            if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-                BlockState state = event.getClickedBlock().getState();
-                if (state instanceof Sign) {
-                    sign = (Sign) state;
-                }
-            }
-
-            if (sign != null) {
-                int amount = 1;
-                if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
-                    amount = 5;
-                }
-                addBlocks(sign, amount);
-
-                if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE)) if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                } else {
-                    event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
+                if (!player.hasPermission("craftbook.mech.door.restock")) {
+                    player.printError("mech.restock-permission");
+                    return;
                 }
 
-                player.print("mech.restock");
-                event.setCancelled(true);
-                return;
+                Sign sign = null;
+
+                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId()
+                        == BlockID.WALL_SIGN) {
+                    BlockState state = event.getClickedBlock().getState();
+                    if (state instanceof Sign) {
+                        sign = (Sign) state;
+                    }
+                }
+
+                if (sign != null) {
+                    int amount = 1;
+                    if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
+                        amount = 5;
+                    }
+                    addBlocks(sign, amount);
+
+                    if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
+                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
+                            event.getPlayer().setItemInHand(new ItemStack(0, 0));
+                        } else {
+                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
+                                    - amount);
+                        }
+
+                    player.print("mech.restock");
+                    event.setCancelled(true);
+                    return;
+                }
             }
-        }
 
         flipState(player);
 
@@ -315,7 +320,7 @@ public class Door extends AbstractMechanic {
     }
 
     @Override
-    public void onBlockRedstoneChange (SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if (!plugin.getLocalConfiguration().doorSettings.enableRedstone) return;
 
@@ -325,7 +330,7 @@ public class Door extends AbstractMechanic {
         flipState(null);
     }
 
-    private void flipState (LocalPlayer player) {
+    private void flipState(LocalPlayer player) {
         // this is kinda funky, but we only check one position
         // to see if the door is open and/or closable.
         // efficiency choice :/
@@ -352,7 +357,7 @@ public class Door extends AbstractMechanic {
     private class ToggleRegionOpen implements Runnable {
 
         @Override
-        public void run () {
+        public void run() {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
@@ -374,13 +379,13 @@ public class Door extends AbstractMechanic {
 
         final LocalPlayer player;
 
-        public ToggleRegionClosed (LocalPlayer player) {
+        public ToggleRegionClosed(LocalPlayer player) {
 
             this.player = player;
         }
 
         @Override
-        public void run () {
+        public void run() {
 
             for (BlockVector bv : toggle) {
                 Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
@@ -405,12 +410,12 @@ public class Door extends AbstractMechanic {
         }
     }
 
-    private int getDoorMaterial () {
+    private int getDoorMaterial() {
 
         return proximalBaseCenter.getTypeId();
     }
 
-    private byte getDoorData () {
+    private byte getDoorData() {
 
         return proximalBaseCenter.getData();
     }
@@ -443,7 +448,7 @@ public class Door extends AbstractMechanic {
     /**
      * @return whether the door can pass through this BlockType (and displace it if needed).
      */
-    private static boolean canPassThrough (int t) {
+    private static boolean canPassThrough(int t) {
 
         int[] passableBlocks = new int[10];
         passableBlocks[0] = BlockID.WATER;
@@ -476,7 +481,7 @@ public class Door extends AbstractMechanic {
      */
     private static class UnacceptableMaterialException extends InvalidMechanismException {
 
-        public UnacceptableMaterialException (String msg) {
+        public UnacceptableMaterialException(String msg) {
 
             super(msg);
         }
@@ -493,17 +498,17 @@ public class Door extends AbstractMechanic {
 
         /**
          * Construct the object.
-         * 
+         *
          * @param msg
          */
-        public InvalidConstructionException (String msg) {
+        public InvalidConstructionException(String msg) {
 
             super(msg);
         }
     }
 
     @Override
-    public void onBlockBreak (BlockBreakEvent event) {
+    public void onBlockBreak(BlockBreakEvent event) {
 
         Sign sign = null;
 
@@ -522,7 +527,7 @@ public class Door extends AbstractMechanic {
         }
     }
 
-    public boolean removeBlocks (Sign s, int amount) {
+    public boolean removeBlocks(Sign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
@@ -531,7 +536,7 @@ public class Door extends AbstractMechanic {
         return curBlocks >= 0;
     }
 
-    public boolean addBlocks (Sign s, int amount) {
+    public boolean addBlocks(Sign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
@@ -540,7 +545,7 @@ public class Door extends AbstractMechanic {
         return curBlocks >= 0;
     }
 
-    public int getBlocks (Sign s) {
+    public int getBlocks(Sign s) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return 100000;
         int curBlocks;
@@ -552,7 +557,7 @@ public class Door extends AbstractMechanic {
         return curBlocks;
     }
 
-    public boolean hasEnoughBlocks (Sign s) {
+    public boolean hasEnoughBlocks(Sign s) {
 
         return !(s == null || s.getLine(0) == null) && (s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0);
     }

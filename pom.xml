@@ -40,7 +40,7 @@
         <repository>
             <id>comphenix-rep</id>
             <name>Comphenix Repository</name>
-        <url>http://repo.comphenix.net/content/groups/public</url>
+            <url>http://repo.comphenix.net/content/groups/public</url>
         </repository>
     </repositories>
     <dependencies>

@@ -15,7 +15,7 @@ public class Delayer extends AbstractIC {
     private long delay = 1;
     private boolean tickDelay;
 
-    public Delayer (Server server, ChangedSign block, ICFactory factory) {
+    public Delayer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         try {
@@ -26,19 +26,19 @@ public class Delayer extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Delayer";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "DELAYER";
     }
 
     @Override
-    public void trigger (final ChipState chip) {
+    public void trigger(final ChipState chip) {
 
         long tdelay = delay * 20;
         if (tickDelay) tdelay = delay;
@@ -46,7 +46,7 @@ public class Delayer extends AbstractIC {
             taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CircuitsPlugin.getInst(), new Runnable() {
 
                 @Override
-                public void run () {
+                public void run() {
 
                     if (chip.getInput(0)) {
                         chip.setOutput(0, true);
@@ -61,19 +61,19 @@ public class Delayer extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Delayer(getServer(), sign, this);
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 Integer.parseInt(sign.getLine(2));
@@ -83,15 +83,15 @@ public class Delayer extends AbstractIC {
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Delays signal by X seconds (or ticks if set).";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "seconds", "true to use ticks" };
+            String[] lines = new String[] {"seconds", "true to use ticks"};
             return lines;
         }
     }

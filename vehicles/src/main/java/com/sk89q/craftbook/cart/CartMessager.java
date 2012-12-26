@@ -1,25 +1,24 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.ArrayList;
-
+import com.sk89q.craftbook.RedstoneUtil.Power;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.RedstoneUtil.Power;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import java.util.ArrayList;
 
 public class CartMessager extends CartMechanism {
 
     VehiclesPlugin plugin;
 
-    public CartMessager (VehiclesPlugin plugin) {
+    public CartMessager(VehiclesPlugin plugin) {
 
         this.plugin = plugin;
     }
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null || minor) return;
 
@@ -71,12 +70,14 @@ public class CartMessager extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Messager";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "Print" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"Print"};
     }
 }

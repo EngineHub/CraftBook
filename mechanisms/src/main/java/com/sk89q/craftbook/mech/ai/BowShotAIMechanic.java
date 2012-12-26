@@ -4,6 +4,6 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 
 public interface BowShotAIMechanic {
 
-    public abstract void onBowShot (EntityShootBowEvent event);
+    public abstract void onBowShot(EntityShootBowEvent event);
 
 }

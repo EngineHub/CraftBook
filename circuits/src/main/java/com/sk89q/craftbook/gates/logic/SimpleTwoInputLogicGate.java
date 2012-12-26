@@ -1,21 +1,20 @@
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.ChipState;
 import com.sk89q.craftbook.ic.ICFactory;
+import org.bukkit.Server;
 
 public abstract class SimpleTwoInputLogicGate extends AbstractIC {
 
-    public SimpleTwoInputLogicGate (Server server, ChangedSign sign, ICFactory factory) {
+    public SimpleTwoInputLogicGate(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         Boolean a = null;
         Boolean b = null;
@@ -39,5 +38,5 @@ public abstract class SimpleTwoInputLogicGate extends AbstractIC {
         chip.setOutput(0, getResult(a, b));
     }
 
-    protected abstract boolean getResult (boolean a, boolean b);
+    protected abstract boolean getResult(boolean a, boolean b);
 }

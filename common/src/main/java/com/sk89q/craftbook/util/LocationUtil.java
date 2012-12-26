@@ -1,11 +1,9 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,29 +12,28 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.*;
 
 /**
  * @author Silthus, Me4502
  */
 public final class LocationUtil {
 
-    private LocationUtil () {
-    }
-
-    public static void init () {
+    private LocationUtil() {
 
     }
 
-    public static boolean isWithinRadius (Location l1, Location l2, int radius) {
+    public static void init() {
 
-        return l1.getWorld().equals(l2.getWorld()) && Math.floor(getDistanceSquared(l1, l2)) <= radius * radius; // Floor for more accurate readings
     }
 
-    public static Entity[] getNearbyEntities (Location l, int radius) {
+    public static boolean isWithinRadius(Location l1, Location l2, int radius) {
+
+        return l1.getWorld().equals(l2.getWorld()) && Math.floor(getDistanceSquared(l1,
+                l2)) <= radius * radius; // Floor for more accurate readings
+    }
+
+    public static Entity[] getNearbyEntities(Location l, int radius) {
 
         int chunkRadius = radius < 16 ? 1 : radius / 16;
         HashSet<Entity> radiusEntities = new HashSet<Entity>();
@@ -44,7 +41,8 @@ public final class LocationUtil {
             for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
                 for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities())
-                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l.getBlock()) {
+                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
+                            .getBlock()) {
                         radiusEntities.add(e);
                     }
             }
@@ -54,83 +52,79 @@ public final class LocationUtil {
 
     /**
      * Gets the distance between two points.
-     * 
+     *
      * @param l1
      * @param l2
+     *
      * @return
      */
-    public static double getDistance (Location l1, Location l2) {
+    public static double getDistance(Location l1, Location l2) {
 
         return Math.sqrt(getDistanceSquared(l1, l2));
     }
 
-    public static double getDistanceSquared (Location l1, Location l2) {
+    public static double getDistanceSquared(Location l1, Location l2) {
 
-        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance) return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
+        if (CraftBookPlugin.getInstance().getLocalConfiguration().useBlockDistance)
+            return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
         else return l1.distanceSquared(l2);
     }
 
     /**
      * Gets the greatest distance between two locations. Only takes int locations and does not check a round radius.
-     * 
-     * @param l1
-     *            to compare
-     * @param l2
-     *            to compare
+     *
+     * @param l1 to compare
+     * @param l2 to compare
+     *
      * @return greatest distance
      */
-    public static int getBlockDistance (Location l1, Location l2) {
+    public static int getBlockDistance(Location l1, Location l2) {
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
         int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
         if (x >= y && x >= z) return x;
         else if (y >= z) // Since x is not the largest, either y or z must be
-        return y;
+            return y;
         else return z;
     }
 
     /**
      * Gets the offset of the blocks location based on the coordiante grid.
-     * 
-     * @param block
-     *            to get offsetfrom
-     * @param offsetX
-     *            to add
-     * @param offsetY
-     *            to add
-     * @param offsetZ
-     *            to add
+     *
+     * @param block   to get offsetfrom
+     * @param offsetX to add
+     * @param offsetY to add
+     * @param offsetZ to add
+     *
      * @return block offset by given coordinates
      */
-    public static Block getOffset (Block block, int offsetX, int offsetY, int offsetZ) {
+    public static Block getOffset(Block block, int offsetX, int offsetY, int offsetZ) {
 
         return block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
     }
 
-    public static Block getRelativeOffset (ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
+    public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
 
-        return getRelativeOffset(SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()), SignUtil.getFacing(BukkitUtil.toSign(sign).getBlock()),
+        return getRelativeOffset(SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()),
+                SignUtil.getFacing(BukkitUtil.toSign(sign).getBlock()),
                 offsetX, offsetY, offsetZ);
     }
 
     /**
-     * Gets the block located relative to the signs facing. That means that when the sign is attached to a block and the player is looking at it it
+     * Gets the block located relative to the signs facing. That means that when the sign is attached to a block and
+     * the player is looking at it it
      * will add the offsetX to left or right, offsetY is added up or down and offsetZ is added front or back.
-     * 
-     * @param block
-     *            to get relative position from
-     * @param facing
-     *            to work with
-     * @param offsetX
-     *            amount to move left(negative) or right(positive)
-     * @param offsetY
-     *            amount to move up(positive) or down(negative)
-     * @param offsetZ
-     *            amount to move back(negative) or front(positive)
+     *
+     * @param block   to get relative position from
+     * @param facing  to work with
+     * @param offsetX amount to move left(negative) or right(positive)
+     * @param offsetY amount to move up(positive) or down(negative)
+     * @param offsetZ amount to move back(negative) or front(positive)
+     *
      * @return block located at the relative offset position
      */
-    public static Block getRelativeOffset (Block block, BlockFace facing, int offsetX, int offsetY, int offsetZ) {
+    public static Block getRelativeOffset(Block block, BlockFace facing, int offsetX, int offsetY, int offsetZ) {
 
         BlockFace front = facing;
         BlockFace back;
@@ -190,14 +184,13 @@ public final class LocationUtil {
 
     /**
      * Gets all surrounding chunks near the given block and radius.
-     * 
-     * @param block
-     *            to get surrounding chunks for
-     * @param radius
-     *            around the block
+     *
+     * @param block  to get surrounding chunks for
+     * @param radius around the block
+     *
      * @return chunks in the given radius
      */
-    public static Set<Chunk> getSurroundingChunks (Block block, int radius) {
+    public static Set<Chunk> getSurroundingChunks(Block block, int radius) {
 
         Chunk chunk = block.getChunk();
         radius = radius / 16 + 1;
@@ -222,13 +215,14 @@ public final class LocationUtil {
 
     /**
      * Get relative block X that way.
-     * 
+     *
      * @param block
      * @param facing
      * @param amount
+     *
      * @return The block
      */
-    private static Block getRelativeBlock (Block block, BlockFace facing, int amount) {
+    private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
 
         amount = Math.abs(amount);
         for (int i = 0; i < amount; i++) {
@@ -239,12 +233,13 @@ public final class LocationUtil {
 
     /**
      * Gets next vertical free space
-     * 
+     *
      * @param block
      * @param direction
+     *
      * @return next air block in a direction.
      */
-    public static Block getNextFreeSpace (Block block, BlockFace direction) {
+    public static Block getNextFreeSpace(Block block, BlockFace direction) {
 
         while (block.getTypeId() != BlockID.AIR && block.getRelative(direction).getTypeId() != BlockID.AIR) {
             if (!(block.getY() < block.getWorld().getMaxHeight())) {
@@ -257,16 +252,17 @@ public final class LocationUtil {
 
     /**
      * Gets centre of passed block.
-     * 
+     *
      * @param block
+     *
      * @return Centre location
      */
-    public static Location getCenterOfBlock (Block block) {
+    public static Location getCenterOfBlock(Block block) {
 
         return block.getLocation().add(0.5, 1, 0.5);
     }
 
-    public static List<Player> getNearbyPlayers (Block block, int radius) {
+    public static List<Player> getNearbyPlayers(Block block, int radius) {
 
         List<Player> players = new ArrayList<Player>();
         for (Chunk chunk : getSurroundingChunks(block, radius)) {

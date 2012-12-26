@@ -1,19 +1,12 @@
 package com.sk89q.craftbook.gates.world.sensors;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.ic.*;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.ic.ICVerificationException;
+import java.util.regex.Pattern;
 
 public class BlockSensor extends AbstractIC {
 
@@ -22,13 +15,13 @@ public class BlockSensor extends AbstractIC {
     private int id;
     private byte data;
 
-    public BlockSensor (Server server, ChangedSign sign, ICFactory factory) {
+    public BlockSensor(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         String[] ids = COLON_PATTERN.split(getSign().getLine(3), 2);
         center = ICUtil.parseBlockLocation(getSign());
@@ -41,31 +34,31 @@ public class BlockSensor extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Block Sensor";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "BLOCK SENSOR";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, ((Factory)getFactory()).invert ? !hasBlock() : hasBlock());
+            chip.setOutput(0, ((Factory) getFactory()).invert ? !hasBlock() : hasBlock());
         }
     }
 
     /**
      * Returns true if the sign has water at the specified location.
-     * 
+     *
      * @return
      */
-    protected boolean hasBlock () {
+    protected boolean hasBlock() {
 
         int blockID = center.getTypeId();
 
@@ -79,19 +72,19 @@ public class BlockSensor extends AbstractIC {
 
         boolean invert;
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new BlockSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify (ChangedSign sign) throws ICVerificationException {
+        public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
                 String[] split = COLON_PATTERN.split(sign.getLine(3), 2);
@@ -103,26 +96,27 @@ public class BlockSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Checks for blocks at location.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "x:y:z", "id:data" };
+            String[] lines = new String[] {"x:y:z", "id:data"};
             return lines;
         }
 
         @Override
-        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
 
             invert = section.getBoolean("invert-output", false);
         }
 
         @Override
-        public boolean needsConfiguration () {
+        public boolean needsConfiguration() {
+
             return true;
         }
     }

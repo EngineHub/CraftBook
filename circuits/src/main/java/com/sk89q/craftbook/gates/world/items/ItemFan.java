@@ -1,5 +1,10 @@
 package com.sk89q.craftbook.gates.world.items;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -7,26 +12,18 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-
 public class ItemFan extends AbstractIC {
 
-    public ItemFan (Server server, ChangedSign sign, ICFactory factory) {
+    public ItemFan(Server server, ChangedSign sign, ICFactory factory) {
+
         super(server, sign, factory);
     }
 
     double force;
 
     @Override
-    public void load () {
+    public void load() {
+
         try {
             force = Double.parseDouble(getSign().getLine(2));
         } catch (Exception ignored) {
@@ -35,21 +32,24 @@ public class ItemFan extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
+
         return "Item Fan";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
+
         return "ITEM FAN";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
+
         if (chip.getInput(0)) chip.setOutput(0, push());
     }
 
-    public boolean push () {
+    public boolean push() {
 
         boolean returnValue = false;
 
@@ -81,27 +81,27 @@ public class ItemFan extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new ItemFan(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Gently pushes items upwards.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "force (default 1)", null };
+            String[] lines = new String[] {"force (default 1)", null};
             return lines;
         }
     }

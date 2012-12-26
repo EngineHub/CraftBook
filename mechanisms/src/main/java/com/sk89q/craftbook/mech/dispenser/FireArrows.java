@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
@@ -8,27 +10,25 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-
 /**
  * @author Me4502
  */
 public class FireArrows extends Recipe {
 
-    public FireArrows (int[] recipe) {
+    public FireArrows(int[] recipe) {
 
         super(recipe);
     }
 
-    public FireArrows () {
+    public FireArrows() {
 
-        super(new int[] { BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR, ItemID.FIRE_CHARGE, ItemID.ARROW, ItemID.FIRE_CHARGE, BlockID.AIR,
-                ItemID.FIRE_CHARGE, BlockID.AIR });
+        super(new int[] {BlockID.AIR, ItemID.FIRE_CHARGE, BlockID.AIR, ItemID.FIRE_CHARGE, ItemID.ARROW,
+                ItemID.FIRE_CHARGE, BlockID.AIR,
+                ItemID.FIRE_CHARGE, BlockID.AIR});
     }
 
     @Override
-    public boolean doAction (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) dis.getData();
         BlockFace face = disp.getFacing();

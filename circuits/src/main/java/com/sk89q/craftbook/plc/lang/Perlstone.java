@@ -2,16 +2,27 @@
 /*
  * Copyright (C) 2012 Lymia Aluysia <lymiahugs@gmail.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.plc.lang;
+
+import com.sk89q.craftbook.ic.ChipState;
+import com.sk89q.craftbook.ic.ICVerificationException;
+import com.sk89q.craftbook.plc.PlcException;
+import com.sk89q.craftbook.plc.PlcLanguage;
+import com.sk89q.craftbook.util.GeneralUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,15 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.ICVerificationException;
-import com.sk89q.craftbook.plc.PlcException;
-import com.sk89q.craftbook.plc.PlcLanguage;
-import com.sk89q.craftbook.util.GeneralUtil;
 
 public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]> {
 
@@ -37,18 +39,18 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
     private static final int PERLSTONE_STORE_VERSION = 0;
 
     @Override
-    public String getName () {
+    public String getName() {
 
         return "Perlstone-1.1";
     }
 
     @Override
-    public boolean[] initState () {
+    public boolean[] initState() {
 
         return new boolean[32];
     }
 
-    private WithLineInfo<char[]> markLines (String code) {
+    private WithLineInfo<char[]> markLines(String code) {
 
         char[] chars = code.toCharArray();
         ArrayList<LineInfo> lines = new ArrayList<LineInfo>();
@@ -66,7 +68,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         return new WithLineInfo<char[]>(lines.toArray(new LineInfo[lines.size()]), chars);
     }
 
-    private char[] fixArray (Character[] c) {
+    private char[] fixArray(Character[] c) {
 
         char[] o = new char[c.length];
         for (int i = 0; i < c.length; i++) {
@@ -76,7 +78,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
     }
 
     @SuppressWarnings("unchecked")
-    private WithLineInfo<String>[] splitFunctions (WithLineInfo<char[]> chars) {
+    private WithLineInfo<String>[] splitFunctions(WithLineInfo<char[]> chars) {
 
         ArrayList<WithLineInfo<String>> lines = new ArrayList<WithLineInfo<String>>();
         ArrayList<Character> current = new ArrayList<Character>();
@@ -86,8 +88,9 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         for (int i = 0; i < data.length; i++) {
             switch (data[i]) {
                 case ':':
-                    lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[currentLineInfo.size()]), new String(fixArray(current
-                            .toArray(new Character[current.size()])))));
+                    lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[currentLineInfo.size()]),
+                            new String(fixArray(current
+                                    .toArray(new Character[current.size()])))));
                     current.clear();
                     currentLineInfo.clear();
                     break;
@@ -99,13 +102,14 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                     currentLineInfo.add(chars.lineInfo[i]);
             }
         }
-        lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[currentLineInfo.size()]), new String(fixArray(current
-                .toArray(new Character[current.size()])))));
+        lines.add(new WithLineInfo<String>(currentLineInfo.toArray(new LineInfo[currentLineInfo.size()]),
+                new String(fixArray(current
+                        .toArray(new Character[current.size()])))));
         return lines.toArray(new WithLineInfo[lines.size()]);
     }
 
     @Override
-    public WithLineInfo<String>[] compile (String code) throws ICVerificationException {
+    public WithLineInfo<String>[] compile(String code) throws ICVerificationException {
 
         WithLineInfo<String>[] functions = splitFunctions(markLines(code));
         for (int l = 0; l < functions.length; l++) {
@@ -125,7 +129,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                             break;
                         case ']':
                             if (bracketCount == 0)
-                                throw new ICVerificationException("Too many closing braces " + "on line " + li[i].line + " at column " + li[i].col);
+                                throw new ICVerificationException("Too many closing braces " + "on line " + li[i]
+                                        .line + " at column " + li[i].col);
                             bracketCount--;
                             break;
                         case '+':
@@ -159,13 +164,15 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                 case 'L':
                                     break;
                                 default:
-                                    throw new ICVerificationException("Unknown modifier " + chars[i] + " to opcode " + c + " " + "on line "
+                                    throw new ICVerificationException("Unknown modifier " + chars[i] + " to opcode "
+                                            + c + " " + "on line "
                                             + li[i].line + " at column " + li[i].col);
                             }
                             if (c == 'S' || c == 'L') {
                                 char p = chars[++i];
                                 if (!(p >= '0' || p <= '9') && !(p >= 'a' || p <= 'v'))
-                                    throw new ICVerificationException("Bad table index " + chars[i] + " for opcode " + c + " " + "on line "
+                                    throw new ICVerificationException("Bad table index " + chars[i] + " for opcode "
+                                            + c + " " + "on line "
                                             + li[i].line + " at column " + li[i].col);
                             }
                             break;
@@ -173,10 +180,11 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                         case 'v': {
                             char n = chars[++i];
                             if (!(n >= '0' || n <= '9'))
-                                throw new ICVerificationException("Bad peek depth " + chars[i] + " " + "on line " + li[i].line + " at column "
+                                throw new ICVerificationException("Bad peek depth " + chars[i] + " " + "on line " +
+                                        li[i].line + " at column "
                                         + li[i].col);
                         }
-                            break;
+                        break;
 
                         case '.':
                             for (int j = 0; j < 4; j++) {
@@ -188,7 +196,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                         break;
 
                                     default:
-                                        throw new ICVerificationException("Bad logic table value " + chars[i] + " " + "on line " + li[i].line
+                                        throw new ICVerificationException("Bad logic table value " + chars[i] + " " +
+                                                "on line " + li[i].line
                                                 + " at column " + li[i].col);
                                 }
                             }
@@ -199,19 +208,22 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                             for (int j = 0; j < 2; j++) {
                                 char n = chars[++i];
                                 if (!(n >= '0' || n <= '9'))
-                                    throw new ICVerificationException("Invalid character " + chars[i] + " in function number " + "on line "
+                                    throw new ICVerificationException("Invalid character " + chars[i] + " in function" +
+                                            " number " + "on line "
                                             + li[i].line + " at column " + li[i].col);
                             }
-                            {
-                                char n = chars[++i];
-                                if (!(n >= '0' || n <= '9'))
-                                    throw new ICVerificationException("Invalid character " + chars[i] + " in argument count " + "on line "
-                                            + li[i].line + " at column " + li[i].col);
-                            }
-                            break;
+                        {
+                            char n = chars[++i];
+                            if (!(n >= '0' || n <= '9'))
+                                throw new ICVerificationException("Invalid character " + chars[i] + " in argument " +
+                                        "count " + "on line "
+                                        + li[i].line + " at column " + li[i].col);
+                        }
+                        break;
 
                         default:
-                            throw new ICVerificationException("Unknown opcode " + c + " " + "on line " + li[i].line + " at column " + li[i].col);
+                            throw new ICVerificationException("Unknown opcode " + c + " " + "on line " + li[i].line +
+                                    " at column " + li[i].col);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
@@ -220,14 +232,15 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                 }
             }
             if (bracketCount != 0)
-                throw new ICVerificationException("Missing closing braces in function #" + l + " " + "                          starting on line "
+                throw new ICVerificationException("Missing closing braces in function #" + l + " " + "               " +
+                        "           starting on line "
                         + li[0].line + " and ending on line " + li[li.length - 1].line);
         }
         return functions;
     }
 
     @Override
-    public void writeState (boolean[] state, DataOutputStream out) throws IOException {
+    public void writeState(boolean[] state, DataOutputStream out) throws IOException {
 
         out.writeInt(PERLSTONE_STORE_VERSION);
         out.writeInt(state.length);
@@ -237,7 +250,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
     }
 
     @Override
-    public void loadState (boolean[] state, DataInputStream in) throws IOException {
+    public void loadState(boolean[] state, DataInputStream in) throws IOException {
 
         if (in.readInt() != PERLSTONE_STORE_VERSION) throw new IOException("incompatible save version");
         if (state.length != in.readInt()) throw new IOException("size mismatch!");
@@ -247,7 +260,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
     }
 
     @Override
-    public void execute (ChipState chip, boolean[] state, WithLineInfo<String>[] code) throws PlcException {
+    public void execute(ChipState chip, boolean[] state, WithLineInfo<String>[] code) throws PlcException {
 
         boolean[] tt = new boolean[32];
         boolean a = chip.getInputCount() > 0 && chip.getInput(0);
@@ -268,28 +281,28 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
     }
 
     @Override
-    public boolean supports (String lang) {
+    public boolean supports(String lang) {
 
         return false;
     }
 
-    private int mod (int a, int b) {
+    private int mod(int a, int b) {
 
         return (a % b + b) % b;
     }
 
-    private int decodeAddress (char c, int shift) {
+    private int decodeAddress(char c, int shift) {
 
         if (c >= '0' && c <= '9') return mod(c - '0' + shift, 32);
         else return mod(c - 'a' + 10 + shift, 32);
     }
 
-    private int parseNumber (char c) {
+    private int parseNumber(char c) {
 
         return c - '0';
     }
 
-    private boolean parseTableChar (char c) throws PlcException {
+    private boolean parseTableChar(char c) throws PlcException {
 
         switch (c) {
             case '+':
@@ -301,14 +314,15 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
             case '0':
                 return false;
 
-                // Shouldn't happen because of validation.
+            // Shouldn't happen because of validation.
             default:
                 throw new PlcException("invalid table", "Invalid character in logic table.");
         }
     }
 
-    private String errmsg (String err, int fno, char opcode, LineInfo li, boolean[] pt, boolean[] tt, boolean[] lt, int pshift, int tshift,
-            int lshift, Stack<Boolean> stack, int tc) {
+    private String errmsg(String err, int fno, char opcode, LineInfo li, boolean[] pt, boolean[] tt, boolean[] lt,
+                          int pshift, int tshift,
+                          int lshift, Stack<Boolean> stack, int tc) {
 
         String errm = "";
         if (!err.startsWith(ChatColor.RED + "Detailed Error Message: ")) {
@@ -324,17 +338,20 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         if (tc > 0) {
             errm += "(" + tc + " tail call" + (tc > 1 ? "s" : "") + " omitted)\n====\n";
         }
-        errm += ChatColor.RED + "Location: " + ChatColor.RESET + "Opcode " + opcode + " at line " + li.line + ", column " + li.col + " in function #"
+        errm += ChatColor.RED + "Location: " + ChatColor.RESET + "Opcode " + opcode + " at line " + li.line + ", " +
+                "column " + li.col + " in function #"
                 + fno + "\n";
         errm += ChatColor.RED + "Local Variable Table: \n " + ChatColor.RESET + dumpStateText(lt) + "\n";
         errm += ChatColor.RED + " - Shift: " + ChatColor.RESET + lshift + "\n";
-        errm += ChatColor.RED + "Function Stack: " + ChatColor.RESET + dumpStateText(stack.toArray(new Boolean[stack.size()]));
+        errm += ChatColor.RED + "Function Stack: " + ChatColor.RESET + dumpStateText(stack.toArray(new Boolean[stack
+                .size()]));
         return errm;
     }
 
     // Use wrapper type to be able to express "no return" as null
-    private Boolean executeFunction (int fno, boolean[] pt, boolean[] tt, WithLineInfo<String>[] funs, boolean a, boolean b, boolean c,
-            boolean[] args, int[] opc, int rec) throws PlcException {
+    private Boolean executeFunction(int fno, boolean[] pt, boolean[] tt, WithLineInfo<String>[] funs, boolean a,
+                                    boolean b, boolean c,
+                                    boolean[] args, int[] opc, int rec) throws PlcException {
 
         int tailcalls = 0;
 
@@ -373,14 +390,17 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
 
             LineInfo li = new LineInfo(0, 0);
             try {
-                if (rec > MAX_RECURSION) throw new PlcException("stack overflow", "Aborted due to too many recursive non-tail calls.");
+                if (rec > MAX_RECURSION)
+                    throw new PlcException("stack overflow", "Aborted due to too many recursive non-tail calls.");
                 try {
                     while (ip < code.length) {
                         opc[0]++;
                         if (opc[0] == MAX_INSTRUCTION_COUNT)
-                            throw new PlcException("ran too long", "Aborted due to running too many instructions in one update");
+                            throw new PlcException("ran too long", "Aborted due to running too many instructions in " +
+                                    "one update");
                         if (executionStack.size() > MAX_STACK_SIZE)
-                            throw new PlcException("stack too bug", "Aborted due to too many values pushed onto stack.");
+                            throw new PlcException("stack too bug", "Aborted due to too many values pushed onto stack" +
+                                    ".");
                         op = code[ip];
                         li = lis[ip];
                         switch (op) {
@@ -433,7 +453,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                         break;
                                 }
                             }
-                                break;
+                            break;
 
                             case 'S':
                             case 'L': {
@@ -465,7 +485,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     executionStack.push(table[add]);
                                 }
                             }
-                                break;
+                            break;
 
                             case 'd':
                                 executionStack.push(executionStack.peek());
@@ -478,7 +498,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     int level = parseNumber(code[++ip]);
                                     executionStack.push(executionStack.get(executionStack.size() - 1 - level));
                                 } catch (ArrayIndexOutOfBoundsException e) {
-                                    throw new PlcException("bad stack pos", "Attempted to call peek on too small a stack.");
+                                    throw new PlcException("bad stack pos", "Attempted to call peek on too small a " +
+                                            "stack.");
                                 }
                                 break;
                             case 'x': {
@@ -487,7 +508,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                 executionStack.push(x);
                                 executionStack.push(y);
                             }
-                                break;
+                            break;
 
                             case '!':
                                 executionStack.push(!executionStack.pop());
@@ -527,7 +548,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     executionStack.push(td);
                                 }
                             }
-                                break;
+                            break;
 
                             case 'c':
                             case 't': {
@@ -536,7 +557,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                 boolean[] arg = new boolean[nArgs];
 
                                 if (n < 0 || n >= funs.length)
-                                    throw new PlcException("func not found", "Attempted to call nonexistent function #" + n);
+                                    throw new PlcException("func not found", "Attempted to call nonexistent function " +
+                                            "#" + n);
 
                                 if (op == 'c') {
                                     for (int i = nArgs - 1; i >= 0; i--) {
@@ -579,14 +601,15 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                     throw new PlcException("stack overflow", "Java stack overflow.");
                 }
             } catch (PlcException e) {
-                throw new PlcException(e.getMessage(), errmsg(e.detailedMessage, fno, op, li, pt, tt, lt, pshift, tshift, lshift, executionStack,
+                throw new PlcException(e.getMessage(), errmsg(e.detailedMessage, fno, op, li, pt, tt, lt, pshift,
+                        tshift, lshift, executionStack,
                         tailcalls));
             }
             return null;
         }
     }
 
-    private String dumpStateText (boolean[] state) {
+    private String dumpStateText(boolean[] state) {
 
         char[] c = new char[state.length];
         for (int i = 0; i < state.length; i++) {
@@ -595,7 +618,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
         return new String(c);
     }
 
-    private String dumpStateText (Boolean[] state) {
+    private String dumpStateText(Boolean[] state) {
 
         char[] c = new char[state.length];
         for (int i = 0; i < state.length; i++) {
@@ -605,7 +628,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
     }
 
     @Override
-    public String dumpState (boolean[] state) {
+    public String dumpState(boolean[] state) {
 
         return ChatColor.RED + "Persistent Variable Table: \n " + ChatColor.RESET + dumpStateText(state);
     }

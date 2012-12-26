@@ -1,27 +1,21 @@
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Server;
 
 public class Counter extends AbstractIC {
 
     private int resetVal;
     private boolean inf;
 
-    public Counter (Server server, ChangedSign block, ICFactory factory) {
+    public Counter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public void load () {
+    public void load() {
 
         // Get IC configuration data from line 3 of sign
         String line2 = getSign().getLine(2);
@@ -43,19 +37,19 @@ public class Counter extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Counter";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "COUNTER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
         // Get current counter value from line 4 of sign
         String line3 = getSign().getLine(3);
         int curVal;
@@ -96,27 +90,27 @@ public class Counter extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new Counter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Increments on redstone signal, outputs high when reset.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "reset ticks:(Optional)INF", "current ticks" };
+            String[] lines = new String[] {"reset ticks:(Optional)INF", "current ticks"};
             return lines;
         }
     }

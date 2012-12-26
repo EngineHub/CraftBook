@@ -4,7 +4,7 @@ import com.sk89q.worldedit.Location;
 
 public interface Vehicle {
 
-    public Location getLocation ();
+    public Location getLocation();
 
-    public void teleport (Location location);
+    public void teleport(Location location);
 }

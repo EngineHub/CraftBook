@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import java.util.ArrayList;
-
+import com.sk89q.craftbook.bukkit.MechanismsPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,8 +10,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.bukkit.MechanismsPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
+import java.util.ArrayList;
 
 /**
  * @author Me4502
@@ -22,7 +21,7 @@ public class DispenserRecipes implements Listener {
 
     private final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
-    public DispenserRecipes (MechanismsPlugin plugin) {
+    public DispenserRecipes(MechanismsPlugin plugin) {
 
         this.plugin = plugin;
         addRecipe(new XPShooter());
@@ -33,7 +32,7 @@ public class DispenserRecipes implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onBlockDispense (BlockDispenseEvent event) {
+    public void onBlockDispense(BlockDispenseEvent event) {
 
         if (plugin.getLocalConfiguration().dispenserSettings.enable) {
             if (!(event.getBlock().getState() instanceof Dispenser)) return; // Heh? Isn't this just for dispensers?
@@ -44,7 +43,7 @@ public class DispenserRecipes implements Listener {
         }
     }
 
-    private boolean dispenseNew (Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    private boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
         ItemStack[] stacks = dis.getInventory().getContents();
@@ -64,22 +63,24 @@ public class DispenserRecipes implements Listener {
         return false;
     }
 
-    private static boolean checkRecipe (ItemStack[] stacks, int[] recipe) {
+    private static boolean checkRecipe(ItemStack[] stacks, int[] recipe) {
+
         for (int i = 0; i < stacks.length; i++) {
             ItemStack stack = stacks[i];
             int id = stack == null ? 0 : stack.getTypeId();
-            if (recipe[i] != id) { return false; }
+            if (recipe[i] != id) {
+                return false;
+            }
         }
         return true;
     }
 
     /**
      * Adds a dispenser recipe.
-     * 
-     * @param recipe
-     *            the recipe to add
+     *
+     * @param recipe the recipe to add
      */
-    public boolean addRecipe (Recipe recipe) {
+    public boolean addRecipe(Recipe recipe) {
 
         if (recipe == null) throw new NullPointerException("Dispenser recipe must not be null.");
         if (recipes.contains(recipe)) return false;

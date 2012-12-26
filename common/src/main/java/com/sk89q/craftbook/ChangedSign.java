@@ -6,37 +6,37 @@ import com.sk89q.worldedit.LocalWorld;
 public interface ChangedSign {
 
     // Location
-    public int getX ();
+    public int getX();
 
-    public int getY ();
+    public int getY();
 
-    public int getZ ();
+    public int getZ();
 
-    public LocalWorld getLocalWorld ();
+    public LocalWorld getLocalWorld();
 
-    public BlockWorldVector getBlockVector ();
+    public BlockWorldVector getBlockVector();
 
     // TODO public Chunk getChunk();
 
     // Lines
-    public String[] getLines ();
+    public String[] getLines();
 
-    public void setLines (String[] lines);
+    public void setLines(String[] lines);
 
-    public String getLine (int line);
+    public String getLine(int line);
 
-    public void setLine (int line, String data);
+    public void setLine(int line, String data);
 
     // Other
-    public boolean update (boolean force);
+    public boolean update(boolean force);
 
-    public boolean setTypeId (int type);
+    public boolean setTypeId(int type);
 
-    public int getTypeId ();
+    public int getTypeId();
 
-    public byte getRawData ();
+    public byte getRawData();
 
-    public void setRawData (byte data);
+    public void setRawData(byte data);
 
-    public byte getLightLevel ();
+    public byte getLightLevel();
 }

@@ -2,39 +2,36 @@
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.InsufficientPermissionsException;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.ProcessedMechanismException;
+import com.sk89q.craftbook.*;
 import com.sk89q.craftbook.bukkit.MechanismsPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
- * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done every time a sign with [|] or [I]
+ * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done
+ * every time a sign with [|] or [I]
  * is right clicked by a player.
- * 
+ *
  * @author fullwall
  */
 public class LightSwitch extends AbstractMechanic {
@@ -43,13 +40,13 @@ public class LightSwitch extends AbstractMechanic {
 
         protected final MechanismsPlugin plugin;
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
 
         @Override
-        public LightSwitch detect (BlockWorldVector pt) {
+        public LightSwitch detect(BlockWorldVector pt) {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
@@ -64,11 +61,12 @@ public class LightSwitch extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
-        public LightSwitch detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
+        public LightSwitch detect(BlockWorldVector pt, LocalPlayer player,
+                                  ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             String line = sign.getLine(1);
@@ -87,7 +85,8 @@ public class LightSwitch extends AbstractMechanic {
     /**
      * Store a list of recent light toggles to prevent spamming. Someone clever can just use two signs though.
      */
-    private final HistoryHashMap<BlockWorldVector, Long> recentLightToggles = new HistoryHashMap<BlockWorldVector, Long>(20);
+    private final HistoryHashMap<BlockWorldVector, Long> recentLightToggles = new HistoryHashMap<BlockWorldVector,
+            Long>(20);
 
     /**
      * Configuration.
@@ -98,11 +97,11 @@ public class LightSwitch extends AbstractMechanic {
 
     /**
      * Construct a LightSwitch for a location.
-     * 
+     *
      * @param pt
      * @param plugin
      */
-    private LightSwitch (BlockWorldVector pt, MechanismsPlugin plugin) {
+    private LightSwitch(BlockWorldVector pt, MechanismsPlugin plugin) {
 
         super();
         this.pt = pt;
@@ -110,7 +109,7 @@ public class LightSwitch extends AbstractMechanic {
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().lightSwitchSettings.enable) return;
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; // wth? our manager is insane
@@ -120,11 +119,13 @@ public class LightSwitch extends AbstractMechanic {
 
     /**
      * Toggle lights in the immediate area.
-     * 
+     *
      * @param pt
-     * @return true if the block was recogized as a lightswitch; this may or may not mean that any lights were actually toggled.
+     *
+     * @return true if the block was recogized as a lightswitch; this may or may not mean that any lights were
+     *         actually toggled.
      */
-    private boolean toggleLights (BlockWorldVector pt) {
+    private boolean toggleLights(BlockWorldVector pt) {
 
         World world = BukkitUtil.toWorld(pt);
 
@@ -172,7 +173,8 @@ public class LightSwitch extends AbstractMechanic {
                 for (int y = -radius + wy; y <= radius + wy; y++) {
                     for (int z = -radius + wz; z <= radius + wz; z++) {
                         int id = world.getBlockTypeIdAt(x, y, z);
-                        if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF || id == BlockID.REDSTONE_TORCH_ON) {
+                        if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF || id == BlockID
+                                .REDSTONE_TORCH_ON) {
                             // Limit the maximum number of changed lights
                             if (changed >= maximum) return true;
 

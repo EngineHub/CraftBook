@@ -1,27 +1,21 @@
 package com.sk89q.craftbook.gates.world.miscellaneous;
 
-import java.io.File;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.jinglenote.JingleNoteManager;
+import com.sk89q.craftbook.jinglenote.MidiJingleSequencer;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICUtil;
-import com.sk89q.craftbook.jinglenote.JingleNoteManager;
-import com.sk89q.craftbook.jinglenote.MidiJingleSequencer;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
+import java.io.File;
+import java.util.logging.Level;
 
 /**
  * @author Me4502
@@ -31,25 +25,25 @@ public class Melody extends AbstractIC {
     MidiJingleSequencer sequencer;
     JingleNoteManager jNote = new JingleNoteManager();
 
-    public Melody (Server server, ChangedSign block, ICFactory factory) {
+    public Melody(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Melody Player";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "MELODY";
     }
 
     @Override
-    public void unload () {
+    public void unload() {
 
         try {
             sequencer.stop();
@@ -67,7 +61,7 @@ public class Melody extends AbstractIC {
     boolean forceStart;
 
     @Override
-    public void load () {
+    public void load() {
 
         try {
             String[] split = ICUtil.COLON_PATTERN.split(getSign().getLine(3));
@@ -84,9 +78,10 @@ public class Melody extends AbstractIC {
 
         midiName = getSign().getLine(2);
 
-        File[] trialPaths = { new File(CircuitsPlugin.getInst().midiFolder, midiName),
-                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"), new File(CircuitsPlugin.getInst().midiFolder, midiName + ".midi"),
-                new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"), };
+        File[] trialPaths = {new File(CircuitsPlugin.getInst().midiFolder, midiName),
+                new File(CircuitsPlugin.getInst().midiFolder, midiName + ".mid"), new File(CircuitsPlugin.getInst()
+                .midiFolder, midiName + ".midi"),
+                new File("midi", midiName), new File("midi", midiName + ".mid"), new File("midi", midiName + ".midi"),};
 
         for (File f : trialPaths)
             if (f.exists()) {
@@ -96,7 +91,7 @@ public class Melody extends AbstractIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (file == null || !file.exists()) {
             getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
@@ -122,7 +117,8 @@ public class Melody extends AbstractIC {
                     if (player == null) {
                         continue;
                     }
-                    if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius)) {
+                    if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(),
+                            player.getLocation(), radius)) {
                         continue;
                     }
                     jNote.play(player, sequencer);
@@ -143,13 +139,13 @@ public class Melody extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             try {
                 if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
@@ -163,15 +159,15 @@ public class Melody extends AbstractIC {
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Plays a MIDI.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "MIDI name", "Radius" };
+            String[] lines = new String[] {"MIDI name", "Radius"};
             return lines;
         }
     }

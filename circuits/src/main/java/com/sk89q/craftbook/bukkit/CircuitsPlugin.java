@@ -2,16 +2,44 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.bukkit;
+
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
+import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
+import com.sk89q.craftbook.circuits.GlowStone;
+import com.sk89q.craftbook.circuits.JackOLantern;
+import com.sk89q.craftbook.circuits.Netherrack;
+import com.sk89q.craftbook.circuits.Pipes;
+import com.sk89q.craftbook.gates.logic.*;
+import com.sk89q.craftbook.gates.world.blocks.*;
+import com.sk89q.craftbook.gates.world.entity.*;
+import com.sk89q.craftbook.gates.world.items.*;
+import com.sk89q.craftbook.gates.world.miscellaneous.*;
+import com.sk89q.craftbook.gates.world.sensors.*;
+import com.sk89q.craftbook.gates.world.weather.*;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.ic.families.*;
+import com.sk89q.craftbook.plc.PlcFactory;
+import com.sk89q.craftbook.plc.lang.Perlstone;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.wepif.PermissionsResolverManager;
+import org.bukkit.*;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,198 +50,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-
-import com.sk89q.craftbook.CircuitsConfiguration;
-import com.sk89q.craftbook.ICConfiguration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicFactory;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
-import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
-import com.sk89q.craftbook.circuits.GlowStone;
-import com.sk89q.craftbook.circuits.JackOLantern;
-import com.sk89q.craftbook.circuits.Netherrack;
-import com.sk89q.craftbook.circuits.Pipes;
-import com.sk89q.craftbook.gates.logic.AndGate;
-import com.sk89q.craftbook.gates.logic.Clock;
-import com.sk89q.craftbook.gates.logic.ClockDivider;
-import com.sk89q.craftbook.gates.logic.ClockST;
-import com.sk89q.craftbook.gates.logic.CombinationLock;
-import com.sk89q.craftbook.gates.logic.Counter;
-import com.sk89q.craftbook.gates.logic.Delayer;
-import com.sk89q.craftbook.gates.logic.Dispatcher;
-import com.sk89q.craftbook.gates.logic.DownCounter;
-import com.sk89q.craftbook.gates.logic.EdgeTriggerDFlipFlop;
-import com.sk89q.craftbook.gates.logic.FullAdder;
-import com.sk89q.craftbook.gates.logic.FullSubtractor;
-import com.sk89q.craftbook.gates.logic.HalfAdder;
-import com.sk89q.craftbook.gates.logic.HalfSubtractor;
-import com.sk89q.craftbook.gates.logic.InvertedRsNandLatch;
-import com.sk89q.craftbook.gates.logic.Inverter;
-import com.sk89q.craftbook.gates.logic.JkFlipFlop;
-import com.sk89q.craftbook.gates.logic.LevelTriggeredDFlipFlop;
-import com.sk89q.craftbook.gates.logic.LowDelayer;
-import com.sk89q.craftbook.gates.logic.LowNotPulser;
-import com.sk89q.craftbook.gates.logic.LowPulser;
-import com.sk89q.craftbook.gates.logic.Marquee;
-import com.sk89q.craftbook.gates.logic.MemoryAccess;
-import com.sk89q.craftbook.gates.logic.MemorySetter;
-import com.sk89q.craftbook.gates.logic.Monostable;
-import com.sk89q.craftbook.gates.logic.Multiplexer;
-import com.sk89q.craftbook.gates.logic.NandGate;
-import com.sk89q.craftbook.gates.logic.NotDelayer;
-import com.sk89q.craftbook.gates.logic.NotLowDelayer;
-import com.sk89q.craftbook.gates.logic.NotPulser;
-import com.sk89q.craftbook.gates.logic.Pulser;
-import com.sk89q.craftbook.gates.logic.Random3Bit;
-import com.sk89q.craftbook.gates.logic.Random5Bit;
-import com.sk89q.craftbook.gates.logic.RandomBit;
-import com.sk89q.craftbook.gates.logic.RandomBitST;
-import com.sk89q.craftbook.gates.logic.RangedOutput;
-import com.sk89q.craftbook.gates.logic.Repeater;
-import com.sk89q.craftbook.gates.logic.RsNandLatch;
-import com.sk89q.craftbook.gates.logic.RsNorFlipFlop;
-import com.sk89q.craftbook.gates.logic.ToggleFlipFlop;
-import com.sk89q.craftbook.gates.logic.XnorGate;
-import com.sk89q.craftbook.gates.logic.XorGate;
-import com.sk89q.craftbook.gates.world.blocks.BlockBreaker;
-import com.sk89q.craftbook.gates.world.blocks.BlockBreakerST;
-import com.sk89q.craftbook.gates.world.blocks.BlockLauncher;
-import com.sk89q.craftbook.gates.world.blocks.BonemealTerraformer;
-import com.sk89q.craftbook.gates.world.blocks.BonemealTerraformerST;
-import com.sk89q.craftbook.gates.world.blocks.CombineHarvester;
-import com.sk89q.craftbook.gates.world.blocks.CombineHarvesterST;
-import com.sk89q.craftbook.gates.world.blocks.Cultivator;
-import com.sk89q.craftbook.gates.world.blocks.CultivatorST;
-import com.sk89q.craftbook.gates.world.blocks.FlexibleSetBlock;
-import com.sk89q.craftbook.gates.world.blocks.Irrigator;
-import com.sk89q.craftbook.gates.world.blocks.IrrigatorST;
-import com.sk89q.craftbook.gates.world.blocks.LavaSensor;
-import com.sk89q.craftbook.gates.world.blocks.LavaSensorST;
-import com.sk89q.craftbook.gates.world.blocks.LiquidFlood;
-import com.sk89q.craftbook.gates.world.blocks.LiquidFloodST;
-import com.sk89q.craftbook.gates.world.blocks.MultipleSetBlock;
-import com.sk89q.craftbook.gates.world.blocks.Planter;
-import com.sk89q.craftbook.gates.world.blocks.PlanterST;
-import com.sk89q.craftbook.gates.world.blocks.Pump;
-import com.sk89q.craftbook.gates.world.blocks.PumpST;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockAbove;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockAboveChest;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockAboveChestST;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockAboveST;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockBelow;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockBelowChest;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockBelowChestST;
-import com.sk89q.craftbook.gates.world.blocks.SetBlockBelowST;
-import com.sk89q.craftbook.gates.world.blocks.SetBridge;
-import com.sk89q.craftbook.gates.world.blocks.SetDoor;
-import com.sk89q.craftbook.gates.world.blocks.Spigot;
-import com.sk89q.craftbook.gates.world.blocks.WaterSensor;
-import com.sk89q.craftbook.gates.world.blocks.WaterSensorST;
-import com.sk89q.craftbook.gates.world.entity.AdvancedEntitySpawner;
-import com.sk89q.craftbook.gates.world.entity.CreatureSpawner;
-import com.sk89q.craftbook.gates.world.entity.EntityCannon;
-import com.sk89q.craftbook.gates.world.entity.EntityCannonST;
-import com.sk89q.craftbook.gates.world.entity.EntityTrap;
-import com.sk89q.craftbook.gates.world.entity.EntityTrapST;
-import com.sk89q.craftbook.gates.world.entity.TeleportReciever;
-import com.sk89q.craftbook.gates.world.entity.TeleportRecieverST;
-import com.sk89q.craftbook.gates.world.entity.TeleportTransmitter;
-import com.sk89q.craftbook.gates.world.items.AutomaticCrafter;
-import com.sk89q.craftbook.gates.world.items.AutomaticCrafterST;
-import com.sk89q.craftbook.gates.world.items.ChestStocker;
-import com.sk89q.craftbook.gates.world.items.ChestStockerST;
-import com.sk89q.craftbook.gates.world.items.ContainerCollector;
-import com.sk89q.craftbook.gates.world.items.ContainerCollectorST;
-import com.sk89q.craftbook.gates.world.items.ContainerDispenser;
-import com.sk89q.craftbook.gates.world.items.ContainerDispenserST;
-import com.sk89q.craftbook.gates.world.items.ItemDispenser;
-import com.sk89q.craftbook.gates.world.items.ItemFan;
-import com.sk89q.craftbook.gates.world.items.ItemFanST;
-import com.sk89q.craftbook.gates.world.items.Sorter;
-import com.sk89q.craftbook.gates.world.items.SorterST;
-import com.sk89q.craftbook.gates.world.miscellaneous.ArrowBarrage;
-import com.sk89q.craftbook.gates.world.miscellaneous.ArrowShooter;
-import com.sk89q.craftbook.gates.world.miscellaneous.FireBarrage;
-import com.sk89q.craftbook.gates.world.miscellaneous.FireShooter;
-import com.sk89q.craftbook.gates.world.miscellaneous.FlameThrower;
-import com.sk89q.craftbook.gates.world.miscellaneous.LightningSummon;
-import com.sk89q.craftbook.gates.world.miscellaneous.Melody;
-import com.sk89q.craftbook.gates.world.miscellaneous.MessageSender;
-import com.sk89q.craftbook.gates.world.miscellaneous.ParticleEffect;
-import com.sk89q.craftbook.gates.world.miscellaneous.ParticleEffectST;
-import com.sk89q.craftbook.gates.world.miscellaneous.PotionInducer;
-import com.sk89q.craftbook.gates.world.miscellaneous.PotionInducerST;
-import com.sk89q.craftbook.gates.world.miscellaneous.SoundEffect;
-import com.sk89q.craftbook.gates.world.miscellaneous.TimedExplosion;
-import com.sk89q.craftbook.gates.world.miscellaneous.WirelessReceiver;
-import com.sk89q.craftbook.gates.world.miscellaneous.WirelessReceiverST;
-import com.sk89q.craftbook.gates.world.miscellaneous.WirelessTransmitter;
-import com.sk89q.craftbook.gates.world.sensors.BlockSensor;
-import com.sk89q.craftbook.gates.world.sensors.BlockSensorST;
-import com.sk89q.craftbook.gates.world.sensors.DaySensor;
-import com.sk89q.craftbook.gates.world.sensors.DaySensorST;
-import com.sk89q.craftbook.gates.world.sensors.EntitySensor;
-import com.sk89q.craftbook.gates.world.sensors.EntitySensorST;
-import com.sk89q.craftbook.gates.world.sensors.ItemNotSensor;
-import com.sk89q.craftbook.gates.world.sensors.ItemNotSensorST;
-import com.sk89q.craftbook.gates.world.sensors.ItemSensor;
-import com.sk89q.craftbook.gates.world.sensors.ItemSensorST;
-import com.sk89q.craftbook.gates.world.sensors.LightSensor;
-import com.sk89q.craftbook.gates.world.sensors.LightSensorST;
-import com.sk89q.craftbook.gates.world.sensors.MovementSensor;
-import com.sk89q.craftbook.gates.world.sensors.MovementSensorST;
-import com.sk89q.craftbook.gates.world.sensors.PlayerSensor;
-import com.sk89q.craftbook.gates.world.sensors.PlayerSensorST;
-import com.sk89q.craftbook.gates.world.sensors.PowerSensor;
-import com.sk89q.craftbook.gates.world.sensors.PowerSensorST;
-import com.sk89q.craftbook.gates.world.weather.RainSensor;
-import com.sk89q.craftbook.gates.world.weather.RainSensorST;
-import com.sk89q.craftbook.gates.world.weather.ServerTimeModulus;
-import com.sk89q.craftbook.gates.world.weather.TStormSensor;
-import com.sk89q.craftbook.gates.world.weather.TStormSensorST;
-import com.sk89q.craftbook.gates.world.weather.TimeControl;
-import com.sk89q.craftbook.gates.world.weather.TimeControlAdvanced;
-import com.sk89q.craftbook.gates.world.weather.TimeFaker;
-import com.sk89q.craftbook.gates.world.weather.TimeSet;
-import com.sk89q.craftbook.gates.world.weather.TimeSetST;
-import com.sk89q.craftbook.gates.world.weather.WeatherControl;
-import com.sk89q.craftbook.gates.world.weather.WeatherControlAdvanced;
-import com.sk89q.craftbook.gates.world.weather.WeatherFaker;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.ICFamily;
-import com.sk89q.craftbook.ic.ICManager;
-import com.sk89q.craftbook.ic.ICMechanicFactory;
-import com.sk89q.craftbook.ic.RegisteredICFactory;
-import com.sk89q.craftbook.ic.RestrictedIC;
-import com.sk89q.craftbook.ic.SelfTriggeredIC;
-import com.sk89q.craftbook.ic.families.Family3I3O;
-import com.sk89q.craftbook.ic.families.Family3ISO;
-import com.sk89q.craftbook.ic.families.FamilyAISO;
-import com.sk89q.craftbook.ic.families.FamilySI3O;
-import com.sk89q.craftbook.ic.families.FamilySI5O;
-import com.sk89q.craftbook.ic.families.FamilySISO;
-import com.sk89q.craftbook.ic.families.FamilyVIVO;
-import com.sk89q.craftbook.plc.PlcFactory;
-import com.sk89q.craftbook.plc.lang.Perlstone;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.wepif.PermissionsResolverManager;
-
 // import com.sk89q.bukkit.migration.*;
 
 /**
  * Plugin for CraftBook's redstone additions.
- * 
+ *
  * @author sk89q
  */
 public class CircuitsPlugin extends BaseBukkitPlugin {
@@ -235,7 +76,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     public static Server server;
 
-    public static CircuitsPlugin getInst () {
+    public static CircuitsPlugin getInst() {
 
         return instance;
     }
@@ -248,7 +89,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     public File midiFolder;
 
     @Override
-    public void onEnable () {
+    public void onEnable() {
 
         super.onEnable();
 
@@ -295,7 +136,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
                 graph.addPlotter(new BukkitMetrics.Plotter(lan) {
 
                     @Override
-                    public int getValue () {
+                    public int getValue() {
 
                         return 1;
                     }
@@ -308,10 +149,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         }
     }
 
-    private void registerMechanics () {
+    private void registerMechanics() {
+
         if (config.icSettings.enabled) {
             registerICs();
-            icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "ic-config.yml")), getDataFolder());
+            icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(),
+                    "ic-config.yml")), getDataFolder());
             try {
                 icConfig.cfg.save(new File(getDataFolder(), "ic-config.yml"));
             } catch (IOException ex) {
@@ -341,7 +184,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     /**
      * Register ICs.
      */
-    private void registerICs () {
+    private void registerICs() {
 
         Server server = getServer();
 
@@ -368,7 +211,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1113", "tele-in", new TeleportReciever.Factory(server), familySISO, familyAISO);
         registerIC("MC1200", "spawner", new CreatureSpawner.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1201", "dispenser", new ItemDispenser.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1202", "c dispense", new ContainerDispenser.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1202", "c dispense", new ContainerDispenser.Factory(server), familySISO,
+                familyAISO); // Restricted
         registerIC("MC1203", "strike", new LightningSummon.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1204", "trap", new EntityTrap.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1205", "set above", new SetBlockAbove.Factory(server), familySISO, familyAISO); // Restricted
@@ -380,8 +224,10 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1211", "set bridge", new SetBridge.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1212", "set door", new SetDoor.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1213", "sound", new SoundEffect.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1215", "set a chest", new SetBlockAboveChest.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1216", "set b chest", new SetBlockBelowChest.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1215", "set a chest", new SetBlockAboveChest.Factory(server), familySISO,
+                familyAISO); // Restricted
+        registerIC("MC1216", "set b chest", new SetBlockBelowChest.Factory(server), familySISO,
+                familyAISO); // Restricted
         registerIC("MC1217", "pot induce", new PotionInducer.Factory(server), familySISO, familyAISO);
         registerIC("MC1218", "block launch", new BlockLauncher.Factory(server), familySISO, familyAISO);
         registerIC("MC1219", "auto craft", new AutomaticCrafter.Factory(server), familySISO, familyAISO);
@@ -392,7 +238,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC1224", "time bomb", new TimedExplosion.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1225", "pump", new Pump.Factory(server), familySISO, familyAISO);
         registerIC("MC1226", "spigot", new Spigot.Factory(server), familySISO, familyAISO);
-        registerIC("MC1227", "avd spawner", new AdvancedEntitySpawner.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1227", "avd spawner", new AdvancedEntitySpawner.Factory(server), familySISO,
+                familyAISO); // Restricted
         registerIC("MC1228", "ent cannon", new EntityCannon.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1229", "sorter", new Sorter.Factory(server), familySISO, familyAISO);
         registerIC("MC1230", "sense day", new DaySensor.Factory(server), familySISO, familyAISO);
@@ -482,7 +329,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0210", "emitter st", new ParticleEffectST.Factory(server), familySISO, familyAISO);
         registerIC("MC0215", "set a chest st", new SetBlockAboveChestST.Factory(server), familySISO, familyAISO);
         registerIC("MC0216", "set b chest st", new SetBlockBelowChestST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0217", "pot induce st", new PotionInducerST.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC0217", "pot induce st", new PotionInducerST.Factory(server), familySISO,
+                familyAISO); // Restricted
         registerIC("MC0219", "auto craft st", new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0220", "a bl break st", new BlockBreakerST.Factory(server, false), familySISO, familyAISO);
         registerIC("MC0221", "b bl break st", new BlockBreakerST.Factory(server, true), familySISO, familyAISO);
@@ -504,12 +352,15 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         registerIC("MC0262", "sense light st", new LightSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0263", "sense block st", new BlockSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0264", "sense item st", new ItemSensorST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0265", "sense n item s", new ItemNotSensorST.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC0265", "sense n item s", new ItemNotSensorST.Factory(server), familySISO,
+                familyAISO); // Restricted
         registerIC("MC0266", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0267", "sense move st", new MovementSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0270", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0272", "sense playe st", new PlayerSensorST.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO,
+                familyAISO); // Restricted
+        registerIC("MC0272", "sense playe st", new PlayerSensorST.Factory(server), familySISO,
+                familyAISO); // Restricted
         registerIC("MC0420", "clock st", new ClockST.Factory(server), familySISO, familyAISO);
         registerIC("MC0421", "monostable", new Monostable.Factory(server), familySISO, familyAISO);
         registerIC("MC0500", "range output", new RangedOutput.Factory(server), familySISO, familyAISO);
@@ -528,7 +379,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     /**
      * Setup the required components of self-triggered ICs.
      */
-    private void setupSelfTriggered () {
+    private void setupSelfTriggered() {
 
         logger.info("CraftBook: Enumerating chunks for self-triggered components...");
 
@@ -547,7 +398,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        logger.info("CraftBook Circuits: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + Math.round(time / 1000.0 * 10)
+        logger.info("CraftBook Circuits: " + numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "("
+                + Math.round(time / 1000.0 * 10)
                 / 10 + "s elapsed)");
 
         // Set up the clock for self-triggered ICs.
@@ -555,7 +407,7 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     }
 
     @Override
-    protected void registerEvents () {
+    protected void registerEvents() {
 
         // if (getLocalConfiguration().enableICs) {
         // TODO reimplement torches getServer().getPluginManager().registerEvents(new ICUtil.ICListener(), this);
@@ -563,22 +415,22 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     }
 
     @Override
-    public CircuitsConfiguration getLocalConfiguration () {
+    public CircuitsConfiguration getLocalConfiguration() {
 
         return config;
     }
 
-    public ICConfiguration getICConfiguration () {
+    public ICConfiguration getICConfiguration() {
 
         return icConfig;
     }
 
-    public PermissionsResolverManager getPermissionsResolver () {
+    public PermissionsResolverManager getPermissionsResolver() {
 
         return perms;
     }
 
-    public List<RegisteredICFactory> getICList () {
+    public List<RegisteredICFactory> getICList() {
 
         List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
         for (Entry<String, RegisteredICFactory> e : icManager.registered.entrySet()) {
@@ -589,12 +441,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     /**
      * Register a mechanic if possible
-     * 
+     *
      * @param name
      * @param factory
      * @param families
      */
-    public boolean registerIC (String name, String longName, ICFactory factory, ICFamily... families) {
+    public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
         if (config.icSettings.disabledICs.contains(name)) return false;
         return icManager.register(name, longName, factory, families);
@@ -602,20 +454,20 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     /**
      * Register a mechanic if possible
-     * 
+     *
      * @param factory
      */
-    public void registerMechanic (MechanicFactory<? extends Mechanic> factory) {
+    public void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         manager.register(factory);
     }
 
     /**
      * Register a array of mechanics if possible
-     * 
+     *
      * @param factories
      */
-    protected void registerMechanic (MechanicFactory<? extends Mechanic>[] factories) {
+    protected void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
 
         for (MechanicFactory<? extends Mechanic> aFactory : factories) {
             registerMechanic(aFactory);
@@ -624,20 +476,22 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     /**
      * Unregister a mechanic if possible TODO Ensure no remnants are left behind
-     * 
+     *
      * @param factory
+     *
      * @return true if the mechanic was successfully unregistered.
      */
-    protected boolean unregisterMechanic (MechanicFactory<? extends Mechanic> factory) {
+    protected boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         return manager.unregister(factory);
     }
 
-    protected boolean unregisterAllMechanics () {
+    protected boolean unregisterAllMechanics() {
 
         boolean ret = true;
 
-        Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();;
+        Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();
+        ;
         while (iterator.hasNext()) {
             if (!unregisterMechanic(iterator.next())) ret = false;
         }
@@ -645,7 +499,8 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         return ret;
     }
 
-    public void generateICDocs (Player player, String id) {
+    public void generateICDocs(Player player, String id) {
+
         RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
         if (ric == null) {
             try {
@@ -677,12 +532,14 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             } else {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: Blank.");
             }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId().toUpperCase());
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
+                    .toUpperCase());
         } catch (Exception ignored) {
         }
     }
 
-    public String getSearchID (Player p, String search) {
+    public String getSearchID(Player p, String search) {
+
         ArrayList<String> icNameList = new ArrayList<String>();
         icNameList.addAll(icManager.registered.keySet());
 
@@ -705,11 +562,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
 
     /**
      * Used for the /listics command.
-     * 
+     *
      * @param p
+     *
      * @return
      */
-    public String[] generateICText (Player p, String search, char[] parameters) {
+    public String[] generateICText(Player p, String search, char[] parameters) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
         icNameList.addAll(icManager.registered.keySet());
@@ -722,47 +580,61 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
             try {
                 thisIC:
                 {
-                RegisteredICFactory ric = icManager.registered.get(ic);
-                IC tic = ric.getFactory().create(null);
-                if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
-                        && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
-                if (parameters != null) {
-                    for (char c : parameters) {
-                        if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
-                        else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
-                        else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks")) break thisIC;
-                        else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items")) break thisIC;
-                        else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity")) break thisIC;
-                        else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith("weather")) break thisIC;
-                        else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic")) break thisIC;
-                        else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith("miscellaneous")) break thisIC;
-                        else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith("sensors")) break thisIC;
+                    RegisteredICFactory ric = icManager.registered.get(ic);
+                    IC tic = ric.getFactory().create(null);
+                    if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
+                            && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
+                    if (parameters != null) {
+                        for (char c : parameters) {
+                            if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
+                            else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
+                            else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks"))
+                                break thisIC;
+                            else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items"))
+                                break thisIC;
+                            else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
+                                break thisIC;
+                            else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith
+                                    ("weather"))
+                                break thisIC;
+                            else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic"))
+                                break thisIC;
+                            else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith
+                                    ("miscellaneous"))
+                                break thisIC;
+                            else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith
+                                    ("sensors"))
+                                break thisIC;
 
+                        }
                     }
-                }
-                col = !col;
-                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
+                    col = !col;
+                    ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                if (ric.getFactory() instanceof RestrictedIC) {
-                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
+                    if (ric.getFactory() instanceof RestrictedIC) {
+                        if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
+                            colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                        }
+                    } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
                         colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                     }
-                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
-                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                }
-                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
-                        + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
+                    strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")" + ": " + (tic instanceof
+                            SelfTriggeredIC ? "ST " : "T ")
+                            + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
-                Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" + " it to Me4502");
+                Bukkit.getLogger().severe("An error occured generating the docs for IC: " + ic + ". Please report" +
+                        " it to Me4502");
             }
         }
 
         return strings.toArray(new String[strings.size()]);
     }
 
-    public void reloadICConfiguration () {
-        icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(), "ic-config.yml")), getDataFolder());
+    public void reloadICConfiguration() {
+
+        icConfig = new ICConfiguration(YamlConfiguration.loadConfiguration(new File(getDataFolder(),
+                "ic-config.yml")), getDataFolder());
         try {
             icConfig.cfg.save(new File(getDataFolder(), "ic-config.yml"));
         } catch (IOException ex) {
@@ -771,12 +643,12 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
     }
 
     @Override
-    public void reloadConfiguration () {
+    public void reloadConfiguration() {
 
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 
             @Override
-            public void run () {
+            public void run() {
                 // Unload everything.
                 unregisterAllMechanics();
                 HandlerList.unregisterAll(CircuitsPlugin.getInst());

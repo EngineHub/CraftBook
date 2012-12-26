@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.VehiclesConfiguration;
+import com.sk89q.craftbook.bukkit.VehiclesPlugin;
+import com.sk89q.craftbook.util.ItemInfo;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
@@ -10,23 +11,26 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.VehiclesPlugin;
-import com.sk89q.craftbook.util.ItemInfo;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MinecartManager {
 
-    public MinecartManager (VehiclesPlugin plugin) {
+    public MinecartManager(VehiclesPlugin plugin) {
 
         this.plugin = plugin;
         reloadConfiguration(plugin.getLocalConfiguration());
     }
 
     private final VehiclesPlugin plugin;
-    public Map<ItemInfo, CartMechanism> mechanisms;
+    private Map<ItemInfo, CartMechanism> mechanisms;
 
-    public void reloadConfiguration (VehiclesConfiguration cfg) {
+    /**
+     * Reloads or sets the configuration of the {@link MinecartManager}.
+     *
+     * @param cfg - The {@link VehiclesConfiguration} to read
+     */
+    public void reloadConfiguration(VehiclesConfiguration cfg) {
 
         mechanisms = new HashMap<ItemInfo, CartMechanism>();
         if (cfg.matBoostMax.getId() > 0) mechanisms.put(cfg.matBoostMax, new CartBooster(100));
@@ -47,7 +51,18 @@ public class MinecartManager {
         }
     }
 
-    public void impact (VehicleMoveEvent event) {
+    /**
+     * This method is used to retrieve all {@link CartMechanism}s handled by this manager.
+     *
+     * @return - A {@link Map} sorted by {@link ItemInfo} keys of all {@link CartMechanism}s
+     *         handled by this manager
+     */
+    public Map<ItemInfo, CartMechanism> getMechanisms() {
+
+        return mechanisms;
+    }
+
+    public void impact(VehicleMoveEvent event) {
 
         try {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
@@ -65,7 +80,7 @@ public class MinecartManager {
         }
     }
 
-    public void enter (VehicleEnterEvent event) {
+    public void enter(VehicleEnterEvent event) {
 
         try {
             Block block = event.getVehicle().getLocation().getBlock();
@@ -84,18 +99,19 @@ public class MinecartManager {
         }
     }
 
-    public void impact (BlockRedstoneEvent event) {
+    public void impact(BlockRedstoneEvent event) {
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DelayedImpact(event));
     }
 
     /**
-     * Bukkit reports redstone events before updating the status of the relevant blocks... which had the rather odd effect of causing only input wires
+     * Bukkit reports redstone events before updating the status of the relevant blocks... which had the rather odd
+     * effect of causing only input wires
      * from the north causing the responses intended. Scheduling the impact check one tick later dodges the whole issue.
      */
     private class DelayedImpact implements Runnable {
 
-        public DelayedImpact (BlockRedstoneEvent event) {
+        public DelayedImpact(BlockRedstoneEvent event) {
 
             huh = event.getBlock();
         }
@@ -103,7 +119,7 @@ public class MinecartManager {
         private final Block huh;
 
         @Override
-        public void run () {
+        public void run() {
 
             try {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(huh);

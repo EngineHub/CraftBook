@@ -1,35 +1,30 @@
 package com.sk89q.craftbook.gates.logic;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
+import com.sk89q.craftbook.ic.*;
+import org.bukkit.Server;
 
 public class FullAdder extends AbstractIC {
 
-    public FullAdder (Server server, ChangedSign block, ICFactory factory) {
+    public FullAdder(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Full Adder";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "FULL ADDER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         boolean A = chip.getInput(0);
         boolean B = chip.getInput(1);
@@ -45,13 +40,13 @@ public class FullAdder extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new FullAdder(getServer(), sign, this);
         }

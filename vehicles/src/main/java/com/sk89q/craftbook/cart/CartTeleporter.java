@@ -1,22 +1,21 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.regex.Pattern;
 
 public class CartTeleporter extends CartMechanism {
 
     private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -50,10 +49,12 @@ public class CartTeleporter extends CartMechanism {
             CartUtils.stop(cart);
         }
 
-        Location loc = BukkitUtil.center(new Location(world, x, y, z, cart.getLocation().getYaw(), cart.getLocation().getPitch()) {
+        Location loc = BukkitUtil.center(new Location(world, x, y, z, cart.getLocation().getYaw(),
+                cart.getLocation().getPitch()) {
 
         });
-        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100 * 100) {
+        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100 *
+                100) {
             cart.teleport(loc);
         } else {
             loc.getChunk().load(true);
@@ -72,7 +73,7 @@ public class CartTeleporter extends CartMechanism {
     }
 
     @Override
-    public boolean verify (ChangedSign sign, LocalPlayer player) {
+    public boolean verify(ChangedSign sign, LocalPlayer player) {
 
         String[] pts = COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
         try {
@@ -87,12 +88,14 @@ public class CartTeleporter extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Teleporter";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "Teleport" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"Teleport"};
     }
 }

@@ -1,10 +1,14 @@
 package com.sk89q.craftbook.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.BukkitUtil;
+import com.sk89q.craftbook.bukkit.CircuitsPlugin;
+import com.sk89q.craftbook.ic.*;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -12,43 +16,29 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.material.PistonBaseMaterial;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitUtil;
-import com.sk89q.craftbook.bukkit.CircuitsPlugin;
-import com.sk89q.craftbook.ic.AbstractIC;
-import com.sk89q.craftbook.ic.AbstractICFactory;
-import com.sk89q.craftbook.ic.ChipState;
-import com.sk89q.craftbook.ic.IC;
-import com.sk89q.craftbook.ic.ICFactory;
-import com.sk89q.craftbook.ic.PipeInputIC;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
 
-    public AutomaticCrafter (Server server, ChangedSign block, ICFactory factory) {
+    public AutomaticCrafter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Automatic Crafter";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "AUTO CRAFT";
     }
@@ -57,14 +47,14 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
     private Recipe recipe;
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, doStuff(true, true));
         }
     }
 
-    public boolean craft (Dispenser disp) {
+    public boolean craft(Dispenser disp) {
 
         Inventory inv = disp.getInventory();
         for (ItemStack it : inv.getContents()) {
@@ -134,7 +124,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
         return true;
     }
 
-    public boolean collect (Dispenser disp) {
+    public boolean collect(Dispenser disp) {
 
         outer:
         for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
@@ -153,7 +143,8 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
                 int newAmount = item.getItemStack().getAmount();
                 for (int i = 0; i < item.getItemStack().getAmount(); i++) {
-                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), item.getItemStack());
+                    ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
+                            item.getItemStack());
                     if (it == null) continue outer;
                     if (it.getAmount() < 64) {
                         it.setAmount(it.getAmount() + 1);
@@ -177,9 +168,10 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
     /**
      * @param craft
      * @param collect
+     *
      * @return
      */
-    public boolean doStuff (boolean craft, boolean collect) {
+    public boolean doStuff(boolean craft, boolean collect) {
 
         boolean ret = false;
         Block crafter = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
@@ -195,7 +187,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
         return ret;
     }
 
-    public boolean isValidRecipe (Recipe r, Inventory inv) {
+    public boolean isValidRecipe(Recipe r, Inventory inv) {
 
         if (r instanceof ShapedRecipe && (recipe == null || recipe instanceof ShapedRecipe)) {
             ShapedRecipe shape = (ShapedRecipe) r;
@@ -248,33 +240,34 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
 
     public static class Factory extends AbstractICFactory {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new AutomaticCrafter(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Auto-crafts recipes in the above dispenser.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { null, null };
+            String[] lines = new String[] {null, null};
             return lines;
         }
     }
 
     @Override
-    public List<ItemStack> onPipeTransfer (BlockWorldVector pipe, List<ItemStack> items) {
+    public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
+
         Block crafter = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
         if (crafter.getTypeId() == BlockID.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();

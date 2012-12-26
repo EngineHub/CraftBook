@@ -2,47 +2,49 @@
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.bukkit;
-
-import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.CommonConfiguration;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.command.CommandSender;
 
 /**
  * Plugin for CraftBook's core.
- * 
+ *
  * @author sk89q
  */
 public class CraftBookPlugin extends BaseBukkitPlugin {
 
     private static CraftBookPlugin instance;
 
-    public static CraftBookPlugin getInstance () {
+    public static CraftBookPlugin getInstance() {
 
         return instance;
     }
 
     private CommonConfiguration config;
 
-    public CraftBookPlugin () {
+    public CraftBookPlugin() {
 
         instance = this;
     }
 
     @Override
-    public void onEnable () {
+    public void onEnable() {
 
         super.onEnable();
         config = new CommonConfiguration(getConfig(), getDataFolder());
@@ -59,12 +61,12 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
     }
 
     @Override
-    protected void registerEvents () {
+    protected void registerEvents() {
 
     }
 
     @Override
-    public CommonConfiguration getLocalConfiguration () {
+    public CommonConfiguration getLocalConfiguration() {
 
         return config;
     }
@@ -72,7 +74,7 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
     public class Commands {
 
         @Command(aliases = "cbreload", desc = "Reloads the CraftBook Common config")
-        public void reload (CommandContext context, CommandSender sender) {
+        public void reload(CommandContext context, CommandSender sender) {
 
             reloadConfiguration();
             sender.sendMessage("The CraftBook Common config has been reloaded.");
@@ -80,7 +82,8 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
     }
 
     @Override
-    public void reloadConfiguration () {
+    public void reloadConfiguration() {
+
         reloadConfig();
         config = new CommonConfiguration(getConfig(), getDataFolder());
         saveConfig();

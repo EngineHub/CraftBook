@@ -1,9 +1,7 @@
 package com.sk89q.craftbook.cart;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.RailUtil;
+import com.sk89q.craftbook.RedstoneUtil.Power;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Minecart;
@@ -11,15 +9,16 @@ import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.RailUtil;
-import com.sk89q.craftbook.RedstoneUtil.Power;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class CartDeposit extends CartMechanism {
 
     private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
 
     @Override
-    public void impact (Minecart cart, CartMechanismBlocks blocks, boolean minor) {
+    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
 
@@ -90,7 +89,8 @@ public class CartDeposit extends CartMechanism {
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
+                leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()
+                        ])).values());
                 transferItems.clear();
                 transferItems.addAll(leftovers);
                 leftovers.clear();
@@ -100,7 +100,8 @@ public class CartDeposit extends CartMechanism {
 
             // System.out.println("collected items. " + transferItems.size() + " stacks left over.");
 
-            leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
+            leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values
+                    ());
             transferItems.clear();
             transferItems.addAll(leftovers);
             leftovers.clear();
@@ -117,10 +118,12 @@ public class CartDeposit extends CartMechanism {
                         if (item == null) {
                             continue;
                         }
-                        if (itemID < 0 || itemID == item.getTypeId()) if (itemData < 0 || itemData == item.getDurability()) {
-                            transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
-                            containerinventory.remove(item);
-                        }
+                        if (itemID < 0 || itemID == item.getTypeId())
+                            if (itemData < 0 || itemData == item.getDurability()) {
+                                transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(),
+                                        item.getDurability()));
+                                containerinventory.remove(item);
+                            }
                     }
                 } else {
                     transferitems.addAll(Arrays.asList(containerinventory.getContents()));
@@ -139,7 +142,8 @@ public class CartDeposit extends CartMechanism {
             // for (ItemStack stack: transferitems) System.out.println("depositing " + stack.getAmount() + " items of
             // type " + stack.getType().toString());
 
-            leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
+            leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values
+                    ());
             transferitems.clear();
             transferitems.addAll(leftovers);
             leftovers.clear();
@@ -152,7 +156,8 @@ public class CartDeposit extends CartMechanism {
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()
+                        ])).values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);
                 leftovers.clear();
@@ -163,12 +168,14 @@ public class CartDeposit extends CartMechanism {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
+
         return "Deposit";
     }
 
     @Override
-    public String[] getApplicableSigns () {
-        return new String[] { "Collect", "Deposit" };
+    public String[] getApplicableSigns() {
+
+        return new String[] {"Collect", "Deposit"};
     }
 }

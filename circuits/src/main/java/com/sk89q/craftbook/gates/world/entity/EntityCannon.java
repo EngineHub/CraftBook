@@ -15,7 +15,7 @@ public class EntityCannon extends AbstractIC {
     private enum Type {
         PLAYER, MOB_HOSTILE, MOB_PEACEFUL, MOB_ANY, ANY, CART, CART_STORAGE, CART_POWERED, ITEM;
 
-        public boolean is (Entity entity) {
+        public boolean is(Entity entity) {
 
             switch (this) {
                 case PLAYER:
@@ -40,31 +40,31 @@ public class EntityCannon extends AbstractIC {
             return false;
         }
 
-        public static Type fromString (String name) {
+        public static Type fromString(String name) {
 
             return EnumUtil.getEnumFromString(EntityCannon.Type.class, name);
         }
     }
 
-    public EntityCannon (Server server, ChangedSign sign, ICFactory factory) {
+    public EntityCannon(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Entity Cannon";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "ENTITY CANNON";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, shoot());
@@ -73,10 +73,10 @@ public class EntityCannon extends AbstractIC {
 
     /**
      * This method launches near by entities
-     * 
+     *
      * @return true if a entity was thrown.
      */
-    protected boolean shoot () {
+    protected boolean shoot() {
 
         boolean resultBoolean = false;
         Location location = BukkitUtil.toSign(getSign()).getLocation();
@@ -112,27 +112,27 @@ public class EntityCannon extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
-        public Factory (Server server) {
+        public Factory(Server server) {
 
             super(server);
         }
 
         @Override
-        public IC create (ChangedSign sign) {
+        public IC create(ChangedSign sign) {
 
             return new EntityCannon(getServer(), sign, this);
         }
 
         @Override
-        public String getDescription () {
+        public String getDescription() {
 
             return "Shoots nearby entities of type at set velocity.";
         }
 
         @Override
-        public String[] getLineHelp () {
+        public String[] getLineHelp() {
 
-            String[] lines = new String[] { "velocity x:y:z", "mob type" };
+            String[] lines = new String[] {"velocity x:y:z", "mob type"};
             return lines;
         }
     }
