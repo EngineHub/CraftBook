@@ -59,7 +59,6 @@ public class PlayerSensor extends AbstractIC {
 
     @Override
     public void load () {
-        radius = 10; // Default Radius
         location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
 
         if (getLine(3).contains(":")) {
@@ -79,10 +78,8 @@ public class PlayerSensor extends AbstractIC {
             }
             radius = ICUtil.parseRadius(getSign());
             if (locInfo.contains("=")) {
-                getSign().setLine(2, radius + '=' + ICUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
                 location = ICUtil.parseBlockLocation(getSign()).getLocation();
             } else {
-                getSign().setLine(2, String.valueOf(radius));
                 location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             }
         } catch (Exception e) {
