@@ -46,7 +46,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.RailUtil;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.VehiclesConfiguration;
-import com.sk89q.craftbook.bukkit.Metrics.Graph;
+import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
@@ -91,11 +91,11 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
         registerCommand(VehicleCommands.class);
 
         try {
-            Metrics metrics = new Metrics(this);
+            BukkitMetrics metrics = new BukkitMetrics(this);
 
             Graph graph = metrics.createGraph("Language");
             for (String lan : languageManager.getLanguages()) {
-                graph.addPlotter(new Metrics.Plotter(lan) {
+                graph.addPlotter(new BukkitMetrics.Plotter(lan) {
 
                     @Override
                     public int getValue () {

@@ -37,7 +37,7 @@ import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.bukkit.Metrics.Graph;
+import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
@@ -288,11 +288,11 @@ public class CircuitsPlugin extends BaseBukkitPlugin {
         languageManager = new LanguageManager(this);
 
         try {
-            Metrics metrics = new Metrics(this);
+            BukkitMetrics metrics = new BukkitMetrics(this);
 
             Graph graph = metrics.createGraph("Language");
             for (String lan : languageManager.getLanguages()) {
-                graph.addPlotter(new Metrics.Plotter(lan) {
+                graph.addPlotter(new BukkitMetrics.Plotter(lan) {
 
                     @Override
                     public int getValue () {

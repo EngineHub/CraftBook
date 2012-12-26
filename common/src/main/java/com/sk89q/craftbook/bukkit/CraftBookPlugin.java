@@ -51,7 +51,7 @@ public class CraftBookPlugin extends BaseBukkitPlugin {
         registerCommand(Commands.class);
 
         try {
-            Metrics metrics = new Metrics(this);
+            BukkitMetrics metrics = new BukkitMetrics(this);
             metrics.start();
         } catch (Exception e) {
             getLogger().severe(GeneralUtil.getStackTrace(e));
