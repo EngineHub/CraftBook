@@ -41,11 +41,6 @@ public class JingleNotePlayer implements Runnable {
         }
     }
 
-    public boolean isActive () {
-
-        return player.isOnline();
-    }
-
     public Player getPlayer () {
 
         return player;

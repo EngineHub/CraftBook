@@ -140,7 +140,7 @@ public class MidiJingleSequencer implements JingleSequencer {
 
             sequencer.start();
 
-            while (sequencer.isRunning() && notePlayer.isActive()) {
+            while (sequencer.isRunning()) {
                 Thread.sleep(1000);
             }
 
