@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
-import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.ic.AbstractIC;
 import com.sk89q.craftbook.ic.AbstractICFactory;
@@ -56,12 +55,12 @@ public class BlockSensor extends AbstractIC {
     public void trigger (ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, ((Factory)getFactory()).invert ? !hasBlock() : hasBlock());
+            chip.setOutput(0, !hasBlock());
         }
     }
 
     /**
-     * Returns true if the sign has water at the specified location.
+     * Returns true if the sign has the specified block at the specified location.
      * 
      * @return
      */
@@ -70,8 +69,7 @@ public class BlockSensor extends AbstractIC {
         int blockID = center.getTypeId();
 
         if (data != (byte) -1)
-            if (blockID == id) return
-                    data == center.getData();
+            if (blockID == id) return data == center.getData();
         return blockID == id;
     }
 
@@ -113,17 +111,6 @@ public class BlockSensor extends AbstractIC {
 
             String[] lines = new String[] { "x:y:z", "id:data" };
             return lines;
-        }
-
-        @Override
-        public void addConfiguration (BaseConfiguration.BaseConfigurationSection section) {
-
-            invert = section.getBoolean("invert-output", true);
-        }
-
-        @Override
-        public boolean needsConfiguration () {
-            return true;
         }
     }
 }
