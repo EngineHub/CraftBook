@@ -227,9 +227,9 @@ public class MidiJingleSequencer implements JingleSequencer {
 
         Sound instrument;
         byte note;
-        int velocity;
+        float velocity;
 
-        public Note (Sound instrument, byte note, int velocity) {
+        public Note (Sound instrument, byte note, float velocity) {
 
             this.instrument = instrument;
             this.note = note;
@@ -246,7 +246,7 @@ public class MidiJingleSequencer implements JingleSequencer {
             return note;
         }
 
-        public int getVelocity () {
+        public float getVelocity () {
 
             if (instrument == Sound.NOTE_PLING) return velocity / 4;
             return velocity;
