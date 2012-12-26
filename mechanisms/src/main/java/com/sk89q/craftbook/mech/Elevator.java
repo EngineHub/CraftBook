@@ -2,13 +2,16 @@
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.craftbook.mech;
@@ -36,7 +39,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player vertically when triggered.
- * 
+ *
  * @author sk89q
  * @author hash
  */
@@ -44,7 +47,7 @@ public class Elevator extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Elevator> {
 
-        public Factory (MechanismsPlugin plugin) {
+        public Factory(MechanismsPlugin plugin) {
 
             this.plugin = plugin;
         }
@@ -53,15 +56,15 @@ public class Elevator extends AbstractMechanic {
 
         /**
          * Explore around the trigger to find a functional elevator; throw if things look funny.
-         * 
-         * @param pt
-         *            the trigger (should be a signpost)
+         *
+         * @param pt the trigger (should be a signpost)
+         *
          * @return an Elevator if we could make a valid one, or null if this looked nothing like an elevator.
-         * @throws InvalidMechanismException
-         *             if the area looked like it was intended to be an elevator, but it failed.
+         *
+         * @throws InvalidMechanismException if the area looked like it was intended to be an elevator, but it failed.
          */
         @Override
-        public Elevator detect (BlockWorldVector pt) throws InvalidMechanismException {
+        public Elevator detect(BlockWorldVector pt) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
@@ -80,12 +83,13 @@ public class Elevator extends AbstractMechanic {
 
         /**
          * Detect the mechanic at a placed sign.
-         * 
+         *
          * @throws ProcessedMechanismException
          */
         @Override
-        public Elevator detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
-        ProcessedMechanismException {
+        public Elevator detect(BlockWorldVector pt, LocalPlayer player,
+                ChangedSign sign) throws InvalidMechanismException,
+                ProcessedMechanismException {
 
             Direction dir = isLift(sign);
             switch (dir) {
@@ -115,13 +119,13 @@ public class Elevator extends AbstractMechanic {
     }
 
     /**
-     * @param trigger
-     *            if you didn't already check if this is a wall sign with appropriate text, you're going on Santa's naughty list.
-     * @param dir
-     *            the direction (UP or DOWN) in which we're looking for a destination
+     * @param trigger if you didn't already check if this is a wall sign with appropriate text,
+     *                you're going on Santa's naughty list.
+     * @param dir     the direction (UP or DOWN) in which we're looking for a destination
+     *
      * @throws InvalidMechanismException
      */
-    private Elevator (Block trigger, Direction dir, MechanismsPlugin plugin) throws InvalidMechanismException {
+    private Elevator(Block trigger, Direction dir, MechanismsPlugin plugin) throws InvalidMechanismException {
 
         super();
         this.trigger = trigger;
@@ -137,7 +141,8 @@ public class Elevator extends AbstractMechanic {
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
-            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(trigger), BukkitUtil.toChangedSign(destination))) {
+            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(trigger),
+                    BukkitUtil.toChangedSign(destination))) {
                 break; // found it!
             }
             if (destination.getY() == trigger.getY()) throw new InvalidConstructionException();
@@ -179,11 +184,12 @@ public class Elevator extends AbstractMechanic {
     }
 
     @Override
-    public void onRightClick (PlayerInteractEvent event) {
+    public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.getLocalConfiguration().elevatorSettings.enable) return;
 
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; // wth? our manager is insane
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
+            return; // wth? our manager is insane
 
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
@@ -198,10 +204,11 @@ public class Elevator extends AbstractMechanic {
         event.setCancelled(true);
     }
 
-    private void makeItSo (LocalPlayer player) {
+    private void makeItSo(LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()), destination.getY() + 1,
+        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()),
+                destination.getY() + 1,
                 (int) Math.floor(player.getPosition().getPosition().getZ()));
         // well, unless that's already a ceiling.
         if (!occupiable(floor)) {
@@ -238,7 +245,8 @@ public class Elevator extends AbstractMechanic {
         newLocation = newLocation.setPosition(player.getPosition().getPosition().setY(floor.getY() + 1));
         if (player.isInsideVehicle()) {
             newLocation = player.getVehicle().getLocation();
-            newLocation = newLocation.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() + 2));
+            newLocation = newLocation.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() +
+                    2));
             player.getVehicle().teleport(newLocation);
         }
         player.setPosition(newLocation.getPosition(), newLocation.getPitch(), newLocation.getYaw());
@@ -248,16 +256,15 @@ public class Elevator extends AbstractMechanic {
         // just print a generic message
         Sign info = null;
         if (!(destination.getState() instanceof Sign)) {
-            if(destination.getState().getData() instanceof Button) {
+            if (destination.getState().getData() instanceof Button) {
 
                 Button button = (Button) destination.getState().getData();
-                if(destination.getRelative(button.getAttachedFace(),2).getState() instanceof Sign)
-                    info = (Sign) destination.getRelative(button.getAttachedFace(),2).getState();
+                if (destination.getRelative(button.getAttachedFace(), 2).getState() instanceof Sign)
+                    info = (Sign) destination.getRelative(button.getAttachedFace(), 2).getState();
             }
-            if(info == null)
+            if (info == null)
                 return;
-        }
-        else
+        } else
             info = (Sign) destination.getState();
         String title = info.getLines()[0];
         if (!title.isEmpty()) {
@@ -267,7 +274,8 @@ public class Elevator extends AbstractMechanic {
         }
     }
 
-    public static boolean isValidLift (ChangedSign start, ChangedSign stop) {
+    public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
+
         if (start == null || stop == null) return true;
         if (start.getLine(2).toLowerCase().startsWith("to:")) {
             try {
@@ -279,7 +287,7 @@ public class Elevator extends AbstractMechanic {
         } else return true;
     }
 
-    private static Elevator.Direction isLift (Block block) {
+    private static Elevator.Direction isLift(Block block) {
 
         BlockState state = block.getState();
         if (!(state instanceof Sign)) {
@@ -288,7 +296,8 @@ public class Elevator extends AbstractMechanic {
                 Button b = (Button) block.getState().getData();
                 Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                 if (sign.getState() instanceof Sign)
-                    return isLift(BukkitUtil.toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines()));
+                    return isLift(BukkitUtil.toChangedSign((Sign) sign.getState(),
+                            ((Sign) sign.getState()).getLines()));
             }
             return Direction.NONE;
         }
@@ -296,7 +305,7 @@ public class Elevator extends AbstractMechanic {
         return isLift(BukkitUtil.toChangedSign((Sign) state, ((Sign) state).getLines()));
     }
 
-    private static Elevator.Direction isLift (ChangedSign sign) {
+    private static Elevator.Direction isLift(ChangedSign sign) {
         // if you were really feeling frisky this could definitely
         // be optomized by converting the string to a char[] and then
         // doing work
@@ -307,7 +316,7 @@ public class Elevator extends AbstractMechanic {
         return Direction.NONE;
     }
 
-    private static boolean occupiable (Block block) {
+    private static boolean occupiable(Block block) {
 
         return BlockType.canPassThrough(block.getTypeId());
     }
@@ -316,7 +325,7 @@ public class Elevator extends AbstractMechanic {
 
         private static final long serialVersionUID = 3845311158458450314L;
 
-        public NoDepartureException () {
+        public NoDepartureException() {
 
             super("Cannot depart from this lift (can only arrive).");
         }
@@ -326,7 +335,7 @@ public class Elevator extends AbstractMechanic {
 
         private static final long serialVersionUID = 2306504048848430689L;
 
-        public InvalidConstructionException () {
+        public InvalidConstructionException() {
 
             super("This lift has no destination.");
         }
