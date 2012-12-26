@@ -68,7 +68,7 @@ public class Teleporter extends AbstractMechanic {
                     Sign s = (Sign) sign.getState();
                     if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                     String[] pos = COLON_PATTERN.split(s.getLine(2));
-                    if (pos.length > 2) return new Teleporter(block, plugin);
+                    if (pos.length > 2) return new Teleporter(s.getBlock(), plugin);
                 }
             }
 
@@ -82,7 +82,7 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 
@@ -122,7 +122,7 @@ public class Teleporter extends AbstractMechanic {
 
         if (!plugin.getLocalConfiguration().teleporterSettings.enable) return;
 
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger))) return; // wth? our manager is insane. ikr.
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)) && !(event.getClickedBlock().getState().getData() instanceof Button)) return; // wth? our manager is insane.
 
         LocalPlayer localPlayer = plugin.wrap(event.getPlayer());
 
@@ -214,7 +214,7 @@ public class Teleporter extends AbstractMechanic {
         }
         if (plugin.getLocalConfiguration().teleporterSettings.maxrange > 0
                 && subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > plugin.getLocalConfiguration().teleporterSettings.maxrange
-                        * plugin.getLocalConfiguration().teleporterSettings.maxrange) {
+                * plugin.getLocalConfiguration().teleporterSettings.maxrange) {
             player.print("mech.teleport.range");
             return;
         }

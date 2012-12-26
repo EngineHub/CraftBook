@@ -84,7 +84,7 @@ public class Elevator extends AbstractMechanic {
          */
         @Override
         public Elevator detect (BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        ProcessedMechanismException {
 
             Direction dir = isLift(sign);
             switch (dir) {
@@ -245,12 +245,24 @@ public class Elevator extends AbstractMechanic {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
-        if (!(destination.getState() instanceof Sign)) return;
-        String title = ((Sign) destination.getState()).getLines()[0];
+        Sign info = null;
+        if (!(destination.getState() instanceof Sign)) {
+            if(destination.getState().getData() instanceof Button) {
+
+                Button button = (Button) destination.getState().getData();
+                if(destination.getRelative(button.getAttachedFace(),2).getState() instanceof Sign)
+                    info = (Sign) destination.getRelative(button.getAttachedFace(),2).getState();
+            }
+            if(info == null)
+                return;
+        }
+        else
+            info = (Sign) destination.getState();
+        String title = info.getLines()[0];
         if (!title.isEmpty()) {
             player.print(player.translate("mech.lift.floor") + ": " + title);
         } else {
-            player.print("You went " + (shift.getModY() > 0 ? "up" : "down") + " a floor.");
+            player.print(shift.getModY() > 0 ? "mech.lift.up" : "mech.lift.down");
         }
     }
 
