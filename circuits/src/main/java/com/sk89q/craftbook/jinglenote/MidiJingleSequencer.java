@@ -5,15 +5,24 @@
 
 package com.sk89q.craftbook.jinglenote;
 
-import com.sk89q.craftbook.util.GeneralUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-
-import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+
+import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * A sequencer that reads MIDI files.
@@ -23,37 +32,37 @@ import java.util.Map;
 public class MidiJingleSequencer implements JingleSequencer {
 
     private static final int[] instruments = {
-            0, 0, 0, 0, 0, 0, 0, 5, // 8
-            6, 0, 0, 0, 0, 0, 0, 0, // 16
-            0, 0, 0, 0, 0, 0, 0, 5, // 24
-            5, 5, 5, 5, 5, 5, 5, 5, // 32
-            6, 6, 6, 6, 6, 6, 6, 6, // 40
-            5, 5, 5, 5, 5, 5, 5, 2, // 48
-            5, 5, 5, 5, 0, 0, 0, 0, // 56
-            0, 0, 0, 0, 0, 0, 0, 0, // 64
-            0, 0, 0, 0, 0, 0, 0, 0, // 72
-            0, 0, 0, 0, 0, 0, 0, 0, // 80
-            0, 0, 0, 0, 0, 0, 0, 0, // 88
-            0, 0, 0, 0, 0, 0, 0, 0, // 96
-            0, 0, 0, 0, 0, 0, 0, 0, // 104
-            0, 0, 0, 0, 0, 0, 0, 0, // 112
-            1, 1, 1, 3, 1, 1, 1, 5, // 120
-            1, 1, 1, 1, 1, 2, 4, 3, // 128
+        0, 0, 0, 0, 0, 0, 0, 5, // 8
+        6, 0, 0, 0, 0, 0, 0, 0, // 16
+        0, 0, 0, 0, 0, 0, 0, 5, // 24
+        5, 5, 5, 5, 5, 5, 5, 5, // 32
+        6, 6, 6, 6, 6, 6, 6, 6, // 40
+        5, 5, 5, 5, 5, 5, 5, 2, // 48
+        5, 5, 5, 5, 0, 0, 0, 0, // 56
+        0, 0, 0, 0, 0, 0, 0, 0, // 64
+        0, 0, 0, 0, 0, 0, 0, 0, // 72
+        0, 0, 0, 0, 0, 0, 0, 0, // 80
+        0, 0, 0, 0, 0, 0, 0, 0, // 88
+        0, 0, 0, 0, 0, 0, 0, 0, // 96
+        0, 0, 0, 0, 0, 0, 0, 0, // 104
+        0, 0, 0, 0, 0, 0, 0, 0, // 112
+        1, 1, 1, 3, 1, 1, 1, 5, // 120
+        1, 1, 1, 1, 1, 2, 4, 3, // 128
 
-            // 16
+        // 16
     };
 
 
     private static int[] percussion = {
-            1, 1, 1, 2, 3, 2,
-            1, 3, 1, 3, 1, 3,
-            1, 1, 3, 1, 3, 3,
-            3, 3, 3, 0, 3, 3,
-            3, 1, 1, 1, 1, 1,
-            1, 1, 3, 3, 3, 3,
-            4, 4, 3, 3, 3, 3,
-            3, 1, 1, 3, 3, 2,
-            4, 4, 3, 1, 1,
+        1, 1, 1, 2, 3, 2,
+        1, 3, 1, 3, 1, 3,
+        1, 1, 3, 1, 3, 3,
+        3, 3, 3, 0, 3, 3,
+        3, 1, 1, 1, 1, 1,
+        1, 1, 3, 3, 3, 3,
+        4, 4, 3, 3, 3, 3,
+        3, 1, 1, 3, 3, 2,
+        4, 4, 3, 1, 1,
     };
 
 
@@ -86,8 +95,6 @@ public class MidiJingleSequencer implements JingleSequencer {
             throw e;
         }
     }
-
-    // private long lastTime = 0;
 
     @Override
     public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
@@ -172,7 +179,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) instruments[patch];
     }
 
-    private static Sound toMCSound(byte instrument) {
+    public Sound toMCSound(byte instrument) {
 
         switch (instrument) {
             case 0:
@@ -194,7 +201,6 @@ public class MidiJingleSequencer implements JingleSequencer {
         }
     }
 
-
     @SuppressWarnings("unused")
     private static int toMCPercussion(int note) {
 
@@ -210,35 +216,5 @@ public class MidiJingleSequencer implements JingleSequencer {
     public boolean isSongPlaying() {
 
         return sequencer.isRunning();
-    }
-
-    public class Note {
-
-        Sound instrument;
-        byte note;
-        float velocity;
-
-        public Note(Sound instrument, byte note, float velocity) {
-
-            this.instrument = instrument;
-            this.note = note;
-            this.velocity = velocity;
-        }
-
-        public Sound getInstrument() {
-
-            return instrument;
-        }
-
-        public float getNote() {
-
-            return (float) Math.pow(2.0D, (note - 12) / 12.0D);
-        }
-
-        public float getVelocity() {
-
-            if (instrument == Sound.NOTE_PLING) return velocity / 256;
-            return velocity / 64;
-        }
     }
 }

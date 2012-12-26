@@ -8,7 +8,7 @@ package com.sk89q.craftbook.jinglenote;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.jinglenote.MidiJingleSequencer.Note;
+import com.sk89q.craftbook.jinglenote.JingleSequencer.Note;
 import com.sk89q.craftbook.util.GeneralUtil;
 
 public class JingleNotePlayer implements Runnable {
