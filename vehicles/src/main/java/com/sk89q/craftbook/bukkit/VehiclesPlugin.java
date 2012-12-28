@@ -29,6 +29,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -144,6 +146,8 @@ public class VehiclesPlugin extends BaseBukkitPlugin {
 
             if (config.minecartEnterOnImpact && vehicle instanceof Minecart) {
                 if (!vehicle.isEmpty()) return;
+                if (vehicle instanceof StorageMinecart) return;
+                if (vehicle instanceof PoweredMinecart) return;
                 if (!(event.getEntity() instanceof LivingEntity)) return;
                 vehicle.setPassenger(event.getEntity());
 
