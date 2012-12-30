@@ -16,7 +16,8 @@
 
 package com.sk89q.craftbook.circuits.plc;
 
-import com.sk89q.craftbook.BaseConfiguration.BaseConfigurationSection;
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -24,7 +25,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.Server;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
 
@@ -65,9 +66,9 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT,
-            Lang> fromLang(Server s, Lang lang,
+    Lang> fromLang(Server s, Lang lang,
 
-                           boolean selfTriggered) {
+            boolean selfTriggered) {
 
         return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered);
     }
@@ -85,7 +86,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public void addConfiguration(BaseConfigurationSection section) {
+    public void addConfiguration(YAMLProcessor config, String path) {
 
     }
 

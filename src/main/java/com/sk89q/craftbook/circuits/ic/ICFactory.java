@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,9 +16,9 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import com.sk89q.craftbook.BaseConfiguration;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Factories are used to generate instances of ICs.
@@ -83,7 +83,7 @@ public interface ICFactory {
      *
      * @param section
      */
-    public void addConfiguration(BaseConfiguration.BaseConfigurationSection section);
+    public void addConfiguration(YAMLProcessor config, String path);
 
     /**
      * Check if IC uses configuration.

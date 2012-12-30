@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,12 +16,18 @@
 
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.circuits.ic.*;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import org.bukkit.Server;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessTransmitter extends AbstractIC {
 
@@ -107,9 +113,9 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
-        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
-            requirename = section.getBoolean("per-player", false);
+            requirename = config.getBoolean(path + "per-player", false);
         }
 
         @Override

@@ -184,6 +184,9 @@ import com.sk89q.craftbook.circuits.ic.families.FamilySISO;
 import com.sk89q.craftbook.circuits.ic.families.FamilyVIVO;
 import com.sk89q.craftbook.circuits.plc.PlcFactory;
 import com.sk89q.craftbook.circuits.plc.lang.Perlstone;
+import com.sk89q.craftbook.util.config.YAMLICConfiguration;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Author: Turtle9598
@@ -194,6 +197,8 @@ public class CircuitCore implements LocalComponent {
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
     private MechanicManager manager;
     private ICManager ICManager;
+
+    private YAMLICConfiguration icConfiguration;
 
     private ICMechanicFactory ICFactory;
     private Pipes.Factory pipeFactory;
@@ -230,6 +235,15 @@ public class CircuitCore implements LocalComponent {
 
         plugin.registerCommands(CircuitCommands.class);
 
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "ic-config.yml"), "ic-config.yml", false);
+        icConfiguration = new YAMLICConfiguration(new YAMLProcessor(new File(plugin.getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
+
+        try {
+            icConfiguration.load();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
         manager = new MechanicManager();
         plugin.registerManager(manager, true, true, true, false);
 
@@ -248,6 +262,7 @@ public class CircuitCore implements LocalComponent {
     @Override
     public void disable() {
 
+        icConfiguration.unload();
     }
 
     public File getFireworkFolder() {

@@ -1,14 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.HashMap;
+import java.util.Random;
+
 import org.bukkit.Server;
 import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
@@ -16,8 +10,19 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Random;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class BonemealTerraformer extends AbstractIC {
 
@@ -139,7 +144,7 @@ public class BonemealTerraformer extends AbstractIC {
                             if (consumeBonemeal()) {
                                 b.setTypeId(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome
                                         .MUSHROOM_SHORE ? BlockID.MYCELIUM
-                                                        : BlockID.GRASS);
+                                                : BlockID.GRASS);
                             }
                             return;
                         }
@@ -328,9 +333,9 @@ public class BonemealTerraformer extends AbstractIC {
         }
 
         @Override
-        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
-            maxradius = section.getInt("max-radius", 15);
+            maxradius = config.getInt(path + "max-radius", 15);
         }
 
         @Override

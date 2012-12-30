@@ -1,11 +1,18 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.RegexUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BlockSensor extends AbstractIC {
 
@@ -111,9 +118,9 @@ public class BlockSensor extends AbstractIC {
         }
 
         @Override
-        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
-            invert = section.getBoolean("invert-output", false);
+            invert = config.getBoolean(path + "invert-output", false);
         }
 
         @Override

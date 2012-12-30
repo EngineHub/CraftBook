@@ -1,20 +1,25 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class Spigot extends AbstractIC {
 
@@ -76,7 +81,7 @@ public class Spigot extends AbstractIC {
         if (off.getLocation()
                 .distanceSquared(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock().getRelative(0,
                         yOffset, 0)).getLocation()) > radius
-                * radius) return false;
+                        * radius) return false;
         if (off.getTypeId() == 0) {
 
             int m = getFromChest();
@@ -198,9 +203,9 @@ public class Spigot extends AbstractIC {
         }
 
         @Override
-        public void addConfiguration(BaseConfiguration.BaseConfigurationSection section) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
-            buckets = section.getBoolean("requires-buckets", false);
+            buckets = config.getBoolean(path + "requires-buckets", false);
         }
 
         @Override
