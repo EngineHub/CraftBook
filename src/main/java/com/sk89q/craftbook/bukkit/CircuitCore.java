@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
@@ -280,7 +277,6 @@ public class CircuitCore implements LocalComponent {
         if (config.ICEnabled) {
             registerICs();
             registerMechanic(ICFactory = new ICMechanicFactory(ICManager));
-            setupSelfTriggered();
         }
 
         // Let's register mechanics!
@@ -684,35 +680,5 @@ public class CircuitCore implements LocalComponent {
         }
 
         return strings.toArray(new String[strings.size()]);
-    }
-
-    /**
-     * Setup the required components of self-triggered ICs.
-     */
-    private void setupSelfTriggered() {
-
-        plugin.getLogger().info("Enumerating chunks for self-triggered components...");
-
-        long start = System.currentTimeMillis();
-        int numWorlds = 0;
-        int numChunks = 0;
-
-        for (World world : plugin.getServer().getWorlds()) {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                manager.enumerate(chunk);
-                numChunks++;
-            }
-
-            numWorlds++;
-        }
-
-        long time = System.currentTimeMillis() - start;
-
-        plugin.getLogger().info(numChunks + " chunk(s) for "
-                + numWorlds + " world(s) processed " + "("
-                + time / 1000.0 * 10 / 10 + "s elapsed)");
-
-        // Set up the clock for self-triggered ICs.
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new MechanicClock(manager), 0, 2);
     }
 }

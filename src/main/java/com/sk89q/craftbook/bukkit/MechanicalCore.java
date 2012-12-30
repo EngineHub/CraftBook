@@ -1,13 +1,10 @@
 package com.sk89q.craftbook.bukkit;
 import java.util.Iterator;
 
-import org.bukkit.Chunk;
 import org.bukkit.Server;
-import org.bukkit.World;
 
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.Mechanic;
-import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
@@ -114,37 +111,6 @@ public class MechanicalCore implements LocalComponent {
         if (plugin.getEconomy() != null && config.paymentEnabled) {
             registerMechanic(new Payment.Factory());
         }
-
-        setupSelfTriggered(manager);
-    }
-
-    /**
-     * Setup the required components of INSTANCE-triggered Mechanics..
-     */
-    private void setupSelfTriggered(MechanicManager manager) {
-
-        plugin.getLogger().info("Enumerating chunks for INSTANCE-triggered components...");
-
-        long start = System.currentTimeMillis();
-        int numWorlds = 0;
-        int numChunks = 0;
-
-        for (World world : plugin.getServer().getWorlds()) {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                manager.enumerate(chunk);
-                numChunks++;
-            }
-
-            numWorlds++;
-        }
-
-        long time = System.currentTimeMillis() - start;
-
-        plugin.getLogger().info(numChunks + " chunk(s) for "
-                + numWorlds + " world(s) processed " + "(" + time / 1000.0 * 10 / 10 + "s elapsed)");
-
-        // Set up the clock for INSTANCE-triggered Mechanics.
-        plugin.getServer().getScheduler().runTaskTimer(plugin, new MechanicClock(manager), 0, 2);
     }
 
     protected void registerEvents() {

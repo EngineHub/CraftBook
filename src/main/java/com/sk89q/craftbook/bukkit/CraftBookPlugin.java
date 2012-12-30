@@ -15,8 +15,10 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -32,6 +34,7 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -103,7 +106,12 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * The adapter for events to the manager.
      */
-    MechanicListenerAdapter managerAdapter;
+    private MechanicListenerAdapter managerAdapter;
+
+    /**
+     * The MechanicClock that manages all Self-Triggering Components.
+     */
+    private MechanicClock mechanicClock;
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -132,6 +140,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onEnable() {
 
         managerAdapter = new MechanicListenerAdapter();
+        mechanicClock = new MechanicClock();
         // Check plugin for checking the active states of a plugin
         Plugin checkPlugin;
 
@@ -231,6 +240,8 @@ public class CraftBookPlugin extends JavaPlugin {
             vehicleCore.enable();
             components.add(vehicleCore);
         }
+
+        setupSelfTriggered();
     }
 
     /**
@@ -303,6 +314,41 @@ public class CraftBookPlugin extends JavaPlugin {
     public static Server server() {
 
         return inst().getServer();
+    }
+
+    /**
+     * Setup the required components of self-triggered Mechanics.
+     */
+    private void setupSelfTriggered() {
+
+        getLogger().info("Enumerating chunks for self-triggered components...");
+
+        long start = System.currentTimeMillis();
+        int numWorlds = 0;
+        int numChunks = 0;
+
+        for(MechanicManager manager : managerAdapter.getManagers()) {
+            mechanicClock.addManager(manager);
+        }
+
+        for (World world : getServer().getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                for(MechanicManager manager : managerAdapter.getManagers()) {
+                    manager.enumerate(chunk);
+                }
+                numChunks++;
+            }
+
+            numWorlds++;
+        }
+
+        long time = System.currentTimeMillis() - start;
+
+        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "("
+                + time / 1000.0 * 10 / 10 + "s elapsed)");
+
+        // Set up the clock for self-triggered ICs.
+        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, 2);
     }
 
     /**

@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,18 +16,27 @@
 
 package com.sk89q.craftbook;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MechanicClock implements Runnable {
 
-    private final MechanicManager manager;
+    private final List<MechanicManager> managers;
 
-    public MechanicClock(MechanicManager manager) {
+    public MechanicClock() {
 
-        this.manager = manager;
+        managers = new ArrayList<MechanicManager>();
+    }
+
+    public void addManager (MechanicManager manager) {
+
+        managers.add(manager);
     }
 
     @Override
     public void run() {
 
-        manager.think();
+        for(MechanicManager manager : managers)
+            manager.think();
     }
 }

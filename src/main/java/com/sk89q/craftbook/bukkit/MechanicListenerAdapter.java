@@ -53,6 +53,8 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  */
 public class MechanicListenerAdapter {
 
+    private List<MechanicManager> managerList = new ArrayList<MechanicManager>();
+
     MechanicPlayerListener playerListener = new MechanicPlayerListener();
     MechanicBlockListener blockListener = new MechanicBlockListener();
     MechanicWorldListener worldListener = new MechanicWorldListener();
@@ -67,6 +69,11 @@ public class MechanicListenerAdapter {
         CraftBookPlugin.registerEvents(worldListener);
     }
 
+    public List<MechanicManager> getManagers() {
+
+        return managerList;
+    }
+
     /**
      * Register events.
      *
@@ -74,12 +81,16 @@ public class MechanicListenerAdapter {
      */
     public void register(MechanicManager manager) {
 
+        managerList.add(manager);
+
         playerListener.addManager(manager);
         blockListener.addManager(manager);
         worldListener.addManager(manager);
     }
 
     public void register(MechanicManager manager, boolean player, boolean block, boolean world, boolean vehicle) {
+
+        managerList.add(manager);
 
         if (player)
             playerListener.addManager(manager);
@@ -321,7 +332,7 @@ public class MechanicListenerAdapter {
     }
 
     /**
-     * Block listener for processing block events.
+     * World listener for processing world events.
      *
      * @author sk89q
      */
