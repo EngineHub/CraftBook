@@ -6,7 +6,6 @@ language: en_US
 op-perms: true
 use-block-radius: false
 check-worldguard-flags: true
-experimental-repeater-support: false
 indirect-redstone-support: false
 
 circuits:
