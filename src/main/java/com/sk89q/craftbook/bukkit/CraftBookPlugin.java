@@ -124,7 +124,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Setup Config and the Commands Manager
         final CraftBookPlugin plugin = this;
-        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml", true);
+        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml", false);
         config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true,
                 YAMLFormat.EXTENDED), this);
         commands = new CommandsManager<CommandSender>() {
@@ -137,7 +137,7 @@ public class CraftBookPlugin extends JavaPlugin {
         };
 
         // Initialize the language manager.
-        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", true);
+        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", false);
         languageManager = new LanguageManager();
 
         // Set the proper command injector
