@@ -30,7 +30,7 @@ public class CircuitCommands {
 
     }
 
-    @Command(aliases = {"midi"}, desc = "Commands to manage Craftbook MIDI's")
+    @Command(aliases = {"/midi"}, desc = "Commands to manage Craftbook MIDI's")
     @NestedCommand(MIDICommands.class)
     public void midiCmd(CommandContext context, CommandSender sender) {
 
@@ -42,15 +42,8 @@ public class CircuitCommands {
 
         }
 
-        @Command(aliases = {"help"}, desc = "Basic MIDI help command", min = 0, max = 0)
-        public void helpCmd(CommandContext context, CommandSender sender) {
-
-            if (!(sender instanceof Player)) return;
-            Player player = (Player) sender;
-            player.sendMessage(ChatColor.YELLOW + "For a list of MIDI's: /midi list");
-        }
-
-        @Command(aliases = {"list"}, desc = "List MIDI's available for Melody IC", min = 0, max = 1)
+        @Command(aliases = {"list"}, desc = "List MIDI's available for Melody IC",
+                usage = "[page]", min = 0, max = 1)
         public void midiListCmd(CommandContext context, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
@@ -105,32 +98,24 @@ public class CircuitCommands {
 
         }
 
-        @Command(aliases = {"help"}, desc = "Basic IC help command", min = 0, max = 0)
-        public void helpCmd(CommandContext context, CommandSender sender) {
+        @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's",
+                usage = "<ic>", min = 1, max = 1)
+        public void docsCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
-            player.sendMessage(ChatColor.YELLOW + "For a list of IC's: /ic list");
-            player.sendMessage(ChatColor.YELLOW + "To search a list of IC's: /ic search");
-            player.sendMessage(ChatColor.YELLOW + "For information on a speficic IC: /ic docs");
+            circuitCore.generateICDocs(player, args.getString(0));
         }
 
-        @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's", min = 1, max = 1)
-        public void docsCmd(CommandContext context, CommandSender sender) {
-
-            if (!(sender instanceof Player)) return;
-            Player player = (Player) sender;
-            circuitCore.generateICDocs(player, context.getString(0));
-        }
-
-        @Command(aliases = {"list"}, desc = "List available IC's", min = 0, max = 2)
-        public void listCmd(CommandContext context, CommandSender sender) {
+        @Command(aliases = {"list"}, desc = "List available IC's",
+                usage = "[page]", min = 0, max = 1)
+        public void listCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             char[] ar = null;
             try {
-                ar = context.getString(1).toCharArray();
+                ar = args.getString(1).toCharArray();
             } catch (Exception ignored) {
             }
             String[] lines = circuitCore.generateICText(player, null, ar);
@@ -138,13 +123,13 @@ public class CircuitCommands {
             int accessedPage;
 
             try {
-                accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(0) - 1;
+                accessedPage = args.argsLength() < 1 ? 0 : args.getInteger(0) - 1;
                 if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(0) + "\"");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(0) + "\"");
                 return;
             }
 
@@ -156,35 +141,35 @@ public class CircuitCommands {
             }
         }
 
-        @Command(aliases = {"search"}, desc = "Search available IC's with names", min = 1, max = 3)
-        public void searchCmd(CommandContext context, CommandSender sender) {
+        @Command(aliases = {"search"}, desc = "Search available IC's with names",
+                usage = "<name> [page] ", min = 1, max = 2)
+        public void searchCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             char[] ar = null;
             try {
-                ar = context.getString(2).toCharArray();
+                ar = args.getString(2).toCharArray();
             } catch (Exception ignored) {
             }
-            String[] lines = circuitCore.generateICText(player, context.getString(0), ar);
+            String[] lines = circuitCore.generateICText(player, args.getString(0), ar);
             int pages = (lines.length - 1) / 9 + 1;
             int accessedPage;
 
             try {
-                accessedPage = context.argsLength() < 2 ? 0 : context.getInteger(1) - 1;
+                accessedPage = args.argsLength() < 2 ? 0 : args.getInteger(1) - 1;
                 if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(1) + "\"");
+                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(1) + "\"");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(1) + "\"");
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(1) + "\"");
                 return;
             }
 
             player.sendMessage(ChatColor.BLUE + "  ");
-            player.sendMessage(ChatColor.BLUE + "CraftBook ICs \"" + context.getString(0) + "\" (Page " +
-                    (accessedPage +
-                            1) + " of " + pages + "):");
+            player.sendMessage(ChatColor.BLUE + "CraftBook ICs \"" + args.getString(0) + "\" (Page " +
+                    (accessedPage + 1) + " of " + pages + "):");
 
             for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
                 player.sendMessage(lines[i]);
