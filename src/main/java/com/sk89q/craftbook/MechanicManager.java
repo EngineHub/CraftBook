@@ -220,10 +220,13 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
+        /*
+        TODO FIX ME
         if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
             player.printError("area.permissions");
             return 0;
         }
+        */
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -261,10 +264,13 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
+        /*
+         TODO FIX ME
         if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
             player.printError("area.permissions");
             return 0;
         }
+        */
 
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
@@ -519,6 +525,7 @@ public class MechanicManager {
      */
     protected boolean passesFilter(Event event) {
 
+        // TODO FIXME
         return true;
     }
 
