@@ -1,3 +1,7 @@
+enable-circuits: true
+enable-mechanisms: true
+enable-vehicles: true
+
 language: en_US
 op-perms: true
 use-block-radius: false
@@ -5,6 +9,142 @@ check-worldguard-flags: true
 experimental-repeater-support: false
 indirect-redstone-support: false
 
-enable-circuits: true
-enable-mechanisms: true
-enable-vehicles: true
+circuits:
+    ics:
+        enable: true
+        cache: true
+        allow-short-hand: true
+    wiring:
+        netherrack-enabled: false
+        pumpkins-enabled: false
+        glowstone-enabled: false
+        glowstone-off-block: 20
+    pipes:
+        enable: true
+        allow-diagonal: false
+        insulator-block: 35
+
+mechanics:
+    ai:
+        enable: true
+        zombie-enable: true
+        skeleton-enable: true
+    ammeter:
+        enable: true
+        item: 263
+    area:
+        enable: true
+        allow-redstone: true
+        use-schematics: true
+        max-size: 5000
+        max-per-user: 30
+    bookcase:
+        enable: true
+        read-line: You pick up a book...
+    bridge:
+        enable: true
+        allow-redstone: true
+        max-length: 30
+        max-width: 5
+    cauldron:
+        enable: true
+        spoons: true
+    chair:
+        enable: true
+        require-sneak: true
+        regen-health: true
+    chunk-anchor:
+        enable: true
+    command-sign:
+        enable: true
+    cooking-pot:
+        enable: true
+        require-fuel: true
+        cook-ores: false
+        sign-click-open: true
+    custom-crafting:
+        enable: true
+    dispenser-recipes:
+        enable: true
+    custom-drops:
+        enable: true
+        require-permissions: false
+    door:
+        enable: true
+        allow-redstone: true
+        max-length: 30
+        max-width: 5
+    elevator:
+        enable: true
+        enable-buttons: true
+        allow-looping: false
+    gate:
+        enable: true
+        allow-redstone: true
+        limit-columns: true
+        max-columns: 14
+    hidden-switch:
+        enable: true
+        any-side: true
+    legacy-cauldron:
+        enable: true
+        block: 1
+    lightstone:
+        enable: true
+        item: 348
+    light-switch:
+        enable: true
+        max-range: 10
+        max-lights: 20
+    map-changer:
+        enable: true
+    paintings:
+        enable: true
+    payment:
+        enable: true
+    snow:
+        enable: true
+        trample: true
+        place: true
+        realistic: false
+        high-piling: false
+        jump-trample: false
+    teleporter:
+        enable: true
+        require-sign: false
+        max-range: 0
+    xp storer:
+        enable: true
+        block: 52
+
+vehicles:
+    minecart:
+        max-boost-block: '41:0'
+        25x-boost-block: '14:0'
+        50x-slow-block: '88:0'
+        20x-slow-block: '13:0'
+        reverse-block: '35:0'
+        station-block: '49:0'
+        sort-block: '87:0'
+        eject-block: '42:0'
+        deposit-block: '15:0'
+        teleport-block: '133:0'
+        lift-block: '112:0'
+        dispenser-block: '129:0'
+        messager-block: '121:0'
+        enter-on-impact: true
+        slow-when-empty: true
+        decay-when-empty: false
+        remove-on-exit: false
+        remove-entities: false
+        remove-entities-othercarts: false
+        max-speed-modifier: 1.0
+        off-rail-speed-modifier: 0.0
+        track-messages: true
+        decay-time: 20
+        constant-speed: 0.0
+    boat:
+        remove-entities: false
+        no-crash: false
+        remove-entities-otherboats: false
+        break-return-boat: false

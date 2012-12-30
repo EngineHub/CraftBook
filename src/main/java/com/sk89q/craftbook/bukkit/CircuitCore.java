@@ -529,7 +529,7 @@ public class CircuitCore implements LocalComponent {
      */
     private void setupSelfTriggered() {
 
-        plugin.getLogger().info("CraftBook: Enumerating chunks for self-triggered components...");
+        plugin.getLogger().info("Enumerating chunks for self-triggered components...");
 
         long start = System.currentTimeMillis();
         int numWorlds = 0;
@@ -546,9 +546,9 @@ public class CircuitCore implements LocalComponent {
 
         long time = System.currentTimeMillis() - start;
 
-        plugin.getLogger().info("CraftBook Circuits: " + numChunks + " chunk(s) for "
+        plugin.getLogger().info(numChunks + " chunk(s) for "
                 + numWorlds + " world(s) processed " + "("
-                + Math.round(time / 1000.0 * 10) / 10 + "s elapsed)");
+                + time / 1000.0 * 10 / 10 + "s elapsed)");
 
         // Set up the clock for self-triggered ICs.
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new MechanicClock(manager), 0, 2);

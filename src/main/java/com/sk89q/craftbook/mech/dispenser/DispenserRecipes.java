@@ -21,13 +21,21 @@ public class DispenserRecipes implements Listener {
 
     private final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
+    private static DispenserRecipes instance;
+
     public DispenserRecipes() {
 
+        instance = this;
         addRecipe(new XPShooter());
         addRecipe(new SnowShooter());
         addRecipe(new FireArrows());
         addRecipe(new Fan());
         addRecipe(new Cannon());
+    }
+
+    public static DispenserRecipes inst() {
+
+        return instance;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

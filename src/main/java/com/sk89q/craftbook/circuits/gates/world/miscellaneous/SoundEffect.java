@@ -24,7 +24,11 @@ public class SoundEffect extends AbstractIC {
     public void load() {
 
         String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
-        volume = Float.parseFloat(split[0]) / 100f;
+        try {
+            volume = Float.parseFloat(split[0]) / 100f;
+        } catch (Exception e) {
+            volume = 100;
+        }
         try {
             pitch = (byte) (Integer.parseInt(split[1]) / 1.5873015873015873015873015873016);
         } catch (Exception e) {

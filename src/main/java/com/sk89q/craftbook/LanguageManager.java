@@ -42,6 +42,8 @@ public class LanguageManager {
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty() || line.trim().startsWith("#"))
+                        continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(line);
                     if (split.length != 2) {
                         continue;

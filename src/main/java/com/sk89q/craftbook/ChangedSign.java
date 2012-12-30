@@ -16,8 +16,6 @@ public interface ChangedSign {
 
     public BlockWorldVector getBlockVector();
 
-    // TODO public Chunk getChunk();
-
     // Lines
     public String[] getLines();
 

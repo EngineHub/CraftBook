@@ -293,7 +293,7 @@ public class Gate extends AbstractMechanic {
                     setBlocks(sign, getBlocks(sign, otherSign));
                 } else if (!hasEnoughBlocks(sign, otherSign) && isValidGateItem(new ItemStack(ID, 1)))
                     if (player != null) {
-                        player.printError("Not enough blocks to trigger mechanic!");
+                        player.printError("mech.not-enough-blocks");
                         return false;
                     }
             } else {

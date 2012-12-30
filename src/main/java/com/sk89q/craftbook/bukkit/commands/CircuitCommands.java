@@ -25,15 +25,94 @@ public class CircuitCommands {
     }
 
     @Command(aliases = {"ic"}, desc = "Commands to manage Craftbook IC's")
-    @NestedCommand(Commands.class)
+    @NestedCommand(ICCommands.class)
     public void icCmd(CommandContext context, CommandSender sender) {
 
     }
 
-    public class Commands {
+    @Command(aliases = {"midi"}, desc = "Commands to manage Craftbook MIDI's")
+    @NestedCommand(MIDICommands.class)
+    public void midiCmd(CommandContext context, CommandSender sender) {
 
-        public Commands(CraftBookPlugin plugin) {
+    }
 
+    public static class MIDICommands {
+
+        public MIDICommands(CraftBookPlugin plugin) {
+
+        }
+
+        @Command(aliases = {"help"}, desc = "Basic MIDI help command", min = 0, max = 0)
+        public void helpCmd(CommandContext context, CommandSender sender) {
+
+            if (!(sender instanceof Player)) return;
+            Player player = (Player) sender;
+            player.sendMessage(ChatColor.YELLOW + "For a list of MIDI's: /midi list");
+        }
+
+        @Command(aliases = {"list"}, desc = "List MIDI's available for Melody IC", min = 0, max = 1)
+        public void midiListCmd(CommandContext context, CommandSender sender) {
+
+            if (!(sender instanceof Player)) return;
+            Player player = (Player) sender;
+            List<String> lines = new ArrayList<String>();
+
+            FilenameFilter fnf = new FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String name) {
+
+                    return name.endsWith("mid") || name.endsWith(".midi");
+                }
+            };
+            for (File f : circuitCore.getMidiFolder().listFiles(fnf)) {
+                lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
+            }
+            Collections.sort(lines, new Comparator<String>() {
+
+                @Override
+                public int compare(String f1, String f2) {
+
+                    return f1.compareTo(f2);
+                }
+            });
+            int pages = (lines.size() - 1) / 9 + 1;
+            int accessedPage;
+
+            try {
+                accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(0) - 1;
+                if (accessedPage < 0 || accessedPage >= pages) {
+                    player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                return;
+            }
+
+            player.sendMessage(ChatColor.BLUE + "  ");
+            player.sendMessage(ChatColor.BLUE + "CraftBook MIDIs (Page " + (accessedPage + 1) + " of " + pages + "):");
+
+            for (int i = accessedPage * 9; i < lines.size() && i < (accessedPage + 1) * 9; i++) {
+                player.sendMessage(ChatColor.GREEN + lines.get(i));
+            }
+        }
+    }
+
+    public static class ICCommands {
+
+        public ICCommands(CraftBookPlugin plugin) {
+
+        }
+
+        @Command(aliases = {"help"}, desc = "Basic IC help command", min = 0, max = 0)
+        public void helpCmd(CommandContext context, CommandSender sender) {
+
+            if (!(sender instanceof Player)) return;
+            Player player = (Player) sender;
+            player.sendMessage(ChatColor.YELLOW + "For a list of IC's: /ic list");
+            player.sendMessage(ChatColor.YELLOW + "To search a list of IC's: /ic search");
+            player.sendMessage(ChatColor.YELLOW + "For information on a speficic IC: /ic docs");
         }
 
         @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's", min = 1, max = 1)
@@ -109,55 +188,6 @@ public class CircuitCommands {
 
             for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
                 player.sendMessage(lines[i]);
-            }
-        }
-
-        // TODO Move MIDI
-        @Command(aliases = {"midi"}, desc = "List MIDI's available for Melody IC", min = 0, max = 1)
-        public void midiListCmd(CommandContext context, CommandSender sender) {
-
-            if (!(sender instanceof Player)) return;
-            Player player = (Player) sender;
-            List<String> lines = new ArrayList<String>();
-
-            FilenameFilter fnf = new FilenameFilter() {
-
-                @Override
-                public boolean accept(File dir, String name) {
-
-                    return name.endsWith("mid") || name.endsWith(".midi");
-                }
-            };
-            for (File f : circuitCore.getMidiFolder().listFiles(fnf)) {
-                lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
-            }
-            Collections.sort(lines, new Comparator<String>() {
-
-                @Override
-                public int compare(String f1, String f2) {
-
-                    return f1.compareTo(f2);
-                }
-            });
-            int pages = (lines.size() - 1) / 9 + 1;
-            int accessedPage;
-
-            try {
-                accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(0) - 1;
-                if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
-                return;
-            }
-
-            player.sendMessage(ChatColor.BLUE + "  ");
-            player.sendMessage(ChatColor.BLUE + "CraftBook MIDIs (Page " + (accessedPage + 1) + " of " + pages + "):");
-
-            for (int i = accessedPage * 9; i < lines.size() && i < (accessedPage + 1) * 9; i++) {
-                player.sendMessage(ChatColor.GREEN + lines.get(i));
             }
         }
     }

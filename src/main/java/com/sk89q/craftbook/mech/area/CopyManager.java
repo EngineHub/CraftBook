@@ -9,7 +9,7 @@ package com.sk89q.craftbook.mech.area;
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -68,8 +68,7 @@ public class CopyManager {
      */
     public static boolean isValidName(String name) {
 
-        // name needs to be between 1 and 13 letters long so we can fit the - XXX - on the sides of the sign to
-        // indicate what area is toggled on
+        // name needs to be between 1 and 13 letters long so we can fit the
         return !name.isEmpty() && name.length() <= 13 && NAME_PATTERN.matcher(name).matches();
     }
 

@@ -7,12 +7,10 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.*;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.BufferedReader;
@@ -173,11 +171,9 @@ public class ProgrammableFireworkShow extends AbstractIC {
                             location.add(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]),
                                     Double.parseDouble(offset[2]));
 
-                            FireworkEffect.Builder builder = FireworkEffect.builder();
-
                             //Duration data (1)
                             errorLocation = "Duration";
-                            int duration = Integer.parseInt(data[1]); //1 duration = 1 second.
+                            double duration = Double.parseDouble(data[1]); //1 duration = 1 second.
 
                             //Shape data (2)
                             errorLocation = "Shape";
@@ -195,36 +191,42 @@ public class ProgrammableFireworkShow extends AbstractIC {
                             else
                                 type = FireworkEffect.Type.BALL;
 
-                            builder.with(type);
-
                             //Colour Data (3)
                             errorLocation = "Colour";
                             String[] rgb = RegexUtil.COMMA_PATTERN.split(data[3]);
-                            builder.withColor(org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]),
-                                    Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2])));
+                            Color colour = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]),
+                                    Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
 
-                            if (data.length > 4) {
+                            //Colour Data (4)
+                            errorLocation = "Fade";
+                            rgb = RegexUtil.COMMA_PATTERN.split(data[4]);
+                            Color fade = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),
+                                    Integer.parseInt(rgb[2]));
 
-                                //Shape data (4)
+                            boolean flicker = false;
+                            boolean trail = false;
+
+                            if (data.length > 5) {
+
+                                //Shape data (5)
                                 errorLocation = "Effects";
-                                boolean flicker = false;
-                                boolean trail = false;
-                                if (data[4].equalsIgnoreCase("twinkle"))
+                                if (data[5].equalsIgnoreCase("twinkle"))
                                     flicker = true;
-                                else if (data[4].equalsIgnoreCase("trail"))
+                                else if (data[5].equalsIgnoreCase("trail"))
                                     trail = true;
-
-                                builder.flicker(flicker);
-                                builder.trail(trail);
                             }
 
                             errorLocation = "Creation";
-                            FireworkEffect effect = builder.build();
+
+                            FireworkEffect effect = FireworkEffect.builder().with(type).withColor(colour).withFade
+                                    (fade).flicker(flicker).trail(trail).build();
 
                             Firework firework = (Firework) location.getWorld().spawnEntity(location,
                                     EntityType.FIREWORK);
-                            firework.getFireworkMeta().addEffect(effect);
-                            firework.getFireworkMeta().setPower(duration * 2);
+                            FireworkMeta meta = firework.getFireworkMeta();
+                            meta.addEffect(effect);
+                            meta.setPower((int) duration * 2);
+                            firework.setFireworkMeta(meta);
                         } catch (Exception e) {
                             Bukkit.getLogger().severe("Error occured while doing: " + errorLocation + ". Whilst " +
                                     "reading line " + position + " of the firework file " + show + "!");

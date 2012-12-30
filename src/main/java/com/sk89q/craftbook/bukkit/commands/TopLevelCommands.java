@@ -20,7 +20,7 @@ public class TopLevelCommands {
 
     }
 
-    public class Commands {
+    public static class Commands {
 
         public Commands(CraftBookPlugin plugin) {
 

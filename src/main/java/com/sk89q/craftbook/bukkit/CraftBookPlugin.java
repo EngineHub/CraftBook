@@ -6,6 +6,7 @@ import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -124,7 +125,9 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Setup Config and the Commands Manager
         final CraftBookPlugin plugin = this;
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true), this);
+        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml", true);
+        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true,
+                YAMLFormat.EXTENDED), this);
         commands = new CommandsManager<CommandSender>() {
 
             @Override
@@ -134,7 +137,8 @@ public class CraftBookPlugin extends JavaPlugin {
             }
         };
 
-        //
+        // Initialize the language manager.
+        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", true);
         languageManager = new LanguageManager();
 
         // Set the proper command injector
@@ -182,18 +186,23 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Let's start the show
         // Circuits
-        CircuitCore circuitCore = new CircuitCore();
-        circuitCore.enable();
-        components.add(circuitCore);
+        if (config.enableCircuits) {
+            CircuitCore circuitCore = new CircuitCore();
+            circuitCore.enable();
+            components.add(circuitCore);
+        }
         // Mechanics
-        MechanicalCore mechanicalCore = new MechanicalCore();
-        mechanicalCore.enable();
-        components.add(mechanicalCore);
+        if (config.enableMechanisms) {
+            MechanicalCore mechanicalCore = new MechanicalCore();
+            mechanicalCore.enable();
+            components.add(mechanicalCore);
+        }
         // Vehicles
-        VehicleCore vehicleCore = new VehicleCore();
-        vehicleCore.enable();
-        components.add(vehicleCore);
-
+        if (config.enableVehicles) {
+            VehicleCore vehicleCore = new VehicleCore();
+            vehicleCore.enable();
+            components.add(vehicleCore);
+        }
     }
 
     /**
@@ -476,8 +485,9 @@ public class CraftBookPlugin extends JavaPlugin {
      *
      * @param actual      The destination file
      * @param defaultName The name of the file inside the jar's defaults folder
+     * @param force       If it should make the file even if it already exists
      */
-    public void createDefaultConfiguration(File actual, String defaultName) {
+    public void createDefaultConfiguration(File actual, String defaultName, boolean force) {
 
         // Make parent directories
         File parent = actual.getParentFile();
@@ -485,7 +495,7 @@ public class CraftBookPlugin extends JavaPlugin {
             parent.mkdirs();
         }
 
-        if (actual.exists()) {
+        if (actual.exists() && !force) {
             return;
         }
 
@@ -514,8 +524,9 @@ public class CraftBookPlugin extends JavaPlugin {
                     output.write(buf, 0, length);
                 }
 
-                getLogger().info("Default configuration file written: "
-                        + actual.getAbsolutePath());
+                if (!force)
+                    getLogger().info("Default configuration file written: "
+                            + actual.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {

@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -374,7 +374,7 @@ public class Bridge extends AbstractMechanic {
                             removeBlocks(s, 1);
                         } else {
                             if (player != null) {
-                                player.printError("Not enough blocks for mechanic to function!");
+                                player.printError("mech.not-enough-blocks");
                             }
                             return;
                         }
