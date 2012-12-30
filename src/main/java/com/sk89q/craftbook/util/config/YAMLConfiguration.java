@@ -84,7 +84,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", true);
         bookcaseReadLine = config.getString("mechanics.bookcase.read-line", "You pick up a book...");
 
-        // Bridge Bookcase Listener
+        // Bridge Configuration Listener
         bridgeEnabled = config.getBoolean("mechanics.bridge.enable", true);
         bridgeAllowRedstone = config.getBoolean("mechanics.bridge.allow-redstone", true);
         bridgeMaxLength = config.getInt("mechanics.bridge.max-length", 30);
@@ -130,7 +130,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         doorAllowRedstone = config.getBoolean("mechanics.door.allow-redstone", true);
         doorMaxLength = config.getInt("mechanics.door.max-length", 30);
         doorMaxWidth = config.getInt("mechanics.door.max-width", 5);
-        doorBlocks = Arrays.asList(4, 5, 20, 43);
+        doorBlocks = config.getIntList("mechanics.door.blocks", Arrays.asList(4, 5, 20, 43));
 
         // Elevator Configuration Listener
         elevatorEnabled = config.getBoolean("mechanics.elevator.enable", true);

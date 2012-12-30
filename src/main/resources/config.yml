@@ -45,6 +45,7 @@ mechanics:
         allow-redstone: true
         max-length: 30
         max-width: 5
+        blocks: [4, 5, 20, 43]
     cauldron:
         enable: true
         spoons: true
@@ -52,6 +53,7 @@ mechanics:
         enable: true
         require-sneak: true
         regen-health: true
+        blocks: [53, 67, 108, 109, 114, 128, 134, 135, 136]
     chunk-anchor:
         enable: true
     command-sign:
@@ -73,6 +75,7 @@ mechanics:
         allow-redstone: true
         max-length: 30
         max-width: 5
+        blocks: [4, 5, 20, 43]
     elevator:
         enable: true
         enable-buttons: true
@@ -82,6 +85,7 @@ mechanics:
         allow-redstone: true
         limit-columns: true
         max-columns: 14
+        blocks: [85, 101, 102, 113]
     hidden-switch:
         enable: true
         any-side: true
