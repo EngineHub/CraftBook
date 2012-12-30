@@ -104,10 +104,7 @@
                 <includes>
                     <include>en_US.txt</include>
                     <include>config.yml</include>
-                    <include>circuits-config.yml</include>
                     <include>ic-config.yml</include>
-                    <include>mechanisms-config.yml</include>
-                    <include>vehicles-config.yml</include>
                     <include>books.tnt</include>
                     <include>cauldron-recipes.txt</include>
                     <include>cauldron-recipes.yml</include>
