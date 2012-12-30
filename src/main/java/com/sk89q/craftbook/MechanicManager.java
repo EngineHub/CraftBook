@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,12 +16,17 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.blocks.ItemID;
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -34,11 +39,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have registered triggerability,
@@ -176,14 +182,6 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
-        /*
-         TODO FIX ME
-        if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
-            player.printError("area.permissions");
-            return 0;
-        }
-        */
-
         // Announce the event to anyone who considers it to be on one of their defining blocks
         watchBlockManager.notify(event);
 
@@ -194,6 +192,13 @@ public class MechanicManager {
             List<Mechanic> mechanics = load(pos);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
+
+                    // A mechanic has been found, check if we can actually build here.
+                    if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
+                        player.printError("area.permissions");
+                        return 0;
+                    }
+
                     aMechanic.onBlockBreak(event);
                     returnValue++;
                 }
@@ -223,14 +228,6 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
-        /*
-        TODO FIX ME
-        if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-            player.printError("area.permissions");
-            return 0;
-        }
-        */
-
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
 
@@ -238,6 +235,12 @@ public class MechanicManager {
             List<Mechanic> mechanics = load(pos);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
+
+                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                        player.printError("area.permissions");
+                        return 0;
+                    }
+
                     aMechanic.onRightClick(event);
                     returnValue++;
                 }
@@ -267,20 +270,18 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
-        /*
-         TODO FIX ME
-        if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-            player.printError("area.permissions");
-            return 0;
-        }
-        */
-
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
             List<Mechanic> mechanics = load(pos);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
+
+                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                        player.printError("area.permissions");
+                        return 0;
+                    }
+
                     aMechanic.onLeftClick(event);
                     returnValue++;
                 }
@@ -406,7 +407,7 @@ public class MechanicManager {
      *                                   but the mechanism is misconfigured and inoperable.
      */
     protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player,
-                                  ChangedSign sign) throws InvalidMechanismException {
+            ChangedSign sign) throws InvalidMechanismException {
 
         List<Mechanic> detectedMechanics = detect(pos, player, sign);
 
@@ -501,7 +502,7 @@ public class MechanicManager {
      *                                   but the mechanism is misconfigured and inoperable.
      */
     protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player,
-                                    ChangedSign sign) throws InvalidMechanismException {
+            ChangedSign sign) throws InvalidMechanismException {
 
         List<Mechanic> mechanics = new ArrayList<Mechanic>();
 
