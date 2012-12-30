@@ -1,5 +1,15 @@
 package com.sk89q.craftbook.circuits;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.PistonBaseMaterial;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -9,19 +19,11 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Pipes extends AbstractMechanic {
 
@@ -142,7 +144,7 @@ public class Pipes extends AbstractMechanic {
                             if (!items.isEmpty()) searchNearbyPipes(block);
                         } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
 
-                            CircuitCore circuitCore = (CircuitCore) CircuitCore.inst();
+                            CircuitCore circuitCore = CircuitCore.inst();
                             if (circuitCore.getICFactory() == null) continue;
 
                             try {
@@ -182,8 +184,20 @@ public class Pipes extends AbstractMechanic {
             PistonBaseMaterial p = (PistonBaseMaterial) block.getState().getData();
             Block fac = block.getRelative(p.getFacing());
             if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.DISPENSER) {
-                items.addAll(Arrays.asList(((InventoryHolder) fac.getState()).getInventory().getContents().clone()));
-                ((InventoryHolder) fac.getState()).getInventory().clear();
+                if(CraftBookPlugin.inst().getConfiguration().pipeStackPerPull) {
+
+                    for(ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+
+                        if(!ItemUtil.isStackValid(stack))
+                            continue;
+                        items.add(stack.clone());
+                        ((InventoryHolder) fac.getState()).getInventory().remove(stack);
+                    }
+                } else {
+
+                    items.addAll(Arrays.asList(((InventoryHolder) fac.getState()).getInventory().getContents().clone()));
+                    ((InventoryHolder) fac.getState()).getInventory().clear();
+                }
                 visitedPipes.add(BukkitUtil.toVector(fac));
                 searchNearbyPipes(block);
                 if (!items.isEmpty()) {

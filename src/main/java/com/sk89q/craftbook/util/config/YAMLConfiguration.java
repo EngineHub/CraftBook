@@ -4,6 +4,12 @@ package com.sk89q.craftbook.util.config;
  * Author: Turtle9598
  */
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mech.CustomDropManager;
@@ -11,12 +17,6 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
 
 /**
  * A implementation of YAML based off of {@link com.sk89q.worldedit.util.YAMLConfiguration} for CraftBook.
@@ -61,6 +61,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pipesEnabled = config.getBoolean("circuits.pipes.enable", true);
         pipesDiagonal = config.getBoolean("circuits.pipes.allow-diagonal", false);
         pipeInsulator = config.getInt("circuits.pipes.insulator-block", BlockID.CLOTH);
+        pipeStackPerPull = config.getBoolean("circuits.pipes.stack-per-move", true);
 
         /* Mechanism Configuration */
 

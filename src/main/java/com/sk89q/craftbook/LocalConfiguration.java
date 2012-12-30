@@ -1,14 +1,14 @@
 package com.sk89q.craftbook;
-import com.sk89q.craftbook.mech.CustomDropManager;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.sk89q.craftbook.mech.CustomDropManager;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * A implementation of Configuration based off of {@link com.sk89q.worldedit.LocalConfiguration} for CraftBook.
@@ -33,6 +33,7 @@ public abstract class LocalConfiguration {
     public boolean pipesEnabled = true;
     public boolean pipesDiagonal = false;
     public int pipeInsulator = BlockID.CLOTH;
+    public boolean pipeStackPerPull = true;
 
     // Mechanics
     // Mechanics - AI

@@ -104,7 +104,6 @@
                 <includes>
                     <include>en_US.txt</include>
                     <include>config.yml</include>
-                    <include>ic-config.yml</include>
                     <include>books.txt</include>
                     <include>cauldron-recipes.txt</include>
                     <include>cauldron-recipes.yml</include>
