@@ -297,7 +297,7 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * This retrives the CraftBookPlugin logger.
+     * This retrieves the CraftBookPlugin logger.
      *
      * @return Returns the CraftBookPlugin {@link Logger}
      */
@@ -307,9 +307,9 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * This retrives the CraftBookPlugin logger.
+     * This retrieves the CraftBookPlugin server.
      *
-     * @return Returns the CraftBookPlugin {@link Logger}
+     * @return Returns the CraftBookPlugin {@link Server}
      */
     public static Server server() {
 

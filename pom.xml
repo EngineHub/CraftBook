@@ -105,14 +105,13 @@
                     <include>en_US.txt</include>
                     <include>config.yml</include>
                     <include>ic-config.yml</include>
-                    <include>books.tnt</include>
+                    <include>books.txt</include>
                     <include>cauldron-recipes.txt</include>
                     <include>cauldron-recipes.yml</include>
                     <include>crafting-recipes.yml</include>
                     <include>custom-block-drops.txt</include>
                     <include>custom-ics.txt</include>
                     <include>custom-mob-drops.txt</include>
-                    <include>recipes.txt</include>
                 </includes>
             </resource>
             <resource>
