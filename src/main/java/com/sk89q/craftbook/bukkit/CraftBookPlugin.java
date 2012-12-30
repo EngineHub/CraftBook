@@ -476,7 +476,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void reloadConfiguration() {
 
-        // TODO Work
+        config.unload();
+        config.load();
     }
 
     /**
