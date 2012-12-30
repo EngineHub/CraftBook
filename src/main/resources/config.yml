@@ -112,7 +112,7 @@ mechanics:
         enable: true
         require-sign: false
         max-range: 0
-    xp storer:
+    xp-storer:
         enable: true
         block: 52
 

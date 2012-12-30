@@ -184,8 +184,8 @@ public class YAMLConfiguration extends LocalConfiguration {
         teleporterMaxRange = config.getInt("mechanics.teleporter.max-range", 0);
 
         // XPStorer Configuration Listener
-        xpStorerEnabled = config.getBoolean("mechanics.xp storer.enable", true);
-        xpStorerBlock = config.getInt("mechanics.xp storer.block", BlockID.MOB_SPAWNER);
+        xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);
+        xpStorerBlock = config.getInt("mechanics.xp-storer.block", BlockID.MOB_SPAWNER);
 
         /* Vehicle Configuration */
 
