@@ -13,7 +13,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
 import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.util.FatalConfigurationLoadingException;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -156,7 +155,7 @@ public class CraftBookPlugin extends JavaPlugin {
         // Load the configuration
         try {
             config.load();
-        } catch (FatalConfigurationLoadingException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             getServer().shutdown();
         }
@@ -611,7 +610,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Location loc) {
 
-        return worldGuardPlugin == null || worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
+        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
     }
 
     /**
@@ -627,7 +626,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Block block) {
 
-        return worldGuardPlugin == null || worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
+        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
     }
 
     /**
@@ -643,8 +642,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canUse(Player player, Location loc) {
 
-        return worldGuardPlugin == null || worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
-                true), loc, new com.sk89q.worldguard.bukkit.BukkitPlayer(worldGuardPlugin, player));
+        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
+                true), loc, worldGuardPlugin.wrapPlayer(player));
     }
 
     /**
