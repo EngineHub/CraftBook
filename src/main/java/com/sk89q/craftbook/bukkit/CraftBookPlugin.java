@@ -344,8 +344,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "("
-                + time / 1000 + "s elapsed)");
+        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms elapsed)");
 
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, 2);
