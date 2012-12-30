@@ -1,29 +1,192 @@
 package com.sk89q.craftbook.bukkit;
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
-import com.sk89q.craftbook.circuits.GlowStone;
-import com.sk89q.craftbook.circuits.JackOLantern;
-import com.sk89q.craftbook.circuits.Netherrack;
-import com.sk89q.craftbook.circuits.Pipes;
-import com.sk89q.craftbook.circuits.gates.logic.*;
-import com.sk89q.craftbook.circuits.gates.world.blocks.*;
-import com.sk89q.craftbook.circuits.gates.world.entity.*;
-import com.sk89q.craftbook.circuits.gates.world.items.*;
-import com.sk89q.craftbook.circuits.gates.world.miscellaneous.*;
-import com.sk89q.craftbook.circuits.gates.world.sensors.*;
-import com.sk89q.craftbook.circuits.gates.world.weather.*;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.circuits.ic.families.*;
-import com.sk89q.craftbook.circuits.plc.PlcFactory;
-import com.sk89q.craftbook.circuits.plc.lang.Perlstone;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.*;
+import com.sk89q.craftbook.LocalComponent;
+import com.sk89q.craftbook.Mechanic;
+import com.sk89q.craftbook.MechanicClock;
+import com.sk89q.craftbook.MechanicFactory;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
+import com.sk89q.craftbook.circuits.GlowStone;
+import com.sk89q.craftbook.circuits.JackOLantern;
+import com.sk89q.craftbook.circuits.Netherrack;
+import com.sk89q.craftbook.circuits.Pipes;
+import com.sk89q.craftbook.circuits.gates.logic.AndGate;
+import com.sk89q.craftbook.circuits.gates.logic.Clock;
+import com.sk89q.craftbook.circuits.gates.logic.ClockDivider;
+import com.sk89q.craftbook.circuits.gates.logic.ClockST;
+import com.sk89q.craftbook.circuits.gates.logic.CombinationLock;
+import com.sk89q.craftbook.circuits.gates.logic.Counter;
+import com.sk89q.craftbook.circuits.gates.logic.Delayer;
+import com.sk89q.craftbook.circuits.gates.logic.Dispatcher;
+import com.sk89q.craftbook.circuits.gates.logic.DownCounter;
+import com.sk89q.craftbook.circuits.gates.logic.EdgeTriggerDFlipFlop;
+import com.sk89q.craftbook.circuits.gates.logic.FullAdder;
+import com.sk89q.craftbook.circuits.gates.logic.FullSubtractor;
+import com.sk89q.craftbook.circuits.gates.logic.HalfAdder;
+import com.sk89q.craftbook.circuits.gates.logic.HalfSubtractor;
+import com.sk89q.craftbook.circuits.gates.logic.InvertedRsNandLatch;
+import com.sk89q.craftbook.circuits.gates.logic.Inverter;
+import com.sk89q.craftbook.circuits.gates.logic.JkFlipFlop;
+import com.sk89q.craftbook.circuits.gates.logic.LevelTriggeredDFlipFlop;
+import com.sk89q.craftbook.circuits.gates.logic.LowDelayer;
+import com.sk89q.craftbook.circuits.gates.logic.LowNotPulser;
+import com.sk89q.craftbook.circuits.gates.logic.LowPulser;
+import com.sk89q.craftbook.circuits.gates.logic.Marquee;
+import com.sk89q.craftbook.circuits.gates.logic.MemoryAccess;
+import com.sk89q.craftbook.circuits.gates.logic.MemorySetter;
+import com.sk89q.craftbook.circuits.gates.logic.Monostable;
+import com.sk89q.craftbook.circuits.gates.logic.Multiplexer;
+import com.sk89q.craftbook.circuits.gates.logic.NandGate;
+import com.sk89q.craftbook.circuits.gates.logic.NotDelayer;
+import com.sk89q.craftbook.circuits.gates.logic.NotLowDelayer;
+import com.sk89q.craftbook.circuits.gates.logic.NotPulser;
+import com.sk89q.craftbook.circuits.gates.logic.Pulser;
+import com.sk89q.craftbook.circuits.gates.logic.Random3Bit;
+import com.sk89q.craftbook.circuits.gates.logic.Random5Bit;
+import com.sk89q.craftbook.circuits.gates.logic.RandomBit;
+import com.sk89q.craftbook.circuits.gates.logic.RandomBitST;
+import com.sk89q.craftbook.circuits.gates.logic.RangedOutput;
+import com.sk89q.craftbook.circuits.gates.logic.Repeater;
+import com.sk89q.craftbook.circuits.gates.logic.RsNandLatch;
+import com.sk89q.craftbook.circuits.gates.logic.RsNorFlipFlop;
+import com.sk89q.craftbook.circuits.gates.logic.ToggleFlipFlop;
+import com.sk89q.craftbook.circuits.gates.logic.XnorGate;
+import com.sk89q.craftbook.circuits.gates.logic.XorGate;
+import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreaker;
+import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreakerST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.BlockLauncher;
+import com.sk89q.craftbook.circuits.gates.world.blocks.BonemealTerraformer;
+import com.sk89q.craftbook.circuits.gates.world.blocks.BonemealTerraformerST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.CombineHarvester;
+import com.sk89q.craftbook.circuits.gates.world.blocks.CombineHarvesterST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.Cultivator;
+import com.sk89q.craftbook.circuits.gates.world.blocks.CultivatorST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.FlexibleSetBlock;
+import com.sk89q.craftbook.circuits.gates.world.blocks.Irrigator;
+import com.sk89q.craftbook.circuits.gates.world.blocks.IrrigatorST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.LavaSensor;
+import com.sk89q.craftbook.circuits.gates.world.blocks.LavaSensorST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFlood;
+import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFloodST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.MultipleSetBlock;
+import com.sk89q.craftbook.circuits.gates.world.blocks.Planter;
+import com.sk89q.craftbook.circuits.gates.world.blocks.PlanterST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.Pump;
+import com.sk89q.craftbook.circuits.gates.world.blocks.PumpST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAbove;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveChest;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveChestST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelow;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowChest;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowChestST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowST;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBridge;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetDoor;
+import com.sk89q.craftbook.circuits.gates.world.blocks.Spigot;
+import com.sk89q.craftbook.circuits.gates.world.blocks.WaterSensor;
+import com.sk89q.craftbook.circuits.gates.world.blocks.WaterSensorST;
+import com.sk89q.craftbook.circuits.gates.world.entity.AdvancedEntitySpawner;
+import com.sk89q.craftbook.circuits.gates.world.entity.CreatureSpawner;
+import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannon;
+import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannonST;
+import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrap;
+import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrapST;
+import com.sk89q.craftbook.circuits.gates.world.entity.TeleportReciever;
+import com.sk89q.craftbook.circuits.gates.world.entity.TeleportRecieverST;
+import com.sk89q.craftbook.circuits.gates.world.entity.TeleportTransmitter;
+import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafter;
+import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafterST;
+import com.sk89q.craftbook.circuits.gates.world.items.ChestStocker;
+import com.sk89q.craftbook.circuits.gates.world.items.ChestStockerST;
+import com.sk89q.craftbook.circuits.gates.world.items.ContainerCollector;
+import com.sk89q.craftbook.circuits.gates.world.items.ContainerCollectorST;
+import com.sk89q.craftbook.circuits.gates.world.items.ContainerDispenser;
+import com.sk89q.craftbook.circuits.gates.world.items.ContainerDispenserST;
+import com.sk89q.craftbook.circuits.gates.world.items.ItemDispenser;
+import com.sk89q.craftbook.circuits.gates.world.items.ItemFan;
+import com.sk89q.craftbook.circuits.gates.world.items.ItemFanST;
+import com.sk89q.craftbook.circuits.gates.world.items.Sorter;
+import com.sk89q.craftbook.circuits.gates.world.items.SorterST;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowBarrage;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowShooter;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FireBarrage;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FireShooter;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FlameThrower;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.LightningSummon;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Melody;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.MessageSender;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ParticleEffect;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ParticleEffectST;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducer;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducerST;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ProgrammableFireworkShow;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.SoundEffect;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.TimedExplosion;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Tune;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessReceiver;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessReceiverST;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessTransmitter;
+import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.MovementSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.MovementSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensorST;
+import com.sk89q.craftbook.circuits.gates.world.weather.RainSensor;
+import com.sk89q.craftbook.circuits.gates.world.weather.RainSensorST;
+import com.sk89q.craftbook.circuits.gates.world.weather.ServerTimeModulus;
+import com.sk89q.craftbook.circuits.gates.world.weather.TStormSensor;
+import com.sk89q.craftbook.circuits.gates.world.weather.TStormSensorST;
+import com.sk89q.craftbook.circuits.gates.world.weather.TimeControl;
+import com.sk89q.craftbook.circuits.gates.world.weather.TimeControlAdvanced;
+import com.sk89q.craftbook.circuits.gates.world.weather.TimeFaker;
+import com.sk89q.craftbook.circuits.gates.world.weather.TimeSet;
+import com.sk89q.craftbook.circuits.gates.world.weather.TimeSetST;
+import com.sk89q.craftbook.circuits.gates.world.weather.WeatherControl;
+import com.sk89q.craftbook.circuits.gates.world.weather.WeatherControlAdvanced;
+import com.sk89q.craftbook.circuits.gates.world.weather.WeatherFaker;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICFamily;
+import com.sk89q.craftbook.circuits.ic.ICManager;
+import com.sk89q.craftbook.circuits.ic.ICMechanicFactory;
+import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.circuits.ic.families.Family3I3O;
+import com.sk89q.craftbook.circuits.ic.families.Family3ISO;
+import com.sk89q.craftbook.circuits.ic.families.FamilyAISO;
+import com.sk89q.craftbook.circuits.ic.families.FamilySI3O;
+import com.sk89q.craftbook.circuits.ic.families.FamilySI5O;
+import com.sk89q.craftbook.circuits.ic.families.FamilySISO;
+import com.sk89q.craftbook.circuits.ic.families.FamilyVIVO;
+import com.sk89q.craftbook.circuits.plc.PlcFactory;
+import com.sk89q.craftbook.circuits.plc.lang.Perlstone;
 
 /**
  * Author: Turtle9598
@@ -66,8 +229,7 @@ public class CircuitCore implements LocalComponent {
         plugin.registerCommands(CircuitCommands.class);
 
         manager = new MechanicManager();
-        MechanicListenerAdapter adapter = new MechanicListenerAdapter();
-        adapter.register(manager);
+        plugin.registerManager(manager, true, true, true, false);
 
         midiFolder = new File(plugin.getDataFolder(), "midi/");
         if (!midiFolder.exists()) midiFolder.mkdir();
@@ -473,47 +635,47 @@ public class CircuitCore implements LocalComponent {
             try {
                 thisIC:
                 {
-                    RegisteredICFactory ric = ICManager.registered.get(ic);
-                    IC tic = ric.getFactory().create(null);
-                    if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
-                            && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
-                    if (parameters != null) {
-                        for (char c : parameters) {
-                            if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
-                            else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
-                            else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks"))
-                                break thisIC;
-                            else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items"))
-                                break thisIC;
-                            else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
-                                break thisIC;
-                            else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith
-                                    ("weather"))
-                                break thisIC;
-                            else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic"))
-                                break thisIC;
-                            else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith
-                                    ("miscellaneous"))
-                                break thisIC;
-                            else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith
-                                    ("sensors"))
-                                break thisIC;
+                RegisteredICFactory ric = ICManager.registered.get(ic);
+                IC tic = ric.getFactory().create(null);
+                if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
+                        && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
+                if (parameters != null) {
+                    for (char c : parameters) {
+                        if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
+                        else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
+                        else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks"))
+                            break thisIC;
+                        else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items"))
+                            break thisIC;
+                        else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
+                            break thisIC;
+                        else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith
+                                ("weather"))
+                            break thisIC;
+                        else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic"))
+                            break thisIC;
+                        else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith
+                                ("miscellaneous"))
+                            break thisIC;
+                        else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith
+                                ("sensors"))
+                            break thisIC;
 
-                        }
                     }
-                    col = !col;
-                    ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
+                }
+                col = !col;
+                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                    if (ric.getFactory() instanceof RestrictedIC) {
-                        if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
-                            colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                        }
-                    } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                if (ric.getFactory() instanceof RestrictedIC) {
+                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
                         colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                     }
-                    strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"
-                            + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
-                            + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
+                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                }
+                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"
+                        + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
+                        + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
                 plugin.getLogger().warning("An error occurred generating the docs for IC: " + ic + ".");

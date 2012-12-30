@@ -16,16 +16,10 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -41,6 +35,17 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Diode;
 
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
  *
@@ -48,11 +53,18 @@ import org.bukkit.material.Diode;
  */
 public class MechanicListenerAdapter {
 
+    MechanicPlayerListener playerListener = new MechanicPlayerListener();
+    MechanicBlockListener blockListener = new MechanicBlockListener();
+    MechanicWorldListener worldListener = new MechanicWorldListener();
+
     /**
      * Constructs the adapter.
      */
     public MechanicListenerAdapter() {
 
+        CraftBookPlugin.registerEvents(playerListener);
+        CraftBookPlugin.registerEvents(blockListener);
+        CraftBookPlugin.registerEvents(worldListener);
     }
 
     /**
@@ -62,9 +74,20 @@ public class MechanicListenerAdapter {
      */
     public void register(MechanicManager manager) {
 
-        CraftBookPlugin.registerEvents(new MechanicPlayerListener(manager));
-        CraftBookPlugin.registerEvents(new MechanicBlockListener(manager));
-        CraftBookPlugin.registerEvents(new MechanicWorldListener(manager));
+        playerListener.addManager(manager);
+        blockListener.addManager(manager);
+        worldListener.addManager(manager);
+    }
+
+    public void register(MechanicManager manager, boolean player, boolean block, boolean world, boolean vehicle) {
+
+        if (player)
+            playerListener.addManager(manager);
+        if (block)
+            blockListener.addManager(manager);
+        if (world)
+            worldListener.addManager(manager);
+        //TODO if (vehicle)
     }
 
     /**
@@ -74,27 +97,38 @@ public class MechanicListenerAdapter {
      */
     protected static class MechanicPlayerListener implements Listener {
 
-        protected final MechanicManager manager;
+        protected static final List<MechanicManager> managers = new ArrayList<MechanicManager>();
+
+        public void addManager (MechanicManager manager) {
+
+            managers.add(manager);
+        }
 
         /**
          * Construct the listener.
          *
          * @param manager
          */
-        public MechanicPlayerListener(MechanicManager manager) {
+        public MechanicPlayerListener(MechanicManager ... manager) {
 
-            this.manager = manager;
+            managers.addAll(Arrays.asList(manager));
+        }
+
+        public MechanicPlayerListener() {
+
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onPlayerInteract(PlayerInteractEvent event) {
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                manager.dispatchBlockRightClick(event);
+                for (MechanicManager manager : managers)
+                    manager.dispatchBlockRightClick(event);
             }
 
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                manager.dispatchBlockLeftClick(event);
+                for (MechanicManager manager : managers)
+                    manager.dispatchBlockLeftClick(event);
             }
         }
     }
@@ -106,16 +140,28 @@ public class MechanicListenerAdapter {
      */
     protected static class MechanicBlockListener implements Listener {
 
-        protected final MechanicManager manager;
+        protected static final List<MechanicManager> managers = new ArrayList<MechanicManager>();
+
+        public void addManager (MechanicManager manager) {
+
+            managers.add(manager);
+        }
 
         /**
          * Construct the listener.
          *
          * @param manager
          */
-        public MechanicBlockListener(MechanicManager manager) {
+        public MechanicBlockListener(MechanicManager ... manager) {
 
-            this.manager = manager;
+            managers.addAll(Arrays.asList(manager));
+        }
+
+        /**
+         * Construct the listener.
+         */
+        public MechanicBlockListener() {
+
         }
 
         // @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -126,13 +172,15 @@ public class MechanicListenerAdapter {
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onSignChange(SignChangeEvent event) {
 
-            manager.dispatchSignChange(event);
+            for (MechanicManager manager : managers)
+                manager.dispatchSignChange(event);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
 
-            manager.dispatchBlockBreak(event);
+            for (MechanicManager manager : managers)
+                manager.dispatchBlockBreak(event);
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -263,11 +311,12 @@ public class MechanicListenerAdapter {
          * @param newLevel
          */
         protected void handleDirectWireInput(WorldVector pt, boolean isOn, Block sourceBlock, int oldLevel,
-                                             int newLevel) {
+                int newLevel) {
 
             Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
                     pt.getBlockZ());
-            manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
+            for (MechanicManager manager : managers)
+                manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
         }
     }
 
@@ -278,16 +327,25 @@ public class MechanicListenerAdapter {
      */
     protected class MechanicWorldListener implements Listener {
 
-        protected final MechanicManager manager;
+        protected final List<MechanicManager> managers = new ArrayList<MechanicManager>();
+
+        public void addManager (MechanicManager manager) {
+
+            managers.add(manager);
+        }
 
         /**
          * Construct the listener.
          *
          * @param manager
          */
-        public MechanicWorldListener(MechanicManager manager) {
+        public MechanicWorldListener(MechanicManager ... manager) {
 
-            this.manager = manager;
+            managers.addAll(Arrays.asList(manager));
+        }
+
+        public MechanicWorldListener() {
+
         }
 
         /**
@@ -301,7 +359,8 @@ public class MechanicListenerAdapter {
                 @Override
                 public void run() {
 
-                    manager.enumerate(event.getChunk());
+                    for (MechanicManager manager : managers)
+                        manager.enumerate(event.getChunk());
                 }
             }, 2);
         }
@@ -315,7 +374,8 @@ public class MechanicListenerAdapter {
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
 
-            manager.unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ), event);
+            for (MechanicManager manager : managers)
+                manager.unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ), event);
         }
     }
 }
