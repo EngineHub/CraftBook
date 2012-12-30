@@ -20,6 +20,7 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.access.*;
+import com.sk89q.craftbook.util.RedstoneUtil;
 
 import java.io.*;
 import java.util.*;

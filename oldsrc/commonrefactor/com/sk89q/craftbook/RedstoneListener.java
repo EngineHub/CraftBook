@@ -8,6 +8,7 @@ import com.sk89q.craftbook.mech.ic.logic.*;
 import com.sk89q.craftbook.mech.ic.plc.*;
 import com.sk89q.craftbook.mech.ic.plc.types.*;
 import com.sk89q.craftbook.mech.ic.world.*;
+import com.sk89q.craftbook.util.RedstoneUtil;
 
 import java.io.FileNotFoundException;
 import java.util.*;

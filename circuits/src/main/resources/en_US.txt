@@ -1,1 +1,0 @@
-area.permissions:You don't have permissions to use circuit mechanics in this area!

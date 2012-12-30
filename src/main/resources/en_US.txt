@@ -1,0 +1,48 @@
+area.permissions:You don't have permissions to use that in this area!
+
+mech.use-permission:You don't have permission to use this mechanic.
+mech.lift.target-sign-created:Elevator target sign created.
+mech.lift.down-sign-created:Elevator down sign created.
+mech.lift.up-sign-created:Elevator up sign created.
+mech.lift.obstruct:Your destination is obstructed!
+mech.lift.no-floor:There is no floor at your destination!
+mech.lift.floor:Floor
+mech.lift.up:You went up a floor!
+mech.lift.down:You went down a floor!
+mech.gate.create:Gate Created!
+mech.dgate.create:Small Gate Created!
+mech.gate.toggle:Gate Toggled!
+mech.gate.not-found:Failed to find a gate!
+mech.door.create:Door Created!
+mech.door.toggle:Door Toggled!
+mech.door.other-sign:Door sign required on other side (or it was too far away).
+mech.door.unusable:Material not usable for a door!
+mech.door.material:Door must be made entirely out of the same material!
+mech.bridge.create:Bridge Created!
+mech.bridge.toggle:Bridge Toggled!
+mech.bridge.end-create:Bridge End Created!
+mech.bridge.unusable:Material not usable for a bridge!
+mech.bridge.material:Bridge must be made entirely out of the same material!
+mech.bridge.other-sign:Bridge sign required on other side (or it was too far away).
+mech.pay.create:Pay Created!
+mech.teleport.create:Teleporter Created!
+mech.teleport.alert:You Teleported!
+mech.teleport.range:Out of Range!
+mech.teleport.sign:There is no Sign at your Destination!
+mech.cauldron.too-small:Cauldron is too small!
+mech.cauldron.leaky:Cauldron has a leak!
+mech.cauldron.no-lava:Cauldron lacks lava!
+mech.cauldron.stir:You stir the cauldron but nothing happens.
+mech.command.create:Command Sign Created!
+mech.cook.create:Cooking Pot Created!
+mech.cook.ouch:Ouch! That was hot!
+mech.hiddenswitch.key:The key did not fit!
+mech.group:You are not in the required group!
+mech.restock:Mechanism Restocked!
+mech.anchor.create:Chunk Anchor Created!
+mech.lightswitch.create:Light Switch Created!
+mech.painting.editing:You are now editing this painting!
+mech.painting.stop:You are no longer editing this painting!
+mech.painting.used:This painting is already being edited by
+
+vehicles.create-permission:You don't have permissions to create this vehicle mechanic!

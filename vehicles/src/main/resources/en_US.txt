@@ -1,2 +1,0 @@
-vehicles.create-permission:You don't have permissions to create this vehicle mechanic!
-area.permissions:You don't have permissions to use vehicle mechanics in this area!
