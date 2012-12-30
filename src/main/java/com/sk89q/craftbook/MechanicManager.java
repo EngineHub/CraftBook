@@ -176,10 +176,13 @@ public class MechanicManager {
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
+        /*
+         TODO FIX ME
         if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
             player.printError("area.permissions");
             return 0;
         }
+        */
 
         // Announce the event to anyone who considers it to be on one of their defining blocks
         watchBlockManager.notify(event);
