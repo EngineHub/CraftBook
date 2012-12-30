@@ -3,7 +3,8 @@ enable-mechanisms: true
 enable-vehicles: true
 
 language: en_US
-op-perms: true
+no-op-perms: true
+safe-destruction: true
 use-block-radius: false
 check-worldguard-flags: true
 indirect-redstone-support: false
