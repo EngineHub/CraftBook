@@ -1,15 +1,20 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.util.RegexUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.*;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class RecipeManager extends BaseConfiguration {
 
@@ -29,7 +34,7 @@ public class RecipeManager extends BaseConfiguration {
     public void load() {
 
         recipes = new ArrayList<Recipe>();
-        config = new File(dataFolder, "src/main/resources/crafting-recipes.yml");
+        config = new File(dataFolder, "crafting-recipes.yml");
         load(cfg.getConfigurationSection("crafting-recipes"));
     }
 

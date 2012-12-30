@@ -49,6 +49,11 @@ public class MechanicalCore implements LocalComponent {
     private final CopyManager copyManager = new CopyManager();
     private MechanicManager manager;
 
+    public static boolean isEnabled() {
+
+        return instance != null;
+    }
+
     public MechanicalCore() {
 
         instance = this;

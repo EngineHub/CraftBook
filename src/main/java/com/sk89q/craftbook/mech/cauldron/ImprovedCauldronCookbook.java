@@ -1,16 +1,17 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import com.sk89q.craftbook.BaseConfiguration;
-import com.sk89q.craftbook.util.RegexUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Silthus
@@ -33,7 +34,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
     public void load() {
 
         recipes = new ArrayList<Recipe>();
-        config = new File(dataFolder, "src/main/resources/cauldron-recipes.yml");
+        config = new File(dataFolder, "cauldron-recipes.yml");
         load(cfg.getConfigurationSection("cauldron-recipes"));
     }
 

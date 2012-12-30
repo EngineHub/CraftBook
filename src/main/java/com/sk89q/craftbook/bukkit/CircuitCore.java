@@ -210,6 +210,11 @@ public class CircuitCore implements LocalComponent {
     public static final ICFamily FAMILY_VIVO = new FamilyVIVO();
     public static final ICFamily FAMILY_SI5O = new FamilySI5O();
 
+    public static boolean isEnabled() {
+
+        return instance != null;
+    }
+
     public CircuitCore() {
 
         instance = this;
