@@ -1,15 +1,17 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
-import org.bukkit.configuration.file.YamlConfiguration;
+import java.io.File;
+import java.util.Collection;
+import java.util.Map.Entry;
+
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Map.Entry;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Custom Crafting Recipe Handler
@@ -23,9 +25,8 @@ public class CustomCrafting {
 
     public CustomCrafting() {
 
-        recipes = new RecipeManager(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(),
-                "crafting-recipes.yml")),
-                plugin.getDataFolder());
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml", false);
+        recipes = new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
         Collection<RecipeManager.Recipe> recipeCollection = recipes.getRecipes();
         for (RecipeManager.Recipe r : recipeCollection) {
             try {

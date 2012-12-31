@@ -42,6 +42,8 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -194,10 +196,10 @@ public class MechanicManager {
                 if (aMechanic != null) {
 
                     // A mechanic has been found, check if we can actually build here.
-                    if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
-                        player.printError("area.permissions");
-                        return 0;
-                    }
+                    //FIXME if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
+                    //    player.printError("area.permissions");
+                    //    return 0;
+                    //}
 
                     aMechanic.onBlockBreak(event);
                     returnValue++;
@@ -236,10 +238,10 @@ public class MechanicManager {
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
-                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-                        player.printError("area.permissions");
-                        return 0;
-                    }
+                    //FIXME if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                    //    player.printError("area.permissions");
+                    //    return 0;
+                    //}
 
                     aMechanic.onRightClick(event);
                     returnValue++;
@@ -277,10 +279,10 @@ public class MechanicManager {
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
-                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-                        player.printError("area.permissions");
-                        return 0;
-                    }
+                    //FIXME if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                    //    player.printError("area.permissions");
+                    //    return 0;
+                    //}
 
                     aMechanic.onLeftClick(event);
                     returnValue++;

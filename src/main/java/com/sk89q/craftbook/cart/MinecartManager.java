@@ -1,9 +1,10 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.InvalidMechanismException;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;

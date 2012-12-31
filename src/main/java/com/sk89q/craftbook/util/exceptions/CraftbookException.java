@@ -1,6 +1,6 @@
 // $Id$
 /*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
+ * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
@@ -14,30 +14,34 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.util.exceptions;
 
-public class InsufficientPermissionsException extends InvalidMechanismException {
+/**
+ * Parent type for all exceptions specific to CraftBook.
+ *
+ * @author hash
+ */
+public class CraftbookException extends Exception {
 
-    private static final long serialVersionUID = -3592509047211745619L;
+    private static final long serialVersionUID = -2562837738752646780L;
 
-    public InsufficientPermissionsException() {
+    public CraftbookException() {
 
-        super("You don't have permission for this.");
+        super();
     }
 
-    public InsufficientPermissionsException(String message, Throwable cause) {
+    public CraftbookException(String message, Throwable cause) {
 
         super(message, cause);
     }
 
-    public InsufficientPermissionsException(String message) {
+    public CraftbookException(String message) {
 
         super(message);
     }
 
-    public InsufficientPermissionsException(Throwable cause) {
+    public CraftbookException(Throwable cause) {
 
         super(cause);
     }
-
 }

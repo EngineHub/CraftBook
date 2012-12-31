@@ -1,62 +1,48 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * @author Silthus
  */
-public class ImprovedCauldronCookbook extends BaseConfiguration {
+public class ImprovedCauldronCookbook extends LocalConfiguration {
 
     public static ImprovedCauldronCookbook INSTANCE;
     private Collection<Recipe> recipes;
-    private File config;
-    private File dataFolder;
+    protected final YAMLProcessor config;
+    protected final Logger logger;
 
-    public ImprovedCauldronCookbook(FileConfiguration cfg, File dataFolder) {
+    public ImprovedCauldronCookbook(YAMLProcessor config, Logger logger) {
 
-        super(cfg, dataFolder);
         INSTANCE = this;
-        this.dataFolder = dataFolder;
+        this.config = config;
+        this.logger = logger;
+        load();
     }
 
     @Override
     public void load() {
 
         recipes = new ArrayList<Recipe>();
-        config = new File(dataFolder, "cauldron-recipes.yml");
-        load(cfg.getConfigurationSection("cauldron-recipes"));
-    }
 
-    public boolean reload() {
+        if (config == null) return; // If the config is null, it can't continue.
 
-        recipes.clear();
-        load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("cauldron-recipes"));
-
-        return true;
-    }
-
-    private void load(ConfigurationSection cfg) {
-        // lets load all recipes
-        if (cfg == null) return; // If the config is null, it can't continue.
-        Set<String> keys = cfg.getKeys(false);
+        List<String> keys = config.getKeys("cauldron-recipes");
         if (keys != null) {
             for (String key : keys) {
-                recipes.add(new Recipe(key, cfg));
+                recipes.add(new Recipe(key, config));
             }
         }
     }
-
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
 
         for (Recipe recipe : recipes) { if (recipe.checkIngredients(items)) return recipe; }
@@ -66,7 +52,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
     public static final class Recipe {
 
         private final String id;
-        private final ConfigurationSection config;
+        private final YAMLProcessor config;
 
         private String name;
         private String description;
@@ -74,10 +60,10 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
         private Collection<CauldronItemStack> results;
         private double chance;
 
-        private Recipe(String id, ConfigurationSection cfg) {
+        private Recipe(String id, YAMLProcessor config) {
 
             this.id = id;
-            config = cfg.getConfigurationSection(id);
+            this.config = config;
             ingredients = new ArrayList<CauldronItemStack>();
             results = new ArrayList<CauldronItemStack>();
             chance = 60;
@@ -88,16 +74,16 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
 
             name = config.getString("name");
             description = config.getString("description");
-            ingredients = getItems(config.getConfigurationSection("ingredients"));
-            results = getItems(config.getConfigurationSection("results"));
+            ingredients = getItems("cauldron-recipes." + id + ".ingredients");
+            results = getItems("cauldron-recipes." + id + ".results");
             chance = config.getDouble("chance", 60);
         }
 
-        private Collection<CauldronItemStack> getItems(ConfigurationSection section) {
+        private Collection<CauldronItemStack> getItems(String path) {
 
             Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
             try {
-                for (String item : section.getKeys(false)) {
+                for (String item : config.getKeys(path)) {
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
                     try {
@@ -113,7 +99,7 @@ public class ImprovedCauldronCookbook extends BaseConfiguration {
                         } else {
                             itemStack.setData((short) -1);
                         }
-                        itemStack.setAmount(section.getInt(item, 1));
+                        itemStack.setAmount(config.getInt(item, 1));
                         items.add(itemStack);
                     }
                 }

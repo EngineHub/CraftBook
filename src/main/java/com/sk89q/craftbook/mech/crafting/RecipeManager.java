@@ -1,41 +1,46 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.craftbook.BaseConfiguration;
+import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
-public class RecipeManager extends BaseConfiguration {
+public class RecipeManager extends LocalConfiguration {
 
     public static RecipeManager INSTANCE;
     private Collection<Recipe> recipes;
-    private File config;
-    private File dataFolder;
+    protected final YAMLProcessor config;
+    protected final Logger logger;
 
-    public RecipeManager(FileConfiguration cfg, File dataFolder) {
+    public RecipeManager(YAMLProcessor config, Logger logger) {
 
-        super(cfg, dataFolder);
         INSTANCE = this;
-        this.dataFolder = dataFolder;
+        this.config = config;
+        this.logger = logger;
+        load();
     }
 
     @Override
     public void load() {
 
         recipes = new ArrayList<Recipe>();
-        config = new File(dataFolder, "crafting-recipes.yml");
-        load(cfg.getConfigurationSection("crafting-recipes"));
+        if (config == null) return; // If the config is null, it can't continue.
+
+        List<String> keys = config.getKeys("crafting-recipes");
+        if (keys != null) {
+            for (String key : keys) {
+                recipes.add(new Recipe(key, config));
+            }
+        }
     }
 
     public Collection<Recipe> getRecipes() {
@@ -43,29 +48,10 @@ public class RecipeManager extends BaseConfiguration {
         return recipes;
     }
 
-    public boolean reload() {
-
-        recipes.clear();
-        load(YamlConfiguration.loadConfiguration(config).getConfigurationSection("crafting-recipes"));
-
-        return true;
-    }
-
-    private void load(ConfigurationSection cfg) {
-        // lets load all recipes
-        if (cfg == null) return; // If the config is null, it can't continue.
-        Set<String> keys = cfg.getKeys(false);
-        if (keys != null) {
-            for (String key : keys) {
-                recipes.add(new Recipe(key, cfg));
-            }
-        }
-    }
-
     public static final class Recipe {
 
         private final String id;
-        private final ConfigurationSection config;
+        private final YAMLProcessor config;
 
         private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
@@ -73,10 +59,10 @@ public class RecipeManager extends BaseConfiguration {
         private Collection<CraftingItemStack> results;
         private List<String> shape;
 
-        private Recipe(String id, ConfigurationSection cfg) {
+        private Recipe(String id, YAMLProcessor config) {
 
             this.id = id;
-            config = cfg.getConfigurationSection(id);
+            this.config = config;
             ingredients = new ArrayList<CraftingItemStack>();
             results = new ArrayList<CraftingItemStack>();
             items = new HashMap<CraftingItemStack, Character>();
@@ -87,19 +73,19 @@ public class RecipeManager extends BaseConfiguration {
 
             type = RecipeType.getTypeFromName(config.getString("type"));
             if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
-                ingredients = getItems(config.getConfigurationSection("ingredients"));
+                ingredients = getItems("crafting-recipes." + "id" + ".ingredients");
             } else {
-                items = getHashItems(config.getConfigurationSection("ingredients"));
-                shape = config.getStringList("shape");
+                items = getHashItems("crafting-recipes." + "id" + ".ingredients");
+                shape = config.getStringList("crafting-recipes." + "id" + ".shape", Arrays.asList(""));
             }
-            results = getItems(config.getConfigurationSection("results"));
+            results = getItems("crafting-recipes." + "id" + ".results");
         }
 
-        private HashMap<CraftingItemStack, Character> getHashItems(ConfigurationSection section) {
+        private HashMap<CraftingItemStack, Character> getHashItems(String path) {
 
             HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
             try {
-                for (String item : section.getKeys(false)) {
+                for (String item : config.getKeys(path)) {
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -117,20 +103,20 @@ public class RecipeManager extends BaseConfiguration {
                             itemStack.setData((short) 0);
                         }
                         itemStack.setAmount(1);
-                        items.put(itemStack, section.getString(item).toCharArray()[0]);
+                        items.put(itemStack, config.getString(item).toCharArray()[0]);
                     }
                 }
             } catch (Exception e) {
-                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + section.getName());
+                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
             }
             return items;
         }
 
-        private Collection<CraftingItemStack> getItems(ConfigurationSection section) {
+        private Collection<CraftingItemStack> getItems(String path) {
 
             Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             try {
-                for (String item : section.getKeys(false)) {
+                for (String item : config.getKeys(path)) {
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -147,12 +133,12 @@ public class RecipeManager extends BaseConfiguration {
                         } else {
                             itemStack.setData((short) 0);
                         }
-                        itemStack.setAmount(section.getInt(item, 1));
+                        itemStack.setAmount(config.getInt(item, 1));
                         items.add(itemStack);
                     }
                 }
             } catch (Exception e) {
-                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + section.getName());
+                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
             }
             return items;
         }

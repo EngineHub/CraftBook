@@ -41,7 +41,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these configuration nodes are available at...",
-                "# http://wiki.sk89q.com/wiki/CraftBook/Configuration");
+                "# http://wiki.sk89q.com/wiki/CraftBook/Configuration",
+                "",
+                "");
 
         enableCircuits = config.getBoolean("enable-circuits", true);
         enableMechanisms = config.getBoolean("enable-mechanics", true);

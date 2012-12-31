@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.util.exceptions.CraftbookRuntimeException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 

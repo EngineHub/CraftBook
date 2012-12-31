@@ -16,7 +16,7 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import com.sk89q.craftbook.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 
 /**
  * Thrown when an IC verification fails.

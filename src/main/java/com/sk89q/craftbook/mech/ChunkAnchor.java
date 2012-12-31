@@ -1,6 +1,9 @@
 package com.sk89q.craftbook.mech;
 
 import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;

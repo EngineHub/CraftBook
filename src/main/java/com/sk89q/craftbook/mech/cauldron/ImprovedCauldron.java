@@ -1,18 +1,14 @@
 package com.sk89q.craftbook.mech.cauldron;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.InvalidMechanismException;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -21,10 +17,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * @author Silthus
@@ -40,9 +42,8 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 
         public Factory() {
 
-            recipes = new ImprovedCauldronCookbook(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder
-                    (), "src/main/resources/cauldron-recipes.yml")),
-                    plugin.getDataFolder());
+            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml", false);
+            recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
         }
 
         @Override

@@ -14,19 +14,30 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.util.exceptions;
 
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
+public class InsufficientPermissionsException extends InvalidMechanismException {
 
-public abstract class AbstractMechanicFactory<T extends Mechanic> implements MechanicFactory<T> {
+    private static final long serialVersionUID = -3592509047211745619L;
 
-    @Override
-    public T detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
-            ProcessedMechanismException {
+    public InsufficientPermissionsException() {
 
-        return null;
+        super("You don't have permission for this.");
+    }
+
+    public InsufficientPermissionsException(String message, Throwable cause) {
+
+        super(message, cause);
+    }
+
+    public InsufficientPermissionsException(String message) {
+
+        super(message);
+    }
+
+    public InsufficientPermissionsException(Throwable cause) {
+
+        super(cause);
     }
 
 }
