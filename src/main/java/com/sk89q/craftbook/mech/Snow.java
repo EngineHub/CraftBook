@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.HashMap;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -16,8 +16,9 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.HashMap;
-import java.util.logging.Level;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -37,11 +38,17 @@ public class Snow implements Listener {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPlace) return;
         if (event.getEntity() instanceof Snowball) {
+
+            Block block = event.getEntity().getLocation().getBlock();
             if (event.getEntity().getShooter() != null && event.getEntity().getShooter() instanceof Player) {
+
+                if (!CraftBookPlugin.inst().canBuild((Player)event.getEntity().getShooter(), block.getLocation())) {
+                    return;
+                }
+
                 LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getEntity().getShooter());
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
             }
-            Block block = event.getEntity().getLocation().getBlock();
             incrementData(block);
         }
     }
