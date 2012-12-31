@@ -1,6 +1,7 @@
 name: CraftBook
 main: com.sk89q.craftbook.bukkit.CraftBookPlugin
 version: "${project.version}"
+authors:[sk89q, me4502, Dark_Arc]
 dev-url: http://dev.bukkit.org/server-mods/craftbook/
 depend: [WorldEdit]
 softdepend: [WorldGuard, ProtocolLib]
