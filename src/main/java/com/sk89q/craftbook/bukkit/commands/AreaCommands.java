@@ -1,5 +1,16 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -18,16 +29,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldedit.data.DataException;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Silthus
@@ -75,6 +76,9 @@ public class AreaCommands {
 
             World world = ((Player) sender).getWorld();
             Selection sel = worldEdit.getSelection((Player) sender);
+            if(sel == null) {
+                sender.sendMessage(ChatColor.RED + "You have not made a selection!");
+            }
             Vector min = BukkitUtil.toVector(sel.getMinimumPoint());
             Vector max = BukkitUtil.toVector(sel.getMaximumPoint());
             Vector size = max.subtract(min).add(1, 1, 1);
