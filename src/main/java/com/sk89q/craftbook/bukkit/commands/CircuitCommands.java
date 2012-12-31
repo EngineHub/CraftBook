@@ -43,7 +43,7 @@ public class CircuitCommands {
         }
 
         @Command(aliases = {"list"}, desc = "List MIDI's available for Melody IC",
-                flags = "p", usage = "[-p page]", min = 0, max = 0)
+                flags = "p:", usage = "[-p page]", min = 0, max = 0)
         public void midiListCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
@@ -108,7 +108,7 @@ public class CircuitCommands {
         }
 
         @Command(aliases = {"list"}, desc = "List available IC's",
-                flags = "p", usage = "[-p page]", min = 0, max = 0)
+                flags = "p:", usage = "[-p page]", min = 0, max = 0)
         public void listCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
@@ -142,7 +142,7 @@ public class CircuitCommands {
         }
 
         @Command(aliases = {"search"}, desc = "Search available IC's with names",
-                flags = "f", usage = "[-p page] <name>", min = 1, max = 1)
+                flags = "p:", usage = "[-p page] <name>", min = 1, max = 1)
         public void searchCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
