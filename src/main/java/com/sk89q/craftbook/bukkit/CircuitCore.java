@@ -238,12 +238,6 @@ public class CircuitCore implements LocalComponent {
         plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "ic-config.yml"), "ic-config.yml", false);
         icConfiguration = new YAMLICConfiguration(new YAMLProcessor(new File(plugin.getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
 
-        try {
-            icConfiguration.load();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
         manager = new MechanicManager();
         plugin.registerManager(manager, true, true, true, false);
 
@@ -257,6 +251,12 @@ public class CircuitCore implements LocalComponent {
         if (!fireworkFolder.exists()) fireworkFolder.mkdir();
 
         registerMechanics();
+
+        try {
+            icConfiguration.load();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
