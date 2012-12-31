@@ -685,6 +685,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Location loc) {
 
+        if(!config.obeyWorldguard)
+            return true;
         return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
     }
 
@@ -701,6 +703,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Block block) {
 
+        if(!config.obeyWorldguard)
+            return true;
         return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
     }
 
@@ -717,6 +721,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canUse(Player player, Location loc) {
 
+        if(!config.obeyWorldguard)
+            return true;
         return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
                 true), loc, worldGuardPlugin.wrapPlayer(player));
     }
