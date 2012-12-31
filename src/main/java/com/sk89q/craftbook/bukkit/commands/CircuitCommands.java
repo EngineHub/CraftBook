@@ -43,8 +43,8 @@ public class CircuitCommands {
         }
 
         @Command(aliases = {"list"}, desc = "List MIDI's available for Melody IC",
-                usage = "[page]", min = 0, max = 1)
-        public void midiListCmd(CommandContext context, CommandSender sender) {
+                flags = "p", usage = "[-p page]", min = 0, max = 0)
+        public void midiListCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
@@ -73,13 +73,13 @@ public class CircuitCommands {
             int accessedPage;
 
             try {
-                accessedPage = context.argsLength() < 1 ? 0 : context.getInteger(0) - 1;
+                accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
                 if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + context.getInteger(0) + "\"");
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
                 return;
             }
 
@@ -108,7 +108,7 @@ public class CircuitCommands {
         }
 
         @Command(aliases = {"list"}, desc = "List available IC's",
-                usage = "[page]", min = 0, max = 1)
+                flags = "p", usage = "[-p page]", min = 0, max = 0)
         public void listCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
@@ -123,13 +123,13 @@ public class CircuitCommands {
             int accessedPage;
 
             try {
-                accessedPage = args.argsLength() < 1 ? 0 : args.getInteger(0) - 1;
+                accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
                 if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(0) + "\"");
+                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(0) + "\"");
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
                 return;
             }
 
@@ -142,7 +142,7 @@ public class CircuitCommands {
         }
 
         @Command(aliases = {"search"}, desc = "Search available IC's with names",
-                usage = "<name> [page] ", min = 1, max = 2)
+                flags = "f", usage = "[-p page] <name>", min = 1, max = 1)
         public void searchCmd(CommandContext args, CommandSender sender) {
 
             if (!(sender instanceof Player)) return;
@@ -157,13 +157,13 @@ public class CircuitCommands {
             int accessedPage;
 
             try {
-                accessedPage = args.argsLength() < 2 ? 0 : args.getInteger(1) - 1;
+                accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
                 if (accessedPage < 0 || accessedPage >= pages) {
-                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(1) + "\"");
+                    player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getInteger(1) + "\"");
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
                 return;
             }
 

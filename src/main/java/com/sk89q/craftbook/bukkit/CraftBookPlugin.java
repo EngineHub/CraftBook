@@ -1,24 +1,18 @@
 package com.sk89q.craftbook.bukkit;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-
+import com.comphenix.protocol.ProtocolLibrary;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.wepif.PermissionsResolverManager;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.GlobalRegionManager;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -29,28 +23,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.LocalComponent;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.MechanicClock;
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.wepif.PermissionsResolverManager;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.GlobalRegionManager;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.jar.JarFile;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
 
 public class CraftBookPlugin extends JavaPlugin {
 
@@ -128,7 +107,8 @@ public class CraftBookPlugin extends JavaPlugin {
         managerAdapter.register(manager);
     }
 
-    public void registerManager(MechanicManager manager, boolean player, boolean block, boolean world, boolean vehicle) {
+    public void registerManager(MechanicManager manager, boolean player, boolean block, boolean world,
+                                boolean vehicle) {
 
         managerAdapter.register(manager, player, block, world, vehicle);
     }
@@ -261,7 +241,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-            String[] args) {
+                             String[] args) {
 
         try {
             commands.execute(cmd.getName(), args, sender, sender);
@@ -327,13 +307,13 @@ public class CraftBookPlugin extends JavaPlugin {
         int numWorlds = 0;
         int numChunks = 0;
 
-        for(MechanicManager manager : managerAdapter.getManagers()) {
+        for (MechanicManager manager : managerAdapter.getManagers()) {
             mechanicClock.addManager(manager);
         }
 
         for (World world : getServer().getWorlds()) {
             for (Chunk chunk : world.getLoadedChunks()) {
-                for(MechanicManager manager : managerAdapter.getManagers()) {
+                for (MechanicManager manager : managerAdapter.getManagers()) {
                     manager.enumerate(chunk);
                 }
                 numChunks++;
@@ -344,7 +324,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms elapsed)");
+        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms " +
+                "elapsed)");
 
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, 2);
@@ -685,7 +666,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Location loc) {
 
-        if(!config.obeyWorldguard)
+        if (!config.obeyWorldguard)
             return true;
         return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
     }
@@ -703,8 +684,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Block block) {
 
-        if(!config.obeyWorldguard)
-            return true;
+        if (!config.obeyWorldguard) return true;
         return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
     }
 
@@ -721,8 +701,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canUse(Player player, Location loc) {
 
-        if(!config.obeyWorldguard)
-            return true;
+        if (!config.obeyWorldguard) return true;
         return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
                 true), loc, worldGuardPlugin.wrapPlayer(player));
     }
