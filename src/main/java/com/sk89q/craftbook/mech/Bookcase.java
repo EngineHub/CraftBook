@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,15 +16,20 @@
 
 package com.sk89q.craftbook.mech;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+
+import org.bukkit.event.player.PlayerInteractEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.io.*;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
@@ -81,14 +86,12 @@ public class Bookcase extends AbstractMechanic {
      */
     protected String getBookLine() throws IOException {
 
-        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getDataFolder(),
-                "src/main/resources/books.txt")));
+        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getDataFolder(),"books.txt")));
         lnr.skip(Long.MAX_VALUE);
         int lines = lnr.getLineNumber();
         lnr.close();
         int toRead = plugin.getRandom().nextInt(lines);
-        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getDataFolder(),
-                "src/main/resources/books.txt")));
+        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getDataFolder(),"books.txt")));
         String line;
         int passes = 0;
         while ((line = br.readLine()) != null) {
