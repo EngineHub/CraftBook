@@ -38,10 +38,12 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
     public static class Factory extends AbstractMechanicFactory<ImprovedCauldron> {
 
         private CraftBookPlugin plugin = CraftBookPlugin.inst();
-        protected final ImprovedCauldronCookbook recipes;
+        public static Factory INSTANCE;
+        public ImprovedCauldronCookbook recipes;
 
         public Factory() {
 
+            INSTANCE = this;
             plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml", false);
             recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
         }

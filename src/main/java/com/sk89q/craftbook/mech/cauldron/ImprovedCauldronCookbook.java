@@ -43,6 +43,7 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
             }
         }
     }
+
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
 
         for (Recipe recipe : recipes) { if (recipe.checkIngredients(items)) return recipe; }
