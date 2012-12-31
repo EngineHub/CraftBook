@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit;
+import java.io.File;
 import java.util.Iterator;
 
 import org.bukkit.Server;
@@ -92,7 +93,10 @@ public class MechanicalCore implements LocalComponent {
 
         // Let's register mechanics!
         if (config.ammeterEnabled) registerMechanic(new Ammeter.Factory());
-        if (config.bookcaseEnabled) registerMechanic(new Bookcase.Factory());
+        if (config.bookcaseEnabled) {
+            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt", false);
+            registerMechanic(new Bookcase.Factory());
+        }
         if (config.gateEnabled) registerMechanic(new Gate.Factory());
         if (config.bridgeEnabled) registerMechanic(new Bridge.Factory());
         if (config.doorEnabled) registerMechanic(new Door.Factory());
