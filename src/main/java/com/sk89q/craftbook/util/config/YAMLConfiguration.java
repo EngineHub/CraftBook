@@ -49,7 +49,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         ICEnabled = config.getBoolean("circuits.ics.enable", true);
         ICCached = config.getBoolean("circuits.ics.cache", true);
         ICShortHandEnabled = config.getBoolean("circuits.ics.allow-short-hand", true);
-        disabledICs = new HashSet<String>(config.getStringList("circuits.ics.disallowed-ics", null));
+        disabledICs = new HashSet<String>(config.getStringList("circuits.ics.disallowed-ics", Arrays.asList("")));
 
         // Circuits Configuration Listener
         netherrackEnabled = config.getBoolean("circuits.wiring.netherrack-enabled", false);
