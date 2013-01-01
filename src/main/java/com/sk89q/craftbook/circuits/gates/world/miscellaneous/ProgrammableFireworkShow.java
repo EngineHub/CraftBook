@@ -1,24 +1,37 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitTask;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.scheduler.BukkitTask;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class ProgrammableFireworkShow extends AbstractIC {
 
@@ -72,8 +85,9 @@ public class ProgrammableFireworkShow extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2).trim().isEmpty() && new File(CircuitCore.inst().getFireworkFolder(),
-                    sign.getLine(2).trim() + ".txt").exists())
+            if (sign.getLine(2).trim().isEmpty() && (new File(CircuitCore.inst().getFireworkFolder(),
+                    sign.getLine(2).trim() + ".txt").exists() || new File(CircuitCore.inst().getFireworkFolder(),
+                            sign.getLine(2).trim() + ".fwk").exists()))
                 throw new ICVerificationException("A valid firework show is required on line 3!");
         }
 
@@ -103,6 +117,8 @@ public class ProgrammableFireworkShow extends AbstractIC {
 
         BukkitTask task;
 
+        boolean fyrestone = false;
+
         public FireworkShowHandler(String show) {
 
             this.show = show;
@@ -117,6 +133,12 @@ public class ProgrammableFireworkShow extends AbstractIC {
 
             lines.clear();
             File firework = new File(CircuitCore.inst().getFireworkFolder(), show + ".txt");
+            if(!firework.exists()) {
+                fyrestone = true;
+                firework = new File(CircuitCore.inst().getFireworkFolder(), show + ".fwk");
+            }
+            else
+                fyrestone = false;
             BufferedReader br = new BufferedReader(new FileReader(firework));
             String line = "";
             while ((line = br.readLine()) != null) {
@@ -132,11 +154,127 @@ public class ProgrammableFireworkShow extends AbstractIC {
             position = 0;
             if (task != null)
                 task.cancel();
-            FireworkShow show = new FireworkShow();
+            Runnable show;
+            if(!fyrestone)
+                show = new BasicShowInterpreter();
+            else
+                show = new FyrestoneInterpreter();
             task = Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), show);
         }
 
-        private class FireworkShow implements Runnable {
+        private class FyrestoneInterpreter implements Runnable {
+
+            Map<String, List<FireworkEffect>> effects = new HashMap<String, List<FireworkEffect>>();
+            String currentBuilding = null;
+            Location location = BukkitUtil.toSign(getSign()).getLocation();
+            float duration = 0.5f;
+
+            @Override
+            public void run () {
+
+                FireworkEffect.Builder builder = FireworkEffect.builder();
+
+                while (position < lines.size()) {
+
+                    String line = lines.get(position);
+                    position++;
+                    if (line.startsWith("#"))
+                        continue;
+
+                    if (line.startsWith("set.")) {
+
+                        if (currentBuilding == null)
+                            continue;
+
+                        line = line.replace("set.", "").trim();
+                        String[] args = RegexUtil.SPACE_PATTERN.split(line);
+
+                        if (args[0].equalsIgnoreCase("shape")) {
+
+                            FireworkEffect.Type type;
+                            if (args[1].equalsIgnoreCase("sball") || args[1].equalsIgnoreCase("smallball"))
+                                type = FireworkEffect.Type.BALL;
+                            else if (args[1].equalsIgnoreCase("lball") || args[1].equalsIgnoreCase("largeball"))
+                                type = FireworkEffect.Type.BALL_LARGE;
+                            else if (args[1].equalsIgnoreCase("burst"))
+                                type = FireworkEffect.Type.BURST;
+                            else if (args[1].equalsIgnoreCase("creeper"))
+                                type = FireworkEffect.Type.CREEPER;
+                            else if (args[1].equalsIgnoreCase("star"))
+                                type = FireworkEffect.Type.STAR;
+                            else
+                                type = FireworkEffect.Type.BALL;
+                            builder.with(type);
+                        } else if (args[0].equalsIgnoreCase("color")) {
+
+                            String[] rgb = RegexUtil.COMMA_PATTERN.split(args[1]);
+                            Color color = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+                            builder.withColor(color);
+                        } else if (args[0].equalsIgnoreCase("fade")) {
+
+                            String[] rgb = RegexUtil.COMMA_PATTERN.split(args[1]);
+                            Color fade = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+                            builder.withFade(fade);
+                        } else if (args[0].equalsIgnoreCase("flicker") || args[0].equalsIgnoreCase("twinkle")) {
+
+                            builder.flicker(true);
+                        } else if (args[0].equalsIgnoreCase("trail")) {
+
+                            builder.trail(true);
+                        }
+                    } else if (line.startsWith("location ")) {
+
+                        double x,y,z;
+                        String[] args = RegexUtil.COMMA_PATTERN.split(line.replace("location ", ""));
+                        x = Double.parseDouble(args[0]);
+                        y = Double.parseDouble(args[1]);
+                        z = Double.parseDouble(args[2]);
+
+                        location = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
+                    } else if (line.startsWith("duration ")) {
+
+                        duration = Float.parseFloat(line.replace("duration ", ""));
+                    } else if (line.startsWith("wait ")) {
+
+                        FyrestoneInterpreter show = new FyrestoneInterpreter();
+                        task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), show,
+                                Long.parseLong(line.replace("wait ", "")));
+                        return;
+                    } else if (line.startsWith("start ")) {
+
+                        currentBuilding = line.replace("start ", "");
+                    } else if (line.startsWith("build")) {
+
+                        if (currentBuilding == null)
+                            continue;
+                        if (effects.containsKey(currentBuilding)) {
+
+                            List<FireworkEffect> effectList = effects.get(currentBuilding);
+                            effectList.add(builder.build());
+                            effects.put(currentBuilding, effectList);
+                        } else {
+                            List<FireworkEffect> effectList = new ArrayList<FireworkEffect>();
+                            effectList.add(builder.build());
+                            effects.put(currentBuilding, effectList);
+                        }
+                        currentBuilding = null;
+                    } else if (line.startsWith("launch ")) {
+
+                        if(effects.containsKey(line.replace("launch ", ""))) {
+
+                            Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                            FireworkMeta meta = firework.getFireworkMeta();
+                            for(FireworkEffect effect : effects.get(line.replace("launch ", "")))
+                                meta.addEffect(effect);
+                            meta.setPower((int) duration * 2);
+                            firework.setFireworkMeta(meta);
+                        }
+                    }
+                }
+            }
+        }
+
+        private class BasicShowInterpreter implements Runnable {
 
             @Override
             public void run() {
@@ -153,7 +291,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
                         continue;
 
                     if (bits[0].equalsIgnoreCase("wait")) {
-                        FireworkShow show = new FireworkShow();
+                        BasicShowInterpreter show = new BasicShowInterpreter();
                         task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), show,
                                 Long.parseLong(bits[1]));
                         return;
