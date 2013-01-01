@@ -143,6 +143,8 @@ public class ProgrammableFireworkShow extends AbstractIC {
             String line = "";
             while ((line = br.readLine()) != null) {
 
+                if(line.trim().isEmpty())
+                    continue;
                 lines.add(line);
             }
 
@@ -168,17 +170,29 @@ public class ProgrammableFireworkShow extends AbstractIC {
             String currentBuilding = null;
             Location location = BukkitUtil.toSign(getSign()).getLocation();
             float duration = 0.5f;
+            FireworkEffect.Builder builder = FireworkEffect.builder();
+
+            public FyrestoneInterpreter() {
+
+            }
+
+            public FyrestoneInterpreter(Map<String, List<FireworkEffect>> effects, String currentBuilding, Location location, float duration, FireworkEffect.Builder builder) {
+
+                this.effects = effects;
+                this.currentBuilding = currentBuilding;
+                this.location = location;
+                this.duration = duration;
+                this.builder = builder;
+            }
 
             @Override
             public void run () {
-
-                FireworkEffect.Builder builder = FireworkEffect.builder();
 
                 while (position < lines.size()) {
 
                     String line = lines.get(position);
                     position++;
-                    if (line.startsWith("#"))
+                    if (line.trim().startsWith("#") || line.trim().isEmpty())
                         continue;
 
                     if (line.startsWith("set.")) {
@@ -236,13 +250,14 @@ public class ProgrammableFireworkShow extends AbstractIC {
                         duration = Float.parseFloat(line.replace("duration ", ""));
                     } else if (line.startsWith("wait ")) {
 
-                        FyrestoneInterpreter show = new FyrestoneInterpreter();
+                        FyrestoneInterpreter show = new FyrestoneInterpreter(effects,currentBuilding,location,duration,builder);
                         task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), show,
                                 Long.parseLong(line.replace("wait ", "")));
                         return;
                     } else if (line.startsWith("start ")) {
 
                         currentBuilding = line.replace("start ", "");
+                        builder = FireworkEffect.builder();
                     } else if (line.startsWith("build")) {
 
                         if (currentBuilding == null)

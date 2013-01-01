@@ -542,16 +542,21 @@ public class MechanicManager {
      */
     public void enumerate(Chunk chunk) {
 
-        for (BlockState state : chunk.getTileEntities()) {
-            if (state == null) continue;
-            if (state instanceof Sign) {
-                try {
-                    load(toWorldVector(state.getBlock()));
-                } catch (InvalidMechanismException ignored) {
-                } catch (Exception t) {
-                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
+        try {
+            for (BlockState state : chunk.getTileEntities()) {
+                if (state == null) continue;
+                if (state instanceof Sign) {
+                    try {
+                        load(toWorldVector(state.getBlock()));
+                    } catch (InvalidMechanismException ignored) {
+                    } catch (Exception t) {
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
+                    }
                 }
             }
+        } catch (AssertionError error) {
+
+            Bukkit.getLogger().severe("A corruption issue has been detected in your world! Self-Triggering mechanics may not work as expected until this is resolved!");
         }
     }
 
