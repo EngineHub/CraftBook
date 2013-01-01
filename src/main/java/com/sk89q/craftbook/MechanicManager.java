@@ -550,8 +550,9 @@ public class MechanicManager {
                     }
                 }
             }
-        } catch (AssertionError error) {
+        } catch (Error error) {
 
+            Bukkit.getLogger().severe("[MAJOR] Chunk at X: " + chunk.getX() + " Y: " + chunk.getZ() + " is corrupted or contains a corrupted block!");
             Bukkit.getLogger().severe("A corruption issue has been detected in your world! Self-Triggering mechanics may not work as expected until this is resolved!");
         }
     }
