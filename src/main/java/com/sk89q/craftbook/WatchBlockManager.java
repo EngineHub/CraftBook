@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -16,13 +16,18 @@
 
 package com.sk89q.craftbook;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.bukkit.event.block.BlockEvent;
+
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.event.block.BlockEvent;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Holds the blocks that are watched by mechanics.

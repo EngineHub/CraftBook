@@ -175,11 +175,6 @@ public class MechanicListenerAdapter {
 
         }
 
-        // @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-        // public void onEvent(Event event) {
-        //
-        // }
-
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onSignChange(SignChangeEvent event) {
 
@@ -294,7 +289,7 @@ public class MechanicListenerAdapter {
                 BlockFace face = diode.getFacing();
                 handleDirectWireInput(new WorldVector(w, x + face.getModX(), y + face.getModY(), z + face.getModZ()),
                         isOn, block, oldLevel, newLevel);
-                //return;
+                return;
             }
             // For redstone wires, the code already exited this method
             // Non-wire blocks proceed

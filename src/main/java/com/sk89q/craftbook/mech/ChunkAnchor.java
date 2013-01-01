@@ -110,7 +110,7 @@ public class ChunkAnchor extends PersistentMechanic {
     }
 
     @Override
-    public void unloadWithEvent(ChunkUnloadEvent event) {
+    public void onChunkUnload(ChunkUnloadEvent event) {
 
         boolean isOn = true;
         if (trigger.getState() instanceof Sign) {

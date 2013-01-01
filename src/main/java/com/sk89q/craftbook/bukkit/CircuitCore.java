@@ -242,13 +242,10 @@ public class CircuitCore implements LocalComponent {
         plugin.registerManager(manager, true, true, true, false);
 
         midiFolder = new File(plugin.getDataFolder(), "midi/");
-        if (!midiFolder.exists()) midiFolder.mkdir();
 
         romFolder = new File(plugin.getDataFolder(), "rom/");
-        if (!romFolder.exists()) romFolder.mkdir();
 
         fireworkFolder = new File(plugin.getDataFolder(), "fireworks/");
-        if (!fireworkFolder.exists()) fireworkFolder.mkdir();
 
         registerMechanics();
 
@@ -267,16 +264,19 @@ public class CircuitCore implements LocalComponent {
 
     public File getFireworkFolder() {
 
+        if (!fireworkFolder.exists()) fireworkFolder.mkdir();
         return fireworkFolder;
     }
 
     public File getRomFolder() {
 
+        if (!romFolder.exists()) romFolder.mkdir();
         return romFolder;
     }
 
     public File getMidiFolder() {
 
+        if (!midiFolder.exists()) midiFolder.mkdir();
         return midiFolder;
     }
 

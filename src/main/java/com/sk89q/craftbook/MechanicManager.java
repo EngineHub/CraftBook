@@ -19,7 +19,6 @@ package com.sk89q.craftbook;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,9 +89,6 @@ public class MechanicManager {
      * List of mechanics that think on a routine basis.
      */
     private final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
-
-    protected HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>> eventRegistration = new
-            HashMap<Class<?>, ArrayList<MechanicFactory<? extends Mechanic>>>();
 
     /**
      * Construct the manager.
@@ -588,8 +584,9 @@ public class MechanicManager {
         }
 
         try {
-            if (event == null) mechanic.unload();
-            else mechanic.unloadWithEvent(event);
+            mechanic.unload();
+            if (event != null)
+                mechanic.onChunkUnload(event);
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);
@@ -632,15 +629,5 @@ public class MechanicManager {
                 unload(mechanic, null);
             }
         }
-    }
-
-    public void registerEvent(Class<?> event, MechanicFactory<? extends Mechanic> mechanic) {
-
-        ArrayList<MechanicFactory<? extends Mechanic>> list = eventRegistration.get(event);
-        if (list == null) {
-            list = new ArrayList<MechanicFactory<? extends Mechanic>>();
-        }
-        list.add(mechanic);
-        eventRegistration.put(event, list);
     }
 }
