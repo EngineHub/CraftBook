@@ -1,17 +1,25 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
  * @author Me4502
@@ -58,7 +66,7 @@ public class PlayerSensor extends AbstractIC {
         }
         if (type == null) type = Type.PLAYER;
 
-        nameLine = getSign().getLine(3).replace("g:", "").replace("p:", "").trim();
+        nameLine = getLine(3).replace("g:", "").replace("p:", "").trim();
 
         try {
             String locInfo = getLine(2);
@@ -71,14 +79,18 @@ public class PlayerSensor extends AbstractIC {
             }
             radius = ICUtil.parseRadius(getSign());
             if (locInfo.contains("=")) {
+                getSign().setLine(2, radius + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
                 location = ICUtil.parseBlockLocation(getSign()).getLocation();
             } else {
+                getSign().setLine(2, String.valueOf(radius));
                 location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             }
         } catch (Exception e) {
             location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
         }
+        if(reg == null && location == null)
+            location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
     }
 
     protected boolean isDetected() {

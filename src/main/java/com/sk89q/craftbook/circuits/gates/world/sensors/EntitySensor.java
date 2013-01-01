@@ -1,19 +1,34 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import java.util.EnumSet;
+import java.util.Set;
+
+import org.bukkit.Chunk;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.PoweredMinecart;
+import org.bukkit.entity.StorageMinecart;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.Chunk;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
-
-import java.util.EnumSet;
-import java.util.Set;
 
 /**
  * @author Silthus
@@ -115,7 +130,7 @@ public class EntitySensor extends AbstractIC {
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radius + '=' + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            getSign().setLine(2, radius + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
             getSign().setLine(2, String.valueOf(radius));
@@ -153,7 +168,7 @@ public class EntitySensor extends AbstractIC {
                 for (Entity entity : chunk.getEntities()) {
                     if (entity.isValid()) {
                         for (Type type : types)
-                        // Check Type
+                            // Check Type
                         {
                             if (type.is(entity)) {
                                 // Check Radius
