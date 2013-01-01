@@ -16,16 +16,14 @@
 
 package com.sk89q.craftbook;
 
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
-
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -38,14 +36,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have registered triggerability,
@@ -405,7 +400,7 @@ public class MechanicManager {
      *                                   but the mechanism is misconfigured and inoperable.
      */
     protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player,
-            ChangedSign sign) throws InvalidMechanismException {
+                                  ChangedSign sign) throws InvalidMechanismException {
 
         List<Mechanic> detectedMechanics = detect(pos, player, sign);
 
@@ -500,7 +495,7 @@ public class MechanicManager {
      *                                   but the mechanism is misconfigured and inoperable.
      */
     protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player,
-            ChangedSign sign) throws InvalidMechanismException {
+                                    ChangedSign sign) throws InvalidMechanismException {
 
         List<Mechanic> mechanics = new ArrayList<Mechanic>();
 
@@ -552,8 +547,15 @@ public class MechanicManager {
             }
         } catch (Error error) {
 
-            Bukkit.getLogger().severe("[MAJOR] Chunk at X: " + chunk.getX() + " Y: " + chunk.getZ() + " is corrupted or contains a corrupted block!");
-            Bukkit.getLogger().severe("A corruption issue has been detected in your world! Self-Triggering mechanics may not work as expected until this is resolved!");
+            error.printStackTrace();
+            Bukkit.getLogger().severe("A corruption issue has been found at chunk ("
+                    + chunk.getX() + ", " + chunk.getZ() + ") Self-Triggering mechanics " +
+                    "may not work as expected until this is resolved!");
+            // TODO This probably needs formatted better
+            Bukkit.getLogger().severe("Chunk (" + chunk.getX() + ", " + chunk.getZ() + ") starts at " +
+                    chunk.getBlock(0, 0, 0).getLocation().toString() + " and ends at " +
+                    chunk.getBlock(15, 255, 15).getLocation().toString() + '.');
+
         }
     }
 
