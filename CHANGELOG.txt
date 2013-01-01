@@ -1,3 +1,23 @@
+3.5 Beta 1
+* MERGED ALL 4 JARS INTO 1. DUE TO THIS CONFIGS NEED TO BE REGENERATED, AND MIDIS + TOGGLE AREAS NEED TO BE MOVED
++ Added a Tune IC
+* Fixed CartReverser for 1.4.5+, and gave station more pushing power
+* Auto Crafter improvements
+* Few tweaks to liquid flooder.
++ Added a programmable firework display IC.
+* Large performance enhancements.
+* Sped up chunk enumeration on startup.
++ Added a single stack option to pipes.
+* Fix snow mechanic not obeying WorldGuard regions.
+* If a WorldEdit selection is empty it now gives a message instead of erroring when trying to save an area.
+* Fixed getting inside of storage carts and powered carts.
+* Re-did the way commands work. /searchics is now /ic search, /listics is /ic list, /icdocs is /ic docs, /listmidis is /midi list, etc.
+* Commands that have pages now use -p flag. So /ic list -p 4
+* Fixed a few bugs with Player/Entity Sensor IC's
+* Removed experimental repeater support in favour of a much better working version of it.
+* Made the filesize taken up by CraftBook smaller.
+* CraftBook now won't generate unused files.
+
 3.4.1
 + Added a permission to restock mechanics.
 * Optimization to tonnes of IC's.
