@@ -242,10 +242,12 @@ public class CircuitCore implements LocalComponent {
         plugin.registerManager(manager, true, true, true, false);
 
         midiFolder = new File(plugin.getDataFolder(), "midi/");
+        getMidiFolder();
 
         romFolder = new File(plugin.getDataFolder(), "rom/");
 
         fireworkFolder = new File(plugin.getDataFolder(), "fireworks/");
+        getFireworkFolder();
 
         registerMechanics();
 

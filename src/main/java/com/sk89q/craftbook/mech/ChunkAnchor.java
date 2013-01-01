@@ -1,18 +1,23 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.util.Arrays;
-import java.util.List;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class ChunkAnchor extends PersistentMechanic {
 
@@ -50,7 +55,7 @@ public class ChunkAnchor extends PersistentMechanic {
          */
         @Override
         public ChunkAnchor detect(BlockWorldVector pt, LocalPlayer player,
-                                  ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Chunk]")) return null;
@@ -63,6 +68,8 @@ public class ChunkAnchor extends PersistentMechanic {
         }
     }
 
+    public boolean isOn = false;
+
     /**
      * @param trigger if you didn't already check if this is a wall sign with appropriate text,
      *                you're going on Santa's naughty list.
@@ -74,6 +81,11 @@ public class ChunkAnchor extends PersistentMechanic {
 
         super();
         this.trigger = trigger;
+
+        if (trigger.getState() instanceof Sign) {
+            Sign sign = (Sign) trigger.getState();
+            isOn = !sign.getLine(3).equalsIgnoreCase("off");
+        }
     }
 
     private final Block trigger;
@@ -89,11 +101,9 @@ public class ChunkAnchor extends PersistentMechanic {
         Block block = event.getBlock();
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            try {
-                sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
-                sign.update();
-            } catch (Exception ignored) {
-            }
+            sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
+            isOn = !sign.getLine(3).equalsIgnoreCase("off");
+            sign.update();
         }
     }
 
@@ -113,13 +123,10 @@ public class ChunkAnchor extends PersistentMechanic {
     public void onChunkUnload(ChunkUnloadEvent event) {
 
         boolean isOn = true;
-        if (trigger.getState() instanceof Sign) {
-            Sign sign = (Sign) trigger.getState();
-            isOn = !sign.getLine(3).equalsIgnoreCase("off");
-        }
 
-        if (event.getChunk().equals(trigger.getWorld().getChunkAt(trigger))) {
-            event.setCancelled(isOn);
-        }
+        if(!isOn)
+            return;
+
+        event.setCancelled(true);
     }
 }
