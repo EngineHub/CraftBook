@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.block.Furnace;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
@@ -142,6 +143,54 @@ public class Pipes extends AbstractMechanic {
                             items.addAll(newItems);
 
                             if (!items.isEmpty()) searchNearbyPipes(block);
+                        } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
+
+                            List<ItemStack> newItems = new ArrayList<ItemStack>();
+
+                            newItems.addAll(items);
+                            Furnace furnace = (Furnace) fac.getState();
+
+                            for (ItemStack item : items) {
+                                if (item == null) continue;
+                                if (ItemUtil.isAFuel(item)) {
+                                    if (ItemUtil.isStackValid(furnace.getInventory().getFuel())) {
+
+                                        if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getFuel())) {
+
+                                            newItems.remove(item);
+                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel(), item);
+                                            if(newStack != null)
+                                                newItems.add(newStack);
+                                        }
+                                    } else {
+
+                                        furnace.getInventory().setFuel(item);
+                                        newItems.remove(item);
+                                    }
+                                } else if (ItemUtil.isSmeltable(item)) {
+
+                                    if (ItemUtil.isStackValid(furnace.getInventory().getSmelting())) {
+
+                                        if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getSmelting())) {
+
+                                            newItems.remove(item);
+                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getSmelting(), item);
+                                            if(newStack != null)
+                                                newItems.add(newStack);
+                                        }
+                                    } else {
+
+                                        furnace.getInventory().setSmelting(item);
+                                        newItems.remove(item);
+                                    }
+                                }
+                            }
+
+                            items.clear();
+                            items.addAll(newItems);
+
+                            if (!items.isEmpty()) searchNearbyPipes(block);
+
                         } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
 
                             CircuitCore circuitCore = CircuitCore.inst();
@@ -206,6 +255,21 @@ public class Pipes extends AbstractMechanic {
                         ((InventoryHolder) fac.getState()).getInventory().addItem(item);
                     }
                 }
+            } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
+
+                Furnace f = (Furnace) fac.getState();
+                items.add(f.getInventory().getResult());
+                f.getInventory().getResult().setAmount(0);
+                visitedPipes.add(BukkitUtil.toVector(fac));
+                searchNearbyPipes(block);
+                if (!items.isEmpty()) {
+                    for (ItemStack item : items) {
+                        if (item == null) continue;
+                        ItemUtil.addToStack(f.getInventory().getResult(), item);
+                    }
+                }
+                else
+                    f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
                 if (!items.isEmpty()) for (ItemStack item : items) {
