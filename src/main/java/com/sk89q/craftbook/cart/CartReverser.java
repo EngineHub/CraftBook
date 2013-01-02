@@ -44,12 +44,12 @@ public class CartReverser extends CartMechanism {
                     }
                     break;
                 case EAST:
-                    if (normalVelocity.getBlockZ() != 1) {
+                    if (normalVelocity.getBlockZ() != -1) {
                         reverse(cart);
                     }
                     break;
                 case WEST:
-                    if (normalVelocity.getBlockZ() != -1) {
+                    if (normalVelocity.getBlockZ() != 1) {
                         reverse(cart);
                     }
                     break;
@@ -69,12 +69,12 @@ public class CartReverser extends CartMechanism {
                     }
                     break;
                 case EAST:
-                    if (normalVelocity.getBlockX() != -1) {
+                    if (normalVelocity.getBlockX() != 1) {
                         reverse(cart);
                     }
                     break;
                 case WEST:
-                    if (normalVelocity.getBlockX() != 1) {
+                    if (normalVelocity.getBlockX() != -1) {
                         reverse(cart);
                     }
                     break;
