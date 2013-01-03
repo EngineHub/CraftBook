@@ -107,7 +107,7 @@ public class MessageSender extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sends a pre-written message on high.";
         }

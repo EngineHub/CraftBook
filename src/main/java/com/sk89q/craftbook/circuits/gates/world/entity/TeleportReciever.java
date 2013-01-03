@@ -77,7 +77,7 @@ public class TeleportReciever extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Reciever for the teleportation network.";
         }

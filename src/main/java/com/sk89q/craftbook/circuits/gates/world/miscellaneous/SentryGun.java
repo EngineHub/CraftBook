@@ -133,7 +133,7 @@ public class SentryGun extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Shoots nearby mobs with arrows.";
         }

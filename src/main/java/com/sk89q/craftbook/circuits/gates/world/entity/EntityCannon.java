@@ -125,7 +125,7 @@ public class EntityCannon extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Shoots nearby entities of type at set velocity.";
         }

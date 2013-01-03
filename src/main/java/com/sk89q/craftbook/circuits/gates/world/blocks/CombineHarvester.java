@@ -157,7 +157,7 @@ public class CombineHarvester extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Harvests nearby crops.";
         }

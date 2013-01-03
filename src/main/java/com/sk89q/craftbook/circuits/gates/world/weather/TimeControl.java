@@ -68,7 +68,7 @@ public class TimeControl extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sets time based on input.";
         }

@@ -88,7 +88,7 @@ public class ChestStocker extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Adds item into above chest.";
         }

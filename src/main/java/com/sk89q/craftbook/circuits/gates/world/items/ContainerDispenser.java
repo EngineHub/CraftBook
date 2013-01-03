@@ -145,7 +145,7 @@ public class ContainerDispenser extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Dispenses items out of containers.";
         }

@@ -139,7 +139,7 @@ public class PotionInducer extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Gives nearby entities a potion effect.";
         }

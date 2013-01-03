@@ -83,7 +83,7 @@ public class Delayer extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Delays signal by X seconds (or ticks if set).";
         }

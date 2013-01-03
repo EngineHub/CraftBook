@@ -92,7 +92,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Plays a firework show from a file.";
         }

@@ -68,7 +68,7 @@ public class PowerSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Detects if offset block is powered.";
         }

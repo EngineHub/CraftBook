@@ -119,7 +119,7 @@ public class LiquidFlood extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Floods an area with a liquid.";
         }

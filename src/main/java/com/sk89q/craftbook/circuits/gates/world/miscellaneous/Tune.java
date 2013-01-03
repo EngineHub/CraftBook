@@ -113,7 +113,7 @@ public class Tune extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Plays a tune.";
         }

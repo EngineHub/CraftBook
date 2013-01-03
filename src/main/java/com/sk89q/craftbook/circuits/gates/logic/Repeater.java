@@ -59,7 +59,7 @@ public class Repeater extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Repeats a redstone signal.";
         }

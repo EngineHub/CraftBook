@@ -77,7 +77,7 @@ public class WeatherControlAdvanced extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "When centre on, set rain if left high and thunder if right high.";
         }

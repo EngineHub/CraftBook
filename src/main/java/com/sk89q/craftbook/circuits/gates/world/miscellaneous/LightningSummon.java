@@ -80,7 +80,7 @@ public class LightningSummon extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Strike location with lightning!";
         }

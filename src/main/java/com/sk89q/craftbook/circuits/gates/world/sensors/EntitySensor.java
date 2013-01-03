@@ -204,7 +204,7 @@ public class EntitySensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Detects specific entity types in a given radius.";
         }

@@ -103,7 +103,7 @@ public class Counter extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Increments on redstone signal, outputs high when reset.";
         }

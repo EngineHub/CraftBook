@@ -54,7 +54,7 @@ public class ItemNotSensor extends ItemSensor {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Detects if an item is NOT within a given radius";
         }

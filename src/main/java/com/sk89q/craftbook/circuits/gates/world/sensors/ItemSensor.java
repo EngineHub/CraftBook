@@ -135,7 +135,7 @@ public class ItemSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Detects items within a given radius";
         }

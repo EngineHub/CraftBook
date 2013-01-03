@@ -161,7 +161,7 @@ public class PlayerSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Detects players within a radius.";
         }

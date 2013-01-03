@@ -268,7 +268,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Auto-crafts recipes in the above dispenser.";
         }

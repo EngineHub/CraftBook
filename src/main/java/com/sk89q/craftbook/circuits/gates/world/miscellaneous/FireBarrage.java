@@ -48,7 +48,7 @@ public class FireBarrage extends FireShooter {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Shoots a barrage of fire.";
         }

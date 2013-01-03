@@ -170,7 +170,7 @@ public class Sorter extends AbstractIC implements PipeInputIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sorts items and spits out left/right depending on above chest.";
         }

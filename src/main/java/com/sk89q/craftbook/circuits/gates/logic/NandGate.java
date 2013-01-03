@@ -61,7 +61,7 @@ public class NandGate extends SimpleAnyInputLogicGate {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "NAND Gate. Outputs high if all inputs are low.";
         }

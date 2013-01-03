@@ -99,7 +99,7 @@ public class ItemDispenser extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Spawns in items.";
         }

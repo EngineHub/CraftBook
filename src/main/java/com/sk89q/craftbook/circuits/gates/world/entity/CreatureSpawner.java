@@ -315,7 +315,7 @@ public class CreatureSpawner extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Spawns a mob with specified data.";
         }

@@ -61,7 +61,7 @@ public class AndGate extends SimpleAnyInputLogicGate {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high if all inputs are high.";
         }

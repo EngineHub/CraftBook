@@ -88,7 +88,7 @@ public class LavaSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high if lava is at given offset.";
         }

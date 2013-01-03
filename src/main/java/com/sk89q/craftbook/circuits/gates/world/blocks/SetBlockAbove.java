@@ -73,7 +73,7 @@ public class SetBlockAbove extends SetBlock {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sets block above IC block.";
         }

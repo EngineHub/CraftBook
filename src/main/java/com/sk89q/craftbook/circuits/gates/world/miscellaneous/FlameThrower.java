@@ -76,7 +76,7 @@ public class FlameThrower extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Makes a line of fire.";
         }

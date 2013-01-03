@@ -93,7 +93,7 @@ public class TimedExplosion extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Spawn tnt with custom fuse and yield.";
         }

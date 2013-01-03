@@ -117,7 +117,7 @@ public class MovementSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high if a nearby entity is moving.";
         }

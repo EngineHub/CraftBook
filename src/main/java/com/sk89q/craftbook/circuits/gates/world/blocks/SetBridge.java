@@ -165,7 +165,7 @@ public class SetBridge extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Generates a bridge out of the set materials with set size.";
         }

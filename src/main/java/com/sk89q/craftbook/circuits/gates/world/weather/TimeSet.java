@@ -57,7 +57,7 @@ public class TimeSet extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Set time when triggered.";
         }

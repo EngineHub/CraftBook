@@ -594,7 +594,7 @@ public class CircuitCore implements LocalComponent {
             if (plugin.getConfiguration().ICShortHandEnabled && ric.getShorthand() != null) {
                 player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
             }
-            player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getDescription());
+            player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getShortDescription());
             if (ric.getFactory().getLineHelp()[0] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
             } else {

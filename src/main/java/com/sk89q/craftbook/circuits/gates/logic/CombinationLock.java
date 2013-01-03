@@ -74,7 +74,7 @@ public class CombinationLock extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Checks combination on sign against inputs.";
         }

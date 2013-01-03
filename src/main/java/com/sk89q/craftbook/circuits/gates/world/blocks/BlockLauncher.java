@@ -101,7 +101,7 @@ public class BlockLauncher extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Launches set block with set velocity.";
         }

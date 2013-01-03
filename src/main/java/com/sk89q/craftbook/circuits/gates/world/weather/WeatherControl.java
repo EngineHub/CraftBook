@@ -89,7 +89,7 @@ public class WeatherControl extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Set rain and thunder duration.";
         }

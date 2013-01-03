@@ -221,7 +221,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Spawns a mob with many customizations.";
         }

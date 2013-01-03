@@ -53,7 +53,7 @@ public class Dispatcher extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Send middle signal out high sides.";
         }

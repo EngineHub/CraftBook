@@ -191,7 +191,7 @@ public class Spigot extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Fills areas with liquid from below chest.";
         }

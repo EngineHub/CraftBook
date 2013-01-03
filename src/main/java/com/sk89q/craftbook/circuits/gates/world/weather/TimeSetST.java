@@ -55,7 +55,7 @@ public class TimeSetST extends TimeSet implements SelfTriggeredIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sets time continuously.";
         }

@@ -89,7 +89,7 @@ public class ClockDivider extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Clock that toggles output when reset.";
         }

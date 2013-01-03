@@ -155,7 +155,7 @@ public class BlockBreaker extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Breaks blocks above/below block sign is on.";
         }

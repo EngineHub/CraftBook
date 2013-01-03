@@ -105,7 +105,7 @@ public class BlockSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Checks for blocks at location.";
         }

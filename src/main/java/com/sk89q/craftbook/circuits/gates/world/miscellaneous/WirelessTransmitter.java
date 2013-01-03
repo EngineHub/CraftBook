@@ -93,7 +93,7 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Transmits wireless signal to wireless recievers.";
         }

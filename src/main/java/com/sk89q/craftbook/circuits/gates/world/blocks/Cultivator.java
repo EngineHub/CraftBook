@@ -117,9 +117,15 @@ public class Cultivator extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Cultivates an area using a hoe.";
+        }
+
+        @Override
+        public String getLongDescription() {
+
+            return "The Cultivator IC tills dirt and grass around the IC within the area designated on line 3, using the hoes in the above chest.";
         }
 
         @Override

@@ -125,7 +125,7 @@ public class Pump extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Pumps liquids into above chest.";
         }

@@ -61,7 +61,7 @@ public class ArrowBarrage extends ArrowShooter {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Shoots a barrage of arrows.";
         }

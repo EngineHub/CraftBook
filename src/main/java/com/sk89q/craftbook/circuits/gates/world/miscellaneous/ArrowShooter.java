@@ -123,7 +123,7 @@ public class ArrowShooter extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Shoots an arrow.";
         }

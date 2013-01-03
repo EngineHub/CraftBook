@@ -61,7 +61,7 @@ public class SetBlockAboveChest extends SetBlock {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sets above block from below chest.";
         }

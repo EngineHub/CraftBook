@@ -76,7 +76,7 @@ public class ServerTimeModulus extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high if time is odd.";
         }

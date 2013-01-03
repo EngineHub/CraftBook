@@ -114,7 +114,7 @@ public class DownCounter extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high when counter reaches 0.";
         }

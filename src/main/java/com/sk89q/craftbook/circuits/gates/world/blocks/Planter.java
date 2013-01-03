@@ -259,7 +259,7 @@ public class Planter extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Plants plantable things at set offset.";
         }

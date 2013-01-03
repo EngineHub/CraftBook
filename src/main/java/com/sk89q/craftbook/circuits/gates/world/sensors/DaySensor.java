@@ -100,7 +100,7 @@ public class DaySensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high if it is day.";
         }

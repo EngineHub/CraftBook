@@ -59,7 +59,7 @@ public class Inverter extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Invert a redstone signal.";
         }

@@ -116,7 +116,7 @@ public class LightSensor extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high if specific block is above specified light level.";
         }

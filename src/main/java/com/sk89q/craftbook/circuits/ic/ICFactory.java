@@ -69,7 +69,14 @@ public interface ICFactory {
      *
      * @return a short description.
      */
-    public String getDescription();
+    public String getShortDescription();
+
+    /**
+     * Get a long description, to be used for wiki generation.
+     * 
+     * @return a long description of the IC's usage.
+     */
+    public String getLongDescription();
 
     /**
      * Get line-by-line help.

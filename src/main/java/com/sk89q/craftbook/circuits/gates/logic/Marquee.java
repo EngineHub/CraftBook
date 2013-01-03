@@ -106,7 +106,7 @@ public class Marquee extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Sequentially sets all pins.";
         }

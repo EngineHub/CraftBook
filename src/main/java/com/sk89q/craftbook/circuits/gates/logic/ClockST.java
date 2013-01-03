@@ -88,7 +88,7 @@ public class ClockST extends Clock implements SelfTriggeredIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Outputs high every X ticks.";
         }

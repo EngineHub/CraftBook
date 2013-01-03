@@ -168,7 +168,7 @@ public class ContainerCollector extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Collects items into above chest.";
         }

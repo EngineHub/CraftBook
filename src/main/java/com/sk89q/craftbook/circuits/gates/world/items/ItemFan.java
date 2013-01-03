@@ -93,7 +93,7 @@ public class ItemFan extends AbstractIC {
         }
 
         @Override
-        public String getDescription() {
+        public String getShortDescription() {
 
             return "Gently pushes items upwards.";
         }
