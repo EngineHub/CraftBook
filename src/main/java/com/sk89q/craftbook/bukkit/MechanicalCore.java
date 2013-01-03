@@ -74,6 +74,7 @@ public class MechanicalCore implements LocalComponent {
         plugin.registerManager(manager);
 
         registerMechanics();
+        registerEvents();
     }
 
     @Override
