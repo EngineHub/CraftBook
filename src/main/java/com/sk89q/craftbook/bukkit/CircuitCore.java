@@ -684,11 +684,7 @@ public class CircuitCore implements LocalComponent {
                 col = !col;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                if (ric.getFactory() instanceof RestrictedIC) {
-                    if (!p.hasPermission("craftbook.ic.restricted." + ic.toLowerCase())) {
-                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                    }
-                } else if (!p.hasPermission("craftbook.ic.safe." + ic.toLowerCase())) {
+                if (!ICMechanicFactory.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(), ic.toLowerCase())) {
                     colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                 }
                 strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"
