@@ -122,8 +122,6 @@ public class ChunkAnchor extends PersistentMechanic {
     @Override
     public void onChunkUnload(ChunkUnloadEvent event) {
 
-        boolean isOn = true;
-
         if(!isOn)
             return;
 

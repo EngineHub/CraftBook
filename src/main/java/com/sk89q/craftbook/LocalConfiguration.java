@@ -160,6 +160,8 @@ public abstract class LocalConfiguration {
     public boolean minecartMessengerEnabled = true;
     public int minecartDecayTime;
     public double minecartConstantSpeed;
+    public double minecartPoweredRailModifier;
+    public boolean minecartPickupItemsOnCollision;
     // Vehicles - Boat Options
     public boolean boatNoCrash;
     public boolean boatRemoveEntities;

@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.PoweredMinecart;
@@ -37,6 +39,7 @@ import com.sk89q.craftbook.cart.CartMechanism;
 import com.sk89q.craftbook.cart.MinecartManager;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
+import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
 /**
@@ -129,6 +132,16 @@ public class VehicleCore implements LocalComponent {
                 return;
             }
 
+            if (plugin.getConfiguration().minecartPickupItemsOnCollision && vehicle instanceof StorageMinecart && event.getEntity() instanceof Item) {
+
+                StorageMinecart cart = (StorageMinecart) vehicle;
+                Collection<ItemStack> leftovers = cart.getInventory().addItem(((Item) entity).getItemStack()).values();
+                if(leftovers.isEmpty())
+                    entity.remove();
+                else
+                    ((Item) entity).setItemStack(leftovers.toArray(new ItemStack[1])[0]);
+            }
+
             if (plugin.getConfiguration().boatRemoveEntities && vehicle instanceof Boat) {
                 if (!plugin.getConfiguration().boatRemoveEntitiesOtherBoats && entity instanceof Boat) return;
 
@@ -211,6 +224,14 @@ public class VehicleCore implements LocalComponent {
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
+
+            if (plugin.getConfiguration().minecartPoweredRailModifier > 0) {
+
+                if (event.getTo().getBlock().getTypeId() == BlockID.POWERED_RAIL) {
+
+                    event.getVehicle().getVelocity().multiply(plugin.getConfiguration().minecartPoweredRailModifier);
+                }
+            }
 
             if (plugin.getConfiguration().minecartConstantSpeed > 0 && RailUtil.isTrack(event.getTo().getBlock()
                     .getTypeId())

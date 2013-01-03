@@ -217,6 +217,8 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartMessengerEnabled = config.getBoolean("vehicles.minecart.track-messages", true);
         minecartDecayTime = config.getInt("vehicles.minecart.decay-time", 20);
         minecartConstantSpeed = config.getDouble("vehicles.minecart.constant-speed", 0);
+        minecartPoweredRailModifier = config.getDouble("vehicles.minecart.powered-rail-modifier", 0);
+        minecartPickupItemsOnCollision = config.getBoolean("vehicles.minecart.item-pickup-collision", false);
 
         // Vehicles - Boat Options
         boatRemoveEntities = config.getBoolean("vehicles.boat.remove-entities", false);
