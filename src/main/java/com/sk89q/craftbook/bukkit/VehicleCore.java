@@ -120,16 +120,14 @@ public class VehicleCore implements LocalComponent {
             Vehicle vehicle = event.getVehicle();
             Entity entity = event.getEntity();
 
-            if (!plugin.getConfiguration().boatRemoveEntities && !plugin.getConfiguration().minecartRemoveEntities &&
-                    !plugin.getConfiguration().minecartEnterOnImpact)
-                return;
+            enterOnImpact: {
+                if (plugin.getConfiguration().minecartEnterOnImpact && vehicle instanceof Minecart) {
+                    if (!vehicle.isEmpty() || vehicle instanceof StorageMinecart || vehicle instanceof PoweredMinecart) break enterOnImpact;
+                    if (!(event.getEntity() instanceof LivingEntity)) break enterOnImpact;
+                    vehicle.setPassenger(event.getEntity());
 
-            if (plugin.getConfiguration().minecartEnterOnImpact && vehicle instanceof Minecart) {
-                if (!vehicle.isEmpty() || vehicle instanceof StorageMinecart || vehicle instanceof PoweredMinecart) return;
-                if (!(event.getEntity() instanceof LivingEntity)) return;
-                vehicle.setPassenger(event.getEntity());
-
-                return;
+                    return;
+                }
             }
 
             if (plugin.getConfiguration().minecartPickupItemsOnCollision && vehicle instanceof StorageMinecart && event.getEntity() instanceof Item) {
@@ -140,26 +138,42 @@ public class VehicleCore implements LocalComponent {
                     entity.remove();
                 else
                     ((Item) entity).setItemStack(leftovers.toArray(new ItemStack[1])[0]);
-            }
-
-            if (plugin.getConfiguration().boatRemoveEntities && vehicle instanceof Boat) {
-                if (!plugin.getConfiguration().boatRemoveEntitiesOtherBoats && entity instanceof Boat) return;
-
-                if (entity instanceof LivingEntity) {
-                    ((LivingEntity) entity).damage(5);
-                    entity.setVelocity(vehicle.getVelocity().multiply(2));
-                } else entity.remove();
 
                 return;
             }
 
-            if (plugin.getConfiguration().minecartRemoveEntities && vehicle instanceof Minecart) {
-                if (!plugin.getConfiguration().minecartRemoveEntitiesOtherCarts && entity instanceof Minecart) return;
+            boatRemoveEntities: {
+                if (plugin.getConfiguration().boatRemoveEntities && vehicle instanceof Boat) {
+                    if (!plugin.getConfiguration().boatRemoveEntitiesOtherBoats && entity instanceof Boat) break boatRemoveEntities;
 
-                if (entity instanceof LivingEntity) {
-                    ((LivingEntity) entity).damage(5);
-                    entity.setVelocity(vehicle.getVelocity().multiply(2));
-                } else entity.remove();
+                    if (entity instanceof LivingEntity) {
+                        ((LivingEntity) entity).damage(5);
+                        entity.setVelocity(vehicle.getVelocity().multiply(2));
+                    } else entity.remove();
+
+                    return;
+                }
+            }
+
+            minecartRemoveEntities: {
+                if (plugin.getConfiguration().minecartRemoveEntities && vehicle instanceof Minecart) {
+                    if (!plugin.getConfiguration().minecartRemoveEntitiesOtherCarts && entity instanceof Minecart) break minecartRemoveEntities;
+
+                    if (entity instanceof LivingEntity) {
+                        ((LivingEntity) entity).damage(10);
+                        entity.setVelocity(vehicle.getVelocity().normalize().multiply(1.8).add(new Vector(0,0.5,0)));
+                    } else if (entity instanceof Vehicle) {
+
+                        if(!entity.isEmpty())
+                            break minecartRemoveEntities;
+                        else
+                            entity.remove();
+                    } else
+                        entity.remove();
+
+                    event.setCollisionCancelled(true);
+                    return;
+                }
             }
         }
 
