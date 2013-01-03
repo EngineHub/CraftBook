@@ -172,9 +172,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         paymentEnabled = config.getBoolean("mechanics.payment.enable", true);
 
         // Snow Configuration Listener
-        snowEnabled = config.getBoolean("mechanics.snow.enable", true);
-        snowTrample = config.getBoolean("mechanics.snow.trample", true);
-        snowPlace = config.getBoolean("mechanics.snow.place", true);
+        snowEnabled = config.getBoolean("mechanics.snow.enable", false);
+        snowTrample = config.getBoolean("mechanics.snow.trample", false);
+        snowPlace = config.getBoolean("mechanics.snow.place", false);
         snowRealistic = config.getBoolean("mechanics.snow.realistic", false);
         snowHighPiles = config.getBoolean("mechanics.snow.high-piling", false);
         snowJumpTrample = config.getBoolean("mechanics.snow.jump-trample", false);
