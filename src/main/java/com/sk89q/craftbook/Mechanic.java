@@ -48,10 +48,10 @@ public interface Mechanic {
 
     /**
      * Raised when a chunk is unloaded.
-     * 
+     *
      * @param event
      */
-    public void onChunkUnload(ChunkUnloadEvent event);
+    public void unloadWithEvent(ChunkUnloadEvent event);
 
     /**
      * Raised when a block is broken.

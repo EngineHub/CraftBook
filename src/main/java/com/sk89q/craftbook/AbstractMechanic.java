@@ -38,7 +38,7 @@ public abstract class AbstractMechanic implements Mechanic {
     }
 
     @Override
-    public void onChunkUnload(ChunkUnloadEvent event) {
+    public void unloadWithEvent(ChunkUnloadEvent event) {
 
     }
 
