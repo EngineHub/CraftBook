@@ -159,6 +159,9 @@ public class VehicleCore implements LocalComponent {
                 if (plugin.getConfiguration().minecartRemoveEntities && vehicle instanceof Minecart) {
                     if (!plugin.getConfiguration().minecartRemoveEntitiesOtherCarts && entity instanceof Minecart) break minecartRemoveEntities;
 
+                    if(!(vehicle instanceof StorageMinecart) && !(vehicle instanceof PoweredMinecart) && vehicle.isEmpty())
+                        break minecartRemoveEntities;
+
                     if (entity instanceof LivingEntity) {
                         ((LivingEntity) entity).damage(10);
                         entity.setVelocity(vehicle.getVelocity().normalize().multiply(1.8).add(new Vector(0,0.5,0)));
@@ -171,6 +174,8 @@ public class VehicleCore implements LocalComponent {
                     } else
                         entity.remove();
 
+                    event.setCancelled(true);
+                    event.setPickupCancelled(true);
                     event.setCollisionCancelled(true);
                     return;
                 }
