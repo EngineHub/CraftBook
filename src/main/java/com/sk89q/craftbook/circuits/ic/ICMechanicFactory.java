@@ -16,10 +16,6 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import java.util.regex.Matcher;
-
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -29,6 +25,9 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+
+import java.util.regex.Matcher;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
@@ -120,13 +119,13 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      */
     @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player,
-            ChangedSign sign) throws InvalidMechanismException {
+                             ChangedSign sign) throws InvalidMechanismException {
 
         return detect(pt, player, sign, false);
     }
 
     private ICMechanic detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign,
-            boolean shortHand) throws InvalidMechanismException {
+                              boolean shortHand) throws InvalidMechanismException {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
@@ -222,35 +221,32 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
     public static boolean checkPermissionsBoolean(LocalPlayer player, ICFactory factory, String id) {
 
-        if (player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName())) return true;
-
-        if (player.hasPermission("craftbook.ic." + id.toLowerCase())) // Simpler overriding permission.
-            return true;
-
-        if (factory instanceof RestrictedIC) {
-            if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase()))
-                return false;
-        } else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase()))
+        try {
+            checkPermissions(player, factory, id);
+        } catch (ICVerificationException e) {
             return false;
-
+        }
         return true;
     }
 
     public static void checkPermissions(LocalPlayer player, ICFactory factory, String id)
             throws ICVerificationException {
 
-        if (player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName()))
+        if (player.hasPermission("craftbook.ic." + id.toLowerCase())) {
             return;
+        }
 
-        if (player.hasPermission("craftbook.ic." + id.toLowerCase())) // Simpler overriding permission.
+        if (player.hasPermission("craftbook.ic."
+                + factory.getClass().getPackage().getName() + '.' + id.toLowerCase())) {
             return;
+        }
 
         if (factory instanceof RestrictedIC) {
-            if (!player.hasPermission("craftbook.ic.restricted." + id.toLowerCase()))
-                throw new ICVerificationException("You don't have permission to use " + id.toLowerCase() + ".");
-        } else if (!player.hasPermission("craftbook.ic.safe." + id.toLowerCase()))
-            throw new ICVerificationException("You don't have permission to use " + id.toLowerCase() + ".");
+            if (player.hasPermission("craftbook.ic.restricted." + id.toLowerCase())) return;
+        } else if (player.hasPermission("craftbook.ic.safe." + id.toLowerCase())) {
+            return;
+        }
 
-        return;
+        throw new ICVerificationException("You don't have permission to use " + id.toLowerCase() + ".");
     }
 }
