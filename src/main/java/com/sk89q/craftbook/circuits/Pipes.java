@@ -1,16 +1,5 @@
 package com.sk89q.craftbook.circuits;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.block.Furnace;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -25,6 +14,16 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.block.Furnace;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.PistonBaseMaterial;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Pipes extends AbstractMechanic {
 
@@ -158,8 +157,9 @@ public class Pipes extends AbstractMechanic {
                                         if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getFuel())) {
 
                                             newItems.remove(item);
-                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel(), item);
-                                            if(newStack != null)
+                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel()
+                                                    , item);
+                                            if (newStack != null)
                                                 newItems.add(newStack);
                                         }
                                     } else {
@@ -174,8 +174,9 @@ public class Pipes extends AbstractMechanic {
                                         if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getSmelting())) {
 
                                             newItems.remove(item);
-                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getSmelting(), item);
-                                            if(newStack != null)
+                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory()
+                                                    .getSmelting(), item);
+                                            if (newStack != null)
                                                 newItems.add(newStack);
                                         }
                                     } else {
@@ -233,18 +234,19 @@ public class Pipes extends AbstractMechanic {
             PistonBaseMaterial p = (PistonBaseMaterial) block.getState().getData();
             Block fac = block.getRelative(p.getFacing());
             if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.DISPENSER) {
-                if(CraftBookPlugin.inst().getConfiguration().pipeStackPerPull) {
+                if (CraftBookPlugin.inst().getConfiguration().pipeStackPerPull) {
 
-                    for(ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+                    for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
-                        if(!ItemUtil.isStackValid(stack))
+                        if (!ItemUtil.isStackValid(stack))
                             continue;
                         items.add(stack.clone());
                         ((InventoryHolder) fac.getState()).getInventory().remove(stack);
                     }
                 } else {
 
-                    items.addAll(Arrays.asList(((InventoryHolder) fac.getState()).getInventory().getContents().clone()));
+                    items.addAll(Arrays.asList(((InventoryHolder) fac.getState()).getInventory().getContents().clone
+                            ()));
                     ((InventoryHolder) fac.getState()).getInventory().clear();
                 }
                 visitedPipes.add(BukkitUtil.toVector(fac));
@@ -259,7 +261,7 @@ public class Pipes extends AbstractMechanic {
 
                 Furnace f = (Furnace) fac.getState();
                 items.add(f.getInventory().getResult());
-                f.getInventory().getResult().setAmount(0);
+                if (f.getInventory().getResult() != null) f.getInventory().getResult().setAmount(0);
                 visitedPipes.add(BukkitUtil.toVector(fac));
                 searchNearbyPipes(block);
                 if (!items.isEmpty()) {
@@ -267,9 +269,7 @@ public class Pipes extends AbstractMechanic {
                         if (item == null) continue;
                         ItemUtil.addToStack(f.getInventory().getResult(), item);
                     }
-                }
-                else
-                    f.getInventory().setResult(null);
+                } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
                 if (!items.isEmpty()) for (ItemStack item : items) {
