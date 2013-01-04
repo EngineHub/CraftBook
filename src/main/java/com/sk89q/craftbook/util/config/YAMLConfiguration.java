@@ -83,6 +83,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Bookcase Configuration Listener
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", true);
+        bookcaseReadWhenSneaking = config.getBoolean("mechanics.bookcase.read-when-sneaking", false);
         bookcaseReadLine = config.getString("mechanics.bookcase.read-line", "You pick up a book...");
 
         // Bridge Configuration Listener

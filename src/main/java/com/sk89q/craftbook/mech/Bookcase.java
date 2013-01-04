@@ -113,6 +113,7 @@ public class Bookcase extends AbstractMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         if (!plugin.getConfiguration().bookcaseEnabled) return;
+        if (event.getPlayer().isSneaking() != plugin.getConfiguration().bookcaseReadWhenSneaking) return;
 
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         if (player.getTypeInHand() == 0 || !player.isHoldingBlock()) {

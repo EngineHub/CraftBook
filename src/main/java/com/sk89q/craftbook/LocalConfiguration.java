@@ -51,6 +51,7 @@ public abstract class LocalConfiguration {
     public int areaMaxAreaPerUser = 30;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled = true;
+    public boolean bookcaseReadWhenSneaking = false;
     public String bookcaseReadLine = "You pick up a book...";
     // Mechanics - Bridge
     public boolean bridgeEnabled = true;
