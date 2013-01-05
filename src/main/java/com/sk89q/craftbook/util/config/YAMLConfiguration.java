@@ -177,6 +177,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         snowPiling = config.getBoolean("mechanics.snow.piling", false);
         snowTrample = config.getBoolean("mechanics.snow.trample", false);
         snowPlace = config.getBoolean("mechanics.snow.place", false);
+        snowSlowdown = config.getBoolean("mechanics.snow.slowdown", false);
         snowRealistic = config.getBoolean("mechanics.snow.realistic", false);
         snowHighPiles = config.getBoolean("mechanics.snow.high-piling", false);
         snowJumpTrample = config.getBoolean("mechanics.snow.jump-trample", false);

@@ -124,6 +124,7 @@ public abstract class LocalConfiguration {
     public boolean snowPiling = true;
     public boolean snowTrample = true;
     public boolean snowPlace = true;
+    public boolean snowSlowdown = false;
     public boolean snowRealistic = false;
     public boolean snowHighPiles = false;
     public boolean snowJumpTrample = false;
