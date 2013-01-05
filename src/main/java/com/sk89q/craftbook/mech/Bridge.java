@@ -16,7 +16,18 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
+import org.bukkit.GameMode;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -28,12 +39,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import org.bukkit.GameMode;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * The default bridge mechanism -- signposts on either side of a 3xN plane of (or 1xN plane if 1 on second line) blocks.
@@ -77,7 +82,7 @@ public class Bridge extends AbstractMechanic {
          */
         @Override
         public Bridge detect(BlockWorldVector pt, LocalPlayer player,
-                             ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Bridge]")) {
@@ -265,7 +270,7 @@ public class Bridge extends AbstractMechanic {
             sign = BukkitUtil.toChangedSign(event.getClickedBlock());
         }
 
-        if (sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
+        if (plugin.getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
             if (event.getPlayer().getItemInHand() != null)
                 if (getBridgeMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
@@ -380,10 +385,10 @@ public class Bridge extends AbstractMechanic {
                             }
                             return;
                         }
+                    } else {
+                        b.setTypeId(getBridgeMaterial());
+                        b.setData(getBridgeData());
                     }
-                } else {
-                    b.setTypeId(getBridgeMaterial());
-                    b.setData(getBridgeData());
                 }
             }
         }

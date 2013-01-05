@@ -16,7 +16,20 @@ package com.sk89q.craftbook.mech;
  * see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.*;
+import org.bukkit.GameMode;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.SignUtil;
@@ -28,14 +41,6 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import org.bukkit.GameMode;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Door.
@@ -59,7 +64,7 @@ public class Door extends AbstractMechanic {
          */
         @Override
         public Door detect(BlockWorldVector pt, LocalPlayer player,
-                           ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Door Down]")) {
                 player.checkPermission("craftbook.mech.door");
@@ -271,7 +276,7 @@ public class Door extends AbstractMechanic {
             return;
         }
 
-        if (event.getPlayer().getItemInHand() != null)
+        if (plugin.getConfiguration().safeDestruction && event.getPlayer().getItemInHand() != null)
             if (getDoorMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
                 if (!player.hasPermission("craftbook.mech.door.restock")) {
