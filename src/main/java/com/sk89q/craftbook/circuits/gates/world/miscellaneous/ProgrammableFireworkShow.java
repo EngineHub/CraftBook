@@ -85,9 +85,9 @@ public class ProgrammableFireworkShow extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2).trim().isEmpty() && (new File(CircuitCore.inst().getFireworkFolder(),
-                    sign.getLine(2).trim() + ".txt").exists() || new File(CircuitCore.inst().getFireworkFolder(),
-                            sign.getLine(2).trim() + ".fwk").exists()))
+            if (sign.getLine(2).trim().isEmpty() || !new File(CircuitCore.inst().getFireworkFolder(),
+                    sign.getLine(2).trim() + ".txt").exists() && !new File(CircuitCore.inst().getFireworkFolder(),
+                            sign.getLine(2).trim() + ".fwk").exists())
                 throw new ICVerificationException("A valid firework show is required on line 3!");
         }
 
@@ -136,6 +136,10 @@ public class ProgrammableFireworkShow extends AbstractIC {
             if(!firework.exists()) {
                 fyrestone = true;
                 firework = new File(CircuitCore.inst().getFireworkFolder(), show + ".fwk");
+                if (!firework.exists()) {
+                    Bukkit.getLogger().severe("Firework File Not Found! " + firework.getName());
+                    return;
+                }
             }
             else
                 fyrestone = false;
