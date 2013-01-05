@@ -52,6 +52,8 @@ public class AreaCommands {
 
         String id;
         String namespace = player.getName();
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
         boolean personal = true;
 
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {

@@ -78,6 +78,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         areaEnabled = config.getBoolean("mechanics.area.enable", true);
         areaAllowRedstone = config.getBoolean("mechanics.area.allow-redstone", true);
         areaUseSchematics = config.getBoolean("mechanics.area.use-schematics", true);
+        areaShortenNames = config.getBoolean("mechanicsa.area.shorten-long-names", true);
         areaMaxAreaSize = config.getInt("mechanics.area.max-size", 5000);
         areaMaxAreaPerUser = config.getInt("mechanics.area.max-per-user", 30);
 

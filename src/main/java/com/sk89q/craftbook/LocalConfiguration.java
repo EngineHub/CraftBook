@@ -47,6 +47,7 @@ public abstract class LocalConfiguration {
     public boolean areaEnabled = true;
     public boolean areaAllowRedstone = true;
     public boolean areaUseSchematics = true;
+    public boolean areaShortenNames = true;
     public int areaMaxAreaSize = 5000;
     public int areaMaxAreaPerUser = 30;
     // Mechanics - Bookcase
