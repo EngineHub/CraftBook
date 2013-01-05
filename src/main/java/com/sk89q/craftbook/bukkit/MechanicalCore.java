@@ -131,7 +131,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.customDispensingEnabled) {
             server.getPluginManager().registerEvents(new DispenserRecipes(), plugin);
         }
-        if (config.snowEnabled || config.snowPlace) {
+        if (config.snowPiling || config.snowPlace) {
             server.getPluginManager().registerEvents(new Snow(), plugin);
         }
         if (config.customDropEnabled) {

@@ -82,7 +82,7 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockForm(final BlockFormEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().snowEnabled) return;
+        if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
         if (event.getNewState().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
             pile(block);
@@ -103,7 +103,7 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPhysics(final BlockPhysicsEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().snowEnabled) return;
+        if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
         if (event.getBlock().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 

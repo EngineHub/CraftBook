@@ -107,7 +107,7 @@ mechanics:
     payment:
         enable: true
     snow:
-        enable: false
+        piling: false
         trample: false
         place: false
         realistic: false

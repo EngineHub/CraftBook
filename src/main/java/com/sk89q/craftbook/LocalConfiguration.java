@@ -120,7 +120,7 @@ public abstract class LocalConfiguration {
     // Mechanics - Payment
     public boolean paymentEnabled = true;
     // Mechanics - Snow
-    public boolean snowEnabled = true;
+    public boolean snowPiling = true;
     public boolean snowTrample = true;
     public boolean snowPlace = true;
     public boolean snowRealistic = false;
