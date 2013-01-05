@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.util;
 
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class ItemUtil {
 
@@ -16,16 +15,14 @@ public class ItemUtil {
 
     public static ItemStack addToStack(ItemStack base, ItemStack toAdd) {
 
-        if (!areItemsIdentical(base, toAdd))
-            return toAdd;
+        if (!areItemsIdentical(base, toAdd)) return toAdd;
 
-        if(base.getAmount() + toAdd.getAmount() > 64) {
+        if (base.getAmount() + toAdd.getAmount() > 64) {
 
             toAdd.setAmount(base.getAmount() + toAdd.getAmount() - 64);
             base.setAmount(64);
             return toAdd;
-        }
-        else {
+        } else {
             base.setAmount(base.getAmount() + toAdd.getAmount());
             return null;
         }

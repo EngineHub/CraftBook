@@ -20,6 +20,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
+import org.apache.commons.lang.Validate;
 import org.bukkit.block.Sign;
 
 public class BukkitChangedSign implements ChangedSign {
@@ -28,6 +29,8 @@ public class BukkitChangedSign implements ChangedSign {
     private String[] lines;
 
     public BukkitChangedSign(Sign sign, String[] lines) {
+
+        Validate.notNull(sign);
 
         this.sign = sign;
         this.lines = lines;

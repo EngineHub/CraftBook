@@ -157,10 +157,9 @@ public class Pipes extends AbstractMechanic {
                                         if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getFuel())) {
 
                                             newItems.remove(item);
-                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel()
-                                                    , item);
-                                            if (newStack != null)
-                                                newItems.add(newStack);
+                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel(),
+                                                    item);
+                                            if (newStack != null) newItems.add(newStack);
                                         }
                                     } else {
 
@@ -176,8 +175,7 @@ public class Pipes extends AbstractMechanic {
                                             newItems.remove(item);
                                             ItemStack newStack = ItemUtil.addToStack(furnace.getInventory()
                                                     .getSmelting(), item);
-                                            if (newStack != null)
-                                                newItems.add(newStack);
+                                            if (newStack != null) newItems.add(newStack);
                                         }
                                     } else {
 
