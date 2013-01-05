@@ -1,6 +1,20 @@
 package com.sk89q.craftbook.mech.area;
 
-import com.sk89q.craftbook.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
+
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -8,15 +22,6 @@ import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.data.DataException;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 /**
  * Area.
@@ -41,7 +46,7 @@ public class Area extends AbstractMechanic {
          */
         @Override
         public Area detect(BlockWorldVector pt, LocalPlayer player,
-                           ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!plugin.getConfiguration().areaEnabled) return null;
 
@@ -111,7 +116,7 @@ public class Area extends AbstractMechanic {
         }
     }
 
-    private CraftBookPlugin plugin;
+    private CraftBookPlugin plugin = CraftBookPlugin.inst();
     private final BlockWorldVector pt;
     private boolean toggledOn;
     private boolean saveOnToggle = false;
