@@ -1,14 +1,20 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -76,10 +82,10 @@ public class SetBridge extends AbstractIC {
         }
         // parse the coordinates
         line = getSign().getLine(3);
-        if (!line.isEmpty()) {
+        if (!line.trim().isEmpty()) {
             boolean relativeOffset = !line.contains("!");
             if (!relativeOffset) {
-                line = line.replace("!", "");
+                line = line.trim().replace("!", "");
             }
             String[] split = RegexUtil.COLON_PATTERN.split(line);
             try {
@@ -90,11 +96,11 @@ public class SetBridge extends AbstractIC {
                 offsetZ = Integer.parseInt(offsetSplit[2]);
             } catch (NumberFormatException e) {
                 offsetX = 0;
-                offsetY = 0;
+                offsetY = 1;
                 offsetZ = 0;
             } catch (IndexOutOfBoundsException e) {
                 offsetX = 0;
-                offsetY = 0;
+                offsetY = 1;
                 offsetZ = 0;
             }
             try {
@@ -141,9 +147,6 @@ public class SetBridge extends AbstractIC {
     }
 
     private void setDoor(boolean open) {
-
-        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-        faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
 
         for (int x = 0; x < width; x++) {
             for (int z = 0; z < depth; z++) {
