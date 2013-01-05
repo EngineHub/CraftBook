@@ -1,6 +1,9 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
+import com.sk89q.craftbook.AbstractMechanic;
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -43,7 +46,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
             // Must be Wall Sign
             if (b == null || b.getTypeId() != BlockID.WALL_SIGN) return false;
-            if (!(b.getState() instanceof Sign)) return false;
+            if (b.getState() == null || !(b.getState() instanceof Sign)) return false;
             Sign s = (Sign) b.getState();
 
             return s.getLine(1).equalsIgnoreCase("[X]");
