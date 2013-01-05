@@ -1,3 +1,17 @@
+3.5 Beta 2
+* Stop unneeded folders generating.
++ Added better detection of corrupt chunks/blocks. It now tells you which chunk is corrupt if it finds one.
+* Fixed CartReverser being inversed.
++ Added furnace support to pipes.
+* Minor changes to IC Permissions. (Shouldn't effect you in any way)
++ Added option to modify powered rail power.
++ Added option for storage carts to pickup items they run into.
+* Made snow mechanics off by default.
+* Made Spigot IC Restricted temporarily, it can be dangerous.
+* Fixed a lot of bugs with minecart remove entities on collision, it is now more stable and won't stop you when hitting entities.
+* Fixed Custom Dispensing, Snow, Painting Switcher, Chairs, AI Mechanics, Custom Drops
++ Added an option to only read bookshelves while sneaking, and if false; it is the opposite.
+
 3.5 Beta 1
 * MERGED ALL 4 JARS INTO 1. DUE TO THIS CONFIGS NEED TO BE REGENERATED, AND MIDIS + TOGGLE AREAS NEED TO BE MOVED
 + Added a Tune IC
