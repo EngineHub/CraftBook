@@ -1,18 +1,24 @@
 package com.sk89q.craftbook.bukkit;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.*;
-import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
-import com.sk89q.minecraft.util.commands.*;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.wepif.PermissionsResolverManager;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.GlobalRegionManager;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.jar.JarFile;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.*;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -23,13 +29,27 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.LocalComponent;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.MechanicClock;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.minecraft.util.commands.CommandUsageException;
+import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
+import com.sk89q.minecraft.util.commands.SimpleInjector;
+import com.sk89q.minecraft.util.commands.WrappedCommandException;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.wepif.PermissionsResolverManager;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.GlobalRegionManager;
 
 public class CraftBookPlugin extends JavaPlugin {
 
@@ -108,7 +128,7 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     public void registerManager(MechanicManager manager, boolean player, boolean block, boolean world,
-                                boolean vehicle) {
+            boolean vehicle) {
 
         managerAdapter.register(manager, player, block, world, vehicle);
     }
@@ -241,7 +261,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-                             String[] args) {
+            String[] args) {
 
         try {
             commands.execute(cmd.getName(), args, sender, sender);
@@ -666,9 +686,10 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Location loc) {
 
-        if (!config.obeyWorldguard)
-            return true;
-        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
+        return true;
+        //if (!config.obeyWorldguard)
+        //    return true;
+        //return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
     }
 
     /**
@@ -684,8 +705,9 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Block block) {
 
-        if (!config.obeyWorldguard) return true;
-        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
+        return true;
+        //if (!config.obeyWorldguard) return true;
+        //return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
     }
 
     /**
@@ -701,15 +723,16 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canUse(Player player, Location loc) {
 
-        if (!config.obeyWorldguard) return true;
-        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
-                true), loc, worldGuardPlugin.wrapPlayer(player));
+        return true;
+        //if (!config.obeyWorldguard) return true;
+        //return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
+        //        true), loc, worldGuardPlugin.wrapPlayer(player));
     }
 
     /**
      * Check to see if it should use the old block face methods.
      *
-     * @return whether it shoudl use the old blockface methods.
+     * @return whether it should use the old BlockFace methods.
      */
     public boolean useOldBlockFace() {
 

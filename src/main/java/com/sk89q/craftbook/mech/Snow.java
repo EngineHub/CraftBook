@@ -92,9 +92,9 @@ public class Snow implements Listener {
                 if(event.getPlayer().hasPotionEffect(PotionEffectType.SLOW))
                     break slowdown;
                 if(event.getTo().getBlock().getData() > 0x5)
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 5, 2));
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2));
                 else if(event.getTo().getBlock().getData() > 0x2)
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 3, 1));
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1));
             }
         }
 
