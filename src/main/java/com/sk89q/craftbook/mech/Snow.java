@@ -70,7 +70,7 @@ public class Snow implements Listener {
                     || event.getPlayer().getItemInHand().getTypeId() == ItemID.GOLD_SHOVEL
                     || event.getPlayer().getItemInHand().getTypeId() == ItemID.DIAMOND_SHOVEL) {
                 event.setCancelled(true);
-                byte amount = event.getBlock().getData();
+                int amount = event.getBlock().getData()+1;
                 event.getBlock().setTypeId(BlockID.AIR);
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation().add(0.5, 0.5, 0.5), new ItemStack(ItemID.SNOWBALL, amount));
             }
@@ -86,16 +86,12 @@ public class Snow implements Listener {
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.snow.trample")) return;
 
-        slowdown: {
-            if(CraftBookPlugin.inst().getConfiguration().snowSlowdown && event.getTo().getBlock().getTypeId() == BlockID.SNOW) {
+        if(CraftBookPlugin.inst().getConfiguration().snowSlowdown && event.getTo().getBlock().getTypeId() == BlockID.SNOW) {
 
-                if(event.getPlayer().hasPotionEffect(PotionEffectType.SLOW))
-                    break slowdown;
-                if(event.getTo().getBlock().getData() > 0x5)
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2));
-                else if(event.getTo().getBlock().getData() > 0x2)
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1));
-            }
+            if(event.getTo().getBlock().getData() > 0x5)
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2), true);
+            else if(event.getTo().getBlock().getData() > 0x2)
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1), true);
         }
 
         if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && event.getPlayer().getVelocity().getY() >= 0D)
