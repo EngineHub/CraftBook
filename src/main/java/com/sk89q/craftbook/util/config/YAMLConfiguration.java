@@ -4,7 +4,6 @@ package com.sk89q.craftbook.util.config;
  * Author: Turtle9598
  */
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.logging.FileHandler;
@@ -35,13 +34,6 @@ public class YAMLConfiguration extends LocalConfiguration {
 
     @Override
     public void load() {
-
-        try {
-            config.load();
-        } catch (IOException e) {
-            logger.severe("Error loading CraftBook configuration: " + e);
-            e.printStackTrace();
-        }
 
         /* Circuits Configuration */
 

@@ -37,6 +37,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -174,10 +175,6 @@ public class CraftBookPlugin extends JavaPlugin {
             }
         };
 
-        // Initialize the language manager.
-        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", false);
-        languageManager = new LanguageManager();
-
         // Set the proper command injector
         commands.setInjector(new SimpleInjector(this));
 
@@ -185,7 +182,7 @@ public class CraftBookPlugin extends JavaPlugin {
         final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
         reg.register(TopLevelCommands.class);
 
-        // Need to create the plugins/WorldGuard folder
+        // Need to create the plugins/CraftBook folder
         getDataFolder().mkdirs();
 
         PermissionsResolverManager.initialize(this);
@@ -194,9 +191,13 @@ public class CraftBookPlugin extends JavaPlugin {
         try {
             config.load();
         } catch (Throwable e) {
-            e.printStackTrace();
+            getLogger().severe(GeneralUtil.getStackTrace(e));
             getServer().shutdown();
         }
+
+        // Initialize the language manager.
+        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", false);
+        languageManager = new LanguageManager();
 
         // Resolve Vault
         try {
@@ -370,7 +371,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Get the global ConfigurationManager.
-     * USe this to access global configuration values and per-world configuration values.
+     * Use this to access global configuration values and per-world configuration values.
      *
      * @return The global ConfigurationManager
      */
