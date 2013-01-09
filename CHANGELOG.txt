@@ -1,3 +1,23 @@
+3.5 Beta 3
+* Fix errors related to corrupt signs.
+* Renamed a few configuration nodes to make more sense.
+* Fixed a NPE with areas.
++ Added an option to auto shorten area namespaces.
+* Fixed SetBridge offset
++ Added error handling for missing fireworks
++ Added an option to make snow slow you down when piled up.
++ Made piled snow drop the equivalent amount of snowballs.
+* Made MessageSender broadcast to all players if the line was empty.
+* Added a workaround for IC's outputs not triggering IC's.
+* Fixed many incorrect config nodes.
++ Added an option to disable redstone on (and therefore turning off) chunk anchors.
++ Added an option to make chunk anchors check for chunk anchors already in the chunk.
++ Added an option to have a ! on the last line of a player sensor to invert the IC.
++ Added an option to have a ! on the offset of a player sensor to use absolute coordinates.
++ Manually added correct drops to Combine Harvester.
+* Fixed /cb reload being usable by all
+* Fixed Auto crafter with 3x2 recipes.
+
 3.5 Beta 2
 * Stop unneeded folders generating.
 + Added better detection of corrupt chunks/blocks. It now tells you which chunk is corrupt if it finds one.
