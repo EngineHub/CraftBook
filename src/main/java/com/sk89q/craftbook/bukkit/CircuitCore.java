@@ -563,6 +563,8 @@ public class CircuitCore implements LocalComponent {
 
     public List<RegisteredICFactory> getICList() {
 
+        if(ICManager == null)
+            return new ArrayList<RegisteredICFactory>();
         List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
         for (Map.Entry<String, RegisteredICFactory> e : ICManager.registered.entrySet()) {
             ics.add(e.getValue());
