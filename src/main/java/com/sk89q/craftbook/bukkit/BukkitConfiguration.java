@@ -45,15 +45,15 @@ public class BukkitConfiguration extends YAMLConfiguration {
             plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
         }
 
-        //        config.setHeader(
-        //                "# CraftBook Configuration for Bukkit. Generated for version: " + CraftBookPlugin.inst().getDescription().getVersion(),
-        //                "# This configuration will automatically add new configuration options for you,",
-        //                "# So there is no need to regenerate this configuration unless you need to.",
-        //                "# More information about these configuration nodes are available at...",
-        //                "# http://wiki.sk89q.com/wiki/CraftBook/Configuration",
-        //                "",
-        //                "");
-        //
+        config.setHeader(
+                "# CraftBook Configuration for Bukkit. Generated for version: " + CraftBookPlugin.inst().getDescription().getVersion(),
+                "# This configuration will automatically add new configuration options for you,",
+                "# So there is no need to regenerate this configuration unless you need to.",
+                "# More information about these configuration nodes are available at...",
+                "# http://wiki.sk89q.com/wiki/CraftBook/Configuration",
+                "",
+                "");
+
         enableCircuits = config.getBoolean("enable-circuits", true);
         enableMechanisms = config.getBoolean("enable-mechanics", true);
         enableVehicles = config.getBoolean("enable-vehicles", true);

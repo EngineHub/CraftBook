@@ -7,7 +7,7 @@ no-op-perms: true
 safe-destruction: true
 use-block-radius: false
 check-worldguard-flags: true
-indirect-redstone-support: false
+indirect-redstone: false
 
 circuits:
     ics:
