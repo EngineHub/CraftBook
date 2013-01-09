@@ -47,7 +47,7 @@ public class PlayerSensor extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, isDetected());
+            chip.setOutput(0, invertOutput ? !isDetected() : isDetected());
         }
     }
 
@@ -57,16 +57,19 @@ public class PlayerSensor extends AbstractIC {
     ProtectedRegion reg;
     Type type;
     String nameLine;
+    boolean invertOutput = false;
 
     @Override
     public void load() {
 
-        if (getLine(3).contains(":")) {
+        if (getLine(3).replace("!", "").contains(":")) {
             type = Type.getFromChar(getLine(3).trim().toCharArray()[0]);
         }
         if (type == null) type = Type.PLAYER;
 
-        nameLine = getLine(3).replace("g:", "").replace("p:", "").trim();
+        invertOutput = getLine(3).contains("!");
+
+        nameLine = getLine(3).replace("g:", "").replace("p:", "").replace("!", "").trim();
 
         try {
             String locInfo = getLine(2);
