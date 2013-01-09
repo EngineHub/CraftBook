@@ -100,7 +100,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Chunk Anchor Configuration Listener
         chunkAnchorEnabled = config.getBoolean("mechanics.chunk-anchor.enable", true);
         chunkAnchorRedstone = config.getBoolean("mechanics.chunk-anchor.enable-redstone", true);
-        chunkAnchorCheck = config.getBoolean("mechanics.chunk-anchor.check-chunks");
+        chunkAnchorCheck = config.getBoolean("mechanics.chunk-anchor.check-chunks", true);
 
         // Command Sign Configuration Listener
         commandSignEnabled = config.getBoolean("mechanics.command-sign.enable", true);
