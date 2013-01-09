@@ -14,6 +14,7 @@ import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -24,6 +25,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class CombineHarvester extends AbstractIC {
 
@@ -97,7 +99,7 @@ public class CombineHarvester extends AbstractIC {
 
                     if (harvestable(b)) {
 
-                        collectDrops(b.getDrops().toArray(new ItemStack[b.getDrops().size()]));
+                        collectDrops(getDrops(b));
                         b.setTypeId(0);
                         return true;
                     }
@@ -105,6 +107,29 @@ public class CombineHarvester extends AbstractIC {
             }
         }
         return false;
+    }
+
+    public ItemStack[] getDrops(Block b) {
+
+        List<ItemStack> drops = new ArrayList<ItemStack>();
+
+        if (b.getTypeId() == BlockID.CROPS) {
+
+            drops.add(new ItemStack(ItemID.WHEAT, 1));
+            int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
+            if(amount > 0)
+                drops.add(new ItemStack(ItemID.SEEDS, amount));
+        } else if (b.getTypeId() == BlockID.CARROTS) {
+
+            drops.add(new ItemStack(ItemID.CARROT, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+        } else if (b.getTypeId() == BlockID.POTATOES) {
+
+            drops.add(new ItemStack(ItemID.POTATO, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+            if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
+                drops.add(new ItemStack(ItemID.POISONOUS_POTATO, 1));
+        }
+
+        return drops.toArray(new ItemStack[drops.size()]);
     }
 
     public void collectDrops(ItemStack[] drops) {
