@@ -61,7 +61,10 @@ public class ItemUtil {
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
-        return !isStackValid(item) && !isStackValid(item2) || areItemsIdentical(item.getData(), item2.getData());
+        if(!isStackValid(item) || !isStackValid(item2))
+            return !isStackValid(item) && !isStackValid(item2);
+        else
+            return areItemsIdentical(item.getData(), item2.getData());
     }
 
     public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {

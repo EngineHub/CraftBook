@@ -204,10 +204,11 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             ShapedRecipe shape = (ShapedRecipe) r;
             Map<Character, ItemStack> ingredientMap = shape.getIngredientMap();
             String[] shapeArr = shape.getShape();
-            boolean large = shapeArr.length >= 3;
+            boolean large = shapeArr.length >= 3 || shapeArr[0].length() >= 3;
             if (recipe != null) if (((ShapedRecipe) recipe).getShape().length != shapeArr.length) return false;
             int c = -1, in = 0;
-            for (ItemStack stack : inv.getContents()) {
+            for (int slot = 0; slot < 9; slot++) {
+                ItemStack stack = inv.getItem(slot);
                 try {
                     c++;
                     if (c > (large ? 2 : 1)) {
@@ -220,12 +221,19 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                             continue;
                         }
                     }
+                    if(shapeArr.length <= in && !ItemUtil.isStackValid(stack))
+                        break;
                     String shapeSection = shapeArr[in];
-                    Character item = shapeSection.charAt(c);
-                    ItemStack require = ingredientMap.get(item);
+                    ItemStack require = null;
+                    try {
+                        Character item = shapeSection.charAt(c);
+                        require = ingredientMap.get(item);
+                    }
+                    catch(Exception e){}
                     if (ItemUtil.areItemsIdentical(require, stack)) {
                     } else return false;
                 } catch (Exception e) {
+                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                     return false;
                 }
             }
