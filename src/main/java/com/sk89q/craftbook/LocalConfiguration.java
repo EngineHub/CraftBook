@@ -66,6 +66,8 @@ public abstract class LocalConfiguration {
     public List<Integer> chairBlocks;
     // Mechanics - Chunk Anchor
     public boolean chunkAnchorEnabled;
+    public boolean chunkAnchorRedstone;
+    public boolean chunkAnchorCheck;
     // Mechanics - Command Signs
     public boolean commandSignEnabled;
     // Mechanics - Cooking Pot

@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.circuits.gates.logic;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.*;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
 
 /**
  * A JK flip flop. A JK Flip Flop is like a SR Latch (S = J, R = K), but if both J and K is high, it toggles,

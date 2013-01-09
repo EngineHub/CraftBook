@@ -1,15 +1,16 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.RedstoneUtil;
-import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.RedstoneUtil;
+import com.sk89q.craftbook.util.RedstoneUtil.Power;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their logic at interation time (like

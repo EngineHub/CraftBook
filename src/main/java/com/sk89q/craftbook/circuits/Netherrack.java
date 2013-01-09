@@ -16,15 +16,16 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.player.PlayerInteractEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.

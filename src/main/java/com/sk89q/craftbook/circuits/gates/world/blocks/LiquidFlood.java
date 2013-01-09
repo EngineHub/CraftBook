@@ -1,13 +1,19 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class LiquidFlood extends AbstractIC {
 

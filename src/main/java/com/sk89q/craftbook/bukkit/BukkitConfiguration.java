@@ -55,7 +55,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "");
 
         enableCircuits = config.getBoolean("enable-circuits", true);
-        enableMechanisms = config.getBoolean("enable-mechanics", true);
+        enableMechanisms = config.getBoolean("enable-mechanisms", true);
         enableVehicles = config.getBoolean("enable-vehicles", true);
 
         safeDestruction = config.getBoolean("safe-destruction", true);

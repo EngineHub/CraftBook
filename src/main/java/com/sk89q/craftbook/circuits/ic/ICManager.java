@@ -16,15 +16,15 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.BlockWorldVector;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
+
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through CraftBook,

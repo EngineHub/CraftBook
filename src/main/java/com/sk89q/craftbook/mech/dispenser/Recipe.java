@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.mech.dispenser;
 
+import java.util.Arrays;
+
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import java.util.Arrays;
 
 /**
  * @author Me4502

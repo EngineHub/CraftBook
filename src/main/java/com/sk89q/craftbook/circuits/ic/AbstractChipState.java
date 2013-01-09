@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.circuits.ic;
 
+import org.bukkit.block.Block;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.block.Block;
 
 /**
  * @author Silthus

@@ -16,13 +16,14 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.worldedit.BlockWorldVector;
-import org.bukkit.event.block.BlockEvent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.bukkit.event.block.BlockEvent;
+
+import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * PersistentMechanic exist to keep internal state in situations where the instantiation of the Mechanic may be

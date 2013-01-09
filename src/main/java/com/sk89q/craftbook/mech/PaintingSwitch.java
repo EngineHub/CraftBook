@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.HashMap;
+
 import org.bukkit.Art;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
@@ -12,7 +12,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * @author Me4502

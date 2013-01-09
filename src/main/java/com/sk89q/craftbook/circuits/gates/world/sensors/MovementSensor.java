@@ -1,18 +1,24 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor.Type;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import java.util.Set;
+
 import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
-import java.util.Set;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor.Type;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * Movement Sensor. This IC is incomplete due to the bukkit API not providing ample movement velocity support.

@@ -1,10 +1,15 @@
 package com.sk89q.craftbook.circuits.gates.world.weather;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
 import org.bukkit.Server;
 import org.bukkit.World;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
 
 public class WeatherControlAdvanced extends AbstractIC {
 

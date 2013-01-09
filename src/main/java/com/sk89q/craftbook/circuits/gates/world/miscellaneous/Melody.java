@@ -1,22 +1,27 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
-import com.sk89q.craftbook.circuits.jinglenote.MidiJingleSequencer;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
+import java.io.File;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.logging.Level;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
+import com.sk89q.craftbook.circuits.jinglenote.MidiJingleSequencer;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Me4502

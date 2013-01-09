@@ -5,15 +5,24 @@
 
 package com.sk89q.craftbook.circuits.jinglenote;
 
-import com.sk89q.craftbook.util.GeneralUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-
-import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+
+import com.sk89q.craftbook.util.GeneralUtil;
 
 /**
  * A sequencer that reads MIDI files.

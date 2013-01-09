@@ -1,15 +1,16 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.util.RailUtil;
-import com.sk89q.craftbook.util.RedstoneUtil.Power;
-import com.sk89q.worldedit.blocks.ItemType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.util.RailUtil;
+import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.worldedit.blocks.ItemType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * <p>

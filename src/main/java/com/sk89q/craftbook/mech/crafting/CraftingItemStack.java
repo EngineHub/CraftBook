@@ -1,11 +1,16 @@
 package com.sk89q.craftbook.mech.crafting;
 
-import com.sk89q.craftbook.util.RegexUtil;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Silthus

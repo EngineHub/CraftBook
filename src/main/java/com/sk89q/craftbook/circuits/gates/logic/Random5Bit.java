@@ -1,10 +1,11 @@
 package com.sk89q.craftbook.circuits.gates.logic;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import org.bukkit.Server;
 
 public class Random5Bit extends RandomBit {
 

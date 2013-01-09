@@ -16,14 +16,16 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.GeneralUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.blocks.ItemID;
+import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -36,15 +38,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * A MechanicManager tracks the BlockVector where loaded Mechanic instances have registered triggerability,

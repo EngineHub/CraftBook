@@ -1,6 +1,22 @@
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.SelfTriggeringMechanic;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -11,16 +27,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 

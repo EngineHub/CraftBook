@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.circuits.jinglenote;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * @author Me4502 with code borrowed from CraftBook Extra

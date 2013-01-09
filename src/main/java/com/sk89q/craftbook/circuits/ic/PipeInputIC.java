@@ -1,9 +1,10 @@
 package com.sk89q.craftbook.circuits.ic;
 
-import com.sk89q.worldedit.BlockWorldVector;
+import java.util.List;
+
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
+import com.sk89q.worldedit.BlockWorldVector;
 
 public interface PipeInputIC {
 

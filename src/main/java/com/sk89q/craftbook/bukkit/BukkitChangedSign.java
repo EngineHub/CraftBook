@@ -16,12 +16,13 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import org.apache.commons.lang.Validate;
+import org.bukkit.block.Sign;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
-import org.apache.commons.lang.Validate;
-import org.bukkit.block.Sign;
 
 public class BukkitChangedSign implements ChangedSign {
 

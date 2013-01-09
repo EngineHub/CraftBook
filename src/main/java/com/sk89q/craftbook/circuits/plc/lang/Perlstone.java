@@ -16,20 +16,21 @@
 
 package com.sk89q.craftbook.circuits.plc.lang;
 
-import com.sk89q.craftbook.circuits.ic.ChipState;
-import com.sk89q.craftbook.circuits.ic.ICVerificationException;
-import com.sk89q.craftbook.circuits.plc.PlcException;
-import com.sk89q.craftbook.circuits.plc.PlcLanguage;
-import com.sk89q.craftbook.util.GeneralUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.plc.PlcException;
+import com.sk89q.craftbook.circuits.plc.PlcLanguage;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]> {
 

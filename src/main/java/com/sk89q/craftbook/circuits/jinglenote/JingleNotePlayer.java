@@ -5,10 +5,11 @@
 
 package com.sk89q.craftbook.circuits.jinglenote;
 
-import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer.Note;
-import com.sk89q.craftbook.util.GeneralUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer.Note;
+import com.sk89q.craftbook.util.GeneralUtil;
 
 public class JingleNotePlayer implements Runnable {
 

@@ -1,13 +1,14 @@
 package com.sk89q.craftbook.cart;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CartTeleporter extends CartMechanism {
 

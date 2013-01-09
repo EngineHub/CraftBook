@@ -16,15 +16,15 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.util.exceptions.CraftbookRuntimeException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.sk89q.craftbook.util.exceptions.CraftbookRuntimeException;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
 
 /**
  * This keeps track of trigger blocks. Trigger blocks are what triggers a mechanic (i.e. a [Gate] sign).

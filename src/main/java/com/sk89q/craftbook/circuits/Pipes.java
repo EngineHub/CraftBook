@@ -1,5 +1,16 @@
 package com.sk89q.craftbook.circuits;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.block.Furnace;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.PistonBaseMaterial;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -14,16 +25,6 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.block.Furnace;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Pipes extends AbstractMechanic {
 

@@ -1,10 +1,11 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
+import java.util.ArrayList;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 
-import java.util.ArrayList;
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class RailUtil {
 

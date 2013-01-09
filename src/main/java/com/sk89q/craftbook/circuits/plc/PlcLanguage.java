@@ -16,12 +16,12 @@
 
 package com.sk89q.craftbook.circuits.plc;
 
-import com.sk89q.craftbook.circuits.ic.ChipState;
-import com.sk89q.craftbook.circuits.ic.ICVerificationException;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 
 public interface PlcLanguage<StateT, CodeT> {
 

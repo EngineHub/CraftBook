@@ -16,18 +16,19 @@
 
 package com.sk89q.craftbook.circuits;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.

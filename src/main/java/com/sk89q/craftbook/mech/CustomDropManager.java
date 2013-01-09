@@ -16,11 +16,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -28,6 +23,12 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * Storage class for custom drop definitions.

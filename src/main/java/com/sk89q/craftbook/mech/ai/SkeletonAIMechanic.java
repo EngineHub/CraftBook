@@ -1,9 +1,10 @@
 package com.sk89q.craftbook.mech.ai;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityShootBowEvent;
+
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class SkeletonAIMechanic extends BaseAIMechanic implements BowShotAIMechanic {
 

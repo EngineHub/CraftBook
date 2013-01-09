@@ -1,14 +1,22 @@
 package com.sk89q.craftbook.circuits.gates.world.weather;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.craftbook.util.SignUtil;
 import net.minecraft.server.v1_4_6.Packet70Bed;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_4_6.CraftServer;
 import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502

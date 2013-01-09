@@ -1,12 +1,5 @@
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.RegexUtil;
-import net.minecraft.server.v1_4_6.LocaleLanguage;
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,6 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+
+import net.minecraft.server.v1_4_6.LocaleLanguage;
+
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * @author Me4502

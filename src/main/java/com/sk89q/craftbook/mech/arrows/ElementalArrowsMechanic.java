@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.mech.arrows;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -7,9 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // TODO finish
 public class ElementalArrowsMechanic implements Listener {

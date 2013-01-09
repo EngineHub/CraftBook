@@ -16,6 +16,10 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
+import java.util.regex.Matcher;
+
+import org.bukkit.block.Block;
+
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -25,9 +29,6 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import org.bukkit.block.Block;
-
-import java.util.regex.Matcher;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 

@@ -1,8 +1,13 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.*;
 import org.bukkit.Server;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 
 /**
  * @author Silthus

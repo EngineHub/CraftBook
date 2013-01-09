@@ -16,6 +16,10 @@
 
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.event.player.PlayerInteractEvent;
+
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
@@ -24,9 +28,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * This allows users to Right-click to check the power level of redstone.

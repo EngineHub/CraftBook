@@ -16,12 +16,13 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 /**
  * A base abstract IC that all ICs can inherit from.

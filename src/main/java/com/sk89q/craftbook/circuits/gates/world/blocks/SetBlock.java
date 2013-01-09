@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
@@ -9,11 +15,6 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
 
 public abstract class SetBlock extends AbstractIC {
 

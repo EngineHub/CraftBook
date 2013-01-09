@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.circuits.ic.families;
 
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractChipState;
@@ -7,8 +10,6 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFamily;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 public class FamilySI5O extends AbstractICFamily {
 

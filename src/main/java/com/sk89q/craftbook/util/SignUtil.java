@@ -16,11 +16,12 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * <p>

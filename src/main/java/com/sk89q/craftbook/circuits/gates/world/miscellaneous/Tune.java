@@ -1,14 +1,19 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.*;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
 import com.sk89q.craftbook.circuits.jinglenote.StringJingleSequencer;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 public class Tune extends AbstractIC {
 
