@@ -60,6 +60,7 @@ public class CustomCrafting {
                 } else {
                     continue;
                 }
+                plugin.getLogger().info("Registered a new " + r.getType().toString().toLowerCase() + " recipe!");
 
                 recipes++;
             } catch (IllegalArgumentException e) {

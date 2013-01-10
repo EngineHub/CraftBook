@@ -82,7 +82,7 @@ public class RecipeManager extends LocalConfiguration {
 
         private void load() {
 
-            type = RecipeType.getTypeFromName(config.getString("crafting-recipes." + id + "type"));
+            type = RecipeType.getTypeFromName(config.getString("crafting-recipes." + id + ".type"));
             if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
                 ingredients = getItems("crafting-recipes." + id + ".ingredients");
             } else {
