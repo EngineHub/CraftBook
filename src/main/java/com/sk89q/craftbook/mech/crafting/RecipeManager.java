@@ -115,7 +115,7 @@ public class RecipeManager extends LocalConfiguration {
                             itemStack.setData((short) 0);
                         }
                         itemStack.setAmount(1);
-                        items.put(itemStack, config.getString(item).toCharArray()[0]);
+                        items.put(itemStack, config.getString(item, "a").toCharArray()[0]);
                     }
                 }
             } catch (Exception e) {
