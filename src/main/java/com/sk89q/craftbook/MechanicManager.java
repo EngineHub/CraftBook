@@ -405,7 +405,7 @@ public class MechanicManager {
      *                                   but the mechanism is misconfigured and inoperable.
      */
     protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player,
-                                  ChangedSign sign) throws InvalidMechanismException {
+            ChangedSign sign) throws InvalidMechanismException {
 
         List<Mechanic> detectedMechanics = detect(pos, player, sign);
 
@@ -500,7 +500,7 @@ public class MechanicManager {
      *                                   but the mechanism is misconfigured and inoperable.
      */
     protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player,
-                                    ChangedSign sign) throws InvalidMechanismException {
+            ChangedSign sign) throws InvalidMechanismException {
 
         List<Mechanic> mechanics = new ArrayList<Mechanic>();
 
@@ -550,7 +550,7 @@ public class MechanicManager {
                     }
                 }
             }
-        } catch (Error error) {
+        } catch (Throwable error) {
 
             error.printStackTrace();
             Bukkit.getLogger().severe("A corruption issue has been found at chunk ("
