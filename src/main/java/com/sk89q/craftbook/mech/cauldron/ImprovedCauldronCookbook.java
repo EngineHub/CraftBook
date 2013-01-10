@@ -108,7 +108,7 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
                         } else {
                             itemStack.setData((short) -1);
                         }
-                        itemStack.setAmount(config.getInt(item, 1));
+                        itemStack.setAmount(config.getInt(path + "." + item, 1));
                         items.add(itemStack);
                     }
                 }
