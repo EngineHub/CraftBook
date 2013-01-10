@@ -28,6 +28,7 @@ public class CustomCrafting {
         plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml", false);
         recipes = new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
         Collection<RecipeManager.Recipe> recipeCollection = recipes.getRecipes();
+        int recipes = 0;
         for (RecipeManager.Recipe r : recipeCollection) {
             try {
                 if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPELESS) {
@@ -56,7 +57,11 @@ public class CustomCrafting {
                         sh.setInput(is.getMaterial(), is.getData());
                     }
                     plugin.getServer().addRecipe(sh);
+                } else {
+                    continue;
                 }
+
+                recipes++;
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().severe("Corrupt or invalid recipe!");
                 plugin.getLogger().severe("Please either delete custom-crafting.yml, " +
@@ -66,5 +71,6 @@ public class CustomCrafting {
                 plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
         }
+        plugin.getLogger().info("Registered " + recipes + " custom recipes!");
     }
 }

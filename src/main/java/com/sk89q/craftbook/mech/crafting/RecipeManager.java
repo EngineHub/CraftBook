@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech.crafting;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import com.sk89q.craftbook.LocalConfiguration;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -33,7 +35,16 @@ public class RecipeManager extends LocalConfiguration {
     public void load() {
 
         recipes = new ArrayList<Recipe>();
-        if (config == null) return; // If the config is null, it can't continue.
+        if (config == null) {
+            Bukkit.getLogger().severe("Failure loading recipes! Config is null!");
+            return; // If the config is null, it can't continue.
+        }
+
+        try {
+            config.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         List<String> keys = config.getKeys("crafting-recipes");
         if (keys != null) {
@@ -71,21 +82,22 @@ public class RecipeManager extends LocalConfiguration {
 
         private void load() {
 
-            type = RecipeType.getTypeFromName(config.getString("type"));
+            type = RecipeType.getTypeFromName(config.getString("crafting-recipes." + id + "type"));
             if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
-                ingredients = getItems("crafting-recipes." + "id" + ".ingredients");
+                ingredients = getItems("crafting-recipes." + id + ".ingredients");
             } else {
-                items = getHashItems("crafting-recipes." + "id" + ".ingredients");
-                shape = config.getStringList("crafting-recipes." + "id" + ".shape", Arrays.asList(""));
+                items = getHashItems("crafting-recipes." + id + ".ingredients");
+                shape = config.getStringList("crafting-recipes." + id + ".shape", Arrays.asList(""));
             }
-            results = getItems("crafting-recipes." + "id" + ".results");
+            results = getItems("crafting-recipes." + id + ".results");
         }
 
         private HashMap<CraftingItemStack, Character> getHashItems(String path) {
 
             HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
             try {
-                for (String item : config.getKeys(path)) {
+                for (Object oitem : config.getKeys(path)) {
+                    String item = String.valueOf(oitem);
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -108,6 +120,7 @@ public class RecipeManager extends LocalConfiguration {
                 }
             } catch (Exception e) {
                 Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
             return items;
         }
@@ -116,7 +129,8 @@ public class RecipeManager extends LocalConfiguration {
 
             Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             try {
-                for (String item : config.getKeys(path)) {
+                for (Object oitem : config.getKeys(path)) {
+                    String item = String.valueOf(oitem);
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -139,6 +153,7 @@ public class RecipeManager extends LocalConfiguration {
                 }
             } catch (Exception e) {
                 Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
             }
             return items;
         }

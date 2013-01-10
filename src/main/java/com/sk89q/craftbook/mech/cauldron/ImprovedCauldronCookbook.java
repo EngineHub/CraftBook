@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech.cauldron;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +36,12 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
         recipes = new ArrayList<Recipe>();
 
         if (config == null) return; // If the config is null, it can't continue.
+
+        try {
+            config.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         List<String> keys = config.getKeys("cauldron-recipes");
         if (keys != null) {
@@ -73,18 +80,19 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
 
         private void load() {
 
-            name = config.getString("name");
-            description = config.getString("description");
+            name = config.getString("cauldron-recipes." + id + ".name");
+            description = config.getString("cauldron-recipes." + id + ".description");
             ingredients = getItems("cauldron-recipes." + id + ".ingredients");
             results = getItems("cauldron-recipes." + id + ".results");
-            chance = config.getDouble("chance", 60);
+            chance = config.getDouble("cauldron-recipes." + id + ".chance", 60);
         }
 
         private Collection<CauldronItemStack> getItems(String path) {
 
             Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
             try {
-                for (String item : config.getKeys(path)) {
+                for (Object oitem : config.getKeys(path)) {
+                    String item = String.valueOf(oitem);
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
                     try {
