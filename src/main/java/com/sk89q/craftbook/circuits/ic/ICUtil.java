@@ -223,7 +223,7 @@ public class ICUtil {
 
     public static ItemStack getItem(String line) {
 
-        if (line.isEmpty()) {
+        if (line == null || line.isEmpty()) {
             return null;
         }
         try {

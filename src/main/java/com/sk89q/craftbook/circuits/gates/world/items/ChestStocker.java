@@ -15,6 +15,7 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -70,7 +71,7 @@ public class ChestStocker extends AbstractIC {
 
     public boolean stock() {
 
-        Block chest = BukkitUtil.toSign(getSign()).getBlock().getRelative(offset.getBlockX(), offset.getBlockY(),
+        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(offset.getBlockX(), offset.getBlockY(),
                 offset.getBlockZ());
 
         if (chest.getTypeId() == BlockID.CHEST) {
