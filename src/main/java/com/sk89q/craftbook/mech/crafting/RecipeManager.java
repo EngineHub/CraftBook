@@ -115,7 +115,7 @@ public class RecipeManager extends LocalConfiguration {
                             itemStack.setData((short) 0);
                         }
                         itemStack.setAmount(1);
-                        items.put(itemStack, config.getString(item, "a").toCharArray()[0]);
+                        items.put(itemStack, config.getString(path + "." + item, "a").charAt(0));
                     }
                 }
             } catch (Exception e) {
@@ -147,7 +147,7 @@ public class RecipeManager extends LocalConfiguration {
                         } else {
                             itemStack.setData((short) 0);
                         }
-                        itemStack.setAmount(config.getInt(item, 1));
+                        itemStack.setAmount(config.getInt(path + "." + item, 1));
                         items.add(itemStack);
                     }
                 }

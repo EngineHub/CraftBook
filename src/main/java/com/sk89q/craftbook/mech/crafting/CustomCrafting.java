@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -37,18 +38,11 @@ public class CustomCrafting {
                         sh.addIngredient(is.getAmount(), is.getMaterial(), is.getData());
                     }
                     plugin.getServer().addRecipe(sh);
-                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED2X2) {
+                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED2X2 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED3X3) {
                     ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
                     sh.shape(r.getShape());
                     for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
-                        sh.setIngredient(is.getValue(), is.getKey().getMaterial(), is.getKey().getData());
-                    }
-                    plugin.getServer().addRecipe(sh);
-                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED3X3) {
-                    ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                    sh.shape(r.getShape());
-                    for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
-                        sh.setIngredient(is.getValue(), is.getKey().getMaterial(), is.getKey().getData());
+                        sh.setIngredient(is.getValue().charValue(), is.getKey().getMaterial(), is.getKey().getData());
                     }
                     plugin.getServer().addRecipe(sh);
                 } else if (r.getType() == RecipeManager.Recipe.RecipeType.FURNACE) {
@@ -67,6 +61,7 @@ public class CustomCrafting {
                 plugin.getLogger().severe("Corrupt or invalid recipe!");
                 plugin.getLogger().severe("Please either delete custom-crafting.yml, " +
                         "" + "or fix the issues with your recipes file!");
+                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
                 plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
