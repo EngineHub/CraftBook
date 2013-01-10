@@ -76,7 +76,7 @@ public class CreatureSpawner extends AbstractIC {
         String line = getSign().getLine(3).trim();
         // parse the amount or rider type
         try {
-            String[] entityInf = RegexUtil.COLON_PATTERN.split(line, 2);
+            String[] entityInf = RegexUtil.ASTERISK_PATTERN.split(line, 2);
             data = entityInf[0];
             amount = Integer.parseInt(entityInf[1]);
         } catch (Exception e) {
@@ -346,7 +346,7 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"entitytype", "data:amount"};
+            String[] lines = new String[] {"entitytype", "data*amount"};
             return lines;
         }
     }
