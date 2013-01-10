@@ -67,7 +67,9 @@ public class ICMechanic extends PersistentMechanic {
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final Block source = event.getSource();
             // abort if the sign is the source or the block the sign is attached to
-            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) return;
+            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source))
+                if(source.getTypeId() != BlockID.REDSTONE_REPEATER_OFF && source.getTypeId() != BlockID.REDSTONE_REPEATER_ON)
+                    return;
 
             Runnable runnable = new Runnable() {
 
@@ -80,8 +82,12 @@ public class ICMechanic extends PersistentMechanic {
                             BukkitUtil.toChangedSign(block));
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
-                        if (chipState.isTriggered(i)) {
-                            cnt++;
+                        if(source.getTypeId() != BlockID.REDSTONE_REPEATER_OFF && source.getTypeId() != BlockID.REDSTONE_REPEATER_ON) {
+                            if (chipState.isTriggered(i))
+                                cnt++;
+                        } else {
+                            if(chipState.get(i) || chipState.isTriggered(i) || true)
+                                cnt++;
                         }
                     }
                     if (cnt > 0) {

@@ -287,6 +287,7 @@ public class MechanicListenerAdapter {
 
                 Diode diode = (Diode) block.getState().getData();
                 BlockFace face = diode.getFacing();
+                handleDirectWireInput(new WorldVector(w, x, y, z), isOn, block, oldLevel, newLevel);
                 handleDirectWireInput(new WorldVector(w, x + face.getModX(), y + face.getModY(), z + face.getModZ()),
                         isOn, block, oldLevel, newLevel);
                 return;
