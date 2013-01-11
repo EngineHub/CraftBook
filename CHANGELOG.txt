@@ -1,3 +1,19 @@
+3.5 Beta 4 (Probably last 3.5 Beta, it looks very stable)
+* Fix error due to improper IC config.
++ Added /ic fireworks command to list firework scripts.
+* Fixed some IC's being unrestricted when they should've been restricted
+* Fix Custom Crafting & Improved Cauldrons recipes.
+* Fixed Crash bug with Hidden Switch.
+* Fixed Auto Crafter not crafting the correct amount of an item.
+* Made Chest Stocker use block above IC Block by default. (Also offset is based of ic block now)
+* Fixed Creature Spawner data overflowing into amount.
+* Fixed radius verification on farm IC's.
+* Fixed Chairs allowing people to glitch through blocks.
+* Fixed all 3I3O IC's. (Adders, Subtractors, Dispatchers)
++ Added a lot more harvestable blocks to Combine Harvester.
++ Added Animal Harvester IC.
+* Made Entity Sensor less buggy.
+
 3.5 Beta 3
 * Fix errors related to corrupt signs.
 * Renamed a few configuration nodes to make more sense.
