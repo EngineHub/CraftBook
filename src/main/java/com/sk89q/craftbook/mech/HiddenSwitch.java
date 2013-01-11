@@ -1,12 +1,5 @@
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.event.player.PlayerInteractEvent;
-
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
@@ -18,6 +11,12 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class HiddenSwitch extends AbstractMechanic {
 
@@ -29,7 +28,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
         @Override
         public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException {
+                                   ChangedSign sign) throws InvalidMechanismException {
             // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
             // FIXME In the future add a check here to test if you can actually build wall signs on this block.
             // World wrd = BukkitUtil.toWorld(pos);
@@ -75,8 +74,7 @@ public class HiddenSwitch extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().hiddenSwitchEnabled)
-            return;
+        if (!CraftBookPlugin.inst().getConfiguration().hiddenSwitchEnabled) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -85,10 +83,9 @@ public class HiddenSwitch extends AbstractMechanic {
         } catch (InsufficientPermissionsException e) {
             return;
         }
-        if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST || event.getBlockFace
-                () == BlockFace.NORTH
-                || event.getBlockFace() == BlockFace.SOUTH || event.getBlockFace() == BlockFace.UP || event
-                .getBlockFace() == BlockFace.DOWN))
+        if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
+                || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
+                || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
             return;
         BlockFace face = event.getBlockFace().getOppositeFace();
         Block testBlock = switchBlock.getRelative(face);

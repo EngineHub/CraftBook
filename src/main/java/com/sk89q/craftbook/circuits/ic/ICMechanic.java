@@ -16,14 +16,6 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -33,6 +25,13 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this mechanic,
@@ -67,27 +66,20 @@ public class ICMechanic extends PersistentMechanic {
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             final Block source = event.getSource();
             // abort if the sign is the source or the block the sign is attached to
-            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source))
-                if(source.getTypeId() != BlockID.REDSTONE_REPEATER_OFF && source.getTypeId() != BlockID.REDSTONE_REPEATER_ON)
-                    return;
+            if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) return;
 
             Runnable runnable = new Runnable() {
 
                 @Override
                 public void run() {
-                    // Assuming that the plugin host isn't going wonky here
-                    if (block.getTypeId() != BlockID.WALL_SIGN) // Could change between then and now.
-                        return;
+
+                    if (block.getTypeId() != BlockID.WALL_SIGN) return;
                     ChipState chipState = family.detect(BukkitUtil.toWorldVector(source),
                             BukkitUtil.toChangedSign(block));
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
-                        if(source.getTypeId() != BlockID.REDSTONE_REPEATER_OFF && source.getTypeId() != BlockID.REDSTONE_REPEATER_ON) {
-                            if (chipState.isTriggered(i))
-                                cnt++;
-                        } else {
-                            if(chipState.get(i) || chipState.isTriggered(i) || true)
-                                cnt++;
+                        if (chipState.isTriggered(i)) {
+                            cnt++;
                         }
                     }
                     if (cnt > 0) {

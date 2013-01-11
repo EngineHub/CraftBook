@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.circuits.ic;
 
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.block.Block;
 
 /**
  * @author Silthus
@@ -32,7 +31,7 @@ public abstract class AbstractChipState implements ChipState {
     public boolean get(int pin) {
 
         Block block = getBlock(pin);
-        return block != null && block.isBlockIndirectlyPowered();
+        return block != null && block.isBlockPowered();
     }
 
     @Override
@@ -57,7 +56,7 @@ public abstract class AbstractChipState implements ChipState {
         Block block = getBlock(pin);
         if (block != null)
             if (block.getTypeId() == BlockID.REDSTONE_WIRE || block.getTypeId() == BlockID.REDSTONE_REPEATER_OFF ||
-            block.getTypeId() == BlockID.REDSTONE_REPEATER_ON)
+                    block.getTypeId() == BlockID.REDSTONE_REPEATER_ON)
                 return true;
         return false;
     }
