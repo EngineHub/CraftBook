@@ -19,6 +19,7 @@ import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -72,6 +73,8 @@ public class Planter extends AbstractIC {
             radius = 10;
             offset = new Vector(0, 2, 0);
         }
+
+        VerifyUtil.verifyRadius(radius, 15);
 
         target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
     }

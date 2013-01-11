@@ -17,6 +17,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -54,6 +55,8 @@ public class Irrigator extends AbstractIC {
         } catch (Exception ignored) {
             radius = 10;
         }
+
+        VerifyUtil.verifyRadius(radius, 15);
     }
 
     @Override

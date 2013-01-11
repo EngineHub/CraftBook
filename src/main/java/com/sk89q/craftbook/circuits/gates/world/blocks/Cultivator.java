@@ -15,6 +15,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -52,6 +53,8 @@ public class Cultivator extends AbstractIC {
         } catch (Exception e) {
             radius = 10;
         }
+
+        VerifyUtil.verifyRadius(radius, 15);
     }
 
     @Override
