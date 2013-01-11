@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
-import java.util.Set;
-
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,7 +32,6 @@ public class AnimalHarvester extends AbstractIC {
     }
 
     private Block center;
-    private Set<Chunk> chunks;
     private int radius;
     private Block chest;
 
@@ -80,18 +76,13 @@ public class AnimalHarvester extends AbstractIC {
 
     public boolean harvest() {
 
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()), radius); // Update chunks
-        for (Chunk chunk : chunks) {
-            if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities()) {
-                    if (entity.isValid() && (entity instanceof Cow || entity instanceof Sheep)) {
-                        if(!((Animals) entity).isAdult())
-                            continue;
-                        // Check Radius
-                        if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                            return harvestAnimal(entity);
-                        }
-                    }
+        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+            if (entity.isValid() && (entity instanceof Cow || entity instanceof Sheep)) {
+                if(!((Animals) entity).isAdult())
+                    continue;
+                // Check Radius
+                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
+                    return harvestAnimal(entity);
                 }
             }
         }

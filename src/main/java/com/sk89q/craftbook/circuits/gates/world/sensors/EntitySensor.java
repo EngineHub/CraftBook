@@ -3,7 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.sensors;
 import java.util.EnumSet;
 import java.util.Set;
 
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
@@ -109,7 +108,6 @@ public class EntitySensor extends AbstractIC {
     private Set<Type> types;
 
     private Block center;
-    private Set<Chunk> chunks;
     private int radius;
 
     public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
@@ -161,22 +159,16 @@ public class EntitySensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
-                radius); // Update chunks
-        for (Chunk chunk : chunks) {
-            if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities()) {
-                    if (entity.isValid()) {
-                        for (Type type : types)
-                            // Check Type
-                        {
-                            if (type.is(entity)) {
-                                // Check Radius
-                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
-                                    return true;
-                                break;
-                            }
-                        }
+        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+            if (entity.isValid()) {
+                for (Type type : types)
+                    // Check Type
+                {
+                    if (type.is(entity)) {
+                        // Check Radius
+                        if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                            return true;
+                        break;
                     }
                 }
             }
