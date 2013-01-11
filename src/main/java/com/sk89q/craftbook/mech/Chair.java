@@ -149,6 +149,7 @@ public class Chair implements Listener {
             }
             if (hasChair(player.getPlayer())) { // Stand
                 removeChair(player.getPlayer());
+                event.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 1.5, 0.5));
             } else { // Sit
                 if (hasChair(event.getClickedBlock())) {
                     player.print("This seat is already occupied.");
@@ -171,11 +172,11 @@ public class Chair implements Listener {
                 if (p == null) continue;
                 if (!plugin.getConfiguration().chairBlocks.contains(getChair(p).getTypeId())
                         || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair
-                        (p).getLocation()) > 1)
+                                (p).getLocation()) > 1)
                     removeChair(p); // Remove
-                    // it.
-                    // It's
-                    // unused.
+                // it.
+                // It's
+                // unused.
                 else {
                     addChair(p, getChair(p)); // For any new players.
 
