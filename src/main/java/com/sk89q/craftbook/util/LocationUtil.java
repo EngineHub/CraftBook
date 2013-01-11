@@ -194,6 +194,8 @@ public final class LocationUtil {
      * @param block  to get surrounding chunks for
      * @param radius around the block
      *
+     * @Deprecated Do not use this ever. Use nearby entities for entities.
+     * 
      * @return chunks in the given radius
      */
     public static Set<Chunk> getSurroundingChunks(Block block, int radius) {
