@@ -67,7 +67,7 @@ public class CombineHarvester extends AbstractIC {
             offset = new Vector(0, 2, 0);
         }
 
-        VerifyUtil.verifyRadius(radius, 15);
+        radius = VerifyUtil.verifyRadius(radius, 15);
 
         target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
     }

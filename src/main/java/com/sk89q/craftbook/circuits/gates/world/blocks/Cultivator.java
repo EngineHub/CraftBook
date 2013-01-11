@@ -54,7 +54,7 @@ public class Cultivator extends AbstractIC {
             radius = 10;
         }
 
-        VerifyUtil.verifyRadius(radius, 15);
+        radius = VerifyUtil.verifyRadius(radius, 15);
     }
 
     @Override
