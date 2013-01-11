@@ -20,6 +20,7 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * @author Me4502
@@ -155,7 +156,12 @@ public class Chair implements Listener {
                     player.print("This seat is already occupied.");
                     return;
                 }
-                player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 0,
+                if(BlockType.canPassThrough(event.getClickedBlock().getRelative(0, -1, 0).getTypeId())) {
+
+                    player.printError("This chair has nothing below it!");
+                    return;
+                }
+                player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5,0.5,
                         0.5)); // Teleport to the seat
                 addChair(player.getPlayer(), event.getClickedBlock());
             }
