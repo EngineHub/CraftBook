@@ -96,6 +96,8 @@ import com.sk89q.craftbook.circuits.gates.world.blocks.Spigot;
 import com.sk89q.craftbook.circuits.gates.world.blocks.WaterSensor;
 import com.sk89q.craftbook.circuits.gates.world.blocks.WaterSensorST;
 import com.sk89q.craftbook.circuits.gates.world.entity.AdvancedEntitySpawner;
+import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvester;
+import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvesterST;
 import com.sk89q.craftbook.circuits.gates.world.entity.CreatureSpawner;
 import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannon;
 import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannonST;
@@ -380,6 +382,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1241", "shoot arrows", new ArrowBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1242", "stocker", new ChestStocker.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1243", "distributer", new Distributer.Factory(server), familySISO, familyAISO);
+        registerIC("MC1244", "animal harvest", new AnimalHarvester.Factory(server), familySISO, familyAISO);
         registerIC("MC1250", "shoot fire", new FireShooter.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1251", "shoot fires", new FireBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1252", "flame thower", new FlameThrower.Factory(server), familySISO, familyAISO); // Restricted
@@ -476,6 +479,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC0239", "harvester st", new CombineHarvesterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0242", "stocker st", new ChestStockerST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0243", "distributer st", new DistributerST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0244", "animal harvest st", new AnimalHarvesterST.Factory(server), familySISO, familyAISO);
         registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0261", "sense lava st", new LavaSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0262", "sense light st", new LightSensorST.Factory(server), familySISO, familyAISO);
