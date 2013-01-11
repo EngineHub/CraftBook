@@ -161,7 +161,7 @@ public class Chair implements Listener {
                     player.printError("This chair has nothing below it!");
                     return;
                 }
-                player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5,0.5,
+                player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5,0,
                         0.5)); // Teleport to the seat
                 addChair(player.getPlayer(), event.getClickedBlock());
             }
