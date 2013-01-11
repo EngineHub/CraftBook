@@ -199,7 +199,7 @@ public class Distributer extends AbstractIC implements PipeInputIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"left quantity:right quantity", "invert - to invert output sides"};
+            String[] lines = new String[] {"left quantity:right quantity", "Current distribution status"};
             return lines;
         }
 
