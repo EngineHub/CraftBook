@@ -57,7 +57,7 @@ public abstract class AbstractChipState implements ChipState {
         Block block = getBlock(pin);
         if (block != null)
             if (block.getTypeId() == BlockID.REDSTONE_WIRE || block.getTypeId() == BlockID.REDSTONE_REPEATER_OFF ||
-                    block.getTypeId() == BlockID.REDSTONE_REPEATER_ON)
+            block.getTypeId() == BlockID.REDSTONE_REPEATER_ON)
                 return true;
         return false;
     }

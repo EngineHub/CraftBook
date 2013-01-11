@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -24,6 +24,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractChipState;
 import com.sk89q.craftbook.circuits.ic.AbstractICFamily;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 
@@ -62,7 +63,7 @@ public class Family3I3O extends AbstractICFamily {
         protected Block getBlock(int pin) {
 
             BlockFace fback = SignUtil.getBack(BukkitUtil.toSign(sign).getBlock());
-            Block backBlock = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()).getRelative(fback);
+            Block backBlock = BukkitUtil.toSign(sign).getBlock().getRelative(fback, 2);
 
             switch (pin) {
                 case 0:
@@ -100,6 +101,15 @@ public class Family3I3O extends AbstractICFamily {
         public void setOutput(int outputIndex, boolean value) {
 
             set(outputIndex + 3, value);
+        }
+
+        @Override
+        public void set(int pin, boolean value) {
+
+            Block block = getBlock(pin);
+            if (block != null) {
+                ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(BukkitUtil.toSign(sign).getBlock())));
+            }
         }
 
         @Override

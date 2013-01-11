@@ -122,6 +122,7 @@ public class ICUtil {
 
         // if the state changed lets apply physics to the source block and the lever itself
         if (wasOn != state) {
+
             // set the new data
             block.setData((byte) newData, true);
             // apply physics to the source block the lever is attached to
