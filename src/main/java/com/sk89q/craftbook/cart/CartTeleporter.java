@@ -1,14 +1,11 @@
 package com.sk89q.craftbook.cart;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
@@ -51,25 +48,7 @@ public class CartTeleporter extends CartMechanism {
 
         Location loc = BukkitUtil.center(new Location(world, x, y, z, cart.getLocation().getYaw(), cart.getLocation().getPitch()));
         loc.getChunk().load(true);
-        final Minecart toCart = world.spawn(loc, Minecart.class);
-        final Entity passenger = cart.getPassenger();
-        if (passenger != null) {
-            cart.eject();
-            passenger.teleport(loc);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run() {
-
-                    toCart.setPassenger(passenger);
-                    passenger.setVelocity(cart.getVelocity());
-                }
-            });
-        }
-        toCart.getLocation().setYaw(cart.getLocation().getYaw());
-        toCart.getLocation().setPitch(cart.getLocation().getPitch());
-        toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
-        cart.remove();
+        CartUtils.teleport(cart, loc);
     }
 
     @Override

@@ -82,8 +82,34 @@ public class AnimalHarvester extends AbstractIC {
                     continue;
                 // Check Radius
                 if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                    return harvestAnimal(entity);
+                    if(canHarvest(entity))
+                        return harvestAnimal(entity);
                 }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean canHarvest(Entity entity) {
+
+        if (entity instanceof Cow) {
+
+            if(doesChestContain(ItemID.BUCKET)) {
+
+                return true;
+            }
+        }
+
+        if (entity instanceof Sheep) {
+
+            if(doesChestContain(ItemID.SHEARS)) {
+
+                Sheep sh = (Sheep) entity;
+                if(sh.isSheared())
+                    return false;
+
+                return true;
             }
         }
 
