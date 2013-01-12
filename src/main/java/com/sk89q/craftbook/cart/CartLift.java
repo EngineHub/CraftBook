@@ -25,6 +25,10 @@ public class CartLift extends CartMechanism {
 
         while (true) {
 
+            if(destination.getLocation().getY() == 0 && !up)
+                return;
+            if(destination.getLocation().getY() == destination.getWorld().getMaxHeight() && up)
+                return;
             destination = destination.getRelative(face);
 
             BlockState state = destination.getState();
@@ -33,7 +37,7 @@ public class CartLift extends CartMechanism {
 
                 if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]")
                         || testLine.equalsIgnoreCase("[CartLift]")) {
-                    destination.getRelative(BlockFace.UP, 2);
+                    destination = destination.getRelative(BlockFace.UP, 2);
                     break;
                 }
             }
