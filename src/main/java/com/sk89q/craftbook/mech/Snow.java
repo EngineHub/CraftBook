@@ -55,7 +55,7 @@ public class Snow implements Listener {
                 LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getEntity().getShooter());
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
             }
-            incrementData(block);
+            incrementData(block, 0);
         }
     }
 
@@ -139,7 +139,7 @@ public class Snow implements Listener {
         if (event.getBlock().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 
-            if (CraftBookPlugin.inst().getConfiguration().snowRealistic) disperse(event.getBlock(), true);
+            if (CraftBookPlugin.inst().getConfiguration().snowRealistic) disperse(event.getBlock(), true, 0);
 
             if (event.getBlock().getWorld().hasStorm()) pile(block);
         }
@@ -176,7 +176,7 @@ public class Snow implements Listener {
 
                 event.add(0, 1, 0);
                 if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80)) return;
-                incrementData(event.getBlock());
+                incrementData(event.getBlock(), 0);
             } else {
                 Integer taskID = tasks.get(event);
                 if (taskID == null) return;
@@ -208,7 +208,7 @@ public class Snow implements Listener {
         setBlockDataWithNotify(block, newData);
     }
 
-    public boolean disperse(Block block, boolean remove) {
+    public boolean disperse(Block block, boolean remove, int depth) {
 
         if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1,
                 0).getTypeId() == BlockID.STATIONARY_WATER) {
@@ -218,7 +218,7 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
             if (block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1,
                     0).getTypeId() != BlockID.SNOW) {
-                incrementData(block.getRelative(0, -1, 0));
+                incrementData(block.getRelative(0, -1, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
             }
@@ -227,7 +227,7 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(1, 0, 0).getTypeId()) && block.getRelative(1, 0, 0).getData() < 0x7) {
             if (block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0,
                     0).getTypeId() != BlockID.SNOW) {
-                incrementData(block.getRelative(1, 0, 0));
+                incrementData(block.getRelative(1, 0, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
             }
@@ -236,7 +236,7 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(-1, 0, 0).getTypeId()) && block.getRelative(-1, 0, 0).getData() < 0x7) {
             if (block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0,
                     0).getTypeId() != BlockID.SNOW) {
-                incrementData(block.getRelative(-1, 0, 0));
+                incrementData(block.getRelative(-1, 0, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
             }
@@ -245,7 +245,7 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(0, 0, 1).getTypeId()) && block.getRelative(0, 0, 1).getData() < 0x7) {
             if (block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0,
                     1).getTypeId() != BlockID.SNOW) {
-                incrementData(block.getRelative(0, 0, 1));
+                incrementData(block.getRelative(0, 0, 1), depth+1);
                 if (remove) lowerData(block);
                 return true;
             }
@@ -254,7 +254,7 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(0, 0, -1).getTypeId()) && block.getRelative(0, 0, -1).getData() < 0x7) {
             if (block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0,
                     -1).getTypeId() != BlockID.SNOW) {
-                incrementData(block.getRelative(0, 0, -1));
+                incrementData(block.getRelative(0, 0, -1), depth+1);
                 if (remove) lowerData(block);
                 return true;
             }
@@ -263,36 +263,35 @@ public class Snow implements Listener {
         return false;
     }
 
-    public void incrementData(Block block) {
+    public void incrementData(Block block, int depth) {
 
-        if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1,
-                0).getTypeId() == BlockID.STATIONARY_WATER) {
+        if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
         }
 
         if (!isValidBlock(block.getTypeId()) && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
-            incrementData(block.getRelative(0, 1, 0));
+            incrementData(block.getRelative(0, 1, 0), depth+1);
             return;
         } else if (!isValidBlock(block.getTypeId())) return;
 
-        if (canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
-            incrementData(block.getRelative(0, -1, 0));
+        if (depth < 10 && canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+            incrementData(block.getRelative(0, -1, 0), depth+1);
             return;
         }
 
         if (canPassThrough(block.getTypeId()) && block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW
                 && block.getRelative(0, -1, 0).getData() < 0x7) {
-            incrementData(block.getRelative(0, -1, 0));
+            incrementData(block.getRelative(0, -1, 0), depth+1);
             return;
         }
 
         if (block.getTypeId() == BlockID.SNOW_BLOCK && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
-            incrementData(block.getRelative(0, 1, 0));
+            incrementData(block.getRelative(0, 1, 0), depth+1);
             return;
         }
 
         if (CraftBookPlugin.inst().getConfiguration().snowRealistic) {
-            if (block.getTypeId() == BlockID.SNOW && disperse(block, false)) return;
+            if (block.getTypeId() == BlockID.SNOW && disperse(block, false, depth+1)) return;
         }
 
         byte newData = 0;
