@@ -25,6 +25,8 @@ public interface ChangedSign {
 
     public void setLine(int line, String data);
 
+    public boolean hasChanged();
+
     // Other
     public boolean update(boolean force);
 

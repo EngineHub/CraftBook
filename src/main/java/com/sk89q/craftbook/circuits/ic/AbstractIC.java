@@ -81,7 +81,8 @@ public abstract class AbstractIC implements IC {
     @Override
     public void unload() {
 
-        sign.update(false);
+        if(sign.hasChanged())
+            sign.update(false);
     }
 
     @Override

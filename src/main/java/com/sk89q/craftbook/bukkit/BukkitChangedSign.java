@@ -105,7 +105,6 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public void setLine(int index, String line) throws IndexOutOfBoundsException {
 
-        sign.setLine(index, line);
         lines[index] = line;
     }
 
@@ -118,6 +117,8 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public boolean update(boolean force) {
 
+        for(int i = 0; i < 4; i++)
+            sign.setLine(i, lines[i]);
         return sign.update(force);
     }
 
@@ -137,5 +138,17 @@ public class BukkitChangedSign implements ChangedSign {
     public void setLines(String[] lines) {
 
         this.lines = lines;
+    }
+
+    @Override
+    public boolean hasChanged () {
+
+        boolean ret = false;
+        for(int i = 0; i < 4; i++)
+            if(!sign.getLine(i).equals(lines[i])) {
+                ret = true;
+                break;
+            }
+        return ret;
     }
 }
