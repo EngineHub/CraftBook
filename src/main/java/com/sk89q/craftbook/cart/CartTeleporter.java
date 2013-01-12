@@ -51,9 +51,18 @@ public class CartTeleporter extends CartMechanism {
                 cart.getLocation().getPitch()) {
 
         });
-        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100 *
-                100) {
-            cart.teleport(loc);
+        if (cart.getWorld() == world && loc.getChunk().isLoaded() && loc.distanceSquared(cart.getLocation()) < 100 * 100) {
+            Minecart toCart = world.spawn(loc, Minecart.class);
+            Entity passenger = cart.getPassenger();
+            if (passenger != null) {
+                cart.eject();
+                passenger.teleport(loc);
+                toCart.setPassenger(passenger);
+            }
+            toCart.getLocation().setYaw(cart.getLocation().getYaw());
+            toCart.getLocation().setPitch(cart.getLocation().getPitch());
+            toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
+            cart.remove();
         } else {
             loc.getChunk().load(true);
             Minecart toCart = world.spawn(loc, Minecart.class);
