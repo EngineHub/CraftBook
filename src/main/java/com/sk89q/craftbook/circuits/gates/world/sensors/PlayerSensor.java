@@ -62,8 +62,8 @@ public class PlayerSensor extends AbstractIC {
     @Override
     public void load() {
 
-        if (getLine(3).replace("!", "").contains(":")) {
-            type = Type.getFromChar(getLine(3).trim().toCharArray()[0]);
+        if (getLine(3).contains(":")) {
+            type = Type.getFromChar(getLine(3).replace("!", "").trim().toCharArray()[0]);
         }
         if (type == null) type = Type.PLAYER;
 

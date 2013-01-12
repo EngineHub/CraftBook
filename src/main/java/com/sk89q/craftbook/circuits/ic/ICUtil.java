@@ -139,6 +139,8 @@ public class ICUtil {
 
         Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
         String line = sign.getLine(lPos);
+        if (line.contains("!"))
+            line = line.replace("!", "");
         int offsetX = 0;
         int offsetY = 0;
         int offsetZ = 0;
