@@ -47,7 +47,7 @@ public class CartTeleporter extends CartMechanism {
             CartUtils.stop(cart);
         }
 
-        Location loc = BukkitUtil.center(new Location(world, x, y-2, z, cart.getLocation().getYaw(),
+        Location loc = BukkitUtil.center(new Location(world, x, y-1, z, cart.getLocation().getYaw(),
                 cart.getLocation().getPitch()) {
 
         });
