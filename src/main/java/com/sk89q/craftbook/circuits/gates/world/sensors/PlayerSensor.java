@@ -14,7 +14,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICUtil;
-import com.sk89q.craftbook.circuits.ic.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -74,8 +73,6 @@ public class PlayerSensor extends AbstractIC {
 
         try {
             String locInfo = getLine(2);
-            boolean relative = !locInfo.contains("!");
-            locInfo = locInfo.replace("!", "");
             if (locInfo.startsWith("r:") && CraftBookPlugin.inst().getWorldGuard() != null) {
 
                 locInfo = locInfo.replace("r:", "");
@@ -86,7 +83,7 @@ public class PlayerSensor extends AbstractIC {
             radius = ICUtil.parseRadius(getSign());
             if (locInfo.contains("=")) {
                 getSign().setLine(2, radius + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
-                location = ICUtil.parseBlockLocation(getSign(), 2, relative ? LocationCheckType.RELATIVE : LocationCheckType.ABSOLUTE).getLocation();
+                location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
             } else {
                 getSign().setLine(2, String.valueOf(radius));
                 location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();

@@ -114,8 +114,17 @@ public class ICUtil {
 
         Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
         String line = sign.getLine(lPos);
-        if (line.contains("!"))
+        if (line.contains("!")) {
+            relative = LocationCheckType.getTypeFromChar('!');
             line = line.replace("!", "");
+        } else if (line.contains("^")) {
+            relative = LocationCheckType.getTypeFromChar('^');
+            line = line.replace("^", "");
+        } else if (line.contains("&")) {
+            relative = LocationCheckType.getTypeFromChar('&');
+            line = line.replace("&", "");
+        }
+        line = line.replace("!", "").replace("^", "").replace("&", ""); //incase it had multiples.
         int offsetX = 0;
         int offsetY = 0;
         int offsetZ = 0;
@@ -245,8 +254,24 @@ public class ICUtil {
 
     public enum LocationCheckType {
 
-        RELATIVE,
-        OFFSET,
-        ABSOLUTE;
+        RELATIVE('^'),
+        OFFSET('&'),
+        ABSOLUTE('!');
+
+        char c;
+
+        LocationCheckType(char c) {
+
+            this.c = c;
+        }
+
+        public static LocationCheckType getTypeFromChar(char c) {
+
+            for(LocationCheckType t : values())
+                if(t.c == c)
+                    return t;
+
+            return RELATIVE;
+        }
     }
 }
