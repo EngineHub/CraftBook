@@ -216,6 +216,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartConstantSpeed = config.getDouble("vehicles.minecart.constant-speed", 0);
         minecartPoweredRailModifier = config.getDouble("vehicles.minecart.powered-rail-modifier", 0);
         minecartPickupItemsOnCollision = config.getBoolean("vehicles.minecart.item-pickup-collision", false);
+        minecartPressurePlateIntersection = config.getBoolean("vehicles.minecart.pressure-plate-intersection", false);
 
         // Vehicles - Boat Options
         boatRemoveEntities = config.getBoolean("vehicles.boat.remove-entities", false);

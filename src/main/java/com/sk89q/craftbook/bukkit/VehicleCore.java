@@ -248,8 +248,17 @@ public class VehicleCore implements LocalComponent {
 
                 if (event.getTo().getBlock().getTypeId() == BlockID.POWERED_RAIL) {
 
-                    event.getVehicle().getVelocity().multiply(plugin.getConfiguration().minecartPoweredRailModifier);
+                    event.getVehicle().setVelocity(event.getVehicle().getVelocity().multiply(plugin.getConfiguration().minecartPoweredRailModifier));
                 }
+            }
+
+            if (plugin.getConfiguration().minecartPressurePlateIntersection) {
+
+                if (event.getTo().getBlock().getTypeId() == BlockID.STONE_PRESSURE_PLATE || event.getTo().getBlock().getTypeId() == BlockID.WOODEN_PRESSURE_PLATE) {
+
+                    event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize().multiply(4));
+                }
+
             }
 
             if (plugin.getConfiguration().minecartConstantSpeed > 0 && RailUtil.isTrack(event.getTo().getBlock()

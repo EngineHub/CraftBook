@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class RailUtil {
@@ -47,11 +48,15 @@ public class RailUtil {
     }
 
     private static final int[] trackBlocks = new int[] {
-            BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL,
-            BlockID.DETECTOR_RAIL
+        BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL,
+        BlockID.DETECTOR_RAIL
     };
 
     public static boolean isTrack(int id) {
+
+        if (CraftBookPlugin.inst().getConfiguration().minecartPressurePlateIntersection)
+            if (id == BlockID.STONE_PRESSURE_PLATE || id == BlockID.WOODEN_PRESSURE_PLATE)
+                return true;
 
         for (int trackBlock : trackBlocks) {
             if (id == trackBlock) return true;
