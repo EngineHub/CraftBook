@@ -72,6 +72,11 @@ public class Gate extends AbstractMechanic {
     private Sign sign;
 
     /**
+     * The fence blocks to protect.
+     */
+    private Set<WorldVector> protectedBlocks = new HashSet<WorldVector>();
+
+    /**
      * Construct a gate for a location.
      *
      * @param pt
@@ -245,6 +250,9 @@ public class Gate extends AbstractMechanic {
     private boolean toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
             Set<BlockVector> visitedColumns) {
 
+        ProtectBlockListener.addBlock(topPoint);
+        protectedBlocks.add(topPoint);
+
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
         int x = topPoint.getBlockX();
         int y = topPoint.getBlockY();
@@ -309,6 +317,10 @@ public class Gate extends AbstractMechanic {
             }
 
             WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
+
+            ProtectBlockListener.addBlock(pt);
+            protectedBlocks.add(pt);
+
             recurseColumn(player, new BlockWorldVector(topPoint, pt.add(1, 0, 0)), visitedColumns, close);
             recurseColumn(player, new BlockWorldVector(topPoint, pt.add(-1, 0, 0)), visitedColumns, close);
             recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, 1)), visitedColumns, close);
@@ -569,6 +581,10 @@ public class Gate extends AbstractMechanic {
                 sign = (Sign) state;
             }
         }
+
+	for (WorldVector protectedBlock : protectedBlocks) {
+		ProtectBlockListener.removeBlock(protectedBlock);
+	}
 
         if (sign == null) return;
 

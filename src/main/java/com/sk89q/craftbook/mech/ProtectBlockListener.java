@@ -19,26 +19,42 @@ import org.bukkit.material.Diode;
 
 import java.util.*;
 
-public class BridgeProtectBlockListener implements Listener {
+public class ProtectBlockListener implements Listener {
 
-        protected static final Set<CuboidRegion> regions = new HashSet<CuboidRegion>();
-	private static BridgeProtectBlockListener singleton = null;
+        protected static final Map<String, CuboidRegion> regions = new HashMap<String, CuboidRegion>();
+        protected static final Map<String, WorldVector> blocks = new HashMap<String, WorldVector>();
+	private static ProtectBlockListener singleton = null;
 
         public static void addCuboidRegion(CuboidRegion region) {
-		regions.add(region);
+		if (!regions.containsKey(region.toString())
+			System.out.println("ProtectBlockListener: add: " + region);
+
+		regions.put(region.toString(), region);
 		if (singleton == null) {
-			singleton = new BridgeProtectBlockListener();
+			singleton = new ProtectBlockListener();
 		}
         }
 
         public static void removeCuboidRegion(CuboidRegion region) {
-		regions.remove(region);
+		System.out.println("ProtectBlockListener: remove: " + region);
+		regions.remove(region.toString());
         }
+
+	public static void addBlock(WorldVector vector) {
+		if (!blocks.containsKey(vector.toString())
+			System.out.println("ProtectBlockListener: add: " + vector);
+		blocks.put(vector.toString(), vector);
+	}
+
+	public static void removeBlock(WorldVector vector) {
+		System.out.println("ProtectBlockListener: remove: " + vector);
+		blocks.remove(vector.toString());
+	}
 
         /**
          * Construct the listener.
          */
-        public BridgeProtectBlockListener() {
+        public ProtectBlockListener() {
 		CraftBookPlugin.registerEvents(this);
         }
 
@@ -57,7 +73,11 @@ public class BridgeProtectBlockListener implements Listener {
 	}
 
 	public boolean isProtected(Block b, Cancellable event) {
-		for (CuboidRegion region : regions) {
+		if (blocks.containsKey(BukkitUtil.toWorldVector(b).toString())) {
+			event.setCancelled(true);
+			return true;
+		}
+		for (CuboidRegion region : regions.values()) {
 			if (region.contains(BukkitUtil.toVector(b))) {
 				event.setCancelled(true);
 				return true;

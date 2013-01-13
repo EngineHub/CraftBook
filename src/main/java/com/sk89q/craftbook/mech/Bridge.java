@@ -225,12 +225,7 @@ public class Bridge extends AbstractMechanic {
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront
                 (trigger)));
 
-	BridgeProtectBlockListener.addCuboidRegion(toggle);
-    }
-
-    @Override
-    public void unload() {
-        BridgeProtectBlockListener.removeCuboidRegion(toggle);
+	ProtectBlockListener.addCuboidRegion(toggle);
     }
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
@@ -487,6 +482,9 @@ public class Bridge extends AbstractMechanic {
         if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
             sign = BukkitUtil.toChangedSign(event.getBlock());
         }
+
+	System.out.println("Bridge: onBlockBreak: event="+event+", sign="+sign);
+        ProtectBlockListener.removeCuboidRegion(toggle);
 
         if (sign == null) return;
 
