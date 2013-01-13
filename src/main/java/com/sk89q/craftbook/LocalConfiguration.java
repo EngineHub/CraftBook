@@ -52,6 +52,7 @@ public abstract class LocalConfiguration {
     public String bookcaseReadLine;
     // Mechanics - Bridge
     public boolean bridgeEnabled;
+    public boolean bridgeProtected;
     public boolean bridgeAllowRedstone;
     public int bridgeMaxLength;
     public int bridgeMaxWidth;
@@ -85,6 +86,7 @@ public abstract class LocalConfiguration {
     public CustomDropManager customDrops;
     // Mechanics - Door
     public boolean doorEnabled;
+    public boolean doorProtected;
     public boolean doorAllowRedstone;
     public int doorMaxLength;
     public int doorMaxWidth;
@@ -95,6 +97,7 @@ public abstract class LocalConfiguration {
     public boolean elevatorLoop;
     // Mechanics - Gate
     public boolean gateEnabled;
+    public boolean gateProtected;
     public boolean gateAllowRedstone;
     public boolean gateLimitColumns;
     public int gateColumnLimit;
