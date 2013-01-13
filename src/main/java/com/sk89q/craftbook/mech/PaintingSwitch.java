@@ -87,6 +87,12 @@ public class PaintingSwitch implements Listener {
         }
         Art[] art = Art.values().clone();
         Painting paint = players.get(player.getName());
+        if(paint.getLocation().distanceSquared(event.getPlayer().getLocation()) > 5*5) {
+            Painting p = players.remove(event.getPlayer().getName());
+            if (p != null) {
+                paintings.remove(p);
+            }
+        }
         int newID = paint.getArt().getId() + (isForwards ? 1 : -1);
         if (newID < 0) {
             newID = art.length - 1;
