@@ -26,7 +26,7 @@ public class ProtectBlockListener implements Listener {
 	private static ProtectBlockListener singleton = null;
 
         public static void addCuboidRegion(CuboidRegion region) {
-		if (!regions.containsKey(region.toString())
+		if (!regions.containsKey(region.toString()))
 			System.out.println("ProtectBlockListener: add: " + region);
 
 		regions.put(region.toString(), region);
@@ -41,7 +41,7 @@ public class ProtectBlockListener implements Listener {
         }
 
 	public static void addBlock(WorldVector vector) {
-		if (!blocks.containsKey(vector.toString())
+		if (!blocks.containsKey(vector.toString()))
 			System.out.println("ProtectBlockListener: add: " + vector);
 		blocks.put(vector.toString(), vector);
 	}
