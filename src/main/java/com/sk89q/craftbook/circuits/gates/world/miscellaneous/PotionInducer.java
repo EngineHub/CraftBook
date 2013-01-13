@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import java.util.Set;
-
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -89,24 +86,18 @@ public class PotionInducer extends AbstractIC {
     public boolean induce() {
 
         boolean value = false;
-        Set<Chunk> chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign())
-                .getBlock()), radius); // Update
         // chunks
-        for (Chunk chunk : chunks) {
-            if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities()) {
-                    if (entity.isValid() && entity instanceof LivingEntity) {
-                        LivingEntity liv = (LivingEntity) entity;
-                        if (!mobs && !(liv instanceof Player)) continue;
-                        if (!players && liv instanceof Player) continue;
-                        if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius *
-                                radius)
-                            continue;
-                        liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
-                                effectAmount - 1), true);
-                        value = true;
-                    }
-                }
+        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation(), radius)) {
+            if (entity.isValid() && entity instanceof LivingEntity) {
+                LivingEntity liv = (LivingEntity) entity;
+                if (!mobs && !(liv instanceof Player)) continue;
+                if (!players && liv instanceof Player) continue;
+                if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius *
+                        radius)
+                    continue;
+                liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
+                        effectAmount - 1), true);
+                value = true;
             }
         }
         return value;
@@ -156,7 +147,7 @@ public class PotionInducer extends AbstractIC {
 
             String[] lines = new String[] {
                     "id:level:time", "range (add a m to the end to only induce mobs or p for " +
-                    "players (pm for both))"
+                            "players (pm for both))"
             };
             return lines;
         }

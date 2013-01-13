@@ -2,7 +2,6 @@ package com.sk89q.craftbook.circuits.gates.world.sensors;
 
 import java.util.Set;
 
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -35,7 +34,6 @@ public class MovementSensor extends AbstractIC {
     private Set<Type> types;
 
     private Block center;
-    private Set<Chunk> chunks;
     private int radius;
 
     @Override
@@ -62,8 +60,6 @@ public class MovementSensor extends AbstractIC {
             getSign().setLine(2, String.valueOf(radius));
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
-        chunks = LocationUtil.getSurroundingChunks(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()),
-                radius); // Update chunks
         getSign().update(false);
     }
 
@@ -87,21 +83,17 @@ public class MovementSensor extends AbstractIC {
 
     public boolean check() {
 
-        for (Chunk chunk : chunks) {
-            if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities()) {
-                    if (entity.isValid()) {
-                        for (Type type : types)
-                        // Check Type
-                        {
-                            if (type.is(entity)) {
-                                // Check Radius
-                                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                                    if (entity.getVelocity().lengthSquared() >= 0.01) return true;
-                                }
-                                break;
-                            }
+        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+            if (entity.isValid()) {
+                for (Type type : types)
+                    // Check Type
+                {
+                    if (type.is(entity)) {
+                        // Check Radius
+                        if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
+                            if (entity.getVelocity().lengthSquared() >= 0.01) return true;
                         }
+                        break;
                     }
                 }
             }

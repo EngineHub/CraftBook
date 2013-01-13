@@ -1,14 +1,8 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -189,39 +183,6 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets all surrounding chunks near the given block and radius.
-     *
-     * @param block  to get surrounding chunks for
-     * @param radius around the block
-     *
-     * @Deprecated Do not use this ever. Use nearby entities for entities.
-     * 
-     * @return chunks in the given radius
-     */
-    public static Set<Chunk> getSurroundingChunks(Block block, int radius) {
-
-        Chunk chunk = block.getChunk();
-        radius = radius / 16 + 1;
-        Set<Chunk> chunks = new LinkedHashSet<Chunk>();
-        World world = chunk.getWorld();
-        int cX = chunk.getX();
-        int cZ = chunk.getZ();
-        for (int x = radius; x >= 0; x--) {
-            for (int z = radius; z >= 0; z--) {
-                chunks.add(world.getChunkAt(cX + x, cZ + z));
-                chunks.add(world.getChunkAt(cX - x, cZ - z));
-                chunks.add(world.getChunkAt(cX + x, cZ - z));
-                chunks.add(world.getChunkAt(cX - x, cZ + z));
-                chunks.add(world.getChunkAt(cX + x, cZ));
-                chunks.add(world.getChunkAt(cX - x, cZ));
-                chunks.add(world.getChunkAt(cX, cZ + z));
-                chunks.add(world.getChunkAt(cX, cZ - z));
-            }
-        }
-        return chunks;
-    }
-
-    /**
      * Get relative block X that way.
      *
      * @param block
@@ -270,16 +231,23 @@ public final class LocationUtil {
         return block.getLocation().add(0.5, 1, 0.5);
     }
 
-    public static List<Player> getNearbyPlayers(Block block, int radius) {
+    public static Player[] getNearbyPlayers(Location l, int radius) {
 
-        List<Player> players = new ArrayList<Player>();
-        for (Chunk chunk : getSurroundingChunks(block, radius)) {
-            for (Entity e : chunk.getEntities()) {
-                if (e instanceof Player) {
-                    players.add((Player) e);
+        int chunkRadius = radius < 16 ? 1 : radius / 16;
+        HashSet<Player> radiusEntities = new HashSet<Player>();
+        for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+                int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
+                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
+                    if(!(e instanceof Player))
+                        continue;
+                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
+                            .getBlock()) {
+                        radiusEntities.add((Player) e);
+                    }
                 }
             }
         }
-        return players;
+        return radiusEntities.toArray(new Player[radiusEntities.size()]);
     }
 }

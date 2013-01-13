@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import java.util.Set;
-
-import org.bukkit.Chunk;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -34,7 +31,6 @@ public class ItemSensor extends AbstractIC {
     private short data;
 
     private Block center;
-    private Set<Chunk> chunks;
     private int radius;
 
     public ItemSensor(Server server, ChangedSign block, ICFactory factory) {
@@ -45,7 +41,6 @@ public class ItemSensor extends AbstractIC {
     @Override
     public void load() {
 
-        Block block = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3).trim());
         // lets get the type to detect first
         try {
@@ -80,7 +75,6 @@ public class ItemSensor extends AbstractIC {
         } else {
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
-        chunks = LocationUtil.getSurroundingChunks(block, radius);
     }
 
     @Override
@@ -105,17 +99,13 @@ public class ItemSensor extends AbstractIC {
 
     protected boolean isDetected() {
 
-        for (Chunk chunk : chunks) {
-            if (chunk.isLoaded()) {
-                for (Entity entity : chunk.getEntities()) {
-                    if (entity instanceof Item) {
-                        ItemStack itemStack = ((Item) entity).getItemStack();
-                        if (itemStack.getTypeId() == item) {
-                            if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                            if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
-                                return true;
-                        }
-                    }
+        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+            if (entity instanceof Item) {
+                ItemStack itemStack = ((Item) entity).getItemStack();
+                if (itemStack.getTypeId() == item) {
+                    if (data != -1 && !(itemStack.getDurability() == data)) return false;
+                    if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                        return true;
                 }
             }
         }
