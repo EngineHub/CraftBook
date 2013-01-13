@@ -18,6 +18,8 @@ package com.sk89q.craftbook.mech;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -74,7 +76,7 @@ public class Gate extends AbstractMechanic {
     /**
      * The fence blocks to protect.
      */
-    private Set<WorldVector> protectedBlocks = new HashSet<WorldVector>();
+    private static Map<BlockWorldVector, Set<WorldVector>> protectedBlocks = new HashMap<BlockWorldVector, Set<WorldVector>>();
 
     /**
      * Construct a gate for a location.
@@ -87,6 +89,10 @@ public class Gate extends AbstractMechanic {
         super();
         this.pt = pt;
         this.smallSearchSize = smallSearchSize;
+
+	if (!protectedBlocks.containsKey(pt)) {
+		protectedBlocks.put(pt, new HashSet<WorldVector>());
+	}
 
         int id = BukkitUtil.toBlock(pt).getTypeId();
         if (id == BlockID.SIGN_POST || id == BlockID.WALL_SIGN) {
@@ -252,7 +258,7 @@ public class Gate extends AbstractMechanic {
 
 	if (CraftBookPlugin.inst().getConfiguration().gateProtected) {
 	        ProtectBlockListener.addBlock(topPoint);
-	        protectedBlocks.add(topPoint);
+	        protectedBlocks.get(pt).add(topPoint);
 	}
 
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
@@ -318,17 +324,17 @@ public class Gate extends AbstractMechanic {
                 world.getBlockAt(x, y1, z).setTypeId(ID);
             }
 
-            WorldVector pt = new BlockWorldVector(topPoint, x, y1, z);
+            WorldVector pt2 = new BlockWorldVector(topPoint, x, y1, z);
 
             if (CraftBookPlugin.inst().getConfiguration().gateProtected) {
-	            ProtectBlockListener.addBlock(pt);
-	            protectedBlocks.add(pt);
+	            ProtectBlockListener.addBlock(pt2);
+	            protectedBlocks.get(pt).add(pt2);
             }
 
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(1, 0, 0)), visitedColumns, close);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(-1, 0, 0)), visitedColumns, close);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, 1)), visitedColumns, close);
-            recurseColumn(player, new BlockWorldVector(topPoint, pt.add(0, 0, -1)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(topPoint, pt2.add(1, 0, 0)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(topPoint, pt2.add(-1, 0, 0)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(topPoint, pt2.add(0, 0, 1)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(topPoint, pt2.add(0, 0, -1)), visitedColumns, close);
         }
 
         recurseColumn(player, new BlockWorldVector(topPoint, topPoint.add(1, 0, 0)), visitedColumns, close);
@@ -586,8 +592,10 @@ public class Gate extends AbstractMechanic {
             }
         }
 
+	System.out.println("Gate: onBlockBreak: event="+event+", protectedBlocks="+protectedBlocks.get(pt));
+
 	if (CraftBookPlugin.inst().getConfiguration().gateProtected) {
-		for (WorldVector protectedBlock : protectedBlocks) {
+		for (WorldVector protectedBlock : protectedBlocks.get(pt)) {
 			ProtectBlockListener.removeBlock(protectedBlock);
 		}
 	}
