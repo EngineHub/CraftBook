@@ -10,25 +10,18 @@ import com.sk89q.worldedit.bukkit.*;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.*;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Diode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class BridgeProtectBlockListener implements Listener {
 
-        protected static final List<CuboidRegion> regions = new ArrayList<CuboidRegion>();
+        protected static final Set<CuboidRegion> regions = new HashSet<CuboidRegion>();
 	private static BridgeProtectBlockListener singleton = null;
 
         public static void addCuboidRegion(CuboidRegion region) {
@@ -36,6 +29,10 @@ public class BridgeProtectBlockListener implements Listener {
 		if (singleton == null) {
 			singleton = new BridgeProtectBlockListener();
 		}
+        }
+
+        public static void removeCuboidRegion(CuboidRegion region) {
+		regions.remove(region);
         }
 
         /**
@@ -47,21 +44,26 @@ public class BridgeProtectBlockListener implements Listener {
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockPlace(BlockPlaceEvent event) {
-		checkProtected(event.getBlock());
+		if (isProtected(event.getBlock(), event)) {
+			event.getPlayer().sendMessage("Protected area. Cannot place blocks here.");
+		}
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
-		checkProtected(event.getBlock());
+		if (isProtected(event.getBlock(), event)) {
+			event.getPlayer().sendMessage("Protected area. Cannot break blocks here.");
+		}
 	}
 
-	public void checkProtected(Block b) {
+	public boolean isProtected(Block b, Cancellable event) {
 		for (CuboidRegion region : regions) {
 			if (region.contains(BukkitUtil.toVector(b))) {
 				event.setCancelled(true);
-				event.getPlayer().sendMessage("Protected area. Cannot build here.");
-				break;
+				return true;
 			}
 		}
+		return false;
         }
 }
+

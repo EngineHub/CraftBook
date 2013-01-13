@@ -228,6 +228,11 @@ public class Bridge extends AbstractMechanic {
 	BridgeProtectBlockListener.addCuboidRegion(toggle);
     }
 
+    @Override
+    public void unload() {
+        BridgeProtectBlockListener.removeCuboidRegion(toggle);
+    }
+
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
 
     /**
