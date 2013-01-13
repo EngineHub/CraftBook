@@ -262,7 +262,8 @@ public class Door extends AbstractMechanic {
         // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(BlockFace.UP), BukkitUtil.toVector(BlockFace.DOWN));
 
-	ProtectBlockListener.addCuboidRegion(toggle);
+	if (CraftBookPlugin.inst().getConfiguration().doorProtected)
+		ProtectBlockListener.addCuboidRegion(toggle);
     }
 
     @Override
@@ -521,7 +522,8 @@ public class Door extends AbstractMechanic {
             }
         }
 
-	ProtectBlockListener.removeCuboidRegion(toggle);
+	if (CraftBookPlugin.inst().getConfiguration().doorProtected)
+		ProtectBlockListener.removeCuboidRegion(toggle);
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getDoorMaterial(), getBlocks(sign), getDoorData());

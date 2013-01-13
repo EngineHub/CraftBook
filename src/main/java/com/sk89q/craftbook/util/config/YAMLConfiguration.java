@@ -81,6 +81,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Bridge Configuration Listener
         bridgeEnabled = config.getBoolean("mechanics.bridge.enable", true);
+        bridgeProtected = config.getBoolean("mechanics.bridge.protected", true);
         bridgeAllowRedstone = config.getBoolean("mechanics.bridge.allow-redstone", true);
         bridgeMaxLength = config.getInt("mechanics.bridge.max-length", 30);
         bridgeMaxWidth = config.getInt("mechanics.bridge.max-width", 5);
@@ -124,6 +125,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Door Configuration Listener
         doorEnabled = config.getBoolean("mechanics.door.enable", true);
+        doorProtected = config.getBoolean("mechanics.door.protected", true);
         doorAllowRedstone = config.getBoolean("mechanics.door.allow-redstone", true);
         doorMaxLength = config.getInt("mechanics.door.max-length", 30);
         doorMaxWidth = config.getInt("mechanics.door.max-width", 5);
@@ -136,6 +138,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Gate Configuration Listener
         gateEnabled = config.getBoolean("mechanics.gate.enable", true);
+        gateProtected = config.getBoolean("mechanics.gate.protected", true);
         gateAllowRedstone = config.getBoolean("mechanics.gate.allow-redstone", true);
         gateLimitColumns = config.getBoolean("mechanics.gate.limit-columns", true);
         gateColumnLimit = config.getInt("mechanics.gate.max-columns", 14);
