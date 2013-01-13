@@ -1,15 +1,12 @@
 package com.sk89q.craftbook.mech;
 
 import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.blocks.*;
+import com.sk89q.worldedit.bukkit.*;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,21 +28,40 @@ import java.util.List;
 
 public class BridgeProtectBlockListener implements Listener {
 
-        protected static final List<MechanicManager> managers = new ArrayList<MechanicManager>();
+        protected static final List<CuboidRegion> regions = new ArrayList<CuboidRegion>();
+	private static BridgeProtectBlockListener singleton = null;
 
-        public void addManager(MechanicManager manager) {
-
-            managers.add(manager);
+        public static void addCuboidRegion(CuboidRegion region) {
+		regions.add(region);
+		if (singleton == null) {
+			singleton = new BridgeProtectBlockListener();
+		}
         }
 
         /**
          * Construct the listener.
          */
         public BridgeProtectBlockListener() {
+		CraftBookPlugin.registerEvents(this);
+        }
 
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        public void onBlockPlace(BlockPlaceEvent event) {
+		checkProtected(event.getBlock());
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
+		checkProtected(event.getBlock());
+	}
+
+	public void checkProtected(Block b) {
+		for (CuboidRegion region : regions) {
+			if (region.contains(BukkitUtil.toVector(b))) {
+				event.setCancelled(true);
+				event.getPlayer().sendMessage("Protected area. Cannot build here.");
+				break;
+			}
+		}
         }
 }

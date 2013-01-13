@@ -224,6 +224,8 @@ public class Bridge extends AbstractMechanic {
         // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront
                 (trigger)));
+
+	BridgeProtectBlockListener.addCuboidRegion(toggle);
     }
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
