@@ -205,32 +205,31 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             ShapedRecipe shape = (ShapedRecipe) r;
             Map<Character, ItemStack> ingredientMap = shape.getIngredientMap();
             String[] shapeArr = shape.getShape();
-            boolean large = shapeArr.length >= 3 || shapeArr[0].length() >= 3;
-            if (recipe != null) if (((ShapedRecipe) recipe).getShape().length != shapeArr.length) return false;
+            if (recipe != null) if (((ShapedRecipe) recipe).getShape().length != shapeArr.length  || shapeArr[0].length() != ((ShapedRecipe) recipe).getShape()[0].length()) return false;
             int c = -1, in = 0;
             for (int slot = 0; slot < 9; slot++) {
                 ItemStack stack = inv.getItem(slot);
                 try {
                     c++;
-                    if (c > (large ? 2 : 1)) {
+                    if (c == shapeArr[in].length()) {
                         c = 0;
                         in++;
-                        if (in > (large ? 2 : 1)) {
+                        if (in == shapeArr.length) {
                             break;
                         }
-                        if (!large) {
-                            continue;
-                        }
                     }
-                    if(shapeArr.length <= in && !ItemUtil.isStackValid(stack))
-                        break;
                     String shapeSection = shapeArr[in];
                     ItemStack require = null;
                     try {
                         Character item = shapeSection.charAt(c);
-                        require = ingredientMap.get(item);
+                        if(item == ' ')
+                            require = null;
+                        else
+                            require = ingredientMap.get(item);
                     }
-                    catch(Exception e){}
+                    catch(Exception e){
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                    }
                     if (ItemUtil.areItemsIdentical(require, stack)) {
                     } else return false;
                 } catch (Exception e) {
