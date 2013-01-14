@@ -319,10 +319,9 @@ public class MechanicListenerAdapter {
         protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
             Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-            CraftBookPlugin.inst().getServer().getPluginManager().callEvent(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
-            //for (MechanicManager manager : managers) {
-            //manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
-            //}
+            for (MechanicManager manager : managers) {
+                manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
+            }
         }
     }
 

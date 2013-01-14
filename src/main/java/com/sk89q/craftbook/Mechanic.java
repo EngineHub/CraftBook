@@ -16,7 +16,6 @@
 
 package com.sk89q.craftbook;
 
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -38,7 +37,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
  * @author sk89q
  * @author hash
  */
-public interface Mechanic extends Listener {
+public interface Mechanic {
 
     /**
      * Unload this mechanic. This should free any allocated resources and de-initialize. This may be called once the
