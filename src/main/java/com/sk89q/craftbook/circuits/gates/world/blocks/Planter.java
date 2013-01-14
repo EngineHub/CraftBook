@@ -210,6 +210,7 @@ public class Planter extends AbstractIC {
             case ItemID.MELON_SEEDS:
             case ItemID.PUMPKIN_SEEDS:
             case ItemID.POTATO:
+            case ItemID.CARROT:
                 return blockId == BlockID.SOIL;
             case ItemID.NETHER_WART_SEED:
                 return blockId == BlockID.SLOW_SAND;
