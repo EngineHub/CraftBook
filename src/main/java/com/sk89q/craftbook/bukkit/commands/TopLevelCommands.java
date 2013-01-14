@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit.commands;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -34,6 +35,13 @@ public class TopLevelCommands {
 
             CraftBookPlugin.inst().reloadConfiguration();
             sender.sendMessage("The CraftBook config has been reloaded.");
+        }
+
+        @Command(aliases = "about", desc = "Gives info about craftbook.")
+        public void about(CommandContext context, CommandSender sender) {
+
+            sender.sendMessage(ChatColor.YELLOW + "CraftBook version " + CraftBookPlugin.inst().getDescription().getVersion());
+            sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by me4502 & Dark_Arc");
         }
     }
 }

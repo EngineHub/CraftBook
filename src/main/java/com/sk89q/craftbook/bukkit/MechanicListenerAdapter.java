@@ -16,16 +16,10 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -41,9 +35,16 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Diode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.BlockWorldVector2D;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -317,12 +318,11 @@ public class MechanicListenerAdapter {
          */
         protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
-            Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(),
-                    pt.getBlockZ());
-            for (MechanicManager manager : managers) {
-                manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block,
-                        oldLevel, newLevel));
-            }
+            Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+            CraftBookPlugin.inst().getServer().getPluginManager().callEvent(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
+            //for (MechanicManager manager : managers) {
+            //manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
+            //}
         }
     }
 
