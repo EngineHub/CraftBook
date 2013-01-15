@@ -15,9 +15,10 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.VerifyUtil;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -29,16 +30,17 @@ public class Irrigator extends AbstractIC {
     }
 
     Location centre;
-    int radius;
+    Vector radius;
 
     @Override
     public void load() {
 
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
+        radius = ICUtil.parseRadius(getSign());
+
         try {
             String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
-            radius = Integer.parseInt(splitEquals[0]);
             if (getSign().getLine(2).contains("=")) {
                 String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
                 int x = Integer.parseInt(splitCoords[0]);
@@ -53,10 +55,7 @@ public class Irrigator extends AbstractIC {
                 centre.add(x, y, z);
             }
         } catch (Exception ignored) {
-            radius = 10;
         }
-
-        radius = VerifyUtil.verifyRadius(radius, 15);
     }
 
     @Override
@@ -79,9 +78,9 @@ public class Irrigator extends AbstractIC {
 
     public boolean irrigate() {
 
-        for (int x = -radius + 1; x < radius; x++) {
-            for (int y = -radius + 1; y < radius; y++) {
-                for (int z = -radius + 1; z < radius; z++) {
+        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
+            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
+                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                     int rx = centre.getBlockX() - x;
                     int ry = centre.getBlockY() - y;
                     int rz = centre.getBlockZ() - z;

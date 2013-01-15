@@ -11,13 +11,15 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class LiquidFlood extends AbstractIC {
 
-    int radius;
+    Vector radius;
     String liquid;
     Location centre;
 
@@ -43,11 +45,11 @@ public class LiquidFlood extends AbstractIC {
 
         centre = BukkitUtil.toSign(getSign()).getLocation();
 
+        radius = ICUtil.parseRadius(getSign());
         try {
 
             if (getSign().getLine(2).contains("=")) {
                 String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
-                radius = Integer.parseInt(splitEquals[0]);
                 String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
                 int x = Integer.parseInt(splitCoords[0]);
                 int y = Integer.parseInt(splitCoords[1]);
@@ -59,10 +61,8 @@ public class LiquidFlood extends AbstractIC {
                 if (z > 16) z = 16;
                 if (z < -16) z = -16;
                 centre.add(x, y, z);
-            } else
-                radius = Integer.parseInt(getLine(2));
+            }
         } catch (Exception ignored) {
-            radius = 10;
         }
 
         liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
@@ -71,15 +71,15 @@ public class LiquidFlood extends AbstractIC {
     public void doStuff(ChipState chip) {
 
         if (chip.getInput(0)) {
-            for (int x = -radius + 1; x < radius; x++) {
-                for (int y = -radius + 1; y < radius; y++) {
-                    for (int z = -radius + 1; z < radius; z++) {
+            for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
+                for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
+                    for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                         int rx = centre.getBlockX() - x;
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == 0 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER
-                                                                                                     : BlockID.LAVA)) {
+                                : BlockID.LAVA)) {
                             b.setTypeId(liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER : BlockID
                                     .STATIONARY_LAVA);
                         }
@@ -87,16 +87,16 @@ public class LiquidFlood extends AbstractIC {
                 }
             }
         } else if (!chip.getInput(0)) {
-            for (int x = -radius + 1; x < radius; x++) {
-                for (int y = -radius + 1; y < radius; y++) {
-                    for (int z = -radius + 1; z < radius; z++) {
+            for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
+                for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
+                    for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                         int rx = centre.getBlockX() - x;
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.WATER : BlockID.LAVA)
                                 || b.getTypeId() == (liquid.equalsIgnoreCase("water") ? BlockID.STATIONARY_WATER :
-                                                     BlockID.STATIONARY_LAVA)) {
+                                    BlockID.STATIONARY_LAVA)) {
                             b.setTypeId(BlockID.AIR);
                         }
                     }

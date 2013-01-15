@@ -13,10 +13,10 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.VerifyUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class Cultivator extends AbstractIC {
@@ -38,23 +38,13 @@ public class Cultivator extends AbstractIC {
         return "CULTIVATOR";
     }
 
-    int radius;
+    Vector radius;
 
     @Override
     public void load() {
 
-        try {
-            radius = Integer.parseInt(getSign().getLine(2));
-            if (radius > ((Factory) getFactory()).maxradius) {
-                radius = ((Factory) getFactory()).maxradius;
-                getSign().setLine(2, String.valueOf(((Factory) getFactory()).maxradius));
-                getSign().update(false);
-            }
-        } catch (Exception e) {
-            radius = 10;
-        }
+        radius = ICUtil.parseRadius(getSign());
 
-        radius = VerifyUtil.verifyRadius(radius, 15);
     }
 
     @Override
@@ -65,9 +55,9 @@ public class Cultivator extends AbstractIC {
 
     public boolean cultivate() {
 
-        for (int x = -radius + 1; x < radius; x++) {
-            for (int y = -radius + 1; y < radius; y++) {
-                for (int z = -radius + 1; z < radius; z++) {
+        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
+            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
+                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                     Block b = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z).getBlock();
                     if (b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
                         if (b.getRelative(BlockFace.UP).getTypeId() == 0 && damageHoe()) {
@@ -136,18 +126,6 @@ public class Cultivator extends AbstractIC {
 
             String[] lines = new String[] {"radius", null};
             return lines;
-        }
-
-        @Override
-        public void addConfiguration(YAMLProcessor config, String path) {
-
-            maxradius = config.getInt(path + "max-radius", 15);
-        }
-
-        @Override
-        public boolean needsConfiguration() {
-
-            return true;
         }
     }
 }

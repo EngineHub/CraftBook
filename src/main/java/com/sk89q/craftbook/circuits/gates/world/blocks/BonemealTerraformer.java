@@ -18,15 +18,16 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
 public class BonemealTerraformer extends AbstractIC {
 
-    int radius;
+    Vector radius;
 
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -36,16 +37,7 @@ public class BonemealTerraformer extends AbstractIC {
     @Override
     public void load() {
 
-        try {
-            radius = Integer.parseInt(getSign().getLine(2));
-            if (radius > ((Factory) getFactory()).maxradius) {
-                radius = ((Factory) getFactory()).maxradius;
-                getSign().setLine(3, String.valueOf(((Factory) getFactory()).maxradius));
-                getSign().update(false);
-            }
-        } catch (Exception e) {
-            radius = 10;
-        }
+        radius = ICUtil.parseRadius(getSign());
     }
 
     @Override
@@ -71,9 +63,9 @@ public class BonemealTerraformer extends AbstractIC {
     public void terraform(boolean overrideChance) {
 
         BlockWorldVector position = getSign().getBlockVector();
-        for (int x = -radius + 1; x < radius; x++) {
-            for (int y = -radius + 1; y < radius; y++) {
-                for (int z = -radius + 1; z < radius; z++) {
+        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
+            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
+                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                     if (overrideChance || CraftBookPlugin.inst().getRandom().nextInt(40) == 0) {
                         int rx = position.getBlockX() - x;
                         int ry = position.getBlockY() - y;
@@ -330,18 +322,6 @@ public class BonemealTerraformer extends AbstractIC {
 
             String[] lines = new String[] {"radius", null};
             return lines;
-        }
-
-        @Override
-        public void addConfiguration(YAMLProcessor config, String path) {
-
-            maxradius = config.getInt(path + "max-radius", 15);
-        }
-
-        @Override
-        public boolean needsConfiguration() {
-
-            return true;
         }
     }
 }

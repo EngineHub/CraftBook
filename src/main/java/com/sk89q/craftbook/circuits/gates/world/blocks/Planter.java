@@ -17,9 +17,9 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -43,7 +43,7 @@ public class Planter extends AbstractIC {
     Block target;
     Block onBlock;
     Vector offset;
-    int radius;
+    Vector radius;
 
     @Override
     public void load() {
@@ -53,8 +53,8 @@ public class Planter extends AbstractIC {
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
+        radius = ICUtil.parseRadius(getSign(), 3);
         try {
-            radius = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(3))[0]);
             try {
                 String[] loc = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(3))[1]);
                 offset = new Vector(Integer.parseInt(loc[0]), Integer.parseInt(loc[1]), Integer.parseInt(loc[2]));
@@ -70,11 +70,8 @@ public class Planter extends AbstractIC {
             }
 
         } catch (Exception e) {
-            radius = 10;
             offset = new Vector(0, 2, 0);
         }
-
-        radius = VerifyUtil.verifyRadius(radius, 15);
 
         target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
     }
@@ -134,11 +131,8 @@ public class Planter extends AbstractIC {
                         () || itemEnt.getItemStack()
                         .getData().getData() == item.getData().getData())) {
                     Location loc = itemEnt.getLocation();
-                    double diffX = target.getX() - loc.getX();
-                    double diffY = target.getY() - loc.getY();
-                    double diffZ = target.getZ() - loc.getZ();
 
-                    if (diffX * diffX + diffY * diffY + diffZ * diffZ < radius * radius) {
+                    if (LocationUtil.isWithinRadius(target.getLocation(), loc, radius)) {
 
                         Block b = null;
 
@@ -158,9 +152,9 @@ public class Planter extends AbstractIC {
 
     public Block searchBlocks(ItemStack stack) {
 
-        for (int x = -radius + 1; x < radius; x++) {
-            for (int y = -radius + 1; y < radius; y++) {
-                for (int z = -radius + 1; z < radius; z++) {
+        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
+            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
+                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                     int rx = target.getX() - x;
                     int ry = target.getY() - y;
                     int rz = target.getZ() - z;
