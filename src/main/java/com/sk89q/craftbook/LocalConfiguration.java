@@ -46,6 +46,9 @@ public abstract class LocalConfiguration {
     public boolean areaShortenNames;
     public int areaMaxAreaSize;
     public int areaMaxAreaPerUser;
+    // Mechanics - BetterPhysics
+    public boolean physicsEnabled;
+    public boolean physicsLadders;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
     public boolean bookcaseReadWhenSneaking;
