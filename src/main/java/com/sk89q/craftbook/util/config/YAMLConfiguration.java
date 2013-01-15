@@ -221,6 +221,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartPoweredRailModifier = config.getDouble("vehicles.minecart.powered-rail-modifier", 0);
         minecartPickupItemsOnCollision = config.getBoolean("vehicles.minecart.item-pickup-collision", false);
         minecartPressurePlateIntersection = config.getBoolean("vehicles.minecart.pressure-plate-intersection", false);
+        minecartStoragePlaceRails = config.getBoolean("vehicles.minecart.storage-place-rails", false);
 
         // Vehicles - Boat Options
         boatRemoveEntities = config.getBoolean("vehicles.boat.remove-entities", false);
