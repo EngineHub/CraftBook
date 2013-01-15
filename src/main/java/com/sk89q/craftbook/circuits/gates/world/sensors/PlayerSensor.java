@@ -19,6 +19,7 @@ import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
@@ -51,7 +52,7 @@ public class PlayerSensor extends AbstractIC {
         }
     }
 
-    int radius;
+    Vector radius;
 
     Location location;
     ProtectedRegion reg;
@@ -82,10 +83,10 @@ public class PlayerSensor extends AbstractIC {
             }
             radius = ICUtil.parseRadius(getSign());
             if (locInfo.contains("=")) {
-                getSign().setLine(2, radius + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+                getSign().setLine(2, radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ() + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
                 location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
             } else {
-                getSign().setLine(2, String.valueOf(radius));
+                getSign().setLine(2, String.valueOf(radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ()));
                 location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             }
         } catch (Exception e) {

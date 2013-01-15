@@ -20,10 +20,12 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.Vector;
 
 /**
  * @author Me4502
@@ -89,7 +91,7 @@ public class EntityTrap extends AbstractIC {
         }
     }
 
-    int radius;
+    Vector radius;
     int damage;
     Type type;
     Location location;
@@ -98,9 +100,9 @@ public class EntityTrap extends AbstractIC {
     public void load() {
 
         location = BukkitUtil.toSign(getSign()).getLocation();
+        radius = ICUtil.parseRadius(getSign());
         try {
             String[] splitLine = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 3);
-            radius = Integer.parseInt(splitLine[0]);
             if (getSign().getLine(2).contains("=")) {
                 String[] pos = RegexUtil.COLON_PATTERN.split(splitLine[1]);
                 int x = Integer.parseInt(pos[0]);
@@ -111,7 +113,6 @@ public class EntityTrap extends AbstractIC {
                 damage = Integer.parseInt(splitLine[2]);
             } else damage = 2;
         } catch (Exception ignored) {
-            radius = 10;
             damage = 2;
         }
 

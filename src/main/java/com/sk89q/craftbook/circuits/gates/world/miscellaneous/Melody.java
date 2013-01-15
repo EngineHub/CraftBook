@@ -85,9 +85,9 @@ public class Melody extends AbstractIC {
         midiName = getSign().getLine(2);
 
         File[] trialPaths = {
-                new File(((CircuitCore) CircuitCore.inst()).getMidiFolder(), midiName),
-                new File(((CircuitCore) CircuitCore.inst()).getMidiFolder(), midiName + ".mid"),
-                new File(((CircuitCore) CircuitCore.inst()).getMidiFolder(), midiName + ".midi"),
+                new File(CircuitCore.inst().getMidiFolder(), midiName),
+                new File(CircuitCore.inst().getMidiFolder(), midiName + ".mid"),
+                new File(CircuitCore.inst().getMidiFolder(), midiName + ".midi"),
                 new File("midi", midiName), new File("midi", midiName + ".mid"),
                 new File("midi", midiName + ".midi"),
         };
@@ -127,8 +127,7 @@ public class Melody extends AbstractIC {
                     if (player == null) {
                         continue;
                     }
-                    if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(),
-                            player.getLocation(), radius)) {
+                    if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius)) {
                         continue;
                     }
                     jNote.play(player, sequencer);

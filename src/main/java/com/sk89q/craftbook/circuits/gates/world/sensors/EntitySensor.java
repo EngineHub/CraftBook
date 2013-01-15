@@ -28,6 +28,7 @@ import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
 
 /**
  * @author Silthus
@@ -108,7 +109,7 @@ public class EntitySensor extends AbstractIC {
     private Set<Type> types;
 
     private Block center;
-    private int radius;
+    private Vector radius;
 
     public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
 
@@ -128,10 +129,10 @@ public class EntitySensor extends AbstractIC {
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radius + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            getSign().setLine(2, radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ() + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
-            getSign().setLine(2, String.valueOf(radius));
+            getSign().setLine(2, String.valueOf(radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ()));
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
         getSign().update(false);

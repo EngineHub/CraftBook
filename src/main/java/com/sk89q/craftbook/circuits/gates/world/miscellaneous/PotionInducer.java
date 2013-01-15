@@ -14,11 +14,13 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
 
 /**
  * @author Me4502
@@ -42,7 +44,8 @@ public class PotionInducer extends AbstractIC {
         return "POTION INDUCER";
     }
 
-    int radius, effectID, effectAmount, effectTime;
+    Vector radius;
+    int effectID, effectAmount, effectTime;
     boolean mobs;
     boolean players;
 
@@ -76,11 +79,7 @@ public class PotionInducer extends AbstractIC {
             mobs = false;
         }
         line4 = line4.replace("m", "").replace("p", "");
-        try {
-            radius = Integer.parseInt(line4);
-        } catch (Exception e) {
-            radius = 10;
-        }
+        radius = ICUtil.parseRadius(getSign(), 3);
     }
 
     public boolean induce() {
@@ -92,8 +91,7 @@ public class PotionInducer extends AbstractIC {
                 LivingEntity liv = (LivingEntity) entity;
                 if (!mobs && !(liv instanceof Player)) continue;
                 if (!players && liv instanceof Player) continue;
-                if (liv.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > radius *
-                        radius)
+                if(!LocationUtil.isWithinRadius(liv.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), radius))
                     continue;
                 liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
                         effectAmount - 1), true);

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -26,24 +27,44 @@ public final class LocationUtil {
 
     }
 
-    public static boolean isWithinRadius(Location l1, Location l2, int radius) {
+    public static boolean isWithinSphericalRadius(Location l1, Location l2, int radius) {
 
-        return l1.getWorld().equals(l2.getWorld()) && Math.floor(getDistanceSquared(l1,
-                l2)) <= radius * radius; // Floor for more accurate readings
+        return l1.getWorld().equals(l2.getWorld()) && Math.floor(getDistanceSquared(l1, l2)) <= radius * radius; // Floor for more accurate readings
     }
 
-    public static Entity[] getNearbyEntities(Location l, int radius) {
+    public static boolean isWithinRadiusPolygon(Location l1, Location l2, Vector radius) {
 
-        int chunkRadius = radius < 16 ? 1 : radius / 16;
+        if(l2.getX() < l1.getX() + radius.getX() && l2.getX() > l1.getX() - radius.getX())
+            if(l2.getY() < l1.getY() + radius.getY() && l2.getY() > l1.getY() - radius.getY())
+                if(l2.getZ() < l1.getZ() + radius.getZ() && l2.getZ() > l1.getZ() - radius.getX())
+                    return true;
+        return false;
+    }
+
+    /**
+     * Passed a vector, and it smartly detecst if its spherical or polygon.
+     * 
+     * @param l1
+     * @param l2
+     * @param radius
+     * @return
+     */
+    public static boolean isWithinRadius(Location l1, Location l2, Vector radius) {
+
+        return radius.getX() == radius.getZ() && radius.getX() == radius.getY() && isWithinSphericalRadius(l1,l2,radius.getBlockX()) || (radius.getX() != radius.getY() || radius.getY() != radius.getZ() || radius.getX() != radius.getZ()) && isWithinRadiusPolygon(l1,l2,radius);
+    }
+
+    public static Entity[] getNearbyEntities(Location l, Vector radius) {
+
+        int chunkRadiusX = radius.getBlockX() < 16 ? 1 : radius.getBlockX() / 16;
+        int chunkRadiusZ = radius.getBlockZ() < 16 ? 1 : radius.getBlockZ() / 16;
         HashSet<Entity> radiusEntities = new HashSet<Entity>();
-        for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
-            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+        for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
+            for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
                 for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
-                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
-                            .getBlock()) {
+                    if(isWithinRadius(l,e.getLocation(),radius))
                         radiusEntities.add(e);
-                    }
                 }
             }
         }

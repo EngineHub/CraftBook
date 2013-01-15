@@ -11,7 +11,6 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.PoweredMinecart;
 import org.bukkit.entity.StorageMinecart;
-import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -24,6 +23,7 @@ import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.Vector;
 
 public class EntityCannon extends AbstractIC {
 
@@ -102,7 +102,7 @@ public class EntityCannon extends AbstractIC {
         }
 
         try {
-            for (Entity e : LocationUtil.getNearbyEntities(location, 3)) {
+            for (Entity e : LocationUtil.getNearbyEntities(location, new Vector(3,3,3))) {
                 if (e.isDead() || !e.isValid()) {
                     continue;
                 }
@@ -115,7 +115,7 @@ public class EntityCannon extends AbstractIC {
                 double y = Double.parseDouble(split[1]);
                 double z = Double.parseDouble(split[2]);
 
-                e.setVelocity(new Vector(x, y, z).add(e.getVelocity()));
+                e.setVelocity(new org.bukkit.util.Vector(x, y, z).add(e.getVelocity()));
 
                 resultBoolean = true;
             }

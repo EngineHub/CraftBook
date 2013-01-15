@@ -62,7 +62,7 @@ public class Radio extends AbstractIC {
             Location signLoc = BukkitUtil.toSign(getSign()).getLocation();
             for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
 
-                if(LocationUtil.isWithinRadius(signLoc, player.getLocation(), radius))
+                if(LocationUtil.isWithinSphericalRadius(signLoc, player.getLocation(), radius))
                     players.add(player);
             }
 

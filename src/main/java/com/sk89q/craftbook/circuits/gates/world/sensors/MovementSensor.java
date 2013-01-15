@@ -18,6 +18,7 @@ import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.Vector;
 
 /**
  * Movement Sensor. This IC is incomplete due to the bukkit API not providing ample movement velocity support.
@@ -34,7 +35,7 @@ public class MovementSensor extends AbstractIC {
     private Set<Type> types;
 
     private Block center;
-    private int radius;
+    private Vector radius;
 
     @Override
     public void load() {
@@ -54,10 +55,10 @@ public class MovementSensor extends AbstractIC {
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radius + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            getSign().setLine(2, radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ() + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
-            getSign().setLine(2, String.valueOf(radius));
+            getSign().setLine(2, String.valueOf(radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ()));
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
         getSign().update(false);

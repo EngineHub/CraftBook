@@ -53,7 +53,7 @@ public class Tune extends AbstractIC {
                 if (player == null) {
                     continue;
                 }
-                if (radius > 0 && !LocationUtil.isWithinRadius(BukkitUtil.toSign(getSign()).getLocation(),
+                if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(),
                         player.getLocation(), radius)) {
                     continue;
                 }

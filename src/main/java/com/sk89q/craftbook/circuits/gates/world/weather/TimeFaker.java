@@ -13,9 +13,11 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.worldedit.Vector;
 
 /**
  * @author Me4502
@@ -68,17 +70,17 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
         }
     }
 
-    int dist;
+    Vector radius;
     long time;
 
     @Override
     public void load() {
 
+        radius = ICUtil.parseRadius(getSign());
+
         try {
-            dist = Integer.parseInt(getSign().getLine(2));
             time = Long.parseLong(getSign().getLine(3));
         } catch (Exception e) {
-            if (dist == 0) dist = 10;
             if (time == 0) time = 13000L;
         }
     }
@@ -101,7 +103,7 @@ public class TimeFaker extends AbstractIC implements SelfTriggeredIC {
             for (Player p : Bukkit.getOnlinePlayers()) {
 
                 if (!players.contains(p.getName()) && LocationUtil.isWithinRadius(p.getLocation(),
-                        BukkitUtil.toSign(getSign()).getLocation(), dist)) {
+                        BukkitUtil.toSign(getSign()).getLocation(), radius)) {
                     p.setPlayerTime(time, false);
                     players.add(p.getName());
                 } else if (players.contains(p.getName())) {
