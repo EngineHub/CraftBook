@@ -11,6 +11,7 @@ import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.AIMechanic;
 import com.sk89q.craftbook.mech.Ammeter;
+import com.sk89q.craftbook.mech.BetterPhysics;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
@@ -146,6 +147,10 @@ public class MechanicalCore implements LocalComponent {
         }
         if (config.paintingsEnabled) {
             server.getPluginManager().registerEvents(new PaintingSwitch(), plugin);
+        }
+
+        if (config.physicsEnabled) {
+            server.getPluginManager().registerEvents(new BetterPhysics(), plugin);
         }
         /*
          * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager()
