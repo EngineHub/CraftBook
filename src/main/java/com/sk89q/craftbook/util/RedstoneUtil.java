@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+
+import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic that differenciates between the
@@ -71,8 +72,7 @@ public abstract class RedstoneUtil {
 
     public static boolean isPotentialPowerSource(Block pow) {
 
-        return pow.getTypeId() == BlockID.REDSTONE_WIRE || pow.getTypeId() == BlockID.REDSTONE_REPEATER_OFF
-                || pow.getTypeId() == BlockID.REDSTONE_REPEATER_ON;
+        return isPotentialPowerSource(pow.getTypeId());
         // return BlockType.isRedstoneBlock(pow.getTypeId());
     }
 
@@ -86,8 +86,7 @@ public abstract class RedstoneUtil {
      */
     public static boolean isPotentialPowerSource(Block mech, Block pow) {
 
-        return pow.getTypeId() == BlockID.REDSTONE_WIRE || pow.getTypeId() == BlockID.REDSTONE_REPEATER_OFF
-                || pow.getTypeId() == BlockID.REDSTONE_REPEATER_ON;
+        return isPotentialPowerSource(pow);
     }
 
     public static void debug(Block block) {
