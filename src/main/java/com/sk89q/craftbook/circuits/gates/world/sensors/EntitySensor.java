@@ -128,11 +128,14 @@ public class EntitySensor extends AbstractIC {
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
+        String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
+        if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
+            radiusString = String.valueOf(radius.getBlockX());
         if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ() + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());
         } else {
-            getSign().setLine(2, String.valueOf(radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ()));
+            getSign().setLine(2, radiusString);
             center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
         getSign().update(false);

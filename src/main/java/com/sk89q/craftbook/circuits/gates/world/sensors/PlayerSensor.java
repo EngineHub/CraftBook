@@ -82,11 +82,14 @@ public class PlayerSensor extends AbstractIC {
                 if (reg != null) return;
             }
             radius = ICUtil.parseRadius(getSign());
+            String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
+            if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
+                radiusString = String.valueOf(radius.getBlockX());
             if (locInfo.contains("=")) {
-                getSign().setLine(2, radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ() + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+                getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
                 location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
             } else {
-                getSign().setLine(2, String.valueOf(radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ()));
+                getSign().setLine(2, radiusString);
                 location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
             }
         } catch (Exception e) {
