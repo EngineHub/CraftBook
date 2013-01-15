@@ -17,7 +17,7 @@
 3.5 Beta 4 (Probably last 3.5 Beta, it looks very stable)
 * Fix error due to improper IC config.
 + Added /ic fireworks command to list firework scripts.
-* Fixed some IC's being unrestricted when they should've been restricted
+* Fixed some IC's being unrestricted when they should've been restricted.
 * Fix Custom Crafting & Improved Cauldrons recipes.
 * Fixed Crash bug with Hidden Switch.
 * Fixed Auto Crafter not crafting the correct amount of an item.
