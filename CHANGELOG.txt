@@ -1,3 +1,19 @@
+3.5
+* Fixed an error with realistic snow.
+* Fixed CartTeleporter and CartLift breaking due to a bukkit change.
++ Added different offset types. (Relative, Difference and Absolute)
++ Added Radio IC and Playlists.
++ Added official support for pressure plates as intersections.
+* Fixed Auto Crafter with a lot of recipes.
+* Fix many IC bugs.
+* Restrict PaintingSwitcher to reach distance.
+* Fixed an ItemDispenser error.
++ Added CraftBook about command listing authors and version.
+* Fixed Planter not planting carrots.
++ Added support for rectangular radius on IC's.
++ Added BetterPhysics mechanic. Currently only has falling ladders.
++ Added the ability for storage carts to place rails.
+
 3.5 Beta 4 (Probably last 3.5 Beta, it looks very stable)
 * Fix error due to improper IC config.
 + Added /ic fireworks command to list firework scripts.

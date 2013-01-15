@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -31,7 +31,7 @@ import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
-import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -115,7 +115,7 @@ public class NearbyChestBlockBag extends BlockBag {
 
                 // Find an existing slot to put it into
                 for (int i = 0; itemArray.length > i; i++)
-                // Found an item
+                    // Found an item
                 {
                     if (itemArray[i].getTypeId() == id && itemArray[i].getAmount() < 64) {
                         int newAmount = itemArray[i].getAmount() + 1;
@@ -156,6 +156,8 @@ public class NearbyChestBlockBag extends BlockBag {
      */
     public void storeBlock(int id, int amount) throws BlockBagException {
 
+        for(int i = 0; i < amount; i++)
+            storeBlock(id);
     }
 
     /**
@@ -185,21 +187,16 @@ public class NearbyChestBlockBag extends BlockBag {
      * @return
      */
     @Override
-    public void addSingleSourcePosition(WorldVector arg0) {
+    public void addSingleSourcePosition(WorldVector pos) {
 
-        int x = arg0.getBlockX();
-        int y = arg0.getBlockY();
-        int z = arg0.getBlockZ();
+        if (BukkitUtil.toWorld(pos.getWorld()).getBlockAt(BukkitUtil.toLocation(pos)).getTypeId() == BlockID.CHEST) {
+            BlockState state = BukkitUtil.toBlock(pos.toWorldBlockVector()).getState();
 
-        if (BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(BukkitUtil.toLocation(arg0)).getTypeId() == BlockType
-                .CHEST.getID()) {
-            BlockState complexBlock = BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(x, y, z).getState();
-
-            if (complexBlock instanceof Chest) {
-                Chest chest = (Chest) complexBlock;
+            if (state instanceof Chest) {
+                Chest chest = (Chest) state;
 
                 if (!chests.contains(chest)) {
-                    chests.add((Chest) complexBlock);
+                    chests.add((Chest) state);
                 }
             }
         }
