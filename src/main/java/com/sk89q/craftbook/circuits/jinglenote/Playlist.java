@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -22,8 +24,8 @@ public class Playlist {
 
     String playlist;
 
-    protected volatile List<Player> players; // Super safe code here.. this is going to be done across threads.
-    private volatile List<Player> lastPlayers;
+    protected volatile HashSet<Player> players; // Super safe code here.. this is going to be done across threads.
+    private volatile HashSet<Player> lastPlayers;
 
     int position;
 
@@ -37,6 +39,8 @@ public class Playlist {
 
     public Playlist(String name) {
 
+        players = new HashSet<Player>();
+        lastPlayers = new HashSet<Player>();
         playlist = name;
         try {
             readPlaylist();
@@ -65,10 +69,8 @@ public class Playlist {
         br.close();
     }
 
-    public void startPlaylist(List<Player> players) {
+    public void startPlaylist() {
 
-        lastPlayers = this.players;
-        this.players = players;
         position = 0;
         if (task != null)
             task.cancel();
@@ -76,21 +78,35 @@ public class Playlist {
         task = Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), show);
     }
 
-    public void setPlayers(List<Player> players) {
+    public void stopPlaylist() {
 
-        lastPlayers = this.players;
-        this.players = players;
+        lastPlayers.clear();
+        jNote.stopAll();
+        players.clear();
+        position = 0;
+        if (task != null)
+            task.cancel();
     }
 
-    public void addPlayers(List<Player> players) {
+    @SuppressWarnings("unchecked")
+    public void setPlayers(List<Player> players) {
 
-        lastPlayers = this.players;
+        lastPlayers = (HashSet<Player>) this.players.clone();
+        this.players.clear();
         this.players.addAll(players);
     }
 
+    @SuppressWarnings("unchecked")
+    public void addPlayers(List<Player> players) {
+
+        lastPlayers = (HashSet<Player>) this.players.clone();
+        this.players.addAll(players);
+    }
+
+    @SuppressWarnings("unchecked")
     public void removePlayers(List<Player> players) {
 
-        lastPlayers = this.players;
+        lastPlayers = (HashSet<Player>) this.players.clone();
         this.players.removeAll(players);
     }
 
@@ -101,6 +117,7 @@ public class Playlist {
 
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void run () {
 
@@ -110,23 +127,34 @@ public class Playlist {
 
                     while(midiSequencer.isSongPlaying()) {
 
-                        if(!lastPlayers.equals(players)) {
+                        if(!areIdentical(players, lastPlayers)) {
 
+                            Bukkit.getLogger().severe("OUT OF SYNC PLAYERS");
                             for(Player p : players) {
 
                                 if(lastPlayers.contains(p))
                                     continue;
+                                Bukkit.getLogger().severe("ADDING A PLAYER");
 
                                 jNote.play(p, midiSequencer);
                             }
 
                             for(Player p : lastPlayers) {
 
-                                if(lastPlayers.contains(p))
+                                if(players.contains(p))
                                     continue;
+                                Bukkit.getLogger().severe("TAKING A PLAYER");
 
                                 jNote.stop(p);
                             }
+
+                            lastPlayers = (HashSet<Player>) players.clone();
+                        }
+
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                         }
                     }
                     midiSequencer = null;
@@ -147,11 +175,19 @@ public class Playlist {
 
                             for(Player p : lastPlayers) {
 
-                                if(lastPlayers.contains(p))
+                                if(players.contains(p))
                                     continue;
 
                                 jNote.stop(p);
                             }
+
+                            lastPlayers = (HashSet<Player>) players.clone();
+                        }
+
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                         }
                     }
                     stringSequencer = null;
@@ -189,12 +225,13 @@ public class Playlist {
 
                     try {
                         midiSequencer = new MidiJingleSequencer(file);
+                        midiSequencer.getSequencer().start();
                     } catch (MidiUnavailableException e) {
-                        e.printStackTrace();
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                     } catch (InvalidMidiDataException e) {
-                        e.printStackTrace();
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
                     }
 
                     for(Player player : players)
@@ -213,8 +250,28 @@ public class Playlist {
 
                     for(Player player : players)
                         player.sendMessage(message);
+                } else if (line.startsWith("goto ")) {
+
+                    position = Integer.parseInt(line.replace("goto ", ""));
                 }
             }
         }
+    }
+
+    public boolean areIdentical(HashSet<?> h1, HashSet<?> h2) {
+        if ( h1.size() != h2.size() ) {
+            return false;
+        }
+        HashSet<?> clone = (HashSet<?>) h2.clone();
+        Iterator<?> it = h1.iterator();
+        while (it.hasNext() ){
+            Object o = it.next();
+            if (clone.contains(o)){
+                clone.remove(o);
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -19,19 +19,21 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.Playlist;
 import com.sk89q.craftbook.util.LocationUtil;
 
-public class Jukebox extends AbstractIC {
+public class RadioPlayer extends AbstractIC {
 
-    Playlist playlist;
+    String band;
     int radius;
 
-    public Jukebox (Server server, ChangedSign sign, ICFactory factory) {
+    List<Player> listening;
+
+    public RadioPlayer (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
     public void load() {
 
-        String plist = getLine(2);
+        band = getLine(2);
         try {
             radius = Integer.parseInt(getLine(3));
         }
@@ -39,42 +41,45 @@ public class Jukebox extends AbstractIC {
             radius = -1;
         }
 
-        playlist = new Playlist(plist);
+        listening = new ArrayList<Player>();
     }
 
     @Override
     public String getTitle () {
-        return "Jukebox";
+        return "Radio Player";
     }
 
     @Override
     public String getSignTitle () {
-        return "JUKEBOX";
+        return "RADIO PLAYER";
     }
 
     @Override
     public void trigger (ChipState chip) {
 
-        if(radius < 0) {
-            playlist.setPlayers(Arrays.asList(Bukkit.getServer().getOnlinePlayers()));
-            if(chip.getInput(0))
-                playlist.startPlaylist();
-            else
-                playlist.stopPlaylist();
-        } else {
-            List<Player> players = new ArrayList<Player>();
-            Location signLoc = BukkitUtil.toSign(getSign()).getLocation();
-            for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
+        Playlist playlist = RadioStation.getPlaylist(band);
 
-                if(LocationUtil.isWithinSphericalRadius(signLoc, player.getLocation(), radius))
-                    players.add(player);
+        if(playlist == null)
+            return;
+
+        if(chip.getInput(0)) {
+            if(radius < 0) {
+                listening.addAll(Arrays.asList(Bukkit.getServer().getOnlinePlayers()));
+                playlist.addPlayers(listening);
+            } else {
+                Location signLoc = BukkitUtil.toSign(getSign()).getLocation();
+                for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
+
+                    if(LocationUtil.isWithinSphericalRadius(signLoc, player.getLocation(), radius))
+                        listening.add(player);
+                }
+
+                playlist.addPlayers(listening);
             }
+        } else {
 
-            playlist.setPlayers(players);
-            if(chip.getInput(0))
-                playlist.startPlaylist();
-            else
-                playlist.stopPlaylist();
+            playlist.removePlayers(listening);
+            listening.clear();
         }
     }
 
@@ -88,19 +93,19 @@ public class Jukebox extends AbstractIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new Jukebox(getServer(), sign, this);
+            return new RadioPlayer(getServer(), sign, this);
         }
 
         @Override
         public String getShortDescription() {
 
-            return "Plays a Playlist.";
+            return "Plays a radio station.";
         }
 
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Playlist Name", "Radius"};
+            String[] lines = new String[] {"Radio Band", "Radius"};
             return lines;
         }
     }

@@ -135,6 +135,8 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ParticleEffectST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducer;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducerST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ProgrammableFireworkShow;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.RadioPlayer;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.RadioStation;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.SoundEffect;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.TimedExplosion;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Tune;
@@ -402,6 +404,8 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1272", "sense player", new PlayerSensor.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1273", "jukebox", new Jukebox.Factory(server), familySISO, familyAISO);
         registerIC("MC1275", "tune", new Tune.Factory(server), familySISO, familyAISO);
+        registerIC("MC1276", "radio station", new RadioStation.Factory(server), familySISO, familyAISO);
+        registerIC("MC1277", "radio player", new RadioPlayer.Factory(server), familySISO, familyAISO);
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);
         registerIC("MC1510", "send message", new MessageSender.Factory(server), familySISO, familyAISO);
