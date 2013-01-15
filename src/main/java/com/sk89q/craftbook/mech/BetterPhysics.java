@@ -24,8 +24,7 @@ public class BetterPhysics implements Listener {
 
         if(event.getBlockPlaced().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
 
-            if(fallingLadders(event.getBlockPlaced()))
-                event.setCancelled(true);
+            fallingLadders(event.getBlockPlaced());
         }
     }
 
@@ -37,8 +36,7 @@ public class BetterPhysics implements Listener {
 
         if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
 
-            if(fallingLadders(event.getBlock()))
-                event.setCancelled(true);
+            fallingLadders(event.getBlock());
         }
     }
 
