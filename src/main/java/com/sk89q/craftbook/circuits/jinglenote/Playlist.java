@@ -22,7 +22,8 @@ public class Playlist {
 
     String playlist;
 
-    protected List<Player> players;
+    protected volatile List<Player> players; // Super safe code here.. this is going to be done across threads.
+    private volatile List<Player> lastPlayers;
 
     int position;
 
@@ -30,9 +31,9 @@ public class Playlist {
 
     BukkitTask task;
 
-    JingleNoteManager jNote = new JingleNoteManager();
-    MidiJingleSequencer midiSequencer;
-    StringJingleSequencer stringSequencer;
+    volatile JingleNoteManager jNote = new JingleNoteManager();
+    volatile MidiJingleSequencer midiSequencer;
+    volatile StringJingleSequencer stringSequencer;
 
     public Playlist(String name) {
 
@@ -66,12 +67,31 @@ public class Playlist {
 
     public void startPlaylist(List<Player> players) {
 
+        lastPlayers = this.players;
         this.players = players;
         position = 0;
         if (task != null)
             task.cancel();
         Runnable show = new PlaylistInterpreter();
-        task = Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), show);
+        task = Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), show);
+    }
+
+    public void setPlayers(List<Player> players) {
+
+        lastPlayers = this.players;
+        this.players = players;
+    }
+
+    public void addPlayers(List<Player> players) {
+
+        lastPlayers = this.players;
+        this.players.addAll(players);
+    }
+
+    public void removePlayers(List<Player> players) {
+
+        lastPlayers = this.players;
+        this.players.removeAll(players);
     }
 
     private class PlaylistInterpreter implements Runnable {
@@ -86,7 +106,58 @@ public class Playlist {
 
             while (position < lines.size()) {
 
+                if(midiSequencer != null) {
+
+                    while(midiSequencer.isSongPlaying()) {
+
+                        if(!lastPlayers.equals(players)) {
+
+                            for(Player p : players) {
+
+                                if(lastPlayers.contains(p))
+                                    continue;
+
+                                jNote.play(p, midiSequencer);
+                            }
+
+                            for(Player p : lastPlayers) {
+
+                                if(lastPlayers.contains(p))
+                                    continue;
+
+                                jNote.stop(p);
+                            }
+                        }
+                    }
+                    midiSequencer = null;
+                }
+                if(stringSequencer != null) {
+
+                    while(stringSequencer.isSongPlaying()) {
+
+                        if(!lastPlayers.equals(players)) {
+
+                            for(Player p : players) {
+
+                                if(lastPlayers.contains(p))
+                                    continue;
+
+                                jNote.play(p, stringSequencer);
+                            }
+
+                            for(Player p : lastPlayers) {
+
+                                if(lastPlayers.contains(p))
+                                    continue;
+
+                                jNote.stop(p);
+                            }
+                        }
+                    }
+                    stringSequencer = null;
+                }
                 String line = lines.get(position);
+                Bukkit.getLogger().severe(line);
                 position++;
                 if (line.trim().startsWith("#") || line.trim().isEmpty())
                     continue;
@@ -94,7 +165,7 @@ public class Playlist {
                 if (line.startsWith("wait ")) {
 
                     PlaylistInterpreter show = new PlaylistInterpreter();
-                    task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
+                    task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
                     return;
                 } else if (line.startsWith("midi ")) {
 

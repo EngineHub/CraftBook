@@ -17,6 +17,7 @@ public class StringJingleSequencer implements JingleSequencer {
     int delay;
     int position;
     int taskID;
+    boolean isPlaying = false;
 
     List<Note> song;
 
@@ -32,6 +33,7 @@ public class StringJingleSequencer implements JingleSequencer {
 
         position = 0;
 
+        isPlaying = true;
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new Runnable() {
 
             @Override
@@ -39,6 +41,7 @@ public class StringJingleSequencer implements JingleSequencer {
 
                 if (position >= song.size()) {
                     Bukkit.getScheduler().cancelTask(taskID);
+                    isPlaying = false;
                     return;
                 }
                 player.play(song.get(position));
@@ -203,5 +206,9 @@ public class StringJingleSequencer implements JingleSequencer {
     @Override
     public void stop() {
 
+    }
+
+    public boolean isSongPlaying () {
+        return isPlaying;
     }
 }

@@ -126,6 +126,7 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowShooter;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FireBarrage;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FireShooter;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FlameThrower;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Jukebox;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.LightningSummon;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Melody;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.MessageSender;
@@ -134,7 +135,6 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ParticleEffectST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducer;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducerST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ProgrammableFireworkShow;
-import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Radio;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.SoundEffect;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.TimedExplosion;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Tune;
@@ -400,7 +400,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1270", "melody", new Melody.Factory(server), familySISO, familyAISO);
         registerIC("MC1271", "sense entity", new EntitySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1272", "sense player", new PlayerSensor.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1273", "radio", new Radio.Factory(server), familySISO, familyAISO);
+        registerIC("MC1273", "jukebox", new Jukebox.Factory(server), familySISO, familyAISO);
         registerIC("MC1275", "tune", new Tune.Factory(server), familySISO, familyAISO);
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);

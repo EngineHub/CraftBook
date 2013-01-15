@@ -107,7 +107,7 @@ public class ICUtil {
             relative = LocationCheckType.getTypeFromChar('&');
             line = line.replace("&", "");
         }
-        line = line.replace("!", "").replace("^", "").replace("&", ""); //incase it had multiples.
+        line = line.replace("!", "").replace("^", "").replace("&", ""); //in case it had multiples.
         int offsetX = 0;
         int offsetY = 0;
         int offsetZ = 0;
@@ -151,10 +151,10 @@ public class ICUtil {
 
     public static void verifySignSyntax(ChangedSign sign) throws ICVerificationException {
 
-        verifySignSyntax(sign, 2);
+        verifySignLocationSyntax(sign, 2);
     }
 
-    public static void verifySignSyntax(ChangedSign sign, int i) throws ICVerificationException {
+    public static void verifySignLocationSyntax(ChangedSign sign, int i) throws ICVerificationException {
 
         try {
             String line = sign.getLine(i);

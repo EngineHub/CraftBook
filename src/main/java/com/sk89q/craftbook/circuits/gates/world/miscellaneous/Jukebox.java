@@ -19,12 +19,12 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.Playlist;
 import com.sk89q.craftbook.util.LocationUtil;
 
-public class Radio extends AbstractIC {
+public class Jukebox extends AbstractIC {
 
     Playlist playlist;
     int radius;
 
-    public Radio (Server server, ChangedSign sign, ICFactory factory) {
+    public Jukebox (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -44,12 +44,12 @@ public class Radio extends AbstractIC {
 
     @Override
     public String getTitle () {
-        return "Radio Player";
+        return "Jukebox";
     }
 
     @Override
     public String getSignTitle () {
-        return "RADIO";
+        return "JUKEBOX";
     }
 
     @Override
@@ -80,7 +80,7 @@ public class Radio extends AbstractIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new Radio(getServer(), sign, this);
+            return new Jukebox(getServer(), sign, this);
         }
 
         @Override

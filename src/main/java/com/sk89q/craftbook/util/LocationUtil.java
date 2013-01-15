@@ -42,7 +42,7 @@ public final class LocationUtil {
     }
 
     /**
-     * Passed a vector, and it smartly detecst if its spherical or polygon.
+     * Passed a vector, and it smartly detects if its spherical or polygon.
      * 
      * @param l1
      * @param l2
