@@ -159,9 +159,18 @@ public class ICUtil {
         try {
             String line = sign.getLine(i);
             String[] strings;
+            line = line.replace("!", "").replace("^", "").replace("&", "");
             if (line.contains("=")) {
                 String[] split = RegexUtil.EQUALS_PATTERN.split(line, 2);
-                Integer.parseInt(split[0]);
+                if(RegexUtil.COMMA_PATTERN.split(split[0]).length > 1) {
+
+                    String[] rads = RegexUtil.COMMA_PATTERN.split(split[0]);
+                    Integer.parseInt(rads[0]);
+                    Integer.parseInt(rads[1]);
+                    Integer.parseInt(rads[2]);
+                }
+                else
+                    Integer.parseInt(split[0]);
                 strings = RegexUtil.COLON_PATTERN.split(split[1], 3);
             } else {
                 strings = RegexUtil.COLON_PATTERN.split(line);
