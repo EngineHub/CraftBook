@@ -40,6 +40,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         // IC Configuration Listener.
         ICEnabled = config.getBoolean("circuits.ics.enable", true);
         ICCached = config.getBoolean("circuits.ics.cache", true);
+        ICMaxRange = config.getInt("circuits.ics.max-radius", 15);
         ICShortHandEnabled = config.getBoolean("circuits.ics.allow-short-hand", true);
         disabledICs = new HashSet<String>(config.getStringList("circuits.ics.disallowed-ics", Arrays.asList("")));
 

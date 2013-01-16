@@ -197,13 +197,13 @@ public class ICUtil {
         try {
             String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
             if(radians.length > 1) {
-                int x = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), 15);
-                int y = VerifyUtil.verifyRadius(Integer.parseInt(radians[1]), 15);
-                int z = VerifyUtil.verifyRadius(Integer.parseInt(radians[2]), 15);
+                int x = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+                int y = VerifyUtil.verifyRadius(Integer.parseInt(radians[1]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+                int z = VerifyUtil.verifyRadius(Integer.parseInt(radians[2]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
                 return new Vector(x,y,z);
             }
             else {
-                int r = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), 15);
+                int r = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
                 return new Vector(r,r,r);
             }
         } catch (NumberFormatException e) {

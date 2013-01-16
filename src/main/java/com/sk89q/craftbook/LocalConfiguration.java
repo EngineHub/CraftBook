@@ -17,6 +17,7 @@ public abstract class LocalConfiguration {
     public boolean ICEnabled;
     public boolean ICCached;
     public boolean ICShortHandEnabled;
+    public int ICMaxRange;
     public Set<String> disabledICs;
 
     // Circuits - Wiring
