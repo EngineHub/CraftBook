@@ -24,7 +24,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractChipState;
 import com.sk89q.craftbook.circuits.ic.AbstractICFamily;
 import com.sk89q.craftbook.circuits.ic.ChipState;
-import com.sk89q.craftbook.circuits.ic.ICUtil;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 

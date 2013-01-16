@@ -22,9 +22,9 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.ICUtil;
 
 public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 

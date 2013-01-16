@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.util.config;
 
 /**
- * Author: Turtle9598
+ * @author Turtle9598
  */
 
 import java.util.Arrays;
