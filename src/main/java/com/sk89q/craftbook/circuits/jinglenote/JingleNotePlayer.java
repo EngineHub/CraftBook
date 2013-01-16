@@ -8,8 +8,8 @@ package com.sk89q.craftbook.circuits.jinglenote;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer.Note;
-import com.sk89q.craftbook.util.GeneralUtil;
 
 public class JingleNotePlayer implements Runnable {
 
@@ -29,12 +29,12 @@ public class JingleNotePlayer implements Runnable {
             try {
                 sequencer.run(this);
             } catch (Throwable t) {
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
+                BukkitUtil.printStacktrace(t);
             }
 
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         } finally {
             sequencer.stop();
             sequencer = null;

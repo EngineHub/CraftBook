@@ -12,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import com.sk89q.craftbook.LocalConfiguration;
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -120,7 +120,7 @@ public class RecipeManager extends LocalConfiguration {
                 }
             } catch (Exception e) {
                 Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             }
             return items;
         }
@@ -153,7 +153,7 @@ public class RecipeManager extends LocalConfiguration {
                 }
             } catch (Exception e) {
                 Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             }
             return items;
         }

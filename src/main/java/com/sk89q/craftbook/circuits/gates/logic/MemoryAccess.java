@@ -4,18 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
 
 public class MemoryAccess extends AbstractIC {
 
@@ -47,7 +46,7 @@ public class MemoryAccess extends AbstractIC {
     public boolean readMemory(ChipState chip) {
 
         try {
-            File f = new File(((CircuitCore) CircuitCore.inst()).getRomFolder(), getSign().getLine(2) + ".dat");
+            File f = new File(CircuitCore.inst().getRomFolder(), getSign().getLine(2) + ".dat");
             if (!f.exists()) {
                 f.createNewFile();
                 return false;
@@ -59,7 +58,7 @@ public class MemoryAccess extends AbstractIC {
             }
             br.close();
         } catch (Exception e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         }
         return false;
     }

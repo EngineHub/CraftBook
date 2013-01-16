@@ -19,7 +19,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -55,7 +55,7 @@ public class Chair implements Listener {
                     try {
                         ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
                     } catch (InvocationTargetException e) {
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                        BukkitUtil.printStacktrace(e);
                     }
                     // ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
                 }
@@ -86,7 +86,7 @@ public class Chair implements Listener {
                 try {
                     ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
                 } catch (InvocationTargetException e) {
-                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                    BukkitUtil.printStacktrace(e);
                 }
                 // ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
             }

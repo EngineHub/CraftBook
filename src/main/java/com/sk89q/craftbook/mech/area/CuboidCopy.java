@@ -5,15 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.data.DataException;
 
 /**
@@ -70,10 +68,10 @@ public abstract class CuboidCopy {
         try {
             copy.loadFromFile(file);
         } catch (IOException e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
             throw new CuboidCopyException(e.getMessage());
         } catch (DataException e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
             throw new CuboidCopyException(e.getMessage());
         }
         // make sure that null is never returned but an exception is thrown instead

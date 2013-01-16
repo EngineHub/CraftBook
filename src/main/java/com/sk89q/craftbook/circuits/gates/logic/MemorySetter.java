@@ -3,18 +3,17 @@ package com.sk89q.craftbook.circuits.gates.logic;
 import java.io.File;
 import java.io.PrintWriter;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
 
 public class MemorySetter extends AbstractIC {
 
@@ -46,7 +45,7 @@ public class MemorySetter extends AbstractIC {
     @Override
     public void load() {
 
-        f = new File(((CircuitCore) CircuitCore.inst()).getRomFolder(), getSign().getLine(2) + ".dat");
+        f = new File(CircuitCore.inst().getRomFolder(), getSign().getLine(2) + ".dat");
     }
 
     public boolean setMemory(ChipState chip) {
@@ -59,7 +58,7 @@ public class MemorySetter extends AbstractIC {
             for (int i = 0; i < chip.getInputCount(); i++) { pw.print(chip.getInput(i) ? "1" : "0"); }
             pw.close();
         } catch (Exception e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         }
         return false;
     }

@@ -1,9 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,12 +9,12 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
 import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
 import com.sk89q.craftbook.mech.ai.SkeletonAIMechanic;
 import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
 import com.sk89q.craftbook.mech.ai.ZombieAIMechanic;
-import com.sk89q.craftbook.util.GeneralUtil;
 
 public class AIMechanic implements Listener {
 
@@ -47,7 +45,7 @@ public class AIMechanic implements Listener {
                 if (ai == null) return;
                 ai.onEntityTarget(event);
             } catch (Exception e) {
-                Bukkit.getLogger().log(Level.SEVERE, GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             }
         }
     }
@@ -65,7 +63,7 @@ public class AIMechanic implements Listener {
                 if (ai == null) return;
                 ai.onBowShot(event);
             } catch (Exception e) {
-                Bukkit.getLogger().log(Level.SEVERE, GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             }
         }
     }

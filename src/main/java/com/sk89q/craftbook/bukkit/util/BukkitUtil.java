@@ -19,6 +19,8 @@ import org.bukkit.entity.Vehicle;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitVehicle;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
@@ -51,6 +53,11 @@ public class BukkitUtil {
 
     private BukkitUtil() {
 
+    }
+
+    public static void printStacktrace(Throwable e) {
+
+        CraftBookPlugin.inst().getLogger().severe(GeneralUtil.getStackTrace(e));
     }
 
     public static ChangedSign toChangedSign(Sign sign) {

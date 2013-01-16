@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 public class Playlist {
 
@@ -45,7 +45,7 @@ public class Playlist {
         try {
             readPlaylist();
         } catch (IOException e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         }
     }
 
@@ -154,7 +154,7 @@ public class Playlist {
                         try {
                             Thread.sleep(1000L);
                         } catch (InterruptedException e) {
-                            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                            BukkitUtil.printStacktrace(e);
                         }
                     }
                     midiSequencer = null;
@@ -187,7 +187,7 @@ public class Playlist {
                         try {
                             Thread.sleep(1000L);
                         } catch (InterruptedException e) {
-                            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                            BukkitUtil.printStacktrace(e);
                         }
                     }
                     stringSequencer = null;
@@ -227,11 +227,11 @@ public class Playlist {
                         midiSequencer = new MidiJingleSequencer(file);
                         midiSequencer.getSequencer().start();
                     } catch (MidiUnavailableException e) {
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                        BukkitUtil.printStacktrace(e);
                     } catch (InvalidMidiDataException e) {
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                        BukkitUtil.printStacktrace(e);
                     } catch (IOException e) {
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                        BukkitUtil.printStacktrace(e);
                     }
 
                     for(Player player : players)

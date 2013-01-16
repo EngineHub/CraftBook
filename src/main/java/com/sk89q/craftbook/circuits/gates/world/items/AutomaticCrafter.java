@@ -28,7 +28,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -85,7 +84,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                     }
                 }
             } catch (Exception e) {
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
                 disp.getInventory().setContents(inv.getContents());
             }
         }
@@ -228,12 +227,12 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                             require = ingredientMap.get(item);
                     }
                     catch(Exception e){
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                        BukkitUtil.printStacktrace(e);
                     }
                     if (ItemUtil.areItemsIdentical(require, stack)) {
                     } else return false;
                 } catch (Exception e) {
-                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                    BukkitUtil.printStacktrace(e);
                     return false;
                 }
             }

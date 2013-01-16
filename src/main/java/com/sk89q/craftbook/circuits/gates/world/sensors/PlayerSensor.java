@@ -15,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICUtil;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -94,7 +93,7 @@ public class PlayerSensor extends AbstractIC {
             }
         } catch (Exception e) {
             location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         }
         if(reg == null && location == null)
             location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();

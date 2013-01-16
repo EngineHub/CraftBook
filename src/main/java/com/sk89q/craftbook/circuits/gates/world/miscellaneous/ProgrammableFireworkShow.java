@@ -30,7 +30,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
 public class ProgrammableFireworkShow extends AbstractIC {
@@ -125,7 +124,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
             try {
                 readShow();
             } catch (IOException e) {
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             }
         }
 
@@ -387,7 +386,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
                         } catch (Exception e) {
                             Bukkit.getLogger().severe("Error occured while doing: " + errorLocation + ". Whilst " +
                                     "reading line " + position + " of the firework file " + show + "!");
-                            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                            BukkitUtil.printStacktrace(e);
                         }
                     }
                 }

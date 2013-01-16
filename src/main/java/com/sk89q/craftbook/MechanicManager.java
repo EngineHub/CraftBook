@@ -40,7 +40,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -546,7 +545,7 @@ public class MechanicManager {
                         load(toWorldVector(state.getBlock()));
                     } catch (InvalidMechanismException ignored) {
                     } catch (Exception t) {
-                        Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
+                        BukkitUtil.printStacktrace(t);
                     }
                 }
             }
@@ -597,7 +596,7 @@ public class MechanicManager {
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
+            BukkitUtil.printStacktrace(t);
         }
 
         synchronized (this) {
@@ -630,7 +629,7 @@ public class MechanicManager {
                 } catch (Throwable t) { // Mechanic failed to think for some reason
                     logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
                             .getCanonicalName(), t);
-                    Bukkit.getLogger().severe(GeneralUtil.getStackTrace(t));
+                    BukkitUtil.printStacktrace(t);
                 }
             } else {
                 unload(mechanic, null);

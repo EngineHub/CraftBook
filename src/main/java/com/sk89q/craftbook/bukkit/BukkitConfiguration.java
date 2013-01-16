@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.config.YAMLConfiguration;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -42,7 +42,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
             config.load();
         } catch (IOException e) {
             logger.severe("Error loading CraftBook configuration: " + e);
-            plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         }
 
         config.setHeader(

@@ -4,13 +4,12 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -61,10 +60,10 @@ public class CustomCrafting {
                 plugin.getLogger().severe("Corrupt or invalid recipe!");
                 plugin.getLogger().severe("Please either delete custom-crafting.yml, " +
                         "" + "or fix the issues with your recipes file!");
-                Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
-                plugin.getLogger().severe(GeneralUtil.getStackTrace(e));
+                BukkitUtil.printStacktrace(e);
             }
         }
         plugin.getLogger().info("Registered " + recipes + " custom recipes!");

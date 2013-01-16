@@ -19,10 +19,9 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 
-import com.sk89q.craftbook.util.GeneralUtil;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 /**
  * A sequencer that reads MIDI files.
@@ -147,7 +146,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                 sequencer.stop();
             }
         } catch (MidiUnavailableException e) {
-            Bukkit.getLogger().severe(GeneralUtil.getStackTrace(e));
+            BukkitUtil.printStacktrace(e);
         } finally {
             if (sequencer.isOpen()) {
                 sequencer.close();
