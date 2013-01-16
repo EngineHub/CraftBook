@@ -2,15 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.PoweredMinecart;
-import org.bukkit.entity.StorageMinecart;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -20,46 +12,12 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.worldedit.Vector;
 
 public class EntityCannon extends AbstractIC {
-
-    private enum Type {
-        PLAYER, MOB_HOSTILE, MOB_PEACEFUL, MOB_ANY, ANY, CART, CART_STORAGE, CART_POWERED, ITEM;
-
-        public boolean is(Entity entity) {
-
-            switch (this) {
-                case PLAYER:
-                    return entity instanceof Player;
-                case MOB_HOSTILE:
-                    return entity instanceof Monster;
-                case MOB_PEACEFUL:
-                    return entity instanceof Animals;
-                case MOB_ANY:
-                    return entity instanceof Creature;
-                case CART:
-                    return entity instanceof Minecart;
-                case CART_STORAGE:
-                    return entity instanceof StorageMinecart;
-                case CART_POWERED:
-                    return entity instanceof PoweredMinecart;
-                case ITEM:
-                    return entity instanceof Item;
-                case ANY:
-                    return true;
-            }
-            return false;
-        }
-
-        public static Type fromString(String name) {
-
-            return EnumUtil.getEnumFromString(EntityCannon.Type.class, name);
-        }
-    }
 
     public EntityCannon(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -95,10 +53,10 @@ public class EntityCannon extends AbstractIC {
 
         boolean resultBoolean = false;
         Location location = BukkitUtil.toSign(getSign()).getLocation();
-        Type type = Type.MOB_HOSTILE;
+        EntityType type = EntityType.MOB_HOSTILE;
 
         if (!getSign().getLine(3).isEmpty()) {
-            type = Type.fromString(getSign().getLine(3));
+            type = EntityType.fromString(getSign().getLine(3));
         }
 
         try {

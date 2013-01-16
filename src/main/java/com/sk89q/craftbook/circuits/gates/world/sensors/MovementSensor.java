@@ -8,12 +8,12 @@ import org.bukkit.entity.Entity;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor.Type;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -32,7 +32,7 @@ public class MovementSensor extends AbstractIC {
         super(server, sign, factory);
     }
 
-    private Set<Type> types;
+    private Set<EntityType> types;
 
     private Block center;
     private Vector radius;
@@ -41,11 +41,11 @@ public class MovementSensor extends AbstractIC {
     public void load() {
 
         // lets get the types to detect first
-        types = Type.getDetected(getSign().getLine(3).trim());
+        types = EntityType.getDetected(getSign().getLine(3).trim());
 
         // Add all if no params are specified
         if (types.isEmpty()) {
-            types.add(Type.ANY);
+            types.add(EntityType.ANY);
         }
 
         getSign().setLine(3, getSign().getLine(3).toUpperCase());
@@ -89,11 +89,8 @@ public class MovementSensor extends AbstractIC {
 
         for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
             if (entity.isValid()) {
-                for (Type type : types)
-                    // Check Type
-                {
-                    if (type.is(entity)) {
-                        // Check Radius
+                for (EntityType type : types) { // Check Type
+                    if (type.is(entity)) { // Check Radius
                         if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
                             if (entity.getVelocity().lengthSquared() >= 0.01) return true;
                         }

@@ -3,11 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -18,40 +14,12 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.EnumUtil;
+import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class SentryGun extends AbstractIC {
 
-    /**
-     * @author Me4502
-     */
-    private enum Type {
-        PLAYER, MOB_HOSTILE, MOB_PEACEFUL, MOB_ANY;
-
-        public boolean is(Entity entity) {
-
-            switch (this) {
-                case PLAYER:
-                    return entity instanceof Player;
-                case MOB_HOSTILE:
-                    return entity instanceof Monster;
-                case MOB_PEACEFUL:
-                    return entity instanceof Animals;
-                case MOB_ANY:
-                    return entity instanceof Creature;
-                default:
-                    return entity instanceof Monster;
-            }
-        }
-
-        public static Type fromString(String name) {
-
-            return EnumUtil.getEnumFromString(SentryGun.Type.class, name);
-        }
-    }
-
-    private Type type;
+    private EntityType type;
     private Block center;
     private int radius = 10;
 
@@ -63,7 +31,7 @@ public class SentryGun extends AbstractIC {
     @Override
     public void load() {
 
-        type = Type.fromString(getSign().getLine(2));
+        type = EntityType.fromString(getSign().getLine(2));
         center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         radius = Integer.parseInt(getSign().getLine(3));
     }
@@ -91,7 +59,7 @@ public class SentryGun extends AbstractIC {
         // add the offset to the location of the block connected to the sign
         /*
          * for (Chunk chunk : LocationUtil.getSurroundingChunks(center, radius)) { if (chunk.isLoaded()) { // get all
-          * entites from the chunks in the
+         * entites from the chunks in the
          * defined radius for (Entity entity : chunk.getEntities()) { if (!entity.isDead()) { if (type.is(entity)) {
          * // at last check if the entity is
          * within the radius if (entity.getLocation().distanceSquared(center.getLocation()) <= radius * radius) {
