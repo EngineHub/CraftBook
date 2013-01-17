@@ -92,6 +92,8 @@ public class PaintingSwitch implements Listener {
             if (p != null) {
                 paintings.remove(p);
             }
+
+            return;
         }
         int newID = paint.getArt().getId() + (isForwards ? 1 : -1);
         if (newID < 0) {
