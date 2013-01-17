@@ -25,6 +25,7 @@ import com.sk89q.craftbook.circuits.gates.logic.ClockDivider;
 import com.sk89q.craftbook.circuits.gates.logic.ClockST;
 import com.sk89q.craftbook.circuits.gates.logic.CombinationLock;
 import com.sk89q.craftbook.circuits.gates.logic.Counter;
+import com.sk89q.craftbook.circuits.gates.logic.DeMultiplexer;
 import com.sk89q.craftbook.circuits.gates.logic.Delayer;
 import com.sk89q.craftbook.circuits.gates.logic.Dispatcher;
 import com.sk89q.craftbook.circuits.gates.logic.DownCounter;
@@ -443,6 +444,7 @@ public class CircuitCore implements LocalComponent {
         // 3I3Os
         registerIC("MC4000", "full adder", new FullAdder.Factory(server), family3I3O);
         registerIC("MC4010", "half adder", new HalfAdder.Factory(server), family3I3O);
+        registerIC("MC4040", "demultiplexer", new DeMultiplexer.Factory(server), family3I3O);
         registerIC("MC4100", "full subtr", new FullSubtractor.Factory(server), family3I3O);
         registerIC("MC4110", "half subtr", new HalfSubtractor.Factory(server), family3I3O);
         registerIC("MC4200", "dispatcher", new Dispatcher.Factory(server), family3I3O);
