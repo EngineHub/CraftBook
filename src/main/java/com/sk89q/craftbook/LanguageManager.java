@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
-import net.minecraft.server.v1_4_6.LocaleLanguage;
+import net.minecraft.server.v1_4_R1.LocaleLanguage;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -56,7 +56,7 @@ public class LanguageManager {
             } catch (IOException e) {
                 plugin.getLogger().log(Level.SEVERE,
                         "[CraftBook] could not find file: " + plugin.getDataFolder().getName() + File.pathSeparator +
-                                language + ".txt");
+                        language + ".txt");
             }
             languageMap.put(language, languageData);
         }

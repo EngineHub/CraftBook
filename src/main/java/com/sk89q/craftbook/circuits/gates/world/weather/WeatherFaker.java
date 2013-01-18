@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.circuits.gates.world.weather;
 
-import net.minecraft.server.v1_4_6.Packet70Bed;
+import net.minecraft.server.v1_4_R1.Packet70Bed;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_4_6.CraftServer;
-import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
