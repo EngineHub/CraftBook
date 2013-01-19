@@ -247,14 +247,6 @@ public class VehicleCore implements LocalComponent {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
 
-            if (plugin.getConfiguration().minecartPoweredRailModifier > 0) {
-
-                if (event.getTo().getBlock().getTypeId() == BlockID.POWERED_RAIL) {
-
-                    event.getVehicle().setVelocity(event.getVehicle().getVelocity().multiply(plugin.getConfiguration().minecartPoweredRailModifier));
-                }
-            }
-
             if (plugin.getConfiguration().minecartStoragePlaceRails && event.getVehicle() instanceof StorageMinecart) {
 
                 if(event.getTo().getBlock().getTypeId() == 0 && !BlockType.canPassThrough(event.getTo().getBlock().getRelative(0, -1, 0).getTypeId()) && ((StorageMinecart)event.getVehicle()).getInventory().contains(BlockID.MINECART_TRACKS)) {

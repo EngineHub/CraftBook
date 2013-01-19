@@ -165,7 +165,6 @@ public abstract class LocalConfiguration {
     public boolean minecartMessengerEnabled = true;
     public int minecartDecayTime;
     public double minecartConstantSpeed;
-    public double minecartPoweredRailModifier;
     public boolean minecartPickupItemsOnCollision;
     public boolean minecartPressurePlateIntersection;
     public boolean minecartStoragePlaceRails;
