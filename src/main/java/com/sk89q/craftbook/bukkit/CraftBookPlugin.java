@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.jar.JarFile;
@@ -24,8 +25,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -117,6 +120,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private MechanicClock mechanicClock;
 
+    public HashMap<String, String> versionConverter = new HashMap<String, String>();
+
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
      * this merely instantiates the objects.
@@ -125,6 +130,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Set the instance
         instance = this;
+
+        versionConverter.put("3.5", "1680-f5e7902");
     }
 
     public void registerManager(MechanicManager manager) {
@@ -231,10 +238,37 @@ public class CraftBookPlugin extends JavaPlugin {
         startComponents();
     }
 
+    public boolean updateAvailable = false;
+    String latestVersion = null;
+    long updateSize = 0;
+
     /**
      * Registers events used by the main CraftBook plugin. Also registers PluginMetrics
      */
     public void registerGlobalEvents() {
+
+        if(getConfiguration().updateNotifier) {
+
+            Updater updater = new Updater(this, "CraftBook", getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
+            updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
+            latestVersion = updater.getLatestVersionString(); // Get the latest version
+            Bukkit.getLogger().info(latestVersion);
+            updateSize = updater.getFileSize(); // Get latest size
+
+            if(updateAvailable) {
+
+                getServer().getPluginManager().registerEvents(new Listener() {
+                    @EventHandler
+                    public void onPlayerJoin (PlayerJoinEvent event) {
+                        Player player = event.getPlayer();
+                        if (player.hasPermission("craftbook.update")) {
+                            player.sendMessage("An update is available: " + latestVersion + "(" + updateSize + " bytes");
+                            player.sendMessage("Type /cb update if you would like to update.");
+                        }
+                    }
+                }, this);
+            }
+        }
 
         try {
             BukkitMetrics metrics = new BukkitMetrics(this);
@@ -790,5 +824,11 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         return useOldBlockFace;
+    }
+
+    @Override
+    public File getFile() {
+
+        return super.getFile();
     }
 }

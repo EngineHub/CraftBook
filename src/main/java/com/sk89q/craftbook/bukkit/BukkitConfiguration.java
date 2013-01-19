@@ -24,6 +24,8 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
     public boolean obeyWorldguard;
 
+    public boolean updateNotifier;
+
     public String language;
     public List<String> languages;
 
@@ -58,6 +60,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         enableMechanisms = config.getBoolean("enable-mechanisms", true);
         enableVehicles = config.getBoolean("enable-vehicles", true);
 
+        updateNotifier = config.getBoolean("notify-updates", true);
         safeDestruction = config.getBoolean("safe-destruction", true);
         noOpPermissions = config.getBoolean("no-op-permissions", false);
         indirectRedstone = config.getBoolean("indirect-redstone", false);

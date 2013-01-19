@@ -3,6 +3,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.Updater;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -42,6 +43,17 @@ public class TopLevelCommands {
                 return;
             }
             sender.sendMessage("The CraftBook config has been reloaded.");
+        }
+
+        @SuppressWarnings("unused")
+        @Command(aliases = "update", desc = "Updates CraftBook.")
+        @CommandPermissions("craftbook.update")
+        public void update(CommandContext context, CommandSender sender) {
+            if(!CraftBookPlugin.inst().getConfiguration().updateNotifier || !CraftBookPlugin.inst().updateAvailable) {
+                sender.sendMessage("Unknown command!");
+                return;
+            }
+            Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.NO_VERSION_CHECK, true); // Go straight to downloading, and announce progress to console.
         }
 
         @Command(aliases = "about", desc = "Gives info about craftbook.")
