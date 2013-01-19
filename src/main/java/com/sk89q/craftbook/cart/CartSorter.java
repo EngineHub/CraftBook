@@ -197,50 +197,45 @@ public class CartSorter extends CartMechanism {
 
         if ((line.equalsIgnoreCase("Player") || line.equalsIgnoreCase("Ply")) && player != null) return true;
 
-        String[] bits = line.split(",");
+        String[] parts = RegexUtil.COLON_PATTERN.split(line);
 
-        for (String bit : bits) {
+        if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held")) {
+            try {
+                int item = Integer.parseInt(parts[1]);
+                if (player.getItemInHand().getTypeId() == item) return true;
+            } catch (NumberFormatException ignored) {
+            }
+        } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
+            if (parts[1].equalsIgnoreCase(player.getName())) return true;
+        } else if (parts[0].equalsIgnoreCase("Mob")) {
+            String testMob = parts[1];
+            return test.getType().toString().equalsIgnoreCase(testMob);
+        } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
+            StorageMinecart storageCart = (StorageMinecart) minecart;
+            Inventory storageInventory = storageCart.getInventory();
 
-            String[] parts = RegexUtil.COLON_PATTERN.split(bit);
-
-            if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held")) {
+            if (parts.length == 4) {
                 try {
                     int item = Integer.parseInt(parts[1]);
-                    if (player.getItemInHand().getTypeId() == item) return true;
+                    short durability = Short.parseShort(parts[2]);
+                    int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
+                            storageInventory.getContents().length - 1);
+                    ItemStack indexed = storageInventory.getContents()[index];
+                    if (indexed != null && indexed.equals(new ItemStack(item, 1, durability))) return true;
                 } catch (NumberFormatException ignored) {
                 }
-            } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
-                if (parts[1].equalsIgnoreCase(player.getName())) return true;
-            } else if (parts[0].equalsIgnoreCase("Mob")) {
-                String testMob = parts[1];
-                return test.getType().toString().equalsIgnoreCase(testMob);
-            } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
-                StorageMinecart storageCart = (StorageMinecart) minecart;
-                Inventory storageInventory = storageCart.getInventory();
-
-                if (parts.length == 4) {
-                    try {
-                        int item = Integer.parseInt(parts[1]);
-                        short durability = Short.parseShort(parts[2]);
-                        int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
-                                storageInventory.getContents().length - 1);
-                        ItemStack indexed = storageInventory.getContents()[index];
-                        if (indexed != null && indexed.equals(new ItemStack(item, 1, durability))) return true;
-                    } catch (NumberFormatException ignored) {
-                    }
-                } else if (parts.length == 3) {
-                    try {
-                        int item = Integer.parseInt(parts[1]);
-                        short durability = Short.parseShort(parts[2]);
-                        if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
-                    } catch (NumberFormatException ignored) {
-                    }
-                } else {
-                    try {
-                        int item = Integer.parseInt(parts[1]);
-                        if (storageInventory.contains(item)) return true;
-                    } catch (NumberFormatException ignored) {
-                    }
+            } else if (parts.length == 3) {
+                try {
+                    int item = Integer.parseInt(parts[1]);
+                    short durability = Short.parseShort(parts[2]);
+                    if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
+                } catch (NumberFormatException ignored) {
+                }
+            } else {
+                try {
+                    int item = Integer.parseInt(parts[1]);
+                    if (storageInventory.contains(item)) return true;
+                } catch (NumberFormatException ignored) {
                 }
             }
         }
