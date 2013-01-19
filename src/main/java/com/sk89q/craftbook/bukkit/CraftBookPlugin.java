@@ -36,7 +36,10 @@ import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
+import com.sk89q.craftbook.bukkit.BukkitMetrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -198,6 +201,31 @@ public class CraftBookPlugin extends JavaPlugin {
         // Initialize the language manager.
         createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", false);
         languageManager = new LanguageManager();
+
+        try {
+            BukkitMetrics metrics = new BukkitMetrics(this);
+            metrics.start();
+
+            Graph g = metrics.createGraph("Language");
+            for (String language : languageManager.getLanguages()) {
+                g.addPlotter(new Plotter(language) {
+
+                    @Override
+                    public int getValue () {
+                        return 1;
+                    }
+                });
+            }
+            g.addPlotter(new Plotter("Total") {
+
+                @Override
+                public int getValue () {
+                    return languageManager.getLanguages().size();
+                }
+            });
+        } catch (Throwable e1) {
+            BukkitUtil.printStacktrace(e1);
+        }
 
         // Resolve Vault
         try {
