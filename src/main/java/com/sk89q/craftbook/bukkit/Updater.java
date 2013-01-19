@@ -398,8 +398,6 @@ public class Updater {
                 remoteVersion = CraftBookPlugin.inst().versionConverter.get(remoteVersion).split("-")[0];
                 if(CraftBookPlugin.inst().versionConverter.containsKey(version))
                     version = CraftBookPlugin.inst().versionConverter.get(version).split("-")[0];
-                plugin.getLogger().warning(remoteVersion);
-                plugin.getLogger().warning(version);
                 int remVer = -1, curVer = 0;
                 try {
                     remVer = calVer(remoteVersion);

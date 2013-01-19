@@ -204,23 +204,31 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             ShapedRecipe shape = (ShapedRecipe) r;
             Map<Character, ItemStack> ingredientMap = shape.getIngredientMap();
             String[] shapeArr = shape.getShape();
-            if (recipe != null) if (((ShapedRecipe) recipe).getShape().length != shapeArr.length  || shapeArr[0].length() != ((ShapedRecipe) recipe).getShape()[0].length()) return false;
+            if (shape.getShape().length != shapeArr.length  || shapeArr[0].length() != shape.getShape()[0].length()) return false;
             int c = -1, in = 0;
             for (int slot = 0; slot < 9; slot++) {
                 ItemStack stack = inv.getItem(slot);
                 try {
                     c++;
-                    if (c == shapeArr[in].length()) {
+                    if (c == 3) {
                         c = 0;
                         in++;
-                        if (in == shapeArr.length) {
+                        if (in == 3) {
                             break;
                         }
                     }
-                    String shapeSection = shapeArr[in];
+                    String shapeSection;
+                    if(in < shapeArr.length)
+                        shapeSection = shapeArr[in];
+                    else
+                        shapeSection = "   ";
                     ItemStack require = null;
                     try {
-                        Character item = shapeSection.charAt(c);
+                        Character item;
+                        if(c < shapeSection.length())
+                            item = shapeSection.charAt(c);
+                        else
+                            item = ' ';
                         if(item == ' ')
                             require = null;
                         else
