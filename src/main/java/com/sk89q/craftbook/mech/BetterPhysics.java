@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -18,23 +17,6 @@ public class BetterPhysics implements Listener {
 
     public BetterPhysics() {
 
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onBlockPlace(BlockPlaceEvent event) {
-
-        if(!CraftBookPlugin.inst().getConfiguration().physicsEnabled)
-            return;
-
-        if(event.getBlockPlaced().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
-
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlockPlaced()), 1L);
-        }
-
-        if(event.getBlockPlaced().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots) {
-
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new ShatteringPots(event.getBlockPlaced(), false), 1L);
-        }
     }
 
     public void onBlockCreatedEntity(EntityChangeBlockEvent event) {
