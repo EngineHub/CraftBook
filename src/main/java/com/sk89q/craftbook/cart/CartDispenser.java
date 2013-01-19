@@ -60,7 +60,8 @@ public class CartDispenser extends CartMechanism {
             if (cart == null) {
                 switch (pow) {
                     case ON:
-                        dispense(blocks, inv, type);
+                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("collect"))
+                            dispense(blocks, inv, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
                     case NA:
@@ -71,7 +72,8 @@ public class CartDispenser extends CartMechanism {
                         return;
                     case OFF:
                     case NA:
-                        collect(cart, inv);
+                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("dispense"))
+                            collect(cart, inv);
                         return;
                 }
             }
