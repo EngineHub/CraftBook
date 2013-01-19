@@ -24,6 +24,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -202,31 +203,6 @@ public class CraftBookPlugin extends JavaPlugin {
         createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", false);
         languageManager = new LanguageManager();
 
-        try {
-            BukkitMetrics metrics = new BukkitMetrics(this);
-            metrics.start();
-
-            Graph g = metrics.createGraph("Language");
-            for (String language : languageManager.getLanguages()) {
-                g.addPlotter(new Plotter(language) {
-
-                    @Override
-                    public int getValue () {
-                        return 1;
-                    }
-                });
-            }
-            g.addPlotter(new Plotter("Total") {
-
-                @Override
-                public int getValue () {
-                    return languageManager.getLanguages().size();
-                }
-            });
-        } catch (Throwable e1) {
-            BukkitUtil.printStacktrace(e1);
-        }
-
         // Resolve Vault
         try {
             RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
@@ -251,6 +227,42 @@ public class CraftBookPlugin extends JavaPlugin {
         } else worldGuardPlugin = null;
 
         // Let's start the show
+        registerGlobalEvents();
+        startComponents();
+    }
+
+    /**
+     * Registers events used by the main CraftBook plugin. Also registers PluginMetrics
+     */
+    public void registerGlobalEvents() {
+
+        try {
+            BukkitMetrics metrics = new BukkitMetrics(this);
+            metrics.start();
+
+            Graph g = metrics.createGraph("Language");
+            for (String language : languageManager.getLanguages()) {
+                g.addPlotter(new Plotter(language) {
+
+                    @Override
+                    public int getValue () {
+                        return 1;
+                    }
+                });
+            }
+            g.addPlotter(new Plotter("Total") {
+
+                @Override
+                public int getValue () {
+                    return languageManager.getLanguages().size();
+                }
+            });
+        } catch (Throwable e1) {
+            BukkitUtil.printStacktrace(e1);
+        }
+    }
+
+    public void startComponents() {
         // Circuits
         if (config.enableCircuits) {
             CircuitCore circuitCore = new CircuitCore();
@@ -383,9 +395,10 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * This is a method used to register events for a class under CraftBook.
      */
-    public static void registerEvents(Listener listener) {
+    public static void registerEvents(Listener ... listeners) {
 
-        inst().getServer().getPluginManager().registerEvents(listener, inst());
+        for(Listener listener : listeners)
+            inst().getServer().getPluginManager().registerEvents(listener, inst());
     }
 
     /**
@@ -578,10 +591,16 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * Reload configuration
      */
-    public void reloadConfiguration() {
+    public void reloadConfiguration() throws Throwable {
 
+        for (LocalComponent component : components) {
+            component.disable();
+        }
+        HandlerList.unregisterAll(this);
         config.unload();
         config.load();
+        registerGlobalEvents();
+        startComponents();
     }
 
     /**

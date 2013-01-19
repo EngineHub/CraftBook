@@ -3,6 +3,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
@@ -33,7 +34,13 @@ public class TopLevelCommands {
         @CommandPermissions("craftbook.reload")
         public void reload(CommandContext context, CommandSender sender) {
 
-            CraftBookPlugin.inst().reloadConfiguration();
+            try {
+                CraftBookPlugin.inst().reloadConfiguration();
+            } catch (Throwable e) {
+                BukkitUtil.printStacktrace(e);
+                sender.sendMessage("An error occured while reloading the CraftBook config.");
+                return;
+            }
             sender.sendMessage("The CraftBook config has been reloaded.");
         }
 
