@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,6 +30,16 @@ public class ItemUtil {
             base.setAmount(base.getAmount() + toAdd.getAmount());
             return null;
         }
+    }
+
+    public static ItemStack[] removeNulls(ItemStack[] array) {
+
+        List<ItemStack> list = new ArrayList<ItemStack>();
+        for(ItemStack t : array)
+            if(t != null)
+                list.add(t);
+
+        return list.toArray(new ItemStack[list.size()]).clone();
     }
 
     public static boolean areItemsSimilar(ItemStack item, int type) {

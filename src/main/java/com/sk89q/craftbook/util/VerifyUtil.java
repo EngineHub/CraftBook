@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+
 public class VerifyUtil {
 
     public static int verifyRadius(int radius, int maxradius) {
