@@ -21,7 +21,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public boolean indirectRedstone;
     public boolean useBlockDistance;
     public boolean safeDestruction;
-
+    public int stThinkRate;
     public boolean obeyWorldguard;
 
     public boolean updateNotifier;
@@ -60,6 +60,8 @@ public class BukkitConfiguration extends YAMLConfiguration {
         enableMechanisms = config.getBoolean("enable-mechanisms", true);
         enableVehicles = config.getBoolean("enable-vehicles", true);
 
+        config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
+        stThinkRate = config.getInt("st-think-ticks", 2);
         updateNotifier = config.getBoolean("notify-updates", true);
         safeDestruction = config.getBoolean("safe-destruction", true);
         noOpPermissions = config.getBoolean("no-op-permissions", false);

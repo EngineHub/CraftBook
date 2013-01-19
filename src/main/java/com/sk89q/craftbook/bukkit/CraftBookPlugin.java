@@ -423,7 +423,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 "elapsed)");
 
         // Set up the clock for self-triggered ICs.
-        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, 2);
+        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, getConfiguration().stThinkRate);
     }
 
     /**
