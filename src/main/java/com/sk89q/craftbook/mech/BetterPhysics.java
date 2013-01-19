@@ -1,6 +1,8 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,7 +26,7 @@ public class BetterPhysics implements Listener {
 
         if(event.getBlockPlaced().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
 
-            fallingLadders(event.getBlockPlaced());
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlockPlaced()), 1L);
         }
     }
 
@@ -36,16 +38,24 @@ public class BetterPhysics implements Listener {
 
         if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
 
-            fallingLadders(event.getBlock());
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()), 1L);
         }
     }
 
-    public boolean fallingLadders(Block ladder) {
+    public class FallingLadders implements Runnable {
 
-        if(ladder.getRelative(0, -1, 0).getTypeId() != 0)
-            return false;
-        ladder.getWorld().spawnFallingBlock(ladder.getLocation(), ladder.getType(), ladder.getData());
-        ladder.setTypeId(0);
-        return true;
+        Block ladder;
+
+        public FallingLadders(Block ladder) {
+
+            this.ladder = ladder;
+        }
+
+        @Override
+        public void run () {
+            if(ladder.getRelative(0, -1, 0).getTypeId() != 0)
+                return;
+            ladder.getWorld().spawn(ladder.getLocation(), FallingBlock.class);
+        }
     }
 }
