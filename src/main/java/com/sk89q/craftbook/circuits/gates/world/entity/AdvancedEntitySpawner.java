@@ -18,6 +18,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -50,7 +51,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
     public void load() {
 
         String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(getSign().getLine(3).trim());
-        type = EntityType.fromName(splitLine3[0].toLowerCase());
+        type = EntityType.fromName(splitLine3[0].trim().toLowerCase());
         if (type == null) {
             type = EntityType.PIG;
         }
@@ -90,7 +91,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         }
 
         for (int i = 0; i < amount; i++) {
-            Entity ent = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, type);
+            Entity ent = BukkitUtil.toSign(getSign()).getWorld().spawn(location, type.getEntityClass());
 
             if (armourSign != null) { // Apply armor
                 if (ent instanceof LivingEntity) {
@@ -237,6 +238,17 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
             String[] lines = new String[] {"x:y:z", "entitytype*amount"};
             return lines;
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
+            if (EntityType.fromName(splitLine3[0].trim().toLowerCase()) == null) {
+                throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
+            } else if (!EntityType.fromName(splitLine3[0].trim().toLowerCase()).isSpawnable()) {
+                throw new ICVerificationException("Entity is not spawnable!");
+            }
         }
     }
 }
