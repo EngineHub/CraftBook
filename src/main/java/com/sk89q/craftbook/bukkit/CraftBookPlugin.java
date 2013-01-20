@@ -168,8 +168,8 @@ public class CraftBookPlugin extends JavaPlugin {
                 @SuppressWarnings("unused")
                 String s = WorldEditPlugin.CUI_PLUGIN_CHANNEL;
             } catch (Throwable t) {
-                logger().warning("WorldEdit detection has failed!");
-                logger().warning("WorldEdit is a required dependency, Craftbook disabled!");
+                logger().severe("WorldEdit detection has failed!");
+                logger().severe("WorldEdit is a required dependency, Craftbook disabled!");
                 return;
             }
         }
