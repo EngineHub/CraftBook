@@ -18,6 +18,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -32,16 +33,23 @@ public class ContainerDispenser extends AbstractIC {
         super(server, sign, factory);
     }
 
-    int amount;
+    ItemStack item;
 
     @Override
     public void load() {
+
+        int amount;
 
         try {
             amount = Integer.parseInt(getSign().getLine(2));
         } catch (Exception e) {
             amount = 1;
         }
+
+        item = ICUtil.getItem(getLine(3));
+        if(item == null)
+            item = new ItemStack(1, 1);
+        item.setAmount(amount);
     }
 
     @Override
@@ -118,22 +126,18 @@ public class ContainerDispenser extends AbstractIC {
     public boolean dispenseItem(Inventory inv, ItemStack item) {
 
         if (inv == null) return false;
-        HashMap<Integer, ItemStack> over = inv.removeItem(new ItemStack(item.getTypeId(), amount,
-                item.getDurability()));
+        HashMap<Integer, ItemStack> over = inv.removeItem(item.clone());
         if (over.isEmpty()) {
-            BukkitUtil.toSign(getSign()).getWorld()
-                    .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(),
-                            amount, item.getDurability()));
+            BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), item.clone());
             return true;
         } else {
             for (ItemStack it : over.values()) {
 
-                if (amount - it.getAmount() < 1) continue;
+                if (item.getAmount() - it.getAmount() < 1) continue;
                 BukkitUtil
-                        .toSign(getSign())
-                        .getWorld()
-                        .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(),
-                                new ItemStack(it.getTypeId(), amount - it.getAmount(), it.getDurability()));
+                .toSign(getSign())
+                .getWorld()
+                .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(), item.getAmount() - it.getAmount(), item.getDurability()));
                 return true;
             }
         }

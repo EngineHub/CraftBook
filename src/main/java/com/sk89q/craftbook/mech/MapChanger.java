@@ -8,6 +8,7 @@ import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
@@ -51,7 +52,7 @@ public class MapChanger extends AbstractMechanic {
          */
         @Override
         public MapChanger detect(BlockWorldVector pt, LocalPlayer player,
-                                 ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Map]")) return null;
@@ -80,7 +81,12 @@ public class MapChanger extends AbstractMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         Block block = event.getClickedBlock();
-        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getTypeId() == ItemID.MAP)
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (!player.hasPermission("craftbook.mech.map.use")) {
+            player.printError("mech.use-permission");
+            return;
+        }        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getTypeId() == ItemID.MAP)
             if (block.getState() instanceof Sign) {
                 Sign sign = (Sign) block.getState();
                 byte id;

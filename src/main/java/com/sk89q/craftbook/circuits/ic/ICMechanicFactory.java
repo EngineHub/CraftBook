@@ -120,13 +120,13 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
      */
     @Override
     public ICMechanic detect(BlockWorldVector pt, LocalPlayer player,
-                             ChangedSign sign) throws InvalidMechanismException {
+            ChangedSign sign) throws InvalidMechanismException {
 
         return detect(pt, player, sign, false);
     }
 
     private ICMechanic detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign,
-                              boolean shortHand) throws InvalidMechanismException {
+            boolean shortHand) throws InvalidMechanismException {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
@@ -237,8 +237,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             return;
         }
 
-        if (player.hasPermission("craftbook.ic."
-                + factory.getClass().getPackage().getName() + '.' + id.toLowerCase())) {
+        if (player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName() + '.' + id.toLowerCase())) {
             return;
         }
 
