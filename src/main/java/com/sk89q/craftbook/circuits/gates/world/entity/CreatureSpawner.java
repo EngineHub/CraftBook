@@ -49,6 +49,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -348,6 +349,16 @@ public class CreatureSpawner extends AbstractIC {
 
             String[] lines = new String[] {"entitytype", "data*amount"};
             return lines;
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            if (EntityType.fromName(sign.getLine(2).trim().toLowerCase()) == null) {
+                throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
+            } else if (!EntityType.fromName(sign.getLine(2).trim().toLowerCase()).isSpawnable()) {
+                throw new ICVerificationException("Entity is not spawnable!");
+            }
         }
     }
 }
