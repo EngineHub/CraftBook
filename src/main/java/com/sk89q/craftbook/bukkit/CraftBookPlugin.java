@@ -131,7 +131,8 @@ public class CraftBookPlugin extends JavaPlugin {
         // Set the instance
         instance = this;
 
-        versionConverter.put("3.5", "1680-f5e7902");
+        versionConverter.put("3.5", "1680");
+        versionConverter.put("3.5.1", "1707");
     }
 
     public void registerManager(MechanicManager manager) {

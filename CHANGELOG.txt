@@ -1,3 +1,24 @@
+3.5.1
+* Fixed a few vehicle bugs.
+* Renamed Radio IC to JukeBox IC.
++ Added a goto line in Playlists.
++ Added Radio Station & Radio Player IC.
+* Made error reporting nicer.
+* Fixed a few IC verifiction bugs.
++ Added an option to change IC max radius.
++ Added a demultiplexer.
+* Fixed painting switch sometimes working out of range.
+* Fix possible betterphysics dupe bug.
+* Allowed last line of cart dispenser to be collect or dispense, making it only do 1 of the actions.
++ Added Container Stacker IC. Stacks contents of above container.
+* Fixed a cart massacre bug.
+* Fix Plugin Metrics.
+* Fixed the /cb reload command.
++ Added an update notifier/auto updater. (Configurable)
+* Fixed all recipes with auto crafter.
++ Add an option to change ST IC ticks. (Unrecommended, as it is perfect to redstone atm).
+* Optimizations to BetterPhysics.
+
 3.5
 * Fixed an error with realistic snow.
 * Fixed CartTeleporter and CartLift breaking due to a bukkit change.
