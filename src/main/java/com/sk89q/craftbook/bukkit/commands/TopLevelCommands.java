@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.Updater;
+import com.sk89q.craftbook.bukkit.Updater.UpdateResult;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -45,7 +46,6 @@ public class TopLevelCommands {
             sender.sendMessage("The CraftBook config has been reloaded.");
         }
 
-        @SuppressWarnings("unused")
         @Command(aliases = "update", desc = "Updates CraftBook.")
         @CommandPermissions("craftbook.update")
         public void update(CommandContext context, CommandSender sender) {
@@ -53,7 +53,9 @@ public class TopLevelCommands {
                 sender.sendMessage("Unknown command!");
                 return;
             }
-            Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.NO_VERSION_CHECK, true); // Go straight to downloading, and announce progress to console.
+            Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
+            if(updater.getResult() == UpdateResult.NO_UPDATE)
+                sender.sendMessage("Unknown command. Type \"help\" for help.");
         }
 
         @Command(aliases = "about", desc = "Gives info about craftbook.")

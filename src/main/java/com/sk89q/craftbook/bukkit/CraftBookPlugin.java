@@ -131,6 +131,7 @@ public class CraftBookPlugin extends JavaPlugin {
         // Set the instance
         instance = this;
 
+        versionConverter.put("3.4.1", "1541");
         versionConverter.put("3.5", "1680");
         versionConverter.put("3.5.1", "1707");
     }
@@ -263,8 +264,8 @@ public class CraftBookPlugin extends JavaPlugin {
                     public void onPlayerJoin (PlayerJoinEvent event) {
                         Player player = event.getPlayer();
                         if (player.hasPermission("craftbook.update")) {
-                            player.sendMessage("An update is available: " + latestVersion + "(" + updateSize + " bytes");
-                            player.sendMessage("Type /cb update if you would like to update.");
+                            player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
+                            player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
                         }
                     }
                 }, this);

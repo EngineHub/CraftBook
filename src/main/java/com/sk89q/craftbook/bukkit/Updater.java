@@ -396,6 +396,8 @@ public class Updater {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
                 //CraftBook Change
                 remoteVersion = CraftBookPlugin.inst().versionConverter.get(remoteVersion).split("-")[0];
+                if(remoteVersion == null)
+                    remoteVersion = "Unknown";
                 if(CraftBookPlugin.inst().versionConverter.containsKey(version))
                     version = CraftBookPlugin.inst().versionConverter.get(version).split("-")[0];
                 int remVer = -1, curVer = 0;
@@ -405,7 +407,7 @@ public class Updater {
                 } catch (NumberFormatException nfe) {
                     remVer = -1;
                 }
-                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion) || curVer >= remVer) {
+                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion) || curVer >= remVer || remVer == -1) {
                     // We already have the latest version, or this build is tagged for no-update
                     result = Updater.UpdateResult.NO_UPDATE;
                     return false;
