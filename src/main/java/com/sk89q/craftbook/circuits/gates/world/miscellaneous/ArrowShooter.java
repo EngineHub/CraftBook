@@ -56,7 +56,8 @@ public class ArrowShooter extends AbstractIC {
             speed = 1.6f;
             spread = 12;
             vert = 0.2f;
-            getSign().setLine(2, speed + ":" + spread + ":" + vert);
+            getSign().setLine(2, speed + ":" + spread);
+            getSign().setLine(3, String.valueOf(vert));
             getSign().update(false);
         }
 

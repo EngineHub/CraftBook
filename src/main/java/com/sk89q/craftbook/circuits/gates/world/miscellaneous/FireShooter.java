@@ -36,36 +36,34 @@ public class FireShooter extends AbstractIC {
     @Override
     public void load() {
 
-        String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim(), 2);
         try {
+            String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
             speed = Float.parseFloat(velocity[0]);
             spread = Float.parseFloat(velocity[1]);
-        } catch (Exception ignored) {
-            speed = 0.6f;
-            spread = 4;
-        }
-        try {
             vert = Float.parseFloat(getSign().getLine(3).trim());
-        } catch (Exception ignored) {
-            vert = 0;
+        } catch (Exception e) {
+            speed = 1.6f;
+            spread = 12;
+            vert = 0.2f;
+            getSign().setLine(2, speed + ":" + spread);
+            getSign().setLine(3, String.valueOf(vert));
+            getSign().update(false);
         }
 
-        if (speed > 2.0) {
-            speed = 2F;
-        } else if (speed < 0.2) {
-            speed = 0.2F;
+        if (speed > 10.0) {
+            speed = 10F;
+        } else if (speed < 0.1) {
+            speed = 0.1F;
         }
-
-        if (spread > 50) {
-            spread = 50;
+        if (spread > 5000) {
+            spread = 5000;
         } else if (spread < 0) {
             spread = 0;
         }
-
-        if (vert > 1) {
-            vert = 1;
-        } else if (vert < -1) {
-            vert = -1;
+        if (vert > 100) {
+            vert = 100;
+        } else if (vert < -100) {
+            vert = -100;
         }
     }
 
@@ -97,26 +95,28 @@ public class FireShooter extends AbstractIC {
 
         float x = targetDir.getX() - signBlock.getX();
         float z = targetDir.getZ() - signBlock.getZ();
-        Vector velocity = new Vector(x, vert, z);
-        Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,
-                targetDir.getY() + 0.5,
-                targetDir.getZ() + 0.5);
+        Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,targetDir.getY() + 0.5,targetDir.getZ() + 0.5);
 
-        if (n != 1) {
-            for (short i = 0; i < n; i++) {
-                velocity = new Vector(x + randomFloat(spread), vert + randomFloat(spread), z + randomFloat(spread));
-                SmallFireball f = BukkitUtil.toSign(getSign()).getWorld().spawn(shootLoc, SmallFireball.class);
-                f.setVelocity(velocity);
-            }
-        } else {
+        for (short i = 0; i < n; i++) {
+
+            float f2 = (float) Math.sqrt(x * x + vert * vert + z * z);
+
+            double nx = (double) x/f2;
+            double ny = (double) vert/f2;
+            double nz = (double) z/f2;
+            nx += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
+            ny += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
+            nz += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
+            nx *= speed;
+            ny *= speed;
+            nz *= speed;
+            float f3 = (float) Math.sqrt(nx * nx + nz * nz);
+
             SmallFireball f = BukkitUtil.toSign(getSign()).getWorld().spawn(shootLoc, SmallFireball.class);
-            f.setVelocity(velocity);
+            f.setVelocity(new Vector(nx,ny,nz));
+            f.getLocation().setYaw((float) (Math.atan2(nx, nz) * 180.0D / 3.1415927410125732D));
+            f.getLocation().setPitch((float) (Math.atan2(ny, f3) * 180.0D / 3.1415927410125732D));
         }
-    }
-
-    private static float randomFloat(float width) {
-
-        return (CraftBookPlugin.inst().getRandom().nextFloat() - 0.5f) * width;
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
