@@ -6,6 +6,8 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+
 public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic {
 
     public ZombieAIMechanic(Entity entity) {
@@ -27,9 +29,9 @@ public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic
             }
         if (zombie.getLocation().getBlock().getLightLevel() > 6) return; // They can clearly see the target.
         if (event.getTarget() instanceof Player)
-            if (((Player) event.getTarget()).isSneaking() && event.getTarget().getLocation().distanceSquared(zombie
-                    .getLocation()) > 2 * 2) {
-                event.setCancelled(true);
+            if (((Player) event.getTarget()).isSneaking()) {
+                if(CraftBookPlugin.inst().getRandom().nextInt((int) Math.floor(event.getTarget().getLocation().distance(zombie.getLocation()))) > 1)
+                    event.setCancelled(true);
             }
     }
 }
