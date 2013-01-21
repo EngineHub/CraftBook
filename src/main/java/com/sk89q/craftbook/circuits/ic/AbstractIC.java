@@ -18,6 +18,7 @@ package com.sk89q.craftbook.circuits.ic;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -25,6 +26,7 @@ import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * A base abstract IC that all ICs can inherit from.
@@ -58,6 +60,11 @@ public abstract class AbstractIC implements IC {
     protected Location getLocation() {
 
         return BukkitUtil.toSign(getSign()).getLocation();
+    }
+
+    protected Block getBackBlock() {
+
+        return SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
     }
 
     protected String getLine(int line) {

@@ -149,6 +149,8 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessTransmitte
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.XPSpawner;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.ContentsSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.ContentsSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor;
@@ -406,6 +408,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1265", "inv sense item", new ItemNotSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1266", "sense power", new PowerSensor.Factory(server), familySISO, familyAISO);
         //FIXME registerIC("MC1267", "sense move", new MovementSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1268", "sense contents", new ContentsSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1270", "melody", new Melody.Factory(server), familySISO, familyAISO);
         registerIC("MC1271", "sense entity", new EntitySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1272", "sense player", new PlayerSensor.Factory(server), familySISO, familyAISO); // Restricted
@@ -504,6 +507,7 @@ public class CircuitCore implements LocalComponent {
                 familyAISO); // Restricted
         registerIC("MC0266", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO); // Restricted
         //FIXME registerIC("MC0267", "sense move st", new MovementSensorST.Factory(server), familySISO, familyAISO);
+        registerIC("MC0268", "sense contents st", new ContentsSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0270", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO,
                 familyAISO); // Restricted
