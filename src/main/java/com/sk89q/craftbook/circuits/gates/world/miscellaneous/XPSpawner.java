@@ -4,14 +4,12 @@ import org.bukkit.Server;
 import org.bukkit.entity.ExperienceOrb;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class XPSpawner extends AbstractIC {
 
@@ -55,7 +53,7 @@ public class XPSpawner extends AbstractIC {
         if(chip.getInput(0)) {
 
             for(int i = 0; i < orbs; i++) {
-                ExperienceOrb orb = BukkitUtil.toSign(getSign()).getWorld().spawn(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation(), ExperienceOrb.class);
+                ExperienceOrb orb = getLocation().getWorld().spawn(getLocation().add(0.5, 1.5, 0.5), ExperienceOrb.class);
                 orb.setExperience(amount);
             }
         }

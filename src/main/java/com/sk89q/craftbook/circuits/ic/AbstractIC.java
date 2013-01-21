@@ -16,12 +16,14 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
 /**
@@ -51,6 +53,11 @@ public abstract class AbstractIC implements IC {
     protected ChangedSign getSign() {
 
         return sign;
+    }
+
+    protected Location getLocation() {
+
+        return BukkitUtil.toSign(getSign()).getLocation();
     }
 
     protected String getLine(int line) {
