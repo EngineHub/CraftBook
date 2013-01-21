@@ -45,7 +45,7 @@ public class ContentsSensorST extends ContentsSensor implements SelfTriggeredIC 
         @Override
         public IC create(ChangedSign sign) {
 
-            return new ContentsSensor(getServer(), sign, this);
+            return new ContentsSensorST(getServer(), sign, this);
         }
     }
 }
