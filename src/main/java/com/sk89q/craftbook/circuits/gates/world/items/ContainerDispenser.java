@@ -47,9 +47,8 @@ public class ContainerDispenser extends AbstractIC {
         }
 
         item = ICUtil.getItem(getLine(3));
-        if(item == null)
-            item = new ItemStack(1, 1);
-        item.setAmount(amount);
+        if(item != null)
+            item.setAmount(amount);
     }
 
     @Override
@@ -91,8 +90,11 @@ public class ContainerDispenser extends AbstractIC {
             Chest c = (Chest) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
-                    stack = it;
-                    inv = c.getInventory();
+                    if(item == null || ItemUtil.areItemsIdentical(it, item)) {
+                        stack = it;
+                        inv = c.getInventory();
+                        break;
+                    }
                 }
             }
         } else if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
@@ -106,16 +108,22 @@ public class ContainerDispenser extends AbstractIC {
                     if (ItemUtil.areItemsIdentical(it, c.getInventory().getIngredient())) {
                         continue;
                     }
-                    stack = it;
-                    inv = c.getInventory();
+                    if(item == null || ItemUtil.areItemsIdentical(it, item)) {
+                        stack = it;
+                        inv = c.getInventory();
+                        break;
+                    }
                 }
             }
         } else if (bl.getTypeId() == BlockID.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
-                    stack = it;
-                    inv = c.getInventory();
+                    if(item == null || ItemUtil.areItemsIdentical(it, item)) {
+                        stack = it;
+                        inv = c.getInventory();
+                        break;
+                    }
                 }
             }
         }
@@ -137,7 +145,7 @@ public class ContainerDispenser extends AbstractIC {
                 BukkitUtil
                 .toSign(getSign())
                 .getWorld()
-                .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(item.getTypeId(), item.getAmount() - it.getAmount(), item.getDurability()));
+                .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getTypeId(), item.getAmount() - it.getAmount(), it.getDurability()));
                 return true;
             }
         }

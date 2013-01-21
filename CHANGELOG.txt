@@ -18,6 +18,11 @@
 * Fixed all recipes with auto crafter.
 + Add an option to change ST IC ticks. (Unrecommended, as it is perfect to redstone atm).
 * Optimizations to BetterPhysics.
+* Made the entity spawning IC's check if the entity is valid to spawn.
+* Made the fire barrage IC shoot more normally.
++ Made last line of the chest dispenser IC allow you to make it spawn only the item you want it to drop.
++ Added XPSpawner IC.
+* Made Enhanced Zombie AI not have a set range, but have better chances of not being detected the further away you are.
 
 3.5
 * Fixed an error with realistic snow.
