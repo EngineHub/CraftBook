@@ -146,6 +146,7 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Tune;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessReceiverST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessTransmitter;
+import com.sk89q.craftbook.circuits.gates.world.miscellaneous.XPSpawner;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensor;
@@ -390,6 +391,8 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1243", "distributer", new Distributer.Factory(server), familySISO, familyAISO);
         registerIC("MC1244", "animal harvest", new AnimalHarvester.Factory(server), familySISO, familyAISO);
         registerIC("MC1245", "cont stacker", new ContainerStacker.Factory(server), familySISO, familyAISO);
+        registerIC("MC1246", "xp spawner", new XPSpawner.Factory(server), familySISO, familyAISO); //Restricted
+        //TODO Dyed Armour Spawner (MC1247) (Sign Title: DYE ARMOUR)
         registerIC("MC1250", "shoot fire", new FireShooter.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1251", "shoot fires", new FireBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1252", "flame thower", new FlameThrower.Factory(server), familySISO, familyAISO); // Restricted

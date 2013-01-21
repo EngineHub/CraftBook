@@ -7,7 +7,6 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetDoor;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -106,14 +105,6 @@ public class ParticleEffect extends AbstractIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            try {
-                if (sign.getLine(0).equalsIgnoreCase("SET P-DOOR")) {
-                    sign.setLine(1, "[MC1212]");
-                    sign.update(false);
-                    return new SetDoor(getServer(), sign, this);
-                }
-            } catch (Exception ignored) {
-            }
             return new ParticleEffect(getServer(), sign, this);
         }
 
