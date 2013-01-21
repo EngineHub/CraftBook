@@ -55,7 +55,7 @@ public class XPSpawner extends AbstractIC {
         if(chip.getInput(0)) {
 
             for(int i = 0; i < orbs; i++) {
-                ExperienceOrb orb = BukkitUtil.toSign(getSign()).getWorld().spawn(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation(), ExperienceOrb.class);
+                ExperienceOrb orb = BukkitUtil.toSign(getSign()).getWorld().spawn(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0).getLocation(), ExperienceOrb.class);
                 orb.setExperience(amount);
             }
         }
