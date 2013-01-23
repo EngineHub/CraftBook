@@ -12,6 +12,7 @@ import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.AIMechanic;
 import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.BetterPhysics;
+import com.sk89q.craftbook.mech.BetterPistons;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
@@ -115,6 +116,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.cauldronEnabled) registerMechanic(new ImprovedCauldron.Factory());
         if (config.xpStorerEnabled) registerMechanic(new XPStorer.Factory());
         if (config.mapChangerEnabled) registerMechanic(new MapChanger.Factory());
+        if (config.pistonsEnabled) registerMechanic(new BetterPistons.Factory());
 
         if (config.customCraftingEnabled) new CustomCrafting();
 

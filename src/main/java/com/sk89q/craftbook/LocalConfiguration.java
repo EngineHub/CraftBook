@@ -51,6 +51,9 @@ public abstract class LocalConfiguration {
     public boolean physicsEnabled;
     public boolean physicsLadders;
     public boolean physicsPots;
+    // Mechanics - BetterPistons
+    public boolean pistonsEnabled;
+    public boolean pistonsCrusher;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
     public boolean bookcaseReadWhenSneaking;

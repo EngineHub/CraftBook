@@ -117,6 +117,8 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public boolean update(boolean force) {
 
+        if(!hasChanged() && !force)
+            return false;
         for(int i = 0; i < 4; i++)
             sign.setLine(i, lines[i]);
         return sign.update(force);
@@ -150,5 +152,11 @@ public class BukkitChangedSign implements ChangedSign {
                 break;
             }
         return ret;
+    }
+
+    @Override
+    public void flushLines () {
+
+        lines = sign.getLines();
     }
 }

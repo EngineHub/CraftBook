@@ -81,6 +81,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         //physicsPots = config.getBoolean("mechanics.better-physics.smashing-pots", false);
         physicsPots = false; //TODO enable when 1.5 comes out (It fixes the client crash caused by this)
 
+        // Better Pistons Configuration Listener
+        pistonsEnabled = config.getBoolean("mechanics.better-pistons.enable", true);
+        pistonsCrusher = config.getBoolean("mechanics.better-pistons.crushers", true);
+
         // Bookcase Configuration Listener
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", true);
         bookcaseReadWhenSneaking = config.getBoolean("mechanics.bookcase.read-when-sneaking", false);
