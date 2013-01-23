@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -27,6 +28,7 @@ import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.entity.BukkitEntity;
 import com.sk89q.worldedit.bukkit.entity.BukkitExpOrb;
@@ -67,7 +69,12 @@ public class BukkitUtil {
 
     public static ChangedSign toChangedSign(Block sign) {
 
-        if (!(sign.getState() instanceof Sign)) return null;
+        if (sign.getTypeId() != BlockID.WALL_SIGN && sign.getTypeId() != BlockID.SIGN_POST) return null;
+        if (sign.getState() == null) {
+
+            Bukkit.getLogger().severe("You have a corrupt sign at: X:" + sign.getLocation().getBlockX() + " Y:" + sign.getLocation().getBlockY() + " Z:" + sign.getLocation().getBlockZ() + ". This has nothing to do with CraftBook!");
+            return null;
+        }
         return toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines());
     }
 
