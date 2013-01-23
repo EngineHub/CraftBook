@@ -139,7 +139,7 @@ public class Snow implements Listener {
         if (event.getBlock().getTypeId() == BlockID.SNOW) {
             Block block = event.getBlock();
 
-            if (CraftBookPlugin.inst().getConfiguration().snowRealistic) disperse(event.getBlock(), true, 0);
+            if (CraftBookPlugin.inst().getConfiguration().snowRealistic && event.getBlock().getData() > 0x0) disperse(event.getBlock(), true, 0);
 
             if (event.getBlock().getWorld().hasStorm()) pile(block);
         }
@@ -225,8 +225,7 @@ public class Snow implements Listener {
         }
 
         if (isValidBlock(block.getRelative(1, 0, 0).getTypeId()) && block.getRelative(1, 0, 0).getData() < 0x7) {
-            if (block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0,
-                    0).getTypeId() != BlockID.SNOW) {
+            if (block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0,0).getTypeId() != BlockID.SNOW) {
                 incrementData(block.getRelative(1, 0, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
