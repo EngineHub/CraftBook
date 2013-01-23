@@ -53,7 +53,12 @@ public class PotionInducer extends AbstractIC {
     public void load() {
 
         String[] effectInfo = RegexUtil.COLON_PATTERN.split(getLine(2), 3);
-        effectID = Integer.parseInt(effectInfo[0]);
+        try {
+            effectID = Integer.parseInt(effectInfo[0]);
+        }
+        catch (Exception e) {
+            effectID = 1;
+        }
         try {
             effectAmount = Integer.parseInt(effectInfo[1]);
         } catch (Exception e) {

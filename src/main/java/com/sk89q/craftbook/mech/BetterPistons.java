@@ -145,6 +145,7 @@ public class BetterPistons extends AbstractMechanic {
     }
 
     private final Block trigger;
+    @SuppressWarnings("unused")
     private final Block sign;
     private final Types type;
 
