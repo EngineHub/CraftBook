@@ -263,7 +263,7 @@ public class Snow implements Listener {
         return false;
     }
 
-    public void incrementData(Block block, int depth) {
+    public void incrementData(final Block block, final int depth) {
 
         if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
@@ -274,13 +274,31 @@ public class Snow implements Listener {
             return;
         } else if (!isValidBlock(block.getTypeId())) return;
 
-        if (depth < 10 && canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+        if (depth < 1 && canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
             incrementData(block.getRelative(0, -1, 0), depth+1);
+            return;
+        } else if (depth >= 1 && canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+
+            final boolean remove;
+            if(block.getTypeId() != BlockID.SNOW && canPassThrough(block.getTypeId())) {
+                block.setTypeId(BlockID.SNOW, false);
+                remove = true;
+            } else {
+                remove = false;
+            }
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                @Override
+                public void run () {
+                    if(remove)
+                        block.setTypeId(0, false);
+                    incrementData(block.getRelative(0, -1, 0), depth+1);
+                }
+            }, 5L);
             return;
         }
 
-        if (canPassThrough(block.getTypeId()) && block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW
-                && block.getRelative(0, -1, 0).getData() < 0x7) {
+        if (canPassThrough(block.getTypeId()) && block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7) {
             incrementData(block.getRelative(0, -1, 0), depth+1);
             return;
         }
