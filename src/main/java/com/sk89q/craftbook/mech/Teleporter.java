@@ -78,7 +78,7 @@ public class Teleporter extends AbstractMechanic {
          */
         @Override
         public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                                 ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
@@ -149,9 +149,13 @@ public class Teleporter extends AbstractMechanic {
                     toY = Double.parseDouble(pos[1]);
                     toZ = Double.parseDouble(pos[2]);
                 } catch (Exception e) {
+                    player.printError("mech.teleport.arriveonly");
                     return;
                 }
-            } else return;
+            } else {
+                player.printError("mech.teleport.arriveonly");
+                return;
+            }
         }
 
         if (CraftBookPlugin.inst().getConfiguration().teleporterRequireSign) {
@@ -211,8 +215,8 @@ public class Teleporter extends AbstractMechanic {
         }
         if (CraftBookPlugin.inst().getConfiguration().teleporterMaxRange > 0)
             if (subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) >
-                    CraftBookPlugin.inst().getConfiguration().teleporterMaxRange * CraftBookPlugin.inst()
-                            .getConfiguration().teleporterMaxRange) {
+            CraftBookPlugin.inst().getConfiguration().teleporterMaxRange * CraftBookPlugin.inst()
+            .getConfiguration().teleporterMaxRange) {
                 player.print("mech.teleport.range");
                 return;
             }

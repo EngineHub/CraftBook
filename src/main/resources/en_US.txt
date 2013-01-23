@@ -30,6 +30,7 @@ mech.teleport.create:Teleporter Created!
 mech.teleport.alert:You Teleported!
 mech.teleport.range:Out of Range!
 mech.teleport.sign:There is no Sign at your Destination!
+mech.teleport.arriveonly:You can only arrive at this teleporter!
 mech.cauldron.too-small:Cauldron is too small!
 mech.cauldron.leaky:Cauldron has a leak!
 mech.cauldron.no-lava:Cauldron lacks lava!
