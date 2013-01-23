@@ -131,6 +131,7 @@ public abstract class LocalConfiguration {
     public boolean snowRealistic;
     public boolean snowHighPiles;
     public boolean snowJumpTrample;
+    public List<Integer> snowRealisticReplacables;
     // Mechanics - Teleporter
     public boolean teleporterEnabled;
     public boolean teleporterRequireSign;

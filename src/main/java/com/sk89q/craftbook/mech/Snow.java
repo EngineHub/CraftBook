@@ -321,7 +321,7 @@ public class Snow implements Listener {
 
     public boolean canPassThrough(int id) {
 
-        return id == BlockID.DEAD_BUSH || id == BlockID.AIR || id == BlockID.LONG_GRASS || id == BlockID.FIRE;
+        return id == BlockID.AIR || CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(id);
     }
 
     public boolean isSnowBlock(int id) {
