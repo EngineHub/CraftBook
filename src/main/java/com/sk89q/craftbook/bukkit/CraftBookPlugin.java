@@ -28,6 +28,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -58,6 +61,7 @@ import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 
 public class CraftBookPlugin extends JavaPlugin {
 
@@ -810,10 +814,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Location loc) {
 
-        return true;
-        //if (!config.obeyWorldguard)
-        //    return true;
-        //return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, loc);
+        return canBuild(player,loc.getBlock());
     }
 
     /**
@@ -829,9 +830,14 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canBuild(Player player, Block block) {
 
-        return true;
-        //if (!config.obeyWorldguard) return true;
-        //return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().canBuild(player, block);
+        if (config.advancedBlockChecks) {
+
+            BlockPlaceEvent event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
+            getServer().getPluginManager().callEvent(event);
+            return !event.isCancelled() || event.canBuild();
+        }
+        if (!config.obeyWorldguard) return true;
+        return worldGuardPlugin != null && worldGuardPlugin.canBuild(player, block);
     }
 
     /**
@@ -847,10 +853,14 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public boolean canUse(Player player, Location loc) {
 
-        return true;
-        //if (!config.obeyWorldguard) return true;
-        //return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(new StateFlag("use",
-        //        true), loc, worldGuardPlugin.wrapPlayer(player));
+        if (config.advancedBlockChecks) {
+
+            PlayerInteractEvent event = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), loc.getBlock(), BlockFace.UP);
+            getServer().getPluginManager().callEvent(event);
+            return !event.isCancelled();
+        }
+        if (!config.obeyWorldguard) return true;
+        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
     }
 
     /**
