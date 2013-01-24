@@ -18,7 +18,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class FlameThrower extends AbstractIC {
 
-    int distance = 5;
+    int distance;
 
     public FlameThrower(Server server, ChangedSign sign, ICFactory factory) {
 
