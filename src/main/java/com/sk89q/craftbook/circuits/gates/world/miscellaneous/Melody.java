@@ -107,7 +107,7 @@ public class Melody extends AbstractIC {
         }
 
         try {
-            if (sequencer != null && !sequencer.isSongPlaying() && forceStart) return;
+            if (sequencer != null && sequencer.isSongPlaying() && forceStart) return;
         } catch (Exception ignored) {
         }
 
