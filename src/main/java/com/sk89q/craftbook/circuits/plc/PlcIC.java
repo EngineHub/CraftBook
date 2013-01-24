@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -42,6 +42,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
@@ -371,7 +372,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     @Override
     public void onRightClick(Player p) {
 
-        if (p.hasPermission("craftbook.plc.debug")) {
+        if (CraftBookPlugin.inst().hasPermission(p, "craftbook.plc.debug")) {
             p.sendMessage(ChatColor.GREEN + "Programmable Logic Controller debug information");
             BlockWorldVector l = sign.getBlockVector();
             p.sendMessage(ChatColor.RED + "Status:" + ChatColor.RESET + " " + (error ? "Error Encountered" : "OK"));
