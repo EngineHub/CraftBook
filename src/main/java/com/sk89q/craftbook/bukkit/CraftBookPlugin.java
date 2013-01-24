@@ -264,6 +264,13 @@ public class CraftBookPlugin extends JavaPlugin {
 
                     if(updateAvailable) {
 
+                        for (Player player : getServer().getOnlinePlayers()) {
+                            if (player.hasPermission("craftbook.update")) {
+                                player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
+                                player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
+                            }
+                        }
+
                         getServer().getPluginManager().registerEvents(new Listener() {
                             @EventHandler
                             public void onPlayerJoin (PlayerJoinEvent event) {
