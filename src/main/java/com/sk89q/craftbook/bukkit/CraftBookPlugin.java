@@ -252,25 +252,31 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if(getConfiguration().updateNotifier) {
 
-            Updater updater = new Updater(this, "CraftBook", getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
-            updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
-            latestVersion = updater.getLatestVersionString(); // Get the latest version
-            Bukkit.getLogger().info(latestVersion);
-            updateSize = updater.getFileSize(); // Get latest size
+            final Updater updater = new Updater(this, "CraftBook", getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
+            getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 
-            if(updateAvailable) {
+                @Override
+                public void run () {
+                    updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
+                    latestVersion = updater.getLatestVersionString(); // Get the latest version
+                    Bukkit.getLogger().info(latestVersion);
+                    updateSize = updater.getFileSize(); // Get latest size
 
-                getServer().getPluginManager().registerEvents(new Listener() {
-                    @EventHandler
-                    public void onPlayerJoin (PlayerJoinEvent event) {
-                        Player player = event.getPlayer();
-                        if (player.hasPermission("craftbook.update")) {
-                            player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
-                            player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
-                        }
+                    if(updateAvailable) {
+
+                        getServer().getPluginManager().registerEvents(new Listener() {
+                            @EventHandler
+                            public void onPlayerJoin (PlayerJoinEvent event) {
+                                Player player = event.getPlayer();
+                                if (player.hasPermission("craftbook.update")) {
+                                    player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
+                                    player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
+                                }
+                            }
+                        }, CraftBookPlugin.inst());
                     }
-                }, this);
-            }
+                }
+            }, 10L);
         }
 
         try {
@@ -294,6 +300,32 @@ public class CraftBookPlugin extends JavaPlugin {
                     return languageManager.getLanguages().size();
                 }
             });
+
+            Graph comp = metrics.createGraph("Components");
+            if (config.enableCircuits)
+                comp.addPlotter(new Plotter("Circuits") {
+
+                    @Override
+                    public int getValue () {
+                        return 1;
+                    }
+                });
+            if (config.enableMechanisms)
+                comp.addPlotter(new Plotter("Mechanisms") {
+
+                    @Override
+                    public int getValue () {
+                        return 1;
+                    }
+                });
+            if (config.enableVehicles)
+                comp.addPlotter(new Plotter("Vehicles") {
+
+                    @Override
+                    public int getValue () {
+                        return 1;
+                    }
+                });
         } catch (Throwable e1) {
             BukkitUtil.printStacktrace(e1);
         }
