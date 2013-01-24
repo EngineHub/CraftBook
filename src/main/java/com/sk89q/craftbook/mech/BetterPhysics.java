@@ -19,6 +19,7 @@ public class BetterPhysics implements Listener {
 
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockCreatedEntity(EntityChangeBlockEvent event) {
 
         if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots) {

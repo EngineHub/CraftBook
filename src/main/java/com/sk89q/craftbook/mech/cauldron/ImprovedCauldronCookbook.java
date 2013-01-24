@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.bukkit.Material;
 
 import com.sk89q.craftbook.LocalConfiguration;
+import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron.UnknownRecipeException;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 

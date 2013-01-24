@@ -77,14 +77,6 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         cookbook = recipes;
     }
 
-    /*
-     * TODO@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) public void onPlayerPickup
-     * (PlayerPickupItemEvent event) { if(block
-     * == null) return; if(event.getItem().getLocation().getBlock().getLocation().distance(block.getLocation()) < 1) {
-     * if(!(event.getPlayer().getLocation().getBlock().getLocation().distance(block.getLocation()) < 1)) { event
-     * .setCancelled(true); } } }
-     */
-
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
@@ -201,5 +193,21 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
             }
         }
         return items;
+    }
+
+    /**
+     * @author Silthus
+     */
+    public static class UnknownRecipeException extends Throwable {
+
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
+
+        public UnknownRecipeException(String message) {
+
+            super(message);
+        }
     }
 }

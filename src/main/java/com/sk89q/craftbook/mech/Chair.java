@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -39,17 +38,11 @@ public class Chair implements Listener {
 
         if (disabled) return;
         try {
-            // TODO deck chairs. Packet17EntityLocationAction packet = new Packet17EntityLocationAction((
-            // (CraftPlayer)player).getHandle(), 0,
-            // block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
-
             PacketContainer entitymeta = ProtocolLibrary.getProtocolManager().createPacket(40);
             entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
             WrappedDataWatcher watcher = new WrappedDataWatcher();
             watcher.setObject(0, (byte) 4);
             entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-            // Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(),
-            // new ChairWatcher((byte) 4), false);
             for (Player play : plugin.getServer().getOnlinePlayers()) {
                 if (play.getWorld().equals(player.getPlayer().getWorld())) {
                     try {
@@ -57,11 +50,10 @@ public class Chair implements Listener {
                     } catch (InvocationTargetException e) {
                         BukkitUtil.printStacktrace(e);
                     }
-                    // ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
                 }
             }
         } catch (Error e) {
-            Bukkit.getLogger().severe("Chairs do not work in this version of Minecraft!");
+            Bukkit.getLogger().severe("Chairs do not work without ProtocolLib!");
             disabled = true;
             return;
         }
@@ -79,8 +71,6 @@ public class Chair implements Listener {
         watcher.setObject(0, (byte) 0);
         entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 
-        // Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(),
-        // new ChairWatcher((byte) 0), false);
         for (Player play : plugin.getServer().getOnlinePlayers()) {
             if (play.getWorld().equals(player.getPlayer().getWorld())) {
                 try {
@@ -88,7 +78,6 @@ public class Chair implements Listener {
                 } catch (InvocationTargetException e) {
                     BukkitUtil.printStacktrace(e);
                 }
-                // ((CraftPlayer) play).getHandle().netServerHandler.sendPacket(packet);
             }
         }
         plugin.wrapPlayer(player).print(ChatColor.YELLOW + "You are no longer sitting.");
@@ -112,12 +101,6 @@ public class Chair implements Listener {
     }
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-
-        if (hasChair(event.getPlayer())) chairs.remove(event.getPlayer().getName());
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -161,8 +144,7 @@ public class Chair implements Listener {
                     player.printError("This chair has nothing below it!");
                     return;
                 }
-                player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5,0,
-                        0.5)); // Teleport to the seat
+                player.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5,0,0.5)); // Teleport to the seat
                 addChair(player.getPlayer(), event.getClickedBlock());
             }
         }
@@ -175,14 +157,14 @@ public class Chair implements Listener {
 
             for (String pl : chairs.keySet()) {
                 Player p = Bukkit.getPlayer(pl);
-                if (p == null) continue;
+                if (p == null) {
+                    chairs.remove(pl);
+                    continue;
+                }
                 if (!plugin.getConfiguration().chairBlocks.contains(getChair(p).getTypeId())
                         || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair
                                 (p).getLocation()) > 1)
-                    removeChair(p); // Remove
-                // it.
-                // It's
-                // unused.
+                    removeChair(p);
                 else {
                     addChair(p, getChair(p)); // For any new players.
 
@@ -193,20 +175,4 @@ public class Chair implements Listener {
             }
         }
     }
-
-    /*
-     * public static class ChairWatcher extends DataWatcher {
-     * 
-     * private byte metadata;
-     * 
-     * public ChairWatcher(byte metadata) {
-     * 
-     * this.metadata = metadata; }
-     * 
-     * @Override public ArrayList<WatchableObject> b() {
-     * 
-     * ArrayList<WatchableObject> list = new ArrayList<WatchableObject>(); WatchableObject wo = new WatchableObject
-     * (0, 0, metadata); list.add(wo);
-     * return list; } }
-     */
 }
