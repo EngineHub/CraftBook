@@ -56,19 +56,41 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "",
                 "");
 
+        config.setComment("enable-circuits", "If this is set to false, all circuit mechanics will be disabled, and circuit configuration will not do anything.");
         enableCircuits = config.getBoolean("enable-circuits", true);
+
+        config.setComment("enable-mechanisms", "If this is set to false, all mechanics will be disabled, and mechanism configuration will not do anything.");
         enableMechanisms = config.getBoolean("enable-mechanisms", true);
+
+        config.setComment("enable-vehicles", "If this is set to false, all vehicles mechanics will be disabled, and vehicle configuration will not do anything.");
         enableVehicles = config.getBoolean("enable-vehicles", true);
+
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
+
+        config.setComment("notify-updates", "Enables the update notifier. This checks for updates on start, and notifies anyone with the permission when they join. They can then use /cb update to download the update.");
         updateNotifier = config.getBoolean("notify-updates", true);
+
+        config.setComment("safe-destruction", "Causes many mechanics to require sufficient blocks to function, for example gates, bridges and doors.");
         safeDestruction = config.getBoolean("safe-destruction", true);
+
+        config.setComment("no-op-permissions", "If on, OP's will not default to have access to everything.");
         noOpPermissions = config.getBoolean("no-op-permissions", false);
+
+        config.setComment("indirect-redstone", "Allows redstone not directly facing a mechanism to trigger said mechanism.");
         indirectRedstone = config.getBoolean("indirect-redstone", false);
+
+        config.setComment("use-block-distance", "Rounds all distance equations to the block grid.");
         useBlockDistance = config.getBoolean("use-block-distance", false);
+
+        config.setComment("check-worldguard-flags", "Checks to see if WorldGuard allows building/using in the area when activating mechanics.");
         obeyWorldguard = config.getBoolean("check-worldguard-flags", true);
+
+        config.setComment("language", "The default language for CraftBook.");
         language = config.getString("language", "en_US");
+
+        config.setComment("languages", "A list of languages supported by craftbook, if a user requests a language not listed... They will see default.");
         languages = config.getStringList("languages", Arrays.asList("en_US"));
 
         super.load();

@@ -5,11 +5,6 @@ package com.sk89q.craftbook.util;
  */
 public final class EnumUtil {
 
-    // util class
-    private EnumUtil() {
-
-    }
-
     /**
      * Get the enum value of a string, null if it doesn't exist.
      */

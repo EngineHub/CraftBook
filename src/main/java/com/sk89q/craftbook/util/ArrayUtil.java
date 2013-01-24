@@ -9,10 +9,6 @@ public final class ArrayUtil {
 
     public static final String[] EMPTY_STRINGS = new String[0];
 
-    private ArrayUtil() {
-
-    }
-
     /**
      * Turns an ArrayList into an array of the size 8. This new array can be used to output every line in the chat.
      *

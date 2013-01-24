@@ -5,10 +5,6 @@ import org.bukkit.block.Block;
 
 public class BlockUtil {
 
-    private BlockUtil() {
-
-    }
-
     public static boolean areBlocksSimilar(Block block, Block block2) {
 
         return block.getTypeId() == block2.getTypeId();
