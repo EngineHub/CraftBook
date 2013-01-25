@@ -222,7 +222,7 @@ public class MechanicListenerAdapter {
 
             if (type == BlockID.REDSTONE_WIRE) {
 
-                if (CraftBookPlugin.inst().getConfiguration().indirectRedstone) { //XXX never gets called?
+                if (CraftBookPlugin.inst().getConfiguration().indirectRedstone){
 
                     // power all blocks around the redstone wire on the same y level
                     // north/south
