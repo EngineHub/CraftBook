@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -38,8 +39,9 @@ public class CustomDrops implements Listener {
                 World w = event.getBlock().getWorld();
                 // Add the custom drops
                 for (CustomDropManager.DropDefinition dropDefinition : drops) {
-                    if (ItemUtil.isStackValid(dropDefinition.getItemStack())) {
-                        w.dropItemNaturally(l, dropDefinition.getItemStack());
+                    ItemStack stack = dropDefinition.getItemStack();
+                    if (ItemUtil.isStackValid(stack)) {
+                        w.dropItemNaturally(l, stack);
                     }
                 }
 
@@ -62,8 +64,9 @@ public class CustomDrops implements Listener {
             if (!drops[0].append) event.getDrops().clear();
             // Add the custom drops
             for (CustomDropManager.DropDefinition dropDefinition : drops) {
-                if (ItemUtil.isStackValid(dropDefinition.getItemStack())) {
-                    event.getDrops().add(dropDefinition.getItemStack());
+                ItemStack stack = dropDefinition.getItemStack();
+                if (ItemUtil.isStackValid(stack)) {
+                    event.getDrops().add(stack);
                 }
             }
         }

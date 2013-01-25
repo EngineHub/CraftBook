@@ -283,9 +283,7 @@ public final class CustomDropManager {
         public ItemStack getItemStack() {
 
             if (CraftBookPlugin.inst().getRandom().nextInt(100) > chance) return null;
-            return new ItemStack(id,
-                    countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt
-                            (countMax - countMin + 1), data);
+            return new ItemStack(id, countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1), data);
         }
 
         public ItemStack[] getItemStacks() {
