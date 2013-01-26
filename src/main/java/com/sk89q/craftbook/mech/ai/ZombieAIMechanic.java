@@ -30,7 +30,10 @@ public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic
         if (zombie.getLocation().getBlock().getLightLevel() > 6) return; // They can clearly see the target.
         if (event.getTarget() instanceof Player)
             if (((Player) event.getTarget()).isSneaking()) {
-                if(CraftBookPlugin.inst().getRandom().nextInt((int) Math.floor(event.getTarget().getLocation().distance(zombie.getLocation()))) > 1)
+                int distance = (int) Math.floor(event.getTarget().getLocation().distance(zombie.getLocation()));
+                if(distance < 0)
+                    distance = 0;
+                if(distance != 0 && CraftBookPlugin.inst().getRandom().nextInt(distance) > 1)
                     event.setCancelled(true);
             }
     }
