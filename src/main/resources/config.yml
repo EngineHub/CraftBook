@@ -3,7 +3,7 @@ enable-mechanisms: true
 enable-vehicles: true
 
 language: en_US
-no-op-permissions: true
+no-op-permissions: false
 safe-destruction: true
 use-block-distance: false
 check-worldguard-flags: true
