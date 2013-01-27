@@ -258,13 +258,16 @@ public class Pipes extends AbstractMechanic {
 
                 Furnace f = (Furnace) fac.getState();
                 items.add(f.getInventory().getResult());
-                if (f.getInventory().getResult() != null) f.getInventory().getResult().setAmount(0);
+                if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
                 visitedPipes.add(BukkitUtil.toVector(fac));
                 searchNearbyPipes(block);
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
                         if (item == null) continue;
-                        ItemUtil.addToStack(f.getInventory().getResult(), item);
+                        if(f.getInventory().getResult() == null)
+                            f.getInventory().setResult(item);
+                        else
+                            ItemUtil.addToStack(f.getInventory().getResult(), item);
                     }
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {

@@ -162,14 +162,14 @@ public class MidiJingleSequencer implements JingleSequencer {
         }
     }
 
-    private static byte toMCNote(int n) {
+    protected static byte toMCNote(int n) {
 
         if (n < 54) return (byte) ((n - 6) % (18 - 6));
         else if (n > 78) return (byte) ((n - 6) % (18 - 6) + 12);
         else return (byte) (n - 54);
     }
 
-    private static byte toMCInstrument(Integer patch) {
+    protected static byte toMCInstrument(Integer patch) {
 
         if (patch == null) return 0;
 
@@ -178,7 +178,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) instruments[patch];
     }
 
-    public Sound toMCSound(byte instrument) {
+    protected Sound toMCSound(byte instrument) {
 
         switch (instrument) {
             case 0:
@@ -200,8 +200,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         }
     }
 
-    @SuppressWarnings("unused")
-    private static int toMCPercussion(int note) {
+    protected static int toMCPercussion(int note) {
 
         int i = note - 35;
         if (i < 0 || i >= percussion.length) {
