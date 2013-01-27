@@ -69,12 +69,6 @@ public class JingleNoteManager {
         instances.clear();
     }
 
-    public boolean isSequencerPlaying() {
-
-        if(sequencer == null) return false;
-        return sequencer.isSongPlaying();
-    }
-
     public JingleSequencer getSequencer() {
 
         return sequencer;

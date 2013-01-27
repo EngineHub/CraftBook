@@ -117,7 +117,7 @@ public class Melody extends AbstractIC {
         }
 
         try {
-            if (jNote != null && jNote.isSequencerPlaying() && forceStart) return;
+            if (jNote != null && jNote.getSequencer() != null && ((MidiJingleSequencer) jNote.getSequencer()).isSongPlaying() && forceStart) return;
         } catch (Exception ignored) {
         }
 
@@ -141,7 +141,7 @@ public class Melody extends AbstractIC {
                     jNote.play(player, sequencer);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
-            } else if (!chip.getInput(0) && jNote.isSequencerPlaying()) {
+            } else if (!chip.getInput(0) && jNote.getSequencer() != null && ((MidiJingleSequencer) jNote.getSequencer()).isSongPlaying()) {
                 for (Player player : getServer().getOnlinePlayers()) {
                     jNote.stop(player);
                 }

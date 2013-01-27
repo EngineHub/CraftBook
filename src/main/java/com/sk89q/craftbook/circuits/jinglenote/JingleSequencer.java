@@ -47,6 +47,4 @@ public interface JingleSequencer {
             return velocity / 64;
         }
     }
-
-    public boolean isSongPlaying();
 }
