@@ -209,6 +209,7 @@ public class BetterPistons extends AbstractMechanic {
                             final int i = x;
                             if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
                                 trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                                Bukkit.getLogger().severe("COWS!");
                                 break;
                             }
                             trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);

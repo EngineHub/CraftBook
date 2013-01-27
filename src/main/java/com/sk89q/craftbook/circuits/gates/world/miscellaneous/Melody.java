@@ -5,7 +5,6 @@ import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -27,6 +26,7 @@ import com.sk89q.craftbook.util.RegexUtil;
  */
 public class Melody extends AbstractIC {
 
+    MidiJingleSequencer sequencer;
     JingleNoteManager jNote = new JingleNoteManager();
 
     public Melody(Server server, ChangedSign block, ICFactory factory) {
@@ -49,23 +49,13 @@ public class Melody extends AbstractIC {
     @Override
     public void unload() {
 
-        boolean stop = false;
         try {
-            Sign s = (Sign)BukkitUtil.toSign(getSign()).getBlock().getState();
-            if(s.getLine(0).isEmpty());
-            stop = false;
-        }
-        catch(Exception e){
-            stop = true;
-        }
-        if(stop) {
-            try {
-                for (Player player : getServer().getOnlinePlayers()) {
-                    jNote.stop(player);
-                }
-                jNote.stopAll();
-            } catch (Exception e) {
+            sequencer.stop();
+            for (Player player : getServer().getOnlinePlayers()) {
+                jNote.stop(player);
             }
+            jNote.stopAll();
+        } catch (Exception ignored) {
         }
     }
 
@@ -117,20 +107,20 @@ public class Melody extends AbstractIC {
         }
 
         try {
-            if (jNote != null && jNote.getSequencer() != null && ((MidiJingleSequencer) jNote.getSequencer()).isSongPlaying() && forceStart) return;
+            if (sequencer != null && sequencer.isSongPlaying() && forceStart) return;
         } catch (Exception ignored) {
         }
 
         try {
             if (chip.getInput(0)) {
 
-                if (jNote != null && jNote.getSequencer() != null || jNote != null) {
+                if (sequencer != null || jNote != null) {
                     for (Player player : getServer().getOnlinePlayers()) {
                         jNote.stop(player);
                     }
                     jNote.stopAll();
                 }
-                MidiJingleSequencer sequencer = new MidiJingleSequencer(file);
+                sequencer = new MidiJingleSequencer(file);
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (player == null) {
                         continue;
@@ -141,7 +131,8 @@ public class Melody extends AbstractIC {
                     jNote.play(player, sequencer);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
-            } else if (!chip.getInput(0) && jNote.getSequencer() != null && ((MidiJingleSequencer) jNote.getSequencer()).isSongPlaying()) {
+            } else if (!chip.getInput(0) && sequencer != null) {
+                sequencer.stop();
                 for (Player player : getServer().getOnlinePlayers()) {
                     jNote.stop(player);
                 }
