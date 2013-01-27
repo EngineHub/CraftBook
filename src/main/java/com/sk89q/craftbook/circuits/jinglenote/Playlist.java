@@ -129,12 +129,10 @@ public class Playlist {
 
                         if(!areIdentical(players, lastPlayers)) {
 
-                            Bukkit.getLogger().severe("OUT OF SYNC PLAYERS");
                             for(Player p : players) {
 
                                 if(lastPlayers.contains(p))
                                     continue;
-                                Bukkit.getLogger().severe("ADDING A PLAYER");
 
                                 jNote.play(p, midiSequencer);
                             }
@@ -143,7 +141,6 @@ public class Playlist {
 
                                 if(players.contains(p))
                                     continue;
-                                Bukkit.getLogger().severe("TAKING A PLAYER");
 
                                 jNote.stop(p);
                             }
@@ -193,7 +190,6 @@ public class Playlist {
                     stringSequencer = null;
                 }
                 String line = lines.get(position);
-                Bukkit.getLogger().severe(line);
                 position++;
                 if (line.trim().startsWith("#") || line.trim().isEmpty())
                     continue;
