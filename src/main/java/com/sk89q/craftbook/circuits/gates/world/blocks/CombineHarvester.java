@@ -185,6 +185,9 @@ public class CombineHarvester extends AbstractIC {
             drops.add(new ItemStack(ItemID.POTATO, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
             if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
                 drops.add(new ItemStack(ItemID.POISONOUS_POTATO, 1));
+        } else if (b.getTypeId() == BlockID.NETHER_WART) {
+
+            drops.add(new ItemStack(ItemID.NETHER_WART_SEED, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
         }
 
         return drops.toArray(new ItemStack[drops.size()]);
