@@ -95,7 +95,7 @@ public class FlameThrower extends AbstractIC {
                 int distance = Integer.parseInt(sign.getLine(2));
                 if (distance > 20) throw new ICVerificationException("Distance too great!");
 
-            } catch (Exception ignored) {
+            } catch (NumberFormatException ignored) {
             }
         }
 
