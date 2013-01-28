@@ -172,7 +172,7 @@ public class BetterPistons extends AbstractMechanic {
             }
 
             Vector vel = new Vector(piston.getFacing().getModX()*mult, piston.getFacing().getModY()*mult, piston.getFacing().getModZ()*mult);
-            if(trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION) {
+            if(trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION) {
                 for(Entity ent : trigger.getChunk().getEntities()) {
 
                     if(ent.getLocation().distanceSquared(trigger.getRelative(piston.getFacing()).getLocation()) < 2) {
