@@ -163,7 +163,7 @@ public class BetterPistons extends AbstractMechanic {
             if(piston.isSticky())
                 return;
 
-            double mult;
+            double mult = 1;
             try {
                 mult = Double.parseDouble(((Sign) sign.getState()).getLine(2));
             }

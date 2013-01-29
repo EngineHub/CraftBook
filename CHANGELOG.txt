@@ -1,3 +1,23 @@
+3.5.2
++ Added BetterPistons mechanic
+  - Bounce Pistons, bounce blocks or entities with set velocity
+  - SuperSticky Pistons, allow a sticky piston to pull back further than 1 block.
+  - Crush Pistons, allow pistons to break blocks.
++ Chest Content Detector IC.
++ Added a custom list of blocks snow can replace to the config.
++ Added better corrupt sign handling, although bukkit has fixed the type of corruption this detected.
+* Fixed gates allowing transmutation of blocks.
++ Added a few extra messages to teleporters.
+* Bug fixes for realistic snow. No more StackOverflowExceptions.
+* Fixed a potion inducer error.
+* Fix Flamethrower IC.
+* Commented config properly.
+* Fixed a few perm bugs with commands.
+* Fix custom drop errors about invalid items.
+* Fixed an AI mechanic bug.
+* Fixed Combine Harvester & Nether Wart.
+* Fixed a pipe dupe bug.
+
 3.5.1
 * Fixed a few vehicle bugs.
 * Renamed Radio IC to JukeBox IC.
