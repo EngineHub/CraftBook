@@ -395,7 +395,9 @@ public class Updater {
             if (title.split(" v").length == 2) {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
                 //CraftBook Change
-                remoteVersion = CraftBookPlugin.inst().versionConverter.get(remoteVersion).split("-")[0];
+                String rmv = CraftBookPlugin.inst().versionConverter.get(remoteVersion);
+                if(rmv != null)
+                    remoteVersion = rmv.split("-")[0];
                 if(remoteVersion == null)
                     remoteVersion = "Unknown";
                 if(CraftBookPlugin.inst().versionConverter.containsKey(version))
