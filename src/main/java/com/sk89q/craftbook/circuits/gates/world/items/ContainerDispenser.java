@@ -131,8 +131,10 @@ public class ContainerDispenser extends AbstractIC {
         return !(stack == null || inv == null) && dispenseItem(inv, stack);
     }
 
-    public boolean dispenseItem(Inventory inv, ItemStack item) {
+    public boolean dispenseItem(Inventory inv, ItemStack old) {
 
+        ItemStack item = old.clone();
+        item.setAmount(this.item.getAmount());
         if (inv == null) return false;
         HashMap<Integer, ItemStack> over = inv.removeItem(item.clone());
         if (over.isEmpty()) {
