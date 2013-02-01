@@ -125,7 +125,7 @@ public class Playlist {
 
                 if(midiSequencer != null) {
 
-                    while(midiSequencer.isSongPlaying()) {
+                    while(midiSequencer != null && midiSequencer.isSongPlaying()) {
 
                         if(!areIdentical(players, lastPlayers)) {
 
@@ -158,7 +158,7 @@ public class Playlist {
                 }
                 if(stringSequencer != null) {
 
-                    while(stringSequencer.isSongPlaying()) {
+                    while(stringSequencer != null && stringSequencer.isSongPlaying()) {
 
                         if(!lastPlayers.equals(players)) {
 
