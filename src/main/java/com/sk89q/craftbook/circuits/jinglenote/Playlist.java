@@ -201,6 +201,14 @@ public class Playlist {
                     return;
                 } else if (line.startsWith("midi ")) {
 
+                    if(players.isEmpty()) {
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            BukkitUtil.printStacktrace(e);
+                        }
+                        continue;
+                    }
                     File file = null;
                     String midiName = line.replace("midi ", "");
 
@@ -221,7 +229,18 @@ public class Playlist {
 
                     try {
                         midiSequencer = new MidiJingleSequencer(file);
-                        midiSequencer.getSequencer().start();
+                        if (!midiSequencer.getSequencer().isOpen()) {
+                            midiSequencer.getSequencer().open();
+                        }
+
+                        for(Player player : players)
+                            jNote.play(player, midiSequencer);
+
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            BukkitUtil.printStacktrace(e);
+                        }
                     } catch (MidiUnavailableException e) {
                         BukkitUtil.printStacktrace(e);
                     } catch (InvalidMidiDataException e) {
@@ -229,19 +248,38 @@ public class Playlist {
                     } catch (IOException e) {
                         BukkitUtil.printStacktrace(e);
                     }
-
-                    for(Player player : players)
-                        jNote.play(player, midiSequencer);
                 } else if (line.startsWith("tune ")) {
 
+                    if(players.isEmpty()) {
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            BukkitUtil.printStacktrace(e);
+                        }
+                        continue;
+                    }
                     String tune = line.replace("tune ", "");
 
                     stringSequencer = new StringJingleSequencer(tune, 0);
 
                     for(Player player : players)
                         jNote.play(player, stringSequencer);
+
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException e) {
+                        BukkitUtil.printStacktrace(e);
+                    }
                 } else if (line.startsWith("send ")) {
 
+                    if(players.isEmpty()) {
+                        try {
+                            Thread.sleep(1000L);
+                        } catch (InterruptedException e) {
+                            BukkitUtil.printStacktrace(e);
+                        }
+                        continue;
+                    }
                     String message = line.replace("send ", "");
 
                     for(Player player : players)

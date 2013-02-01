@@ -101,6 +101,8 @@ public class MidiJingleSequencer implements JingleSequencer {
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
         try {
+            if(sequencer.getSequence() == null)
+                return;
             if (!sequencer.isOpen()) {
                 sequencer.open();
             }
@@ -136,7 +138,12 @@ public class MidiJingleSequencer implements JingleSequencer {
                 }
             });
 
-            sequencer.start();
+            try {
+                if (sequencer.isOpen()) {
+                    sequencer.start();
+                }
+            }
+            catch(Exception e){}
 
             while (sequencer.isRunning()) {
                 Thread.sleep(1000);
