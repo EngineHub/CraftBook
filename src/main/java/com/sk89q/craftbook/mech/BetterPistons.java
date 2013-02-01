@@ -92,6 +92,11 @@ public class BetterPistons extends AbstractMechanic {
                     s.update(true);
                     type = Types.BOUNCE;
                 }
+                if(s.getLine(1).equalsIgnoreCase("[SuperPush]") && CraftBookPlugin.inst().getConfiguration().pistonsSuperPush) {
+                    s.setLine(1, "[SuperPush]");
+                    s.update(true);
+                    type = Types.SUPERPUSH;
+                }
             }
 
             return type;
@@ -186,6 +191,8 @@ public class BetterPistons extends AbstractMechanic {
             }
         } else if (type == Types.SUPERSTICKY && event.getNewCurrent() < event.getOldCurrent()) {
             final PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
+            if(!piston.isSticky())
+                return;
             if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE) {
 
                 int block;
@@ -218,6 +225,40 @@ public class BetterPistons extends AbstractMechanic {
 
                 }, 2L);
             }
+        } else if (type == Types.SUPERPUSH && event.getNewCurrent() > event.getOldCurrent()) {
+            final PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
+            if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE) {
+
+                int block;
+                try {
+                    block = Integer.parseInt(((Sign) sign.getState()).getLine(2));
+                }
+                catch(Exception e){
+                    block = 10;
+                }
+
+                if(block > 10)
+                    block = 10;
+
+                final int fblock = block;
+
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                    @Override
+                    public void run () {
+                        for(int x = fblock+2; x >= 2; x--) {
+                            final int i = x;
+                            if(trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder)
+                                continue;
+                            if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
+                                trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
+                                trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                            }
+                        }
+                    }
+
+                }, 2L);
+            }
         }
     }
 
@@ -227,6 +268,6 @@ public class BetterPistons extends AbstractMechanic {
 
     private enum Types {
 
-        CRUSH, SUPERSTICKY, BOUNCE;
+        CRUSH, SUPERSTICKY, BOUNCE, SUPERPUSH;
     }
 }
