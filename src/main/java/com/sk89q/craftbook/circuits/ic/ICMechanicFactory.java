@@ -90,6 +90,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             ic = ICManager.getCachedIC(pt);
         } else {
             ic = registration.getFactory().create(sign);
+            ic.load();
             // add the created ic to the cache
             ICManager.addCachedIC(pt, ic);
         }
@@ -173,6 +174,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             factory.checkPlayer(sign, player);
 
             IC ic = registration.getFactory().create(sign);
+            ic.load();
 
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
 
