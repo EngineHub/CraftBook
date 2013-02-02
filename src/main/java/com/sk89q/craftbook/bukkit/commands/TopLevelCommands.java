@@ -11,13 +11,13 @@ import com.sk89q.craftbook.bukkit.ReportWriter;
 import com.sk89q.craftbook.bukkit.Updater;
 import com.sk89q.craftbook.bukkit.Updater.UpdateResult;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.PastebinPoster;
+import com.sk89q.craftbook.util.PastebinPoster.PasteCallback;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import com.sk89q.worldguard.util.PastebinPoster;
-import com.sk89q.worldguard.util.PastebinPoster.PasteCallback;
 
 /**
  * Author: Turtle9598
