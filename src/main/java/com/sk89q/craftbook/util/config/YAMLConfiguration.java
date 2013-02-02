@@ -22,7 +22,7 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class YAMLConfiguration extends LocalConfiguration {
 
-    protected final YAMLProcessor config;
+    public final YAMLProcessor config;
     protected final Logger logger;
     private FileHandler logFileHandler;
 

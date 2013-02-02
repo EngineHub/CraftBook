@@ -138,7 +138,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Set the version converter contents. It really only needs the current versions stuff... but just incase you are using a release version that isn't on bukkit dev yet, this is here.
         versionConverter.put("3.4.1", "1541");
-        versionConverter.put("3.5", "1680");
+        versionConverter.put("3.5",   "1680");
         versionConverter.put("3.5.1", "1718");
         versionConverter.put("3.5.2", "1749");
     }

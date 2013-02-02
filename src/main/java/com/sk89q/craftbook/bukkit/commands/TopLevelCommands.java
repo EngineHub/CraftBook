@@ -1,15 +1,23 @@
 package com.sk89q.craftbook.bukkit.commands;
+import java.io.File;
+import java.io.IOException;
+
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.ReportWriter;
 import com.sk89q.craftbook.bukkit.Updater;
 import com.sk89q.craftbook.bukkit.Updater.UpdateResult;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.NestedCommand;
+import com.sk89q.worldguard.util.PastebinPoster;
+import com.sk89q.worldguard.util.PastebinPoster.PasteCallback;
 
 /**
  * Author: Turtle9598
@@ -66,6 +74,43 @@ public class TopLevelCommands {
                 ver = CraftBookPlugin.inst().versionConverter.inverse().get(ver);
             sender.sendMessage(ChatColor.YELLOW + "CraftBook version " + ver);
             sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by me4502 & Dark_Arc");
+        }
+
+        @Command(aliases = {"report"}, desc = "Writes a report on CraftBook", flags = "p", max = 0)
+        @CommandPermissions({"craftbook.report"})
+        public void report(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
+
+            File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
+            ReportWriter report = new ReportWriter(CraftBookPlugin.inst());
+
+            try {
+                report.write(dest);
+                sender.sendMessage(ChatColor.YELLOW + "CraftBook report written to "
+                        + dest.getAbsolutePath());
+            } catch (IOException e) {
+                throw new CommandException("Failed to write report: " + e.getMessage());
+            }
+
+            if (args.hasFlag('p')) {
+                CraftBookPlugin.inst().checkPermission(sender, "craftbook.report.pastebin");
+
+                sender.sendMessage(ChatColor.YELLOW + "Now uploading to Pastebin...");
+                PastebinPoster.paste(report.toString(), new PasteCallback() {
+
+                    @Override 
+                    public void handleSuccess(String url) {
+                        // Hope we don't have a thread safety issue here
+                        sender.sendMessage(ChatColor.YELLOW + "CraftBook report (1 hour): " + url);
+                    }
+
+                    @Override
+                    public void handleError(String err) {
+                        // Hope we don't have a thread safety issue here
+                        sender.sendMessage(ChatColor.YELLOW + "CraftBook report pastebin error: " + err);
+                    }
+                });
+            }
+
         }
     }
 }
