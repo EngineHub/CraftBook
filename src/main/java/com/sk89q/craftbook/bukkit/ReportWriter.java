@@ -12,6 +12,7 @@ import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.LocalConfiguration;
+import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.worldguard.util.LogListBlock;
 
 /**
@@ -30,6 +31,7 @@ public class ReportWriter {
         appendReportHeader(plugin);
         appendServerInformation(plugin.getServer());
         appendPluginInformation(plugin.getServer().getPluginManager().getPlugins());
+        appendCraftBookInformation(plugin);
         appendGlobalConfiguration(plugin.getConfiguration());
         appendln("-------------");
         appendln("END OF REPORT");
@@ -78,7 +80,7 @@ public class ReportWriter {
     }
 
     private void appendReportHeader(CraftBookPlugin plugin) {
-        appendln("WorldGuard Configuration Report");
+        appendln("CraftBook Configuration Report");
         appendln("Generated " + dateFmt.format(date));
         appendln();
         appendln("Version: " + plugin.getDescription().getVersion());
@@ -142,6 +144,20 @@ public class ReportWriter {
         //log.put("Address", server.getIp(), server.getPort());
         log.put("Player count", "%d/%d",
                 server.getOnlinePlayers().length, server.getMaxPlayers());
+
+        append(log);
+        appendln();
+    }
+
+    private void appendCraftBookInformation(CraftBookPlugin plugin) {
+        appendHeader("CraftBook Information");
+
+        LogListBlock log = new LogListBlock();
+
+        int amount = 0;
+        for(MechanicManager mech : plugin.managerAdapter.getManagers())
+            amount += mech.factories.size();
+        log.put("Factories Loaded:", "%d", amount);
 
         append(log);
         appendln();

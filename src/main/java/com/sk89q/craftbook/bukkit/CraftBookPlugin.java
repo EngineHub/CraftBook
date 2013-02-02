@@ -118,7 +118,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * The adapter for events to the manager.
      */
-    private MechanicListenerAdapter managerAdapter;
+    MechanicListenerAdapter managerAdapter;
 
     /**
      * The MechanicClock that manages all Self-Triggering Components.
