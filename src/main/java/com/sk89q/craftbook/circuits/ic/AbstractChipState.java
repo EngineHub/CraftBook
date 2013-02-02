@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.circuits.ic;
 
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * @author Silthus
@@ -33,7 +33,7 @@ public abstract class AbstractChipState implements ChipState {
     public boolean get(int pin) {
 
         Block block = getBlock(pin);
-        return block != null && (block.isBlockIndirectlyPowered() || block.isBlockPowered() || block.getBlockPower() > 0);
+        return block != null && (block.isBlockIndirectlyPowered() || block.isBlockPowered() || block.getBlockPower() > 0 || block.getType() == Material.DIODE_BLOCK_ON);
     }
 
     @Override
