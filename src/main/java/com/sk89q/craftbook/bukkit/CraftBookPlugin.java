@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.jar.JarFile;
@@ -37,6 +36,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalComponent;
@@ -124,7 +125,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private MechanicClock mechanicClock;
 
-    public HashMap<String, String> versionConverter = new HashMap<String, String>();
+    public BiMap<String, String> versionConverter = HashBiMap.create();
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
