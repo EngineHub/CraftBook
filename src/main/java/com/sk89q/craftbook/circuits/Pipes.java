@@ -219,7 +219,6 @@ public class Pipes extends AbstractMechanic {
 
         return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE || typeId == BlockID.PISTON_STICKY_BASE ||
                 typeId == BlockID.WALL_SIGN;
-
     }
 
     public void startPipe(Block block) {

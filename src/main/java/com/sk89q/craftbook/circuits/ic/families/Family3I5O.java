@@ -8,6 +8,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractChipState;
 import com.sk89q.craftbook.circuits.ic.AbstractICFamily;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 
@@ -82,6 +83,18 @@ public class Family3I5O extends AbstractICFamily {
         public void setOutput(int outputIndex, boolean value) {
 
             set(outputIndex + 3, value);
+        }
+
+        @Override
+        public void set(int pin, boolean value) {
+
+            Block block = getBlock(pin);
+            if (block != null) {
+                if(pin == 3 || pin == 4 || pin == 5)
+                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(BukkitUtil.toSign(sign).getBlock()), 2));
+                else
+                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(BukkitUtil.toSign(sign).getBlock())));
+            }
         }
 
         @Override

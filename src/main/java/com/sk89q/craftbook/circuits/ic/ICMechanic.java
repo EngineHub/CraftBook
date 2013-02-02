@@ -113,14 +113,11 @@ public class ICMechanic extends PersistentMechanic {
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
-            if (block.getTypeId() == BlockID.WALL_SIGN) {
-                ChangedSign sign = BukkitUtil.toChangedSign(block);
+            ChangedSign sign = BukkitUtil.toChangedSign(block);
 
-                Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
+            Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
 
-                return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && (
-                        (PersistentIC) ic).isActive();
-            }
+            return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
         }
 
         return false;

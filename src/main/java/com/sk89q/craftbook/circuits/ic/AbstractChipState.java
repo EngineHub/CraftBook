@@ -33,7 +33,7 @@ public abstract class AbstractChipState implements ChipState {
     public boolean get(int pin) {
 
         Block block = getBlock(pin);
-        return block != null && block.isBlockIndirectlyPowered();
+        return block != null && (block.isBlockIndirectlyPowered() || block.isBlockPowered() || block.getBlockPower() > 0);
     }
 
     @Override

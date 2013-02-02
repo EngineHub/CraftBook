@@ -23,7 +23,6 @@ import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-//TODO finish this.
 public class BetterPistons extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<BetterPistons> {
@@ -227,7 +226,7 @@ public class BetterPistons extends AbstractMechanic {
             }
         } else if (type == Types.SUPERPUSH && event.getNewCurrent() > event.getOldCurrent()) {
             final PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
-            if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE) {
+            if(trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_MOVING_PIECE) {
 
                 int block;
                 try {
@@ -248,7 +247,7 @@ public class BetterPistons extends AbstractMechanic {
                     public void run () {
                         for(int x = fblock+2; x >= 2; x--) {
                             final int i = x;
-                            if(trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder)
+                            if(trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION)
                                 continue;
                             if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
                                 trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
