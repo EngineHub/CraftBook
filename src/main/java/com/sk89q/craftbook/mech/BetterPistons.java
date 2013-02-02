@@ -27,8 +27,11 @@ public class BetterPistons extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<BetterPistons> {
 
-        public Factory() {
+        Types type;
 
+        public Factory(Types type) {
+
+            this.type = type;
         }
 
         /**
@@ -56,12 +59,12 @@ public class BetterPistons extends AbstractMechanic {
                             continue;
                         sign = block.getRelative(face);
                         type = checkSign(sign);
-                        if(type != null)
+                        if(type == this.type)
                             break signCheck;
                     }
                 }
 
-                if(type == null)
+                if(type == null || type != this.type)
                     return null;
                 return new BetterPistons(block, sign, type);
             }
@@ -118,7 +121,7 @@ public class BetterPistons extends AbstractMechanic {
 
                 type = checkSign(BukkitUtil.toSign(sign).getBlock());
 
-                if(type == null)
+                if(type == null || type != this.type)
                     return null;
 
                 player.checkPermission("craftbook.mech.pistons." + type.name().toLowerCase());
@@ -265,7 +268,7 @@ public class BetterPistons extends AbstractMechanic {
     private final Block sign;
     private final Types type;
 
-    private enum Types {
+    public static enum Types {
 
         CRUSH, SUPERSTICKY, BOUNCE, SUPERPUSH;
     }
