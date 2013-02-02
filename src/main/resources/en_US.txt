@@ -3,6 +3,9 @@ area.permissions:You don't have permissions to use that in this area!
 mech.use-permission:You don't have permission to use this mechanic.
 mech.not-enough-blocks:Not enough blocks to trigger mechanic!
 mech.pistons.crush.created:Piston Crush Mechanic Created!
+mech.pistons.supersticky.created:Piston Super-Sticky Mechanic Created!
+mech.pistons.bounce.created:Piston Bounce Mechanic Created!
+mech.pistons.superpush.created:Piston Super-Push Mechanic Created!
 mech.lift.target-sign-created:Elevator target sign created.
 mech.lift.down-sign-created:Elevator down sign created.
 mech.lift.up-sign-created:Elevator up sign created.
