@@ -205,6 +205,8 @@ public class BetterPistons extends AbstractMechanic {
                     block = 10;
                 }
 
+                final boolean air = ((Sign) sign.getState()).getLine(3).equalsIgnoreCase("AIR");
+
                 if(block > 10)
                     block = 10;
 
@@ -216,7 +218,7 @@ public class BetterPistons extends AbstractMechanic {
                     public void run () {
                         for(int x = 2; x <= fblock+2; x++) {
                             final int i = x;
-                            if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
+                            if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
                                 trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                 break;
                             }
