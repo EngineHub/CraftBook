@@ -71,7 +71,7 @@ public class TopLevelCommands {
 
             String ver = CraftBookPlugin.inst().getDescription().getVersion();
             if(CraftBookPlugin.inst().versionConverter.inverse().get(ver) != null)
-                ver = CraftBookPlugin.inst().versionConverter.inverse().get(ver);
+                ver = CraftBookPlugin.inst().versionConverter.inverse().get(ver) + " (" + CraftBookPlugin.inst().getDescription().getVersion() + ")";
             sender.sendMessage(ChatColor.YELLOW + "CraftBook version " + ver);
             sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by me4502 & Dark_Arc");
         }

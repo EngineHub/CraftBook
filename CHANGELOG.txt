@@ -1,3 +1,19 @@
+3.5.3
+* Fix ContainerDispenser ignoring amount written on sign.
+* Fix an error with Painting Switcher and the Auto Updater.
++ Added SuperPush piston mechanic. It can push air.
+* Fix an error in Playlists sometimes stopping players from being removed.
+* Fixed some MIDIs sounding different with Radio IC's.
+* Fix item dissapearing bug with BetterPistons.
+* Fixed 5 Output IC's.
++ Added missing language nodes for BetterPistons.
+* Made /cb about give release versions name (If using one).
++ Added /cb report command to allow us to solve peoples issues quicker. (Reports config and other info)
+* BetterPiston mechanics allow multiple mechanics on a single piston.
++ Added an AIR option to last line of SuperSticky, allowing it to pull air.
+* Fixed Repeaters not working 100% with BetterPistons.
+* Fixed Repeaters not working 100% with IC's. (Thanks to Silthus)
+
 3.5.2
 + Added BetterPistons mechanic
   - Bounce Pistons, bounce blocks or entities with set velocity

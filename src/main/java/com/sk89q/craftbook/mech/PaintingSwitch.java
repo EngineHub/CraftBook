@@ -88,7 +88,7 @@ public class PaintingSwitch implements Listener {
         }
         Art[] art = Art.values().clone();
         Painting paint = players.get(player.getName());
-        if(LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
+        if(!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
             Painting p = players.remove(event.getPlayer().getName());
             if (p != null) {
                 paintings.remove(p);

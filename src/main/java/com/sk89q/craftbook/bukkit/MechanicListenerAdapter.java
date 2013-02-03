@@ -289,7 +289,8 @@ public class MechanicListenerAdapter {
                 Diode diode = (Diode) block.getState().getData();
                 BlockFace f = diode.getFacing();
                 handleDirectWireInput(new WorldVector(w, x + f.getModX(), y, z + f.getModZ()), block, oldLevel, newLevel);
-                handleDirectWireInput(new WorldVector(w, x + f.getModX(), y - 1, z + f.getModZ()), block, oldLevel, newLevel);
+                if(block.getRelative(f).getTypeId() != 0)
+                    handleDirectWireInput(new WorldVector(w, x + f.getModX(), y - 1, z + f.getModZ()), block, oldLevel, newLevel);
                 return;
             }
             // For redstone wires and repeaters, the code already exited this method

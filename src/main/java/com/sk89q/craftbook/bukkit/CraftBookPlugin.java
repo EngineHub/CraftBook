@@ -141,6 +141,7 @@ public class CraftBookPlugin extends JavaPlugin {
         versionConverter.put("3.5",   "1680");
         versionConverter.put("3.5.1", "1718");
         versionConverter.put("3.5.2", "1749");
+        versionConverter.put("3.5.3", "1766");
     }
 
     public void registerManager(MechanicManager manager) {
@@ -216,7 +217,7 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         // Initialize the language manager.
-        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", false);
+        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", true);
         languageManager = new LanguageManager();
 
         // Resolve Vault
