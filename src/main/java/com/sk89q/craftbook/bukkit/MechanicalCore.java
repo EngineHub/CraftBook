@@ -181,6 +181,7 @@ public class MechanicalCore implements LocalComponent {
      *
      * @return true if the mechanic was successfully unregistered.
      */
+    @SuppressWarnings("unused")
     private boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
 
         return manager.unregister(factory);
@@ -188,15 +189,13 @@ public class MechanicalCore implements LocalComponent {
 
     private boolean unregisterAllMechanics() {
 
-        boolean ret = true;
-
         Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();
 
         while (iterator.hasNext()) {
-            if (!unregisterMechanic(iterator.next())) ret = false;
+            manager.unregister(iterator);
         }
 
-        return ret;
+        return true;
     }
 
     /**

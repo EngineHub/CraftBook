@@ -19,6 +19,7 @@ package com.sk89q.craftbook;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,6 +124,17 @@ public class MechanicManager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Unregister a mechanic factory, using a iterator object.
+     *
+     * @param factory
+     */
+    public boolean unregister(Iterator<MechanicFactory<? extends Mechanic>> factory) {
+
+        factory.remove();
+        return true;
     }
 
     /**

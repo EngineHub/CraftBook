@@ -579,15 +579,13 @@ public class CircuitCore implements LocalComponent {
 
     protected boolean unregisterAllMechanics() {
 
-        boolean ret = true;
-
         Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();
 
         while (iterator.hasNext()) {
-            if (!unregisterMechanic(iterator.next())) ret = false;
+            manager.unregister(iterator);
         }
 
-        return ret;
+        return true;
     }
 
     public List<RegisteredICFactory> getICList() {
