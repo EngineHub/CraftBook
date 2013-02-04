@@ -377,6 +377,7 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
+        components.clear();
         config.unload();
     }
 
@@ -679,9 +680,12 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
+        components.clear();
         HandlerList.unregisterAll(this);
         config.unload();
         config.load();
+        managerAdapter = new MechanicListenerAdapter();
+        mechanicClock = new MechanicClock();
         registerGlobalEvents();
         startComponents();
     }

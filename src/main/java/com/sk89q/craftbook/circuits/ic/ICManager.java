@@ -180,6 +180,15 @@ public class ICManager {
         removeCachedIC(pt);
     }
 
+    /**
+     * Clears the IC cache.
+     *
+     */
+    public static void emptyCache() {
+
+        cachedICs.clear();
+    }
+
     public boolean hasCustomPrefix(String prefix) {
 
         return customPrefix.contains(prefix.toLowerCase());

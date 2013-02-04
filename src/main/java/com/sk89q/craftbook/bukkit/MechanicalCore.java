@@ -83,6 +83,7 @@ public class MechanicalCore implements LocalComponent {
     @Override
     public void disable() {
 
+        unregisterAllMechanics();
         // Nothing to do at the current time
     }
 
@@ -185,7 +186,6 @@ public class MechanicalCore implements LocalComponent {
         return manager.unregister(factory);
     }
 
-    @SuppressWarnings("unused")
     private boolean unregisterAllMechanics() {
 
         boolean ret = true;

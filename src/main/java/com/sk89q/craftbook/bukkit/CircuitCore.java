@@ -207,7 +207,7 @@ public class CircuitCore implements LocalComponent {
     private static CircuitCore instance;
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
     private MechanicManager manager;
-    private ICManager ICManager;
+    private ICManager icManager;
 
     private YAMLICConfiguration icConfiguration;
 
@@ -272,6 +272,8 @@ public class CircuitCore implements LocalComponent {
     @Override
     public void disable() {
 
+        unregisterAllMechanics();
+        ICManager.emptyCache();
         icConfiguration.unload();
     }
 
@@ -309,7 +311,7 @@ public class CircuitCore implements LocalComponent {
 
         if (config.ICEnabled) {
             registerICs();
-            registerMechanic(ICFactory = new ICMechanicFactory(ICManager));
+            registerMechanic(ICFactory = new ICMechanicFactory(icManager));
         }
 
         // Let's register mechanics!
@@ -324,7 +326,7 @@ public class CircuitCore implements LocalComponent {
         Server server = plugin.getServer();
 
         // Let's register ICs!
-        ICManager = new ICManager();
+        icManager = new ICManager();
         ICFamily familySISO = FAMILY_SISO;
         ICFamily family3ISO = FAMILY_3ISO;
         ICFamily familySI3O = FAMILY_SI3O;
@@ -538,7 +540,7 @@ public class CircuitCore implements LocalComponent {
     public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
         if (CraftBookPlugin.inst().getConfiguration().disabledICs.contains(name)) return false;
-        return ICManager.register(name, longName, factory, families);
+        return icManager.register(name, longName, factory, families);
     }
 
     /**
@@ -590,10 +592,10 @@ public class CircuitCore implements LocalComponent {
 
     public List<RegisteredICFactory> getICList() {
 
-        if(ICManager == null)
+        if(icManager == null)
             return new ArrayList<RegisteredICFactory>();
         List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
-        for (Map.Entry<String, RegisteredICFactory> e : ICManager.registered.entrySet()) {
+        for (Map.Entry<String, RegisteredICFactory> e : icManager.registered.entrySet()) {
             ics.add(e.getValue());
         }
         return ics;
@@ -601,10 +603,10 @@ public class CircuitCore implements LocalComponent {
 
     public void generateICDocs(Player player, String id) {
 
-        RegisteredICFactory ric = ICManager.registered.get(id.toLowerCase());
+        RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
         if (ric == null) {
             try {
-                ric = ICManager.registered.get(getSearchID(player, id));
+                ric = icManager.registered.get(getSearchID(player, id));
                 if (ric == null) {
                     player.sendMessage(ChatColor.RED + "Invalid IC!");
                     return;
@@ -641,13 +643,13 @@ public class CircuitCore implements LocalComponent {
     public String getSearchID(Player p, String search) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(ICManager.registered.keySet());
+        icNameList.addAll(icManager.registered.keySet());
 
         Collections.sort(icNameList);
 
         for (String ic : icNameList) {
             try {
-                RegisteredICFactory ric = ICManager.registered.get(ic);
+                RegisteredICFactory ric = icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
                 if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
                         && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
@@ -670,7 +672,7 @@ public class CircuitCore implements LocalComponent {
     public String[] generateICText(Player p, String search, char[] parameters) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(ICManager.registered.keySet());
+        icNameList.addAll(icManager.registered.keySet());
 
         Collections.sort(icNameList);
 
@@ -680,7 +682,7 @@ public class CircuitCore implements LocalComponent {
             try {
                 thisIC:
                 {
-                RegisteredICFactory ric = ICManager.registered.get(ic);
+                RegisteredICFactory ric = icManager.registered.get(ic);
                 IC tic = ric.getFactory().create(null);
                 if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
                         && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
