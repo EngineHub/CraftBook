@@ -582,6 +582,7 @@ public class CircuitCore implements LocalComponent {
         Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();
 
         while (iterator.hasNext()) {
+            iterator.next();
             manager.unregister(iterator);
         }
 
