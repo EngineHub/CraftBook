@@ -21,7 +21,6 @@ import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -69,7 +68,7 @@ public class MechanicManager {
     /**
      * List of factories that will be used to detect mechanisms at a location.
      */
-    public final LinkedList<MechanicFactory<? extends Mechanic>> factories;
+    public final ArrayList<MechanicFactory<? extends Mechanic>> factories;
 
     /**
      * Keeps track of trigger blocks. Trigger blocks are the blocks that will activate mechanics. No block can be a
@@ -95,7 +94,7 @@ public class MechanicManager {
      */
     public MechanicManager() {
 
-        factories = new LinkedList<MechanicFactory<? extends Mechanic>>();
+        factories = new ArrayList<MechanicFactory<? extends Mechanic>>();
         triggersManager = new TriggerBlockManager();
         watchBlockManager = new WatchBlockManager();
     }
