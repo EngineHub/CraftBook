@@ -307,12 +307,12 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
             List<ItemStack> newItems = new ArrayList<ItemStack>();
             newItems.addAll(items);
             for (ItemStack ite : items) {
-                if (ite == null) continue;
+                if (!ItemUtil.isStackValid(ite)) continue;
                 int iteind = newItems.indexOf(ite);
                 int newAmount = ite.getAmount();
                 for (int i = 0; i < ite.getAmount(); i++) {
                     ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), ite);
-                    if (it == null) continue;
+                    if (!ItemUtil.isStackValid(it) || !ItemUtil.areItemsIdentical(ite, it)) continue;
                     if (it.getAmount() < 64) {
                         it.setAmount(it.getAmount() + 1);
                         newAmount -= 1;
@@ -324,7 +324,8 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                     }
                 }
                 if (newAmount > 0) delete = false;
-                ite.setAmount(newAmount);
+                if(newAmount != ite.getAmount())
+                    ite.setAmount(newAmount);
                 if (delete) newItems.remove(iteind);
                 else newItems.set(iteind, ite);
             }
