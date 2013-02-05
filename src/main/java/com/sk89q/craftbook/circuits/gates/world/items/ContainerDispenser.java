@@ -34,11 +34,10 @@ public class ContainerDispenser extends AbstractIC {
     }
 
     ItemStack item;
+    int amount;
 
     @Override
     public void load() {
-
-        int amount;
 
         try {
             amount = Integer.parseInt(getSign().getLine(2));
@@ -134,8 +133,8 @@ public class ContainerDispenser extends AbstractIC {
     public boolean dispenseItem(Inventory inv, ItemStack old) {
 
         ItemStack item = old.clone();
-        item.setAmount(this.item.getAmount());
-        if (inv == null) return false;
+        item.setAmount(amount);
+        if (inv == nulgl) return false;
         HashMap<Integer, ItemStack> over = inv.removeItem(item.clone());
         if (over.isEmpty()) {
             BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), item.clone());
