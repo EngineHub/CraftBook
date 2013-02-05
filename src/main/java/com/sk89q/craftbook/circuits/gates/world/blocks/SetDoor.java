@@ -30,9 +30,9 @@ public class SetDoor extends AbstractIC {
     private int width;
     private int height;
 
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
+    private int offsetX = 0;
+    private int offsetY = 1;
+    private int offsetZ = 0;
 
     private Block center;
     private BlockFace faceing;
@@ -94,13 +94,9 @@ public class SetDoor extends AbstractIC {
                 offsetY = Integer.parseInt(offsetSplit[1]);
                 offsetZ = Integer.parseInt(offsetSplit[2]);
             } catch (NumberFormatException e) {
-                offsetX = 0;
-                offsetY = 1;
-                offsetZ = 0;
+                // ignore and use defaults
             } catch (IndexOutOfBoundsException e) {
-                offsetX = 0;
-                offsetY = 1;
-                offsetZ = 0;
+                // ignore and use defaults
             }
             try {
                 // parse the size of the door
