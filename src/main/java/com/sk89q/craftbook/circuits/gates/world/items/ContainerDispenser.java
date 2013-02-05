@@ -134,7 +134,7 @@ public class ContainerDispenser extends AbstractIC {
 
         ItemStack item = old.clone();
         item.setAmount(amount);
-        if (inv == nulgl) return false;
+        if (inv == null) return false;
         HashMap<Integer, ItemStack> over = inv.removeItem(item.clone());
         if (over.isEmpty()) {
             BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), item.clone());
