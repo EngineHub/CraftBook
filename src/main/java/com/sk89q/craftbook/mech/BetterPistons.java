@@ -17,6 +17,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
@@ -197,12 +198,14 @@ public class BetterPistons extends AbstractMechanic {
                 return;
             if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE) {
 
-                int block;
+                int block = 10;
+                int amount = 1;
                 try {
-                    block = Integer.parseInt(((Sign) sign.getState()).getLine(2));
+                    block = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[0]);
+                    if(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2)).length > 1)
+                        amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[1]);
                 }
                 catch(Exception e){
-                    block = 10;
                 }
 
                 final boolean air = ((Sign) sign.getState()).getLine(3).equalsIgnoreCase("AIR");
@@ -212,33 +215,38 @@ public class BetterPistons extends AbstractMechanic {
 
                 final int fblock = block;
 
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                for(int p = 0; p < amount; p++) {
 
-                    @Override
-                    public void run () {
-                        for(int x = 2; x <= fblock+2; x++) {
-                            final int i = x;
-                            if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
-                                trigger.getRelative(piston.getFacing(), i).setTypeId(0);
-                                break;
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                        @Override
+                        public void run () {
+                            for(int x = 2; x <= fblock+2; x++) {
+                                final int i = x;
+                                if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
+                                    trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                                    break;
+                                }
+                                trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);
+                                //trigger.getRelative(piston.getFacing(), i+1).setTypeId(0);
                             }
-                            trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);
-                            //trigger.getRelative(piston.getFacing(), i+1).setTypeId(0);
                         }
-                    }
 
-                }, 2L);
+                    }, 2L*p);
+                }
             }
         } else if (type == Types.SUPERPUSH && event.getNewCurrent() > event.getOldCurrent()) {
             final PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
             if(trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_MOVING_PIECE) {
 
-                int block;
+                int block = 10;
+                int amount = 1;
                 try {
-                    block = Integer.parseInt(((Sign) sign.getState()).getLine(2));
+                    block = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[0]);
+                    if(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2)).length > 1)
+                        amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[1]);
                 }
                 catch(Exception e){
-                    block = 10;
                 }
 
                 if(block > 10)
@@ -246,22 +254,24 @@ public class BetterPistons extends AbstractMechanic {
 
                 final int fblock = block;
 
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                for(int p = 0; p < amount; p++) {
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
-                    @Override
-                    public void run () {
-                        for(int x = fblock+2; x >= 2; x--) {
-                            final int i = x;
-                            if(trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION)
-                                continue;
-                            if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
-                                trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
-                                trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                        @Override
+                        public void run () {
+                            for(int x = fblock+2; x >= 2; x--) {
+                                final int i = x;
+                                if(trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION)
+                                    continue;
+                                if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
+                                    trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
+                                    trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                                }
                             }
                         }
-                    }
 
-                }, 2L);
+                    }, 2L*p);
+                }
             }
         }
     }
