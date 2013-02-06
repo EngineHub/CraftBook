@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Recipe;
@@ -23,7 +24,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
  *
  * @author Me4502
  */
-public class CustomCrafting {
+public class CustomCrafting implements Listener {
 
     protected final RecipeManager recipes;
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();

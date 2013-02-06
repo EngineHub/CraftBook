@@ -121,8 +121,6 @@ public class MechanicalCore implements LocalComponent {
         for(Types type : BetterPistons.Types.values())
             if (config.pistonsEnabled) registerMechanic(new BetterPistons.Factory(type));
 
-        if (config.customCraftingEnabled) new CustomCrafting();
-
         // Special mechanics.
         if (plugin.getEconomy() != null && config.paymentEnabled) {
             registerMechanic(new Payment.Factory());
@@ -134,6 +132,9 @@ public class MechanicalCore implements LocalComponent {
         Server server = plugin.getServer();
         BukkitConfiguration config = plugin.getConfiguration();
 
+        if (config.customCraftingEnabled) {
+            server.getPluginManager().registerEvents(new CustomCrafting(), plugin);
+        }
         if (config.customDispensingEnabled) {
             server.getPluginManager().registerEvents(new DispenserRecipes(), plugin);
         }
