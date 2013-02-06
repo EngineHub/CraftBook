@@ -67,15 +67,27 @@ public class RecipeManager extends LocalConfiguration {
         private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
         private HashMap<CraftingItemStack, Character> items;
-        private Collection<CraftingItemStack> results;
+        private CraftingItemStack result;
         private List<String> shape;
+
+        public boolean hasAdvancedData() {
+            for(CraftingItemStack stack : ingredients)
+                if(!stack.hasAdvancedData())
+                    return true;
+            for(CraftingItemStack stack : items.keySet())
+                if(!stack.hasAdvancedData())
+                    return true;
+            if(!result.hasAdvancedData())
+                return true;
+
+            return false;
+        }
 
         private Recipe(String id, YAMLProcessor config) {
 
-            this.id = id;
+            this.id = id; 
             this.config = config;
             ingredients = new ArrayList<CraftingItemStack>();
-            results = new ArrayList<CraftingItemStack>();
             items = new HashMap<CraftingItemStack, Character>();
             load();
         }
@@ -89,7 +101,7 @@ public class RecipeManager extends LocalConfiguration {
                 items = getHashItems("crafting-recipes." + id + ".ingredients");
                 shape = config.getStringList("crafting-recipes." + id + ".shape", Arrays.asList(""));
             }
-            results = getItems("crafting-recipes." + id + ".results");
+            result = getItems("crafting-recipes." + id + ".results").iterator().next();
         }
 
         private HashMap<CraftingItemStack, Character> getHashItems(String path) {
@@ -132,6 +144,7 @@ public class RecipeManager extends LocalConfiguration {
                 for (Object oitem : config.getKeys(path)) {
                     String item = String.valueOf(oitem);
                     if (item == null || item.isEmpty()) continue;
+                    item = RegexUtil.PIPE_PATTERN.split(item)[0];
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
                     try {
@@ -148,6 +161,8 @@ public class RecipeManager extends LocalConfiguration {
                             itemStack.setData((short) 0);
                         }
                         itemStack.setAmount(config.getInt(path + "." + item, 1));
+                        if(RegexUtil.PIPE_PATTERN.split(item).length > 1)
+                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(item)[1]);
                         items.add(itemStack);
                     }
                 }
@@ -185,11 +200,7 @@ public class RecipeManager extends LocalConfiguration {
 
         public CraftingItemStack getResult() {
 
-            try {
-                return results.iterator().next();
-            } catch (Exception e) {
-                return null;
-            }
+            return result;
         }
 
         public enum RecipeType {

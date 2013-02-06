@@ -2,9 +2,14 @@ package com.sk89q.craftbook.mech.crafting;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -23,6 +28,8 @@ public class CustomCrafting {
     protected final RecipeManager recipes;
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
+    private HashMap<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<Recipe, RecipeManager.Recipe>();
+
     public CustomCrafting() {
 
         plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml", false);
@@ -37,6 +44,8 @@ public class CustomCrafting {
                         sh.addIngredient(is.getAmount(), is.getMaterial(), is.getData());
                     }
                     plugin.getServer().addRecipe(sh);
+                    if(r.hasAdvancedData())
+                        advancedRecipes.put(sh, r);
                 } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED2X2 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED3X3) {
                     ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
                     sh.shape(r.getShape());
@@ -44,12 +53,16 @@ public class CustomCrafting {
                         sh.setIngredient(is.getValue().charValue(), is.getKey().getMaterial(), is.getKey().getData());
                     }
                     plugin.getServer().addRecipe(sh);
+                    if(r.hasAdvancedData())
+                        advancedRecipes.put(sh, r);
                 } else if (r.getType() == RecipeManager.Recipe.RecipeType.FURNACE) {
                     FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
                     for (CraftingItemStack is : r.getIngredients()) {
                         sh.setInput(is.getMaterial(), is.getData());
                     }
                     plugin.getServer().addRecipe(sh);
+                    if(r.hasAdvancedData())
+                        advancedRecipes.put(sh, r);
                 } else {
                     continue;
                 }
@@ -67,5 +80,16 @@ public class CustomCrafting {
             }
         }
         plugin.getLogger().info("Registered " + recipes + " custom recipes!");
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onCraft(CraftItemEvent event) {
+
+        if(advancedRecipes.containsKey(event.getRecipe())) {
+
+            RecipeManager.Recipe recipe = advancedRecipes.get(event.getRecipe());
+            if(recipe.getResult().hasAdvancedData("name"))
+                event.getCurrentItem().getItemMeta().setDisplayName((String) recipe.getResult().getAdvancedData("name"));
+        }
     }
 }

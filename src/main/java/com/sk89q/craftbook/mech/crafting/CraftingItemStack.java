@@ -43,6 +43,25 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     private short data;
     private int amount;
 
+    //Advanced data
+    private HashMap<String, Object> advancedData = new HashMap<String, Object>();
+
+    public boolean hasAdvancedData() {
+        return !advancedData.isEmpty();
+    }
+
+    public boolean hasAdvancedData(String key) {
+        return advancedData.containsKey(key);
+    }
+
+    public Object getAdvancedData(String key) {
+        return advancedData.get(key);
+    }
+
+    public void addAdvancedData(String key, Object data) {
+        advancedData.put(key, data);
+    }
+
     public CraftingItemStack(Material material, short data, int amount) {
 
         this.material = material;
