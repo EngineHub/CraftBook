@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import com.sk89q.craftbook.util.BlockUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -146,9 +147,14 @@ public class SetDoor extends AbstractIC {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Block block = LocationUtil.getRelativeOffset(center, faceing, x, y, 0);
+                // do not replace the block the sign is on
+                boolean isSource = block.equals(getBackBlock());
+
                 if (open) {
+                    if (isSource && !BlockUtil.isBlockSolid(onMaterial)) continue;
                     block.setTypeIdAndData(onMaterial, (byte) onData, true);
                 } else {
+                    if (isSource && !BlockUtil.isBlockSolid(offMaterial)) continue;
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
                 }
             }
