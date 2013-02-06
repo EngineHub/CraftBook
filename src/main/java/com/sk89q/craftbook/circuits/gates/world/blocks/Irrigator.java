@@ -111,6 +111,9 @@ public class Irrigator extends AbstractIC {
                 c.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
                 return true;
             }
+        } else if (chest.getTypeId() == BlockID.WATER || chest.getTypeId() == BlockID.STATIONARY_WATER) {
+            chest.setTypeId(0);
+            return true;
         }
 
         return false;
