@@ -62,6 +62,12 @@ public class BetterPistons extends AbstractMechanic {
                         type = checkSign(sign);
                         if(type == this.type)
                             break signCheck;
+                        else if (type != null && SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign.getRelative(face)) == SignUtil.getFacing(sign)) {
+                            sign = sign.getRelative(face);
+                            type = checkSign(sign);
+                            if(type == this.type)
+                                break signCheck;
+                        }
                     }
                 }
 
@@ -217,22 +223,23 @@ public class BetterPistons extends AbstractMechanic {
 
                 for(int p = 0; p < amount; p++) {
 
+                    final int fp = p;
+
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
                         @Override
                         public void run () {
-                            for(int x = 2; x <= fblock+2; x++) {
+                            for(int x = fp == 0 ? 2 : 1; x <= fblock+(fp == 0 ? 2 : 1); x++) {
                                 final int i = x;
-                                if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
+                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                     break;
                                 }
                                 trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);
-                                //trigger.getRelative(piston.getFacing(), i+1).setTypeId(0);
                             }
                         }
 
-                    }, 2L*p);
+                    }, 2L*(p+1));
                 }
             }
         } else if (type == Types.SUPERPUSH && event.getNewCurrent() > event.getOldCurrent()) {
@@ -270,7 +277,7 @@ public class BetterPistons extends AbstractMechanic {
                             }
                         }
 
-                    }, 2L*p);
+                    }, 2L*(p+1));
                 }
             }
         }
