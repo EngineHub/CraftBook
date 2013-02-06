@@ -12,6 +12,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 
 public class ContentsSensor extends AbstractIC {
 
@@ -23,9 +24,16 @@ public class ContentsSensor extends AbstractIC {
     public void load() {
 
         item = ICUtil.getItem(getLine(2));
+        try {
+            slot = Integer.parseInt(getLine(3));
+        } catch (Exception e) {
+
+            slot = -1;
+        }
     }
 
     ItemStack item;
+    int slot;
 
     @Override
     public String getTitle () {
@@ -49,7 +57,10 @@ public class ContentsSensor extends AbstractIC {
         if (getBackBlock().getRelative(0, 1, 0).getState() instanceof InventoryHolder) {
 
             InventoryHolder inv = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
-            return inv.getInventory().containsAtLeast(item, 1);
+            if(slot < 0)
+                return inv.getInventory().containsAtLeast(item, 1);
+            else
+                return ItemUtil.areItemsIdentical(item, inv.getInventory().getItem(slot));
         }
 
         return false;
@@ -85,7 +96,7 @@ public class ContentsSensor extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"item id:data", null};
+            String[] lines = new String[] {"item id:data", "slot (optional)"};
             return lines;
         }
     }
