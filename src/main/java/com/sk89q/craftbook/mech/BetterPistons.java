@@ -156,6 +156,8 @@ public class BetterPistons extends AbstractMechanic {
         this.type = type;
     }
 
+    private double movemod = 1.0;
+
     /**
      * Raised when an input redstone current changes.
      */
@@ -189,7 +191,7 @@ public class BetterPistons extends AbstractMechanic {
             if(trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION) {
                 for(Entity ent : trigger.getChunk().getEntities()) {
 
-                    if(ent.getLocation().distanceSquared(trigger.getRelative(piston.getFacing()).getLocation()) < 2) {
+                    if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing()).getLocation()) < 0.5) {
                         ent.setVelocity(vel);
                     }
                 }
@@ -231,9 +233,15 @@ public class BetterPistons extends AbstractMechanic {
                         public void run () {
                             for(int x = fp == 0 ? 2 : 1; x <= fblock+(fp == 0 ? 2 : 1); x++) {
                                 final int i = x;
-                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i+1).getState().getData() instanceof PistonBaseMaterial && ((PistonBaseMaterial) trigger.getRelative(piston.getFacing(), i+1).getState().getData()).isPowered()) {
+                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                     break;
+                                }
+                                for(Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
+
+                                    if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing(), i).getLocation()) < 0.5) {
+                                        ent.teleport(ent.getLocation().subtract(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
+                                    }
                                 }
                                 trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);
                             }
@@ -271,6 +279,12 @@ public class BetterPistons extends AbstractMechanic {
                                 if(trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION)
                                     continue;
                                 if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
+                                    for(Entity ent : trigger.getRelative(piston.getFacing(), i+1).getChunk().getEntities()) {
+
+                                        if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing(), i+1).getLocation()) < 0.5) {
+                                            ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
+                                        }
+                                    }
                                     trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                 }
