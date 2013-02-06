@@ -39,19 +39,23 @@ public class MultipleSetBlock extends AbstractIC {
 
     int x, y, z;
 
-    int block;
-    byte data;
+    int onblock;
+    byte ondata;
+
+    int offblock;
+    byte offdata;
 
     String[] dim;
 
     @Override
     public void load() {
 
-        String line3 = getSign().getLine(2).toUpperCase();
+        String line3 = getSign().getLine(2).replace("+", "").toUpperCase();
         String line4 = getSign().getLine(3);
+        getSign().setLine(2, line3);
+        getSign().update(false);
 
-        String[] coords;
-        coords = RegexUtil.COLON_PATTERN.split(RegexUtil.PLUS_PATTERN.matcher(line3).replaceAll(""));
+        String[] coords = RegexUtil.COLON_PATTERN.split(line3,4);
 
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         x = body.getX();
@@ -60,18 +64,42 @@ public class MultipleSetBlock extends AbstractIC {
 
         if (coords.length < 4) return;
 
+        String[] blocks = RegexUtil.MINUS_PATTERN.split(coords[3]);
+
+        String[] onBlocks = RegexUtil.COLON_PATTERN.split(blocks[0],2);
         try {
-            block = Integer.parseInt(coords[3]);
+            onblock = Integer.parseInt(onBlocks[0]);
         } catch (Exception e) {
             return;
         }
 
-        if (coords.length == 5) {
+        if (onBlocks.length == 2) {
             try {
-                data = Byte.parseByte(coords[4]);
+                ondata = Byte.parseByte(onBlocks[1]);
             } catch (Exception e) {
                 return;
             }
+        }
+
+        if(blocks.length > 1) {
+            String[] offBlocks = RegexUtil.COLON_PATTERN.split(blocks[1],2);
+
+            try {
+                offblock = Integer.parseInt(offBlocks[0]);
+            } catch (Exception e) {
+                offblock = 0;
+            }
+
+            if (offBlocks.length == 2) {
+                try {
+                    offdata = Byte.parseByte(offBlocks[1]);
+                } catch (Exception e) {
+                    offdata = 0;
+                }
+            }
+        } else {
+            offblock = 0;
+            offdata = 0;
         }
 
         x += Integer.parseInt(coords[0]);
@@ -96,14 +124,16 @@ public class MultipleSetBlock extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        int setblock = block;
+        int setblock = onblock;
+        byte setdata = ondata;
 
         chip.setOutput(0, chip.getInput(0));
 
         boolean inp = chip.getInput(0);
 
         if (!inp) {
-            setblock = 0;
+            setblock = offblock;
+            setdata = offdata;
         }
 
         Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
@@ -115,12 +145,12 @@ public class MultipleSetBlock extends AbstractIC {
             for (int lx = 0; lx < dimX; lx++) {
                 for (int ly = 0; ly < dimY; ly++) {
                     for (int lz = 0; lz < dimZ; lz++) {
-                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(setblock, data, true);
+                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(setblock, setdata, true);
                     }
                 }
             }
         } else {
-            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(setblock, data, true);
+            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(setblock, setdata, true);
         }
     }
 
@@ -135,6 +165,19 @@ public class MultipleSetBlock extends AbstractIC {
         public IC create(ChangedSign sign) {
 
             return new MultipleSetBlock(getServer(), sign, this);
+        }
+
+        @Override
+        public String getShortDescription() {
+
+            return "Sets multiple blocks.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {"x:y:z:onid:ondata-offid:offdata", "width:height:depth"};
+            return lines;
         }
     }
 }
