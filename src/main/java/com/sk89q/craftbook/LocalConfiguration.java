@@ -52,6 +52,7 @@ public abstract class LocalConfiguration {
     public boolean physicsLadders;
     public boolean physicsPots;
     // Mechanics - BetterPistons
+    public int pistonMaxDistance;
     public boolean pistonsEnabled;
     public boolean pistonsCrusher;
     public boolean pistonsSuperSticky;

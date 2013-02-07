@@ -87,6 +87,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
         pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);
+        pistonMaxDistance = config.getInt("mechanics.better-pistons.max-distance", 12);
 
         // Bookcase Configuration Listener
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", true);

@@ -218,8 +218,8 @@ public class BetterPistons extends AbstractMechanic {
 
                 final boolean air = ((Sign) sign.getState()).getLine(3).equalsIgnoreCase("AIR");
 
-                if(block > 10)
-                    block = 10;
+                if(block > CraftBookPlugin.inst().getConfiguration().pistonMaxDistance)
+                    block = CraftBookPlugin.inst().getConfiguration().pistonMaxDistance;
 
                 final int fblock = block;
 
@@ -264,8 +264,8 @@ public class BetterPistons extends AbstractMechanic {
                 catch(Exception e){
                 }
 
-                if(block > 10)
-                    block = 10;
+                if(block > CraftBookPlugin.inst().getConfiguration().pistonMaxDistance)
+                    block = CraftBookPlugin.inst().getConfiguration().pistonMaxDistance;
 
                 final int fblock = block;
 
