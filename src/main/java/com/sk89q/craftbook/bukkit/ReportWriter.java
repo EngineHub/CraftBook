@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.worldguard.util.LogListBlock;
+import com.sk89q.craftbook.util.LogListBlock;
 
 /**
  * Writes reports.
