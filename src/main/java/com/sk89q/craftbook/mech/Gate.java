@@ -350,7 +350,7 @@ public class Gate extends AbstractMechanic {
         }
         if (sign == null) return;
 
-        if (plugin.getConfiguration().safeDestruction && getGateBlock() == player.getTypeInHand()) {
+        if (plugin.getConfiguration().safeDestruction && getGateBlock() == player.getTypeInHand() && isValidGateBlock(getGateBlock(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 player.printError("mech.restock-permission");
