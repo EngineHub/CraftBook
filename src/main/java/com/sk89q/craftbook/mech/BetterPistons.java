@@ -233,7 +233,7 @@ public class BetterPistons extends AbstractMechanic {
                         public void run () {
                             for(int x = fp == 0 ? 2 : 1; x <= fblock+(fp == 0 ? 2 : 1); x++) {
                                 final int i = x;
-                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.equals(trigger.getRelative(piston.getFacing(), i+1)) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder) {
+                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.equals(trigger.getRelative(piston.getFacing(), i+1)) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                     break;
                                 }
@@ -275,7 +275,7 @@ public class BetterPistons extends AbstractMechanic {
                         public void run () {
                             for(int x = fblock+2; x >= 2; x--) {
                                 final int i = x;
-                                if(trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION)
+                                if(trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
                                     continue;
                                 if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
                                     for(Entity ent : trigger.getRelative(piston.getFacing(), i+1).getChunk().getEntities()) {
@@ -293,6 +293,18 @@ public class BetterPistons extends AbstractMechanic {
                     }, 2L*(p+1));
                 }
             }
+        }
+    }
+
+    public boolean canPistonPushBlock(Block block) {
+
+        switch(block.getTypeId()) {
+
+            case BlockID.BEDROCK:
+            case BlockID.OBSIDIAN:
+                return false;
+            default: 
+                return true;
         }
     }
 
