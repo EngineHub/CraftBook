@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.sk89q.craftbook.mech.CustomDropManager;
+import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
 
 /**
@@ -19,6 +20,7 @@ public abstract class LocalConfiguration {
     public boolean ICShortHandEnabled;
     public int ICMaxRange;
     public Set<String> disabledICs;
+    public LocationCheckType ICdefaultCoordinate;
 
     // Circuits - Wiring
     public boolean netherrackEnabled;
