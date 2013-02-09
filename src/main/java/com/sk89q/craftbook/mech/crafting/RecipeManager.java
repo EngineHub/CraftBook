@@ -161,8 +161,9 @@ public class RecipeManager extends LocalConfiguration {
                             itemStack.setData((short) 0);
                         }
                         itemStack.setAmount(config.getInt(path + "." + item, 1));
-                        if(RegexUtil.PIPE_PATTERN.split(item).length > 1)
-                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(item)[1]);
+                        if(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length > 1) {
+                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem))[1]);
+                        }
                         items.add(itemStack);
                     }
                 }
@@ -204,7 +205,7 @@ public class RecipeManager extends LocalConfiguration {
         }
 
         public enum RecipeType {
-            SHAPELESS("Shapeless"), SHAPED3X3("Shaped3x3"), SHAPED2X2("Shaped2x2"), FURNACE("Furnace");
+            SHAPELESS("Shapeless"), SHAPED3X3("Shaped3x3"), SHAPED2X2("Shaped2x2"), FURNACE("Furnace"), SHAPED("Shaped");
 
             private String name;
 

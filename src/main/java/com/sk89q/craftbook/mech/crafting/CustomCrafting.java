@@ -1,21 +1,27 @@
 package com.sk89q.craftbook.mech.crafting;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -47,7 +53,7 @@ public class CustomCrafting implements Listener {
                     plugin.getServer().addRecipe(sh);
                     if(r.hasAdvancedData())
                         advancedRecipes.put(sh, r);
-                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED2X2 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED3X3) {
+                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED2X2 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED3X3 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED) {
                     ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
                     sh.shape(r.getShape());
                     for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
@@ -86,11 +92,38 @@ public class CustomCrafting implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCraft(CraftItemEvent event) {
 
-        if(advancedRecipes.containsKey(event.getRecipe())) {
+        for(Recipe rec : advancedRecipes.keySet()) {
 
-            RecipeManager.Recipe recipe = advancedRecipes.get(event.getRecipe());
-            if(recipe.getResult().hasAdvancedData("name"))
-                event.getCurrentItem().getItemMeta().setDisplayName((String) recipe.getResult().getAdvancedData("name"));
+            check: {
+            if(ItemUtil.areItemsIdentical(rec.getResult(), event.getRecipe().getResult())) {
+                if(rec instanceof ShapedRecipe && event.getRecipe() instanceof ShapedRecipe || rec instanceof ShapelessRecipe && event.getRecipe() instanceof ShapelessRecipe) {
+                    if(rec instanceof ShapedRecipe && event.getRecipe() instanceof ShapedRecipe) {
+                        if(((ShapedRecipe) rec).getShape().length != ((ShapedRecipe) event.getRecipe()).getShape().length)
+                            break check;
+                    }
+                    else if(rec instanceof ShapelessRecipe && event.getRecipe() instanceof ShapelessRecipe) {
+                        if(((ShapelessRecipe) rec).getIngredientList().size() != ((ShapelessRecipe) event.getRecipe()).getIngredientList().size())
+                            break check;
+
+                        List<ItemStack> test = new ArrayList<ItemStack>();
+                        test.addAll(((ShapelessRecipe) rec).getIngredientList());
+                        if(!test.removeAll(((ShapelessRecipe) event.getRecipe()).getIngredientList()))
+                            break check;
+                        if(test.size() > 0)
+                            break check;
+                    }
+                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                    if(recipe.getResult().hasAdvancedData("name")) {
+                        ItemStack res = event.getCurrentItem();
+                        ItemMeta meta = res.getItemMeta();
+                        meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
+                        res.setItemMeta(meta);
+                        event.setCurrentItem(res);
+                    }
+                    break;
+                }
+            }
+        }
         }
     }
 }
