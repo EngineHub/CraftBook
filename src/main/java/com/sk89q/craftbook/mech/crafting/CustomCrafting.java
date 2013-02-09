@@ -92,7 +92,11 @@ public class CustomCrafting implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCraft(CraftItemEvent event) {
 
-        event.setCurrentItem(craftItem(event.getRecipe()));
+        if(!ItemUtil.isStackValid(event.getCurrentItem()))
+            return;
+        ItemStack bits = new ItemStack(craftItem(event.getRecipe()));
+        bits.setAmount(event.getCurrentItem().getAmount());
+        event.setCurrentItem(bits);
     }
 
     public static ItemStack craftItem(Recipe recipe) {
