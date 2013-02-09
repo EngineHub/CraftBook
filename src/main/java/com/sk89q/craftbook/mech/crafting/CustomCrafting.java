@@ -92,16 +92,21 @@ public class CustomCrafting implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCraft(CraftItemEvent event) {
 
-        for(Recipe rec : advancedRecipes.keySet()) {
-
-            if(checkRecipes(rec, event.getRecipe())) {
-                event.setCurrentItem(applyAdvancedEffects(event.getCurrentItem(),rec));
-                break;
-            }
-        }
+        event.setCurrentItem(craftItem(event.getRecipe()));
     }
 
-    public static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
+    public static ItemStack craftItem(Recipe recipe) {
+        for(Recipe rec : advancedRecipes.keySet()) {
+
+            if(checkRecipes(rec, recipe)) {
+                return applyAdvancedEffects(recipe.getResult(),rec);
+            }
+        }
+
+        return recipe.getResult();
+    }
+
+    private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
         RecipeManager.Recipe recipe = advancedRecipes.get(rep);
         ItemStack res = stack.clone();
         if(recipe.getResult().hasAdvancedData("name")) {
@@ -112,7 +117,7 @@ public class CustomCrafting implements Listener {
         return res;
     }
 
-    public static boolean checkRecipes(Recipe rec1, Recipe rec2) {
+    private static boolean checkRecipes(Recipe rec1, Recipe rec2) {
 
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
             if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe || rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {

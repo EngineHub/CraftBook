@@ -117,13 +117,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
                 PistonBaseMaterial p = (PistonBaseMaterial) b.getState().getData();
                 if (p.getFacing() == ((org.bukkit.material.Dispenser) disp.getData()).getFacing().getOppositeFace()) {
                     List<ItemStack> items = new ArrayList<ItemStack>();
-                    for(Recipe rec : CustomCrafting.advancedRecipes.keySet()) {
-
-                        if(CustomCrafting.checkRecipes(rec, recipe)) {
-                            items.add(CustomCrafting.applyAdvancedEffects(recipe.getResult().clone(),rec));
-                            break;
-                        }
-                    }
+                    items.add(CustomCrafting.craftItem(recipe));
                     if (CircuitCore.inst().getPipeFactory() != null)
                         if (CircuitCore.inst().getPipeFactory()
                                 .detect(BukkitUtil.toWorldVector(b), items) != null) {
@@ -134,13 +128,7 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
         }
 
         if (!pipes) {
-            for(Recipe rec : CustomCrafting.advancedRecipes.keySet()) {
-
-                if(CustomCrafting.checkRecipes(rec, recipe)) {
-                    disp.getInventory().addItem(CustomCrafting.applyAdvancedEffects(recipe.getResult().clone(),rec));
-                    break;
-                }
-            }
+            disp.getInventory().addItem(CustomCrafting.craftItem(recipe));
             for(int i = 0; i < recipe.getResult().getAmount(); i++)
                 disp.dispense();
         }
