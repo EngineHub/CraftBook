@@ -107,6 +107,7 @@ public class ReportWriter {
         Class<? extends BukkitConfiguration> cls2 = config.getClass();
         for (Field field : cls2.getFields()) {
             try {
+                if (field.getName().equalsIgnoreCase("config")) continue;
                 if (field.getName().equalsIgnoreCase("plugin")) continue;
                 Object val = field.get(config);
                 configLog.put(field.getName(), val);

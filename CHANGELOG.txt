@@ -1,3 +1,23 @@
+3.5.4
+* Bonemeal terraformer can now grow crops a few stages instead of just 1.
+* Fixed a few /cb reload bugs.
+* Fix redstone not correctly being updated around IC outputs.
+* Fix a Container Dispenser error.
++ Added naming support to custom recipes.
++ Added support for the irrigator IC to use water above the IC block.
++ Added a slot option to the content sensor IC.
+* Command sign can now only be triggered on rising edge.
++ Added off block support for MultiBlockSet.
++ Added an option to have superpush/sticky move blocks more than 1 block per trigger.
++ Added support for betterpiston mechs to move entities when they move blocks. (Eg, for elevators)
++ Added an option to change max BetterPiston distance.
+* Bug fixes for BetterPistons. (Fixes bounce boucning wrong entities)
+* Fixed BetterPhysics ladders requiring 2 to be placed to work.
+* Fixed /cb report requiring WorldGuard.
+* BetterPistons no longer interact with Bedrock/Obsidian.
+* Fixed a gate dupe bug.
++ Added an option to IC's, to change default offset mode.
+
 3.5.3
 * Fix ContainerDispenser ignoring amount written on sign.
 * Fix an error with Painting Switcher and the Auto Updater.
