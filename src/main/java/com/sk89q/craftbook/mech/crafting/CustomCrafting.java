@@ -35,7 +35,7 @@ public class CustomCrafting implements Listener {
     protected final RecipeManager recipes;
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    private HashMap<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<Recipe, RecipeManager.Recipe>();
+    public static HashMap<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<Recipe, RecipeManager.Recipe>();
 
     public CustomCrafting() {
 
@@ -94,36 +94,48 @@ public class CustomCrafting implements Listener {
 
         for(Recipe rec : advancedRecipes.keySet()) {
 
-            check: {
-            if(ItemUtil.areItemsIdentical(rec.getResult(), event.getRecipe().getResult())) {
-                if(rec instanceof ShapedRecipe && event.getRecipe() instanceof ShapedRecipe || rec instanceof ShapelessRecipe && event.getRecipe() instanceof ShapelessRecipe) {
-                    if(rec instanceof ShapedRecipe && event.getRecipe() instanceof ShapedRecipe) {
-                        if(((ShapedRecipe) rec).getShape().length != ((ShapedRecipe) event.getRecipe()).getShape().length)
-                            break check;
-                    }
-                    else if(rec instanceof ShapelessRecipe && event.getRecipe() instanceof ShapelessRecipe) {
-                        if(((ShapelessRecipe) rec).getIngredientList().size() != ((ShapelessRecipe) event.getRecipe()).getIngredientList().size())
-                            break check;
-
-                        List<ItemStack> test = new ArrayList<ItemStack>();
-                        test.addAll(((ShapelessRecipe) rec).getIngredientList());
-                        if(!test.removeAll(((ShapelessRecipe) event.getRecipe()).getIngredientList()))
-                            break check;
-                        if(test.size() > 0)
-                            break check;
-                    }
-                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
-                    if(recipe.getResult().hasAdvancedData("name")) {
-                        ItemStack res = event.getCurrentItem();
-                        ItemMeta meta = res.getItemMeta();
-                        meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
-                        res.setItemMeta(meta);
-                        event.setCurrentItem(res);
-                    }
-                    break;
-                }
+            if(checkRecipes(rec, event.getRecipe())) {
+                event.setCurrentItem(applyAdvancedEffects(event.getCurrentItem(),rec));
+                break;
             }
         }
+    }
+
+    public static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
+        RecipeManager.Recipe recipe = advancedRecipes.get(rep);
+        ItemStack res = stack.clone();
+        if(recipe.getResult().hasAdvancedData("name")) {
+            ItemMeta meta = res.getItemMeta();
+            meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
+            res.setItemMeta(meta);
         }
+        return res;
+    }
+
+    public static boolean checkRecipes(Recipe rec1, Recipe rec2) {
+
+        if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
+            if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe || rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
+                if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
+                    if(((ShapedRecipe) rec1).getShape().length != ((ShapedRecipe) rec2).getShape().length)
+                        return false;
+                }
+                else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
+                    if(((ShapelessRecipe) rec1).getIngredientList().size() != ((ShapelessRecipe) rec2).getIngredientList().size())
+                        return false;
+
+                    List<ItemStack> test = new ArrayList<ItemStack>();
+                    test.addAll(((ShapelessRecipe) rec1).getIngredientList());
+                    if(!test.removeAll(((ShapelessRecipe) rec2).getIngredientList()))
+                        return false;
+                    if(test.size() > 0)
+                        return false;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }
