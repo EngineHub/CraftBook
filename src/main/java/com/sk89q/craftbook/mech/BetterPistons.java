@@ -172,6 +172,8 @@ public class BetterPistons extends AbstractMechanic {
             if(piston.isSticky())
                 return;
             piston.setPowered(false);
+            if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.BEDROCK)
+                return;
             trigger.getRelative(piston.getFacing()).breakNaturally();
             trigger.getRelative(piston.getFacing()).setTypeId(0, false);
         } else if(type == Types.BOUNCE && event.getNewCurrent() > event.getOldCurrent()) {
