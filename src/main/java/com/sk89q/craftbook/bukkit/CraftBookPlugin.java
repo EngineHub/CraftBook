@@ -240,7 +240,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Resolve WorldGuard
         checkPlugin = getServer().getPluginManager().getPlugin("WorldGuard");
-        if (checkPlugin != null && checkPlugin instanceof WorldEditPlugin) {
+        if (checkPlugin != null && checkPlugin instanceof WorldGuardPlugin) {
             worldGuardPlugin = (WorldGuardPlugin) checkPlugin;
         } else worldGuardPlugin = null;
 
