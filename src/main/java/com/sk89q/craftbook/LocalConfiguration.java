@@ -20,6 +20,7 @@ public abstract class LocalConfiguration {
     public boolean ICShortHandEnabled;
     public int ICMaxRange;
     public Set<String> disabledICs;
+    public boolean ICKeepLoaded;
     public LocationCheckType ICdefaultCoordinate;
 
     // Circuits - Wiring

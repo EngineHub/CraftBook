@@ -146,11 +146,14 @@ public class BukkitChangedSign implements ChangedSign {
     public boolean hasChanged () {
 
         boolean ret = false;
-        for(int i = 0; i < 4; i++)
-            if(!sign.getLine(i).equals(lines[i])) {
-                ret = true;
-                break;
-            }
+        try {
+            for(int i = 0; i < 4; i++)
+                if(!sign.getLine(i).equals(lines[i])) {
+                    ret = true;
+                    break;
+                }
+        }
+        catch(Exception e){}
         return ret;
     }
 
