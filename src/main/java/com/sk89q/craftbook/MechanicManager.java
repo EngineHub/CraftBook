@@ -204,10 +204,10 @@ public class MechanicManager {
                 if (aMechanic != null) {
 
                     // A mechanic has been found, check if we can actually build here.
-                    //FIXME if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
-                    //    player.printError("area.permissions");
-                    //    return 0;
-                    //}
+                    if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
+                        player.printError("area.permissions");
+                        return 0;
+                    }
 
                     aMechanic.onBlockBreak(event);
                     returnValue++;
@@ -246,10 +246,10 @@ public class MechanicManager {
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
-                    //FIXME if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-                    //    player.printError("area.permissions");
-                    //    return 0;
-                    //}
+                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                        player.printError("area.permissions");
+                        return 0;
+                    }
 
                     aMechanic.onRightClick(event);
                     returnValue++;
@@ -287,10 +287,10 @@ public class MechanicManager {
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
-                    //FIXME if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-                    //    player.printError("area.permissions");
-                    //    return 0;
-                    //}
+                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                        player.printError("area.permissions");
+                        return 0;
+                    }
 
                     aMechanic.onLeftClick(event);
                     returnValue++;
