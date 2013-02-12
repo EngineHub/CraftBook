@@ -32,6 +32,8 @@ public class StringJingleSequencer implements JingleSequencer {
     public void run(final JingleNotePlayer player) throws InterruptedException {
 
         position = 0;
+        if(song == null)
+            return;
 
         isPlaying = true;
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new Runnable() {
