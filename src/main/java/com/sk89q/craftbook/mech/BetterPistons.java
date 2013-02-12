@@ -169,8 +169,6 @@ public class BetterPistons extends AbstractMechanic {
 
         if(type == Types.CRUSH && event.getNewCurrent() > event.getOldCurrent()) {
             PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
-            if(piston.isSticky())
-                return;
             piston.setPowered(false);
             if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.BEDROCK)
                 return;
