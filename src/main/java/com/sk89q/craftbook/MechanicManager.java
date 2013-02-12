@@ -604,7 +604,7 @@ public class MechanicManager {
         }
 
 
-        if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded && mechanic instanceof ICMechanic && event != null) {
+        if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded && mechanic instanceof ICMechanic && event != null && ((PersistentMechanic) mechanic).isActive()) {
             event.setCancelled(true);
             return;
         }
