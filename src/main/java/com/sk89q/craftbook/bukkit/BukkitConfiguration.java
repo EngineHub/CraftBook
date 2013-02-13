@@ -48,6 +48,8 @@ public class BukkitConfiguration extends YAMLConfiguration {
             BukkitUtil.printStacktrace(e);
         }
 
+        config.setWriteDefaults(true);
+
         config.setHeader(
                 "# CraftBook Configuration for Bukkit. Generated for version: " + CraftBookPlugin.inst().getDescription().getVersion(),
                 "# This configuration will automatically add new configuration options for you,",

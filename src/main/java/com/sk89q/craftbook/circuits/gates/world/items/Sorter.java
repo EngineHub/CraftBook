@@ -84,7 +84,7 @@ public class Sorter extends AbstractIC implements PipeInputIC {
                 BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
                 Block b;
 
-                if (isInAboveChest(stack) || inverted) {
+                if (isInAboveChest(stack) ^ inverted) {
                     b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
                 } else {
                     b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
@@ -101,8 +101,8 @@ public class Sorter extends AbstractIC implements PipeInputIC {
 
                         List<ItemStack> items = new ArrayList<ItemStack>();
                         items.add(item.getItemStack());
-                        if (((CircuitCore) CircuitCore.inst()).getPipeFactory() != null)
-                            if (((CircuitCore) CircuitCore.inst()).getPipeFactory().detect(BukkitUtil.toWorldVector(b),
+                        if (CircuitCore.inst().getPipeFactory() != null)
+                            if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(b),
                                     items) != null) {
                                 item.remove();
                                 pipes = true;
@@ -140,8 +140,8 @@ public class Sorter extends AbstractIC implements PipeInputIC {
 
                 List<ItemStack> items = new ArrayList<ItemStack>();
                 items.add(item);
-                if (((CircuitCore) CircuitCore.inst()).getPipeFactory() != null)
-                    if (((CircuitCore) CircuitCore.inst()).getPipeFactory().detect(BukkitUtil.toWorldVector(b),
+                if (CircuitCore.inst().getPipeFactory() != null)
+                    if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(b),
                             items) != null) {
                         pipes = true;
                     }

@@ -4,6 +4,7 @@ package com.sk89q.craftbook.util.config;
  * @author Turtle9598
  */
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.logging.FileHandler;
@@ -44,7 +45,8 @@ public class YAMLConfiguration extends LocalConfiguration {
         ICMaxRange = config.getInt("circuits.ics.max-radius", 15);
         ICShortHandEnabled = config.getBoolean("circuits.ics.allow-short-hand", true);
         ICKeepLoaded = config.getBoolean("circuits.ics.keep-loaded", false);
-        disabledICs = new HashSet<String>(config.getStringList("circuits.ics.disallowed-ics", Arrays.asList("")));
+        config.addNode("circuits.ics.disallowed-ics");
+        disabledICs = new HashSet<String>(config.getStringList("circuits.ics.disallowed-ics", new ArrayList<String>()));
         ICdefaultCoordinate = LocationCheckType.getTypeFromName(config.getString("circuits.ics.default-coordinate-system", "RELATIVE"));
 
         // Circuits Configuration Listener
