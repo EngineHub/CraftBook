@@ -12,9 +12,9 @@ crafting-recipes:
       '35:12': 1
     results:
       #64 Endstone.
-      121: 64
+      '121': 64
   shapeexample:
-    type: shaped2x2
+    type: shaped
     ingredients: #mc only supports amount of 1 currently as ingredients.
       # light wooden plank
       'wood:2': 'a'
@@ -25,4 +25,4 @@ crafting-recipes:
       - 'bb'
     results:
       #64 Endstone.
-      121: 64
+      '121': 64
