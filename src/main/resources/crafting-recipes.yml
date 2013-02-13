@@ -26,3 +26,11 @@ crafting-recipes:
     results:
       #64 Endstone.
       '121': 64
+  furnaceexample:
+    type: furnace
+    ingredients:
+      # light wooden plank
+      'wood:2': 1
+    results:
+      #1 Stone.
+      '1': 1
