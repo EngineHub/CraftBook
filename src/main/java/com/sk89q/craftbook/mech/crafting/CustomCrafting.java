@@ -95,8 +95,10 @@ public class CustomCrafting implements Listener {
         if(!ItemUtil.isStackValid(event.getCurrentItem()))
             return;
         ItemStack bits = new ItemStack(craftItem(event.getRecipe()));
-        bits.setAmount(event.getCurrentItem().getAmount());
-        event.setCurrentItem(bits);
+        if(bits != null) {
+            bits.setAmount(event.getCurrentItem().getAmount());
+            event.setCurrentItem(bits);
+        }
     }
 
     public static ItemStack craftItem(Recipe recipe) {
@@ -107,7 +109,7 @@ public class CustomCrafting implements Listener {
             }
         }
 
-        return recipe.getResult();
+        return null;
     }
 
     private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
@@ -118,7 +120,7 @@ public class CustomCrafting implements Listener {
             meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
             res.setItemMeta(meta);
         }
-        return res;
+        return null;
     }
 
     private static boolean checkRecipes(Recipe rec1, Recipe rec2) {
