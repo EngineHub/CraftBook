@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import com.sk89q.craftbook.util.BlockUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -30,9 +31,9 @@ public class SetDoor extends AbstractIC {
     private int width;
     private int height;
 
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
+    private int offsetX = 0;
+    private int offsetY = 1;
+    private int offsetZ = 0;
 
     private Block center;
     private BlockFace faceing;
@@ -94,13 +95,9 @@ public class SetDoor extends AbstractIC {
                 offsetY = Integer.parseInt(offsetSplit[1]);
                 offsetZ = Integer.parseInt(offsetSplit[2]);
             } catch (NumberFormatException e) {
-                offsetX = 0;
-                offsetY = 1;
-                offsetZ = 0;
+                // ignore and use defaults
             } catch (IndexOutOfBoundsException e) {
-                offsetX = 0;
-                offsetY = 1;
-                offsetZ = 0;
+                // ignore and use defaults
             }
             try {
                 // parse the size of the door
@@ -150,9 +147,14 @@ public class SetDoor extends AbstractIC {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Block block = LocationUtil.getRelativeOffset(center, faceing, x, y, 0);
+                // do not replace the block the sign is on
+                boolean isSource = block.equals(getBackBlock());
+
                 if (open) {
+                    if (isSource && !BlockUtil.isBlockSolid(onMaterial)) continue;
                     block.setTypeIdAndData(onMaterial, (byte) onData, true);
                 } else {
+                    if (isSource && !BlockUtil.isBlockSolid(offMaterial)) continue;
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
                 }
             }
