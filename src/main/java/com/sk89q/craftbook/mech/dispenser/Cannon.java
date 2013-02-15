@@ -22,9 +22,9 @@ public class Cannon extends Recipe {
     public Cannon() {
 
         super(new int[] {
-                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE, ItemID.SULPHUR, BlockID.TNT,
-                ItemID.SULPHUR, ItemID.FIRE_CHARGE,
-                ItemID.SULPHUR, ItemID.FIRE_CHARGE
+                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE, 
+                ItemID.SULPHUR, BlockID.TNT, ItemID.SULPHUR, 
+                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE
         });
     }
 
@@ -35,10 +35,7 @@ public class Cannon extends Recipe {
         BlockFace face = disp.getFacing();
         Location location = dis.getBlock().getRelative(face).getLocation().add(0.5, 0.5, 0.5);
         TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
-        a.setVelocity(velocity);
-        a.setIsIncendiary(true);
-        a.setYield(0.4f);
-        a.setFuseTicks(200);
+        a.setVelocity(velocity.normalize().multiply(2));
         return true;
     }
 }
