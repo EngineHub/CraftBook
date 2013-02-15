@@ -94,7 +94,7 @@ public class CustomCrafting implements Listener {
 
         if(!ItemUtil.isStackValid(event.getCurrentItem()))
             return;
-        ItemStack bits = new ItemStack(craftItem(event.getRecipe()));
+        ItemStack bits = craftItem(event.getRecipe());
         if(bits != null) {
             bits.setAmount(event.getCurrentItem().getAmount());
             event.setCurrentItem(bits);
