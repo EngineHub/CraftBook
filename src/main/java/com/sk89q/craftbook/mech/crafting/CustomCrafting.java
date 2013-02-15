@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -94,7 +95,19 @@ public class CustomCrafting implements Listener {
 
         if(!ItemUtil.isStackValid(event.getCurrentItem()))
             return;
-        ItemStack bits = craftItem(event.getRecipe());
+        ItemStack bits = null;
+        for(Recipe rec : advancedRecipes.keySet()) {
+
+            if(checkRecipes(rec, event.getRecipe())) {
+                if(advancedRecipes.get(rec).hasAdvancedData("permission-node")) {
+                    if(!event.getWhoClicked().hasPermission((String) advancedRecipes.get(rec).getAdvancedData("permission-node"))) {
+                        ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
+                        event.setCancelled(true);
+                    }
+                }
+                bits = applyAdvancedEffects(event.getRecipe().getResult(),rec);
+            }
+        }
         if(bits != null) {
             bits.setAmount(event.getCurrentItem().getAmount());
             event.setCurrentItem(bits);

@@ -85,7 +85,7 @@ public class RecipeManager extends LocalConfiguration {
             if(!result.hasAdvancedData())
                 return true;
 
-            return false;
+            return !advancedData.isEmpty();
         }
 
         private Recipe(String id, YAMLProcessor config) throws InvalidCraftingException {
@@ -111,6 +111,10 @@ public class RecipeManager extends LocalConfiguration {
                 result = iterator.next();
             else
                 throw new InvalidCraftingException("Result is invalid in recipe: "+ id);
+
+            String permNode = config.getString("crafting-recipes." + id + ".permission-node", null);
+            if (permNode != null)
+                addAdvancedData("permission-node", permNode);
         }
 
         private HashMap<CraftingItemStack, Character> getHashItems(String path) {
@@ -233,6 +237,22 @@ public class RecipeManager extends LocalConfiguration {
                 for (RecipeType t : RecipeType.values()) { if (t.getName().equalsIgnoreCase(name)) return t; }
                 return SHAPELESS; // Default to shapeless
             }
+        }
+
+        //Advanced data
+        private HashMap<String, Object> advancedData = new HashMap<String, Object>();
+
+        public boolean hasAdvancedData(String key) {
+            return advancedData.containsKey(key);
+        }
+
+        public Object getAdvancedData(String key) {
+            return advancedData.get(key);
+        }
+
+        public void addAdvancedData(String key, Object data) {
+            Bukkit.getLogger().info("Adding advanced data of type: " + key + " to an ItemStack!");
+            advancedData.put(key, data);
         }
     }
 }
