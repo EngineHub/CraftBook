@@ -74,6 +74,8 @@ public class LanguageManager {
 
     public String getString(String message, String language) {
 
+        if(language == null)
+            language = plugin.getConfiguration().language;
         HashMap<String, String> languageData = languageMap.get(language);
         if (languageData == null) return getString(message);
         String translated = languageData.get(ChatColor.stripColor(message));

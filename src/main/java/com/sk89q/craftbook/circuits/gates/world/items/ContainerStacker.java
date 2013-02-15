@@ -54,6 +54,8 @@ public class ContainerStacker extends AbstractIC {
                     int amount = it.getAmount();
                     if (it.getAmount() < 64) {
 
+                        int missing = 0;
+
                         for (int ii = 0; ii < c.getInventory().getSize(); ii++) {
                             if (ii == i)
                                 continue;
@@ -62,11 +64,11 @@ public class ContainerStacker extends AbstractIC {
 
                                 if (amount + itt.getAmount() <= 64) {
                                     amount += itt.getAmount();
-                                    c.getInventory().remove(itt);
                                 } else {
-                                    //TODO
-                                    continue;
+                                    missing = amount + itt.getAmount() - 64;
+                                    amount = 64;
                                 }
+                                c.getInventory().remove(itt);
                             }
                         }
 
@@ -75,6 +77,12 @@ public class ContainerStacker extends AbstractIC {
                             it.setAmount(amount);
                             c.getInventory().setItem(i, it);
                             break;
+                        }
+                        if(missing > 0) {
+
+                            ItemStack miss = new ItemStack(it);
+                            miss.setAmount(missing);
+                            c.getInventory().addItem(miss);
                         }
                     }
                 }
